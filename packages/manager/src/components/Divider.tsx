@@ -17,8 +17,12 @@ export const Divider = (props: DividerProps) => {
 
 const StyledDivider = styled(_Divider, {
   label: 'StyledDivider',
-  shouldForwardProp: (prop) =>
-    omittedProps(['spacingTop', 'spacingBottom', 'light', 'dark'], prop),
+  shouldForwardProp: omittedProps([
+    'spacingTop',
+    'spacingBottom',
+    'light',
+    'dark',
+  ]),
 })<DividerProps>(({ theme, ...props }) => ({
   borderColor: props.dark
     ? theme.color.border2

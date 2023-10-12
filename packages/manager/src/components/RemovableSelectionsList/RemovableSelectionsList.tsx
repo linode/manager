@@ -115,7 +115,7 @@ export const RemovableSelectionsList = (props: Props) => {
 
 const StyledNoAssignedLinodesBox = styled(Box, {
   label: 'StyledNoAssignedLinodesBox',
-  shouldForwardProp: (prop) => omittedProps(['maxWidth'], prop),
+  shouldForwardProp: omittedProps(['maxWidth']),
 })(({ maxWidth, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   display: 'flex',
@@ -138,7 +138,7 @@ const SelectedOptionsHeader = styled('h4', {
 
 const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
-  shouldForwardProp: (prop) => omittedProps(['isRemovable'], prop),
+  shouldForwardProp: omittedProps(['isRemovable']),
 })<{ isRemovable?: boolean }>(({ isRemovable, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   overflow: 'auto',

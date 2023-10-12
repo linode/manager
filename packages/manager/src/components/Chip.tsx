@@ -46,8 +46,7 @@ export const Chip = ({
 
 const StyledChip = styled(_Chip, {
   label: 'StyledChip',
-  shouldForwardProp: (prop) =>
-    omittedProps(['inTable', 'outlineColor', 'pill'], prop),
+  shouldForwardProp: omittedProps(['inTable', 'outlineColor', 'pill']),
 })<ChipProps>(({ theme, ...props }) => ({
   ...(props.inTable && {
     marginBottom: 0,

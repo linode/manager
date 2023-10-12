@@ -105,7 +105,7 @@ export type StyledTypographyProps = { component: string };
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: (prop) => omittedProps(['component'], prop),
+  shouldForwardProp: omittedProps(['component']),
 })<StyledTypographyProps>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
 }));

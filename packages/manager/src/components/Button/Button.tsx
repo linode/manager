@@ -43,8 +43,12 @@ export interface ButtonProps extends _ButtonProps {
 }
 
 const StyledButton = styled(_Button, {
-  shouldForwardProp: (prop) =>
-    omittedProps(['compactX', 'compactY', 'loading', 'buttonType'], prop),
+  shouldForwardProp: omittedProps([
+    'compactX',
+    'compactY',
+    'loading',
+    'buttonType',
+  ]),
 })<ButtonProps>(({ theme, ...props }) => ({
   ...(props.buttonType === 'secondary' && {
     color: theme.textColors.linkActiveLight,

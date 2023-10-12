@@ -176,7 +176,7 @@ const StyledTooltip = styled(
   ),
   {
     label: 'StyledTooltip',
-    shouldForwardProp: (prop) => omittedProps(['width'], prop),
+    shouldForwardProp: omittedProps(['width']),
   }
 )`
   & .${tooltipClasses.tooltip} {

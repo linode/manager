@@ -10,7 +10,7 @@ type StyledCopyTooltipProps = { isHovered: boolean };
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip ',
-  shouldForwardProp: (prop) => omittedProps(['isHovered'], prop),
+  shouldForwardProp: omittedProps(['isHovered']),
 })<StyledCopyTooltipProps>(({ isHovered }) => ({
   '& svg': {
     height: `12px`,

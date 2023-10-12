@@ -75,8 +75,7 @@ const AddTag = (props: AddTagProps) => {
 export { AddTag };
 
 const StyledSelect = styled(Select, {
-  shouldForwardProp: (prop) =>
-    omittedProps(['fixedMenu', 'inDetailsContext'], prop),
+  shouldForwardProp: omittedProps(['fixedMenu', 'inDetailsContext']),
 })<{
   fixedMenu?: boolean;
   inDetailsContext?: boolean;

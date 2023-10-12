@@ -7,7 +7,7 @@ import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledListItem = styled('li', {
   label: 'StyledListItem',
-  shouldForwardProp: (prop) => omittedProps(['selectAllOption'], prop),
+  shouldForwardProp: omittedProps(['selectAllOption']),
 })(({ theme }) => ({
   '&.MuiAutocomplete-option': {
     overflow: 'unset',

@@ -131,7 +131,7 @@ export const StyledButton = styled(Button, {
 
 export const StyledButtonElement = styled('span', {
   label: 'StyledButtonElement',
-  shouldForwardProp: (prop) => omittedProps(['hidden', 'sx'], prop),
+  shouldForwardProp: omittedProps(['hidden', 'sx']),
 })(({ ...props }) => ({
   ...(props.hidden && {
     textDecoration: 'line-through',

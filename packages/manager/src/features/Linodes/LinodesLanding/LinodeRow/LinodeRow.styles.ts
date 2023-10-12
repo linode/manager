@@ -1,4 +1,4 @@
-import { styled, Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
 import { omittedProps } from 'src/utilities/omittedProps';
@@ -37,8 +37,8 @@ export const StyledIpTableCell = styled(TableCell, {
 
 export const StyledMaintenanceTableCell = styled(TableCell, {
   label: 'StyledMaintenanceTableCell',
-  shouldForwardProp: (prop) => omittedProps(['maintenance'], prop),
-})<StyledMaintenanceCellProps>(({ theme, maintenance }) => ({
+  shouldForwardProp: omittedProps(['maintenance']),
+})<StyledMaintenanceCellProps>(({ maintenance, theme }) => ({
   ...(maintenance
     ? {
         '& .data': {

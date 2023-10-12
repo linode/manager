@@ -10,7 +10,7 @@ type StyledCircleIconProps = {
 
 export const StyledCircleIcon = styled('div', {
   label: 'StyledCircleIcon',
-  shouldForwardProp: (prop) => omittedProps(['activeStep', 'index'], prop),
+  shouldForwardProp: omittedProps(['activeStep', 'index']),
 })<StyledCircleIconProps>(({ theme, ...props }) => ({
   alignItems: 'center',
   backgroundColor:

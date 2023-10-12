@@ -6,17 +6,13 @@ import type { TableProps } from './Table';
 
 export const StyledTableWrapper = styled('div', {
   label: 'StyledTableWrapper',
-  shouldForwardProp: (prop) =>
-    omittedProps(
-      [
-        'noBorder',
-        'noOverflow',
-        'rowHoverState',
-        'spacingBottom',
-        'spacingTop',
-      ],
-      prop
-    ),
+  shouldForwardProp: omittedProps([
+    'noBorder',
+    'noOverflow',
+    'rowHoverState',
+    'spacingBottom',
+    'spacingTop',
+  ]),
 })<TableProps>(({ theme, ...props }) => ({
   marginBottom: props.spacingBottom !== undefined ? props.spacingBottom : 0,
   marginTop: props.spacingTop !== undefined ? props.spacingTop : 0,

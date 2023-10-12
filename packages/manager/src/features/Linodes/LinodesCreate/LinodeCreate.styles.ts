@@ -35,7 +35,7 @@ export const StyledForm = styled('form', { label: 'StyledForm' })({
 
 export const StyledMessageDiv = styled('div', {
   label: 'StyledMessageDiv',
-  shouldForwardProp: (prop) => omittedProps(['showAgreement'], prop),
+  shouldForwardProp: omittedProps(['showAgreement']),
 })<StyledLinodeCreateProps>(({ showAgreement, theme }) => ({
   display: 'flex',
   flexDirection: 'column' as const,

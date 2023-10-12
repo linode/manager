@@ -42,7 +42,7 @@ const GridBody = styled(Grid)(({ theme }) => ({
 
 const GridFooter = styled(Grid, {
   label: 'EntityDetailGridFooter',
-  shouldForwardProp: (prop) => omittedProps(['body'], prop),
+  shouldForwardProp: omittedProps(['body']),
 })<Partial<EntityDetailProps>>(({ theme, ...props }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.bgPaper,

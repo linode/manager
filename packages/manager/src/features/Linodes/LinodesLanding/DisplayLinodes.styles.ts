@@ -27,7 +27,7 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
-  shouldForwardProp: (prop) => omittedProps(['isGroupedByTag'], prop),
+  shouldForwardProp: omittedProps(['isGroupedByTag']),
 })<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.tableHeader,
@@ -39,7 +39,7 @@ export const StyledControlHeader = styled('div', {
 
 export const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
-  shouldForwardProp: (prop) => omittedProps(['isActive'], prop),
+  shouldForwardProp: omittedProps(['isActive']),
 })<{ isActive: boolean }>(({ isActive, theme }) => ({
   '&.Mui-disabled': {
     display: 'none',

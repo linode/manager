@@ -37,7 +37,7 @@ export const Paper = (props: Props) => {
 };
 
 const StyledPaper = styled(_Paper, {
-  shouldForwardProp: (prop) => omittedProps(['error'], prop),
+  shouldForwardProp: omittedProps(['error']),
 })<Props>(({ theme, ...props }) => ({
   borderColor: props.error ? theme.color.red : undefined,
   padding: theme.spacing(3),

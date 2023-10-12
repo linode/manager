@@ -36,7 +36,7 @@ export const SayHello = (props: SayHelloProps) => {
 */
 const StyledH1 = styled("h1", {
   label: "StyledH1",
-  shouldForwardProp: (prop) => omittedProps(["isDisabled"], prop),
+  shouldForwardProp:  omittedProps(["isDisabled"]),
 })(({ theme, ...props }) => ({
   color: props.isDisabled ? theme.color.grey : theme.color.black,
 }));

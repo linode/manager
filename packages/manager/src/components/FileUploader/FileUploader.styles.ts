@@ -13,11 +13,12 @@ interface DropZoneClassProps {
 
 export const StyledDropZoneDiv = styled('div', {
   label: 'StyledDropZoneDiv',
-  shouldForwardProp: (prop) =>
-    omittedProps(
-      ['dropzoneDisabled', 'isDragActive', 'isDragAccept', 'isDragReject'],
-      prop
-    ),
+  shouldForwardProp: omittedProps([
+    'dropzoneDisabled',
+    'isDragActive',
+    'isDragAccept',
+    'isDragReject',
+  ]),
 })<DropZoneClassProps>(({ theme, ...props }) => ({
   backgroundColor: 'transparent',
   borderColor: theme.palette.primary.main,
@@ -68,7 +69,7 @@ export const StyledFileUploadsDiv = styled('div', {
 
 export const StyledDropZoneContentDiv = styled('div', {
   label: 'StyledDropZoneContentDiv',
-  shouldForwardProp: (prop) => omittedProps(['uploadZoneActive'], prop),
+  shouldForwardProp: omittedProps(['uploadZoneActive']),
 })<{
   uploadZoneActive: boolean;
 }>(({ theme, ...props }) => ({

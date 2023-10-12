@@ -29,7 +29,7 @@ import { StyledTopMenuIconWrapper, TopMenuIcon } from '../TopMenuIcon';
 
 const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   label: 'NotificationIconWrapper',
-  shouldForwardProp: (prop) => omittedProps(['isMenuOpen'], prop),
+  shouldForwardProp: omittedProps(['isMenuOpen']),
 })<{
   isMenuOpen: boolean;
 }>(({ ...props }) => ({

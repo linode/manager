@@ -23,7 +23,7 @@ export const StyledTypography = styled(Typography, {
 
 export const StyledDisabledTableRow = styled(TableRow, {
   label: 'StyledDisabledTableRow',
-  shouldForwardProp: (prop) => omittedProps(['disabled'], prop),
+  shouldForwardProp: omittedProps(['disabled']),
 })<StyledDisabledTableRowProps>(({ theme, ...props }) => ({
   ...(props.disabled && {
     backgroundColor: theme.bg.tableHeader,

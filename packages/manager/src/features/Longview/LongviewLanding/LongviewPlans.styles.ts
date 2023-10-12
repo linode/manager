@@ -81,7 +81,7 @@ export const StyledTable = styled(Table, { label: 'StyledTable' })(
 
 export const StyledTableRow = styled(TableRow, {
   label: 'StyledTableRow',
-  shouldForwardProp: (prop) => omittedProps(['disabled'], prop),
+  shouldForwardProp: omittedProps(['disabled']),
 })<StyledTableRowProps>(({ disabled }) => ({
   ...(disabled && {
     cursor: 'not-allowed',

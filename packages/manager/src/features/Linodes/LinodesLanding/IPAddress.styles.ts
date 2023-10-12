@@ -21,7 +21,7 @@ export const StyledIpLinkDiv = styled('div', { label: 'StyledIpLinkDiv' })(
 
 export const StyledRootDiv = styled('div', {
   label: 'StyledRootDiv',
-  shouldForwardProp: (prop) => omittedProps(['showAll'], prop),
+  shouldForwardProp: omittedProps(['showAll']),
 })<StyledIpAddressProps>(({ showAll, theme }) => ({
   '&:last-child': {
     marginBottom: 0,
@@ -40,8 +40,11 @@ export const StyledRootDiv = styled('div', {
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip ',
-  shouldForwardProp: (prop) =>
-    omittedProps(['isHovered', 'isIpHovered', 'showTooltipOnIpHover'], prop),
+  shouldForwardProp: omittedProps([
+    'isHovered',
+    'isIpHovered',
+    'showTooltipOnIpHover',
+  ]),
 })<StyledIpAddressProps>(
   ({ isHovered, isIpHovered, showTooltipOnIpHover, theme }) => ({
     '& svg': {
@@ -66,8 +69,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 
 export const StyledRenderIPDiv = styled('div', {
   label: 'StyledRenderIPDiv',
-  shouldForwardProp: (prop) =>
-    omittedProps(['showAll', 'showTooltipOnIpHover'], prop),
+  shouldForwardProp: omittedProps(['showAll', 'showTooltipOnIpHover']),
 })<StyledIpAddressProps>(({ showAll, theme }) => ({
   alignItems: 'center',
   display: 'flex',

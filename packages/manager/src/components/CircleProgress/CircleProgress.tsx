@@ -120,7 +120,7 @@ const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
 );
 
 const StyledMiniCircularProgress = styled(CircularProgress, {
-  shouldForwardProp: (prop) => omittedProps(['noPadding'], prop),
+  shouldForwardProp: omittedProps(['noPadding']),
 })<CircleProgressProps>(({ theme, ...props }) => ({
   padding: `calc(${theme.spacing()} * 1.3)`,
   ...(props.noPadding && {

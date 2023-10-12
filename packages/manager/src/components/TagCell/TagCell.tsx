@@ -140,7 +140,7 @@ const StyledCircleDiv = styled('div')({
 });
 
 const StyledTagListDiv = styled('div', {
-  shouldForwardProp: (prop) => omittedProps(['hasOverflow'], prop),
+  shouldForwardProp: omittedProps(['hasOverflow']),
 })<{
   hasOverflow: boolean;
 }>(({ ...props }) => ({
@@ -158,7 +158,7 @@ const StyledTagListDiv = styled('div', {
 }));
 
 const StyledTag = styled(Tag, {
-  shouldForwardProp: (prop) => omittedProps(['loading'], prop),
+  shouldForwardProp: omittedProps(['loading']),
 })<{
   loading: boolean;
 }>(({ ...props }) => ({

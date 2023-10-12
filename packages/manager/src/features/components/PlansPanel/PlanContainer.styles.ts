@@ -10,7 +10,7 @@ type StyledTableCellPropsProps = TableCellProps & {
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
-  shouldForwardProp: (prop) => omittedProps(['isDisabled'], prop),
+  shouldForwardProp: omittedProps(['isDisabled']),
 })<{ isDisabled?: boolean }>(({ isDisabled, theme }) => ({
   '& tr ': {
     opacity: isDisabled ? 0.4 : 1,
@@ -24,7 +24,7 @@ export const StyledTable = styled(Table, {
 
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
-  shouldForwardProp: (prop) => omittedProps(['isPlanCell'], prop),
+  shouldForwardProp: omittedProps(['isPlanCell']),
 })<StyledTableCellPropsProps>(({ theme, ...props }) => ({
   '&.emptyCell': {
     borderRight: 'none',

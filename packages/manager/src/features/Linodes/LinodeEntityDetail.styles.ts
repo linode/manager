@@ -38,17 +38,13 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
 
 export const StyledChip = styled(Chip, {
   label: 'StyledChip',
-  shouldForwardProp: (prop) =>
-    omittedProps(
-      [
-        'isSummaryView',
-        'hasSecondaryStatus',
-        'isOffline',
-        'isOther',
-        'isRunning',
-      ],
-      prop
-    ),
+  shouldForwardProp: omittedProps([
+    'isSummaryView',
+    'hasSecondaryStatus',
+    'isOffline',
+    'isOther',
+    'isRunning',
+  ]),
 })<StyledChipProps>(
   ({
     hasSecondaryStatus,
