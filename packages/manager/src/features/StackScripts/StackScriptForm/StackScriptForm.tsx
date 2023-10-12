@@ -1,61 +1,23 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { InputAdornment } from 'src/components/InputAdornment';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingBottom: 0,
-  },
-  gridWithTips: {
-    maxWidth: '50%',
-    [theme.breakpoints.down('md')]: {
-      maxWidth: '100%',
-      width: '100%',
-    },
-  },
-  labelField: {
-    '& input': {
-      paddingLeft: 0,
-    },
-  },
-  revisionTextarea: {
-    maxWidth: '100%',
-  },
-  root: {
-    padding: theme.spacing(2),
-  },
-  scriptTextarea: {
-    maxWidth: '100%',
-  },
-  tips: {
-    backgroundColor: theme.palette.divider,
-    marginLeft: theme.spacing(4),
-    marginTop: `${theme.spacing(4)} !important`,
-    padding: theme.spacing(4),
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(2),
-    },
-    [theme.breakpoints.down('xl')]: {
-      marginLeft: 0,
-    },
-  },
-}));
+import {
+  StyledActionsPanel,
+  StyledGridWithTips,
+  StyledNotice,
+  StyledTextField,
+} from './StackScriptForm.styles';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -86,17 +48,13 @@ interface Props {
   script: TextFieldHandler;
 }
 
-type CombinedProps = Props;
-
 const errorResources = {
   images: 'Images',
   label: 'A label',
   script: 'A script',
 };
 
-// exported as a class component, otherwise no display name
-// appears in tests
-export const StackScriptForm: React.FC<CombinedProps> = (props) => {
+export const StackScriptForm = React.memo((props: Props) => {
   const {
     currentUser,
     description,
@@ -114,22 +72,19 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
     script,
   } = props;
 
-  const classes = useStyles();
-
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
   const selectedImages = imageToItem(images.selected);
 
   return (
-    <Paper className={classes.root}>
+    <Paper sx={(theme) => ({ padding: theme.spacing(2) })}>
       <Grid container spacing={2}>
-        <Grid className={classes.gridWithTips}>
-          <TextField
+        <StyledGridWithTips>
+          <StyledTextField
             InputProps={{
               startAdornment: (
                 <InputAdornment position="end">{currentUser} /</InputAdornment>
               ),
             }}
-            className={classes.labelField}
             data-qa-stackscript-label
             disabled={disabled}
             errorText={hasErrorFor('label')}
@@ -165,9 +120,9 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
             required
             value={selectedImages}
           />
-        </Grid>
-        <Grid className={classes.gridWithTips}>
-          <Notice className={classes.tips}>
+        </StyledGridWithTips>
+        <StyledGridWithTips>
+          <StyledNotice>
             <Typography variant="h2">Tips</Typography>
             <Typography>
               There are four default environment variables provided to you:
@@ -178,11 +133,11 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
               <li>LINODE_RAM</li>
               <li>LINODE_DATACENTERID</li>
             </ul>
-          </Notice>
-        </Grid>
+          </StyledNotice>
+        </StyledGridWithTips>
       </Grid>
       <TextField
-        InputProps={{ className: classes.scriptTextarea }}
+        InputProps={{ sx: { maxWidth: '100%' } }}
         data-qa-stackscript-script
         disabled={disabled}
         errorText={hasErrorFor('script')}
@@ -195,7 +150,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         value={script.value}
       />
       <TextField
-        InputProps={{ className: classes.revisionTextarea }}
+        InputProps={{ sx: { maxWidth: '100%' } }}
         data-qa-stackscript-revision
         disabled={disabled}
         label="Revision Note"
@@ -203,7 +158,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         placeholder="Enter a revision note"
         value={revision.value}
       />
-      <ActionsPanel
+      <StyledActionsPanel
         primaryButtonProps={{
           'data-testid': 'save',
           disabled: disabled || disableSubmit,
@@ -217,10 +172,9 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
           label: 'Reset',
           onClick: onCancel,
         }}
-        className={classes.actions}
       />
     </Paper>
   );
-};
+});
 
 export default React.memo(StackScriptForm);

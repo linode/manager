@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -13,14 +13,7 @@ import { truncate } from 'src/utilities/truncate';
 
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-const useStyles = makeStyles(() => ({
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100,
-  },
-}));
-
-export interface Props {
+interface Props {
   currentUser: string;
   data: StackScript[];
   disabled?: boolean;
@@ -30,10 +23,7 @@ export interface Props {
   selectedId?: number;
 }
 
-type CombinedProps = Props;
-
-export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const SelectStackScriptsSection = (props: Props) => {
   const { data, disabled, isSorting, onSelect, selectedId } = props;
 
   const { data: profile } = useProfile();
@@ -53,7 +43,7 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
       onSelect={() => onSelect(s)}
       stackScriptID={s.id}
       stackScriptUsername={s.username}
-      updateFor={[selectedId === s.id, classes]}
+      updateFor={[selectedId === s.id]}
     />
   );
 
@@ -63,13 +53,16 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
         data && data.map(selectStackScript)
       ) : (
         <TableRow>
-          <TableCell className={classes.loadingWrapper} colSpan={5}>
+          <StyledTableCell colSpan={5}>
             <CircleProgress />
-          </TableCell>
+          </StyledTableCell>
         </TableRow>
       )}
     </TableBody>
   );
 };
 
-export default SelectStackScriptsSection as React.FC<Props>;
+const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
+  border: 0,
+  paddingTop: 100,
+});
