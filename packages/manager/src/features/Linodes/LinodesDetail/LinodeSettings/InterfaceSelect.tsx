@@ -32,7 +32,7 @@ export interface Props {
 interface VPCStateErrors {
   ipamError?: string;
   labelError?: string;
-  nat_1_1Error?: string;
+  publicIPv4Error?: string;
   subnetError?: string;
   vpcError?: string;
   vpcIPv4Error?: string;
@@ -353,7 +353,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
-            nat_1_1Error={errors.nat_1_1Error}
+            publicIPv4Error={errors.publicIPv4Error}
             region={region}
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}

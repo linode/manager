@@ -972,6 +972,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       defaultValue={
                         primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
                       }
+                      data-testid="primary-interface-dropdown"
                       disabled={isReadOnly}
                       isClearable={false}
                       label="Primary Interface (Default Route)"
@@ -995,7 +996,7 @@ export const LinodeConfigDialog = (props: Props) => {
                         ipamError:
                           formik.errors[`interfaces[${idx}].ipam_address`],
                         labelError: formik.errors[`interfaces[${idx}].label`],
-                        nat_1_1Error:
+                        publicIPv4Error:
                           formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
                         subnetError:
                           formik.errors[`interfaces[${idx}].subnet_id`],
