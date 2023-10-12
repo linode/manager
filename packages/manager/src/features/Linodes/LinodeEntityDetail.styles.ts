@@ -11,7 +11,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { HeaderProps } from './LinodeEntityDetail';
 
@@ -39,7 +39,7 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
 export const StyledChip = styled(Chip, {
   label: 'StyledChip',
   shouldForwardProp: (prop) =>
-    isPropValid(
+    omittedProps(
       [
         'isSummaryView',
         'hasSecondaryStatus',

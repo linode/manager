@@ -3,7 +3,7 @@ import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { Box } from 'src/components/Box';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
 type StyledFirewallRuleButtonProps = Pick<FirewallRuleTableRowProps, 'status'>;
@@ -25,7 +25,7 @@ export const sxItemSpacing = {
 
 export const StyledFirewallRuleBox = styled(Box, {
   label: 'StyledFirewallRuleBox',
-  shouldForwardProp: (prop) => isPropValid(['originalIndex', 'ruleId'], prop),
+  shouldForwardProp: (prop) => omittedProps(['originalIndex', 'ruleId'], prop),
 })<StyledFirewallRuleBoxProps>(
   ({ theme, status, disabled, originalIndex, ruleId }) => ({
     margin: 0,

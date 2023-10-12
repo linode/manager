@@ -8,7 +8,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { AddTag } from './AddTag';
 
@@ -140,7 +140,7 @@ const StyledCircleDiv = styled('div')({
 });
 
 const StyledTagListDiv = styled('div', {
-  shouldForwardProp: (prop) => isPropValid(['hasOverflow'], prop),
+  shouldForwardProp: (prop) => omittedProps(['hasOverflow'], prop),
 })<{
   hasOverflow: boolean;
 }>(({ ...props }) => ({
@@ -158,7 +158,7 @@ const StyledTagListDiv = styled('div', {
 }));
 
 const StyledTag = styled(Tag, {
-  shouldForwardProp: (prop) => isPropValid(['loading'], prop),
+  shouldForwardProp: (prop) => omittedProps(['loading'], prop),
 })<{
   loading: boolean;
 }>(({ ...props }) => ({

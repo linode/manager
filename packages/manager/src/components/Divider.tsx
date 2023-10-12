@@ -2,7 +2,7 @@ import _Divider, { DividerProps as _DividerProps } from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export interface DividerProps extends _DividerProps {
   dark?: boolean;
@@ -18,7 +18,7 @@ export const Divider = (props: DividerProps) => {
 const StyledDivider = styled(_Divider, {
   label: 'StyledDivider',
   shouldForwardProp: (prop) =>
-    isPropValid(['spacingTop', 'spacingBottom', 'light', 'dark'], prop),
+    omittedProps(['spacingTop', 'spacingBottom', 'light', 'dark'], prop),
 })<DividerProps>(({ theme, ...props }) => ({
   borderColor: props.dark
     ? theme.color.border2

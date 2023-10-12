@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 
 import { TableRow, TableRowProps } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledDisabledTableRowProps = Pick<TableRowProps, 'disabled'>;
 
@@ -23,7 +23,7 @@ export const StyledTypography = styled(Typography, {
 
 export const StyledDisabledTableRow = styled(TableRow, {
   label: 'StyledDisabledTableRow',
-  shouldForwardProp: (prop) => isPropValid(['disabled'], prop),
+  shouldForwardProp: (prop) => omittedProps(['disabled'], prop),
 })<StyledDisabledTableRowProps>(({ theme, ...props }) => ({
   ...(props.disabled && {
     backgroundColor: theme.bg.tableHeader,

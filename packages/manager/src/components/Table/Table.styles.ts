@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TableProps } from './Table';
 
 export const StyledTableWrapper = styled('div', {
   label: 'StyledTableWrapper',
   shouldForwardProp: (prop) =>
-    isPropValid(
+    omittedProps(
       [
         'noBorder',
         'noOverflow',

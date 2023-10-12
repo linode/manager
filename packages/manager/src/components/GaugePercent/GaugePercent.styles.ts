@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 import { GaugePercentProps } from './GaugePercent';
 
 type StyledGaugePercentProps = Pick<GaugePercentProps, 'innerTextFontSize'> &
@@ -8,7 +8,7 @@ type StyledGaugePercentProps = Pick<GaugePercentProps, 'innerTextFontSize'> &
 const propKeys = ['width', 'height', 'innerTextFontSize'];
 
 export const StyledSubTitleDiv = styled('div', {
-  shouldForwardProp: (prop) => isPropValid(propKeys, prop),
+  shouldForwardProp: (prop) => omittedProps(propKeys, prop),
 })<StyledGaugePercentProps>(({ theme, width, height, innerTextFontSize }) => ({
   color: theme.color.headline,
   fontSize: innerTextFontSize || theme.spacing(2.5),
@@ -19,7 +19,7 @@ export const StyledSubTitleDiv = styled('div', {
 }));
 
 export const StyledInnerTextDiv = styled('div', {
-  shouldForwardProp: (prop) => isPropValid(propKeys, prop),
+  shouldForwardProp: (prop) => omittedProps(propKeys, prop),
 })<StyledGaugePercentProps>(({ theme, height, width }) => ({
   position: 'absolute',
   top: `calc(${height + 30}px / 2)`,
@@ -30,7 +30,7 @@ export const StyledInnerTextDiv = styled('div', {
 }));
 
 export const StyledGaugeWrapperDiv = styled('div', {
-  shouldForwardProp: (prop) => isPropValid(propKeys, prop),
+  shouldForwardProp: (prop) => omittedProps(propKeys, prop),
 })<StyledGaugePercentProps>(({ theme, height, width }) => ({
   position: 'relative',
   width: width,

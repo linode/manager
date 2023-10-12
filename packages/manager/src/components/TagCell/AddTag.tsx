@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 interface AddTagProps {
   addTag: (tag: string) => Promise<void>;
@@ -76,7 +76,7 @@ export { AddTag };
 
 const StyledSelect = styled(Select, {
   shouldForwardProp: (prop) =>
-    isPropValid(['fixedMenu', 'inDetailsContext'], prop),
+    omittedProps(['fixedMenu', 'inDetailsContext'], prop),
 })<{
   fixedMenu?: boolean;
   inDetailsContext?: boolean;

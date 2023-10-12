@@ -1,12 +1,12 @@
 import { styled } from '@mui/material/styles';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { SearchSuggestionProps } from './SearchSuggestion';
 
 export const StyledWrapperDiv = styled('div', {
   label: 'StyledWrapperDiv',
-  shouldForwardProp: (prop) => isPropValid(['isFocused'], prop),
+  shouldForwardProp: (prop) => omittedProps(['isFocused'], prop),
 })<Partial<SearchSuggestionProps>>(({ isFocused, theme }) => ({
   '&:last-child': {
     borderBottom: 0,

@@ -2,11 +2,11 @@ import { default as _TableRow } from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 
 import type { TableRowProps } from './TableRow';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledTableRow = styled(_TableRow, {
   label: 'StyledTableRow',
-  shouldForwardProp: (prop) => isPropValid(['forceIndex'], prop),
+  shouldForwardProp: (prop) => omittedProps(['forceIndex'], prop),
 })<TableRowProps>(({ theme, ...props }) => ({
   backgroundColor: theme.bg.bgPaper,
   borderLeft: `1px solid ${theme.borderColors.borderTable}`,

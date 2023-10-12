@@ -6,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export type RemovableItem = {
   id: number;
@@ -115,7 +115,7 @@ export const RemovableSelectionsList = (props: Props) => {
 
 const StyledNoAssignedLinodesBox = styled(Box, {
   label: 'StyledNoAssignedLinodesBox',
-  shouldForwardProp: (prop) => isPropValid(['maxWidth'], prop),
+  shouldForwardProp: (prop) => omittedProps(['maxWidth'], prop),
 })(({ maxWidth, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   display: 'flex',
@@ -138,7 +138,7 @@ const SelectedOptionsHeader = styled('h4', {
 
 const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
-  shouldForwardProp: (prop) => isPropValid(['isRemovable'], prop),
+  shouldForwardProp: (prop) => omittedProps(['isRemovable'], prop),
 })<{ isRemovable?: boolean }>(({ isRemovable, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   overflow: 'auto',

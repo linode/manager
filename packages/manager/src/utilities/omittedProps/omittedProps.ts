@@ -8,11 +8,10 @@
  * @see https://mui.com/material-ui/customization/how-to-customize/#dynamic-overrides
  * @Usage
  *    const MyComponent = styled(Button, {
- *      shouldForwardProp: (prop) =>
- *      isPropValid(['compactX', 'compactY'], prop),
+ *      shouldForwardProp: (prop) => omittedProps(['compactX', 'compactY'], prop),
  *    })<Props>(({ theme, ...props }) => ({ ... }));
  */
-export const isPropValid = <CustomProps extends Record<string, unknown>>(
+export const omittedProps = <CustomProps extends Record<string, unknown>>(
   props: Array<keyof CustomProps>,
   prop: PropertyKey
 ): boolean => !props.includes(prop as string);

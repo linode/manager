@@ -10,7 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { isPropValid } from '../../utilities/isPropValid';
+import { omittedProps } from '../../utilities/omittedProps';
 
 export interface EntityDetailProps {
   body?: JSX.Element;
@@ -42,7 +42,7 @@ const GridBody = styled(Grid)(({ theme }) => ({
 
 const GridFooter = styled(Grid, {
   label: 'EntityDetailGridFooter',
-  shouldForwardProp: (prop) => isPropValid(['body'], prop),
+  shouldForwardProp: (prop) => omittedProps(['body'], prop),
 })<Partial<EntityDetailProps>>(({ theme, ...props }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.bgPaper,

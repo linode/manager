@@ -19,7 +19,7 @@ import {
   withProfile,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { StyledTypographyProps } from './SelectLinodePanel';
 
@@ -146,7 +146,7 @@ const SelectBackupPanel = (props: CombinedProps) => {
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: (prop) => isPropValid(['component'], prop),
+  shouldForwardProp: (prop) => omittedProps(['component'], prop),
 })<StyledTypographyProps>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
   width: '100%',

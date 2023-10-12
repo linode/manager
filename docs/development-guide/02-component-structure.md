@@ -7,10 +7,9 @@ The basic structure of a component file should follow:
 ```
 [ imports ]
 [ types and interfaces ]
-[ function component definition ]
-[ styles ]
-[ utility functions ]
-[ default export ]
+[ exported function component definition ]
+[ styles ] (possibly in their own file)
+[ utility functions ] (possibly in their own file)
 ```
 
 Here is a minimal code example demonstrating the basic structure of a component file:
@@ -18,35 +17,41 @@ Here is a minimal code example demonstrating the basic structure of a component 
 ```tsx
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { isPropValid } from "src/utilities/isPropValid";
+import { omittedProps } from "src/utilities/omittedProps";
 
-interface SayHelloProps {
+// If not exported, it can just be named `Props`
+export interface SayHelloProps {
   name: string;
   isDisabled: boolean;
 }
 
-const SayHello = (props: SayHelloProps) => {
+export const SayHello = (props: SayHelloProps) => {
   const { name, isDisabled } = props;
 
   return <StyledH1 isDisabled={isDisabled}>Hello, {capitalize(name)}</StyledH1>;
 };
 
+/**
+ * Should be moved in own SayHello.styles.ts if component was large.
+*/
 const StyledH1 = styled("h1", {
   label: "StyledH1",
-  shouldForwardProp: (prop) => isPropValid(["isDisabled"], prop),
+  shouldForwardProp: (prop) => omittedProps(["isDisabled"], prop),
 })(({ theme, ...props }) => ({
   color: props.isDisabled ? theme.color.grey : theme.color.black,
 }));
 
+/**
+* It's often a good idea to move utilities to their own files as well,
+* either in the `src/utilities` directory if meant to be portable and reusable,
+* or in the feature's directory as a .utils.ts file. ex: `SayHello.utils.ts`.
+* Isolation often makes them easier to test and reduce the main file size for better readability.
+* Doing so also may also reveal the use case is already covered by an existing utility.
+*/
 export const capitalize = (s: string) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
-
-export { SayHello };
 ```
-
-- There are cases where you don't want the prop to be forwarded to the DOM element, so we've provided a helper `isPropValid` to assist in these cases.
-- The `label` property in the `styled` API is used to provide a unique identifier for the component when it is being styled. This can be useful when debugging a large codebase, as it can help identify which component the style is being applied to. For example, if you have multiple instances of the `StyledH1` component, the `label` property can help you identify which instance is being styled in the browser's developer tools.
 
 #### Imports
 
@@ -54,11 +59,21 @@ export { SayHello };
 - Use absolute imports, e.g. `import { queryClient } from 'src/queries/base'`.
 - Methods from the api-v4 package should be imported from `@linode/api-v4/lib/..`.
 
+#### Composition
+
+When building a large component, it is recommended to break it down and avoid writing several components within the same file. It improves readability and testability. Components should in most cases come with their own unit test, although they can be skipped if an e2e suite is covering the functionality.
+Utilities should almost always feature a unit test.
+
 #### Styles
 
 - With the transition to MUI v5, the [`styled`](https://mui.com/system/styled/) API, along with the [`sx` prop](https://mui.com/system/getting-started/the-sx-prop/), is the preferred way to specify component-specific styles.
-  - Component-specific styles may be defined at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`.
+  - Component-specific styles may be defined at the end of the component file or in a dedicated file, named `ComponentName.styles.ts`.
   - Component files longer than 100 lines must have these styles defined in a dedicated file.
+
+##### Styled Components
+- The `label` property in the `styled` API is used to provide a unique identifier for the component when it is being styled. This can be useful when debugging a large codebase, as it can help identify which component the style is being applied to. For example, if you have multiple instances of the `StyledH1` component, the `label` property can help you identify which instance is being styled in the browser's developer tools.
+- There are cases where you don't want the prop to be forwarded to the DOM element, so we've provided a helper `omittedProps` to assist in these cases.
+It is the responsibility of the developer to check for any console error in case non-semantic props make their way to the dom. It is usually more clear when a component 
 
 #### Types and Interfaces
 

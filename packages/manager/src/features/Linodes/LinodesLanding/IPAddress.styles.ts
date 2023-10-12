@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { IPAddressProps } from './IPAddress';
 
@@ -21,7 +21,7 @@ export const StyledIpLinkDiv = styled('div', { label: 'StyledIpLinkDiv' })(
 
 export const StyledRootDiv = styled('div', {
   label: 'StyledRootDiv',
-  shouldForwardProp: (prop) => isPropValid(['showAll'], prop),
+  shouldForwardProp: (prop) => omittedProps(['showAll'], prop),
 })<StyledIpAddressProps>(({ showAll, theme }) => ({
   '&:last-child': {
     marginBottom: 0,
@@ -41,7 +41,7 @@ export const StyledRootDiv = styled('div', {
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip ',
   shouldForwardProp: (prop) =>
-    isPropValid(['isHovered', 'isIpHovered', 'showTooltipOnIpHover'], prop),
+    omittedProps(['isHovered', 'isIpHovered', 'showTooltipOnIpHover'], prop),
 })<StyledIpAddressProps>(
   ({ isHovered, isIpHovered, showTooltipOnIpHover, theme }) => ({
     '& svg': {
@@ -67,7 +67,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 export const StyledRenderIPDiv = styled('div', {
   label: 'StyledRenderIPDiv',
   shouldForwardProp: (prop) =>
-    isPropValid(['showAll', 'showTooltipOnIpHover'], prop),
+    omittedProps(['showAll', 'showTooltipOnIpHover'], prop),
 })<StyledIpAddressProps>(({ showAll, theme }) => ({
   alignItems: 'center',
   display: 'flex',

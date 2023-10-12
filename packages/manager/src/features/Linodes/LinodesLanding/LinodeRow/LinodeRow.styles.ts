@@ -1,7 +1,7 @@
 import { styled, Theme } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledMaintenanceCellProps = { maintenance: boolean };
 
@@ -37,7 +37,7 @@ export const StyledIpTableCell = styled(TableCell, {
 
 export const StyledMaintenanceTableCell = styled(TableCell, {
   label: 'StyledMaintenanceTableCell',
-  shouldForwardProp: (prop) => isPropValid(['maintenance'], prop),
+  shouldForwardProp: (prop) => omittedProps(['maintenance'], prop),
 })<StyledMaintenanceCellProps>(({ theme, maintenance }) => ({
   ...(maintenance
     ? {

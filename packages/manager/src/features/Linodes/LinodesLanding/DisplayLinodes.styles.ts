@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { IconButton } from 'src/components/IconButton';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',
@@ -27,7 +27,7 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
-  shouldForwardProp: (prop) => isPropValid(['isGroupedByTag'], prop),
+  shouldForwardProp: (prop) => omittedProps(['isGroupedByTag'], prop),
 })<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.tableHeader,
@@ -39,7 +39,7 @@ export const StyledControlHeader = styled('div', {
 
 export const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
-  shouldForwardProp: (prop) => isPropValid(['isActive'], prop),
+  shouldForwardProp: (prop) => omittedProps(['isActive'], prop),
 })<{ isActive: boolean }>(({ isActive, theme }) => ({
   '&.Mui-disabled': {
     display: 'none',
