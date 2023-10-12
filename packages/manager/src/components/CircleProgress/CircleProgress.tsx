@@ -1,7 +1,7 @@
-import { Box } from 'src/components/Box';
-import { styled } from '@mui/material/styles';
+import { SxProps, styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import {
   CircularProgress,
   CircularProgressProps,
@@ -15,6 +15,7 @@ interface CircleProgressProps extends CircularProgressProps {
   noInner?: boolean;
   noPadding?: boolean;
   size?: number;
+  sx?: SxProps;
 }
 
 const CircleProgress = (props: CircleProgressProps) => {
@@ -25,6 +26,7 @@ const CircleProgress = (props: CircleProgressProps) => {
     noInner,
     noPadding,
     size,
+    sx,
     ...rest
   } = props;
 
@@ -46,7 +48,11 @@ const CircleProgress = (props: CircleProgressProps) => {
   }
 
   return (
-    <StyledRootDiv aria-label="Content is loading" className={className}>
+    <StyledRootDiv
+      aria-label="Content is loading"
+      className={className}
+      sx={sx}
+    >
       {children !== undefined && (
         <Box sx={{ marginTop: 4, position: 'absolute' }}>{children}</Box>
       )}
