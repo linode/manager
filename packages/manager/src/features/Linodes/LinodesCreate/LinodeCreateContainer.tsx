@@ -515,7 +515,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       type && {
-        details: `$${linodePrice ? UNKNOWN_PRICE : linodePrice}/month`,
+        details: `$${linodePrice ? linodePrice : UNKNOWN_PRICE}/month`,
         hourly: linodePrice?.hourly,
         monthly: linodePrice?.monthly,
         title: type.formattedLabel,
