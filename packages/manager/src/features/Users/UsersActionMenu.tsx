@@ -13,14 +13,11 @@ interface Props {
   username: string;
 }
 
-type CombinedProps = Props;
-
-const UsersActionMenu: React.FC<CombinedProps> = (props) => {
+export const UsersActionMenu = ({ onDelete, username }: Props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { onDelete, username } = props;
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
 
@@ -73,5 +70,3 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default UsersActionMenu;
