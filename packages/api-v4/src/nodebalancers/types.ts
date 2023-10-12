@@ -106,9 +106,7 @@ export interface CreateNodeBalancerConfigNode {
   weight?: number;
 }
 
-export type UpdateNodeBalancerConfigNode = Partial<
-  CreateNodeBalancerConfigNode
->;
+export type UpdateNodeBalancerConfigNode = Partial<CreateNodeBalancerConfigNode>;
 
 export interface NodeBalancerConfigNode {
   address: string;
@@ -119,6 +117,7 @@ export interface NodeBalancerConfigNode {
   nodebalancer_id: number;
   status: 'unknown' | 'UP' | 'DOWN';
   weight: number;
+  firewall_id?: number;
 }
 
 export interface NodeBalancerConfigNodeWithPort extends NodeBalancerConfigNode {

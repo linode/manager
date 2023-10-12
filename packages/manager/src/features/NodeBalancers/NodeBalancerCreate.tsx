@@ -21,8 +21,10 @@ import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary'
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
@@ -56,6 +58,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 
 interface NodeBalancerFieldsState {
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
+  firewall_id?: number;
   label?: string;
   region?: string;
   tags?: string[];
@@ -399,17 +402,28 @@ const NodeBalancerCreate = () => {
     regionId: nodeBalancerFields.region,
   });
 
-  const summaryItems = [
-    { title: regionLabel },
-    { details: nodeBalancerFields.configs.length, title: 'Configs' },
-    {
-      details: nodeBalancerFields.configs.reduce(
-        (acc, config) => acc + config.nodes.length,
-        0
-      ),
-      title: 'Nodes',
-    },
-  ].filter((item) => Boolean(item.title));
+  const summaryItems = [];
+
+  if (regionLabel) {
+    summaryItems.push({ title: regionLabel });
+  }
+
+  if (nodeBalancerFields.firewall_id) {
+    summaryItems.push({ title: 'Firewall Assigned' });
+  }
+
+  summaryItems.push({
+    details: nodeBalancerFields.configs.length,
+    title: 'Configs',
+  });
+
+  summaryItems.push({
+    details: nodeBalancerFields.configs.reduce(
+      (acc, config) => acc + config.nodes.length,
+      0
+    ),
+    title: 'Nodes',
+  });
 
   if (nodeBalancerFields.region) {
     summaryItems.unshift({ title: `$${price}/month` });
@@ -471,6 +485,23 @@ const NodeBalancerCreate = () => {
         handleSelection={regionChange}
         regions={regions ?? []}
         selectedID={nodeBalancerFields.region}
+      />
+      <SelectFirewallPanel
+        handleFirewallChange={(firewallId: number) => {
+          setNodeBalancerFields((prev) => ({
+            ...prev,
+            firewall_id: firewallId > 0 ? firewallId : undefined,
+          }));
+        }}
+        helperText={
+          <Typography>
+            Assign an existing Firewall to this NodeBalancer to control inbound
+            network traffic. If you want to assign a new Firewall to this
+            NodeBalancer, go to <Link to="/firewalls">Firewalls</Link>.{' '}
+            {/* @TODO Firewall-NodeBalancer: Update link */}
+            <Link to="">Learn more about creating Firewalls</Link>.
+          </Typography>
+        }
       />
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
