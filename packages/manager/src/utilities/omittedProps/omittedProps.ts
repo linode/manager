@@ -10,6 +10,6 @@
  *      shouldForwardProp: omittedProps(['compactX', 'compactY']),
  *    })<Props>(({ theme, ...props }) => ({ ... }));
  */
-export const omittedProps = <CustomProps extends Record<string, unknown>>(
-  props: Array<keyof CustomProps>
-) => (prop: PropertyKey): boolean => !props.includes(prop as string);
+export const omittedProps = <Props>(props: Array<keyof Props>) => (
+  prop: keyof Props
+): boolean => !props.includes(prop);
