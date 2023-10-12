@@ -1,3 +1,10 @@
+## [2023-10-16] - v0.104.0
+
+
+### Added:
+
+- New payload option `migration_type` in `ResizeLinodePayload` and new event type `linode_resize_warm_create` ([#9677](https://github.com/linode/manager/pull/9677))
+
 ## [2023-10-02] - v0.102.0
 
 ### Upcoming Features:
