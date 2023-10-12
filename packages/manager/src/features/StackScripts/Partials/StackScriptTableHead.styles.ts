@@ -2,7 +2,7 @@ import { Theme, styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { StackScriptTableHeadProps } from './StackScriptTableHead';
 
@@ -89,7 +89,7 @@ type CompatibleImageCellProps = Pick<StackScriptTableHeadProps, 'category'>;
 
 export const StyledCompatibleImagesCell = styled(TableCell, {
   label: 'StyledCompatibleImagesCell',
-  shouldForwardProp: (prop) => isPropValid(['category'], prop),
+  shouldForwardProp: omittedProps(['category']),
 })<CompatibleImageCellProps>(({ category, theme }) => ({
   ...tableHeadStyles(theme),
   ...(category === 'account'
