@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 
 import { Hidden } from 'src/components/Hidden';
-import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { StackScriptActionMenu } from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
@@ -40,9 +38,7 @@ export interface Props {
   updated: string;
 }
 
-export type CombinedProps = Props & RenderGuardProps;
-
-export const StackScriptRow = (props: CombinedProps) => {
+export const StackScriptRow = (props: Props) => {
   const {
     canAddLinodes,
     canModify,
@@ -122,7 +118,3 @@ export const StackScriptRow = (props: CombinedProps) => {
     </StyledTableRow>
   );
 };
-
-export default recompose<CombinedProps, Props & RenderGuardProps>(RenderGuard)(
-  StackScriptRow
-);

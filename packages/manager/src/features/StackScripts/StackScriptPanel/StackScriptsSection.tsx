@@ -13,7 +13,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 
-import StackScriptRow from './StackScriptRow';
+import { StackScriptRow } from './StackScriptRow';
 import { StyledTableCell } from '../SelectStackScriptPanel/SelectStackScriptsSection';
 
 export interface Props {
