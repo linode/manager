@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-10-16] - v1.105.0
+
+
+### Added:
+
+- Ability to choose resize types when resizing Linode ([#9677](https://github.com/linode/manager/pull/9677))
+- Statically Cache Marketplace Apps ([#9732](https://github.com/linode/manager/pull/9732))
+- Link `contact Support` text in notices to support ticket modal ([#9770](https://github.com/linode/manager/pull/9770))
+
+### Changed:
+
+- Comment out CS:GO app pending update ([#9753](https://github.com/linode/manager/pull/9753))
+
+### Fixed:
+
+- Add Firewall and Linode Configuration success toast notifications ([#9725](https://github.com/linode/manager/pull/9725))
+- Long drawer titles overlapping close icon ([#9731](https://github.com/linode/manager/pull/9731))
+- Removed `title` prop forwarding on Modals/Dialogs ([#9739](https://github.com/linode/manager/pull/9739))
+- Fixed the top spacing for the NodeBalancer empty state page ([#9746](https://github.com/linode/manager/pull/9746))
+- Persistent error messages for Region, Label, and Description fields in VPC Create flow ([#9750](https://github.com/linode/manager/pull/9750))
+- Notice scroll-to-view behavior and styling regressions ([#9755](https://github.com/linode/manager/pull/9755))
+- Display Database menu items in side nav and Create dropdown for permissioned users ([#9762](https://github.com/linode/manager/pull/9762))
+- Customer success Hively overlap issue ([#9776](https://github.com/linode/manager/pull/9776))
+- Inconsistent display of % in Linode Details MNTP legend ([#9780](https://github.com/linode/manager/pull/9780))
+
+### Tech Stories:
+
+- Disable Sentry Performance Tracing ([#9745](https://github.com/linode/manager/pull/9745))
+- Migrate Filesystem TextField Select to Autocomplete ([#9752](https://github.com/linode/manager/pull/9752))
+- MUI v5 Migration - `SRC > Features > Lish` ([#9774](https://github.com/linode/manager/pull/9774))
+
+### Tests:
+
+- Added Cypress integration test for Edit Subnet flow ([#9728](https://github.com/linode/manager/pull/9728))
+- Cypress tests for VPC create flows ([#9730](https://github.com/linode/manager/pull/9730))
+
+### Upcoming Features:
+
+- Subnet Unassign Linodes Drawer ([#9703](https://github.com/linode/manager/pull/9703))
+- Add AGLB Route Delete Dialog ([#9735](https://github.com/linode/manager/pull/9735))
+- Add Drag and Drop support to the Load Balancer Rules Table ([#9736](https://github.com/linode/manager/pull/9736))
+- Make Reboot Linodes dismissible banner on VPC Details page unique for each VPC ([#9743](https://github.com/linode/manager/pull/9743))
+- Showcase VPC feedback ([#9751](https://github.com/linode/manager/pull/9751))
+
 ## [2023-10-02] - v1.104.1
 
 ### Fixed:
