@@ -5,7 +5,7 @@ import { useAccountSettings } from 'src/queries/accountSettings';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 export const useAccountManagement = () => {
-  const { data: account } = useAccount();
+  const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
@@ -25,6 +25,7 @@ export const useAccountManagement = () => {
     _isManagedAccount,
     _isRestrictedUser,
     account,
+    accountError,
     accountSettings,
     profile,
   };
