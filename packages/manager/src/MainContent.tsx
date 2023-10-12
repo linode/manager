@@ -135,7 +135,11 @@ interface Props {
 
 type CombinedProps = Props & GlobalErrorProps;
 
-const Account = React.lazy(() => import('src/features/Account'));
+const Account = React.lazy(() =>
+  import('src/features/Account').then((module) => ({
+    default: module.Account,
+  }))
+);
 const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
@@ -409,8 +413,8 @@ export default compose<CombinedProps, Props>(
 export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
   return Boolean(
     flags.mainContentBanner &&
-      !isEmpty(flags.mainContentBanner) &&
-      flags.mainContentBanner.key
+    !isEmpty(flags.mainContentBanner) &&
+    flags.mainContentBanner.key
   );
 };
 

@@ -77,11 +77,10 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   '& > button': {
     marginBottom: spacing(1),
   },
-  display: 'flex',
   justifyContent: 'flex-end',
-  marginTop: spacing(2),
+  marginTop: spacing(1),
   paddingBottom: spacing(1),
-  paddingTop: spacing(2),
+  paddingTop: spacing(1),
 }));
 
 const ActionsPanel = RenderGuard(ActionsPanelComponent);
