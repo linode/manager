@@ -32,7 +32,7 @@ export const SayHello = (props: SayHelloProps) => {
 };
 
 /**
- * Should be moved in own SayHello.styles.ts if component was large.
+ * Should be moved to SayHello.styles.ts if component was large (> 100 lines).
 */
 const StyledH1 = styled("h1", {
   label: "StyledH1",
@@ -45,7 +45,7 @@ const StyledH1 = styled("h1", {
 * It's often a good idea to move utilities to their own files as well,
 * either in the `src/utilities` directory if meant to be portable and reusable,
 * or in the feature's directory as a .utils.ts file. ex: `SayHello.utils.ts`.
-* Isolation often makes them easier to test and reduce the main file size for better readability.
+* Isolation makes utils easier to test and reduces the main file size for better readability.
 * Doing so also may also reveal the use case is already covered by an existing utility.
 */
 export const capitalize = (s: string) => {
@@ -61,7 +61,7 @@ export const capitalize = (s: string) => {
 
 #### Composition
 
-When building a large component, it is recommended to break it down and avoid writing several components within the same file. It improves readability and testability. Components should in most cases come with their own unit test, although they can be skipped if an e2e suite is covering the functionality.
+When building a large component, it is recommended to break it down and avoid writing several components within the same file. It improves readability and testability. Components should, in most cases, come with their own unit test, although they can be skipped if an e2e suite is covering the functionality.
 Utilities should almost always feature a unit test.
 
 #### Styles
@@ -73,7 +73,7 @@ Utilities should almost always feature a unit test.
 ##### Styled Components
 - The `label` property in the `styled` API is used to provide a unique identifier for the component when it is being styled. This can be useful when debugging a large codebase, as it can help identify which component the style is being applied to. For example, if you have multiple instances of the `StyledH1` component, the `label` property can help you identify which instance is being styled in the browser's developer tools.
 - There are cases where you don't want the prop to be forwarded to the DOM element, so we've provided a helper `omittedProps` to assist in these cases.
-It is the responsibility of the developer to check for any console error in case non-semantic props make their way to the dom. It is usually more clear when a component 
+It is the responsibility of the developer to check for any console error in case non-semantic props make their way to the dom.
 
 #### Types and Interfaces
 
