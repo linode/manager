@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
@@ -9,6 +10,11 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { vpcQueryKey } from 'src/queries/vpcs';
+
+import { hasVPCInterfaceInConfigs } from './utils';
+
 interface Props {
   linodeId: number | undefined;
   onClose: () => void;
@@ -17,9 +23,15 @@ interface Props {
 }
 
 export const DeleteLinodeDialog = (props: Props) => {
+  const queryClient = useQueryClient();
   const { linodeId, onClose, onSuccess, open } = props;
 
   const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && open
+  );
+
+  const { data: configs } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
   );
@@ -36,6 +48,9 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
+    if (hasVPCInterfaceInConfigs(configs ?? [])) {
+      await queryClient.invalidateQueries(vpcQueryKey);
+    }
     onClose();
     resetEventsPolling();
 

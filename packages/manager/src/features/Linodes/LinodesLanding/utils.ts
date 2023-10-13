@@ -1,4 +1,4 @@
-import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 
 import { reportException } from 'src/exceptionReporting';
 
@@ -50,4 +50,17 @@ export const getLinodeIconStatus = (status: LinodeStatus) => {
     return 'inactive';
   }
   return 'other';
+};
+
+// might change this to collect vpc ids instead?? >> ask about react query cache
+export const hasVPCInterfaceInConfigs = (configs: Config[]): boolean => {
+  for (const config of configs) {
+    for (const linodeInterface of config.interfaces) {
+      if (linodeInterface.purpose === 'vpc') {
+        return true;
+      }
+    }
+  }
+
+  return false;
 };
