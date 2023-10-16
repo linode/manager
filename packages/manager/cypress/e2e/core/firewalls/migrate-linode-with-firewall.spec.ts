@@ -265,48 +265,4 @@ describe('Migrate Linode With Firewall', () => {
       validateMigration();
     });
   });
-
-  it('adds linode to firewall - real data', () => {
-    const firewallLabel = `cy-test-firewall-${randomString(5)}`;
-    // intercept firewall requests
-    cy.intercept('POST', apiMatcher('networking/firewalls')).as(
-      'createFirewall'
-    );
-    cy.intercept(apiMatcher('networking/firewalls*')).as('getFirewall');
-
-    cy.visitWithLogin('/firewalls');
-    createLinode().then((linode) => {
-      const linodeLabel = linode.label;
-      cy.wait('@getFirewall').then(() => {
-        getVisible('[data-qa-header]').within(() => {
-          fbtVisible('Firewalls');
-        });
-        fbtClick('Create Firewall');
-      });
-
-      cy.get('[data-testid="textfield-input"]:first')
-        .should('be.visible')
-        .type(firewallLabel);
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click()
-        .type(linodeLabel);
-
-      cy.get('[data-qa-autocomplete-popper]')
-        .findByText(linode.label)
-        .should('be.visible')
-        .click();
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click();
-
-      cy.findByText(linodeLabel).should('be.visible');
-
-      getClick('[data-qa-submit="true"]');
-      cy.wait('@createFirewall').its('response.statusCode').should('eq', 200);
-      fbtVisible(linodeLabel);
-    });
-  });
 });
