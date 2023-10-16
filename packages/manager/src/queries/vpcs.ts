@@ -88,12 +88,13 @@ export const useDeleteVPCMutation = (id: number) => {
 export const useSubnetsQuery = (
   vpcID: number,
   params: Params,
-  filter: Filter
+  filter: Filter,
+  enabled: boolean = true
 ) => {
   return useQuery<ResourcePage<Subnet>, APIError[]>(
     [vpcQueryKey, 'vpc', vpcID, subnetQueryKey, 'paginated', params, filter],
     () => getSubnets(vpcID, params, filter),
-    { keepPreviousData: true }
+    { enabled, keepPreviousData: true }
   );
 };
 
