@@ -47,6 +47,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Showcase VPC feedback ([#9751](https://github.com/linode/manager/pull/9751))
 - Persistent error messages for Region, Label, and Description fields in VPC Create flow ([#9750](https://github.com/linode/manager/pull/9750))
 - Ability to choose resize types when resizing Linode ([#9677](https://github.com/linode/manager/pull/9677))
+- Add AGLB "Edit Certificate" drawer ([#9723](https://github.com/linode/manager/pull/9723))
 
 ## [2023-10-02] - v1.104.1
 
