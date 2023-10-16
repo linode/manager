@@ -1,7 +1,6 @@
 import { deleteUser } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +10,6 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -20,28 +18,9 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
+import { StyledTitle, StyledWrapper } from './UserProfile.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  title: {
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  topMargin: {
-    marginLeft: 0,
-    marginTop: theme.spacing(2),
-  },
-  wrapper: {
-    '&:not(:last-child)': {
-      marginBottom: theme.spacing(3),
-    },
-    backgroundColor: theme.color.white,
-    marginTop: theme.spacing(),
-  },
-}));
-
-interface Props {
+interface UserProfileProps {
   accountErrors?: APIError[];
   accountSaving: boolean;
   accountSuccess: boolean;
@@ -62,8 +41,7 @@ interface Props {
   username: string;
 }
 
-const UserProfile: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const UserProfile = (props: UserProfileProps) => {
   const theme = useTheme();
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -109,10 +87,8 @@ const UserProfile: React.FC<Props> = (props) => {
 
     return (
       <>
-        <Typography className={classes.title} variant="h2">
-          User Profile
-        </Typography>
-        <Paper className={classes.wrapper}>
+        <StyledTitle variant="h2">User Profile</StyledTitle>
+        <StyledWrapper>
           {accountSuccess && (
             <Notice spacingBottom={0} variant="success">
               Username updated successfully
@@ -143,8 +119,8 @@ const UserProfile: React.FC<Props> = (props) => {
               onClick: saveAccount,
             }}
           />
-        </Paper>
-        <Paper className={classes.wrapper}>
+        </StyledWrapper>
+        <StyledWrapper>
           {profileSuccess && (
             <Notice spacingBottom={0} variant="success">
               Email updated successfully
@@ -185,7 +161,7 @@ const UserProfile: React.FC<Props> = (props) => {
               onClick: saveProfile,
             }}
           />
-        </Paper>
+        </StyledWrapper>
       </>
     );
   };
@@ -216,20 +192,26 @@ const UserProfile: React.FC<Props> = (props) => {
 
   const renderDeleteSection = () => {
     return (
-      <Paper className={classes.wrapper}>
+      <StyledWrapper>
         <Typography data-qa-delete-user-header variant="h2">
           Delete User
         </Typography>
         {userDeleteError && (
           <Notice
-            className={classes.topMargin}
+            sx={{
+              marginLeft: 0,
+              marginTop: theme.spacing(2),
+            }}
             text="Error when deleting user, please try again later"
             variant="error"
           />
         )}
         <Button
+          sx={{
+            marginLeft: 0,
+            marginTop: theme.spacing(2),
+          }}
           buttonType="outlined"
-          className={classes.topMargin}
           data-qa-confirm-delete
           disabled={profile?.username === originalUsername}
           onClick={onDelete}
@@ -246,10 +228,16 @@ const UserProfile: React.FC<Props> = (props) => {
             text="You can't delete the currently active user"
           />
         )}
-        <Typography className={classes.topMargin} variant="body1">
+        <Typography
+          sx={{
+            marginLeft: 0,
+            marginTop: theme.spacing(2),
+          }}
+          variant="body1"
+        >
           The user will be deleted permanently.
         </Typography>
-      </Paper>
+      </StyledWrapper>
     );
   };
 
@@ -274,5 +262,3 @@ const UserProfile: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default UserProfile;

@@ -7,7 +7,6 @@ import {
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -35,25 +34,12 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import ScriptForm from 'src/features/StackScripts/StackScriptForm';
+import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-
-type ClassNames = 'backButton' | 'createTitle';
-
-const styles = () =>
-  createStyles({
-    backButton: {
-      '& svg': {
-        height: 34,
-        width: 34,
-      },
-      margin: '5px 0 0 -16px',
-    },
-  });
 
 interface State {
   apiResponse?: StackScript;
@@ -76,7 +62,6 @@ interface Props {
 type CombinedProps = Props &
   ImagesProps &
   WithProfileProps &
-  WithStyles<ClassNames> &
   RouteComponentProps<{ stackScriptID: string }> &
   WithQueryClientProps;
 
@@ -250,7 +235,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             variant="error"
           />
         )}
-        <ScriptForm
+        <StackScriptForm
           description={{
             handler: this.handleDescriptionChange,
             value: description,
@@ -551,11 +536,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
   withImages,
-  styled,
   withRouter,
   withProfile,
   withQueryClient

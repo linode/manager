@@ -12,7 +12,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import { v4 } from 'uuid';
 
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -617,6 +617,7 @@ export class LinodeCreate extends React.PureComponent<
             }
             assignPublicIPv4Address={this.props.assignPublicIPv4Address}
             autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
+            from="linodeCreate"
             handleSelectVPC={this.props.setSelectedVPC}
             handleSubnetChange={this.props.handleSubnetChange}
             handleVPCIPv4Change={this.props.handleVPCIPv4Change}
