@@ -124,12 +124,12 @@ export const TableCell = (props: TableCellProps) => {
         <div className={classes.status}>{props.children}</div>
       ) : errorCell && errorText ? (
         <>
+          {props.children}
           <TooltipIcon
             status="error"
             style={{ paddingBottom: 0, paddingTop: 0 }}
             text={errorText}
           />
-          {props.children}
         </>
       ) : (
         props.children

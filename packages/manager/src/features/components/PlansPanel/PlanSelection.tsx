@@ -157,14 +157,18 @@ export const PlanSelection = (props: Props) => {
               />
             )}
           </TableCell>
-          <TableCell data-qa-monthly>
+          <TableCell
+            data-qa-monthly
+            errorCell={!price?.monthly}
+            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+          >
             {' '}
             ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
           </TableCell>
           <TableCell
             data-qa-hourly
-            errorCell={!price}
-            errorText={!price ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+            errorCell={!price?.hourly}
+            errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             {isGPU ? (
               <Currency quantity={price?.hourly ?? UNKNOWN_PRICE} />
