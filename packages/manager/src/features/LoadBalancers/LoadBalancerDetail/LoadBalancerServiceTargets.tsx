@@ -38,7 +38,7 @@ export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [query, setQuery] = useState<string>();
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [
     selectedServiceTarget,
@@ -58,6 +58,11 @@ export const LoadBalancerServiceTargets = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+  };
+
+  const handleEditServiceTarget = (serviceTarget: ServiceTarget) => {
+    setIsDrawerOpen(true);
+    setSelectedServiceTarget(serviceTarget);
   };
 
   const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
@@ -119,10 +124,7 @@ export const LoadBalancerServiceTargets = () => {
           value={query}
         />
         <Box flexGrow={1} />
-        <Button
-          buttonType="primary"
-          onClick={() => setIsCreateDrawerOpen(true)}
-        >
+        <Button buttonType="primary" onClick={() => setIsDrawerOpen(true)}>
           Create Service Target
         </Button>
       </Stack>
@@ -183,7 +185,10 @@ export const LoadBalancerServiceTargets = () => {
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
-                    { onClick: () => null, title: 'Edit' },
+                    {
+                      onClick: () => handleEditServiceTarget(serviceTarget),
+                      title: 'Edit',
+                    },
                     { onClick: () => null, title: 'Clone Service Target' },
                     {
                       onClick: () => handleDeleteServiceTarget(serviceTarget),
@@ -206,8 +211,9 @@ export const LoadBalancerServiceTargets = () => {
       />
       <CreateServiceTargetDrawer
         loadbalancerId={Number(loadbalancerId)}
-        onClose={() => setIsCreateDrawerOpen(false)}
-        open={isCreateDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        serviceTarget={selectedServiceTarget}
       />
       <DeleteServiceTargetDialog
         loadbalancerId={Number(loadbalancerId)}

@@ -1,4 +1,4 @@
-import { Endpoint, ServiceTargetPayload } from '@linode/api-v4';
+import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
 import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
@@ -20,7 +20,10 @@ import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useServiceTargetCreateMutation } from 'src/queries/aglb/serviceTargets';
+import {
+  useServiceTargetCreateMutation,
+  useServiceTargetUpdateMutation,
+} from 'src/queries/aglb/serviceTargets';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
@@ -31,6 +34,7 @@ interface Props {
   loadbalancerId: number;
   onClose: () => void;
   open: boolean;
+  serviceTarget?: ServiceTarget;
 }
 
 const algorithmOptions = [
@@ -80,7 +84,9 @@ const initialValues: ServiceTargetPayload = {
 };
 
 export const CreateServiceTargetDrawer = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open } = props;
+  const { loadbalancerId, onClose: _onClose, open, serviceTarget } = props;
+
+  const isEditMode = serviceTarget !== undefined;
 
   const {
     error,
@@ -88,14 +94,29 @@ export const CreateServiceTargetDrawer = (props: Props) => {
     reset,
   } = useServiceTargetCreateMutation(loadbalancerId);
 
+  const {
+    // error: errorUpdateServiceTarget,
+    mutateAsync: updateServiceTarget,
+    reset: resetUpdateServiceTarget,
+  } = useServiceTargetUpdateMutation(loadbalancerId, serviceTarget?.id ?? -1);
+
   const formik = useFormik<ServiceTargetPayload>({
-    initialValues,
+    initialValues: isEditMode ? serviceTarget : initialValues,
     async onSubmit(values) {
-      try {
-        await createServiceTarget(values);
-        onClose();
-      } catch (error) {
-        scrollErrorIntoView();
+      if (isEditMode) {
+        try {
+          await updateServiceTarget(values);
+          onClose();
+        } catch (errorUpdateServiceTarget) {
+          scrollErrorIntoView();
+        }
+      } else {
+        try {
+          await createServiceTarget(values);
+          onClose();
+        } catch (error) {
+          scrollErrorIntoView();
+        }
       }
     },
   });
@@ -103,6 +124,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
   const onClose = () => {
     formik.resetForm();
     reset();
+    resetUpdateServiceTarget();
     _onClose();
   };
 
@@ -117,8 +139,12 @@ export const CreateServiceTargetDrawer = (props: Props) => {
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
+  const drawerTitle = isEditMode
+    ? `Edit ${serviceTarget.label}`
+    : 'Add a Service Target';
+
   return (
-    <Drawer onClose={onClose} open={open} title="Add a Service Target">
+    <Drawer onClose={onClose} open={open} title={drawerTitle}>
       <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
@@ -314,7 +340,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         )}
         <ActionsPanel
           primaryButtonProps={{
-            label: 'Create Service Target',
+            label: `${isEditMode ? 'Save' : 'Create'} Service Target`,
             loading: formik.isSubmitting,
             type: 'submit',
           }}
