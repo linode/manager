@@ -132,8 +132,8 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           {totalMonthlyPrice && (
             <Typography className={classes.summary}>
               Current pool: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month
-              {pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month{' '}
+              ({pluralize('node', 'nodes', nodePool.count)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
               /month)
             </Typography>
@@ -159,7 +159,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             <Typography className={classes.summary}>
               {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
                 updatedCount * pricePerNode
-              )} /month`}{' '}
+              )}/month`}{' '}
               ({pluralize('node', 'nodes', updatedCount)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
               /month)
