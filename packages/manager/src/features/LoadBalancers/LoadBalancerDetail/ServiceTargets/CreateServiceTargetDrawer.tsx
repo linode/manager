@@ -101,6 +101,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
   } = useServiceTargetUpdateMutation(loadbalancerId, serviceTarget?.id ?? -1);
 
   const formik = useFormik<ServiceTargetPayload>({
+    enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
     async onSubmit(values) {
       if (isEditMode) {
