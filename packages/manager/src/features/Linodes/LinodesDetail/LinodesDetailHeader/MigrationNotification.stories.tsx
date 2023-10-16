@@ -22,10 +22,6 @@ export default meta;
 
 type Story = StoryObj<typeof MigrationNotification>;
 
-/**
- * Default Primary MigrationNotification
- *  Bold and easily visible. Represents the primary or preferred action on the page.
- */
 export const Default: Story = {
   args: {},
   render: (args) => <MigrationNotification {...args} />,
