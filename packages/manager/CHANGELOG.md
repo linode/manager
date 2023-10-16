@@ -9,7 +9,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
-- Ability to choose resize types when resizing Linode ([#9677](https://github.com/linode/manager/pull/9677))
 - Statically Cache Marketplace Apps ([#9732](https://github.com/linode/manager/pull/9732))
 - Link `contact Support` text in notices to support ticket modal ([#9770](https://github.com/linode/manager/pull/9770))
 
@@ -23,7 +22,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Long drawer titles overlapping close icon ([#9731](https://github.com/linode/manager/pull/9731))
 - Removed `title` prop forwarding on Modals/Dialogs ([#9739](https://github.com/linode/manager/pull/9739))
 - Fixed the top spacing for the NodeBalancer empty state page ([#9746](https://github.com/linode/manager/pull/9746))
-- Persistent error messages for Region, Label, and Description fields in VPC Create flow ([#9750](https://github.com/linode/manager/pull/9750))
 - Notice scroll-to-view behavior and styling regressions ([#9755](https://github.com/linode/manager/pull/9755))
 - Display Database menu items in side nav and Create dropdown for permissioned users ([#9762](https://github.com/linode/manager/pull/9762))
 - Customer success Hively overlap issue ([#9776](https://github.com/linode/manager/pull/9776))
@@ -47,6 +45,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add Drag and Drop support to the Load Balancer Rules Table ([#9736](https://github.com/linode/manager/pull/9736))
 - Make Reboot Linodes dismissible banner on VPC Details page unique for each VPC ([#9743](https://github.com/linode/manager/pull/9743))
 - Showcase VPC feedback ([#9751](https://github.com/linode/manager/pull/9751))
+- Persistent error messages for Region, Label, and Description fields in VPC Create flow ([#9750](https://github.com/linode/manager/pull/9750))
+- Ability to choose resize types when resizing Linode ([#9677](https://github.com/linode/manager/pull/9677))
 
 ## [2023-10-02] - v1.104.1
 
