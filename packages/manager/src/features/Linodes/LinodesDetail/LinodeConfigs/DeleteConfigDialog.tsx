@@ -25,7 +25,9 @@ export const DeleteConfigDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    enqueueSnackbar('Successfully deleted config', { variant: 'success' });
+    enqueueSnackbar(`Configuration ${config?.label} successfully deleted`, {
+      variant: 'success',
+    });
     onClose();
   };
 

@@ -6,7 +6,6 @@ import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export type RemovableItem = {
@@ -22,6 +21,10 @@ interface Props {
    * The descriptive text to display above the list
    */
   headerText: string;
+  /**
+   * If false, hide the remove button
+   */
+  isRemovable?: boolean;
   /**
    * The maxHeight of the list component, in px
    */
@@ -53,6 +56,7 @@ interface Props {
 export const RemovableSelectionsList = (props: Props) => {
   const {
     headerText,
+    isRemovable = true,
     maxHeight,
     maxWidth,
     noDataText,
@@ -74,6 +78,7 @@ export const RemovableSelectionsList = (props: Props) => {
             maxHeight: maxHeight ? `${maxHeight}px` : '450px',
             maxWidth: maxWidth ? `${maxWidth}px` : '416px',
           }}
+          isRemovable={isRemovable}
         >
           {selectionData.map((selection) => (
             <SelectedOptionsListItem alignItems="center" key={selection.id}>
@@ -82,18 +87,20 @@ export const RemovableSelectionsList = (props: Props) => {
                   ? selection[preferredDataLabel]
                   : selection.label}
               </StyledLabel>
-              <IconButton
-                aria-label={`remove ${
-                  preferredDataLabel
-                    ? selection[preferredDataLabel]
-                    : selection.label
-                }`}
-                disableRipple
-                onClick={() => handleOnClick(selection)}
-                size="medium"
-              >
-                <Close />
-              </IconButton>
+              {isRemovable && (
+                <IconButton
+                  aria-label={`remove ${
+                    preferredDataLabel
+                      ? selection[preferredDataLabel]
+                      : selection.label
+                  }`}
+                  disableRipple
+                  onClick={() => handleOnClick(selection)}
+                  size="medium"
+                >
+                  <Close />
+                </IconButton>
+              )}
             </SelectedOptionsListItem>
           ))}
         </SelectedOptionsList>
@@ -109,7 +116,7 @@ export const RemovableSelectionsList = (props: Props) => {
 const StyledNoAssignedLinodesBox = styled(Box, {
   label: 'StyledNoAssignedLinodesBox',
   shouldForwardProp: (prop) => isPropValid(['maxWidth'], prop),
-})(({ theme, maxWidth }) => ({
+})(({ maxWidth, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   display: 'flex',
   flexDirection: 'column',
@@ -131,10 +138,11 @@ const SelectedOptionsHeader = styled('h4', {
 
 const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => isPropValid(['isRemovable'], prop),
+})<{ isRemovable?: boolean }>(({ isRemovable, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   overflow: 'auto',
-  padding: '5px 0',
+  padding: !isRemovable ? '16px 0' : '5px 0',
   width: '100%',
 }));
 
@@ -143,6 +151,7 @@ const SelectedOptionsListItem = styled(ListItem, {
 })(() => ({
   justifyContent: 'space-between',
   paddingBottom: 0,
+  paddingRight: 4,
   paddingTop: 0,
 }));
 

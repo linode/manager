@@ -1,4 +1,3 @@
-import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -30,6 +29,10 @@ import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
+import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
+
+import type { Linode } from '@linode/api-v4/lib/linodes/types';
+import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
   vpcId: number;
@@ -45,6 +48,9 @@ export const VPCSubnetsTable = (props: Props) => {
   const [selectedSubnet, setSelectedSubnet] = React.useState<
     Subnet | undefined
   >();
+  const [selectedLinode, setSelectedLinode] = React.useState<
+    Linode | undefined
+  >();
   const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
     false
   );
@@ -57,6 +63,11 @@ export const VPCSubnetsTable = (props: Props) => {
   const [
     subnetAssignLinodesDrawerOpen,
     setSubnetAssignLinodesDrawerOpen,
+  ] = React.useState(false);
+
+  const [
+    subnetUnassignLinodesDrawerOpen,
+    setSubnetUnassignLinodesDrawerOpen,
   ] = React.useState(false);
 
   const pagination = usePagination(1, preferenceKey);
@@ -114,6 +125,17 @@ export const VPCSubnetsTable = (props: Props) => {
   const handleEditSubnet = (subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setEditSubnetsDrawerOpen(true);
+  };
+
+  const handleSubnetUnassignLinodes = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setSubnetUnassignLinodesDrawerOpen(true);
+  };
+
+  const handleSubnetUnassignLinode = (subnet: Subnet, linode: Linode) => {
+    setSelectedSubnet(subnet);
+    setSelectedLinode(linode);
+    setSubnetUnassignLinodesDrawerOpen(true);
   };
 
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
@@ -192,6 +214,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleAssignLinodes={handleSubnetAssignLinodes}
               handleDelete={handleSubnetDelete}
               handleEdit={handleEditSubnet}
+              handleUnassignLinodes={handleSubnetUnassignLinodes}
               numLinodes={subnet.linodes.length}
               subnet={subnet}
               vpcId={vpcId}
@@ -209,13 +232,15 @@ export const VPCSubnetsTable = (props: Props) => {
             {subnet.linodes.length > 0 ? (
               subnet.linodes.map((linodeId) => (
                 <SubnetLinodeRow
+                  handleUnassignLinode={handleSubnetUnassignLinode}
                   key={linodeId}
                   linodeId={linodeId}
+                  subnet={subnet}
                   subnetId={subnet.id}
                 />
               ))
             ) : (
-              <TableRowEmpty colSpan={5} message={'No Linodes'} />
+              <TableRowEmpty colSpan={6} message={'No Linodes'} />
             )}
           </TableBody>
         </Table>
@@ -263,8 +288,10 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcId={vpcId}
       />
       <CollapsibleTable
+        TableRowEmpty={
+          <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
+        }
         TableItems={getTableItems()}
-        TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Subnets'} />}
         TableRowHead={SubnetTableRowHead}
       />
       <PaginationFooter
@@ -274,6 +301,18 @@ export const VPCSubnetsTable = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+      {subnetUnassignLinodesDrawerOpen && (
+        <SubnetUnassignLinodesDrawer
+          onClose={() => {
+            setSubnetUnassignLinodesDrawerOpen(false);
+            setSelectedLinode(undefined);
+          }}
+          open={subnetUnassignLinodesDrawerOpen}
+          selectedLinode={selectedLinode}
+          subnet={selectedSubnet}
+          vpcId={vpcId}
+        />
+      )}
       {subnetAssignLinodesDrawerOpen && (
         <SubnetAssignLinodesDrawer
           onClose={() => setSubnetAssignLinodesDrawerOpen(false)}

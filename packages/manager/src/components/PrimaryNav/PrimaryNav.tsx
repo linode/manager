@@ -25,6 +25,7 @@ import { Divider } from 'src/components/Divider';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
+import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -90,7 +91,7 @@ export const PrimaryNav = (props: Props) => {
     setEnableMarketplacePrefetch,
   ] = React.useState(false);
 
-  const { _isManagedAccount, account } = useAccountManagement();
+  const { _isManagedAccount, account, accountError } = useAccountManagement();
 
   const {
     data: oneClickApps,
@@ -121,11 +122,16 @@ export const PrimaryNav = (props: Props) => {
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
+  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
+  const { error: enginesError } = useDatabaseEnginesQuery(checkRestrictedUser);
+
+  const showDatabases =
+    isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
+      account?.capabilities ?? []
+    ) ||
+    (checkRestrictedUser && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',

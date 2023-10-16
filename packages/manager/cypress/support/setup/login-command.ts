@@ -1,10 +1,6 @@
-import { UserPreferences } from '@linode/api-v4/types';
+import type { UserPreferences } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { oauthToken } from 'support/constants/api';
-import {
-  CommonRequestMockOptions,
-  mockCommonRequests,
-} from 'support/intercepts/common';
 import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
@@ -43,16 +39,6 @@ export interface LinodeVisitOptions {
   localStorageOverrides?: Record<string, any>;
 
   /**
-   * Whether or not to mock common Linode API requests.
-   *
-   * If `true`, mocks are enabled with default options. If a
-   * `CommonRequestMockOptions` object is passed, mocks are enabled with the
-   * provided options. Otherwise (e.g. `false` or `undefined`) mocks are disabled.
-   *
-   */
-  mockRequests?: CommonRequestMockOptions | boolean;
-
-  /**
    * User preference overrides.
    *
    * The given object will override the specific user preferences fetched by
@@ -69,7 +55,6 @@ Cypress.Commands.add(
   (url: string, linodeOptions?: LinodeVisitOptions, cypressOptions?: any) => {
     const defaultLinodeOptions: LinodeVisitOptions = {
       localStorageOverrides: undefined,
-      mockRequests: true,
       preferenceOverrides: undefined,
     };
 
@@ -96,14 +81,6 @@ Cypress.Commands.add(
       },
     };
 
-    if (resolvedLinodeOptions.mockRequests) {
-      const mockOptions =
-        typeof resolvedLinodeOptions.mockRequests === 'boolean'
-          ? undefined
-          : resolvedLinodeOptions.mockRequests;
-      mockCommonRequests(mockOptions);
-    }
-
     if (resolvedLinodeOptions.preferenceOverrides) {
       cy.intercept('GET', apiMatcher('profile/preferences*'), (request) => {
         request.continue((response) => {
@@ -115,7 +92,6 @@ Cypress.Commands.add(
       });
     }
 
-    console.log('executing visit');
     return cy.visit(url, { ...cypressOptions, ...opt });
   }
 );
