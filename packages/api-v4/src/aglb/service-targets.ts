@@ -84,7 +84,7 @@ export const updateLoadbalancerServiceTarget = (
         loadbalancerId
       )}/service-targets/${encodeURIComponent(serviceTargetId)}`
     ),
-    setData(data),
+    setData(data, CreateServiceTargetSchema),
     setMethod('PUT')
   );
 
