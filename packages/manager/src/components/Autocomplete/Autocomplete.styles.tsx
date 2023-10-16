@@ -3,11 +3,11 @@ import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledListItem = styled('li', {
   label: 'StyledListItem',
-  shouldForwardProp: (prop) => isPropValid(['selectAllOption'], prop),
+  shouldForwardProp: omittedProps(['selectAllOption']),
 })(({ theme }) => ({
   '&.MuiAutocomplete-option': {
     overflow: 'unset',

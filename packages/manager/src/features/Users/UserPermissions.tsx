@@ -9,18 +9,16 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import { withStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -43,66 +41,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import { StyledDivWrapper, StyledSelect } from './UserPermissions.styles';
 import {
   UserPermissionsEntitySection,
   entityNameMap,
 } from './UserPermissionsEntitySection';
-
-type ClassNames =
-  | 'globalRow'
-  | 'globalSection'
-  | 'section'
-  | 'setAll'
-  | 'title'
-  | 'toggle'
-  | 'unrestrictedRoot';
-
-const styles = (theme: Theme) => ({
-  globalRow: {
-    padding: `${theme.spacing(1)} 0`,
-  },
-  globalSection: {
-    marginTop: theme.spacing(2),
-  },
-  section: {
-    marginTop: theme.spacing(2),
-    paddingBottom: 0,
-  },
-  setAll: {
-    '& .react-select__menu, & .input': {
-      marginLeft: theme.spacing(1),
-      right: 0,
-      textAlign: 'left' as const,
-      width: 125,
-    },
-    '& .react-select__menu-list': {
-      width: '100%',
-    },
-    '& > div': {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    '& label': {
-      marginTop: 6,
-    },
-  },
-  title: {
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(),
-    },
-  },
-  toggle: {
-    marginRight: 3,
-  },
-  unrestrictedRoot: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(3),
-  },
-});
-
 interface Props {
-  classes?: Partial<Record<ClassNames, string>>;
   clearNewUser: () => void;
   currentUser?: string;
   username?: string;
@@ -342,7 +286,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     onCancel: () => void,
     loading: boolean
   ) => {
-    const classes = withStyles.getClasses(this.props);
     return (
       <ActionsPanel
         primaryButtonProps={{
@@ -356,8 +299,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           label: 'Reset',
           onClick: onCancel,
         }}
+        sx={(theme) => ({
+          marginTop: theme.spacing(2),
+          paddingBottom: 0,
+        })}
         alignItems="center"
-        className={classes.section}
         display="flex"
         justifyContent="flex-end"
       />
@@ -365,16 +311,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderBillingPerm = () => {
-    const classes = withStyles.getClasses(this.props);
     const { grants } = this.state;
     if (!(grants && grants.global)) {
       return null;
     }
 
     return (
-      <div className={classes.section}>
+      <StyledDivWrapper>
         <Grid
-          className={classes.section}
+          sx={(theme) => ({
+            marginTop: theme.spacing(2),
+            paddingBottom: 0,
+          })}
           container
           data-qa-billing-section
           spacing={2}
@@ -385,7 +333,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
         </Grid>
-        <Grid className={classes.section} container spacing={2}>
+        <Grid
+          sx={(theme) => ({
+            marginTop: theme.spacing(2),
+            paddingBottom: 0,
+          })}
+          container
+          spacing={2}
+        >
           <SelectionCard
             checked={grants.global.account_access === null}
             data-qa-billing-access="None"
@@ -410,12 +365,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             onClick={this.billingPermOnClick('read_write')}
           />
         </Grid>
-      </div>
+      </StyledDivWrapper>
     );
   };
 
   renderBody = () => {
-    const classes = withStyles.getClasses(this.props);
     const { currentUser, username } = this.props;
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
@@ -434,7 +388,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         >
           <Grid>
             <Typography
-              className={classes.title}
+              sx={(theme) => ({
+                [theme.breakpoints.down('md')]: {
+                  paddingLeft: theme.spacing(),
+                },
+              })}
               data-qa-restrict-access={restricted}
               variant="h2"
             >
@@ -452,9 +410,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   : ''
               }
               checked={!restricted}
-              className={classes.toggle}
               disabled={username === currentUser}
               onChange={this.onChangeRestricted}
+              sx={{ marginRight: '3px' }}
             />
           </Grid>
         </Grid>
@@ -464,7 +422,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderGlobalPerm = (perm: string, checked: boolean) => {
-    const classes = withStyles.getClasses(this.props);
     const permDescriptionMap = {
       add_databases: 'Can add Databases to this account ($)',
       add_domains: 'Can add Domains using the DNS Manager',
@@ -494,7 +451,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               onChange={this.globalPermOnChange(perm)}
             />
           }
-          className={classes.globalRow}
+          sx={(theme) => ({
+            padding: `${theme.spacing(1)} 0`,
+          })}
           label={permDescriptionMap[perm]}
         />
         <Divider />
@@ -503,17 +462,28 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderGlobalPerms = () => {
-    const classes = withStyles.getClasses(this.props);
     const { grants, isSavingGlobal } = this.state;
     return (
-      <Paper className={classes.globalSection} data-qa-global-section>
+      <Paper
+        sx={(theme) => ({
+          marginTop: theme.spacing(2),
+        })}
+        data-qa-global-section
+      >
         <Typography
           data-qa-permissions-header="Global Permissions"
           variant="h2"
         >
           Global Permissions
         </Typography>
-        <Grid className={classes.section} container spacing={2}>
+        <Grid
+          sx={(theme) => ({
+            marginTop: theme.spacing(2),
+            paddingBottom: 0,
+          })}
+          container
+          spacing={2}
+        >
           {grants &&
             grants.global &&
             this.globalBooleanPerms
@@ -552,7 +522,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderSpecificPerms = () => {
-    const classes = withStyles.getClasses(this.props);
     const { grants, isSavingEntity, setAllPerm } = this.state;
 
     const permOptions = [
@@ -566,7 +535,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <Paper className={classes.globalSection} data-qa-entity-section>
+      <Paper
+        sx={(theme) => ({
+          marginTop: theme.spacing(2),
+        })}
+        data-qa-entity-section
+      >
         <Grid alignItems="center" container justifyContent="space-between">
           <Grid>
             <Typography
@@ -578,8 +552,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
 
           <Grid style={{ marginTop: 5 }}>
-            <Select
-              className={classes.setAll}
+            <StyledSelect
               defaultValue={defaultPerm}
               id="setall"
               inline
@@ -593,7 +566,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <div className={classes.section}>
+        <StyledDivWrapper>
           {this.state.showTabs ? (
             <Tabs>
               <TabList>
@@ -628,7 +601,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               />
             ))
           )}
-        </div>
+        </StyledDivWrapper>
         {this.renderActions(
           this.saveSpecificGrants,
           this.cancelPermsType('entity'),
@@ -639,10 +612,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderUnrestricted = () => {
-    const classes = withStyles.getClasses(this.props);
     /* TODO: render all permissions disabled with this message above */
     return (
-      <Paper className={classes.unrestrictedRoot}>
+      <Paper
+        sx={(theme) => ({
+          marginTop: theme.spacing(2),
+          padding: theme.spacing(3),
+        })}
+      >
         <Typography data-qa-unrestricted-msg>
           This user has unrestricted access to the account.
         </Typography>
@@ -785,4 +762,4 @@ export default recompose<CombinedProps, Props>(
   withSnackbar,
   withQueryClient,
   withFlags
-)(withStyles(UserPermissions, styles));
+)(UserPermissions);

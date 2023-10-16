@@ -28,6 +28,7 @@ import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotific
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import { usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -134,7 +135,11 @@ interface Props {
 
 type CombinedProps = Props & GlobalErrorProps;
 
-const Account = React.lazy(() => import('src/features/Account'));
+const Account = React.lazy(() =>
+  import('src/features/Account').then((module) => ({
+    default: module.Account,
+  }))
+);
 const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
@@ -190,17 +195,27 @@ const MainContent = (props: CombinedProps) => {
   const complianceUpdateContextValue = useDialogContext();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const { _isManagedAccount, account, profile } = useAccountManagement();
+  const {
+    _isManagedAccount,
+    account,
+    accountError,
+    profile,
+  } = useAccountManagement();
 
   const username = profile?.username || '';
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
+  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
+  const { error: enginesError } = useDatabaseEnginesQuery(checkRestrictedUser);
+
+  const showDatabases =
+    isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
+      account?.capabilities ?? []
+    ) ||
+    (checkRestrictedUser && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
@@ -398,8 +413,8 @@ export default compose<CombinedProps, Props>(
 export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
   return Boolean(
     flags.mainContentBanner &&
-      !isEmpty(flags.mainContentBanner) &&
-      flags.mainContentBanner.key
+    !isEmpty(flags.mainContentBanner) &&
+    flags.mainContentBanner.key
   );
 };
 
