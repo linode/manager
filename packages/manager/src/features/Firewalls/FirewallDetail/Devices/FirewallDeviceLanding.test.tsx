@@ -1,4 +1,7 @@
+// import { fireEvent } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
+import { Router } from 'react-router-dom';
 
 import { firewallDeviceFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
@@ -14,48 +17,59 @@ import type { FirewallDeviceEntityType } from '@linode/api-v4';
 const baseProps = (
   type: FirewallDeviceEntityType
 ): FirewallDeviceLandingProps => ({
-  disabled: true,
+  disabled: false,
   firewallID: 1,
   firewallLabel: 'test',
   type,
 });
 
-const devices = ['linode', 'nodebalancer'];
+const disabledProps = (type: FirewallDeviceEntityType) => ({
+  ...baseProps(type),
+  disabled: true,
+});
 
-devices.forEach((device: FirewallDeviceEntityType) => {
-  describe(`Firewall ${device} device`, () => {
+const services = ['linode', 'nodebalancer'];
+
+services.forEach((service: FirewallDeviceEntityType) => {
+  describe(`Firewall ${service} Service`, () => {
     let addButton: HTMLElement;
-    let permissionNotice: HTMLElement;
     let table: HTMLElement;
+    let permissionNotice: HTMLElement;
+    const history = createMemoryHistory();
 
-    beforeEach(() => {
-      server.use(
-        rest.get('*/firewalls/*', (req, res, ctx) => {
-          return res(ctx.json(firewallDeviceFactory.buildList(1)));
-        })
-      );
-      const { getByRole, getByTestId } = renderWithTheme(
-        <FirewallDeviceLanding {...baseProps(device)} />
-      );
-      addButton = getByTestId('add-device-button');
-      permissionNotice = getByRole('alert');
-      table = getByRole('table');
-    });
+    const props = [baseProps(service), disabledProps(service)];
 
-    it(`should render an add ${device} button`, () => {
-      expect(addButton).toBeInTheDocument();
-    });
+    props.forEach((prop) => {
+      it(`should render the component with ${
+        prop.disabled ? 'disabled' : 'enabled'
+      } add ${service} button`, () => {
+        server.use(
+          rest.get('*/firewalls/*', (req, res, ctx) => {
+            return res(ctx.json(firewallDeviceFactory.buildList(1)));
+          })
+        );
+        const { getByRole, getByTestId } = renderWithTheme(
+          <Router history={history}>
+            <FirewallDeviceLanding {...prop} />
+          </Router>
+        );
+        addButton = getByTestId('add-device-button');
+        table = getByRole('table');
 
-    it(`should render a disabled add ${device} button`, () => {
-      expect(addButton).toBeDisabled();
-    });
+        expect(addButton).toBeInTheDocument();
+        expect(table).toBeInTheDocument();
 
-    it(`should render a permission denied notice`, () => {
-      expect(permissionNotice).toBeInTheDocument();
-    });
-
-    it(`should render a table`, () => {
-      expect(table).toBeInTheDocument();
+        if (prop.disabled) {
+          expect(addButton).toBeDisabled();
+          permissionNotice = getByRole('alert');
+          expect(permissionNotice).toBeInTheDocument();
+        } else {
+          expect(addButton).toBeEnabled();
+          // fireEvent.click(addButton);
+          // const baseUrl = '/';
+          // expect(history.location.pathname).toBe(baseUrl + '/add');
+        }
+      });
     });
   });
 });
