@@ -41,7 +41,7 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
     backups: {
       price: {
         hourly: 0.004,
-        monthly: 2.5,
+        monthly: 2.0,
       },
       region_prices: [
         {
@@ -57,6 +57,7 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       ],
     },
   },
+  id: `g6-nanode-1`,
   region_prices: [
     {
       hourly: 0.021,

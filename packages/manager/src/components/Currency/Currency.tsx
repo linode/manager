@@ -19,7 +19,7 @@ export const Currency = (props: CurrencyFormatterProps) => {
 
   const formattedQuantity = isNumber(quantity)
     ? formatter.format(Math.abs(quantity))
-    : quantity;
+    : `$${quantity}`;
   const isNegative = isNumber(quantity) ? quantity < 0 : false;
 
   let output;

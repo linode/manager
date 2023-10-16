@@ -398,7 +398,7 @@ describe('"Enable Linode Backups" banner', () => {
     ];
 
     // The expected total cost of enabling backups, as shown in backups drawer.
-    const expectedTotal = '$7.74/mo';
+    const expectedTotal = '$9.74/mo';
 
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);

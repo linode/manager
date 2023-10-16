@@ -27,7 +27,6 @@ export const getLinodeBackupPrice = (
     };
   }
 
-  // TODO: M3-7063 (defaults)
   return type.addons.backups.price;
 };
 
@@ -38,7 +37,8 @@ interface BackupsPriceOptions {
 }
 
 /**
- *
+ * @returns The monthly backup price for a single linode without backups enabled;
+ * if price cannot be calculated, returns undefined.
  */
 export const getMonthlyBackupsPrice = ({
   flags,
@@ -70,6 +70,10 @@ export interface TotalBackupsPriceOptions {
   types: LinodeType[];
 }
 
+/**
+ * @returns The summed monthly backups prices for all linodes without backups enabled;
+ * if price cannot be calculated, returns undefined.
+ */
 export const getTotalBackupsPrice = ({
   flags,
   linodes,
@@ -82,7 +86,6 @@ export const getTotalBackupsPrice = ({
       return undefined;
     }
 
-    // TODO: M3-7063 (defaults)
     const backupsMonthlyPrice: PriceObject['monthly'] | undefined =
       getMonthlyBackupsPrice({
         flags,

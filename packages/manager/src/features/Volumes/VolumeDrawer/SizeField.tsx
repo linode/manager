@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -8,10 +9,10 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
-import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
-import { makeStyles } from '@mui/styles';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+
+import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
 
 interface Props {
   disabled?: boolean;

@@ -8,8 +8,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
+import {
+  PRICE_ERROR_TOOLTIP_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 
 interface Props {
   error?: string;
@@ -60,7 +62,7 @@ export const BackupLinodeRow = (props: Props) => {
         errorText={!backupsMonthlyPrice ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
         parentColumn="Price"
       >
-        {`$${renderMonthlyPriceToCorrectDecimalPlace(backupsMonthlyPrice)}/mo`}
+        {`$${backupsMonthlyPrice?.toFixed(2) ?? UNKNOWN_PRICE}/mo`}
       </TableCell>
     </TableRow>
   );

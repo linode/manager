@@ -50,7 +50,7 @@ describe('Currency Component', () => {
     const { getByText } = renderWithTheme(
       <Currency quantity={UNKNOWN_PRICE} />
     );
-    getByText(UNKNOWN_PRICE);
+    getByText(`$${UNKNOWN_PRICE}`);
   });
 
   it('groups by comma', () => {

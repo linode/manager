@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import { isNumber } from 'lodash';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -148,6 +149,12 @@ all new Linodes will automatically be backed up.`
     onClose();
   };
 
+  const totalBackupsPrice = getTotalBackupsPrice({
+    flags,
+    linodes: linodesWithoutBackups,
+    types: types ?? [],
+  });
+
   return (
     <Drawer
       onClose={onClose}
@@ -193,11 +200,9 @@ all new Linodes will automatically be backed up.`
           &nbsp;
           <DisplayPrice
             price={
-              getTotalBackupsPrice({
-                flags,
-                linodes: linodesWithoutBackups,
-                types: types ?? [],
-              }) ?? UNKNOWN_PRICE
+              totalBackupsPrice && isNumber(totalBackupsPrice)
+                ? totalBackupsPrice
+                : UNKNOWN_PRICE
             }
             interval="mo"
           />
