@@ -18,7 +18,7 @@ import {
 
 import { InterfaceSelect } from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
-// @TODO Delete this file when VPC is released
+// @TODO VPC: Delete this file when VPC is released
 
 interface Props {
   handleVLANChange: (updatedInterface: Interface) => void;
@@ -105,14 +105,16 @@ export const AttachVLAN = React.memo((props: Props) => {
             .
           </Typography>
           <InterfaceSelect
+            errors={{
+              ipamError,
+              labelError,
+            }}
             handleChange={(newInterface: Interface) =>
               handleVLANChange(newInterface)
             }
             fromAddonsPanel
             ipamAddress={ipamAddress}
-            ipamError={ipamError}
             label={vlanLabel}
-            labelError={labelError}
             purpose="vlan"
             readOnly={readOnly || !regionSupportsVLANs || false}
             region={region}
