@@ -15,7 +15,7 @@ const meta: Meta<typeof MigrationNotification> = {
     requestNotifications: action('requestNotifications'),
   },
   component: MigrationNotification,
-  title: 'Components/Notifications/MigrationNotification',
+  title: 'Features/LinodesDetail/MigrationNotification',
 };
 
 export default meta;
