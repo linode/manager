@@ -2,7 +2,7 @@ name: Send Report
 
 on:
   workflow_run:
-    workflows: ["Code Coverage Summary Report"]
+    workflows: ["ci"]
     types:
       - completed
 
