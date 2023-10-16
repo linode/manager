@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
 import { Paper } from 'src/components/Paper';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   '& > img': {
@@ -20,7 +20,7 @@ type StyledPaperProps = {
 
 export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
-  shouldForwardProp: (prop) => isPropValid(['isDrawerOpenable'], prop),
+  shouldForwardProp: omittedProps(['isDrawerOpenable']),
 })<StyledPaperProps>(({ isDrawerOpenable, theme }) => ({
   '& > div:last-child': {
     border: 0,

@@ -2,10 +2,10 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { TextField } from 'src/components/TextField';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 interface Props {
   error?: string;
@@ -84,9 +84,9 @@ class UserDefinedText extends React.Component<Props, {}> {
 
 type StyledAccessPanelProps = Pick<Props, 'isOptional'>;
 
-const StyledAccessPanel = styled(AccessPanel, { 
+const StyledAccessPanel = styled(AccessPanel, {
   label: 'StyledAccessPanel',
-  shouldForwardProp: (prop) => isPropValid(['isOptional'], prop),
+  shouldForwardProp: omittedProps(['isOptional']),
 })<StyledAccessPanelProps>(({ isOptional }) => ({
   padding: 0,
   ...(!isOptional && { margin: 0 }),

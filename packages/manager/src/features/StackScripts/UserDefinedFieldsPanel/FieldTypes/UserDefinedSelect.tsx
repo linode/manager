@@ -2,12 +2,11 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InputLabel } from 'src/components/InputLabel';
-import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import { TextField } from 'src/components/TextField';
 
 interface Props {
   error?: string;
@@ -18,7 +17,6 @@ interface Props {
 }
 
 export const UserDefinedSelect = (props: Props) => {
-
   const { error, field, isOptional, updateFormState, value } = props;
 
   const [oneof, setOneof] = React.useState<string[]>(field.oneof!.split(','));
@@ -27,29 +25,23 @@ export const UserDefinedSelect = (props: Props) => {
     setOneof(field.oneof!.split(','));
   }, [field.oneof]);
 
-  const handleSelectOneOf = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedValue = e.target.value;
-    updateFormState(field.name, selectedValue);
+  const handleSelectOneOf = (value: string) => {
+    updateFormState(field.name, value);
   };
+
+  const options = oneof.map((item) => ({ label: item }));
 
   if (oneof.length > 4) {
     return (
       <div>
         {error && <Notice spacingTop={8} text={error} variant="error" />}
-        <TextField
+        <Autocomplete
+          disableClearable
           label={field.label}
-          onChange={handleSelectOneOf}
-          select
-          value={value}
-        >
-          {oneof.map((choice: string, index) => {
-            return (
-              <WrapperMenuItem key={index} value={choice}>
-                {choice}
-              </WrapperMenuItem>
-            );
-          })}
-        </TextField>
+          onChange={(_, option) => handleSelectOneOf(option.label)}
+          options={options}
+          value={options.find((option) => option.label === value)}
+        />
       </div>
     );
   }
@@ -68,7 +60,7 @@ export const UserDefinedSelect = (props: Props) => {
               checked={!!value && value === choice}
               data-qa-perm-none-radio
               name={choice}
-              onChange={handleSelectOneOf}
+              onChange={(e) => handleSelectOneOf(e.target.value)}
             />
           }
           key={index}
@@ -85,9 +77,11 @@ const StyledInputLabel = styled(InputLabel, { label: 'StyledInputLabel' })({
   marginBottom: '4px',
 });
 
-const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  margin: `${theme.spacing(3)} 0 0`,
-  marginTop: theme.spacing(2),
-}));
+const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    margin: `${theme.spacing(3)} 0 0`,
+    marginTop: theme.spacing(2),
+  })
+);
