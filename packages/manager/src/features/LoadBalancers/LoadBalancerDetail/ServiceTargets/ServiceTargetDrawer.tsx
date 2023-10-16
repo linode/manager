@@ -87,7 +87,7 @@ const initialValues: ServiceTargetPayload = {
   load_balancing_policy: 'round_robin',
 };
 
-export const CreateServiceTargetDrawer = (props: Props) => {
+export const ServiceTargetDrawer = (props: Props) => {
   const { loadbalancerId, onClose: _onClose, open, serviceTarget } = props;
 
   const isEditMode = serviceTarget !== undefined;

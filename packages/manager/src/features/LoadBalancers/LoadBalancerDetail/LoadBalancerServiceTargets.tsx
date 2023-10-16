@@ -27,8 +27,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
-import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetDrawer';
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
+import { ServiceTargetDrawer } from './ServiceTargets/ServiceTargetDrawer';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -216,7 +216,7 @@ export const LoadBalancerServiceTargets = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <CreateServiceTargetDrawer
+      <ServiceTargetDrawer
         loadbalancerId={Number(loadbalancerId)}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
