@@ -13,8 +13,8 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 
+import { StyledStackScriptSectionTableCell } from '../CommonStackScript.styles';
 import { StackScriptRow } from './StackScriptRow';
-import { StyledTableCell } from '../SelectStackScriptPanel/SelectStackScriptsSection';
 
 export interface Props {
   // change until we're actually using it.
@@ -72,9 +72,9 @@ export const StackScriptsSection = (props: Props) => {
         data && data.map(listStackScript)
       ) : (
         <TableRow>
-          <StyledTableCell colSpan={5}>
+          <StyledStackScriptSectionTableCell colSpan={5}>
             <CircleProgress />
-          </StyledTableCell>
+          </StyledStackScriptSectionTableCell>
         </TableRow>
       )}
     </TableBody>

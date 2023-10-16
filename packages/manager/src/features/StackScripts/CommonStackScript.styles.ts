@@ -167,3 +167,10 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
     color: theme.textColors.tableStatic,
   })
 );
+
+export const StyledStackScriptSectionTableCell = styled(TableCell, {
+  label: 'StyledStackScriptSectionTableCell',
+})({
+  border: 0,
+  paddingTop: 100,
+});

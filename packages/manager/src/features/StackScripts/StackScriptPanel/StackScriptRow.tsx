@@ -16,7 +16,7 @@ import {
   StyledTitleTypography,
   StyledTypography,
   StyledUsernameSpan,
-} from '../StackScriptRowHelpers';
+} from '../CommonStackScript.styles';
 
 export interface Props {
   canAddLinodes: boolean;

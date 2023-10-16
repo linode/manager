@@ -12,13 +12,13 @@ import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/
 import {
   StyledDetailsButton,
   StyledLabel,
-  StyledSelectionGrid,
   StyledSelectionButtonGrid,
   StyledSelectionDetailsGrid,
+  StyledSelectionGrid,
   StyledTableCell,
   StyledTypography,
   StyledUsernameLabel,
-} from '../StackScriptRowHelpers';
+} from '../CommonStackScript.styles';
 
 export interface Props {
   checked?: boolean;
