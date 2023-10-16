@@ -29,4 +29,3 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
