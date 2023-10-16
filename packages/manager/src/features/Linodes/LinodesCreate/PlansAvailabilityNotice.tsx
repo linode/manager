@@ -98,7 +98,11 @@ const PlansAvailabilityNoticeMessage = (
 
   if (hasSelectedRegion && !isSelectedRegionEligibleForPlan) {
     return (
-      <Notice dataTestId={`${planType}-notice-error`} variant="error">
+      <Notice
+        bypassValidation={true}
+        dataTestId={`${planType}-notice-error`}
+        variant="error"
+      >
         <StyledNoticeTypography>
           {formattedPlanType} Plans are not currently available in this
           region.&nbsp;

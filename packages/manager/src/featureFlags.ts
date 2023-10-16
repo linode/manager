@@ -63,6 +63,7 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
+  unifiedMigrations: boolean;
   vpc: boolean;
 }
 

@@ -10,8 +10,11 @@ import { parseAPIDate } from 'src/utilities/date';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 interface Props {
+  /** The username of the Linode user who created the ticket. */
   linodeUsername: string;
+  /** The ID of the reply. */
   replyId: string;
+  /** The ID of the ticket. */
   ticketId: string;
 }
 
@@ -48,7 +51,11 @@ export const Hively = (props: Props) => {
     <>
       <Divider />
       <Stack alignItems="center" direction="row" pl={1} spacing={1.5}>
-        <Typography mr={3}>
+        <Typography
+          sx={{
+            padding: '2px 20px 2px 0',
+          }}
+        >
           <Link external to={href + '3'}>
             How did I do?
           </Link>
