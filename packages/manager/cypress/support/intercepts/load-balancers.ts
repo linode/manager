@@ -1,14 +1,15 @@
-import { paginateResponse } from 'support/util/paginate';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
-import type {
-  ServiceTarget,
-  Loadbalancer,
-  Configuration,
-  Certificate,
-  Route,
-} from '@linode/api-v4';
+import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+
+import type {
+  Certificate,
+  Configuration,
+  Loadbalancer,
+  Route,
+  ServiceTarget,
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch an AGLB load balancer and mocks response.
@@ -103,6 +104,7 @@ export const mockUploadLoadBalancerCertificate = (
  *
  * @returns Cypress chainable.
  */
+// TODO: We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
 export const mockGetServiceTargets = (
   loadBalancer: Loadbalancer,
   serviceTargets: ServiceTarget[]
@@ -146,6 +148,22 @@ export const mockCreateServiceTarget = (
     'POST',
     apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
     makeResponse(serviceTarget)
+  );
+};
+
+/**
+ * Intercepts POST request to create a route and mocks response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param serviceTarget - Service target with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateRoute = (loadBalancer: Loadbalancer, route: Route) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes`),
+    makeResponse(route)
   );
 };
 
