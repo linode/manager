@@ -12,9 +12,8 @@ import {
   linodeFactory,
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
-import { containsClick, getClick } from 'support/helpers';
+import { containsClick } from 'support/helpers';
 import {
-  interceptCreateFirewall,
   interceptUpdateFirewallLinodes,
   interceptUpdateFirewallRules,
 } from 'support/intercepts/firewalls';
