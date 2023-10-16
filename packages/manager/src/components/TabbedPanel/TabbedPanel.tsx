@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import React, { useEffect, useState } from 'react';
@@ -11,6 +10,8 @@ import { TabPanel } from 'src/components/ReachTabPanel';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { Typography } from 'src/components/Typography';
+
+import { Box } from '../Box';
 
 export interface Tab {
   render: (props: any) => JSX.Element | null;
@@ -71,26 +72,20 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
       sx={{ flexGrow: 1, ...sx }}
     >
       <div className={innerClass}>
-        {error && <Notice variant="error">{error}</Notice>}
-        <Grid container sx={{ display: 'flex' }}>
-          {header !== '' && (
-            <Grid xs={6}>
-              <Typography data-qa-tp-title variant="h2">
-                {header}
-              </Typography>
-            </Grid>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          {header && (
+            <Typography data-qa-tp-title variant="h2">
+              {header}
+            </Typography>
           )}
-          {docsLink ? (
-            <Grid
-              style={{ display: 'flex', flexDirection: 'row-reverse' }}
-              xs={6}
-            >
-              {docsLink}
-            </Grid>
-          ) : null}
-        </Grid>
+          {docsLink}
+        </Box>
+        {error && (
+          <Notice spacingBottom={0} spacingTop={12} variant="error">
+            {error}
+          </Notice>
+        )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
-
         <Tabs
           index={tabIndex}
           onChange={tabChangeHandler}
@@ -135,7 +130,7 @@ const StyledTabList = styled(TabList)(({ theme }) => ({
     },
     boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
     marginBottom: theme.spacing(3),
-    marginTop: 22,
+    marginTop: theme.spacing(1),
   },
 }));
 

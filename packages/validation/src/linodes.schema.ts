@@ -155,9 +155,9 @@ export const LinodeInterfaceSchema = object().shape({
   }),
   ipam_address: string().when('purpose', {
     is: 'vlan',
-    then: string().notRequired().test({
+    then: string().notRequired().nullable().test({
       name: 'validateIPAM',
-      message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24',
+      message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
       test: validateIP,
     }),
     otherwise: string().when('ipam_address', {
@@ -177,6 +177,15 @@ export const LinodeInterfaceSchema = object().shape({
     otherwise: number().test({
       name: testnameDisallowedBasedOnPurpose('VPC'),
       message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
+      test: (value) => typeof value === 'undefined',
+    }),
+  }),
+  vpc_id: number().when('purpose', {
+    is: 'vpc',
+    then: number().required('VPC is required.'),
+    otherwise: number().test({
+      name: testnameDisallowedBasedOnPurpose('VPC'),
+      message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
       test: (value) => typeof value === 'undefined',
     }),
   }),

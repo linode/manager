@@ -3,7 +3,7 @@ import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { TextField } from 'src/components/TextField';
 
