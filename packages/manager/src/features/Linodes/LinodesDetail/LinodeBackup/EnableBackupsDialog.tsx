@@ -72,6 +72,7 @@ export const EnableBackupsDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm-enable-backups',
+        disabled: !backupsMonthlyPrice,
         label: 'Enable Backups',
         loading: isLoading,
         onClick: handleEnableBackups,

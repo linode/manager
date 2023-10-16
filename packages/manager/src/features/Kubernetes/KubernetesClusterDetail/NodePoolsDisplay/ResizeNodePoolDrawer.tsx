@@ -154,6 +154,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         </div>
 
         <div className={classes.section}>
+          {/* Renders total pool price/month for N nodes at price per node/month. */}
           {pricePerNode && (
             <Typography className={classes.summary}>
               {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
