@@ -1,4 +1,4 @@
-name: Code Coverage Summary Report
+name: Send Report
 
 on:
   workflow_run:
