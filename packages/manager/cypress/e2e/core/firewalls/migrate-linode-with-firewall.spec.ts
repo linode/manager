@@ -23,7 +23,7 @@ import { selectRegionString } from 'support/ui/constants';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber } from 'support/util/random';
 import type { Linode, Region } from '@linode/api-v4';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegions } from 'support/util/regions';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -98,10 +98,11 @@ describe('Migrate Linode With Firewall', () => {
 
   // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
   it('migrates linode with firewall - real data', () => {
+    const [migrationRegionStart, migrationRegionEnd] = chooseRegions(2);
     const firewallLabel = randomLabel();
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: chooseRegion().id,
+      region: migrationRegionStart.id,
     });
 
     interceptCreateFirewall().as('createFirewall');
@@ -171,7 +172,7 @@ describe('Migrate Linode With Firewall', () => {
       cy.get('[data-qa-checked="false"]').click();
       cy.findByText(selectRegionString).click();
 
-      ui.regionSelect.findItemByRegionLabel('Toronto, CA').click();
+      ui.regionSelect.findItemByRegionLabel(migrationRegionEnd.label).click();
       ui.button
         .findByTitle('Enter Migration Queue')
         .should('be.visible')
