@@ -12,6 +12,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
@@ -24,11 +26,18 @@ export const UsersLanding = () => {
   const { data: profile } = useProfile();
 
   const pagination = usePagination(1, 'account-users');
+  const order = useOrder();
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers({
-    page: pagination.page,
-    page_size: pagination.pageSize,
-  });
+  const { data: users, error, isLoading, refetch } = useAccountUsers(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    {
+      '+order': order.order,
+      '+order_by': order.orderBy,
+    }
+  );
 
   const isRestrictedUser = profile?.restricted;
 
@@ -48,7 +57,7 @@ export const UsersLanding = () => {
     if (isLoading) {
       return (
         <TableRowLoading
-          columns={4}
+          columns={5}
           responsive={{ 1: { smDown: true } }}
           rows={1}
         />
@@ -56,11 +65,11 @@ export const UsersLanding = () => {
     }
 
     if (error) {
-      return <TableRowError colSpan={4} message={error[0].reason} />;
+      return <TableRowError colSpan={5} message={error[0].reason} />;
     }
 
     if (!users || users.results === 0) {
-      return <TableRowEmpty colSpan={4} />;
+      return <TableRowEmpty colSpan={5} />;
     }
 
     return users.data.map((user) => (
@@ -86,9 +95,24 @@ export const UsersLanding = () => {
       <Table aria-label="List of Users">
         <TableHead>
           <TableRow>
-            <TableCell>Username</TableCell>
-            <TableCell>Email Address</TableCell>
+            <TableSortCell
+              active={order.orderBy === 'username'}
+              direction={order.order}
+              handleClick={order.handleOrderChange}
+              label={'username'}
+            >
+              Username
+            </TableSortCell>
+            <TableSortCell
+              active={order.orderBy === 'email'}
+              direction={order.order}
+              handleClick={order.handleOrderChange}
+              label={'email'}
+            >
+              Email Address
+            </TableSortCell>
             <TableCell>Account Access</TableCell>
+            <TableCell>Last Login</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>

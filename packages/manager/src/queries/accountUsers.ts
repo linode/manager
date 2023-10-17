@@ -21,6 +21,7 @@ export const useAccountUsers = (params?: Params, filters?: Filter) => {
     () => getUsers(params, filters),
     {
       enabled: !profile?.restricted,
+      keepPreviousData: true,
     }
   );
 };

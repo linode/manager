@@ -7,12 +7,13 @@ import { useAccountUserDeleteMutation } from 'src/queries/accountUsers';
 
 interface Props {
   onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   username: string;
 }
 
 export const UserDeleteConfirmationDialog = (props: Props) => {
-  const { onClose: _onClose, open, username } = props;
+  const { onClose: _onClose, onSuccess, open, username } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -28,15 +29,14 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
   };
 
   const onDelete = async () => {
-    try {
-      await deleteUser();
-      enqueueSnackbar(`User ${username} has been deleted successfully.`, {
-        variant: 'success',
-      });
-      onClose();
-    } catch (error) {
-      // Error is shown in the ConfirmationDialog
+    await deleteUser();
+    enqueueSnackbar(`User ${username} has been deleted successfully.`, {
+      variant: 'success',
+    });
+    if (onSuccess) {
+      onSuccess();
     }
+    onClose();
   };
 
   return (

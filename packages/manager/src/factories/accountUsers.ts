@@ -3,6 +3,8 @@ import * as Factory from 'factory.ts';
 
 export const accountUserFactory = Factory.Sync.makeFactory<User>({
   email: 'user@example.com',
+  last_login: null,
+  password_created: null,
   restricted: true,
   ssh_keys: [],
   tfa_enabled: false,

@@ -28,7 +28,7 @@ export interface User {
      * @example successful
      */
     status: AccountLoginStatus;
-  };
+  } | null;
 }
 
 export interface Account {
