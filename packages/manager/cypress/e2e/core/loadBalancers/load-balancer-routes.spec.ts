@@ -476,7 +476,7 @@ it('can create a Route', () => {
     });
 });
 
-it.only('surfaces API errors in the Create Route Drawer', () => {
+it('surfaces API errors in the Create Route Drawer', () => {
   const loadbalancer = loadbalancerFactory.build();
   const routes = routeFactory.buildList(1, { protocol: 'http' });
 
