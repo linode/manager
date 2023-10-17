@@ -2,9 +2,8 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Paper } from 'src/components/Paper';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
@@ -47,7 +46,7 @@ interface Props {
   tooltipInteractive?: boolean;
 }
 
-const AccessPanel = (props: Props) => {
+export const AccessPanel = (props: Props) => {
   const {
     authorizedUsers,
     className,
@@ -76,12 +75,11 @@ const AccessPanel = (props: Props) => {
       className={cx(
         {
           [classes.isOptional]: isOptional,
-          [classes.root]: true,
         },
+        classes.root,
         className
       )}
     >
-      {error ? <Notice text={error} variant="error" /> : null}
       <React.Suspense fallback={<SuspenseLoader />}>
         <PasswordInput
           autoComplete="off"
@@ -89,10 +87,12 @@ const AccessPanel = (props: Props) => {
           data-qa-password-input
           disabled={disabled}
           disabledReason={disabledReason || ''}
+          errorText={error}
           helperText={passwordHelperText}
           hideStrengthLabel={hideStrengthLabel}
           label={label || 'Root Password'}
           name="password"
+          noMarginTop
           onChange={handleChange}
           placeholder={placeholder || 'Enter a password.'}
           required={required}
@@ -102,7 +102,7 @@ const AccessPanel = (props: Props) => {
       </React.Suspense>
       {setAuthorizedUsers !== undefined && authorizedUsers !== undefined ? (
         <>
-          <Divider spacingBottom={20} spacingTop={44} />
+          <Divider spacingBottom={20} spacingTop={24} />
           <UserSSHKeyPanel
             authorizedUsers={authorizedUsers}
             disabled={disabled}
@@ -113,5 +113,3 @@ const AccessPanel = (props: Props) => {
     </Paper>
   );
 };
-
-export default AccessPanel;

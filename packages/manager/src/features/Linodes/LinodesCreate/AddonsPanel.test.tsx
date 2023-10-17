@@ -1,11 +1,12 @@
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { linodeTypeFactory } from 'src/factories/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import { rest, server } from 'src/mocks/testServer';
 
 import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
+import { imageFactory, linodeTypeFactory } from 'src/factories';
 
 const type = linodeTypeFactory.build({
   addons: {
@@ -172,6 +173,14 @@ const vlanAccordionTestId = 'vlan-accordion';
 const attachVLANTestId = 'attach-vlan';
 
 describe('AddonsPanel', () => {
+  beforeEach(() => {
+    server.use(
+      rest.get('*/images/*', (req, res, ctx) => {
+        return res(ctx.json(imageFactory.build()));
+      })
+    );
+  });
+
   it('should render AddonsPanel', () => {
     renderWithTheme(<AddonsPanel {...props} />);
   });
