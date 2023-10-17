@@ -7,7 +7,7 @@ import Reload from 'src/assets/icons/reload.svg';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import { rotate360 } from '../../styles/keyframes';
-import { isPropValid } from '../../utilities/isPropValid';
+import { omittedProps } from '../../utilities/omittedProps';
 
 export type ButtonType = 'outlined' | 'primary' | 'secondary';
 
@@ -43,8 +43,12 @@ export interface ButtonProps extends _ButtonProps {
 }
 
 const StyledButton = styled(_Button, {
-  shouldForwardProp: (prop) =>
-    isPropValid(['compactX', 'compactY', 'loading', 'buttonType'], prop),
+  shouldForwardProp: omittedProps([
+    'compactX',
+    'compactY',
+    'loading',
+    'buttonType',
+  ]),
 })<ButtonProps>(({ theme, ...props }) => ({
   ...(props.buttonType === 'secondary' && {
     color: theme.textColors.linkActiveLight,
