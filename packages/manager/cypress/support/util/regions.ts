@@ -92,6 +92,50 @@ export const chooseRegion = (): Region => {
 };
 
 /**
+ * Returns an array of unique Cloud Manager regions at random.
+ *
+ * If an override region is defined via the `CY_TEST_REGION` environment
+ * variable, the first item in the array will be the override region, and
+ * subsequent items will be chosen at random.
+ *
+ * @param count - Number of Regions to include in the returned array.
+ *
+ * @throws When `count` is less than 0.
+ * @throws When there are not enough regions to satisfy the given `count`.
+ *
+ * @returns Array of Cloud Manager Region objects.
+ */
+export const chooseRegions = (count: number): Region[] => {
+  if (count < 0) {
+    throw new Error(
+      'Unable to choose regions. The desired number of regions must be 0 or greater'
+    );
+  }
+  if (regions.length < count) {
+    throw new Error(
+      `Unable to choose regions. The desired number of regions exceeds the number of known regions (${regions.length})`
+    );
+  }
+  const overrideRegion = getOverrideRegion();
+
+  return new Array(count).fill(null).reduce((acc: Region[], _cur, index) => {
+    const chosenRegion: Region = ((): Region => {
+      if (index === 0 && overrideRegion) {
+        return overrideRegion;
+      }
+      // Get an array of regions that have not already been selected.
+      const unusedRegions = regions.filter(
+        (regionA: Region) =>
+          !!regions.find((regionB: Region) => regionA.id !== regionB.id)
+      );
+      return randomItem(unusedRegions);
+    })();
+    acc.push(chosenRegion);
+    return acc;
+  }, []);
+};
+
+/**
  * Executes a test for each Linode region exposed to Cypress.
  */
 export const testRegions = (
