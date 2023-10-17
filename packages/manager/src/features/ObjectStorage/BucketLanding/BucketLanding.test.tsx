@@ -1,6 +1,6 @@
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient, setLogger } from 'react-query';
 
 import {
   objectStorageBucketFactory,
@@ -17,11 +17,13 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: queryPresets.oneTimeFetch },
 });
 
-afterEach(() => {
-  queryClient.clear();
-});
-
 describe('ObjectStorageLanding', () => {
+  afterEach(() => {
+    queryClient.clear();
+    // If necessary, reset React Query logger.
+    setLogger(console);
+  });
+
   it('renders a loading state', () => {
     // Mock Buckets
     server.use(
@@ -59,6 +61,22 @@ describe('ObjectStorageLanding', () => {
   });
 
   it('renders per-cluster errors', async () => {
+    // Suppress logging React Query errors to CLI since this test is expected
+    // to trigger errors.
+    //
+    // Note: Logging options improved in React Query v4 and `setLogger` will
+    // be removed in v5. We will be able to accomplish this more cleanly once
+    // we upgrade.
+    //
+    // See also:
+    // - https://github.com/TanStack/query/issues/125
+    // - https://github.com/TanStack/query/discussions/4252
+    setLogger({
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+    });
+
     objectStorageBucketFactory.resetSequenceNumber();
     objectStorageClusterFactory.resetSequenceNumber();
 
@@ -103,6 +121,22 @@ describe('ObjectStorageLanding', () => {
   });
 
   it('renders general error state', async () => {
+    // Suppress logging React Query errors to CLI since this test is expected
+    // to trigger errors.
+    //
+    // Note: Logging options improved in React Query v4 and `setLogger` will
+    // be removed in v5. We will be able to accomplish this more cleanly once
+    // we upgrade.
+    //
+    // See also:
+    // - https://github.com/TanStack/query/issues/125
+    // - https://github.com/TanStack/query/discussions/4252
+    setLogger({
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+    });
+
     // Mock Clusters
     server.use(
       rest.get('*/object-storage/clusters', (req, res, ctx) => {
