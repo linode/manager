@@ -9,11 +9,13 @@ import {
   mockDeleteDatabase,
   mockDeleteProvisioningDatabase,
   mockGetDatabase,
+  mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { ui } from 'support/ui';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
+  mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 
 describe('Delete database clusters', () => {
@@ -40,12 +42,13 @@ describe('Delete database clusters', () => {
           // Mock account to ensure 'Managed Databases' capability.
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockDeleteDatabase(database.id, database.engine).as('deleteDatabase');
 
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait(['@getAccount', '@getDatabase']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Click "Delete Cluster" button.
           ui.button
@@ -97,6 +100,7 @@ describe('Delete database clusters', () => {
 
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockDeleteProvisioningDatabase(
             database.id,
             database.engine,
@@ -106,7 +110,7 @@ describe('Delete database clusters', () => {
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait(['@getAccount', '@getDatabase']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Click "Delete Cluster" button.
           ui.button

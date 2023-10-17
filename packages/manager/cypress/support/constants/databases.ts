@@ -44,9 +44,11 @@ export const mockDatabaseEngineTypes: DatabaseEngine[] = [
 // `linodeType` values used by the tests.
 export const mockDatabaseNodeTypes: DatabaseType[] = [
   databaseTypeFactory.build({
+    class: 'nanode',
     id: 'g6-nanode-1',
   }),
   databaseTypeFactory.build({
+    class: 'dedicated',
     id: 'g6-dedicated-16',
   }),
 ];
