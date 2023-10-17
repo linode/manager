@@ -64,4 +64,18 @@ describe('AddNewMenu', () => {
     const hiddenMenuItem = queryByText('Global Load Balancer');
     expect(hiddenMenuItem).toBeNull();
   });
+
+  test('does not render hidden menu item - databases', () => {
+    const mockedUseFlags = jest.fn().mockReturnValue({ databases: false });
+    jest.mock('src/hooks/useFlags', () => ({
+      __esModule: true,
+      useFlags: mockedUseFlags,
+    }));
+
+    const { getByText, queryByText } = renderWithTheme(<AddNewMenu />);
+    const createButton = getByText('Create');
+    fireEvent.click(createButton);
+    const hiddenMenuItem = queryByText('Create Database');
+    expect(hiddenMenuItem).toBeNull();
+  });
 });

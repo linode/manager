@@ -26,6 +26,7 @@ import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
+import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 interface LinkProps {
@@ -39,16 +40,21 @@ interface LinkProps {
 
 export const AddNewMenu = () => {
   const theme = useTheme();
-  const { data: account } = useAccount();
+  const { data: account, error: accountError } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const flags = useFlags();
   const open = Boolean(anchorEl);
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
+  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
+  const { error: enginesError } = useDatabaseEnginesQuery(checkRestrictedUser);
+
+  const showDatabases =
+    isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
+      account?.capabilities ?? []
+    ) ||
+    (checkRestrictedUser && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',

@@ -7,6 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -34,6 +35,8 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useLinodeConfigCreateMutation,
   useLinodeConfigUpdateMutation,
@@ -46,6 +49,8 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { vpcQueryKey } from 'src/queries/vpcs';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
@@ -165,23 +170,51 @@ const interfacesToState = (interfaces?: Interface[]) => {
     return defaultInterfaceList;
   }
   const interfacesPayload = interfaces.map(
-    ({ ipam_address, label, purpose }) => ({ ipam_address, label, purpose })
+    ({
+      id,
+      ipam_address,
+      ipv4,
+      label,
+      primary,
+      purpose,
+      subnet_id,
+      vpc_id,
+    }) => ({
+      id,
+      ipam_address,
+      ipv4,
+      label,
+      primary,
+      purpose,
+      subnet_id,
+      vpc_id,
+    })
   );
   return padInterfaceList(interfacesPayload);
 };
 
-const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
+const interfacesToPayload = (
+  interfaces?: ExtendedInterface[],
+  primaryInterfaceIndex?: number
+) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
-  return equals(interfaces, defaultInterfaceList)
-    ? // In this case, where eth0 is set to public interface
-      // and no other interfaces are specified, the API prefers
-      // to receive an empty array.
-      []
-    : (interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[]);
+
+  if (equals(interfaces, defaultInterfaceList)) {
+    // In this case, where eth0 is set to public interface
+    // and no other interfaces are specified, the API prefers
+    // to receive an empty array.
+    return [];
+  }
+
+  if (primaryInterfaceIndex !== undefined) {
+    interfaces[primaryInterfaceIndex].primary = true;
+  }
+
+  return interfaces.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  ) as Interface[];
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -194,6 +227,8 @@ export const LinodeConfigDialog = (props: Props) => {
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     data: kernels,
@@ -216,6 +251,9 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const theme = useTheme();
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
   const regions = useRegionsQuery().data ?? [];
 
   const queryClient = useQueryClient();
@@ -226,13 +264,30 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
+  const [
+    primaryInterfaceIndex,
+    setPrimaryInterfaceIndex,
+  ] = React.useState<number>();
+
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linode?.region &&
       thisRegion.capabilities.includes('Vlans')
   );
+  const regionHasVPCs = regions.some(
+    (thisRegion) =>
+      thisRegion.id === linode?.region &&
+      thisRegion.capabilities.includes('VPCs')
+  );
 
   const showVlans = regionHasVLANS;
+
+  // @TODO VPC: remove once VPC is fully rolled out
+  const vpcEnabled = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
 
   const { resetForm, setFieldValue, values, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -265,7 +320,7 @@ export const LinodeConfigDialog = (props: Props) => {
       devices: createDevicesFromStrings(devices),
       helpers,
       initrd: initrd !== '' ? initrd : null,
-      interfaces: interfacesToPayload(interfaces),
+      interfaces: interfacesToPayload(interfaces, primaryInterfaceIndex),
       kernel,
       label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -313,10 +368,11 @@ export const LinodeConfigDialog = (props: Props) => {
       configData.initrd = finnixDiskID;
     }
 
-    if (!regionHasVLANS) {
+    if (!regionHasVLANS || !regionHasVPCs) {
       delete configData.interfaces;
     }
 
+    const actionType = Boolean(config) ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
       queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
@@ -326,8 +382,24 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries('vlans');
+        queryClient.invalidateQueries(vlansQueryKey);
       }
+
+      // Ensure VPC query data is up-to-date
+      if (
+        configData.interfaces?.some(
+          (thisInterface) => thisInterface.purpose === 'vpc'
+        )
+      ) {
+        queryClient.invalidateQueries(vpcQueryKey);
+      }
+
+      enqueueSnackbar(
+        `Configuration ${configData.label} successfully ${actionType}`,
+        {
+          variant: 'success',
+        }
+      );
       onClose();
     };
 
@@ -344,9 +416,20 @@ export const LinodeConfigDialog = (props: Props) => {
         });
       };
 
+      // @TODO VPC: Remove this override and surface the field errors appropriately
+      // once API fixes interface index bug for ipv4.vpc & ipv4.nat_1_1 errors
+      const overrideFieldForIPv4 = (error: APIError[]) => {
+        error.forEach((err) => {
+          if (err.field && ['ipv4.nat_1_1', 'ipv4.vpc'].includes(err.field)) {
+            err.field = 'interfaces';
+          }
+        });
+      };
+
       formik.setSubmitting(false);
 
       overrideFieldForDevices(error);
+      overrideFieldForIPv4(error);
 
       handleFieldErrors(formik.setErrors, error);
 
@@ -400,6 +483,14 @@ export const LinodeConfigDialog = (props: Props) => {
           )
         );
 
+        const indexOfExistingPrimaryInterface = config.interfaces.findIndex(
+          (_interface) => _interface.primary === true
+        );
+
+        if (vpcEnabled && indexOfExistingPrimaryInterface !== -1) {
+          setPrimaryInterfaceIndex(indexOfExistingPrimaryInterface);
+        }
+
         resetForm({
           values: {
             comments: config.comments,
@@ -423,9 +514,10 @@ export const LinodeConfigDialog = (props: Props) => {
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
+        setPrimaryInterfaceIndex(0);
       }
     }
-  }, [open, config, initrdFromConfig, resetForm]);
+  }, [open, config, initrdFromConfig, resetForm, queryClient, vpcEnabled]);
 
   const generalError = formik.status?.generalError;
 
@@ -500,6 +592,21 @@ export const LinodeConfigDialog = (props: Props) => {
     value: '',
   });
 
+  const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
+    return interfaces.map((_interface, idx) => {
+      return {
+        label: `eth${idx}`,
+        value: idx,
+      };
+    });
+  };
+
+  const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
+
+  const handlePrimaryInterfaceChange = (selected: Item<number>) => {
+    setPrimaryInterfaceIndex(selected.value);
+  };
+
   /**
    * Form change handlers
    * (where formik.handleChange is insufficient)
@@ -550,6 +657,21 @@ export const LinodeConfigDialog = (props: Props) => {
       setFieldValue('initrd', selectedDisk.value);
     },
     [setFieldValue]
+  );
+
+  const networkInterfacesHelperText = (
+    <Typography>
+      Configure the network that a selected interface will connect to (
+      {vpcEnabled
+        ? '"Public Internet", VLAN, or VPC'
+        : 'either "Public Internet" or a VLAN'}
+      ) . Each Linode can have up to three Network Interfaces. For more
+      information, see our{' '}
+      <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
+        Network Interfaces guide
+      </Link>
+      .
+    </Typography>
   );
 
   return (
@@ -824,52 +946,77 @@ export const LinodeConfigDialog = (props: Props) => {
             {showVlans ? (
               <Grid xs={12}>
                 <Box alignItems="center" display="flex">
-                  <Typography variant="h3">Network Interfaces</Typography>
+                  <Typography variant="h3">
+                    {vpcEnabled ? 'Networking' : 'Network Interfaces'}
+                  </Typography>
                   <TooltipIcon
                     sxTooltipIcon={{
                       paddingBottom: 0,
                       paddingTop: 0,
                     }}
-                    text={
-                      <Typography>
-                        Configure the network that a selected interface will
-                        connect to (either &quot;Public Internet&quot; or a
-                        VLAN). Each Linode can have up to three Network
-                        Interfaces. For more information, see our{' '}
-                        <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
-                          Network Interfaces guide
-                        </Link>
-                        .
-                      </Typography>
-                    }
                     interactive
                     status="help"
                     sx={{ tooltip: { maxWidth: 350 } }}
+                    text={networkInterfacesHelperText}
                   />
                 </Box>
-                {formik.errors.interfaces ? (
+                {formik.errors.interfaces && (
                   <Notice
                     text={formik.errors.interfaces as string}
                     variant="error"
                   />
-                ) : null}
+                )}
+                {vpcEnabled && (
+                  <>
+                    <Select
+                      defaultValue={
+                        primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
+                      }
+                      data-testid="primary-interface-dropdown"
+                      disabled={isReadOnly}
+                      isClearable={false}
+                      label="Primary Interface (Default Route)"
+                      onChange={handlePrimaryInterfaceChange}
+                      options={getPrimaryInterfaceOptions(values.interfaces)}
+                    />
+                    <Divider
+                      sx={{
+                        margin: `${theme.spacing(
+                          4.5
+                        )} ${theme.spacing()} ${theme.spacing(1.5)} `,
+                        width: `calc(100% - ${theme.spacing(2)})`,
+                      }}
+                    />
+                  </>
+                )}
                 {values.interfaces.map((thisInterface, idx) => {
                   return (
                     <InterfaceSelect
+                      errors={{
+                        ipamError:
+                          formik.errors[`interfaces[${idx}].ipam_address`],
+                        labelError: formik.errors[`interfaces[${idx}].label`],
+                        publicIPv4Error:
+                          formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
+                        subnetError:
+                          formik.errors[`interfaces[${idx}].subnet_id`],
+                        vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
+                        vpcIPv4Error:
+                          formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                      }}
                       handleChange={(newInterface: Interface) =>
                         handleInterfaceChange(idx, newInterface)
-                      }
-                      ipamError={
-                        formik.errors[`interfaces[${idx}].ipam_address`]
                       }
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
-                      labelError={formik.errors[`interfaces[${idx}].label`]}
                       purpose={thisInterface.purpose}
                       readOnly={isReadOnly}
                       region={linode?.region}
                       slotNumber={idx}
+                      subnetId={thisInterface.subnet_id}
+                      vpcIPv4={thisInterface.ipv4?.vpc}
+                      vpcId={thisInterface.vpc_id}
                     />
                   );
                 })}
@@ -1012,7 +1159,7 @@ interface ConfigFormProps {
   loading: boolean;
 }
 
-const DialogContent: React.FC<ConfigFormProps> = (props) => {
+const DialogContent = (props: ConfigFormProps) => {
   const { errors, loading } = props;
 
   if (loading) {
