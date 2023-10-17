@@ -5,6 +5,7 @@ import { QueryClient } from 'react-query';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectFirewallPanel } from './SelectFirewallPanel';
+import { createFirewallLabel } from './SelectFirewallPanel';
 
 const queryClient = new QueryClient();
 
@@ -48,9 +49,7 @@ describe('SelectFirewallPanel', () => {
     fireEvent.click(createFirewallLink);
 
     await waitFor(() => {
-      expect(
-        wrapper.getByLabelText('Additional Linodes (Optional)')
-      ).toBeInTheDocument();
+      expect(wrapper.getByLabelText(createFirewallLabel)).toBeInTheDocument();
     });
   });
 });

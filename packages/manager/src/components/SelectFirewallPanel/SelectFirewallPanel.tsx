@@ -14,6 +14,8 @@ interface Props {
   helperText: JSX.Element;
 }
 
+export const createFirewallLabel = 'Additional Linodes (Optional)';
+
 export const SelectFirewallPanel = (props: Props) => {
   const { handleFirewallChange, helperText } = props;
 
@@ -83,7 +85,7 @@ export const SelectFirewallPanel = (props: Props) => {
           Create Firewall
         </StyledCreateLink>
         <CreateFirewallDrawer
-          label="Additional Linodes (Optional)"
+          label={createFirewallLabel}
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}
