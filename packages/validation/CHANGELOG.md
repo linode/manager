@@ -1,3 +1,9 @@
+## [2023-10-16] - v0.33.0
+
+### Upcoming Features:
+
+- Add `UpdateCertificateSchema` for AGLB ([#9723](https://github.com/linode/manager/pull/9723))
+
 ## [2023-10-02] - v0.32.0
 
 ### Upcoming Features:

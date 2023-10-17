@@ -1,3 +1,10 @@
+## [2023-10-16] - v0.103.0
+
+### Upcoming Features:
+
+- Added `UpdateCertificatePayload` payload and updated `Certificate` interface ([#9723](https://github.com/linode/manager/pull/9723))
+- New payload option `migration_type` in `ResizeLinodePayload` and new event type `linode_resize_warm_create` ([#9677](https://github.com/linode/manager/pull/9677))
+
 ## [2023-10-02] - v0.102.0
 
 ### Upcoming Features:
