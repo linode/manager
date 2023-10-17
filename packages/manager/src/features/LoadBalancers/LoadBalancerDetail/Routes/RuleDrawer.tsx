@@ -42,18 +42,31 @@ interface Props {
   onClose: () => void;
   open: boolean;
   route: Route | undefined;
+  ruleIndexToEdit: number | undefined;
 }
 
-export const AddRuleDrawer = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open, route } = props;
+/**
+ * Drawer used for *adding* and *editing* AGLB rules
+ */
+export const RuleDrawer = (props: Props) => {
+  const {
+    loadbalancerId,
+    onClose: _onClose,
+    open,
+    route,
+    ruleIndexToEdit,
+  } = props;
 
-  const ruleIndex = route?.rules.length ?? 0;
+  const ruleIndex = ruleIndexToEdit ?? route?.rules.length ?? 0;
+
+  const isEditMode = ruleIndexToEdit !== undefined;
 
   const validationSchema =
     route?.protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
 
   const {
     error,
+    isLoading,
     mutateAsync: updateRule,
     reset,
   } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
@@ -62,13 +75,23 @@ export const AddRuleDrawer = (props: Props) => {
 
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
-    initialValues,
+    initialValues: isEditMode
+      ? route?.rules[ruleIndexToEdit] ?? initialValues
+      : initialValues,
     async onSubmit(rule) {
       try {
         const existingRules = route?.rules ?? [];
+
+        // If we are editing, update the rule with the form data.
+        if (isEditMode) {
+          existingRules[ruleIndexToEdit] = rule;
+        }
+
         await updateRule({
           protocol: route?.protocol,
-          rules: [...existingRules, rule],
+          // If we are editing, send the updated rules, otherwise
+          // append a new rule to the end.
+          rules: isEditMode ? existingRules : [...existingRules, rule],
         });
         onClose();
       } catch (errors) {
@@ -167,7 +190,12 @@ export const AddRuleDrawer = (props: Props) => {
     .join(', ');
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add Rule" wide>
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={`${isEditMode ? 'Edit' : 'Add'} Rule`}
+      wide
+    >
       <form onSubmit={formik.handleSubmit}>
         {/**
          * @todo: AGLB update copy
@@ -464,8 +492,8 @@ export const AddRuleDrawer = (props: Props) => {
         </Stack>
         <ActionsPanel
           primaryButtonProps={{
-            label: 'Add Rule',
-            loading: formik.isSubmitting,
+            label: isEditMode ? 'Save' : 'Add Rule',
+            loading: formik.isSubmitting || isLoading,
             type: 'submit',
           }}
           secondaryButtonProps={{

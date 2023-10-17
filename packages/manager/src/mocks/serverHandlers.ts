@@ -354,7 +354,7 @@ const aglb = [
   }),
   // Routes
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(routeFactory.buildList(1))));
+    return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
   }),
   rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));
@@ -362,7 +362,10 @@ const aglb = [
   rest.put('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     const id = Number(req.params.routeId);
     const body = req.body as any;
-    return res(ctx.json(createRouteFactory.build({ id, ...body })));
+    return res(
+      ctx.delay(1000),
+      ctx.json(createRouteFactory.build({ id, ...body }))
+    );
   }),
   rest.delete('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     return res(ctx.json({}));
