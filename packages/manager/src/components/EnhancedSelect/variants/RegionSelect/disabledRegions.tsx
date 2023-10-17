@@ -58,7 +58,7 @@ interface DisabledRegion {
 export const listOfDisabledRegions: DisabledRegion[] = [
   {
     disabledMessage: tokyoDisabledMessage,
-    excludePaths: ['/object-storage/buckets/create'],
+    excludePaths: ['/object-storage/buckets/create', '/vpcs/create'],
     fakeRegion: fakeTokyo,
     featureFlag: 'soldOutTokyo',
   },
