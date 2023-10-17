@@ -74,7 +74,7 @@ export const listOfDisabledRegions: DisabledRegion[] = [
     featureFlag: 'soldOutTokyo',
   },
   {
-    excludePaths: ['/object-storage/buckets/create', '/vpcs/create'],
+    excludePaths: ['/vpcs/create'],
     fakeRegion: {
       disabledMessage: disabledMessage({
         disabledLink: SINGAPORE_DISABLED_MESSAGE_LINK,
