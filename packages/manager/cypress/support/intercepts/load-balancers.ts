@@ -155,7 +155,7 @@ export const mockCreateServiceTarget = (
  * Intercepts POST request to create a route and mocks response.
  *
  * @param loadBalancer - Load balancer for mocked route.
- * @param serviceTarget - Service target with which to mock response.
+ * @param route - Route with which to mock response.
  *
  * @returns Cypress chainable.
  */
