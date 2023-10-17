@@ -479,6 +479,9 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           borderRadius: 1,
         },
+        colorSuccess: {
+          color: '#fff',
+        },
         root: {
           '&:focus': {
             outline: '1px dotted #999',
@@ -487,7 +490,7 @@ export const lightTheme: ThemeOptions = {
             marginRight: 0,
           },
           alignItems: 'center',
-          backgroundColor: '#E7E7E7',
+          // backgroundColor: '#E7E7E7',
           borderRadius: 4,
           color: primaryColors.text,
           display: 'inline-flex',

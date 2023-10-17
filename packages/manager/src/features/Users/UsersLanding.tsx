@@ -1,15 +1,8 @@
-import { User, deleteUser } from '@linode/api-v4/lib/account';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -22,108 +15,33 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { GravatarByEmail } from '../../components/GravatarByEmail';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
-import { UsersActionMenu } from './UsersActionMenu';
+import { UserRow } from './UserRow';
 
 export const UsersLanding = () => {
   const { data: profile } = useProfile();
+
   const pagination = usePagination(1, 'account-users');
+
   const { data: users, error, isLoading, refetch } = useAccountUsers({
     page: pagination.page,
     page_size: pagination.pageSize,
   });
+
   const isRestrictedUser = profile?.restricted;
-  const { enqueueSnackbar } = useSnackbar();
-  const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
+
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
   );
-  const [
-    deleteConfirmDialogOpen,
-    setDeleteConfirmDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [newUsername, setNewUsername] = React.useState<string | undefined>(
-    undefined
-  );
-  const [userDeleteError, setUserDeleteError] = React.useState<
-    boolean | undefined
-  >(false);
-  const [toDeleteUsername, setToDeleteUsername] = React.useState<
-    string | undefined
-  >('');
 
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [selectedUsername, setSelectedUsername] = React.useState('');
 
-  const openForCreate = () => {
-    setCreateDrawerOpen(true);
-  };
-
-  const userCreateOnClose = () => {
-    setCreateDrawerOpen(false);
-  };
-
-  const onDeleteConfirm = (username: string) => {
-    setNewUsername(undefined);
-    setUserDeleteError(false);
-    setDeleteConfirmDialogOpen(false);
-
-    deleteUser(username)
-      .then(() => {
-        refetch();
-        enqueueSnackbar(`User ${username} has been deleted successfully.`, {
-          variant: 'success',
-        });
-      })
-      .catch(() => {
-        setUserDeleteError(true);
-        setToDeleteUsername('');
-
-        scrollErrorIntoView();
-      });
-  };
-
-  const onDeleteCancel = () => {
-    setDeleteConfirmDialogOpen(false);
-  };
-
-  const onUsernameDelete = (username: string) => {
-    setDeleteConfirmDialogOpen(true);
-    setToDeleteUsername(username);
-  };
-
-  const renderUserRow = (user: User) => {
-    return (
-      <TableRow
-        ariaLabel={`User ${user.username}`}
-        data-qa-user-row
-        key={user.username}
-      >
-        <TableCell data-qa-username>
-          <Grid alignItems="center" container spacing={2}>
-            <Grid style={{ display: 'flex' }}>
-              <GravatarByEmail email={user.email} />
-            </Grid>
-            <Grid className="px0">{user.username}</Grid>
-          </Grid>
-        </TableCell>
-        {!matchesSmDown && (
-          <TableCell data-qa-user-email>{user.email}</TableCell>
-        )}
-        <TableCell data-qa-user-restriction>
-          {user.restricted ? 'Limited' : 'Full'}
-        </TableCell>
-        <TableCell actionCell>
-          <UsersActionMenu
-            onDelete={onUsernameDelete}
-            username={user.username}
-          />
-        </TableCell>
-      </TableRow>
-    );
+  const onDelete = (username: string) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedUsername(username);
   };
 
   const renderTableContent = () => {
@@ -145,25 +63,14 @@ export const UsersLanding = () => {
       return <TableRowEmpty colSpan={4} />;
     }
 
-    return users.data.map((user) => renderUserRow(user));
+    return users.data.map((user) => (
+      <UserRow key={user.username} onDelete={onDelete} user={user} />
+    ));
   };
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
-      {newUsername && (
-        <Notice
-          text={`User ${newUsername} created successfully`}
-          variant="success"
-        />
-      )}
-      {userDeleteError && (
-        <Notice
-          style={{ marginTop: newUsername ? 16 : 0 }}
-          text={`Error when deleting user, please try again later`}
-          variant="error"
-        />
-      )}
       <Box display="flex" justifyContent="flex-end" sx={{ marginBottom: 1 }}>
         <AddNewLink
           disabledReason={
@@ -173,17 +80,15 @@ export const UsersLanding = () => {
           }
           disabled={isRestrictedUser}
           label="Add a User"
-          onClick={openForCreate}
+          onClick={() => setIsCreateDrawerOpen(true)}
         />
       </Box>
       <Table aria-label="List of Users">
         <TableHead>
           <TableRow>
-            <TableCell data-qa-username-column>Username</TableCell>
-            {!matchesSmDown && (
-              <TableCell data-qa-email-column>Email Address</TableCell>
-            )}
-            <TableCell data-qa-restriction-column>Account Access</TableCell>
+            <TableCell>Username</TableCell>
+            <TableCell>Email Address</TableCell>
+            <TableCell>Account Access</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -198,15 +103,14 @@ export const UsersLanding = () => {
         pageSize={pagination.pageSize}
       />
       <CreateUserDrawer
-        onClose={userCreateOnClose}
-        open={createDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
         refetch={refetch}
       />
       <UserDeleteConfirmationDialog
-        onCancel={onDeleteCancel}
-        onDelete={() => onDeleteConfirm(toDeleteUsername ?? '')}
-        open={deleteConfirmDialogOpen}
-        username={toDeleteUsername || ''}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        username={selectedUsername}
       />
     </React.Fragment>
   );

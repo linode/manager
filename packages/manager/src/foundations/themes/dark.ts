@@ -250,7 +250,7 @@ export const darkTheme: ThemeOptions = {
           borderRadius: 1,
         },
         root: {
-          backgroundColor: primaryColors.main,
+          // backgroundColor: primaryColors.main,
           color: primaryColors.text,
         },
       },
