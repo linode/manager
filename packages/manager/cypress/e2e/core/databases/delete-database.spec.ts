@@ -2,23 +2,21 @@
  * @file DBaaS integration tests for delete operations.
  */
 
-import { databaseFactory } from 'src/factories/databases';
+import { accountFactory, databaseFactory } from 'src/factories';
 import { randomNumber, randomIp } from 'support/util/random';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockDeleteDatabase,
   mockDeleteProvisioningDatabase,
   mockGetDatabase,
+  mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
+  mockDatabaseNodeTypes,
 } from 'support/constants/databases';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
@@ -41,17 +39,16 @@ describe('Delete database clusters', () => {
             allow_list: [allowedIp],
           });
 
-          mockAppendFeatureFlags({
-            databases: makeFeatureFlagData(true),
-          }).as('getFeatureFlags');
-          mockGetFeatureFlagClientstream().as('getClientstream');
+          // Mock account to ensure 'Managed Databases' capability.
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockDeleteDatabase(database.id, database.engine).as('deleteDatabase');
 
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait(['@getFeatureFlags', '@getClientstream', '@getDatabase']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Click "Delete Cluster" button.
           ui.button
@@ -101,11 +98,9 @@ describe('Delete database clusters', () => {
           const errorMessage =
             'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
 
-          mockAppendFeatureFlags({
-            databases: makeFeatureFlagData(true),
-          }).as('getFeatureFlags');
-          mockGetFeatureFlagClientstream().as('getClientstream');
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockDeleteProvisioningDatabase(
             database.id,
             database.engine,
@@ -115,7 +110,7 @@ describe('Delete database clusters', () => {
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait(['@getFeatureFlags', '@getClientstream', '@getDatabase']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Click "Delete Cluster" button.
           ui.button

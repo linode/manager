@@ -17,7 +17,7 @@ describe('Delete Subnet dialog', () => {
     const { getByText } = renderWithTheme(<SubnetDeleteDialog {...props} />);
 
     getByText('Delete Subnet some subnet');
-    getByText('Subnet label');
+    getByText('Subnet Label');
     getByText('Cancel');
     getByText('Delete');
   });

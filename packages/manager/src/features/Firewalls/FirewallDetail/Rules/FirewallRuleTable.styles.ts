@@ -1,9 +1,11 @@
 import { styled } from '@mui/material/styles';
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { Box } from 'src/components/Box';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { Button } from 'src/components/Button/Button';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { omittedProps } from 'src/utilities/omittedProps';
+
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
 type StyledFirewallRuleButtonProps = Pick<FirewallRuleTableRowProps, 'status'>;
@@ -25,13 +27,13 @@ export const sxItemSpacing = {
 
 export const StyledFirewallRuleBox = styled(Box, {
   label: 'StyledFirewallRuleBox',
-  shouldForwardProp: (prop) => isPropValid(['originalIndex', 'ruleId'], prop),
+  shouldForwardProp: omittedProps(['originalIndex', 'ruleId']),
 })<StyledFirewallRuleBoxProps>(
-  ({ theme, status, disabled, originalIndex, ruleId }) => ({
-    margin: 0,
-    fontSize: '0.875rem',
+  ({ disabled, originalIndex, ruleId, status, theme }) => ({
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
+    fontSize: '0.875rem',
+    margin: 0,
     ...sxBox,
 
     // Conditional styles
@@ -62,10 +64,10 @@ export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
 
 export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
   ({ theme }) => ({
+    alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
-    alignItems: 'center',
     display: 'flex',
     fontSize: '0.875rem',
     justifyContent: 'center',
@@ -76,7 +78,7 @@ export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
 
 export const StyledFirewallRuleButton = styled('button', {
   label: 'StyledFirewallRuleButton',
-})<StyledFirewallRuleButtonProps>(({ theme, status }) => ({
+})<StyledFirewallRuleButtonProps>(({ status, theme }) => ({
   backgroundColor: 'transparent',
   border: 'none',
   cursor: 'pointer',
@@ -95,7 +97,7 @@ export const StyledFirewallTableButton = styled(Button, {
 
 export const MoreStyledLinkButton = styled(StyledLinkButton, {
   label: 'MoreStyledLinkButton',
-})(({ theme, ...props }) => ({
+})(({ ...props }) => ({
   color: props.disabled ? 'inherit' : '',
 }));
 

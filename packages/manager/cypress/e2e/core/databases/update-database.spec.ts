@@ -8,25 +8,24 @@ import {
   randomIp,
   randomString,
 } from 'support/util/random';
-import { databaseFactory } from 'src/factories/databases';
+import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetDatabase,
   mockGetDatabaseCredentials,
+  mockGetDatabaseTypes,
   mockResetPassword,
   mockResetPasswordProvisioningDatabase,
   mockUpdateDatabase,
   mockUpdateProvisioningDatabase,
 } from 'support/intercepts/databases';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
   databaseClusterConfiguration,
   databaseConfigurations,
+  mockDatabaseNodeTypes,
 } from 'support/constants/databases';
+import { accountFactory } from '@src/factories';
 
 /**
  * Updates a database cluster's label.
@@ -169,11 +168,10 @@ describe('Update database clusters', () => {
             allow_list: [allowedIp],
           });
 
-          mockAppendFeatureFlags({
-            databases: makeFeatureFlagData(true),
-          }).as('getFeatureFlags');
-          mockGetFeatureFlagClientstream().as('getClientstream');
+          // Mock account to ensure 'Managed Databases' capability.
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockResetPassword(database.id, database.engine).as(
             'resetRootPassword'
           );
@@ -184,7 +182,7 @@ describe('Update database clusters', () => {
           ).as('getCredentials');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait(['@getDatabase', '@getFeatureFlags', '@getClientstream']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           cy.get('[data-qa-cluster-config]').within(() => {
             cy.findByText(configuration.region.label).should('be.visible');
@@ -285,13 +283,9 @@ describe('Update database clusters', () => {
             'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
           const hostnameRegex = /your hostnames? will appear here once (it is|they are) available./i;
 
-          mockAppendFeatureFlags({
-            databases: makeFeatureFlagData(true),
-          }).as('getFeatureFlags');
-
-          mockGetFeatureFlagClientstream().as('getClientstream');
-
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
           mockUpdateProvisioningDatabase(
             database.id,
@@ -306,7 +300,7 @@ describe('Update database clusters', () => {
           ).as('resetRootPassword');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait(['@getDatabase', '@getFeatureFlags', '@getClientstream']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Cannot update database label.
           updateDatabaseLabel(initialLabel, updateAttemptLabel);

@@ -1,65 +1,27 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 
+import '../../assets/weblish/weblish.css';
+import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  notFound: {
-    '& h1': {
-      color: '#f4f4f4 !important',
-    },
-    color: '#f4f4f4 !important',
-  },
-  progress: {
-    height: 'auto',
-  },
-  tabs: {
-    '& [role="tab"]': {
-      '&[aria-selected="true"]': {
-        '&:hover': {
-          backgroundColor: theme.palette.primary.light,
-          color: 'white',
-        },
-        backgroundColor: theme.palette.primary.main,
-        borderBottom: 'none !important',
-        color: 'white !important',
-      },
-      backgroundColor: theme.bg.offWhite,
-      color: theme.color.tableHeaderText,
-      flex: 'auto',
-      margin: 0,
-      maxWidth: 'none !important',
-    },
-    '& [role="tablist"]': {
-      backgroundColor: theme.bg.offWhite,
-      display: 'flex',
-      margin: 0,
-      overflow: 'hidden',
-    },
-    backgroundColor: 'black',
-    margin: 0,
-  },
-}));
-
 const Lish = () => {
-  const classes = useStyles();
   const history = useHistory();
 
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
@@ -83,10 +45,6 @@ const Lish = () => {
   const token = data?.lish_token;
 
   React.useEffect(() => {
-    const webLishCss = import('' + '../../assets/weblish/weblish.css');
-    const xtermCss = import('' + '../../assets/weblish/xterm.css');
-    Promise.all([webLishCss, xtermCss]);
-
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
 
     return () => {
@@ -127,7 +85,7 @@ const Lish = () => {
   };
 
   if (isLoading) {
-    return <CircleProgress className={classes.progress} noInner />;
+    return <StyledCircleProgress />;
   }
 
   if (linodeError) {
@@ -149,44 +107,63 @@ const Lish = () => {
     );
   }
 
-  return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <React.Fragment>
-      {linode && token && (
-        <Tabs
-          index={
-            type &&
-            tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !==
-              -1
-              ? tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type)
-              : 0
-          }
-          className={classes.tabs}
-          onChange={navToURL}
-        >
-          <TabLinkList tabs={tabs} />
-          <TabPanels>
-            <SafeTabPanel data-qa-tab="Weblish" index={0}>
-              <Weblish
-                linode={linode}
-                refreshToken={refreshToken}
-                token={token}
-              />
-            </SafeTabPanel>
-            {!isBareMetal && (
-              <SafeTabPanel data-qa-tab="Glish" index={1}>
-                <Glish
-                  linode={linode}
-                  refreshToken={refreshToken}
-                  token={token}
-                />
-              </SafeTabPanel>
-            )}
-          </TabPanels>
-        </Tabs>
-      )}
-    </React.Fragment>
-  );
+  return linode && token ? (
+    <StyledTabs
+      index={
+        type &&
+        tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !== -1
+          ? tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type)
+          : 0
+      }
+      onChange={navToURL}
+    >
+      <TabLinkList tabs={tabs} />
+      <TabPanels>
+        <SafeTabPanel data-qa-tab="Weblish" index={0}>
+          <Weblish linode={linode} refreshToken={refreshToken} token={token} />
+        </SafeTabPanel>
+        {!isBareMetal && (
+          <SafeTabPanel data-qa-tab="Glish" index={1}>
+            <Glish linode={linode} refreshToken={refreshToken} token={token} />
+          </SafeTabPanel>
+        )}
+      </TabPanels>
+    </StyledTabs>
+  ) : null;
 };
 
 export default Lish;
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+  '& [data-reach-tab][role="tab"]': {
+    '&[aria-selected="true"]': {
+      '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+        color: theme.name === 'light' ? theme.color.white : theme.color.black,
+      },
+      backgroundColor: theme.palette.primary.main,
+      borderBottom: 'none !important',
+      color: theme.name === 'light' ? theme.color.white : theme.color.black,
+    },
+    backgroundColor: theme.bg.offWhite,
+    color: theme.color.tableHeaderText,
+    flex: 'auto',
+    margin: 0,
+    maxWidth: 'none !important',
+  },
+  '& [role="tablist"]': {
+    backgroundColor: theme.bg.offWhite,
+    display: 'flex',
+    margin: 0,
+    overflow: 'hidden',
+  },
+  backgroundColor: 'black',
+  margin: 0,
+}));
+
+export const StyledCircleProgress = styled(CircleProgress)(() => ({
+  left: '50%',
+  position: 'absolute',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
+}));

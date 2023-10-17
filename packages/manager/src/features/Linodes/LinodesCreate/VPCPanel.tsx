@@ -32,10 +32,10 @@ export interface VPCPanelProps {
   handleSelectVPC: (vpcId: number) => void;
   handleSubnetChange: (subnetId: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
-  nat_1_1Error?: string;
+  publicIPv4Error?: string;
   region: string | undefined;
-  selectedSubnetId?: null | number;
-  selectedVPCId?: null | number;
+  selectedSubnetId: null | number | undefined;
+  selectedVPCId: null | number | undefined;
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
@@ -54,7 +54,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     handleSelectVPC,
     handleSubnetChange,
     handleVPCIPv4Change,
-    nat_1_1Error,
+    publicIPv4Error,
     region,
     selectedSubnetId,
     selectedVPCId,
@@ -149,6 +149,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
     return (
       <>
+        {/* @TODO VPC: Update link */}
         {copy} <Link to="">Learn more</Link>.
       </>
     );
@@ -175,10 +176,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
         </Typography>
       )}
       <Stack>
-        <Typography>
-          {/* @TODO VPC: Update link */}
-          {getMainCopyVPC()}
-        </Typography>
+        <Typography>{getMainCopyVPC()}</Typography>
         <Select
           onChange={(selectedVPC: Item<number, string>) => {
             handleSelectVPC(selectedVPC.value);
@@ -306,13 +304,13 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   </Box>
                 }
               />
-              {assignPublicIPv4Address && nat_1_1Error && (
+              {assignPublicIPv4Address && publicIPv4Error && (
                 <Typography
                   sx={(theme) => ({
                     color: theme.color.red,
                   })}
                 >
-                  {nat_1_1Error}
+                  {publicIPv4Error}
                 </Typography>
               )}
             </Box>

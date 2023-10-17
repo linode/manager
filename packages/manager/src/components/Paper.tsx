@@ -2,7 +2,7 @@ import _Paper, { PaperProps } from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { FormHelperText } from './FormHelperText';
 
@@ -37,7 +37,7 @@ export const Paper = (props: Props) => {
 };
 
 const StyledPaper = styled(_Paper, {
-  shouldForwardProp: (prop) => isPropValid(['error'], prop),
+  shouldForwardProp: omittedProps(['error']),
 })<Props>(({ theme, ...props }) => ({
   borderColor: props.error ? theme.color.red : undefined,
   padding: theme.spacing(3),

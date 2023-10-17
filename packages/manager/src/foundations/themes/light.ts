@@ -644,7 +644,7 @@ export const lightTheme: ThemeOptions = {
           '&$error': {
             color: '#555',
           },
-          '&$focused': {
+          '&.Mui-focused': {
             color: '#555',
           },
           color: '#555',

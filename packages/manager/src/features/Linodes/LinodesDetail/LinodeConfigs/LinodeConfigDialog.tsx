@@ -7,6 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -48,6 +49,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { vpcQueryKey } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -226,6 +228,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     data: kernels,
     error: kernelsError,
@@ -368,10 +372,19 @@ export const LinodeConfigDialog = (props: Props) => {
       configData.initrd = finnixDiskID;
     }
 
-    if (!regionHasVLANS || !regionHasVPCs) {
-      delete configData.interfaces;
+    if (!regionHasVLANS) {
+      configData.interfaces = configData.interfaces?.filter(
+        (_interface) => _interface.purpose !== 'vlan'
+      );
     }
 
+    if (!regionHasVPCs) {
+      configData.interfaces = configData.interfaces?.filter(
+        (_interface) => _interface.purpose !== 'vpc'
+      );
+    }
+
+    const actionType = Boolean(config) ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
       queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
@@ -381,8 +394,24 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries('vlans');
+        queryClient.invalidateQueries(vlansQueryKey);
       }
+
+      // Ensure VPC query data is up-to-date
+      if (
+        configData.interfaces?.some(
+          (thisInterface) => thisInterface.purpose === 'vpc'
+        )
+      ) {
+        queryClient.invalidateQueries(vpcQueryKey);
+      }
+
+      enqueueSnackbar(
+        `Configuration ${configData.label} successfully ${actionType}`,
+        {
+          variant: 'success',
+        }
+      );
       onClose();
     };
 
@@ -955,6 +984,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       defaultValue={
                         primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
                       }
+                      data-testid="primary-interface-dropdown"
                       disabled={isReadOnly}
                       isClearable={false}
                       label="Primary Interface (Default Route)"
@@ -998,7 +1028,7 @@ export const LinodeConfigDialog = (props: Props) => {
                         ipamError:
                           formik.errors[`interfaces[${idx}].ipam_address`],
                         labelError: formik.errors[`interfaces[${idx}].label`],
-                        nat_1_1Error:
+                        publicIPv4Error:
                           formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
                         subnetError:
                           formik.errors[`interfaces[${idx}].subnet_id`],

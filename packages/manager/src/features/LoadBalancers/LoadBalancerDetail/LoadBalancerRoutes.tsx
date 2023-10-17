@@ -24,16 +24,22 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
+import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
+import { RuleDrawer } from './Routes/RuleDrawer';
 import { RulesTable } from './RulesTable';
 
-import type { Filter } from '@linode/api-v4';
+import type { Filter, Route } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 
 export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
+  const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedRouteId, setSelectedRouteId] = useState<number>();
+  const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -64,6 +70,26 @@ export const LoadBalancerRoutes = () => {
     filter
   );
 
+  const selectedRoute = routes?.data.find(
+    (route) => route.id === selectedRouteId
+  );
+
+  const onAddRule = (route: Route) => {
+    setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
+  const onEditRule = (route: Route, ruleIndex: number) => {
+    setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+    setSelectedRuleIndex(ruleIndex);
+  };
+
+  const onDeleteRoute = (route: Route) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -72,20 +98,23 @@ export const LoadBalancerRoutes = () => {
     if (!routes) {
       return [];
     }
-    return routes.data?.map(({ id, label, protocol, rules }) => {
+    return routes.data?.map((route) => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
-            <TableCell>{rules?.length}</TableCell>
+            <TableCell>{route.rules.length}</TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell>{protocol?.toLocaleUpperCase()}</TableCell>{' '}
+            <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>{' '}
           </Hidden>
           <TableCell actionCell>
             {/**
              * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.
              */}
-            <InlineMenuAction actionText="Add Rule" onClick={() => null} />
+            <InlineMenuAction
+              actionText="Add Rule"
+              onClick={() => onAddRule(route)}
+            />
             {/**
              * TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets.
              */}
@@ -93,21 +122,27 @@ export const LoadBalancerRoutes = () => {
               actionsList={[
                 { onClick: () => null, title: 'Edit' },
                 { onClick: () => null, title: 'Clone Route' },
-                { onClick: () => null, title: 'Delete' },
+                { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
-              ariaLabel={`Action Menu for Route ${label}`}
+              ariaLabel={`Action Menu for Route ${route.label}`}
             />
           </TableCell>
         </>
       );
 
-      const InnerTable = <RulesTable rules={rules} />;
+      const InnerTable = (
+        <RulesTable
+          loadbalancerId={Number(loadbalancerId)}
+          onEditRule={(index) => onEditRule(route, index)}
+          route={route}
+        />
+      );
 
       return {
         InnerTable,
         OuterTableCells,
-        id,
-        label,
+        id: route.id,
+        label: route.label,
       };
     });
   };
@@ -191,6 +226,22 @@ export const LoadBalancerRoutes = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <RuleDrawer
+        onClose={() => {
+          setIsAddRuleDrawerOpen(false);
+          setSelectedRuleIndex(undefined);
+        }}
+        loadbalancerId={Number(loadbalancerId)}
+        open={isAddRuleDrawerOpen}
+        route={selectedRoute}
+        ruleIndexToEdit={selectedRuleIndex}
+      />
+      <DeleteRouteDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        route={selectedRoute}
       />
     </>
   );

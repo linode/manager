@@ -256,3 +256,8 @@ body > div.terminal {
 .osx b, .osx strong {
   font-weight: 500;
 }
+
+[data-qa-tab="Glish"] canvas {
+  margin: 0 !important;
+  padding: 24px;
+}

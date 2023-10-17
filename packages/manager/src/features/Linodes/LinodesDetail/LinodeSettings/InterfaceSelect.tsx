@@ -47,6 +47,22 @@ interface VPCState {
   vpcId?: null | number;
 }
 
+interface VPCStateErrors {
+  ipamError?: string;
+  labelError?: string;
+  publicIPv4Error?: string;
+  subnetError?: string;
+  vpcError?: string;
+  vpcIPv4Error?: string;
+}
+
+interface VPCState {
+  errors: VPCStateErrors;
+  subnetId?: null | number;
+  vpcIPv4?: string;
+  vpcId?: null | number;
+}
+
 // To allow for empty slots, which the API doesn't account for
 export type ExtendedPurpose = 'none' | InterfacePurpose;
 export interface ExtendedInterface
@@ -367,7 +383,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
-            nat_1_1Error={errors.nat_1_1Error}
+            publicIPv4Error={errors.publicIPv4Error}
             region={region}
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}

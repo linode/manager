@@ -7,17 +7,14 @@ import {
   getStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
-import { Table } from 'src/components/Table';
 import { Typography } from 'src/components/Typography';
 import {
   WithProfileProps,
@@ -27,7 +24,13 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
 
-import StackScriptTableHead from '../Partials/StackScriptTableHead';
+import { StackScriptTableHead } from '../Partials/StackScriptTableHead';
+import {
+  StyledLinkDiv,
+  StyledPanelPaper,
+  StyledSelectingPaper,
+  StyledTable,
+} from './SelectStackScriptPanel.styles';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
@@ -35,38 +38,6 @@ export interface ExtendedLinode extends Linode {
   heading: string;
   subHeadings: string[];
 }
-
-type ClassNames = 'inner' | 'link' | 'panel' | 'selecting' | 'table';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    inner: {
-      padding: 0,
-    },
-    link: {
-      display: 'block',
-      marginBottom: 24,
-      marginTop: theme.spacing(),
-      textAlign: 'right',
-    },
-    panel: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      marginBottom: theme.spacing(3),
-      width: '100%',
-    },
-    selecting: {
-      maxHeight: '1000px',
-      minHeight: '400px',
-      overflowY: 'scroll',
-      paddingTop: 0,
-    },
-    table: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      width: '100%',
-    },
-  });
 
 interface Props extends RenderGuardProps {
   category: string;
@@ -93,10 +64,7 @@ interface Props extends RenderGuardProps {
   selectedUsername?: string;
 }
 
-type CombinedProps = Props &
-  RenderGuardProps &
-  WithStyles<ClassNames> &
-  WithProfileProps;
+type CombinedProps = Props & RenderGuardProps & WithProfileProps;
 
 interface State {
   stackScript?: StackScript;
@@ -136,14 +104,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      category,
-      classes,
-      error,
-      profile,
-      request,
-      selectedId,
-    } = this.props;
+    const { category, error, profile, request, selectedId } = this.props;
     const { stackScript, stackScriptError, stackScriptLoading } = this.state;
 
     if (selectedId) {
@@ -153,11 +114,10 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       if (stackScript) {
         return (
           <React.Fragment>
-            <Table
+            <StyledTable
               aria-label="List of StackScripts"
               data-qa-select-stackscript
               noOverflow={true}
-              tableClass={classes.table}
             >
               <StackScriptTableHead
                 currentFilterType={null}
@@ -180,20 +140,20 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   updateFor={[selectedId === stackScript.id]}
                 />
               </tbody>
-            </Table>
-            <div className={classes.link}>
+            </StyledTable>
+            <StyledLinkDiv>
               <Button buttonType="secondary" onClick={this.resetStackScript}>
                 Choose another StackScript
               </Button>
-            </div>
+            </StyledLinkDiv>
           </React.Fragment>
         );
       }
     }
 
     return (
-      <Paper className={classes.panel}>
-        <div className={classes.inner}>
+      <StyledPanelPaper>
+        <Box padding={0}>
           {error && (
             <Notice
               spacingBottom={0}
@@ -207,7 +167,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               An error occurred while loading the selected StackScript.
             </Typography>
           )}
-          <Paper className={classes.selecting}>
+          <StyledSelectingPaper>
             <SelectStackScriptPanelContent
               category={category}
               currentUser={profile.data?.username || ''}
@@ -219,9 +179,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               request={request}
               resetStackScriptSelection={this.props.resetSelectedStackScript}
             />
-          </Paper>
-        </div>
-      </Paper>
+          </StyledSelectingPaper>
+        </Box>
+      </StyledPanelPaper>
     );
   }
 
@@ -237,10 +197,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
   RenderGuard,
-  styled,
   withProfile
 )(SelectStackScriptPanel);

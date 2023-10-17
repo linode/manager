@@ -1,4 +1,3 @@
-import { Notification } from '@linode/api-v4/lib/account';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
@@ -18,7 +17,6 @@ import {
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useTypeQuery } from 'src/queries/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
@@ -52,14 +50,6 @@ export const LinodeRow = (props: Props) => {
   } = props;
 
   const notificationContext = React.useContext(_notificationContext);
-
-  const { data: notifications } = useNotificationsQuery();
-
-  const linodeNotifications =
-    notifications?.filter(
-      (notification) =>
-        notification.entity?.type === 'linode' && notification.entity?.id === id
-    ) ?? [];
 
   const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
@@ -174,7 +164,6 @@ export const LinodeRow = (props: Props) => {
           mutationAvailable={
             linodeType !== undefined && linodeType?.successor !== null
           }
-          linodeNotifications={linodeNotifications}
         />
         <LinodeActionMenu
           linodeBackups={backups}
@@ -192,7 +181,6 @@ export const LinodeRow = (props: Props) => {
 };
 
 export const RenderFlag: React.FC<{
-  linodeNotifications: Notification[];
   mutationAvailable: boolean;
 }> = (props) => {
   /*
@@ -200,25 +188,13 @@ export const RenderFlag: React.FC<{
    * or if it has a pending mutation available. Mutations take
    * precedent over notifications
    */
-  const { linodeNotifications, mutationAvailable } = props;
+  const { mutationAvailable } = props;
 
   if (mutationAvailable) {
     return (
       <Tooltip title="There is a free upgrade available for this Linode">
         <Flag />
       </Tooltip>
-    );
-  }
-  if (linodeNotifications.length > 0) {
-    return (
-      // eslint-disable-next-line
-      <>
-        {linodeNotifications.map((notification, idx) => (
-          <Tooltip key={idx} title={notification.message}>
-            <Flag />
-          </Tooltip>
-        ))}
-      </>
     );
   }
   return null;
