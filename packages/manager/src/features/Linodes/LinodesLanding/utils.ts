@@ -52,15 +52,16 @@ export const getLinodeIconStatus = (status: LinodeStatus) => {
   return 'other';
 };
 
-// might change this to collect vpc ids instead?? >> ask about react query cache
-export const hasVPCInterfaceInConfigs = (configs: Config[]): boolean => {
+// Return all (unique) vpc IDs that a linode is assigned to
+export const getVPCsFromLinodeConfigs = (configs: Config[]): number[] => {
+  const vpcIds = new Set<number>();
   for (const config of configs) {
     for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.purpose === 'vpc') {
-        return true;
+      if (linodeInterface.purpose === 'vpc' && linodeInterface.vpc_id) {
+        vpcIds.add(linodeInterface.vpc_id);
       }
     }
   }
 
-  return false;
+  return Array.from(vpcIds);
 };

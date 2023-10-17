@@ -11,9 +11,9 @@ import {
 } from 'src/queries/linodes/linodes';
 
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { vpcQueryKey } from 'src/queries/vpcs';
+import { vpcQueryKey, subnetQueryKey } from 'src/queries/vpcs';
 
-import { hasVPCInterfaceInConfigs } from './utils';
+import { getVPCsFromLinodeConfigs } from './utils';
 
 interface Props {
   linodeId: number | undefined;
@@ -48,8 +48,19 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    if (hasVPCInterfaceInConfigs(configs ?? [])) {
-      await queryClient.invalidateQueries(vpcQueryKey);
+    const vpcIds = getVPCsFromLinodeConfigs(configs ?? []);
+    if (vpcIds) {
+      queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
+      // invalidate data for specific vpcs this linode is assigned to
+      vpcIds.forEach((vpcId) => {
+        queryClient.invalidateQueries([vpcQueryKey, 'vpc', vpcId]);
+        queryClient.invalidateQueries([
+          vpcQueryKey,
+          'vpc',
+          vpcId,
+          subnetQueryKey,
+        ]);
+      });
     }
     onClose();
     resetEventsPolling();
