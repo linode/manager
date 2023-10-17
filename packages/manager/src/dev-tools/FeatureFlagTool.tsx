@@ -19,6 +19,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
   { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
+  { flag: 'soldOutSingapore', label: 'Sold Out Singapore' },
   { flag: 'soldOutTokyo', label: 'Sold Out Tokyo' },
 ];
 

@@ -1,5 +1,4 @@
 /* eslint-disable perfectionist/sort-objects */
-import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -17,6 +16,8 @@ import { RegionItem, RegionOption } from './RegionOption';
 import { listOfDisabledRegions } from './disabledRegions';
 import { ContinentNames, Country } from './utils';
 
+import type { FakeRegion } from './disabledRegions';
+import type { Region } from '@linode/api-v4/lib/regions';
 import type { FlagSet } from 'src/featureFlags';
 
 interface Props<IsClearable extends boolean>
@@ -56,27 +57,29 @@ export const getRegionOptions = (
     Other: [],
   };
 
-  const hasUserAccessToDisabledRegions = listOfDisabledRegions.some(
-    (disabledRegion) =>
-      regions.some((region) => region.id === disabledRegion.fakeRegion.id)
-  );
   const allRegions = [
     ...regions,
     ...listOfDisabledRegions
-      .filter(
-        (disabledRegion) =>
-          // Only display a fake region if the feature flag for it is enabled
-          // We may want to consider modifying this logic if we end up with disabled regions that don't rely on feature flags
-          flags[disabledRegion.featureFlag] &&
-          // Don't display a fake region if it's included in the real /regions response
-          !regions.some(
-            (region) => region.id === disabledRegion.fakeRegion.id
-          ) &&
-          // Don't display a fake region if it's excluded by the current path
-          !disabledRegion.excludePaths?.some((pathToExclude) =>
-            path.includes(pathToExclude)
-          )
-      )
+      .filter((disabledRegion) => {
+        /**
+         * Only display a fake region if the feature flag for it is enabled
+         */
+        const isFlagEnabled = flags[disabledRegion.featureFlag];
+        /**
+         * Don't display a fake region if it's included in the real /regions response
+         */
+        const isAlreadyIncluded = regions.some(
+          (region) => region.id === disabledRegion.fakeRegion.id
+        );
+        /**
+         * Don't display a fake region if it's excluded by the current path
+         */
+        const isExcludedByPath = disabledRegion.excludePaths?.some(
+          (pathToExclude) => path.includes(pathToExclude)
+        );
+
+        return isFlagEnabled && !isAlreadyIncluded && !isExcludedByPath;
+      })
       .map((disabledRegion) => disabledRegion.fakeRegion),
   ];
 
@@ -85,11 +88,7 @@ export const getRegionOptions = (
 
     groups[group].push({
       country: region.country,
-      disabledMessage: hasUserAccessToDisabledRegions
-        ? undefined
-        : listOfDisabledRegions.find(
-            (disabledRegion) => disabledRegion.fakeRegion.id === region.id
-          )?.disabledMessage,
+      disabledMessage: (region as FakeRegion).disabledMessage || null,
       flag: <Flag country={region.country as Lowercase<Country>} />,
       label: `${region.label} (${region.id})`,
       value: region.id,
