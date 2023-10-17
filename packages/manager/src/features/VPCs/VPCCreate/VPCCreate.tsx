@@ -43,6 +43,8 @@ const VPCCreate = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: regions } = useRegionsQuery();
+  const regionsWithVPCCapability =
+    regions?.filter((region) => region.capabilities.includes('VPCs')) ?? [];
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
   const [
     generalSubnetErrorsFromAPI,
@@ -242,7 +244,7 @@ const VPCCreate = () => {
               disabled={userCannotAddVPC}
               errorText={errors.region}
               isClearable
-              regions={regions ?? []}
+              regions={regionsWithVPCCapability}
               selectedID={values.region}
             />
             <TextField

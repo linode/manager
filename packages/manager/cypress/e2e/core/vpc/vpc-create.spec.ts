@@ -3,11 +3,17 @@
  */
 
 import type { Subnet, VPC } from '@linode/api-v4';
-import { vpcFactory, subnetFactory, linodeFactory } from '@src/factories';
+import {
+  vpcFactory,
+  subnetFactory,
+  linodeFactory,
+  regionFactory,
+} from '@src/factories';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateVPCError,
   mockCreateVPC,
@@ -44,7 +50,9 @@ describe('VPC create flow', () => {
    * - Confirms that UI redirects to created VPC page after creating a VPC.
    */
   it('can create a VPC', () => {
-    const vpcRegion = chooseRegion();
+    const mockVPCRegion = regionFactory.build({
+      capabilities: ['VPCs'],
+    });
 
     const mockSubnets: Subnet[] = buildArray(3, (index: number) => {
       return subnetFactory.build({
@@ -61,7 +69,7 @@ describe('VPC create flow', () => {
     const mockVpc: VPC = vpcFactory.build({
       id: randomNumber(10000, 99999),
       label: randomLabel(),
-      region: vpcRegion.id,
+      region: mockVPCRegion.id,
       description: randomPhrase(),
       subnets: mockSubnets,
     });
@@ -75,13 +83,15 @@ describe('VPC create flow', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientstream');
 
+    mockGetRegions([mockVPCRegion]).as('getRegions');
+
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream']);
+    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
 
     cy.findByText('Region')
       .should('be.visible')
       .click()
-      .type(`${vpcRegion.label}{enter}`);
+      .type(`${mockVPCRegion.label}{enter}`);
 
     cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
 
@@ -250,7 +260,7 @@ describe('VPC create flow', () => {
         cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
         cy.contains(`Linodes ${totalSubnetUniqueLinodes}`).should('be.visible');
         cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
-        cy.contains(`Region ${vpcRegion.label}`).should('be.visible');
+        cy.contains(`Region ${mockVPCRegion.label}`).should('be.visible');
       });
 
     mockSubnets.forEach((mockSubnet: Subnet) => {
@@ -272,11 +282,14 @@ describe('VPC create flow', () => {
    * - Confirms that Cloud Manager UI responds accordingly when creating a VPC without subnets.
    */
   it('can create a VPC without any subnets', () => {
-    const vpcRegion = chooseRegion();
+    const mockVPCRegion = regionFactory.build({
+      capabilities: ['VPCs'],
+    });
+
     const mockVpc: VPC = vpcFactory.build({
       id: randomNumber(10000, 99999),
       label: randomLabel(),
-      region: vpcRegion.id,
+      region: mockVPCRegion.id,
       description: randomPhrase(),
       subnets: [],
     });
@@ -288,13 +301,15 @@ describe('VPC create flow', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientstream');
 
+    mockGetRegions([mockVPCRegion]).as('getRegions');
+
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream']);
+    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
 
     cy.findByText('Region')
       .should('be.visible')
       .click()
-      .type(`${vpcRegion.label}{enter}`);
+      .type(`${mockVPCRegion.label}{enter}`);
 
     cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
 
@@ -338,7 +353,7 @@ describe('VPC create flow', () => {
         cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
         cy.contains(`Linodes ${totalSubnetUniqueLinodes}`).should('be.visible');
         cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
-        cy.contains(`Region ${vpcRegion.label}`).should('be.visible');
+        cy.contains(`Region ${mockVPCRegion.label}`).should('be.visible');
       });
 
     cy.findByText('No Subnets are assigned.').should('be.visible');
