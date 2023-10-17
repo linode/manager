@@ -1,12 +1,13 @@
-import {
+import type {
   ClusterSize,
   Engine,
   Region,
   DatabaseEngine,
+  DatabaseType,
 } from '@linode/api-v4/types';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { databaseEngineFactory } from '@src/factories';
+import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 
 export interface databaseClusterConfiguration {
   clusterSize: ClusterSize;
@@ -36,6 +37,17 @@ export const mockDatabaseEngineTypes: DatabaseEngine[] = [
     engine: 'postgresql',
     version: '13',
     deprecated: false,
+  }),
+];
+
+// The database type IDs in this array should correspond to the DBaaS cluster
+// `linodeType` values used by the tests.
+export const mockDatabaseNodeTypes: DatabaseType[] = [
+  databaseTypeFactory.build({
+    id: 'g6-nanode-1',
+  }),
+  databaseTypeFactory.build({
+    id: 'g6-dedicated-16',
   }),
 ];
 
