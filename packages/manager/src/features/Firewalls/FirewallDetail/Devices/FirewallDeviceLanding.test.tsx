@@ -1,4 +1,4 @@
-// import { fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Router } from 'react-router-dom';
@@ -32,11 +32,6 @@ const services = ['linode', 'nodebalancer'];
 
 services.forEach((service: FirewallDeviceEntityType) => {
   describe(`Firewall ${service} Service`, () => {
-    let addButton: HTMLElement;
-    let table: HTMLElement;
-    let permissionNotice: HTMLElement;
-    const history = createMemoryHistory();
-
     const props = [baseProps(service), disabledProps(service)];
 
     props.forEach((prop) => {
@@ -48,26 +43,27 @@ services.forEach((service: FirewallDeviceEntityType) => {
             return res(ctx.json(firewallDeviceFactory.buildList(1)));
           })
         );
+        const history = createMemoryHistory();
         const { getByRole, getByTestId } = renderWithTheme(
           <Router history={history}>
             <FirewallDeviceLanding {...prop} />
           </Router>
         );
-        addButton = getByTestId('add-device-button');
-        table = getByRole('table');
+        const addButton = getByTestId('add-device-button');
+        const table = getByRole('table');
 
         expect(addButton).toBeInTheDocument();
         expect(table).toBeInTheDocument();
 
         if (prop.disabled) {
           expect(addButton).toBeDisabled();
-          permissionNotice = getByRole('alert');
+          const permissionNotice = getByRole('alert');
           expect(permissionNotice).toBeInTheDocument();
         } else {
           expect(addButton).toBeEnabled();
-          // fireEvent.click(addButton);
-          // const baseUrl = '/';
-          // expect(history.location.pathname).toBe(baseUrl + '/add');
+          fireEvent.click(addButton);
+          const baseUrl = '/';
+          expect(history.location.pathname).toBe(baseUrl + '/add');
         }
       });
     });
