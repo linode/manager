@@ -429,3 +429,90 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('You reached a rate limit', { exact: false });
   });
 });
+
+it('can create a Route', () => {
+  const loadbalancer = loadbalancerFactory.build();
+  const routes = routeFactory.buildList(1, { protocol: 'http' });
+
+  mockAppendFeatureFlags({
+    aglb: makeFeatureFlagData(true),
+  }).as('getFeatureFlags');
+  mockGetFeatureFlagClientstream().as('getClientStream');
+  mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+  mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+
+  cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+  cy.wait([
+    '@getFeatureFlags',
+    '@getClientStream',
+    '@getLoadBalancer',
+    '@getRoutes',
+  ]);
+
+  ui.button
+    .findByTitle('Create Route')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+
+  mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
+
+  ui.drawer
+    .findByTitle('Create Route')
+    .should('be.visible')
+    .within(() => {
+      cy.findByLabelText('Route Label')
+        .should('be.visible')
+        .click()
+        .type(routes[0].label);
+
+      cy.get('[data-qa-radio="HTTP"]').find('input').should('be.checked');
+
+      ui.buttonGroup
+        .findButtonByTitle('Create Route')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+});
+
+it.only('surfaces API errors in the Create Route Drawer', () => {
+  const loadbalancer = loadbalancerFactory.build();
+  const routes = routeFactory.buildList(1, { protocol: 'http' });
+
+  mockAppendFeatureFlags({
+    aglb: makeFeatureFlagData(true),
+  }).as('getFeatureFlags');
+  mockGetFeatureFlagClientstream().as('getClientStream');
+  mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+  mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+
+  cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+  cy.wait([
+    '@getFeatureFlags',
+    '@getClientStream',
+    '@getLoadBalancer',
+    '@getRoutes',
+  ]);
+
+  ui.button
+    .findByTitle('Create Route')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+
+  mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
+
+  ui.drawer
+    .findByTitle('Create Route')
+    .should('be.visible')
+    .within(() => {
+      ui.buttonGroup
+        .findButtonByTitle('Create Route')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+  cy.findByText('Label is required.', { exact: false });
+});

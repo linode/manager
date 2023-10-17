@@ -1,4 +1,5 @@
 import { CreateRoutePayload } from '@linode/api-v4';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import React from 'react';
 
@@ -27,6 +28,7 @@ const initialValues: CreateRoutePayload = {
 };
 
 export const CreateRouteDrawer = (props: Props) => {
+  const theme = useTheme();
   const { loadbalancerId, onClose: _onClose, open } = props;
 
   const {
@@ -61,7 +63,7 @@ export const CreateRouteDrawer = (props: Props) => {
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           errorText={error?.find((e) => e.field === 'label')?.reason}
-          label="Service Target Label"
+          label="Route Label"
           name="label"
           onChange={formik.handleChange}
           value={formik.values.label}
@@ -70,9 +72,19 @@ export const CreateRouteDrawer = (props: Props) => {
           onChange={(_, value) => formik.setFieldValue('protocol', value)}
           value={formik.values.protocol}
         >
-          <FormLabel>Protocol</FormLabel>
-          <FormControlLabel control={<Radio />} label="HTTP" value="http" />
-          <FormControlLabel control={<Radio />} label="TCP" value="tcp" />
+          <FormLabel sx={{ marginTop: theme.spacing(1) }}>Protocol</FormLabel>
+          <FormControlLabel
+            control={<Radio />}
+            data-qa-radio={'HTTP'}
+            label="HTTP"
+            value="http"
+          />
+          <FormControlLabel
+            control={<Radio />}
+            data-qa-radio={'TCP'}
+            label="TCP"
+            value="tcp"
+          />
           <FormHelperText>
             {error?.find((e) => e.field === 'protocol')?.reason}
           </FormHelperText>
