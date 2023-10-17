@@ -57,7 +57,6 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       ],
     },
   },
-  id: `g6-nanode-1`,
   region_prices: [
     {
       hourly: 0.021,
@@ -75,6 +74,33 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
     },
   ],
 });
+
+export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
+  3,
+  {
+    addons: {
+      backups: {
+        price: {
+          hourly: 0.004,
+          monthly: 2.0,
+        },
+        region_prices: [
+          {
+            hourly: 0.0048,
+            id: 'us-east',
+            monthly: 3.57,
+          },
+          {
+            hourly: 0.0056,
+            id: 'us-west',
+            monthly: 4.17,
+          },
+        ],
+      },
+    },
+    id: 'g6-nanode-1',
+  }
+);
 
 /**
  * Subset of LKE cluster plans as shown on Cloud Manager, mapped from DC-specific pricing mock linode

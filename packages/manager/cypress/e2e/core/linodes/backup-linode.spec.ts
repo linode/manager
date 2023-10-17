@@ -29,7 +29,7 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
-import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
+import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
 
 authenticate();
@@ -374,13 +374,13 @@ describe('"Enable Linode Backups" banner', () => {
         label: randomLabel(),
         region: 'us-east',
         backups: { enabled: false },
-        type: dcPricingMockLinodeTypes[0].id,
+        type: dcPricingMockLinodeTypesForBackups[0].id,
       }),
       linodeFactory.build({
         label: randomLabel(),
         region: 'us-west',
         backups: { enabled: false },
-        type: dcPricingMockLinodeTypes[1].id,
+        type: dcPricingMockLinodeTypesForBackups[1].id,
       }),
       linodeFactory.build({
         label: randomLabel(),
@@ -400,9 +400,9 @@ describe('"Enable Linode Backups" banner', () => {
     // The expected total cost of enabling backups, as shown in backups drawer.
     const expectedTotal = '$9.74/mo';
 
-    mockGetLinodeType(dcPricingMockLinodeTypes[0]);
-    mockGetLinodeType(dcPricingMockLinodeTypes[1]);
-    mockGetLinodeTypes(dcPricingMockLinodeTypes);
+    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[0]);
+    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[1]);
+    mockGetLinodeTypes(dcPricingMockLinodeTypesForBackups);
 
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(true),
