@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-11-01] - v1.107.0
+
+### Changed:
+
+- Handle disabled Singapore RegionSelect menu entry ([#9805](https://github.com/linode/manager/pull/9805))
+
 ## [2023-10-30] - v1.106.0
 
 ### Added:
