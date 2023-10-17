@@ -79,7 +79,7 @@ export const getTotalBackupsPrice = ({
   linodes,
   types,
 }: TotalBackupsPriceOptions) => {
-  return linodes.reduce((prevValue: number, linode: Linode) => {
+  return linodes.reduce((prevValue: number | undefined, linode: Linode) => {
     const type = types.find((type) => type.id === linode.type);
 
     if (!type) {
@@ -93,6 +93,12 @@ export const getTotalBackupsPrice = ({
         type,
       }) || undefined;
 
-    return prevValue + (backupsMonthlyPrice ? backupsMonthlyPrice : 0);
+    if (backupsMonthlyPrice === null || backupsMonthlyPrice === undefined) {
+      return undefined;
+    }
+
+    return prevValue !== undefined
+      ? prevValue + backupsMonthlyPrice
+      : undefined;
   }, 0);
 };
