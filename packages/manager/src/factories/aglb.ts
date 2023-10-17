@@ -12,8 +12,9 @@ import {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4/lib/aglb/types';
 import * as Factory from 'factory.ts';
+import { pickRandom } from 'src/utilities/random';
 
-const certificate = `
+export const mockCertificate = `
 -----BEGIN CERTIFICATE-----
 MIID0DCCArigAwIBAgIBATANBgkqhkiG9w0BAQUFADB/MQswCQYDVQQGEwJGUjET
 MBEGA1UECAwKU29tZS1TdGF0ZTEOMAwGA1UEBwwFUGFyaXMxDTALBgNVBAoMBERp
@@ -39,7 +40,7 @@ cbTV5RDkrlaYwm5yqlTIglvCv7o=
 -----END CERTIFICATE-----
 `;
 
-const key = `
+const mockKey = `
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAvpnaPKLIKdvx98KW68lz8pGaRRcYersNGqPjpifMVjjE8LuC
 oXgPU0HePnNTUjpShBnynKCvrtWhN+haKbSp+QWXSxiTrW99HBfAl1MDQyWcukoE
@@ -125,7 +126,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                   match_field: 'path_prefix',
                   match_value: '/images',
                   session_stickiness_cookie: 'my-cool-cookie',
-                  session_stickiness_ttl: '60000',
+                  session_stickiness_ttl: 60000,
                 },
                 service_targets: [
                   {
@@ -176,23 +177,55 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `route-${i}`),
-  protocol: 'http',
+  protocol: Factory.each(() => pickRandom(['http', 'tcp'])),
   rules: [
     {
       match_condition: {
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
-        match_value: '/images/*',
-        service_targets: [
-          {
-            id: 1,
-            label: 'my-service-target',
-            percentage: 10,
-          },
-        ],
+        match_value: '/A/*',
         session_stickiness_cookie: null,
         session_stickiness_ttl: null,
       },
+      service_targets: [
+        {
+          id: 1,
+          label: 'my-service-target',
+          percentage: 100,
+        },
+      ],
+    },
+    {
+      match_condition: {
+        hostname: 'www.acme.com',
+        match_field: 'path_prefix',
+        match_value: '/B/*',
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+      service_targets: [
+        {
+          id: 1,
+          label: 'my-service-target',
+          percentage: 100,
+        },
+      ],
+    },
+    {
+      match_condition: {
+        hostname: 'www.acme.com',
+        match_field: 'path_prefix',
+        match_value: '/C/*',
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+      service_targets: [
+        {
+          id: 1,
+          label: 'my-service-target',
+          percentage: 100,
+        },
+      ],
     },
   ],
 });
@@ -212,7 +245,7 @@ export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
       service_targets: [
         {
           id: 1,
-          label: 'my-service-target',
+          label: 'test',
           percentage: 10,
         },
       ],
@@ -275,6 +308,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
 // Certificate endpoints
 // *********************
 export const certificateFactory = Factory.Sync.makeFactory<Certificate>({
+  certificate: mockCertificate,
   id: Factory.each((i) => i),
   label: Factory.each((i) => `certificate-${i}`),
   type: 'ca',
@@ -282,8 +316,8 @@ export const certificateFactory = Factory.Sync.makeFactory<Certificate>({
 
 export const createCertificateFactory = Factory.Sync.makeFactory<CreateCertificatePayload>(
   {
-    certificate,
-    key,
+    certificate: mockCertificate,
+    key: mockKey,
     label: 'my-cert',
     type: 'downstream',
   }

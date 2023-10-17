@@ -9,6 +9,8 @@ import { Typography } from 'src/components/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useSnackbar } from 'notistack';
+
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { FirewallRuleTable } from './FirewallRuleTable';
 import {
@@ -48,6 +50,8 @@ const FirewallRulesLanding = (props: Props) => {
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID
   );
+
+  const { enqueueSnackbar } = useSnackbar();
 
   /**
    * inbound and outbound policy aren't part of any particular rule
@@ -191,6 +195,9 @@ const FirewallRulesLanding = (props: Props) => {
         // Reset editor state.
         inboundDispatch({ rules: _rules.inbound ?? [], type: 'RESET' });
         outboundDispatch({ rules: _rules.outbound ?? [], type: 'RESET' });
+        enqueueSnackbar('Firewall rules successfully updated', {
+          variant: 'success',
+        });
       })
       .catch((err) => {
         setSubmitting(false);
@@ -218,6 +225,9 @@ const FirewallRulesLanding = (props: Props) => {
             });
           }
         }
+        enqueueSnackbar('Failed to update Firewall rules', {
+          variant: 'error',
+        });
       });
   };
 

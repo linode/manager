@@ -8,11 +8,11 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { MenuItem } from 'src/components/MenuItem';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -112,6 +112,14 @@ export const CreateDiskDrawer = (props: Props) => {
     }
   }, [open]);
 
+  const fileSystemOptions = [
+    { label: 'raw' },
+    { label: 'swap' },
+    { label: 'ext3' },
+    { label: 'ext4' },
+    { label: 'initrd' },
+  ];
+
   return (
     <Drawer onClose={onClose} open={open} title="Create Disk">
       <form onSubmit={formik.handleSubmit}>
@@ -140,26 +148,21 @@ export const CreateDiskDrawer = (props: Props) => {
           value={formik.values.label}
         />
         {selectedMode === 'empty' && (
-          <TextField
+          <Autocomplete
             errorText={
               formik.touched.filesystem ? formik.errors.filesystem : undefined
             }
+            onChange={(_, option) =>
+              formik.setFieldValue('filesystem', option.label)
+            }
+            value={fileSystemOptions.find(
+              (option) => option.label === formik.values.filesystem
+            )}
+            disableClearable
             label="Filesystem"
-            name="filesystem"
             onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            select
-            value={formik.values.filesystem}
-          >
-            <MenuItem value="_none_">
-              <em>Select a Filesystem</em>
-            </MenuItem>
-            {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
-              <MenuItem key={fs} value={fs}>
-                {fs}
-              </MenuItem>
-            ))}
-          </TextField>
+            options={fileSystemOptions}
+          />
         )}
         {selectedMode === 'from_image' && (
           <ImageAndPassword

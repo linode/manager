@@ -95,7 +95,7 @@ export const Dialog = (props: DialogProps) => {
 };
 
 const StyledDialog = styled(_Dialog, {
-  shouldForwardProp: (prop) => isPropValid(['fullHeight'], prop),
+  shouldForwardProp: (prop) => isPropValid(['fullHeight', 'title'], prop),
 })<DialogProps>(({ theme, ...props }) => ({
   '& .MuiDialog-paper': {
     height: props.fullHeight ? '100vh' : undefined,
