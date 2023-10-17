@@ -29,6 +29,7 @@ import type { MatchField, Route } from '@linode/api-v4';
 interface Props {
   loadbalancerId: number;
   onEditRule: (ruleIndex: number) => void;
+  onDeleteRule: (ruleIndex: number) => void;
   route: Route;
 }
 
@@ -43,7 +44,8 @@ const matchFieldMap: Record<MatchField, string> = {
 const screenReaderMessage =
   'Some screen readers may require you to enter focus mode to interact with Loadbalancer rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
 
-export const RulesTable = ({ loadbalancerId, onEditRule, route }: Props) => {
+export const RulesTable = (props: Props) => {
+  const { loadbalancerId, onEditRule, route, onDeleteRule } = props;
   const { label, protocol, rules } = route;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -285,7 +287,10 @@ export const RulesTable = ({ loadbalancerId, onEditRule, route }: Props) => {
                                     onClick: () => handleMoveDown(index),
                                     title: 'Move Down',
                                   },
-                                  { onClick: () => null, title: 'Remove' },
+                                  {
+                                    onClick: () => onDeleteRule(index),
+                                    title: 'Remove',
+                                  },
                                 ]}
                                 ariaLabel={`Action Menu for Rule ${index}`}
                               />
