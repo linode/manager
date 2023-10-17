@@ -48,30 +48,27 @@ export const UserRow = ({ onDelete, user }: Props) => {
   );
 };
 
-const LastLogin = ({ user }: { user: User; }) => {
+const LastLogin = ({ user }: { user: User }) => {
   const { data: profile } = useProfile();
 
   if (user.last_login === null) {
-    return (
-      <Stack alignItems="center" direction="row" spacing={1}>
-        <Typography>Never</Typography>
-        <StatusIcon status="inactive" />
-      </Stack>
-    );
+    return <Typography>Never</Typography>;
   }
 
   const date = formatDate(user.last_login.login_datetime, {
     timezone: profile?.timezone,
   });
 
+  if (user.last_login.status === 'successful') {
+    return <Typography>{date}</Typography>;
+  }
+
   return (
     <Stack alignItems="center" direction="row" spacing={1}>
-      <Typography>{capitalize(user.last_login.status)}</Typography>
-      <StatusIcon
-        status={user.last_login.status === 'successful' ? 'active' : 'error'}
-      />
-      <Typography>&#8212;</Typography>
       <Typography>{date}</Typography>
+      <Typography>&#8212;</Typography>
+      <StatusIcon status="error" />
+      <Typography>{capitalize(user.last_login.status)}</Typography>
     </Stack>
   );
 };
