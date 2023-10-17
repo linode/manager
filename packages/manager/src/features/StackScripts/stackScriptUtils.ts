@@ -22,7 +22,7 @@ export const baseApps = {
   '401697': 'WordPress - Latest One-Click',
   '401698': 'Drupal - Latest One-Click',
   '401699': 'Ark - Latest One-Click',
-  '401700': 'CS:GO - Latest One-Click',
+  // '401700': 'CS:GO - Latest One-Click', // CS:GO app is defunct because the sequel is out
   '401701': 'LAMP One-Click',
   '401702': 'MERN One-Click',
   '401703': 'Rust - Latest One-Click',
@@ -115,9 +115,8 @@ export const baseApps = {
   '1008125': 'Easypanel',
   '1017300': 'Kali Linux',
   '1037036': 'Budibase',
-  // uncomment clusters after marketplace release
-  // '1226544': 'HashiCorp Nomad Cluster',
-  // '1226545': 'HashiCorp Nomad Clients Cluster',
+  '1226544': 'HashiCorp Nomad Cluster',
+  '1226545': 'HashiCorp Nomad Clients Cluster',
   '1037037': 'HashiCorp Nomad',
   '1037038': 'HashiCorp Vault',
   '1051714': 'Microweber',

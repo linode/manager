@@ -1,8 +1,14 @@
-import { ClusterSize, Engine, Region } from '@linode/api-v4/types';
+import {
+  ClusterSize,
+  Engine,
+  Region,
+  DatabaseEngine,
+} from '@linode/api-v4/types';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { databaseEngineFactory } from '@src/factories';
 
-interface databaseClusterConfiguration {
+export interface databaseClusterConfiguration {
   clusterSize: ClusterSize;
   dbType: Engine;
   engine: string;
@@ -12,8 +18,29 @@ interface databaseClusterConfiguration {
   version: string;
 }
 
+/**
+ * Array of common database engine types that can be used for mocking.
+ */
+export const mockDatabaseEngineTypes: DatabaseEngine[] = [
+  databaseEngineFactory.build({
+    engine: 'mysql',
+    version: '5',
+    deprecated: false,
+  }),
+  databaseEngineFactory.build({
+    engine: 'mysql',
+    version: '8',
+    deprecated: false,
+  }),
+  databaseEngineFactory.build({
+    engine: 'postgresql',
+    version: '13',
+    deprecated: false,
+  }),
+];
+
 // Array of database cluster configurations for which to test creation.
-const databaseConfigurations: databaseClusterConfiguration[] = [
+export const databaseConfigurations: databaseClusterConfiguration[] = [
   {
     clusterSize: 1,
     dbType: 'mysql',
@@ -52,5 +79,3 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     version: '13',
   },
 ];
-
-export { databaseClusterConfiguration, databaseConfigurations };

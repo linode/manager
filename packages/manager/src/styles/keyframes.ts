@@ -10,10 +10,10 @@ export const rotate360 = keyframes`
 `;
 
 export const fadeIn = keyframes`
-  from: {
+  from {
     opacity: 0;
   },
-  to: {
+  to {
     opacity: 1;
   }
 `;

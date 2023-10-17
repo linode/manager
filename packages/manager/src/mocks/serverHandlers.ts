@@ -354,7 +354,7 @@ const aglb = [
   }),
   // Routes
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(routeFactory.buildList(4))));
+    return res(ctx.json(makeResourcePage(routeFactory.buildList(1))));
   }),
   rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));
@@ -391,8 +391,12 @@ const aglb = [
   ),
   // Certificates
   rest.get('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    const tlsCertificate = certificateFactory.build({
+      label: 'tls-certificate',
+      type: 'downstream',
+    });
     const certificates = certificateFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(certificates)));
+    return res(ctx.json(makeResourcePage([tlsCertificate, ...certificates])));
   }),
   rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
     return res(ctx.json(certificateFactory.build()));

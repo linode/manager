@@ -302,6 +302,7 @@ export type EventAction =
   | 'linode_reboot'
   | 'linode_rebuild'
   | 'linode_resize_create'
+  | 'linode_resize_warm_create'
   | 'linode_resize'
   | 'linode_shutdown'
   | 'linode_snapshot'

@@ -145,7 +145,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
           .should('be.visible')
           .type(mockLoadBalancerCertServiceTarget.label);
 
-        cy.findByLabelText('TLS Certificate')
+        cy.findByLabelText('Server Certificate')
           .should('be.visible')
           .type(randomString(32));
 

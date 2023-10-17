@@ -14,6 +14,7 @@ const props = {
   handleAssignLinodes: jest.fn(),
   handleDelete: jest.fn(),
   handleEdit: jest.fn(),
+  handleUnassignLinodes: jest.fn(),
   numLinodes: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,

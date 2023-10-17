@@ -6,6 +6,7 @@ import type {
   Loadbalancer,
   Configuration,
   Certificate,
+  Route,
 } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
 
@@ -145,5 +146,122 @@ export const mockCreateServiceTarget = (
     'POST',
     apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
     makeResponse(serviceTarget)
+  );
+};
+
+/**
+ * Intercepts GET requests to retrieve AGLB load balancer routes and mocks response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to mock certificates.
+ * @param routes - Load balancer routes with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLoadBalancerRoutes = (
+  loadBalancerId: number,
+  routes: Route[]
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/aglb/${loadBalancerId}/routes*`),
+    paginateResponse(routes)
+  );
+};
+
+/**
+ * Intercepts GET requests to retrieve AGLB load balancer service targets and mocks response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to mock certificates.
+ * @param serviceTargets - Load balancer service targets with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLoadBalancerServiceTargets = (
+  loadBalancerId: number,
+  serviceTargets: ServiceTarget[]
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/aglb/${loadBalancerId}/service-targets*`),
+    paginateResponse(serviceTargets)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a route and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param route - Route with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateRoute = (loadBalancer: Loadbalancer, route: Route) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    makeResponse(route)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a route and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param route - Route with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateRouteError = (
+  loadBalancer: Loadbalancer,
+  route: Route
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    makeResponse(
+      {
+        errors: [
+          {
+            field: 'rules[3].match_condition.match_value',
+            reason: 'Bad Match Value',
+          },
+          {
+            field: 'rules[3].match_condition.match_field',
+            reason: 'Bad Match Type',
+          },
+          {
+            field: 'rules[3].service_targets[0].id',
+            reason: 'Service Target does not exist',
+          },
+          {
+            field: 'rules[3].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+          {
+            field: 'rules[3].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+          {
+            field: 'rules[3].match_condition.session_stickiness_ttl',
+            reason: 'Invalid TTL',
+          },
+          {
+            field: 'rules[3].match_condition.session_stickiness_cookie',
+            reason: 'Invalid Cookie',
+          },
+          {
+            field: 'rules[3].match_condition.hostname',
+            reason: 'Hostname is not valid',
+          },
+          {
+            reason: 'A backend service is down',
+          },
+          {
+            reason: 'You reached a rate limit',
+          },
+        ],
+      },
+      400
+    )
   );
 };

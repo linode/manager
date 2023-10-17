@@ -1,8 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { authenticate } from 'support/api/authentication';
-import { createDomain, deleteAllTestDomains } from 'support/api/domains';
+import { createDomain } from 'support/api/domains';
 import { fbtClick, getClick } from 'support/helpers';
 import { interceptCreateDomainRecord } from 'support/intercepts/domains';
+import { cleanUp } from 'support/util/cleanup';
 import {
   randomDomainName,
   randomIp,
@@ -95,8 +96,8 @@ const createRecords = () => [
 
 authenticate();
 describe('Creates Domains record with Form', () => {
-  beforeEach(() => {
-    cy.defer(deleteAllTestDomains(), 'cleaning up test domains');
+  before(() => {
+    cleanUp('domains');
   });
 
   createRecords().forEach((rec) => {

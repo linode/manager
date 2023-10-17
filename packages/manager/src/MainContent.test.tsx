@@ -1,7 +1,16 @@
-import {
+import { render, waitFor } from '@testing-library/react';
+import * as React from 'react';
+
+import { rest, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
+
+import MainContent, {
   checkFlagsForMainContentBanner,
   checkPreferencesForBannerDismissal,
 } from './MainContent';
+import { queryClientFactory } from './queries/base';
+
+const queryClient = queryClientFactory();
 
 const mainContentBanner = {
   key: 'Test Text Key',
@@ -41,5 +50,33 @@ describe('checkPreferencesForBannerDismissal', () => {
       )
     ).toBe(false);
     expect(checkPreferencesForBannerDismissal({}, 'key1')).toBe(false);
+  });
+});
+
+describe('Databases menu item for a restricted user', () => {
+  it('should not render the menu item', async () => {
+    server.use(
+      rest.get('*/account', (req, res, ctx) => {
+        return res(ctx.json({}));
+      })
+    );
+    const { getByText } = render(
+      wrapWithTheme(
+        <MainContent appIsLoading={false} isLoggedInAsCustomer={true} />,
+        {
+          flags: { databases: false },
+          queryClient,
+        }
+      )
+    );
+
+    await waitFor(() => {
+      let el;
+      try {
+        el = getByText('Databases');
+      } catch (e) {
+        expect(el).not.toBeDefined();
+      }
+    });
   });
 });

@@ -205,7 +205,7 @@ const DatabaseCreate = () => {
     data: engines,
     error: enginesError,
     isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery();
+  } = useDatabaseEnginesQuery(true);
 
   const {
     data: dbtypes,

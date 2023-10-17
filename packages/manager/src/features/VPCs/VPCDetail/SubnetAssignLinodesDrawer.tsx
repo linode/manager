@@ -18,6 +18,7 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
   ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE,
@@ -89,12 +90,6 @@ export const SubnetAssignLinodesDrawer = (
   const userCannotAssignLinodes =
     Boolean(profile?.restricted) &&
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
-
-  const csvHeaders = [
-    { key: 'label', label: 'Linode Label' },
-    { key: 'id', label: 'Linode ID' },
-    { key: 'ipv4', label: 'IPv4' },
-  ];
 
   const downloadCSV = async () => {
     await getCSVData();
@@ -351,6 +346,7 @@ export const SubnetAssignLinodesDrawer = (
         <Notice text={assignLinodesErrors.none} variant="error" />
       )}
       <Notice
+        spacingBottom={16}
         text={`${ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE}`}
         variant="warning"
       />
@@ -461,7 +457,7 @@ export const SubnetAssignLinodesDrawer = (
         csvRef={csvRef}
         data={assignedLinodesAndConfigData}
         filename={`linodes-assigned-${formattedDate}.csv`}
-        headers={csvHeaders}
+        headers={SUBNET_LINODE_CSV_HEADERS}
         onClick={downloadCSV}
         text={'Download List of Assigned Linodes (.csv)'}
       />

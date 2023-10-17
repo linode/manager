@@ -15,7 +15,7 @@ interface Props extends DrawerProps {
    */
   title: string;
   /**
-   * Increaces the Drawers width from 480px to 700px on desktop-sized viewports
+   * Increases the Drawers width from 480px to 700px on desktop-sized viewports
    * @default false
    */
   wide?: boolean;
@@ -34,11 +34,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     minWidth: 'auto',
     padding: 0,
   },
-  drawerHeader: {
-    '&&': {
-      marginBottom: theme.spacing(2),
-    },
-  },
   common: {
     '& .actionPanel': {
       display: 'flex',
@@ -55,13 +50,19 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   default: {
-    width: 480,
     [theme.breakpoints.down('sm')]: {
       maxWidth: 445,
       width: '100%',
     },
+    width: 480,
+  },
+  drawerHeader: {
+    '&&': {
+      marginBottom: theme.spacing(2),
+    },
   },
   title: {
+    marginRight: theme.spacing(4),
     wordBreak: 'break-word',
   },
   wide: {
@@ -90,18 +91,18 @@ export const Drawer = (props: Props) => {
 
   return (
     <_Drawer
-      onClose={(event, reason) => {
-        if (onClose && reason !== 'backdropClick') {
-          onClose(event, reason);
-        }
-      }}
-      anchor="right"
       classes={{
         paper: cx(classes.common, {
           [classes.default]: !wide,
           [classes.wide]: wide,
         }),
       }}
+      onClose={(event, reason) => {
+        if (onClose && reason !== 'backdropClick') {
+          onClose(event, reason);
+        }
+      }}
+      anchor="right"
       {...rest}
       aria-labelledby={titleID}
       data-qa-drawer

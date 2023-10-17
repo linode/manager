@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Hidden } from 'src/components/Hidden';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -19,18 +20,23 @@ import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import { getSubnetInterfaceFromConfigs } from '../utils';
 import {
+  StyledActionTableCell,
   StyledTableCell,
   StyledTableHeadCell,
   StyledTableRow,
 } from './SubnetLinodeRow.styles';
 
+import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+
 interface Props {
+  handleUnassignLinode: any;
   linodeId: number;
+  subnet?: Subnet;
   subnetId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
-  const { linodeId, subnetId } = props;
+  const { handleUnassignLinode, linodeId, subnet, subnetId } = props;
 
   const {
     data: linode,
@@ -112,6 +118,12 @@ export const SubnetLinodeRow = (props: Props) => {
           )}
         </StyledTableCell>
       </Hidden>
+      <StyledActionTableCell actionCell>
+        <InlineMenuAction
+          actionText="Unassign Linode"
+          onClick={() => handleUnassignLinode(subnet, linode)}
+        />
+      </StyledActionTableCell>
     </StyledTableRow>
   );
 };
@@ -194,18 +206,17 @@ const getFirewallLinks = (data: Firewall[]): JSX.Element => {
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
-    <StyledTableHeadCell sx={{ width: '24%' }}>
-      Linode Label
-    </StyledTableHeadCell>
+    <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
     <Hidden lgDown>
       <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
-      <StyledTableHeadCell sx={{ width: '20%' }}>VPC IPv4</StyledTableHeadCell>
+      <StyledTableHeadCell>VPC IPv4</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
     </Hidden>
+    <StyledTableHeadCell></StyledTableHeadCell>
   </TableRow>
 );
