@@ -1,4 +1,7 @@
+import { fireEvent } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
+import { Router } from 'react-router-dom';
 
 import { firewallDeviceFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
@@ -14,48 +17,81 @@ import type { FirewallDeviceEntityType } from '@linode/api-v4';
 const baseProps = (
   type: FirewallDeviceEntityType
 ): FirewallDeviceLandingProps => ({
-  disabled: true,
+  disabled: false,
   firewallID: 1,
   firewallLabel: 'test',
   type,
 });
 
-const devices = ['linode', 'nodebalancer'];
+const disabledProps = (type: FirewallDeviceEntityType) => ({
+  ...baseProps(type),
+  disabled: true,
+});
 
-devices.forEach((device: FirewallDeviceEntityType) => {
-  describe(`Firewall ${device} device`, () => {
-    let addButton: HTMLElement;
-    let permissionNotice: HTMLElement;
-    let table: HTMLElement;
+const services = ['linode', 'nodebalancer'];
 
-    beforeEach(() => {
-      server.use(
-        rest.get('*/firewalls/*', (req, res, ctx) => {
-          return res(ctx.json(firewallDeviceFactory.buildList(1)));
-        })
-      );
-      const { getByRole, getByTestId } = renderWithTheme(
-        <FirewallDeviceLanding {...baseProps(device)} />
-      );
-      addButton = getByTestId('add-device-button');
-      permissionNotice = getByRole('alert');
-      table = getByRole('table');
-    });
+services.forEach((service: FirewallDeviceEntityType) => {
+  const serviceName = service === 'linode' ? 'Linode' : 'NodeBalancer';
 
-    it(`should render an add ${device} button`, () => {
-      expect(addButton).toBeInTheDocument();
-    });
+  describe(`Firewall ${serviceName} landing page`, () => {
+    const props = [baseProps(service), disabledProps(service)];
 
-    it(`should render a disabled add ${device} button`, () => {
-      expect(addButton).toBeDisabled();
-    });
+    props.forEach((prop) => {
+      it('should render the component', () => {
+        server.use(
+          rest.get('*/firewalls/*', (req, res, ctx) => {
+            return res(ctx.json(firewallDeviceFactory.buildList(1)));
+          })
+        );
+        const { getByRole, getByTestId } = renderWithTheme(
+          <FirewallDeviceLanding {...prop} />
+        );
+        const addButton = getByTestId('add-device-button');
+        const table = getByRole('table');
 
-    it(`should render a permission denied notice`, () => {
-      expect(permissionNotice).toBeInTheDocument();
-    });
+        expect(addButton).toBeInTheDocument();
+        expect(table).toBeInTheDocument();
+      });
 
-    it(`should render a table`, () => {
-      expect(table).toBeInTheDocument();
+      it(`should contain ${
+        prop.disabled ? 'disabled' : 'enabled'
+      } Add ${serviceName} button`, () => {
+        const { getByTestId } = renderWithTheme(
+          <FirewallDeviceLanding {...prop} />
+        );
+        const addButton = getByTestId('add-device-button');
+
+        if (prop.disabled) {
+          expect(addButton).toBeDisabled();
+        } else {
+          expect(addButton).toBeEnabled();
+        }
+      });
+
+      if (prop.disabled) {
+        it('should contain permission notice when disabled', () => {
+          const { getByRole } = renderWithTheme(
+            <FirewallDeviceLanding {...prop} />
+          );
+          const permissionNotice = getByRole('alert');
+          expect(permissionNotice).toBeInTheDocument();
+        });
+      }
+
+      if (!prop.disabled) {
+        it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, () => {
+          const history = createMemoryHistory();
+          const { getByTestId } = renderWithTheme(
+            <Router history={history}>
+              <FirewallDeviceLanding {...prop} />
+            </Router>
+          );
+          const addButton = getByTestId('add-device-button');
+          fireEvent.click(addButton);
+          const baseUrl = '/';
+          expect(history.location.pathname).toBe(baseUrl + '/add');
+        });
+      }
     });
   });
 });
