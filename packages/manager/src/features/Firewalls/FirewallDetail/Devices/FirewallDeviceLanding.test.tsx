@@ -31,41 +31,67 @@ const disabledProps = (type: FirewallDeviceEntityType) => ({
 const services = ['linode', 'nodebalancer'];
 
 services.forEach((service: FirewallDeviceEntityType) => {
-  describe(`Firewall ${service} Service`, () => {
+  const serviceName = service === 'linode' ? 'Linode' : 'NodeBalancer';
+
+  describe(`Firewall ${serviceName} landing page`, () => {
     const props = [baseProps(service), disabledProps(service)];
 
     props.forEach((prop) => {
-      it(`should render the component with ${
-        prop.disabled ? 'disabled' : 'enabled'
-      } add ${service} button`, () => {
+      it('should render the component', () => {
         server.use(
           rest.get('*/firewalls/*', (req, res, ctx) => {
             return res(ctx.json(firewallDeviceFactory.buildList(1)));
           })
         );
-        const history = createMemoryHistory();
         const { getByRole, getByTestId } = renderWithTheme(
-          <Router history={history}>
-            <FirewallDeviceLanding {...prop} />
-          </Router>
+          <FirewallDeviceLanding {...prop} />
         );
         const addButton = getByTestId('add-device-button');
         const table = getByRole('table');
 
         expect(addButton).toBeInTheDocument();
         expect(table).toBeInTheDocument();
+      });
+
+      it(`should contain ${
+        prop.disabled ? 'disabled' : 'enabled'
+      } Add ${serviceName} button`, () => {
+        const { getByTestId } = renderWithTheme(
+          <FirewallDeviceLanding {...prop} />
+        );
+        const addButton = getByTestId('add-device-button');
 
         if (prop.disabled) {
           expect(addButton).toBeDisabled();
-          const permissionNotice = getByRole('alert');
-          expect(permissionNotice).toBeInTheDocument();
         } else {
           expect(addButton).toBeEnabled();
+        }
+      });
+
+      if (prop.disabled) {
+        it('should contain permission notice when disabled', () => {
+          const { getByRole } = renderWithTheme(
+            <FirewallDeviceLanding {...prop} />
+          );
+          const permissionNotice = getByRole('alert');
+          expect(permissionNotice).toBeInTheDocument();
+        });
+      }
+
+      if (!prop.disabled) {
+        it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, () => {
+          const history = createMemoryHistory();
+          const { getByTestId } = renderWithTheme(
+            <Router history={history}>
+              <FirewallDeviceLanding {...prop} />
+            </Router>
+          );
+          const addButton = getByTestId('add-device-button');
           fireEvent.click(addButton);
           const baseUrl = '/';
           expect(history.location.pathname).toBe(baseUrl + '/add');
-        }
-      });
+        });
+      }
     });
   });
 });
