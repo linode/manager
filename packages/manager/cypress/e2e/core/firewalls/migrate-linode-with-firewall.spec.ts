@@ -59,10 +59,10 @@ describe('Migrate Linode With Firewall', () => {
     cleanUp('firewalls');
   });
 
+  /*
+   * - Tests Linode migration flow for Linodes with Firewalls using mock API data.
+   */
   it('test migrate flow - mocking all data', () => {
-    // const fakeLinodeId = 9999;
-    // const fakeFirewallId = 6666;
-
     const mockLinode = linodeFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -96,7 +96,9 @@ describe('Migrate Linode With Firewall', () => {
     cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
   });
 
-  // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
+  /*
+   * - Uses real API data to create a Firewall, attach a Linode to it, then migrate the Linode.
+   */
   it('migrates linode with firewall - real data', () => {
     const [migrationRegionStart, migrationRegionEnd] = chooseRegions(2);
     const firewallLabel = randomLabel();

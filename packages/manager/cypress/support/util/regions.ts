@@ -80,9 +80,9 @@ export const getRegionByLabel = (label: string) => {
  * Returns a known Cloud Manager region at random, or returns a user-chosen
  * region if one was specified.
  *
- * Region selection can be configured via the `CY_TEST_REGION_ID` and
- * `CY_TEST_REGION_NAME` environment variables. Both must be specified in
- * order to override the region that is returned by this function.
+ * Region selection can be configured via the `CY_TEST_REGION` environment
+ * variable. If defined, the region returned by this function will be
+ * overridden using the chosen region.
  *
  * @returns Object describing a Cloud Manager region to use during tests.
  */
