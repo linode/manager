@@ -39,7 +39,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
       <TableCell>{user.email}</TableCell>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
       <TableCell>
-        <LastLogin user={user} />
+        <LastLogin last_login={user.last_login} />
       </TableCell>
       <TableCell actionCell>
         <UsersActionMenu onDelete={onDelete} username={user.username} />
@@ -48,18 +48,26 @@ export const UserRow = ({ onDelete, user }: Props) => {
   );
 };
 
-const LastLogin = ({ user }: { user: User }) => {
+/**
+ * Display information about a Users last login
+ *
+ * - The component renders "Never" if last_login is `null`
+ * - The component renders a date if last_login is a success
+ * - The component renders a date and a status if last_login is a failure
+ */
+const LastLogin = (props: Pick<User, 'last_login'>) => {
+  const { last_login } = props;
   const { data: profile } = useProfile();
 
-  if (user.last_login === null) {
+  if (last_login === null) {
     return <Typography>Never</Typography>;
   }
 
-  const date = formatDate(user.last_login.login_datetime, {
+  const date = formatDate(last_login.login_datetime, {
     timezone: profile?.timezone,
   });
 
-  if (user.last_login.status === 'successful') {
+  if (last_login.status === 'successful') {
     return <Typography>{date}</Typography>;
   }
 
@@ -68,7 +76,7 @@ const LastLogin = ({ user }: { user: User }) => {
       <Typography>{date}</Typography>
       <Typography>&#8212;</Typography>
       <StatusIcon status="error" />
-      <Typography>{capitalize(user.last_login.status)}</Typography>
+      <Typography>{capitalize(last_login.status)}</Typography>
     </Stack>
   );
 };
