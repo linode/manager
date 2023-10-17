@@ -53,6 +53,17 @@ const mockRegions: Region[] = [
   }),
 ];
 
+// Migration notes and warnings that are shown to the user.
+// We want to confirm that these are displayed so that users are not surprised
+// by migration side effects.
+const migrationNoticeSubstrings = [
+  'assigned new IPv4 and IPv6 addresses',
+  'existing backups with the Linode Backup Service will not be migrated',
+  'DNS records (including Reverse DNS) will need to be updated',
+  'attached VLANs will be inaccessible if the destination region does not support VLANs',
+  'Your Linode will be powered off.',
+];
+
 authenticate();
 describe('Migrate Linode With Firewall', () => {
   before(() => {
@@ -61,6 +72,7 @@ describe('Migrate Linode With Firewall', () => {
 
   /*
    * - Tests Linode migration flow for Linodes with Firewalls using mock API data.
+   * - Confirms that user is warned of migration consequences.
    */
   it('test migrate flow - mocking all data', () => {
     const mockLinode = linodeFactory.build({
@@ -81,19 +93,44 @@ describe('Migrate Linode With Firewall', () => {
     mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockGetRegions(mockRegions).as('getRegions');
-    mockMigrateLinode(mockLinode.id).as('migrateReq');
+    mockMigrateLinode(mockLinode.id).as('migrateLinode');
 
     cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
     cy.wait(['@getLinode', '@getRegions']);
     cy.findByText('Dallas, TX').should('be.visible');
-    cy.get('[data-qa-checked="false"]').click();
-    cy.findByText(`North America: Dallas, TX`).should('be.visible');
-    cy.contains(selectRegionString).click();
 
-    ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
+    ui.dialog
+      .findByTitle(`Migrate Linode ${mockLinode.label} to another region`)
+      .should('be.visible')
+      .within(() => {
+        // Confirm that 'Enter Migration Queue' button is disabled.
+        ui.button
+          .findByTitle('Enter Migration Queue')
+          .should('be.visible')
+          .should('be.disabled');
 
-    cy.findByText('Enter Migration Queue').click();
-    cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
+        // Confirm that user is warned of Migration side effects.
+        cy.findByText('Caution:').should('be.visible');
+        migrationNoticeSubstrings.forEach((noticeSubstring: string) => {
+          cy.contains(noticeSubstring).should('be.visible');
+        });
+
+        // Click the "Accept" check box.
+        cy.findByText('Accept').should('be.visible').click();
+
+        // Select migration region.
+        cy.findByText(`North America: Dallas, TX`).should('be.visible');
+        cy.contains(selectRegionString).click();
+        ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
+
+        ui.button
+          .findByTitle('Enter Migration Queue')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
   });
 
   /*
@@ -110,46 +147,47 @@ describe('Migrate Linode With Firewall', () => {
     interceptCreateFirewall().as('createFirewall');
     interceptGetFirewalls().as('getFirewalls');
 
+    // Create a Linode, then navigate to the Firewalls landing page.
     cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
       interceptMigrateLinode(linode.id).as('migrateLinode');
       cy.visitWithLogin('/firewalls');
-      // intercept migrate linode request
-
-      cy.get('[data-qa-header]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Firewalls').should('be.visible');
-        });
-
       cy.wait('@getFirewalls');
-      cy.get('[data-qa-header]')
+
+      ui.button
+        .findByTitle('Create Firewall')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle('Create Firewall')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Firewalls').should('be.visible');
+          cy.findByText('Label')
+            .should('be.visible')
+            .click()
+            .type(firewallLabel);
+
+          cy.findByText('Linodes')
+            .should('be.visible')
+            .click()
+            .type(linode.label);
+
+          ui.autocompletePopper
+            .findByTitle(linode.label)
+            .should('be.visible')
+            .click();
+
+          // Click on the Select again to dismiss the autocomplete popper.
+          cy.findByLabelText('Linodes').should('be.visible').click();
+
+          ui.buttonGroup
+            .findButtonByTitle('Create Firewall')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
-      cy.findByText('Create Firewall').click();
 
-      cy.get('[data-testid="textfield-input"]:first')
-        .should('be.visible')
-        .type(firewallLabel);
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click()
-        .type(linode.label);
-
-      cy.get('[data-qa-autocomplete-popper]')
-        .findByText(linode.label)
-        .should('be.visible')
-        .click();
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click();
-
-      cy.findByText(linode.label).should('be.visible');
-
-      cy.get('[data-qa-submit="true"]').click();
       cy.wait('@createFirewall');
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.get('[data-qa-link-text="true"]')
@@ -170,16 +208,26 @@ describe('Migrate Linode With Firewall', () => {
 
       ui.actionMenuItem.findByTitle('Migrate').should('be.visible').click();
 
-      cy.contains(`Migrate Linode ${linode.label}`).should('be.visible');
-      cy.get('[data-qa-checked="false"]').click();
-      cy.findByText(selectRegionString).click();
-
-      ui.regionSelect.findItemByRegionLabel(migrationRegionEnd.label).click();
-      ui.button
-        .findByTitle('Enter Migration Queue')
+      ui.dialog
+        .findByTitle(`Migrate Linode ${linode.label} to another region`)
         .should('be.visible')
-        .should('be.enabled')
-        .click();
+        .within(() => {
+          // Click "Accept" check box.
+          cy.findByText('Accept').should('be.visible').click();
+
+          // Select region for migration.
+          cy.findByText(selectRegionString).click();
+          ui.regionSelect
+            .findItemByRegionLabel(migrationRegionEnd.label)
+            .click();
+
+          // Initiate migration.
+          ui.button
+            .findByTitle('Enter Migration Queue')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
       cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
     });
