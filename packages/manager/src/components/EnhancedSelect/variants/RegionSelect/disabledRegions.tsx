@@ -2,45 +2,47 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+import { regionFactory } from 'src/factories';
 
-import type { Capabilities, Region, RegionStatus } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4';
 
-// DATA
-const tokyoDisabledMessage = (
+// TOKYO
+const TOKYO_DISABLED_MESSAGE =
+  'Tokyo is sold out while we expand our capacity. We recommend deploying workloads in Osaka.';
+const TOKYO_DISABLED_MESSAGE_LINK =
+  'https://www.linode.com/blog/linode/tokyo-region-availability-update/';
+
+// SINGAPORE
+const SINGAPORE_DISABLED_MESSAGE =
+  'Singapore is sold out while we expand our capacity. We recommend deploying workloads in Osaka.';
+const SINGAPORE_DISABLED_MESSAGE_LINK =
+  'https://www.linode.com/blog/linode/singapore-region-availability-update/';
+
+// UTILS
+interface DisabledMessage {
+  disabledLink: string;
+  disabledMessage: string;
+}
+
+const disabledMessage = ({
+  disabledLink,
+  disabledMessage,
+}: DisabledMessage): JSX.Element => (
   <Typography>
-    Tokyo is sold out while we expand our capacity. We recommend deploying
-    workloads in Osaka.{` `}
+    {disabledMessage}
     <br />
-    <Link to="https://www.linode.com/blog/linode/tokyo-region-availability-update/">
-      Learn more
-    </Link>
-    .
+    <Link to={disabledLink}>Learn more</Link>.
   </Typography>
 );
 
-const fakeTokyo: FakeRegion = {
-  capabilities: ['Linodes', 'NodeBalancers'] as Capabilities[],
-  country: 'jp',
-  disabled: true,
-  display: 'Tokyo, JP',
-  id: 'ap-northeast',
-  label: 'Tokyo, JP',
-  resolvers: {
-    ipv4:
-      '173.230.129.5,173.230.136.5,173.230.140.5,66.228.59.5,66.228.62.5,50.116.35.5,50.116.41.5,23.239.18.5',
-    ipv6: '',
-  },
-  status: 'ok' as RegionStatus,
-};
-
-type FakeRegion = Region & { disabled: boolean; display: string };
-
-// UTILS
-interface DisabledRegion {
+export interface FakeRegion extends Region {
   /**
    * The message to display when the region is disabled.
    */
   disabledMessage: JSX.Element;
+}
+
+export interface DisabledRegion {
   /**
    * A list of paths that should not display the fake region.
    */
@@ -57,9 +59,33 @@ interface DisabledRegion {
 
 export const listOfDisabledRegions: DisabledRegion[] = [
   {
-    disabledMessage: tokyoDisabledMessage,
     excludePaths: ['/object-storage/buckets/create', '/vpcs/create'],
-    fakeRegion: fakeTokyo,
+    fakeRegion: {
+      disabledMessage: disabledMessage({
+        disabledLink: TOKYO_DISABLED_MESSAGE_LINK,
+        disabledMessage: TOKYO_DISABLED_MESSAGE,
+      }),
+      ...regionFactory.build({
+        country: 'JP',
+        id: 'ap-northeast',
+        label: 'Tokyo, JP',
+      }),
+    },
     featureFlag: 'soldOutTokyo',
+  },
+  {
+    excludePaths: ['/object-storage/buckets/create', '/vpcs/create'],
+    fakeRegion: {
+      disabledMessage: disabledMessage({
+        disabledLink: SINGAPORE_DISABLED_MESSAGE_LINK,
+        disabledMessage: SINGAPORE_DISABLED_MESSAGE,
+      }),
+      ...regionFactory.build({
+        country: 'SG',
+        id: 'ap-south',
+        label: 'Singapore, SG',
+      }),
+    },
+    featureFlag: 'soldOutSingapore',
   },
 ];
