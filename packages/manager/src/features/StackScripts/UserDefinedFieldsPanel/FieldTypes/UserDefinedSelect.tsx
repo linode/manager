@@ -1,6 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -8,19 +7,6 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InputLabel } from 'src/components/InputLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  radioGroupLabel: {
-    display: 'block',
-    marginBottom: '4px',
-  },
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: `${theme.spacing(3)} 0 0`,
-    marginTop: '16px',
-  },
-}));
 
 interface Props {
   error?: string;
@@ -31,8 +17,6 @@ interface Props {
 }
 
 export const UserDefinedSelect = (props: Props) => {
-  const classes = useStyles();
-
   const { error, field, isOptional, updateFormState, value } = props;
 
   const [oneof, setOneof] = React.useState<string[]>(field.oneof!.split(','));
@@ -62,12 +46,12 @@ export const UserDefinedSelect = (props: Props) => {
     );
   }
   return (
-    <div className={classes.root}>
+    <StyledRootDiv>
       {error && <Notice spacingTop={8} text={error} variant="error" />}
-      <InputLabel className={classes.radioGroupLabel}>
+      <StyledInputLabel>
         {field.label}
         {!isOptional && '*'}
-      </InputLabel>
+      </StyledInputLabel>
 
       {oneof.map((choice: string, index) => (
         <FormControlLabel
@@ -84,6 +68,20 @@ export const UserDefinedSelect = (props: Props) => {
           value={choice}
         />
       ))}
-    </div>
+    </StyledRootDiv>
   );
 };
+
+const StyledInputLabel = styled(InputLabel, { label: 'StyledInputLabel' })({
+  display: 'block',
+  marginBottom: '4px',
+});
+
+const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    margin: `${theme.spacing(3)} 0 0`,
+    marginTop: theme.spacing(2),
+  })
+);

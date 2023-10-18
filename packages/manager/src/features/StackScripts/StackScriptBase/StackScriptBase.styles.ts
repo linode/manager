@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Table } from 'src/components/Table';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { WithStackScriptBaseOptions } from './StackScriptBase';
 
@@ -13,6 +14,7 @@ type StyledStackScriptBaseProps = Pick<
 
 export const StyledContentDiv = styled('div', {
   label: 'StyledContentDiv',
+  shouldForwardProp: omittedProps(['isSelecting']),
 })<StyledStackScriptBaseProps>(({ isSelecting, theme }) => ({
   ...(isSelecting
     ? {
@@ -78,7 +80,7 @@ export const StyledLoaderDiv = styled('div', { label: 'StyledLoaderDiv' })(
 
 // Styles to override base placeholder styles for StackScript null state
 export const StyledPlaceholder = styled(Placeholder, {
-  label: 'StyledPlaceHolder',
+  label: 'StyledPlaceholder',
 })(({ theme }) => ({
   '& svg': {
     marginTop: 4,

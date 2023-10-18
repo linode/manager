@@ -1,16 +1,15 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
 
+import { StyledStackScriptSectionTableCell } from '../CommonStackScript.styles';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 interface Props {
@@ -53,16 +52,11 @@ export const SelectStackScriptsSection = (props: Props) => {
         data && data.map(selectStackScript)
       ) : (
         <TableRow>
-          <StyledTableCell colSpan={5}>
+          <StyledStackScriptSectionTableCell colSpan={5}>
             <CircleProgress />
-          </StyledTableCell>
+          </StyledStackScriptSectionTableCell>
         </TableRow>
       )}
     </TableBody>
   );
 };
-
-const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
-  border: 0,
-  paddingTop: 100,
-});
