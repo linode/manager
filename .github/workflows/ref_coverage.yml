@@ -20,7 +20,7 @@ jobs:
 
       ### TEMP FOR TESTING
       - name: Yarn test with coverage
-        run: yarn workspace linode-manager run test:ci
+        run: yarn coverage:generate
       ###
 
       - name: Run base branch coverage and write to a file
