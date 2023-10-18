@@ -48,7 +48,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ref_code_coverage
-          path: ref_code_coverage.txt
 
       - name: Install dependencies
         run: yarn
@@ -61,17 +60,17 @@ jobs:
           current_coverage_value=$(yarn coverage:get)
           echo "$current_coverage_value" > current_code_coverage.txt
       
-      - name: Generate Comment with Code Coverage
-        run: |
-            base_coverage=$(cat ref_code_coverage.txt)
-            current_coverage=$(cat current_code_coverage.txt)
-            comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
-            echo "$comment_message" > updated_comment.txt
+      # - name: Generate Comment with Code Coverage
+      #   run: |
+      #       base_coverage=$(cat ${{ github.workspace }}/ref_code_coverage/ref_code_coverage.txt)
+      #       current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
+      #       comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
+      #       echo "$comment_message" > updated_comment.txt
 
       - name: Log Code Coverage
         run: |
-          base_coverage=$(cat ref_code_coverage.txt)
-          current_coverage=$(cat current_code_coverage.txt)
+          base_coverage=$(cat ${{ github.workspace }}/ref_code_coverage/ref_code_coverage.txt)
+          current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
           comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
           echo "Coverage: $comment_message"
 
