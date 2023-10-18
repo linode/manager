@@ -1,4 +1,4 @@
-import * as jaxe from 'vi-axe';
+import * as jaxe from 'jest-axe';
 import * as React from 'react';
 
 import { renderWithTheme, toPassAxeCheck } from 'src/utilities/testHelpers';
