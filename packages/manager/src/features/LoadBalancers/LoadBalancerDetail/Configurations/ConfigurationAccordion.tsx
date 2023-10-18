@@ -19,6 +19,7 @@ import { pluralize } from 'src/utilities/pluralize';
 
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
+import { ConfigurationRoutes } from './ConfigurationRoutes';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
@@ -166,7 +167,7 @@ export const ConfigurationAccordion = (props: Props) => {
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
           {/* @TODO Add AGLB routes table */}
-          <Typography>Routes Table will go here ⚠️🔜</Typography>
+          <ConfigurationRoutes />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
         <ActionsPanel
