@@ -24,15 +24,19 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
-import { DeleteRouteDialog } from '../Routes/DeleteRouteDialog';
-import { RuleDrawer } from '../Routes/RuleDrawer';
 import { RulesTable } from '../RulesTable';
+import { DeleteRouteDialog } from './DeleteRouteDialog';
+import { RuleDrawer } from './RuleDrawer';
 
-import type { Filter, Route } from '@linode/api-v4';
+import type { Configuration, Filter, Route } from '@linode/api-v4';
 
-const PREFERENCE_KEY = 'loadbalancer-configuration-routes';
+const PREFERENCE_KEY = 'loadbalancer-routes';
 
-export const ConfigurationRoutes = () => {
+interface Props {
+  configuredRoutes?: Configuration['routes'];
+}
+
+export const RoutesTable = ({ configuredRoutes }: Props) => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
@@ -70,7 +74,17 @@ export const ConfigurationRoutes = () => {
     filter
   );
 
-  const selectedRoute = routes?.data.find(
+  /**
+   * Filters the configured routes that are rendered in configurations tab routes table.
+   */
+
+  const routesList = configuredRoutes
+    ? routes?.data.filter((route) =>
+        configuredRoutes.map((r) => r.id).includes(route?.id)
+      )
+    : routes?.data;
+
+  const selectedRoute = routesList?.find(
     (route) => route.id === selectedRouteId
   );
 
@@ -95,10 +109,10 @@ export const ConfigurationRoutes = () => {
   }
 
   const getTableItems = (): TableItem[] => {
-    if (!routes) {
+    if (!routesList) {
       return [];
     }
-    return routes.data?.map((route) => {
+    return routesList?.map((route) => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
