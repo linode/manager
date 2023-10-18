@@ -458,16 +458,16 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: '#e5f1ff',
         },
         colorError: {
-          color: '#fff',
+          color: color.white,
         },
         colorPrimary: {
-          color: '#fff',
+          color: color.white,
         },
         colorSecondary: {
-          color: '#fff',
+          color: color.white,
         },
         colorSuccess: {
-          color: '#fff',
+          color: color.white,
         },
         deleteIcon: {
           color: primaryColors.text,
