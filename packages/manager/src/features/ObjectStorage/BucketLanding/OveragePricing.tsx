@@ -1,4 +1,5 @@
 import { Region } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
@@ -13,7 +14,7 @@ interface Props {
 const DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT =
   'For this region, monthly network transfer is calculated and tracked independently and is not part of your global network transfer pool.';
 const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
-  'Your global network transfer pool adds up all the included transfer associated with active Linode services on our account and is prorated based on service creation.';
+  'Your global network transfer pool adds up all the included transfer associated with active Linode services on your account and is prorated based on service creation.';
 
 export const OveragePricing = (props: Props) => {
   const { regionId } = props;
@@ -22,7 +23,7 @@ export const OveragePricing = (props: Props) => {
 
   return regionId ? (
     <>
-      <Typography sx={{ marginTop: '12px' }}>
+      <StyledTypography>
         For this region, additional storage costs{' '}
         <strong>
           $
@@ -32,8 +33,8 @@ export const OveragePricing = (props: Props) => {
           per GB
         </strong>
         .
-      </Typography>
-      <Typography>
+      </StyledTypography>
+      <StyledTypography>
         Outbound transfer will cost{' '}
         <strong>
           $
@@ -61,7 +62,13 @@ export const OveragePricing = (props: Props) => {
           </>
         )}
         .
-      </Typography>
+      </StyledTypography>
     </>
   ) : null;
 };
+
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  margin: `${theme.spacing(2)} 0`,
+}));
