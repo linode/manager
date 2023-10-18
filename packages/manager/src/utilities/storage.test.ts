@@ -2,45 +2,59 @@ import { getEnvLocalStorageOverrides, isDevToolsEnvValid } from './storage';
 
 describe('getLocalStorageOverrides', () => {
   beforeEach(() => {
+    window.localStorage.clear();
     vi.resetModules();
+    vi.unstubAllEnvs();
   });
 
-  const localStorage = {
+  const localStorageData = {
     apiRoot: 'http://localhost:5000/v4',
     clientID: 'MY_CLIENT_ID',
     label: 'My Env',
     loginRoot: 'http://login.localhost:5000',
   };
 
-  it.skip('it returns overrides if defined and if dev tools are enabled', () => {
-    // Enable the dev tools.
-    window.localStorage.setItem('dev-tools', 'true');
+  describe('built for development mode', () => {
+    // Stub `DEV` environment variable to be truthy.
+    beforeEach(() => {
+      vi.stubEnv('DEV', '1');
+    });
 
-    // Set the overrides in local storage.
-    window.localStorage.setItem('devTools/env', JSON.stringify(localStorage));
+    it('returns overrides if overrides are defined', () => {
+      window.localStorage.setItem(
+        'devTools/env',
+        JSON.stringify(localStorageData)
+      );
+      const overrides = getEnvLocalStorageOverrides();
+      expect(overrides).toBeDefined();
+      expect(overrides?.apiRoot).toBe(localStorageData.apiRoot);
+      expect(overrides?.loginRoot).toBe(localStorageData.loginRoot);
+      expect(overrides?.clientID).toBe(localStorageData.clientID);
+    });
 
-    const overrides = getEnvLocalStorageOverrides();
-    expect(overrides).toBeDefined();
-    expect(overrides?.apiRoot).toBe(localStorage.apiRoot);
-    expect(overrides?.loginRoot).toBe(localStorage.loginRoot);
-    expect(overrides?.clientID).toBe(localStorage.clientID);
-
-    // Disable the dev tools.
-    window.localStorage.setItem('dev-tools', 'false');
-
-    // Now, no overrides should be returned.
-    expect(getEnvLocalStorageOverrides()).toBeUndefined();
+    it('returns `undefined` if no overrides are defined', () => {
+      const overrides = getEnvLocalStorageOverrides();
+      expect(overrides).toBeDefined();
+      expect(overrides?.apiRoot).toBe(localStorageData.apiRoot);
+      expect(overrides?.loginRoot).toBe(localStorageData.loginRoot);
+      expect(overrides?.clientID).toBe(localStorageData.clientID);
+    });
   });
 
-  it('only returns overrides while in development mode', () => {
-    // Enable the dev tools.
-    window.localStorage.setItem('dev-tools', 'true');
+  describe('not built for development mode', () => {
+    // Stub `DEV` environment variable to be falsy.
+    beforeEach(() => {
+      vi.stubEnv('DEV', '');
+    });
 
-    // Set the overrides in local storage.
-    window.localStorage.setItem('devTools/env', JSON.stringify(localStorage));
-
-    // No overrides should be returned.
-    expect(getEnvLocalStorageOverrides()).toBeUndefined();
+    it('returns `undefined` when overrides are defined', () => {
+      window.localStorage.setItem(
+        'devTools/env',
+        JSON.stringify(localStorageData)
+      );
+      const overrides = getEnvLocalStorageOverrides();
+      expect(overrides).toBeUndefined();
+    });
   });
 });
 
