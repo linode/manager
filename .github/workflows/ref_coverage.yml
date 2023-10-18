@@ -18,15 +18,13 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      ### TEMP FOR TESTING
-      - name: Yarn test with coverage
-        run: yarn coverage:generate
-      ###
-
       - name: Run base branch coverage and write to a file
+        # Uncomment when ready to run
+        # run: |
+        #   ref_coverage_value=$(yarn coverage:get)
+        #   echo "$ref_coverage_value" > ref_code_coverage.txt
         run: |
-          ref_coverage_value=$(yarn coverage:get)
-          echo "$ref_coverage_value" > ref_code_coverage.txt
+          echo "65" > ref_code_coverage.txt
 
   ### TEMP FOR TESTING
   current_branch_coverage:
@@ -48,6 +46,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+
+      - name: Yarn test with coverage
+        run: yarn workspace linode-manager run test:ci
 
       - name: Run current branch coverage and write to a file
         run: |
