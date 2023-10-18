@@ -1,14 +1,14 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Box } from 'src/components/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { ExtendedNotification } from './useFormattedNotifications';
 

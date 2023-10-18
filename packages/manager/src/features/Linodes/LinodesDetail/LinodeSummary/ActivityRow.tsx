@@ -6,7 +6,7 @@ import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Typography } from 'src/components/Typography';
 import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
-import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+import { formatEventSeconds } from 'src/utilities/minute-conversion';
 
 interface Props {
   event: Event;

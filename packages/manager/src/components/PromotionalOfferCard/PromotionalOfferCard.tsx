@@ -9,10 +9,7 @@ import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import {
-  offSiteURL,
-  onSiteURL,
-} from 'src/utilities/sanitize-html/sanitizeHTML';
+import { offSiteURL, onSiteURL } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alignLeft: {

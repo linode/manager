@@ -6,7 +6,7 @@ import { RouteProps, matchPath } from 'react-router-dom';
  * @param pathname Needle.
  * @param matchPath arguments.
  */
-export default (
+export const isPathOneOf = (
   paths: string[],
   pathname: string,
   props?: RouteProps
