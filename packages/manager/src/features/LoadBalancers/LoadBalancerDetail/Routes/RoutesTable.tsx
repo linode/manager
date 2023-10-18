@@ -75,7 +75,9 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
   );
 
   /**
-   * Filters the configured routes that are rendered in configurations tab routes table.
+   * If configuredRoutes is passed, it filters the configured routes and
+   * renders them in the configurations tab routes table. Otherwise,
+   * it renders all the routes in the routes table.
    */
 
   const routesList = configuredRoutes
