@@ -457,6 +457,18 @@ export const lightTheme: ThemeOptions = {
           },
           backgroundColor: '#e5f1ff',
         },
+        colorError: {
+          color: '#fff',
+        },
+        colorPrimary: {
+          color: '#fff',
+        },
+        colorSecondary: {
+          color: '#fff',
+        },
+        colorSuccess: {
+          color: '#fff',
+        },
         deleteIcon: {
           color: primaryColors.text,
           margin: 0,
@@ -479,9 +491,6 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           borderRadius: 1,
         },
-        colorSuccess: {
-          color: '#fff',
-        },
         root: {
           '&:focus': {
             outline: '1px dotted #999',
@@ -490,7 +499,6 @@ export const lightTheme: ThemeOptions = {
             marginRight: 0,
           },
           alignItems: 'center',
-          // backgroundColor: '#E7E7E7',
           borderRadius: 4,
           color: primaryColors.text,
           display: 'inline-flex',
@@ -1438,8 +1446,8 @@ export const lightTheme: ThemeOptions = {
     },
     warning: {
       dark: '#ffd002',
-      light: '#fdf4da',
-      main: '#fdf4da',
+      light: '#ffd002',
+      main: '#ffd002',
     },
   },
   shadows: [
