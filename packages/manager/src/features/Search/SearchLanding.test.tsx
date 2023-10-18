@@ -8,6 +8,7 @@ import { searchbarResult1 } from 'src/__data__/searchResults';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import { linodeTypeFactory } from 'src/factories';
 
 import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
@@ -30,11 +31,16 @@ const propsWithResults: Props = {
 const queryClient = new QueryClient();
 
 describe('Component', () => {
-  server.use(
-    rest.get('*/domains', (req, res, ctx) => {
-      return res(ctx.json(makeResourcePage([])));
-    })
-  );
+  beforeEach(() => {
+    server.use(
+      rest.get('*/domains', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([])));
+      }),
+      rest.get('*/linode/types/*', (req, res, ctx) => {
+        return res(ctx.json(linodeTypeFactory.build()));
+      })
+    );
+  });
 
   it('should render', async () => {
     const { findByText } = renderWithTheme(<SearchLanding {...props} />);

@@ -87,9 +87,9 @@ export const handleAPIErrors = (
 };
 
 export interface SubnetError {
-  label?: string;
   ipv4?: string;
   ipv6?: string;
+  label?: string;
 }
 
 /**

@@ -7,7 +7,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VPCPanel } from './VPCPanel';
+import { VPCPanel, VPCPanelProps } from './VPCPanel';
 
 const queryClient = new QueryClient();
 
@@ -19,6 +19,7 @@ afterEach(() => {
 const props = {
   assignPublicIPv4Address: false,
   autoassignIPv4WithinVPC: true,
+  from: 'linodeCreate' as VPCPanelProps['from'],
   handleSelectVPC: jest.fn(),
   handleSubnetChange: jest.fn(),
   handleVPCIPv4Change: jest.fn(),
