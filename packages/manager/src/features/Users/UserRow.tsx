@@ -22,11 +22,7 @@ interface Props {
 
 export const UserRow = ({ onDelete, user }: Props) => {
   return (
-    <TableRow
-      ariaLabel={`User ${user.username}`}
-      data-qa-user-row
-      key={user.username}
-    >
+    <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
           <GravatarByEmail email={user.email} />
