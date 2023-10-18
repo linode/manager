@@ -69,8 +69,8 @@ jobs:
 
       - name: Log Code Coverage
         run: |
-          base_coverage=$(cat ${{ github.workspace }}/ref_code_coverage/ref_code_coverage.txt)
-          current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
+          base_coverage=$(cat packages/manager/ref_code_coverage/ref_code_coverage.txt)
+          current_coverage=$(cat packages/manager/current_code_coverage.txt)
           comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
           echo "Coverage: $comment_message"
 
