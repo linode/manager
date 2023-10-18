@@ -7,13 +7,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectRegionPanel } from './SelectRegionPanel';
 
+const pricingMocks = vi.hoisted(() => ({
+  doesRegionHaveUniquePricing: vi.fn().mockReturnValue(false),
+  isLinodeTypeDifferentPriceInSelectedRegion: vi.fn().mockReturnValue(false),
+}));
+
+const queryParamMocks = vi.hoisted(() => ({
+  getQueryParamsFromQueryString: vi.fn().mockReturnValue({}),
+}));
+
 vi.mock('src/utilities/pricing/linodes', () => ({
-  doesRegionHaveUniquePricing: vi.fn(() => false),
-  isLinodeTypeDifferentPriceInSelectedRegion: vi.fn(() => false),
+  doesRegionHaveUniquePricing: pricingMocks.doesRegionHaveUniquePricing,
+  isLinodeTypeDifferentPriceInSelectedRegion:
+    pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion,
 }));
+
 vi.mock('src/utilities/queryParams', () => ({
-  getQueryParamsFromQueryString: vi.fn(() => ({})),
+  getQueryParamsFromQueryString: queryParamMocks.getQueryParamsFromQueryString,
 }));
+
 vi.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
     dcSpecificPricing: true,
@@ -24,16 +36,11 @@ const createPath = '/linodes/create';
 
 describe('SelectRegionPanel in Create Flow', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi
-      .spyOn(
-        require('src/utilities/pricing/linodes'),
-        'doesRegionHaveUniquePricing'
-      )
-      .mockReturnValue(true);
+    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
   });
 
   it('should render a notice when the selected region has unique pricing and the flag is on', async () => {
+    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
     server.use(
       rest.get('*/linode/types', (req, res, ctx) => {
         const types = linodeTypeFactory.buildList(1, {
@@ -76,22 +83,11 @@ describe('SelectRegionPanel in Create Flow', () => {
 
 describe('SelectRegionPanel on the Clone Flow', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi
-      .spyOn(
-        require('src/utilities/queryParams'),
-        'getQueryParamsFromQueryString'
-      )
-      .mockReturnValue({
-        regionID: 'us-east',
-        type: 'Clone+Linode',
-      });
-    vi
-      .spyOn(
-        require('src/utilities/pricing/linodes'),
-        'doesRegionHaveUniquePricing'
-      )
-      .mockReturnValue(false);
+    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(false);
+    queryParamMocks.getQueryParamsFromQueryString.mockReturnValue({
+      regionID: 'us-east',
+      type: 'Clone+Linode',
+    });
   });
 
   const regions = [...regionFactory.buildList(3)];
@@ -137,13 +133,9 @@ describe('SelectRegionPanel on the Clone Flow', () => {
   });
 
   it('displays no notice when cloning to the same region', () => {
-    vi
-      .spyOn(
-        require('src/utilities/pricing/linodes'),
-        'isLinodeTypeDifferentPriceInSelectedRegion'
-      )
-      .mockReturnValue(false);
-
+    pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion.mockReturnValue(
+      false
+    );
     const { queryAllByRole } = renderWithTheme(
       <SelectRegionPanel {...mockedProps} selectedID="us-east" />,
       {
@@ -158,12 +150,9 @@ describe('SelectRegionPanel on the Clone Flow', () => {
   });
 
   it('displays the region cloning notice when cloning to a different region with the same price', () => {
-    vi
-      .spyOn(
-        require('src/utilities/pricing/linodes'),
-        'isLinodeTypeDifferentPriceInSelectedRegion'
-      )
-      .mockReturnValue(false);
+    pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion.mockReturnValue(
+      false
+    );
 
     const { getAllByRole, getByTestId } = renderWithTheme(
       <SelectRegionPanel {...mockedProps} selectedID="us-west" />,
@@ -180,18 +169,10 @@ describe('SelectRegionPanel on the Clone Flow', () => {
   });
 
   it('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
-    vi
-      .spyOn(
-        require('src/utilities/pricing/linodes'),
-        'isLinodeTypeDifferentPriceInSelectedRegion'
-      )
-      .mockReturnValue(true);
-    vi
-      .spyOn(
-        require('src/utilities/pricing/linodes'),
-        'doesRegionHaveUniquePricing'
-      )
-      .mockReturnValue(true);
+    pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion.mockReturnValue(
+      true
+    );
+    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
       <SelectRegionPanel {...mockedProps} selectedID="br-gru" />,
