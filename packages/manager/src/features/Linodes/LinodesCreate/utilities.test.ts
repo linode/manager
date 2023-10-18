@@ -150,8 +150,8 @@ describe('filterOneClickApps', () => {
 });
 
 describe('handleAppLabel', () => {
-  jest.mock('he', () => ({
-    decode: jest.fn(),
+  vi.mock('he', () => ({
+    decode: vi.fn(),
   }));
 
   it('should decode the label and remove "Cluster" when cluster_size is present', () => {

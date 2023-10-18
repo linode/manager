@@ -7,14 +7,14 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectRegionPanel } from './SelectRegionPanel';
 
-jest.mock('src/utilities/pricing/linodes', () => ({
-  doesRegionHaveUniquePricing: jest.fn(() => false),
-  isLinodeTypeDifferentPriceInSelectedRegion: jest.fn(() => false),
+vi.mock('src/utilities/pricing/linodes', () => ({
+  doesRegionHaveUniquePricing: vi.fn(() => false),
+  isLinodeTypeDifferentPriceInSelectedRegion: vi.fn(() => false),
 }));
-jest.mock('src/utilities/queryParams', () => ({
-  getQueryParamsFromQueryString: jest.fn(() => ({})),
+vi.mock('src/utilities/queryParams', () => ({
+  getQueryParamsFromQueryString: vi.fn(() => ({})),
 }));
-jest.mock('src/hooks/useFlags', () => ({
+vi.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
     dcSpecificPricing: true,
   }),
@@ -24,8 +24,8 @@ const createPath = '/linodes/create';
 
 describe('SelectRegionPanel in Create Flow', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest
+    vi.clearAllMocks();
+    vi
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'doesRegionHaveUniquePricing'
@@ -56,7 +56,7 @@ describe('SelectRegionPanel in Create Flow', () => {
 
     const { findByText } = renderWithTheme(
       <SelectRegionPanel
-        handleSelection={jest.fn()}
+        handleSelection={vi.fn()}
         regions={regions}
         selectedID="id-cgk"
       />,
@@ -76,8 +76,8 @@ describe('SelectRegionPanel in Create Flow', () => {
 
 describe('SelectRegionPanel on the Clone Flow', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest
+    vi.clearAllMocks();
+    vi
       .spyOn(
         require('src/utilities/queryParams'),
         'getQueryParamsFromQueryString'
@@ -86,7 +86,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
         regionID: 'us-east',
         type: 'Clone+Linode',
       });
-    jest
+    vi
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'doesRegionHaveUniquePricing'
@@ -96,7 +96,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
 
   const regions = [...regionFactory.buildList(3)];
   const mockedProps = {
-    handleSelection: () => jest.fn(),
+    handleSelection: () => vi.fn(),
     regions,
     selectedLinodeTypeId: 'g6-standard-2',
   };
@@ -137,7 +137,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
   });
 
   it('displays no notice when cloning to the same region', () => {
-    jest
+    vi
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'isLinodeTypeDifferentPriceInSelectedRegion'
@@ -158,7 +158,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
   });
 
   it('displays the region cloning notice when cloning to a different region with the same price', () => {
-    jest
+    vi
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'isLinodeTypeDifferentPriceInSelectedRegion'
@@ -180,13 +180,13 @@ describe('SelectRegionPanel on the Clone Flow', () => {
   });
 
   it('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
-    jest
+    vi
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'isLinodeTypeDifferentPriceInSelectedRegion'
       )
       .mockReturnValue(true);
-    jest
+    vi
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'doesRegionHaveUniquePricing'

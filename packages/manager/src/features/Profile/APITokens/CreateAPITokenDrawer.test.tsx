@@ -9,9 +9,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
-  showSecret: jest.fn(),
+  showSecret: vi.fn(),
 };
 
 describe('Create API Token Drawer', () => {

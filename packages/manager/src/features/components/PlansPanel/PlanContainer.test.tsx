@@ -14,7 +14,7 @@ const mockPlans: PlanSelectionType[] = planSelectionTypeFactory.buildList(2);
 beforeAll(() => mockMatchMedia());
 
 // Mock the useFlags hook
-jest.mock('src/hooks/useFlags', () => ({
+vi.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
     dcSpecificPricing: true,
   }),

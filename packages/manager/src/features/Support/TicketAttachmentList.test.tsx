@@ -20,7 +20,7 @@ const props = {
   ],
   classes: { attachmentPaperWrapper: '', root: '' },
   showMoreAttachments: false,
-  toggle: jest.fn(),
+  toggle: vi.fn(),
 };
 
 const component = shallow(<TicketAttachmentList {...props} />);

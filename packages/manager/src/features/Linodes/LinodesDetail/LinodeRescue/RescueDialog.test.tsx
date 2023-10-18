@@ -17,7 +17,7 @@ const metalLinode = linodeFactory.build({ type: 'g6-metal-alpha-2' });
 
 const props: Props = {
   linodeId: normalLinode.id,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

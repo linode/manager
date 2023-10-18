@@ -22,7 +22,7 @@ const transferDisplayUsageProps: TransferDisplayUsageProps = {
   used: mockTransferData.used,
 };
 
-jest.mock('src/hooks/useFlags', () => ({
+vi.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
     dcSpecificPricing: true,
   }),

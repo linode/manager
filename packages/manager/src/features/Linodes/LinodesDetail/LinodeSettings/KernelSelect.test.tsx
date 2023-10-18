@@ -19,10 +19,10 @@ const kernels = cachedKernelRequest.data.filter(
 
 const props: KernelSelectProps = {
   kernels,
-  onChange: jest.fn(),
+  onChange: vi.fn(),
 };
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('Kernel Select component', () => {
   it('should render a select with the correct number of options', () => {

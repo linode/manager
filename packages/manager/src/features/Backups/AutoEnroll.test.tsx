@@ -8,18 +8,18 @@ import { AutoEnroll } from './AutoEnroll';
 describe('AutoEnroll display component', () => {
   it('should render', () => {
     const { getByText } = renderWithTheme(
-      <AutoEnroll enabled={false} toggle={jest.fn()} />
+      <AutoEnroll enabled={false} toggle={vi.fn()} />
     );
     expect(getByText('Auto Enroll All New Linodes in Backups')).toBeVisible();
   });
   it('enabled prop controls the toggle', () => {
     const { getByRole } = renderWithTheme(
-      <AutoEnroll enabled={true} toggle={jest.fn()} />
+      <AutoEnroll enabled={true} toggle={vi.fn()} />
     );
     expect(getByRole('checkbox')).toBeChecked();
   });
   it('the toggle props works', () => {
-    const toggle = jest.fn();
+    const toggle = vi.fn();
     const { getByRole } = renderWithTheme(
       <AutoEnroll enabled={true} toggle={toggle} />
     );
@@ -31,7 +31,7 @@ describe('AutoEnroll display component', () => {
       <AutoEnroll
         enabled={false}
         error="OMG! This is an error!"
-        toggle={jest.fn()}
+        toggle={vi.fn()}
       />
     );
     expect(getByText('OMG! This is an error!')).toBeVisible();

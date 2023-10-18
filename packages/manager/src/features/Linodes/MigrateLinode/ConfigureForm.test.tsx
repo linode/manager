@@ -7,28 +7,28 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { ConfigureForm } from './ConfigureForm';
 
 // Mock the useFlags hook
-jest.mock('src/hooks/useFlags', () => ({
+vi.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
     dcSpecificPricing: true, // Mock the flag value
   }),
 }));
 
 // Mock the useTypeQuery hook
-jest.mock('src/queries/types', () => ({
+vi.mock('src/queries/types', () => ({
   useTypeQuery: () => ({
     data: typeFactory.build(),
   }),
 }));
 
 // Mock the useRegionsQuery hook
-jest.mock('src/queries/regions', () => ({
+vi.mock('src/queries/regions', () => ({
   useRegionsQuery: () => ({
     data: [],
   }),
 }));
 
 describe('ConfigureForm component with price comparison', () => {
-  const handleSelectRegion = jest.fn();
+  const handleSelectRegion = vi.fn();
   const currentPriceLabel = 'Current Price';
   const newPriceLabel = 'New Price';
   const currentPricePanel = 'current-price-panel';
@@ -141,8 +141,8 @@ describe('ConfigureForm component with price comparison', () => {
   });
 
   it("shouldn't render the MigrationPricingComponent if the flag is disabled", () => {
-    jest.isolateModules(async () => {
-      jest.mock('src/hooks/useFlags', () => ({
+    vi.isolateModules(async () => {
+      vi.mock('src/hooks/useFlags', () => ({
         useFlags: () => ({
           dcSpecificPricing: false,
         }),

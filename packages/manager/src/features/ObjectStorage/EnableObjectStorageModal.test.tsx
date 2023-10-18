@@ -18,8 +18,8 @@ const DC_SPECIFIC_PRICING_REGION_LABEL = 'Jakarta, ID';
 const DC_SPECIFIC_PRICING_REGION = 'id-cgk';
 const BASE_PRICING_REGION = 'us-east';
 
-const handleSubmit = jest.fn();
-const onClose = jest.fn();
+const handleSubmit = vi.fn();
+const onClose = vi.fn();
 
 const props: EnableObjectStorageProps = {
   handleSubmit,

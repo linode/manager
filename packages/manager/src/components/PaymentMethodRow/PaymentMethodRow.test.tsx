@@ -10,10 +10,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentMethodRow from './PaymentMethodRow';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', () => {
   return {
-    getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
-    makeDefaultPaymentMethod: jest.fn().mockResolvedValue({}),
+    getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
+    makeDefaultPaymentMethod: vi.fn().mockResolvedValue({}),
   };
 });
 
@@ -22,7 +22,7 @@ describe('Payment Method Row', () => {
     const { getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
-          onDelete={jest.fn()}
+          onDelete={vi.fn()}
           paymentMethod={paymentMethodFactory.build({ is_default: true })}
         />
       </PayPalScriptProvider>
@@ -35,7 +35,7 @@ describe('Payment Method Row', () => {
     const { queryByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
-          onDelete={jest.fn()}
+          onDelete={vi.fn()}
           paymentMethod={paymentMethodFactory.build({ is_default: false })}
         />
       </PayPalScriptProvider>
@@ -71,11 +71,11 @@ describe('Payment Method Row', () => {
     const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
-          onDelete={jest.fn()}
+          onDelete={vi.fn()}
           paymentMethod={paymentMethodCreditCard}
         />
         <PaymentMethodRow
-          onDelete={jest.fn()}
+          onDelete={vi.fn()}
           paymentMethod={paymentMethodGooglePay}
         />
       </PayPalScriptProvider>
@@ -100,7 +100,7 @@ describe('Payment Method Row', () => {
     const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
-          onDelete={jest.fn()}
+          onDelete={vi.fn()}
           paymentMethod={payPalPaymentMethod}
         />
       </PayPalScriptProvider>
@@ -113,7 +113,7 @@ describe('Payment Method Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
-          onDelete={jest.fn()}
+          onDelete={vi.fn()}
           paymentMethod={paymentMethodFactory.build({ is_default: true })}
         />
       </PayPalScriptProvider>
@@ -128,7 +128,7 @@ describe('Payment Method Row', () => {
   });
 
   it('Calls `onDelete` callback when "Delete" action is clicked', () => {
-    const mockFunction = jest.fn();
+    const mockFunction = vi.fn();
 
     const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
@@ -160,7 +160,7 @@ describe('Payment Method Row', () => {
 
     const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <PaymentMethodRow onDelete={jest.fn()} paymentMethod={paymentMethod} />
+        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
       </PayPalScriptProvider>
     );
 
@@ -188,7 +188,7 @@ describe('Payment Method Row', () => {
           balanceUninvoiced={0}
           paymentMethods={[paymentMethod]}
         />
-        <PaymentMethodRow onDelete={jest.fn()} paymentMethod={paymentMethod} />
+        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
       </PayPalScriptProvider>
     );
 

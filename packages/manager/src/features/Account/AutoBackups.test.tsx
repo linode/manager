@@ -1,11 +1,11 @@
-import * as jaxe from 'jest-axe';
+import * as jaxe from 'vi-axe';
 import * as React from 'react';
 
 import { renderWithTheme, toPassAxeCheck } from 'src/utilities/testHelpers';
 
 import AutoBackups from './AutoBackups';
 
-jest.setTimeout(10000);
+vi.setTimeout(10000);
 
 expect.extend(toPassAxeCheck);
 expect.extend(jaxe.toHaveNoViolations);
@@ -13,12 +13,12 @@ expect.extend(jaxe.toHaveNoViolations);
 // expect.extend(jaxe.toHaveNoViolations);
 describe('AutoBackups simple sanity check', () => {
   it('not managed not auto backups with linodes nobackups', async () => {
-    const openDrawer = jest.fn();
+    const openDrawer = vi.fn();
     const props = {
       backups_enabled: false,
       hasLinodesWithoutBackups: true,
       isManagedCustomer: false,
-      onChange: jest.fn(),
+      onChange: vi.fn(),
       openBackupsDrawer: openDrawer,
     };
     const res = renderWithTheme(<AutoBackups {...props} />);

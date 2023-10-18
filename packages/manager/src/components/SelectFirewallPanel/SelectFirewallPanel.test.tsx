@@ -19,7 +19,7 @@ describe('SelectFirewallPanel', () => {
   it('should render', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
-        handleFirewallChange={jest.fn()}
+        handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
       />,
       {

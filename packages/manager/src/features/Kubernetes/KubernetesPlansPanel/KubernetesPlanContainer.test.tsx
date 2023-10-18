@@ -12,11 +12,11 @@ import {
 const plans = extendedTypeFactory.buildList(2);
 
 const props: KubernetesPlanContainerProps = {
-  getTypeCount: jest.fn(),
-  onSelect: jest.fn(),
+  getTypeCount: vi.fn(),
+  onSelect: vi.fn(),
   plans,
   selectedRegionID: undefined,
-  updatePlanCount: jest.fn(),
+  updatePlanCount: vi.fn(),
 };
 
 beforeAll(() => mockMatchMedia());

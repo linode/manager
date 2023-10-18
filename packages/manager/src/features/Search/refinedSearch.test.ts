@@ -208,7 +208,7 @@ describe('formatQuery', () => {
 
 describe('recursivelyTestItem', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   const queryJSON1: QueryJSON = {
@@ -252,9 +252,9 @@ describe('recursivelyTestItem', () => {
     ],
   };
 
-  const spy_areAnyTrue = jest.spyOn(RefinedSearch, 'areAnyTrue');
-  const spy_areAllTrue = jest.spyOn(RefinedSearch, 'areAllTrue');
-  const spy_recursivelyTestItem = jest.spyOn(
+  const spy_areAnyTrue = vi.spyOn(RefinedSearch, 'areAnyTrue');
+  const spy_areAllTrue = vi.spyOn(RefinedSearch, 'areAllTrue');
+  const spy_recursivelyTestItem = vi.spyOn(
     RefinedSearch,
     'recursivelyTestItem'
   );

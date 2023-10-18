@@ -10,9 +10,9 @@ const store = storeFactory(queryClient);
 
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
-    initSession={jest.fn()}
+    initSession={vi.fn()}
     isAuthenticated={false}
-    markAppAsDoneLoading={jest.fn()}
+    markAppAsDoneLoading={vi.fn()}
     pendingUpload={false}
     queryClient={queryClient}
     store={store}

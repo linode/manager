@@ -26,7 +26,7 @@ const diffLabelList = Array.from({ length: 5 }, (_, index) => {
 const props = {
   headerText: 'Linodes to remove',
   noDataText: 'No Linodes available',
-  onRemove: jest.fn(),
+  onRemove: vi.fn(),
   selectionData: defaultList,
 };
 

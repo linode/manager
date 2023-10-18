@@ -30,7 +30,7 @@ describe('LinodeSelect', () => {
     renderWithTheme(
       <LinodeSelect
         multiple={false}
-        onSelectionChange={jest.fn()} // Placeholder, as there's no callback
+        onSelectionChange={vi.fn()} // Placeholder, as there's no callback
         options={[fakeLinodeData]}
         renderOption={mockRenderOption}
         value={null}
@@ -54,7 +54,7 @@ describe('LinodeSelect', () => {
   test('should display custom no options message', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const options: Linode[] = []; // Assuming no options are available
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <LinodeSelect
@@ -80,7 +80,7 @@ describe('LinodeSelect', () => {
   test('should display default no options message', async () => {
     // Mock the props
     const option: Linode[] = []; // Assuming no options are available
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <LinodeSelect
@@ -105,7 +105,7 @@ describe('LinodeSelect', () => {
     // Mock the props
     const customNoOptionsMessage = 'Custom No Options Message';
     const option: Linode[] = []; // Assuming no options are available
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <LinodeSelect
@@ -130,7 +130,7 @@ describe('LinodeSelect', () => {
   test('should display no options message when user input does not match an option', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <LinodeSelect
@@ -154,7 +154,7 @@ describe('LinodeSelect', () => {
   test('should not display no options message when user input matches an option', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <LinodeSelect

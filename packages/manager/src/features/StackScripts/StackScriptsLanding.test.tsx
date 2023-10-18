@@ -5,8 +5,8 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptsLanding } from './StackScriptsLanding';
 
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn().mockResolvedValue({}),
+vi.mock('@linode/api-v4/lib/account', () => ({
+  getUsers: vi.fn().mockResolvedValue({}),
 }));
 
 describe('StackScripts Landing', () => {

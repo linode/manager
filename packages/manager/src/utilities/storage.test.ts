@@ -2,7 +2,7 @@ import { getEnvLocalStorageOverrides, isDevToolsEnvValid } from './storage';
 
 describe('getLocalStorageOverrides', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   const localStorage = {

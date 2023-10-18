@@ -11,12 +11,12 @@ import BillingActivityPanel, {
   makeFilter,
   paymentToActivityFeedItem,
 } from './BillingActivityPanel';
-jest.mock('../../../../utilities/getUserTimezone');
+vi.mock('../../../../utilities/getUserTimezone');
 
 // Mock global Date object so Transaction Date tests are deterministic.
-global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());
+global.Date.now = vi.fn(() => new Date('2020-01-02T00:00:00').getTime());
 
-jest.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', () => {
   const invoices = [
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
@@ -29,13 +29,13 @@ jest.mock('@linode/api-v4/lib/account', () => {
   ];
 
   return {
-    getInvoices: jest.fn().mockResolvedValue({
+    getInvoices: vi.fn().mockResolvedValue({
       data: invoices,
       page: 1,
       pages: 1,
       results: 2,
     }),
-    getPayments: jest.fn().mockResolvedValue({
+    getPayments: vi.fn().mockResolvedValue({
       data: payments,
       page: 1,
       pages: 1,
@@ -43,7 +43,7 @@ jest.mock('@linode/api-v4/lib/account', () => {
     }),
   };
 });
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {

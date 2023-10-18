@@ -10,8 +10,8 @@ const props = {
     attachFileButton: '',
   },
   files: [attachment1, attachment2],
-  handleFileSelected: jest.fn(),
-  updateFiles: jest.fn(),
+  handleFileSelected: vi.fn(),
+  updateFiles: vi.fn(),
 };
 
 const component = shallow(<AttachFileForm {...props} />);

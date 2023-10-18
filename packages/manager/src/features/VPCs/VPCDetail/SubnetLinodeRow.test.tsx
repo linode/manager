@@ -37,7 +37,7 @@ describe('SubnetLinodeRow', () => {
       })
     );
 
-    const handleUnassignLinode = jest.fn();
+    const handleUnassignLinode = vi.fn();
 
     const {
       getAllByRole,
