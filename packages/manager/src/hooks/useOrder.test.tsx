@@ -38,10 +38,13 @@ const mockHistory = {
 };
 
 // Used to mock query params
-vi.mock('react-router-dom', () => ({
-  ...vi.requireActual('react-router-dom'),
-  useHistory: vi.fn(() => mockHistory),
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<any>('react-router-dom');
+  return {
+    ...actual,
+    useHistory: vi.fn(() => mockHistory),
+  };
+});
 
 const queryClient = queryClientFactory();
 

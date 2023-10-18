@@ -16,7 +16,8 @@ vi.mock('../../../../utilities/getUserTimezone');
 // Mock global Date object so Transaction Date tests are deterministic.
 global.Date.now = vi.fn(() => new Date('2020-01-02T00:00:00').getTime());
 
-vi.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
   const invoices = [
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
@@ -29,6 +30,7 @@ vi.mock('@linode/api-v4/lib/account', () => {
   ];
 
   return {
+    ...actual,
     getInvoices: vi.fn().mockResolvedValue({
       data: invoices,
       page: 1,

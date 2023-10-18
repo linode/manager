@@ -10,8 +10,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentMethodRow from './PaymentMethodRow';
 
-vi.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
   return {
+    ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
     makeDefaultPaymentMethod: vi.fn().mockResolvedValue({}),
   };

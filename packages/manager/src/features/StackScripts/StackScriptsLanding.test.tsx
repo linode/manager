@@ -5,9 +5,13 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptsLanding } from './StackScriptsLanding';
 
-vi.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: vi.fn().mockResolvedValue({}),
-}));
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  return {
+    ...actual,
+    getUsers: vi.fn().mockResolvedValue({}),
+  };
+});
 
 describe('StackScripts Landing', () => {
   const { getByText } = render(wrapWithTheme(<StackScriptsLanding />));

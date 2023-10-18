@@ -7,6 +7,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AddNewMenu } from './AddNewMenu';
 
+vi.mock('src/hooks/useFlags', async () => {
+  const actual = await vi.importActual<any>('src/hooks/useFlags');
+  return {
+    ...actual,
+    __esModule: true,
+    useFlags: vi.fn().mockReturnValue({
+      aglb: false,
+      databases: false,
+    }),
+  };
+});
+
 describe('AddNewMenu', () => {
   test('renders the Create button', () => {
     const { getByText } = renderWithTheme(<AddNewMenu />);
@@ -51,31 +63,14 @@ describe('AddNewMenu', () => {
     expect(history.location.pathname).toBe('/linodes/create');
   });
 
-  test('does not render hidden menu item', () => {
-    const mockedUseFlags = vi.fn().mockReturnValue({ aglb: false });
-    vi.mock('src/hooks/useFlags', () => ({
-      __esModule: true,
-      useFlags: mockedUseFlags,
-    }));
-
+  test('does not render hidden menu items', () => {
     const { getByText, queryByText } = renderWithTheme(<AddNewMenu />);
     const createButton = getByText('Create');
     fireEvent.click(createButton);
-    const hiddenMenuItem = queryByText('Global Load Balancer');
-    expect(hiddenMenuItem).toBeNull();
-  });
 
-  test('does not render hidden menu item - databases', () => {
-    const mockedUseFlags = vi.fn().mockReturnValue({ databases: false });
-    vi.mock('src/hooks/useFlags', () => ({
-      __esModule: true,
-      useFlags: mockedUseFlags,
-    }));
-
-    const { getByText, queryByText } = renderWithTheme(<AddNewMenu />);
-    const createButton = getByText('Create');
-    fireEvent.click(createButton);
-    const hiddenMenuItem = queryByText('Create Database');
-    expect(hiddenMenuItem).toBeNull();
+    ['Global Load Balancer', 'Database'].forEach((createMenuItem: string) => {
+      const hiddenMenuItem = queryByText(createMenuItem);
+      expect(hiddenMenuItem).toBeNull();
+    });
   });
 });

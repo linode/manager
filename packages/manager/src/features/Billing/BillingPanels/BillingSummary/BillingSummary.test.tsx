@@ -16,8 +16,10 @@ import BillingSummary from './BillingSummary';
 const accountBalanceText = 'account-balance-text';
 const accountBalanceValue = 'account-balance-value';
 
-vi.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
   return {
+    ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
   };
 });

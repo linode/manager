@@ -10,8 +10,12 @@ import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 
 import type { ObjectDetailsDrawerProps } from './ObjectDetailsDrawer';
 
-vi.mock('@linode/api-v4/lib/object-storage/objects', () => {
+vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
+  const actual = await vi.importActual<any>(
+    '@linode/api-v4/lib/object-storage/objects'
+  );
   return {
+    ...actual,
     getObjectACL: vi.fn().mockResolvedValue({
       acl: 'public-read',
       acl_xml: 'long xml string',

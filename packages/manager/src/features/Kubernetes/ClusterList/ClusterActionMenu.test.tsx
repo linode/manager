@@ -10,14 +10,17 @@ import { ClusterActionMenu } from './ClusterActionMenu';
 const mockGetKubeConfig = vi.spyOn<any, any>(kube, 'getKubeConfig');
 
 // Mock snackbar to prevent "Can't perform a React state update on an unmounted component" warning.
-vi.mock('notistack', () => ({
-  ...vi.requireActual('notistack'),
-  useSnackbar: () => {
-    return {
-      enqueueSnackbar: vi.fn(),
-    };
-  },
-}));
+vi.mock('notistack', async () => {
+  const actual = await vi.importActual<any>('notistack');
+  return {
+    ...actual,
+    useSnackbar: () => {
+      return {
+        enqueueSnackbar: vi.fn(),
+      };
+    },
+  };
+});
 
 const props = {
   closeSnackbar: vi.fn(),
