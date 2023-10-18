@@ -28,6 +28,7 @@ import type { MatchField, Route } from '@linode/api-v4';
 
 interface Props {
   loadbalancerId: number;
+  onEditRule: (ruleIndex: number) => void;
   route: Route;
 }
 
@@ -42,7 +43,7 @@ const matchFieldMap: Record<MatchField, string> = {
 const screenReaderMessage =
   'Some screen readers may require you to enter focus mode to interact with Loadbalancer rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
 
-export const RulesTable = ({ loadbalancerId, route }: Props) => {
+export const RulesTable = ({ loadbalancerId, onEditRule, route }: Props) => {
   const { label, protocol, rules } = route;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -146,10 +147,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                     >
                       {(provided) => (
                         <li
-                          aria-label={
-                            rule.match_condition.hostname ??
-                            `Rule ${rule.match_condition.hostname}`
-                          }
+                          aria-label={`Rule ${index}`}
                           aria-roledescription={screenReaderMessage}
                           aria-selected={false}
                           ref={provided.innerRef}
@@ -158,7 +156,6 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                           {...provided.dragHandleProps}
                         >
                           <StyledRuleBox
-                            aria-label={`Rule ${rule.match_condition.hostname}`}
                             key={index}
                             sx={{ backgroundColor: theme.bg.bgPaper }}
                           >
@@ -219,22 +216,26 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                 }}
                                 aria-label={`Service Targets: ${rule.service_targets.length}`}
                               >
-                                <TextTooltip
-                                  displayText={String(
-                                    rule.service_targets.length
-                                  )}
-                                  tooltipText={
-                                    <>
-                                      {rule.service_targets.map(
-                                        ({ id, label }) => (
-                                          <div key={label}>
-                                            {label}:{id}
-                                          </div>
-                                        )
-                                      )}
-                                    </>
-                                  }
-                                />
+                                {rule.service_targets.length > 0 ? (
+                                  <TextTooltip
+                                    displayText={String(
+                                      rule.service_targets.length
+                                    )}
+                                    tooltipText={
+                                      <>
+                                        {rule.service_targets.map(
+                                          ({ id, label }) => (
+                                            <div key={label}>
+                                              {label}:{id}
+                                            </div>
+                                          )
+                                        )}
+                                      </>
+                                    }
+                                  />
+                                ) : (
+                                  'None'
+                                )}
                               </Box>
                             </Hidden>
                             <Hidden smDown>
@@ -253,7 +254,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                 }}
                               >
                                 {rule.match_condition
-                                  .session_stickiness_cookie &&
+                                  .session_stickiness_cookie ||
                                 rule.match_condition.session_stickiness_ttl
                                   ? 'Yes'
                                   : 'No'}
@@ -270,7 +271,10 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                               {/** TODO: AGLB: The Edit and Delete Action menu behavior should be implemented in future AGLB tickets. */}
                               <ActionMenu
                                 actionsList={[
-                                  { onClick: () => null, title: 'Edit' },
+                                  {
+                                    onClick: () => onEditRule(index),
+                                    title: 'Edit',
+                                  },
                                   {
                                     disabled: index === 0,
                                     onClick: () => handleMoveUp(index),
@@ -283,7 +287,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                   },
                                   { onClick: () => null, title: 'Remove' },
                                 ]}
-                                ariaLabel={`Action Menu for Rule ${rule.match_condition.match_value}`}
+                                ariaLabel={`Action Menu for Rule ${index}`}
                               />
                             </Box>
                           </StyledRuleBox>

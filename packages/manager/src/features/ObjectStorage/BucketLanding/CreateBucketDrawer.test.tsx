@@ -10,8 +10,11 @@ import {
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { QueryClient, setLogger } from 'react-query';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
+
+const queryClient = new QueryClient();
 
 const props = {
   isOpen: true,
@@ -21,7 +24,28 @@ const props = {
 jest.mock('src/components/EnhancedSelect/Select');
 
 describe('CreateBucketDrawer', () => {
+  afterEach(() => {
+    // Reset React Query logger.
+    setLogger(console);
+  });
+
   it('Should show a general error notice if the API returns one', async () => {
+    // Suppress logging React Query errors to CLI since this test is expected
+    // to trigger errors.
+    //
+    // Note: Logging options improved in React Query v4 and `setLogger` will
+    // be removed in v5. We will be able to accomplish this more cleanly once
+    // we upgrade.
+    //
+    // See also:
+    // - https://github.com/TanStack/query/issues/125
+    // - https://github.com/TanStack/query/discussions/4252
+    setLogger({
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+    });
+
     server.use(
       rest.post('*/object-storage/buckets', (req, res, ctx) => {
         return res(
@@ -62,7 +86,7 @@ describe('CreateBucketDrawer', () => {
       getByLabelText,
       getByPlaceholderText,
       getByTestId,
-    } = renderWithTheme(<CreateBucketDrawer {...props} />);
+    } = renderWithTheme(<CreateBucketDrawer {...props} />, { queryClient });
 
     userEvent.type(getByLabelText('Label'), 'my-test-bucket');
 

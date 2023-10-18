@@ -369,8 +369,16 @@ export const LinodeConfigDialog = (props: Props) => {
       configData.initrd = finnixDiskID;
     }
 
-    if (!regionHasVLANS || !regionHasVPCs) {
-      delete configData.interfaces;
+    if (!regionHasVLANS) {
+      configData.interfaces = configData.interfaces?.filter(
+        (_interface) => _interface.purpose !== 'vlan'
+      );
+    }
+
+    if (!regionHasVPCs) {
+      configData.interfaces = configData.interfaces?.filter(
+        (_interface) => _interface.purpose !== 'vpc'
+      );
     }
 
     const actionType = Boolean(config) ? 'updated' : 'created';

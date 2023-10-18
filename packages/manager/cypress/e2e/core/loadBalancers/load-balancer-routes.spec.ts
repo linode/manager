@@ -217,7 +217,78 @@ describe('Akamai Global Load Balancer routes page', () => {
 
     cy.wait('@updateRoute');
   });
-  it('surfaces API errors in the Add Rule Drawer', () => {
+  it('can edit a HTTP rule', () => {
+    const loadbalancer = loadbalancerFactory.build();
+    const routes = routeFactory.buildList(1, { protocol: 'http' });
+    const serviceTargets = serviceTargetFactory.buildList(3);
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+    mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+    mockGetLoadBalancerServiceTargets(loadbalancer.id, serviceTargets).as(
+      'getServiceTargets'
+    );
+
+    cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getRoutes',
+    ]);
+
+    cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+
+    ui.actionMenu.findByTitle('Action Menu for Rule 0').click();
+
+    ui.actionMenuItem.findByTitle('Edit').click();
+
+    mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
+
+    ui.drawer
+      .findByTitle('Edit Rule')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Hostname')
+          .should('have.value', routes[0].rules[0].match_condition.hostname)
+          .clear()
+          .type('example.com');
+
+        cy.findByLabelText('Match Type')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type('Header');
+
+        ui.autocompletePopper
+          .findByTitle('HTTP Header')
+          .should('be.visible')
+          .click();
+
+        cy.findByLabelText('Match Value')
+          .should('have.value', routes[0].rules[0].match_condition.match_value)
+          .clear()
+          .type('x-header=my-header-value');
+
+        ui.buttonGroup
+          .findButtonByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@updateRoute');
+
+    // Verify the table updates after the drawer saves and closes
+    cy.findByLabelText('Rule 0').within(() => {
+      cy.findByText('x-header=my-header-value');
+      cy.findByText('HTTP Header');
+    });
+  });
+  it('surfaces API errors in the Add Rule Drawer for an HTTP route', () => {
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(1, { protocol: 'http' });
     const serviceTargets = serviceTargetFactory.buildList(3);
