@@ -52,6 +52,7 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
+import { regionsWithFeature } from 'src/utilities/doesRegionSupportFeature';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
@@ -200,6 +201,11 @@ const DatabaseCreate = () => {
     error: regionsError,
     isLoading: regionsLoading,
   } = useRegionsQuery();
+
+  const regionsThatSupportDbaas = regionsWithFeature(
+    regionsData ?? [],
+    'Managed Databases'
+  );
 
   const {
     data: engines,
@@ -502,7 +508,7 @@ const DatabaseCreate = () => {
               setFieldValue('region', selected)
             }
             errorText={errors.region}
-            regions={regionsData}
+            regions={regionsThatSupportDbaas}
             selectedID={values.region}
           />
           <RegionHelperText mt={1} />
