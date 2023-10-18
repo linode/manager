@@ -25,6 +25,12 @@ jobs:
         #   echo "$ref_coverage_value" > ref_code_coverage.txt
         run: |
           echo "65" > ref_code_coverage.txt
+      
+      - name: Upload code coverage for ref branch
+        uses: actions/upload-artifact@v3
+        with:
+          name: ref_code_coverage
+          path: ref_code_coverage.txt
 
   ### TEMP FOR TESTING
   current_branch_coverage:
