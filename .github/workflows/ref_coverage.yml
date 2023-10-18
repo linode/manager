@@ -31,6 +31,7 @@ jobs:
   ### TEMP FOR TESTING
   current_branch_coverage:
     runs-on: ubuntu-latest
+    needs: base_branch_coverage
     steps:
       - uses: actions/checkout@v3
 
