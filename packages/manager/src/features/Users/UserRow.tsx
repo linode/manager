@@ -5,6 +5,7 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -31,11 +32,15 @@ export const UserRow = ({ onDelete, user }: Props) => {
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
-      <TableCell>{user.email}</TableCell>
+      <Hidden smDown>
+        <TableCell>{user.email}</TableCell>
+      </Hidden>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
-      <TableCell>
-        <LastLogin last_login={user.last_login} />
-      </TableCell>
+      <Hidden lgDown>
+        <TableCell>
+          <LastLogin last_login={user.last_login} />
+        </TableCell>
+      </Hidden>
       <TableCell actionCell>
         <UsersActionMenu onDelete={onDelete} username={user.username} />
       </TableCell>

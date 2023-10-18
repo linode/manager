@@ -21,6 +21,7 @@ import { useProfile } from 'src/queries/profile';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
+import { Hidden } from 'src/components/Hidden';
 
 export const UsersLanding = () => {
   const { data: profile } = useProfile();
@@ -58,7 +59,7 @@ export const UsersLanding = () => {
       return (
         <TableRowLoading
           columns={5}
-          responsive={{ 1: { smDown: true } }}
+          responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
           rows={1}
         />
       );
@@ -99,20 +100,24 @@ export const UsersLanding = () => {
               active={order.orderBy === 'username'}
               direction={order.order}
               handleClick={order.handleOrderChange}
-              label={'username'}
+              label="username"
             >
               Username
             </TableSortCell>
-            <TableSortCell
-              active={order.orderBy === 'email'}
-              direction={order.order}
-              handleClick={order.handleOrderChange}
-              label={'email'}
-            >
-              Email Address
-            </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={order.orderBy === 'email'}
+                direction={order.order}
+                handleClick={order.handleOrderChange}
+                label="email"
+              >
+                Email Address
+              </TableSortCell>
+            </Hidden>
             <TableCell>Account Access</TableCell>
-            <TableCell>Last Login</TableCell>
+            <Hidden lgDown>
+              <TableCell>Last Login</TableCell>
+            </Hidden>
             <TableCell />
           </TableRow>
         </TableHead>
