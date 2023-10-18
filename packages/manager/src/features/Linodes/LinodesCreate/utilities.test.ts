@@ -20,6 +20,7 @@ const linodeImage = imageFactory.build({
   label: 'Debian 10',
   vendor: 'linode',
 });
+
 const images = normalizeEntities(imageFactory.buildList(10));
 images['linode/debian10'] = linodeImage;
 
@@ -150,10 +151,6 @@ describe('filterOneClickApps', () => {
 });
 
 describe('handleAppLabel', () => {
-  vi.mock('he', () => ({
-    decode: vi.fn(),
-  }));
-
   it('should decode the label and remove "Cluster" when cluster_size is present', () => {
     const stackScript = stackScriptFactory.build({
       label: 'My StackScript Cluster ',
