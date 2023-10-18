@@ -32,10 +32,6 @@ export const EnableObjectStorageModal = React.memo(
 
     const regionLabel =
       regions?.find((r) => r.id === regionId)?.label ?? regionId;
-    // TODO: DC Pricing - M3-6973: Uncomment to calculate `objStoragePrices` based on region map rather than OBJ_STORAGE_PRICE constant
-    //   regionId && flags.dcSpecificPricing
-    //     ? objectStoragePriceIncreaseMap[regionId] ?? OBJ_STORAGE_PRICE
-    //     : OBJ_STORAGE_PRICE;
     const isObjBetaPricingRegion =
       regionId && objectStoragePriceIncreaseMap.hasOwnProperty(regionId);
 

@@ -7,6 +7,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
@@ -25,6 +26,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
+import { OveragePricing } from './OveragePricing';
 
 interface Props {
   isOpen: boolean;
@@ -50,6 +52,8 @@ export const CreateBucketDrawer = (props: Props) => {
   const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
     false
   );
+
+  const flags = useFlags();
 
   const formik = useFormik({
     initialValues: {
@@ -140,6 +144,9 @@ export const CreateBucketDrawer = (props: Props) => {
           required
           selectedCluster={formik.values.cluster}
         />
+        {flags.objDCSpecificPricing && (
+          <OveragePricing regionId={clusterRegion?.[0]?.id} />
+        )}
         {showAgreement ? (
           <StyledEUAgreementCheckbox
             onChange={(e) =>
