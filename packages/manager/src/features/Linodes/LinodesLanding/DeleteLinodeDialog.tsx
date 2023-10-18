@@ -12,6 +12,9 @@ import {
 
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { vpcQueryKey, subnetQueryKey } from 'src/queries/vpcs';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { getVPCsFromLinodeConfigs } from './utils';
 
@@ -24,6 +27,15 @@ interface Props {
 
 export const DeleteLinodeDialog = (props: Props) => {
   const queryClient = useQueryClient();
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const enableVPCActions = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
   const { linodeId, onClose, onSuccess, open } = props;
 
   const { data: linode } = useLinodeQuery(
@@ -33,7 +45,7 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const { data: configs } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
-    linodeId !== undefined && open
+    linodeId !== undefined && open && enableVPCActions
   );
 
   const { error, isLoading, mutateAsync, reset } = useDeleteLinodeMutation(
@@ -49,7 +61,7 @@ export const DeleteLinodeDialog = (props: Props) => {
   const onDelete = async () => {
     await mutateAsync();
     const vpcIds = getVPCsFromLinodeConfigs(configs ?? []);
-    if (vpcIds) {
+    if (vpcIds.length > 0) {
       queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
       // invalidate data for specific vpcs this linode is assigned to
       vpcIds.forEach((vpcId) => {
