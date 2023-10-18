@@ -5,6 +5,13 @@
   Akamai Connected Cloud Manager
 </h2>
 
+<center>
+
+[![Coverage](https://img.shields.io/badge/@linode/manager_coverage-75.18%-yellow)](packages/manager/coverage/lcov-report/index.html)
+
+</center>
+
+
 <p align="center">
   <a href="https://github.com/linode/manager/actions/workflows/ci.yml">
     <img src="https://github.com/linode/manager/actions/workflows/ci.yml/badge.svg?branch=develop" alt="CI Build Stats on develop" />
@@ -52,4 +59,4 @@ To report a bug or request a feature in Cloud Manager, please [open a GitHub Iss
 ## License
 
 All code located in this repository is distributed under the terms of the [APLv2
-license](LICENSE).
+lice
