@@ -1,4 +1,5 @@
 import { Region } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -43,17 +44,17 @@ export const EnableObjectStorageModal = React.memo(
       if (flags.objDCSpecificPricing) {
         return (
           <>
-            <Typography sx={{ fontSize: '1rem', marginBottom: '12px' }}>
+            <StyledTypography>
               To create your first {regionId ? 'bucket' : 'access key'}, you
               need to enable Object Storage.{' '}
-            </Typography>
-            <Typography sx={{ fontSize: '1rem' }}>
+            </StyledTypography>
+            <StyledTypography>
               Object Storage costs a flat rate of{' '}
               <strong>${OBJ_STORAGE_PRICE.monthly}/month</strong>, and includes{' '}
               {OBJ_STORAGE_STORAGE_AMT} of storage. When you enable Object
               Storage, {OBJ_STORAGE_NETWORK_TRANSFER_AMT} of outbound data
               transfer will be added to your global network transfer pool.
-            </Typography>
+            </StyledTypography>
           </>
         );
       }
@@ -61,25 +62,24 @@ export const EnableObjectStorageModal = React.memo(
       if (flags.dcSpecificPricing) {
         if (!regionId) {
           return (
-            <Typography sx={{ fontSize: '1rem' }}>
+            <StyledTypography>
               {ENABLE_OBJ_ACCESS_KEYS_MESSAGE}
-            </Typography>
+            </StyledTypography>
           );
         } else if (isObjBetaPricingRegion) {
-          // TODO: DC Pricing - M3-6973: Remove this case once beta pricing ends.
           return (
-            <Typography sx={{ fontSize: '1rem' }}>
+            <StyledTypography>
               Object Storage for {regionLabel} is currently in beta. During the
               beta period, Object Storage in these regions is free. After the
               beta period, customers will be notified before charges for this
               service begin.
-            </Typography>
+            </StyledTypography>
           );
         }
       }
 
       return (
-        <Typography sx={{ fontSize: '1rem' }}>
+        <StyledTypography>
           Linode Object Storage costs a flat rate of{' '}
           <strong>${OBJ_STORAGE_PRICE.monthly}/month</strong>, and includes{' '}
           {OBJ_STORAGE_STORAGE_AMT} of storage and{' '}
@@ -93,7 +93,7 @@ export const EnableObjectStorageModal = React.memo(
               Learn more.
             </Link>
           )}
-        </Typography>
+        </StyledTypography>
       );
     };
 
@@ -121,14 +121,14 @@ export const EnableObjectStorageModal = React.memo(
       >
         {renderRegionPricingText(regionLabel ?? 'this region')}
         {flags.dcSpecificPricing && (
-          <Typography style={{ fontSize: '1rem', marginTop: 12 }}>
+          <StyledTypography>
             <Link to="https://www.linode.com/pricing/#object-storage">
               Learn more
             </Link>{' '}
             about pricing and specifications.
-          </Typography>
+          </StyledTypography>
         )}
-        <Notice spacingTop={12} spacingBottom={0} variant="warning">
+        <Notice spacingBottom={0} variant="warning">
           To discontinue billing, you&rsquo;ll need to cancel Object Storage in
           your &nbsp;
           <Link to="/account/settings">Account Settings</Link>.
@@ -137,3 +137,10 @@ export const EnableObjectStorageModal = React.memo(
     );
   }
 );
+
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  fontSize: '1rem',
+  marginBottom: theme.spacing(2),
+}));
