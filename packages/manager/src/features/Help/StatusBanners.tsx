@@ -12,7 +12,7 @@ import {
   useIncidentQuery,
 } from 'src/queries/statusPage';
 import { capitalize } from 'src/utilities/capitalize';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { truncateEnd } from 'src/utilities/truncate';
 
 export const StatusBanners = () => {

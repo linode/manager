@@ -1,1 +1,0 @@
-export { omittedProps } from './omittedProps';

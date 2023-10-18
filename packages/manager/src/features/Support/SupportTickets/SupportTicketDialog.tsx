@@ -33,7 +33,7 @@ import {
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
 import { reduceAsync } from 'src/utilities/reduceAsync';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
 import AttachFileForm from '../AttachFileForm';

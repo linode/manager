@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { useProfile } from 'src/queries/profile';
 import { parseAPIDate } from 'src/utilities/date';
-import getUserTimezone from 'src/utilities/getUserTimezone';
+import { getUserTimezone } from 'src/utilities/getUserTimezone';
 
 import IssueDay from './IssueDay';
 

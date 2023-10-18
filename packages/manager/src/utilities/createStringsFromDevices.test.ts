@@ -1,4 +1,4 @@
-import createStringsFromDevices from './createStringsFromDevices';
+import { createStringsFromDevices } from './createStringsFromDevices';
 
 describe('LinodeRescue', () => {
   describe('createRescueDevicesPostObject', () => {

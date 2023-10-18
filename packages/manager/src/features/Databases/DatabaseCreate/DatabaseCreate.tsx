@@ -54,13 +54,13 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import {
   ExtendedIP,
   ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 

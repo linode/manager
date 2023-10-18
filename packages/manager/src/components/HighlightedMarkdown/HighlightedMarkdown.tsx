@@ -13,7 +13,7 @@ import { Typography } from 'src/components/Typography';
 import 'src/formatted-text.css';
 import { ThemeName } from 'src/foundations/themes';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
 
 hljs.registerLanguage('apache', apache);

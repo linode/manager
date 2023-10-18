@@ -1,7 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 
 import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
-import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+import { formatEventSeconds } from 'src/utilities/minute-conversion';
 
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 

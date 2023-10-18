@@ -1,4 +1,7 @@
-export default (input: string[], separator: string = ','): string => {
+export const arrayToList = (
+  input: string[],
+  separator: string = ','
+): string => {
   if (!Array.isArray(input) || input.length === 0) {
     return '';
   }

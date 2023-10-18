@@ -44,7 +44,7 @@ import {
 } from 'src/containers/withQueryClient.container';
 import { queryKey } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';

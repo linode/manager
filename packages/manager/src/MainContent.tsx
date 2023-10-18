@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
-import MainContentBanner from 'src/components/MainContentBanner';
+import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -17,7 +17,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
-import { useDialogContext } from 'src/context';
+import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {

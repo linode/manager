@@ -1,4 +1,4 @@
-import arrayToList from './arrayToList';
+import { arrayToList } from './arrayToList';
 
 describe('Array to delimiter-separated list', () => {
   it('should return a single item as an unaltered string', () => {

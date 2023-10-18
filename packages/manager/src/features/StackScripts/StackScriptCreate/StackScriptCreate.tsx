@@ -37,8 +37,8 @@ import {
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
 interface State {
@@ -166,7 +166,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
     const _imagesData = filterImagesByType(imagesData, 'public');
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const hasErrorFor = getAPIErrorFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const hasUnsavedChanges = this.hasUnsavedChanges();

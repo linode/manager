@@ -45,7 +45,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { HAControlPlane } from './HAControlPlane';

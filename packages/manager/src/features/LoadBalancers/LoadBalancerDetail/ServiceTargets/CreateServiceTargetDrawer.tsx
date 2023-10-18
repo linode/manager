@@ -21,7 +21,7 @@ import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useServiceTargetCreateMutation } from 'src/queries/aglb/serviceTargets';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
 import { AddEndpointForm } from './AddEndpointForm';
