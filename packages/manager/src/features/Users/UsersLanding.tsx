@@ -3,6 +3,7 @@ import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -21,7 +22,6 @@ import { useProfile } from 'src/queries/profile';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
-import { Hidden } from 'src/components/Hidden';
 
 export const UsersLanding = () => {
   const { data: profile } = useProfile();

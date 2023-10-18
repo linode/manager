@@ -12,7 +12,7 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
@@ -66,12 +66,12 @@ export const UserProfile = (props: UserProfileProps) => {
   ] = React.useState<boolean>(false);
 
   const renderProfileSection = () => {
-    const hasAccountErrorFor = getAPIErrorsFor(
+    const hasAccountErrorFor = getAPIErrorFor(
       { username: 'Username' },
       accountErrors
     );
 
-    const hasProfileErrorFor = getAPIErrorsFor(
+    const hasProfileErrorFor = getAPIErrorFor(
       { email: 'Email' },
       profileErrors
     );

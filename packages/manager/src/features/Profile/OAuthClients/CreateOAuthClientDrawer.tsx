@@ -10,7 +10,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useCreateOAuthClientMutation } from 'src/queries/accountOAuth';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   onClose: () => void;
@@ -49,7 +49,7 @@ export const CreateOAuthClientDrawer = ({
     redirect_uri: 'A callback URL',
   };
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, error ?? undefined);
+  const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
 
   return (
     <Drawer onClose={onClose} open={open} title="Create OAuth App">

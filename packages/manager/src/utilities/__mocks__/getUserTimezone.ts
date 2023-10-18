@@ -1,5 +1,3 @@
-const getUserTimezone = () => {
+export const getUserTimezone = () => {
   return 'utc';
 };
-
-export default getUserTimezone;
