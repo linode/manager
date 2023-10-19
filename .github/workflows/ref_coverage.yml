@@ -21,7 +21,8 @@ jobs:
       - name: Run base branch coverage and write to a file
         # Uncomment when ready to run
         # run: |
-        #   ref_coverage_value=$(yarn coverage:get)
+        #   raw_coverage_output=$(yarn coverage:get)
+        #   ref_coverage_value==$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
         #   echo "$ref_coverage_value" > ref_code_coverage.txt
         run: |
           echo "65" > ref_code_coverage.txt
@@ -57,7 +58,8 @@ jobs:
 
       - name: Run current branch coverage and write to a file
         run: |
-          current_coverage_value=$(yarn coverage:get)
+          raw_coverage_output=$(yarn coverage:get)
+          current_coverage_value=$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
           echo "$current_coverage_value" > current_code_coverage.txt
       
       # - name: Generate Comment with Code Coverage
@@ -78,10 +80,10 @@ jobs:
         run: yarn coverage:update
 
       ### THIS WILL FAIL
-      - name: Post Comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message: |
-            <strong>Coverage Report</strong>:\n
-            $(cat updated_comment.txt)
+      # - name: Post Comment
+      #   uses: mshick/add-pr-comment@v2
+      #   with:
+      #     message: |
+      #       <strong>Coverage Report</strong>:\n
+      #       $(cat updated_comment.txt)
   ###

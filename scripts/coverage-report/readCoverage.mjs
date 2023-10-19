@@ -48,3 +48,5 @@ export function readCoverage() {
     });
   }
 }
+
+readCoverage(); 
