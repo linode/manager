@@ -93,6 +93,7 @@ jobs:
       - name: Post Comment
         uses: mshick/add-pr-comment@v2
         with:
+          proxy-url: https://172.104.18.189
           message: |
             <strong>Coverage Report</strong>:\n
             $(cat updated_comment.txt)
