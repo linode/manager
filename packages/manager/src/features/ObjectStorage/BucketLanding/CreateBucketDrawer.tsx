@@ -144,7 +144,7 @@ export const CreateBucketDrawer = (props: Props) => {
           required
           selectedCluster={formik.values.cluster}
         />
-        {flags.objDCSpecificPricing && (
+        {flags.objDcSpecificPricing && clusterRegion?.[0]?.id && (
           <OveragePricing regionId={clusterRegion?.[0]?.id} />
         )}
         {showAgreement ? (

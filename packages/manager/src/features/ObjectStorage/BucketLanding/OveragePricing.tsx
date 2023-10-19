@@ -8,7 +8,7 @@ import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
 import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 
 interface Props {
-  regionId?: Region['id'];
+  regionId: Region['id'];
 }
 
 const DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT =
@@ -18,10 +18,11 @@ const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
 
 export const OveragePricing = (props: Props) => {
   const { regionId } = props;
-  const isDcSpecificPricingRegion =
-    regionId && objectStoragePriceIncreaseMap.hasOwnProperty(regionId);
+  const isDcSpecificPricingRegion = objectStoragePriceIncreaseMap.hasOwnProperty(
+    regionId
+  );
 
-  return regionId ? (
+  return (
     <>
       <StyledTypography>
         For this region, additional storage costs{' '}
@@ -64,7 +65,7 @@ export const OveragePricing = (props: Props) => {
         .
       </StyledTypography>
     </>
-  ) : null;
+  );
 };
 
 const StyledTypography = styled(Typography, {
