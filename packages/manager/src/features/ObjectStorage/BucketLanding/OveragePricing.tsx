@@ -11,9 +11,9 @@ interface Props {
   regionId: Region['id'];
 }
 
-const DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT =
+export const DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT =
   'For this region, monthly network transfer is calculated and tracked independently and is not part of your global network transfer pool.';
-const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
+export const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
   'Your global network transfer pool adds up all the included transfer associated with active Linode services on your account and is prorated based on service creation.';
 
 export const OveragePricing = (props: Props) => {
