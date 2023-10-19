@@ -26,6 +26,7 @@ import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
 import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
 import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
+import { DeleteRuleDialog } from './Routes/DeleteRuleDialog';
 import { RuleDrawer } from './Routes/RuleDrawer';
 import { RulesTable } from './RulesTable';
 
@@ -39,6 +40,7 @@ export const LoadBalancerRoutes = () => {
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleteRuleDialogOpen, setIsDeleteRuleDialogOpen] = useState(false);
   const [selectedRouteId, setSelectedRouteId] = useState<number>();
   const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>();
 
@@ -82,6 +84,12 @@ export const LoadBalancerRoutes = () => {
 
   const onEditRule = (route: Route, ruleIndex: number) => {
     setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+    setSelectedRuleIndex(ruleIndex);
+  };
+
+  const onDeleteRule = (route: Route, ruleIndex: number) => {
+    setIsDeleteRuleDialogOpen(true);
     setSelectedRouteId(route.id);
     setSelectedRuleIndex(ruleIndex);
   };
@@ -134,6 +142,7 @@ export const LoadBalancerRoutes = () => {
       const InnerTable = (
         <RulesTable
           loadbalancerId={Number(loadbalancerId)}
+          onDeleteRule={(index) => onDeleteRule(route, index)}
           onEditRule={(index) => onEditRule(route, index)}
           route={route}
         />
@@ -253,6 +262,13 @@ export const LoadBalancerRoutes = () => {
         onClose={() => setIsDeleteDialogOpen(false)}
         open={isDeleteDialogOpen}
         route={selectedRoute}
+      />
+      <DeleteRuleDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteRuleDialogOpen(false)}
+        open={isDeleteRuleDialogOpen}
+        route={selectedRoute}
+        ruleIndex={selectedRuleIndex}
       />
     </>
   );

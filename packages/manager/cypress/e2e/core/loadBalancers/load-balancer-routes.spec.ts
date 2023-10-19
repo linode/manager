@@ -428,6 +428,54 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('A backend service is down', { exact: false });
     cy.findByText('You reached a rate limit', { exact: false });
   });
+  it('can delete a rule', () => {
+    const loadbalancer = loadbalancerFactory.build();
+    const routes = routeFactory.buildList(1, { protocol: 'http' });
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+    mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+
+    cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getRoutes',
+    ]);
+
+    // Expand the route table
+    cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+
+    // Verify all rules are shown
+    for (const rule of routes[0].rules) {
+      cy.findByText(rule.match_condition.match_value).should('be.visible');
+    }
+
+    const indexOfRuleToDelete = 1;
+
+    ui.actionMenu
+      .findByTitle(`Action Menu for Rule ${indexOfRuleToDelete}`)
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').click();
+
+    mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
+
+    ui.dialog.findByTitle('Delete Rule?').within(() => {
+      ui.button.findByTitle('Delete').should('be.visible').click();
+    });
+
+    cy.wait('@updateRoute');
+
+    // Verify the deleted rule no longer shows
+    cy.findByText(
+      routes[0].rules[indexOfRuleToDelete].match_condition.match_value
+    ).should('not.exist');
+  });
 });
 
 it('can create a Route', () => {
