@@ -1,5 +1,4 @@
 import { CreateRoutePayload } from '@linode/api-v4';
-import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import React from 'react';
 
@@ -13,7 +12,9 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { capitalize } from 'src/utilities/capitalize';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 interface Props {
   loadbalancerId: number;
@@ -28,7 +29,6 @@ const initialValues: CreateRoutePayload = {
 };
 
 export const CreateRouteDrawer = (props: Props) => {
-  const theme = useTheme();
   const { loadbalancerId, onClose: _onClose, open } = props;
 
   const {
@@ -43,8 +43,9 @@ export const CreateRouteDrawer = (props: Props) => {
       try {
         await createRoute(values);
         onClose();
-      } catch (error) {
+      } catch (errors) {
         scrollErrorIntoView();
+        formik.setErrors(getFormikErrorsFromAPIErrors(errors));
       }
     },
   });
@@ -62,7 +63,7 @@ export const CreateRouteDrawer = (props: Props) => {
       <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
-          errorText={error?.find((e) => e.field === 'label')?.reason}
+          errorText={formik.touched.label ? formik.errors.label : undefined}
           label="Route Label"
           name="label"
           onChange={formik.handleChange}
@@ -72,7 +73,9 @@ export const CreateRouteDrawer = (props: Props) => {
           onChange={(_, value) => formik.setFieldValue('protocol', value)}
           value={formik.values.protocol}
         >
-          <FormLabel sx={{ marginTop: theme.spacing(1) }}>Protocol</FormLabel>
+          <FormLabel sx={(theme) => ({ marginTop: theme.spacing(1) })}>
+            Protocol
+          </FormLabel>
           <FormControlLabel
             control={<Radio />}
             data-qa-radio={'HTTP'}
@@ -85,8 +88,12 @@ export const CreateRouteDrawer = (props: Props) => {
             label="TCP"
             value="tcp"
           />
-          <FormHelperText>
-            {error?.find((e) => e.field === 'protocol')?.reason}
+          <FormHelperText error>
+            {formik.touched.protocol
+              ? typeof formik.errors.protocol === 'string'
+                ? capitalize(formik.errors.protocol)
+                : undefined
+              : undefined}
           </FormHelperText>
         </RadioGroup>
         <ActionsPanel
