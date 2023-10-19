@@ -18,12 +18,12 @@ try {
   const badgeColor =
     coveragePercentage >= COVERAGE_THRESHOLD ? "green" : "yellow";
 
-  const badgeMarkdown = `[![Coverage](https://img.shields.io/badge/@linode/manager_coverage-${coveragePercentage}%-${badgeColor})](packages/manager/coverage/lcov-report/index.html)`;
+  const badgeMarkdown = `<img alt="Linode/Manager Coverage" src="https://img.shields.io/badge/%40linode%2Fmanager_coverage-${coveragePercentage}%25-${badgeColor}" />`;
 
   let readmeContents = fs.readFileSync("README.md", "utf8");
-  readmeContents = readmeContents
-    .replace(/\[!\[Coverage\]\([^)]*\)]\([^)]*\)/i, badgeMarkdown)
-    .slice(0, -1);
+  const coverageBadgeRegex = /<img alt="Linode\/Manager Coverage" src="[^"]+" \/>/;
+
+  readmeContents = readmeContents.replace(coverageBadgeRegex, badgeMarkdown);
 
   fs.writeFileSync("README.md", readmeContents);
 

@@ -74,6 +74,9 @@ jobs:
           comment_message="Base Coverage: $base_coverage - Current Coverage: $current_coverage"
           echo "Coverage: $comment_message"
 
+      - name: Update Coverage Badge
+        run: yarn coverage:update
+
       ### THIS WILL FAIL
       - name: Post Comment
         uses: mshick/add-pr-comment@v2

@@ -5,11 +5,9 @@
   Akamai Connected Cloud Manager
 </h2>
 
-<center>
-
-[![Coverage](https://img.shields.io/badge/@linode/manager_coverage-75.18%-yellow)](packages/manager/coverage/lcov-report/index.html)
-
-</center>
+<p align="center">
+  <img alt="Linode/Manager Coverage" src="https://img.shields.io/badge/%40linode%2Fmanager_coverage-N%2FA%25-yellow" />
+</p>
 
 
 <p align="center">
