@@ -41,14 +41,14 @@ export function readCoverage() {
     const coveragePercentageNumber = parseFloat(coveragePercentage);
 
     logger.success({
-      message: "Successfully retrieved the base branch coverage!",
+      message: "Successfully retrieved the branch coverage!",
       info: `Coverage: ${coveragePercentage}`,
     });
 
     return coveragePercentageNumber;
   } catch (error) {
     logger.error({
-      message: "Something went wrong while getting base branch coverage.",
+      message: "Something went wrong while getting the branch coverage.",
       info: error,
     });
   }

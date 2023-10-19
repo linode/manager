@@ -66,18 +66,12 @@ jobs:
       #       current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
       #       comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
       #       echo "$comment_message" > updated_comment.txt
-      
-      - name: Debugging - List Contents of Directory
-        run: |
-          ls -R
-          ls -R packages/manager
-        working-directory: ${{ github.workspace }}
 
       - name: Log Code Coverage
         run: |
           base_coverage=$(cat ref_code_coverage.txt)
           current_coverage=$(cat current_code_coverage.txt)
-          comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
+          comment_message="Base Coverage: $base_coverage - Current Coverage: $current_coverage"
           echo "Coverage: $comment_message"
 
       ### THIS WILL FAIL
