@@ -1,4 +1,4 @@
-import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 
 import { reportException } from 'src/exceptionReporting';
 
@@ -50,4 +50,18 @@ export const getLinodeIconStatus = (status: LinodeStatus) => {
     return 'inactive';
   }
   return 'other';
+};
+
+// Return all (unique) vpc IDs that a linode is assigned to
+export const getVPCsFromLinodeConfigs = (configs: Config[]): number[] => {
+  const vpcIds = new Set<number>();
+  for (const config of configs) {
+    for (const linodeInterface of config.interfaces) {
+      if (linodeInterface.purpose === 'vpc' && linodeInterface.vpc_id) {
+        vpcIds.add(linodeInterface.vpc_id);
+      }
+    }
+  }
+
+  return Array.from(vpcIds);
 };
