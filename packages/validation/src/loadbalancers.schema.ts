@@ -63,6 +63,11 @@ export const CreateServiceTargetSchema = object({
   healthcheck: HealthCheckSchema,
 });
 
+export const CreateRouteSchema = object({
+  label: string().required('Label is required.'),
+  protocol: string().oneOf(['http', 'tcp']),
+});
+
 const RouteServiceTargetSchema = object({
   id: number()
     .min(0, 'Service Target ID is required.')

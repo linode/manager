@@ -1,4 +1,6 @@
 import {
+  CreateRoutePayload,
+  createLoadbalancerRoute,
   deleteLoadbalancerRoute,
   getLoadbalancerRoutes,
   updateLoadbalancerRoute,
@@ -26,6 +28,23 @@ export const useLoadBalancerRoutesQuery = (
     [QUERY_KEY, 'loadbalancer', id, 'routes', params, filter],
     () => getLoadbalancerRoutes(id, params, filter),
     { keepPreviousData: true }
+  );
+};
+
+export const useLoadBalancerRouteCreateMutation = (loadbalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Route, APIError[], CreateRoutePayload>(
+    (data) => createLoadbalancerRoute(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+        ]);
+      },
+    }
   );
 };
 
