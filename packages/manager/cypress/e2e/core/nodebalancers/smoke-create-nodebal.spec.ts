@@ -11,6 +11,12 @@ import {
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+import { dcPricingRegionNotice } from 'support/constants/dc-specific-pricing';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
@@ -19,13 +25,48 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-const createNodeBalancerWithUI = (nodeBal) => {
+const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   const regionName = getRegionById(nodeBal.region).label;
   cy.visitWithLogin('/nodebalancers/create');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(entityTag);
-  // this will create the NB in newark, where the default Linode was created
-  containsClick(selectRegionString).type(`${regionName}{enter}`);
+
+  if (isDcPricingTest) {
+    const newRegion = getRegionById('br-gru');
+
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    // Confirms that the price will not display when the region is not selected
+    cy.get('[data-qa-summary="true"]').within(() => {
+      cy.findByText('/month').should('not.exist');
+    });
+
+    // Confirms that the price will show up when the region is selected
+    containsClick(selectRegionString).type(`${regionName}{enter}`);
+    cy.get('[data-qa-summary="true"]').within(() => {
+      cy.findByText(`$10.00/month`).should('be.visible');
+    });
+
+    // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
+    // cy.findByText(dcPricingDocsLabel)
+    //   .should('be.visible')
+    //   .should('have.attr', 'href', dcPricingDocsUrl);
+
+    // Confirms that the summary updates to reflect price changes if the user changes their region.
+    cy.get(`[value="${regionName}"]`).click().type(`${newRegion.label}{enter}`);
+    cy.get('[data-qa-summary="true"]').within(() => {
+      cy.findByText(`$14.00/month`).should('be.visible');
+    });
+
+    // Confirms that a notice is shown in the "Region" section of the NodeBalancer Create form informing the user of DC-specific pricing
+    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
+
+    // Change back to the initial region to create the Node Balancer
+    cy.get(`[value="${newRegion.label}"]`).click().type(`${regionName}{enter}`);
+  } else {
+    // this will create the NB in newark, where the default Linode was created
+    containsClick(selectRegionString).type(`${regionName}{enter}`);
+  }
 
   // node backend config
   fbtClick('Label').type(randomLabel());
@@ -46,10 +87,10 @@ const createNodeBalancerWithUI = (nodeBal) => {
 authenticate();
 describe('create NodeBalancer', () => {
   before(() => {
-    cleanUp(['tags', 'node-balancers']);
+    cleanUp(['tags', 'node-balancers', 'linodes']);
   });
 
-  it('creates a nodebal - positive', () => {
+  it('creates a NodeBalancer in a region with base pricing', () => {
     // create a linode in NW where the NB will be created
     const region = chooseRegion();
     createLinode({ region: region.id }).then((linode) => {
@@ -68,7 +109,12 @@ describe('create NodeBalancer', () => {
         .should('eq', 200);
     });
   });
-  it('API error Handling', () => {
+
+  /*
+   * - Confirms label field displays error if it contains special characters.
+   * - Confirms session stickiness field displays error if protocol is not HTTP or HTTPS.
+   */
+  it('displays API errors for NodeBalancer Create form fields', () => {
     const region = chooseRegion();
     createLinode({ region: region.id }).then((linode) => {
       // catch request
@@ -98,6 +144,34 @@ describe('create NodeBalancer', () => {
           errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
         });
       fbtVisible(errMessage);
+    });
+  });
+
+  /*
+   * - Confirms DC-specific pricing UI flow works as expected during NodeBalancer creation.
+   * - Confirms that pricing notice is shown in "Region" section.
+   * - Confirms that notice is shown when selecting a region with a different price structure.
+   */
+  it('shows DC-specific pricing information when creating a NodeBalancer', () => {
+    const initialRegion = getRegionById('us-west');
+    createLinode({ region: initialRegion.id }).then((linode) => {
+      const nodeBal = {
+        label: randomLabel(),
+        region: initialRegion.id,
+        linodePrivateIp: linode.ipv4[1],
+      };
+
+      // catch request
+      cy.intercept('POST', apiMatcher('nodebalancers')).as(
+        'createNodeBalancer'
+      );
+
+      mockAppendFeatureFlags({
+        dcSpecificPricing: makeFeatureFlagData(true),
+      }).as('getFeatureFlags');
+      mockGetFeatureFlagClientstream().as('getClientStream');
+
+      createNodeBalancerWithUI(nodeBal, true);
     });
   });
 });
