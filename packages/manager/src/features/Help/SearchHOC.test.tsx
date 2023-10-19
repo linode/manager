@@ -23,13 +23,11 @@ const HITS_PER_PAGE = 10;
 
 const mockFn = vi.fn();
 
-vi.mock('algoliasearch', () =>
-  vi.fn((key: string, appId: string) => {
-    return {
-      search: mockFn,
-    };
-  })
-);
+vi.mock('algoliasearch', () => ({
+  default: vi.fn().mockImplementation(() => ({
+    search: mockFn,
+  })),
+}));
 
 const mockResults = {
   results: [{ hits: [docs_result] }, { hits: [community_question] }],
