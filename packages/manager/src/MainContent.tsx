@@ -209,7 +209,10 @@ const MainContent = (props: CombinedProps) => {
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
   const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const { error: enginesError } = useDatabaseEnginesQuery(checkRestrictedUser);
+  const {
+    error: enginesError,
+    isLoading: enginesLoading,
+  } = useDatabaseEnginesQuery(checkRestrictedUser);
 
   const showDatabases =
     isFeatureEnabled(
@@ -217,7 +220,7 @@ const MainContent = (props: CombinedProps) => {
       Boolean(flags.databases),
       account?.capabilities ?? []
     ) ||
-    (checkRestrictedUser && !enginesError);
+    (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
