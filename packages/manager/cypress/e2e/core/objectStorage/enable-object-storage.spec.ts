@@ -296,6 +296,13 @@ describe('Object Storage enrollment', () => {
     cy.findByText('Enable Object Storage').should('not.exist');
   });
 
+  /*
+   * - Confirms that Object Storage can be enabled using mock API data.
+   * - Confirms that pricing information link is present in enrollment dialog.
+   * - Confirms that cancellation explanation is present in enrollment dialog.
+   * - Confirms that DC-specific overage pricing is explained for regions in the Create Bucket drawer.
+   * - Confirms that consistent pricing information is shown for all regions in the enable modal.
+   */
   // TODO: DC Pricing - M3-7073: Remove feature flag mocks once feature flags are cleaned up.
   it('can enroll in Object Storage with OBJ DC-specific pricing', () => {
     const mockAccountSettings = accountSettingsFactory.build({
