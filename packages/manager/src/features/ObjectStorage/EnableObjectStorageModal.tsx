@@ -41,7 +41,7 @@ export const EnableObjectStorageModal = React.memo(
      * @returns Dynamic modal text dependent on the existence and selection of a region
      */
     const renderRegionPricingText = (regionLabel: string) => {
-      if (flags.objDCSpecificPricing) {
+      if (flags.objDcSpecificPricing) {
         return (
           <>
             <StyledTypography>
@@ -59,23 +59,19 @@ export const EnableObjectStorageModal = React.memo(
         );
       }
 
-      if (flags.dcSpecificPricing) {
-        if (!regionId) {
-          return (
-            <StyledTypography>
-              {ENABLE_OBJ_ACCESS_KEYS_MESSAGE}
-            </StyledTypography>
-          );
-        } else if (isObjBetaPricingRegion) {
-          return (
-            <StyledTypography>
-              Object Storage for {regionLabel} is currently in beta. During the
-              beta period, Object Storage in these regions is free. After the
-              beta period, customers will be notified before charges for this
-              service begin.
-            </StyledTypography>
-          );
-        }
+      if (!regionId) {
+        return (
+          <StyledTypography>{ENABLE_OBJ_ACCESS_KEYS_MESSAGE}</StyledTypography>
+        );
+      } else if (isObjBetaPricingRegion) {
+        return (
+          <StyledTypography>
+            Object Storage for {regionLabel} is currently in beta. During the
+            beta period, Object Storage in these regions is free. After the beta
+            period, customers will be notified before charges for this service
+            begin.
+          </StyledTypography>
+        );
       }
 
       return (
@@ -88,11 +84,6 @@ export const EnableObjectStorageModal = React.memo(
           <strong>
             ${OBJ_STORAGE_PRICE.storage_overage} per GB per month.
           </strong>{' '}
-          {!flags.dcSpecificPricing && (
-            <Link to="https://www.linode.com/docs/products/storage/object-storage/#pricing">
-              Learn more.
-            </Link>
-          )}
         </StyledTypography>
       );
     };
@@ -102,6 +93,7 @@ export const EnableObjectStorageModal = React.memo(
         actions={() => (
           <ActionsPanel
             primaryButtonProps={{
+              'data-testid': 'enable-obj',
               label: 'Enable Object Storage',
               onClick: () => {
                 onClose();
@@ -120,14 +112,12 @@ export const EnableObjectStorageModal = React.memo(
         title="Enable Object Storage"
       >
         {renderRegionPricingText(regionLabel ?? 'this region')}
-        {flags.dcSpecificPricing && (
-          <StyledTypography>
-            <Link to="https://www.linode.com/pricing/#object-storage">
-              Learn more
-            </Link>{' '}
-            about pricing and specifications.
-          </StyledTypography>
-        )}
+        <StyledTypography>
+          <Link to="https://www.linode.com/pricing/#object-storage">
+            Learn more
+          </Link>{' '}
+          about pricing and specifications.
+        </StyledTypography>
         <Notice spacingBottom={0} variant="warning">
           To discontinue billing, you&rsquo;ll need to cancel Object Storage in
           your &nbsp;
