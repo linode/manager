@@ -60,7 +60,11 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    const vpcIds = getVPCsFromLinodeConfigs(configs ?? []);
+    const vpcIds = enableVPCActions
+      ? getVPCsFromLinodeConfigs(configs ?? [])
+      : [];
+    // @TODO VPC: potentially revisit using the linodeEventsHandler in linode/events.ts to invalidate queries rather than here
+    // See PR #9814 for more details
     if (vpcIds.length > 0) {
       queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
       // invalidate data for specific vpcs this linode is assigned to
