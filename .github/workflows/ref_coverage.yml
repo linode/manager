@@ -68,8 +68,8 @@ jobs:
       
       - name: Generate Comment with Code Coverage
         run: |
-          base_coverage=$(cat ${{ github.workspace }}/ref_code_coverage/ref_code_coverage.txt)
-          current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
+          base_coverage=$(cat ref_code_coverage.txt)
+          current_coverage=$(cat current_code_coverage.txt)
           if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
             icon="❌" # Error icon
           else
