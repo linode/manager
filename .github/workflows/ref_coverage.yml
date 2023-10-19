@@ -37,6 +37,10 @@ jobs:
   current_branch_coverage:
     runs-on: ubuntu-latest
     needs: base_branch_coverage
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
 
@@ -62,28 +66,34 @@ jobs:
           current_coverage_value=$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
           echo "$current_coverage_value" > current_code_coverage.txt
       
-      # - name: Generate Comment with Code Coverage
-      #   run: |
-      #       base_coverage=$(cat ${{ github.workspace }}/ref_code_coverage/ref_code_coverage.txt)
-      #       current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
-      #       comment_message="Base Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
-      #       echo "$comment_message" > updated_comment.txt
-
-      - name: Log Code Coverage
+      - name: Generate Comment with Code Coverage
         run: |
-          base_coverage=$(cat ref_code_coverage.txt)
-          current_coverage=$(cat current_code_coverage.txt)
-          comment_message="Base Coverage: $base_coverage - Current Coverage: $current_coverage"
+          base_coverage=$(cat ${{ github.workspace }}/ref_code_coverage/ref_code_coverage.txt)
+          current_coverage=$(cat ${{ github.workspace }}/current_code_coverage.txt)
+          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
+            icon="❌" # Error icon
+          else
+            icon="✅" # Check mark icon
+          fi
+          comment_message="$icon Coverage Report\nBase Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
           echo "Coverage: $comment_message"
+          echo "$comment_message" > updated_comment.txt
 
       - name: Update Coverage Badge
         run: yarn coverage:update
 
-      ### THIS WILL FAIL
-      # - name: Post Comment
-      #   uses: mshick/add-pr-comment@v2
-      #   with:
-      #     message: |
-      #       <strong>Coverage Report</strong>:\n
-      #       $(cat updated_comment.txt)
+      - name: Check Coverage
+        run: |
+          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
+            echo "Error: Current coverage is lower than base coverage"
+            exit 1 # Fail the check
+          fi
+
+      ## THIS WILL FAIL
+      - name: Post Comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            <strong>Coverage Report</strong>:\n
+            $(cat updated_comment.txt)
   ###
