@@ -55,7 +55,7 @@ export const DeleteRuleDialog = (props: Props) => {
       error={error?.[0]?.reason}
       onClose={onClose}
       open={open}
-      title={`Delete Rule?`}
+      title="Delete Rule?"
     >
       Are you sure you want to delete this rule?
     </ConfirmationDialog>
