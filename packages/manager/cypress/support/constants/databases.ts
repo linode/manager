@@ -61,7 +61,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
-    region: chooseRegion(),
+    region: chooseRegion({ capability: 'Managed Databases' }),
     version: '8',
   },
   {
@@ -70,7 +70,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     label: randomLabel(),
     linodeType: 'g6-dedicated-16',
-    region: chooseRegion(),
+    region: chooseRegion({ capability: 'Managed Databases' }),
     version: '5',
   },
   // {
@@ -89,7 +89,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'PostgreSQL',
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
-    region: chooseRegion(),
+    region: chooseRegion({ capability: 'Managed Databases' }),
     version: '13',
   },
 ];
