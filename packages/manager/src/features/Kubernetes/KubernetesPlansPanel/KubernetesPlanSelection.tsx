@@ -98,15 +98,15 @@ export const KubernetesPlanSelection = (
           <TableCell data-qa-plan-name>{type.heading}</TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={!price}
-            errorText={!price ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+            errorCell={!price?.monthly}
+            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
           </TableCell>
           <TableCell
             data-qa-hourly
-            errorCell={!price}
-            errorText={!price ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+            errorCell={!price?.hourly}
+            errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             ${price?.hourly ?? UNKNOWN_PRICE}
           </TableCell>
@@ -124,9 +124,12 @@ export const KubernetesPlanSelection = (
               <EnhancedNumberInput
                 disabled={
                   // When on the add pool flow, we only want the current input to be active,
-                  // unless we've just landed on the form or all the inputs are empty.
+                  // unless we've just landed on the form, all the inputs are empty,
+                  // or there was a pricing data error.
                   (!onAdd && Boolean(selectedID) && type.id !== selectedID) ||
-                  disabled
+                  disabled ||
+                  !price?.monthly ||
+                  !price?.hourly
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(type.id, newCount)
