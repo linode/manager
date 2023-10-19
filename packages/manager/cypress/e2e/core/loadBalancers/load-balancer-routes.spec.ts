@@ -461,7 +461,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       .findByTitle(`Action Menu for Rule ${indexOfRuleToDelete}`)
       .click();
 
-    ui.actionMenuItem.findByTitle('Remove').click();
+    ui.actionMenuItem.findByTitle('Delete').click();
 
     mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
 

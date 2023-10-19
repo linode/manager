@@ -289,7 +289,7 @@ export const RulesTable = (props: Props) => {
                                   },
                                   {
                                     onClick: () => onDeleteRule(index),
-                                    title: 'Remove',
+                                    title: 'Delete',
                                   },
                                 ]}
                                 ariaLabel={`Action Menu for Rule ${index}`}
