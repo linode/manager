@@ -39,10 +39,7 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import {
-  NODEBALANCER_PRICE,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
+import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPrice,
   renderMonthlyPriceToCorrectDecimalPlace,
@@ -419,9 +416,7 @@ const NodeBalancerCreate = () => {
 
   if (nodeBalancerFields.region) {
     summaryItems.unshift({
-      title: `$${
-        renderMonthlyPriceToCorrectDecimalPlace(Number(price)) ?? UNKNOWN_PRICE
-      }/month`,
+      title: `$${renderMonthlyPriceToCorrectDecimalPlace(Number(price))}/month`,
     });
   }
 
