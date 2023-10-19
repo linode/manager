@@ -123,7 +123,10 @@ export const PrimaryNav = (props: Props) => {
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
   const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const { error: enginesError } = useDatabaseEnginesQuery(checkRestrictedUser);
+  const {
+    error: enginesError,
+    isLoading: enginesLoading,
+  } = useDatabaseEnginesQuery(checkRestrictedUser);
 
   const showDatabases =
     isFeatureEnabled(
@@ -131,7 +134,7 @@ export const PrimaryNav = (props: Props) => {
       Boolean(flags.databases),
       account?.capabilities ?? []
     ) ||
-    (checkRestrictedUser && !enginesError);
+    (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
