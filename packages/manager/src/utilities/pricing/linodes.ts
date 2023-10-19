@@ -38,10 +38,10 @@ export const getLinodeRegionPrice = (
 
 /**
  * Get the price based on provided conditions.
- * @param {string} type - The Linode type.
- * @param {string} selectedRegionId - The selected region ID.
- * @param {boolean | undefined} dcSpecificPricing - The data center specific pricing.
- * @returns {number | undefined} The price or undefined if not available.
+ * @param type - The Linode type.
+ * @param selectedRegionId - The selected region ID.
+ * @param dcSpecificPricing - The data center specific pricing.
+ * @returns The price or undefined if not available.
  * TODO: DC Pricing - M3-7073: Remove this function and replace with getLinodeRegionPrice once dcSpecificPricing flag is removed.
  */
 
