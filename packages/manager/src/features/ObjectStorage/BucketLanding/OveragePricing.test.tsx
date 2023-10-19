@@ -11,8 +11,6 @@ import {
   OveragePricing,
 } from './OveragePricing';
 
-jest.mock('src/components/EnhancedSelect/Select');
-
 describe('OveragePricing', () => {
   it('Renders base overage pricing for a region without price increases', () => {
     const { getByText } = renderWithTheme(
