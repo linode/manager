@@ -11,21 +11,24 @@ import {
   sortCurrentKernels,
 } from './KernelSelect';
 
-const cachedKernelRequest = require('src/cachedData/kernels.json');
-
-const kernels = cachedKernelRequest.data.filter(
-  (thisKernel: Kernel) => thisKernel.kvm
-);
-
-const props: KernelSelectProps = {
-  kernels,
-  onChange: vi.fn(),
-};
+let kernels: Kernel[] = [];
+beforeAll(async () => {
+  const cachedKernelData = await vi.importActual<any>(
+    'src/cachedData/kernels.json'
+  );
+  kernels = (cachedKernelData['data'] || []).filter(
+    (kernel: Kernel) => !!kernel.kvm
+  );
+});
 
 vi.mock('src/components/EnhancedSelect/Select');
 
 describe('Kernel Select component', () => {
   it('should render a select with the correct number of options', () => {
+    const props: KernelSelectProps = {
+      kernels,
+      onChange: vi.fn(),
+    };
     renderWithTheme(<KernelSelect {...props} />);
     expect(screen.getAllByTestId('mock-option')).toHaveLength(kernels.length);
   });
