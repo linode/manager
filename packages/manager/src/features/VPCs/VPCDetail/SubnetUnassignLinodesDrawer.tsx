@@ -92,9 +92,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       if (linodes) {
         setLinodeOptionsToUnassign(findAssignedLinodes() ?? []);
       }
-      return () => {
-        setLinodeOptionsToUnassign([]);
-      };
+      // return () => {
+      //   setLinodeOptionsToUnassign([]);
+      // };
     }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
 
     // 3. Everytime our selection changes, we need to either add or remove the linode from the configInterfacesToDelete state.
@@ -303,7 +303,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               <Autocomplete
                 disabled={userCannotUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
-                isOptionEqualToValue={() => true} // Ignore the multi-select warning since it isn't helpful https://github.com/mui/material-ui/issues/29727
+                // isOptionEqualToValue={() => true} // Ignore the multi-select warning since it isn't helpful https://github.com/mui/material-ui/issues/29727
                 label="Linodes"
                 multiple
                 onChange={(_, value) => setSelectedLinodes(value)}
