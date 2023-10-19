@@ -301,18 +301,16 @@ export const VPCSubnetsTable = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {subnetUnassignLinodesDrawerOpen && (
-        <SubnetUnassignLinodesDrawer
-          onClose={() => {
-            setSubnetUnassignLinodesDrawerOpen(false);
-            setSelectedLinode(undefined);
-          }}
-          open={subnetUnassignLinodesDrawerOpen}
-          selectedLinode={selectedLinode}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
+      <SubnetUnassignLinodesDrawer
+        onClose={() => {
+          setSubnetUnassignLinodesDrawerOpen(false);
+          setSelectedLinode(undefined);
+        }}
+        open={subnetUnassignLinodesDrawerOpen}
+        selectedLinode={selectedLinode}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
+      />
       {subnetAssignLinodesDrawerOpen && (
         <SubnetAssignLinodesDrawer
           onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
