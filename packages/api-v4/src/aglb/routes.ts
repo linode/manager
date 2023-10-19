@@ -7,8 +7,8 @@ import Request, {
 } from '../request';
 import { Filter, Params, ResourcePage } from '../types';
 import { BETA_API_ROOT } from '../constants';
-import type { Route, RoutePayload, UpdateRoutePayload } from './types';
-import { UpdateRouteSchema } from '@linode/validation';
+import type { Route, CreateRoutePayload, UpdateRoutePayload } from './types';
+import { UpdateRouteSchema, CreateRouteSchema } from '@linode/validation';
 
 /**
  * getLoadbalancerRoutes
@@ -51,13 +51,13 @@ export const getLoadbalancerRoute = (loadbalancerId: number, routeId: number) =>
  */
 export const createLoadbalancerRoute = (
   loadbalancerId: number,
-  data: RoutePayload
+  data: CreateRoutePayload
 ) =>
   Request<Route>(
     setURL(
       `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
     ),
-    setData(data),
+    setData(data, CreateRouteSchema),
     setMethod('POST')
   );
 
