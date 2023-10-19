@@ -3,9 +3,17 @@ import React from 'react';
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { rest, server } from 'src/mocks/testServer';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithTheme,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 
 import { UserRow } from './UserRow';
+
+// Because the table row hides certain columns on small viewport sizes,
+// we must use this.
+beforeAll(() => mockMatchMedia());
 
 describe('UserRow', () => {
   it('renders a username and email', () => {
