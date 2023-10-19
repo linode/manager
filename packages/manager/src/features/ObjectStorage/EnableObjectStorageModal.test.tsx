@@ -158,7 +158,6 @@ describe('EnableObjectStorageModal', () => {
     expect(props.onClose).toHaveBeenCalled();
   });
 
-  // TODO: fix failing test
   it('calls the handleSubmit prop/handler when the Enable Object Storage button is clicked', () => {
     const { getByTestId } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
