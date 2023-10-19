@@ -147,6 +147,19 @@ describe('create linode', () => {
       type: dcPricingMockLinodeTypes[0].id,
     });
 
+    const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
+      (regionPrice) => regionPrice.id === initialRegion.id
+    );
+    const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
+      (regionPrice) => regionPrice.id === initialRegion.id
+    );
+    const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
+      (linodeType) => linodeType.id === newRegion.id
+    );
+    const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
+      (regionPrice) => regionPrice.id === newRegion.id
+    );
+
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
@@ -175,15 +188,28 @@ describe('create linode', () => {
       dcPricingPlanPlaceholder
     );
 
-    // Confirm that the checkout summary at the bottom of the page reflects the correct price.
+    // Check the 'Backups' add on
+    cy.get('[data-testid="backups"]').should('be.visible').click();
+
     containsClick(selectRegionString).type(`${initialRegion.label} {enter}`);
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
+    // Confirm that the backup prices are displayed as expected.
+    cy.get('[data-qa-add-ons="true"]')
+      .eq(1)
+      .within(() => {
+        cy.findByText(`$${currentBackupPrice.monthly}`).should('be.visible');
+        cy.findByText('per month').should('be.visible');
+      });
+    // Confirm that the checkout summary at the bottom of the page reflects the correct price.
     cy.get('[data-qa-summary="true"]').within(() => {
-      const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
-        (regionPrice) => regionPrice.id === initialRegion.id
+      cy.findByText(`$${currentPrice.monthly.toFixed(2)}/month`).should(
+        'be.visible'
       );
-      cy.findByText(`$${currentPrice.monthly}0/month`).should('be.visible');
+      cy.findByText('Backups').should('be.visible');
+      cy.findByText(`$${currentBackupPrice.monthly.toFixed(2)}/month`).should(
+        'be.visible'
+      );
     });
 
     // Confirms that a notice is shown in the "Region" section of the Linode Create form informing the user of tiered pricing
@@ -194,15 +220,25 @@ describe('create linode', () => {
     //   .should('be.visible')
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
-    // Confirms that the summary updates to reflect price changes if the user changes their region and plan selection.
     containsClick(initialRegion.label).type(`${newRegion.label} {enter}`);
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
+    // Confirm that the backup prices are displayed as expected.
+    cy.get('[data-qa-add-ons="true"]')
+      .eq(1)
+      .within(() => {
+        cy.findByText(`$${newBackupPrice.monthly}`).should('be.visible');
+        cy.findByText('per month').should('be.visible');
+      });
+    // Confirms that the summary updates to reflect price changes if the user changes their region and plan selection.
     cy.get('[data-qa-summary="true"]').within(() => {
-      const currentPrice = dcPricingMockLinodeTypes[1].region_prices.find(
-        (regionPrice) => regionPrice.id === newRegion.id
+      cy.findByText(`$${newPrice.monthly.toFixed(2)}/month`).should(
+        'be.visible'
       );
-      cy.findByText(`$${currentPrice.monthly}0/month`).should('be.visible');
+      cy.findByText('Backups').should('be.visible');
+      cy.findByText(`$${newBackupPrice.monthly.toFixed(2)}/month`).should(
+        'be.visible'
+      );
     });
 
     getClick('#linode-label').clear().type(linodeLabel);
