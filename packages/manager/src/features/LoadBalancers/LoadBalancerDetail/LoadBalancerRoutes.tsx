@@ -24,6 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
+import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
 import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
 import { DeleteRuleDialog } from './Routes/DeleteRuleDialog';
 import { RuleDrawer } from './Routes/RuleDrawer';
@@ -35,7 +36,7 @@ const PREFERENCE_KEY = 'loadbalancer-routes';
 
 export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
-
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -222,7 +223,12 @@ export const LoadBalancerRoutes = () => {
         {/**
          * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
          */}
-        <Button buttonType="primary">Create Route</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Create Route
+        </Button>
       </Stack>
       <CollapsibleTable
         TableItems={getTableItems()}
@@ -245,6 +251,11 @@ export const LoadBalancerRoutes = () => {
         open={isAddRuleDrawerOpen}
         route={selectedRoute}
         ruleIndexToEdit={selectedRuleIndex}
+      />
+      <CreateRouteDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
       />
       <DeleteRouteDialog
         loadbalancerId={Number(loadbalancerId)}

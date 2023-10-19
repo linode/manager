@@ -9,7 +9,7 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import ImageSelect from 'src/features/Images/ImageSelect';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
 import {
@@ -72,7 +72,7 @@ export const StackScriptForm = React.memo((props: Props) => {
     script,
   } = props;
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+  const hasErrorFor = getAPIErrorFor(errorResources, errors);
   const selectedImages = imageToItem(images.selected);
 
   return (
