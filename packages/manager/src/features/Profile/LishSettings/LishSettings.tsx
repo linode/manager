@@ -16,8 +16,8 @@ import { Typography } from 'src/components/Typography';
 import { FormControl } from 'src/components/FormControl';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 export const LishSettings = () => {
   const theme = useTheme();

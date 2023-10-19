@@ -51,7 +51,7 @@ interface Props {
   url: string;
 }
 
-const MainContentBanner = (props: Props) => {
+export const MainContentBanner = React.memo((props: Props) => {
   const { bannerKey, bannerText, linkText, onClose, url } = props;
 
   const { refetch: refetchPrefrences } = usePreferences();
@@ -94,6 +94,4 @@ const MainContentBanner = (props: Props) => {
       </button>
     </Grid>
   );
-};
-
-export default React.memo(MainContentBanner);
+});
