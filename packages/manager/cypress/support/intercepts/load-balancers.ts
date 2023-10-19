@@ -104,7 +104,7 @@ export const mockUploadLoadBalancerCertificate = (
  *
  * @returns Cypress chainable.
  */
-// TODO: We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
+// TODO: AGLB - We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
 export const mockGetServiceTargets = (
   loadBalancer: Loadbalancer,
   serviceTargets: ServiceTarget[]
