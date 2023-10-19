@@ -24,5 +24,3 @@ export const useDialogContext = (): DialogContextProps => {
     open,
   };
 };
-
-export default useDialogContext;
