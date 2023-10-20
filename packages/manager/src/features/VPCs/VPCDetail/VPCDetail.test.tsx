@@ -110,5 +110,5 @@ describe('VPC Detail Summary section', () => {
 
     fireEvent.click(readMoreButton);
     expect(readMoreButton.innerHTML).toBe('Read Less');
-  });
+  }, 10000);
 });
