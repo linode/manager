@@ -118,7 +118,7 @@ export const LoadBalancerRoutes = () => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
-            <TableCell>{route.rules?.length}</TableCell>
+            <TableCell>{route.rules.length}</TableCell>
           </Hidden>
           <Hidden smDown>
             <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>{' '}
