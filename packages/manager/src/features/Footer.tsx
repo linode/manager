@@ -7,7 +7,7 @@ import {
   SIDEBAR_WIDTH,
 } from 'src/components/SideMenu';
 
-import packageJson from '../../../package.json';
+import packageJson from '../../package.json';
 
 interface Props {
   desktopMenuIsOpen: boolean;
