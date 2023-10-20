@@ -53,8 +53,11 @@ export const getDCSpecificPrice = ({
   flags,
   regionId,
 }: DataCenterPricingOptions) => {
-  if (!flags?.dcSpecificPricing || !regionId) {
-    // TODO: M3-7063 (defaults)
+  if (!regionId || !basePrice) {
+    return undefined;
+  }
+
+  if (!flags?.dcSpecificPricing) {
     return basePrice.toFixed(2);
   }
 
