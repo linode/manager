@@ -39,11 +39,6 @@ export const SelectFirewallPanel = (props: Props) => {
     value: firewall.id,
   }));
 
-  // firewallsDropdownOptions.unshift({
-  //   label: 'None',
-  //   value: -1,
-  // });
-
   const [dropdownValue, setDropdownValue] = React.useState<{
     label: string;
     value: number;
