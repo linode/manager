@@ -37,11 +37,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -97,6 +97,7 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
@@ -326,14 +327,16 @@ export class LinodeCreate extends React.PureComponent<
 
       if (this.props.createType === 'fromApp' && this.state.numberOfNodes > 0) {
         const { hourlyPrice, monthlyPrice } = getMonthlyAndHourlyNodePricing(
-          typeDisplayInfoCopy.monthly,
-          typeDisplayInfoCopy.hourly,
+          typeDisplayInfoCopy?.monthly,
+          typeDisplayInfoCopy?.hourly,
           this.state.numberOfNodes
         );
 
         typeDisplayInfoCopy.details = `${
           this.state.numberOfNodes
-        } Nodes - $${monthlyPrice.toFixed(2)}/month $${hourlyPrice}/hr`;
+        } Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(
+          monthlyPrice
+        )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);
@@ -343,7 +346,9 @@ export class LinodeCreate extends React.PureComponent<
       (type) => type.id === this.props.selectedTypeID
     );
 
-    const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    const backupsMonthlyPrice:
+      | PriceObject['monthly']
+      | undefined = getMonthlyBackupsPrice({
       flags: this.props.flags,
       region: selectedRegionID,
       type,
