@@ -355,7 +355,7 @@ const aglb = [
   // Routes
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     const headers = JSON.parse(req.headers.get('x-filter') || '{}');
-    if (headers['+or']?.length) {
+    if (headers['+or']) {
       return res(ctx.json(makeResourcePage(routeFactory.buildList(2))));
     }
     return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
