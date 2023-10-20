@@ -44,10 +44,8 @@ describe('Akamai Global Load Balancer routes page', () => {
       '@getRoutes',
     ]);
 
-    cy.findByLabelText(`route-${routes[0].id} expand row`).click();
-
     ui.actionMenu
-      .findByTitle(`Action Menu for Rule ${indexOfRuleToEdit}`)
+      .findByTitle(`Action Menu for Route ${routes[0].label}`)
       .click();
 
     ui.actionMenuItem.findByTitle('Edit').click();
