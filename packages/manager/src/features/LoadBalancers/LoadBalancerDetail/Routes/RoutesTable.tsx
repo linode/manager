@@ -65,6 +65,14 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     filter['label'] = { '+contains': query };
   }
 
+  /**
+   * If configuredRoutes is passed, it filters the configured routes form API
+   *  Otherwise, it fetches routes without filter in the routes table.
+   */
+  if (configuredRoutes) {
+    filter['+or'] = configuredRoutes.map((route) => ({ id: route.id }));
+  }
+
   const { data: routes, isLoading } = useLoadBalancerRoutesQuery(
     Number(loadbalancerId),
     {
@@ -74,17 +82,7 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     filter
   );
 
-  /**
-   * If configuredRoutes is passed, it filters the configured routes and
-   * renders them in the configurations tab routes table. Otherwise,
-   * it renders all the routes in the routes table.
-   */
-
-  const routesList = configuredRoutes
-    ? routes?.data.filter((route) =>
-        configuredRoutes.map((r) => r.id).includes(route?.id)
-      )
-    : routes?.data;
+  const routesList = routes?.data;
 
   const selectedRoute = routesList?.find(
     (route) => route.id === selectedRouteId
