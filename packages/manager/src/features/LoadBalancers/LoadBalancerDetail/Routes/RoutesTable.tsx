@@ -25,7 +25,9 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
 import { RulesTable } from '../RulesTable';
+import { CreateRouteDrawer } from './CreateRouteDrawer';
 import { DeleteRouteDialog } from './DeleteRouteDialog';
+import { DeleteRuleDialog } from './DeleteRuleDialog';
 import { RuleDrawer } from './RuleDrawer';
 
 import type { Configuration, Filter, Route } from '@linode/api-v4';
@@ -38,10 +40,11 @@ interface Props {
 
 export const RoutesTable = ({ configuredRoutes }: Props) => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
-
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleteRuleDialogOpen, setIsDeleteRuleDialogOpen] = useState(false);
   const [selectedRouteId, setSelectedRouteId] = useState<number>();
   const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>();
 
@@ -99,6 +102,12 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     setSelectedRuleIndex(ruleIndex);
   };
 
+  const onDeleteRule = (route: Route, ruleIndex: number) => {
+    setIsDeleteRuleDialogOpen(true);
+    setSelectedRouteId(route.id);
+    setSelectedRuleIndex(ruleIndex);
+  };
+
   const onDeleteRoute = (route: Route) => {
     setIsDeleteDialogOpen(true);
     setSelectedRouteId(route.id);
@@ -147,6 +156,7 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
       const InnerTable = (
         <RulesTable
           loadbalancerId={Number(loadbalancerId)}
+          onDeleteRule={(index) => onDeleteRule(route, index)}
           onEditRule={(index) => onEditRule(route, index)}
           route={route}
         />
@@ -227,7 +237,12 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
         {/**
          * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
          */}
-        <Button buttonType="primary">Create Route</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Create Route
+        </Button>
       </Stack>
       <CollapsibleTable
         TableItems={getTableItems()}
@@ -251,11 +266,23 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
         route={selectedRoute}
         ruleIndexToEdit={selectedRuleIndex}
       />
+      <CreateRouteDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
+      />
       <DeleteRouteDialog
         loadbalancerId={Number(loadbalancerId)}
         onClose={() => setIsDeleteDialogOpen(false)}
         open={isDeleteDialogOpen}
         route={selectedRoute}
+      />
+      <DeleteRuleDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteRuleDialogOpen(false)}
+        open={isDeleteRuleDialogOpen}
+        route={selectedRoute}
+        ruleIndex={selectedRuleIndex}
       />
     </>
   );

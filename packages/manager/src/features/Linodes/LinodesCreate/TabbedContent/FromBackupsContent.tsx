@@ -12,7 +12,7 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Paper } from 'src/components/Paper';
 import { reportException } from 'src/exceptionReporting';
 import { extendType } from 'src/utilities/extendType';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
@@ -87,7 +87,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const extendedTypes = typesData?.map(extendType);
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
       (thisLinode) => thisLinode.backups.enabled

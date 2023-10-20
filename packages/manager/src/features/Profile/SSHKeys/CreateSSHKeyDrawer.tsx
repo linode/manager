@@ -11,7 +11,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useCreateSSHKeyMutation } from 'src/queries/profile';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   onClose: () => void;

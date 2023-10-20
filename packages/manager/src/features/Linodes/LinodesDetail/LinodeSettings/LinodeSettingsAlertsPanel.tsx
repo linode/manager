@@ -12,7 +12,7 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
 

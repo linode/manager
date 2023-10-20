@@ -43,7 +43,7 @@ import {
   extendedIPToString,
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 

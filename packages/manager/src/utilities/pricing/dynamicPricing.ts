@@ -1,6 +1,7 @@
+import { UNKNOWN_PRICE } from './constants';
+
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
-import { UNKNOWN_PRICE } from './constants';
 
 export interface DataCenterPricingOptions {
   /**
@@ -55,8 +56,11 @@ export const getDCSpecificPrice = ({
   flags,
   regionId,
 }: DataCenterPricingOptions) => {
-  if (!flags?.dcSpecificPricing || !regionId) {
-    // TODO: M3-7063 (defaults)
+  if (!regionId || !basePrice) {
+    return undefined;
+  }
+
+  if (!flags?.dcSpecificPricing) {
     return basePrice.toFixed(2);
   }
 

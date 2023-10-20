@@ -9,12 +9,12 @@ import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './oneClickApps';
 import { mapStackScriptLabelToOCA } from './utils';
 
 import type { OCA } from './types';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appName: {
