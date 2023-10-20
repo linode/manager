@@ -22,6 +22,7 @@ describe('SelectFirewallPanel', () => {
       <SelectFirewallPanel
         handleFirewallChange={jest.fn()}
         helperText={<span>Testing</span>}
+        selectedFirewallId={-1}
       />,
       {
         queryClient,
@@ -38,6 +39,7 @@ describe('SelectFirewallPanel', () => {
       <SelectFirewallPanel
         handleFirewallChange={jest.fn()}
         helperText={<span>Testing</span>}
+        selectedFirewallId={-1}
       />,
       {
         queryClient,

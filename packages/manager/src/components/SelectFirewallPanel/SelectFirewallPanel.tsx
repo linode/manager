@@ -13,12 +13,13 @@ import { LinkButton } from '../LinkButton';
 interface Props {
   handleFirewallChange: (firewallID: number) => void;
   helperText: JSX.Element;
+  selectedFirewallId: number;
 }
 
 export const createFirewallLabel = 'Additional Linodes (Optional)';
 
 export const SelectFirewallPanel = (props: Props) => {
-  const { handleFirewallChange, helperText } = props;
+  const { handleFirewallChange, helperText, selectedFirewallId } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
@@ -27,7 +28,6 @@ export const SelectFirewallPanel = (props: Props) => {
   };
 
   const handleFirewallCreated = (firewall: Firewall) => {
-    setDropdownValue({ label: firewall.label, value: firewall.id });
     handleFirewallChange(firewall.id);
   };
 
@@ -39,10 +39,11 @@ export const SelectFirewallPanel = (props: Props) => {
     value: firewall.id,
   }));
 
-  const [dropdownValue, setDropdownValue] = React.useState<{
-    label: string;
-    value: number;
-  } | null>(null);
+  const selectedFirewall =
+    firewallsDropdownOptions.find(
+      (option) =>
+        option.value === selectedFirewallId && selectedFirewallId !== -1
+    ) || null;
 
   return (
     <Paper
@@ -59,17 +60,15 @@ export const SelectFirewallPanel = (props: Props) => {
         {helperText}
         <Autocomplete
           onChange={(_, selection) => {
-            setDropdownValue(selection);
             handleFirewallChange(selection?.value ?? -1);
           }}
           errorText={error?.[0].reason}
-          isOptionEqualToValue={(option, value) => option.value === value.value}
           label="Assign Firewall"
           loading={isLoading}
           noOptionsText="Create a Firewall to assign to this Linode."
           options={firewallsDropdownOptions}
           placeholder={'None'}
-          value={dropdownValue}
+          value={selectedFirewall}
         />
         <LinkButton
           onClick={handleCreateFirewallClick}
