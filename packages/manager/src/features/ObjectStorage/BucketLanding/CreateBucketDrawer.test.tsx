@@ -88,7 +88,7 @@ describe('CreateBucketDrawer', () => {
       getByTestId,
     } = renderWithTheme(<CreateBucketDrawer {...props} />, { queryClient });
 
-    userEvent.type(getByLabelText('Label'), 'my-test-bucket');
+    userEvent.type(getByLabelText('Label', { exact: false }), 'my-test-bucket');
 
     // We must waitFor because we need to load region and cluster data from the API
     await waitFor(() =>
