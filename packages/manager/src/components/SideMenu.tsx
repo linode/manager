@@ -7,6 +7,7 @@ import { Hidden } from 'src/components/Hidden';
 import PrimaryNav from './PrimaryNav/PrimaryNav';
 
 export const SIDEBAR_WIDTH = 190;
+export const SIDEBAR_COLLAPSED_WIDTH = 52;
 
 export interface Props {
   closeMenu: () => void;
@@ -70,7 +71,7 @@ const StyledDrawer = styled(Drawer, {
         [theme.breakpoints.up('sm')]: {
           overflowY: 'hidden',
         },
-        width: '52px',
+        width: `${SIDEBAR_COLLAPSED_WIDTH}px`,
       },
       '&.MuiDrawer-docked': {
         height: '100%',
