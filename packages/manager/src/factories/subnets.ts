@@ -6,7 +6,7 @@ export const subnetLinodeInformationFactory = Factory.Sync.makeFactory<SubnetLin
     id: Factory.each((i) => i),
     interfaces: Factory.each((i) =>
       Array.from({ length: i }, () => ({
-        active: 'true',
+        active: false,
         id: Math.floor(Math.random() * 100),
       }))
     ),
