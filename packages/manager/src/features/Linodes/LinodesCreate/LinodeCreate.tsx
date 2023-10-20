@@ -103,7 +103,7 @@ export interface LinodeCreateProps {
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
-  firewallId: number | undefined;
+  firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleShowApiAwarenessModal: () => void;
@@ -376,7 +376,7 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    if (this.props.firewallId !== undefined && this.props.firewallId !== -1) {
+    if (this.props.firewallId != null && this.props.firewallId !== -1) {
       displaySections.push({
         title: 'Firewall Assigned',
       });

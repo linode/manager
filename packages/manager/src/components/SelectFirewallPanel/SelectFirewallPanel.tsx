@@ -1,13 +1,14 @@
+import { Firewall } from '@linode/api-v4';
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
-import Select from 'src/components/EnhancedSelect';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
-import { StyledCreateLink } from '../../features/Linodes/LinodesCreate/LinodeCreate.styles';
+import { Autocomplete } from '../Autocomplete/Autocomplete';
+import { LinkButton } from '../LinkButton';
 
 interface Props {
   handleFirewallChange: (firewallID: number) => void;
@@ -25,9 +26,9 @@ export const SelectFirewallPanel = (props: Props) => {
     setIsDrawerOpen(true);
   };
 
-  const handleFirewallCreated = (id: number, label: string) => {
-    setDropdownValue({ label, value: id });
-    handleFirewallChange(id);
+  const handleFirewallCreated = (firewall: Firewall) => {
+    setDropdownValue({ label: firewall.label, value: firewall.id });
+    handleFirewallChange(firewall.id);
   };
 
   const { data: firewallsData, error, isLoading } = useFirewallsQuery();
@@ -38,15 +39,15 @@ export const SelectFirewallPanel = (props: Props) => {
     value: firewall.id,
   }));
 
-  firewallsDropdownOptions.unshift({
-    label: 'None',
-    value: -1,
-  });
+  // firewallsDropdownOptions.unshift({
+  //   label: 'None',
+  //   value: -1,
+  // });
 
   const [dropdownValue, setDropdownValue] = React.useState<{
     label: string;
     value: number;
-  }>(firewallsDropdownOptions[0]);
+  } | null>(null);
 
   return (
     <Paper
@@ -61,29 +62,26 @@ export const SelectFirewallPanel = (props: Props) => {
       </Typography>
       <Stack>
         {helperText}
-        <Select
-          onChange={(selection) => {
+        <Autocomplete
+          onChange={(_, selection) => {
             setDropdownValue(selection);
-            handleFirewallChange(selection.value);
+            handleFirewallChange(selection?.value ?? -1);
           }}
           errorText={error?.[0].reason}
-          isClearable={false}
-          isLoading={isLoading}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           label="Assign Firewall"
-          noOptionsMessage={() => 'Create a Firewall to assign to this Linode.'}
+          loading={isLoading}
+          noOptionsText="Create a Firewall to assign to this Linode."
           options={firewallsDropdownOptions}
-          placeholder={''}
+          placeholder={'None'}
           value={dropdownValue}
         />
-        <StyledCreateLink
-          onClick={(e) => {
-            e.preventDefault();
-            handleCreateFirewallClick();
-          }}
-          to="#"
+        <LinkButton
+          onClick={handleCreateFirewallClick}
+          style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
         >
           Create Firewall
-        </StyledCreateLink>
+        </LinkButton>
         <CreateFirewallDrawer
           label={createFirewallLabel}
           onClose={() => setIsDrawerOpen(false)}

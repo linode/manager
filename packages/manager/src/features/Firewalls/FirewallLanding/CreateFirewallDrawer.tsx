@@ -1,4 +1,4 @@
-import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -24,7 +24,7 @@ export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
 export interface CreateFirewallDrawerProps {
   label?: string;
   onClose: () => void;
-  onFirewallCreated?: (firewallId: number, firewallLabel: string) => void;
+  onFirewallCreated?: (firewall: Firewall) => void;
   open: boolean;
 }
 
@@ -90,7 +90,7 @@ export const CreateFirewallDrawer = React.memo(
           .then((response) => {
             setSubmitting(false);
             if (onFirewallCreated) {
-              onFirewallCreated(response.id, response.label);
+              onFirewallCreated(response);
             }
             onClose();
           })
