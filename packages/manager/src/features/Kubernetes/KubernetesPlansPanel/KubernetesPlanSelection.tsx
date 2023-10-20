@@ -128,8 +128,7 @@ export const KubernetesPlanSelection = (
                   // or there was a pricing data error.
                   (!onAdd && Boolean(selectedID) && type.id !== selectedID) ||
                   disabled ||
-                  !price?.monthly ||
-                  !price?.hourly
+                  !price?.monthly
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(type.id, newCount)
@@ -140,7 +139,7 @@ export const KubernetesPlanSelection = (
               {onAdd && (
                 <Button
                   buttonType="primary"
-                  disabled={count < 1 || disabled}
+                  disabled={count < 1 || disabled || !price?.monthly}
                   onClick={() => onAdd(type.id, count)}
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
