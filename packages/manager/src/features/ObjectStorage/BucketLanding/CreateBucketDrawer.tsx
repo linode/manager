@@ -133,6 +133,7 @@ export const CreateBucketDrawer = (props: Props) => {
           name="label"
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
+          required
           value={formik.values.label}
         />
         <ClusterSelect
