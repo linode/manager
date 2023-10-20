@@ -24,9 +24,7 @@ interface State {
   manyof: string[];
 }
 
-type CombinedProps = Props;
-
-class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
+class UserDefinedMultiSelect extends React.Component<Props, State> {
   render() {
     const { manyof } = this.state;
     const { error, field, value: propValue } = this.props;
@@ -79,4 +77,4 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   };
 }
 
-export default RenderGuard<CombinedProps>(UserDefinedMultiSelect);
+export default RenderGuard<Props>(UserDefinedMultiSelect);

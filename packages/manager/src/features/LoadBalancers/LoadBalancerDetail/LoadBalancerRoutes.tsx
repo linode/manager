@@ -24,8 +24,10 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
-import { AddRuleDrawer } from './Routes/AddRuleDrawer';
+import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
 import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
+import { DeleteRuleDialog } from './Routes/DeleteRuleDialog';
+import { RuleDrawer } from './Routes/RuleDrawer';
 import { RulesTable } from './RulesTable';
 
 import type { Filter, Route } from '@linode/api-v4';
@@ -34,11 +36,13 @@ const PREFERENCE_KEY = 'loadbalancer-routes';
 
 export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
-
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleteRuleDialogOpen, setIsDeleteRuleDialogOpen] = useState(false);
   const [selectedRouteId, setSelectedRouteId] = useState<number>();
+  const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -76,6 +80,18 @@ export const LoadBalancerRoutes = () => {
   const onAddRule = (route: Route) => {
     setIsAddRuleDrawerOpen(true);
     setSelectedRouteId(route.id);
+  };
+
+  const onEditRule = (route: Route, ruleIndex: number) => {
+    setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+    setSelectedRuleIndex(ruleIndex);
+  };
+
+  const onDeleteRule = (route: Route, ruleIndex: number) => {
+    setIsDeleteRuleDialogOpen(true);
+    setSelectedRouteId(route.id);
+    setSelectedRuleIndex(ruleIndex);
   };
 
   const onDeleteRoute = (route: Route) => {
@@ -124,7 +140,12 @@ export const LoadBalancerRoutes = () => {
       );
 
       const InnerTable = (
-        <RulesTable loadbalancerId={Number(loadbalancerId)} route={route} />
+        <RulesTable
+          loadbalancerId={Number(loadbalancerId)}
+          onDeleteRule={(index) => onDeleteRule(route, index)}
+          onEditRule={(index) => onEditRule(route, index)}
+          route={route}
+        />
       );
 
       return {
@@ -202,7 +223,12 @@ export const LoadBalancerRoutes = () => {
         {/**
          * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
          */}
-        <Button buttonType="primary">Create Route</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Create Route
+        </Button>
       </Stack>
       <CollapsibleTable
         TableItems={getTableItems()}
@@ -216,17 +242,33 @@ export const LoadBalancerRoutes = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <AddRuleDrawer
+      <RuleDrawer
+        onClose={() => {
+          setIsAddRuleDrawerOpen(false);
+          setSelectedRuleIndex(undefined);
+        }}
         loadbalancerId={Number(loadbalancerId)}
-        onClose={() => setIsAddRuleDrawerOpen(false)}
         open={isAddRuleDrawerOpen}
         route={selectedRoute}
+        ruleIndexToEdit={selectedRuleIndex}
+      />
+      <CreateRouteDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
       />
       <DeleteRouteDialog
         loadbalancerId={Number(loadbalancerId)}
         onClose={() => setIsDeleteDialogOpen(false)}
         open={isDeleteDialogOpen}
         route={selectedRoute}
+      />
+      <DeleteRuleDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteRuleDialogOpen(false)}
+        open={isDeleteRuleDialogOpen}
+        route={selectedRoute}
+        ruleIndex={selectedRuleIndex}
       />
     </>
   );

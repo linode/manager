@@ -22,14 +22,14 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { GravatarByEmail } from '../../components/GravatarByEmail';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
-import ActionMenu from './UsersActionMenu';
+import { UsersActionMenu } from './UsersActionMenu';
 
-const UsersLanding = () => {
+export const UsersLanding = () => {
   const { data: profile } = useProfile();
   const pagination = usePagination(1, 'account-users');
   const { data: users, error, isLoading, refetch } = useAccountUsers({
@@ -117,7 +117,10 @@ const UsersLanding = () => {
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
         <TableCell actionCell>
-          <ActionMenu onDelete={onUsernameDelete} username={user.username} />
+          <UsersActionMenu
+            onDelete={onUsernameDelete}
+            username={user.username}
+          />
         </TableCell>
       </TableRow>
     );
@@ -208,5 +211,3 @@ const UsersLanding = () => {
     </React.Fragment>
   );
 };
-
-export default UsersLanding;

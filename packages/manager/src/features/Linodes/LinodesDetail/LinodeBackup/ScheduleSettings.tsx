@@ -5,17 +5,17 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Select from 'src/components/EnhancedSelect/Select';
+import { FormControl } from 'src/components/FormControl';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
-import { FormHelperText } from 'src/components/FormHelperText';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
-import getUserTimezone from 'src/utilities/getUserTimezone';
+import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';
 
 interface Props {
