@@ -22,7 +22,7 @@ import {
 } from 'support/intercepts/load-balancers';
 
 describe('Akamai Global Load Balancer routes page', () => {
-  it.only('can edit a route label and protocol', () => {
+  it('can edit a route label and protocol', () => {
     const indexOfRuleToEdit = 1;
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(indexOfRuleToEdit, {
@@ -55,10 +55,13 @@ describe('Akamai Global Load Balancer routes page', () => {
     mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
 
     ui.drawer
-      .findByTitle('Edit Route')
+      .findByTitle(`Edit Route: ${routes[0].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Route Label').should('have.value', routes[0].label);
+        cy.findByLabelText('Route Label').should(
+          'have.value',
+          `${routes[0].label}`
+        );
         // .clear() // TODO: [M3-7028] - Enable when we have real data and not mocks
         // .type('new-label'); // TODO: [M3-7028] - Enable when we have real data and not mocks
 
