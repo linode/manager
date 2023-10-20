@@ -40,10 +40,11 @@ export const SelectFirewallPanel = (props: Props) => {
   }));
 
   const selectedFirewall =
-    firewallsDropdownOptions.find(
-      (option) =>
-        option.value === selectedFirewallId && selectedFirewallId !== -1
-    ) || null;
+    selectedFirewallId !== -1
+      ? firewallsDropdownOptions.find(
+          (option) => option.value === selectedFirewallId
+        ) || null
+      : null;
 
   return (
     <Paper
