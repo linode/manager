@@ -116,18 +116,23 @@ export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 // Default size limit for Images (some users have custom limits)
 export const IMAGE_DEFAULT_LIMIT = 6144;
 
-export const allowedHTMLTags = [
+export const allowedHTMLTagsStrict: string[] = [
+  'b',
+  'del',
+  'em',
+  'i',
+  'code',
+  'strong',
+];
+
+export const allowedHTMLTagsFlexible: string[] = [
+  ...allowedHTMLTagsStrict,
   'a',
   'abbr',
   'acronym',
-  'b',
   'blockquote',
   'br',
-  'code',
-  'del',
-  'em',
   'hr',
-  'i',
   'li',
   'ol',
   'ul',
@@ -140,7 +145,6 @@ export const allowedHTMLTags = [
   'h5',
   'h6',
   'span',
-  'strong',
   'table',
   'tbody',
   'td',

@@ -1,8 +1,24 @@
 import sanitize from 'sanitize-html';
 
-import { allowedHTMLAttr, allowedHTMLTags } from 'src/constants';
+import { allowedHTMLAttr } from 'src/constants';
 
-export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
+import { getAllowedHTMLTags } from './sanitizeHTML.utils';
+
+import type { AllowedHTMLTagsTier } from './sanitizeHTML.utils';
+
+interface SanitizeHTMLOptions {
+  allowMoreTags?: string[];
+  options?: sanitize.IOptions;
+  sanitizingTier: AllowedHTMLTagsTier;
+  text: string;
+}
+
+export const sanitizeHTML = ({
+  allowMoreTags,
+  options = {},
+  sanitizingTier,
+  text,
+}: SanitizeHTMLOptions) =>
   sanitize(text, {
     allowedAttributes: {
       '*': allowedHTMLAttr,
@@ -13,7 +29,7 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
     allowedClasses: {
       span: ['version'],
     },
-    allowedTags: allowedHTMLTags,
+    allowedTags: getAllowedHTMLTags(sanitizingTier, allowMoreTags),
     disallowedTagsMode: 'escape',
     transformTags: {
       // This transformation function does the following to anchor tags:
