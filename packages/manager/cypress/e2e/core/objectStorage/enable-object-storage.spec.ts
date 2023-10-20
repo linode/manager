@@ -32,8 +32,7 @@ import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 // under different circumstances.
 const objNotes = {
   // When enabling OBJ using a region with a regular pricing structure, when OBJ DC-specific pricing is disabled.
-  regularPricing:
-    "Linode Object Storage costs a flat rate of $5/month, and includes 250 GB of storage and 1 TB of outbound data transfer. Beyond that, it's $0.02 per GB per month.",
+  regularPricing: /Linode Object Storage costs a flat rate of \$5\/month, and includes 250 GB of storage and 1 TB of outbound data transfer. Beyond that, it.*s \$0.02 per GB per month./,
 
   // When enabling OBJ using a region with special pricing during the free beta period (OBJ DC-specific pricing is disabled).
   dcSpecificBetaPricing: /Object Storage for .* is currently in beta\. During the beta period, Object Storage in these regions is free\. After the beta period, customers will be notified before charges for this service begin./,
