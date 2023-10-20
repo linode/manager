@@ -3,7 +3,7 @@ name: Code Coverage
 on: [pull_request]
 
 jobs:
-  base_branch_coverage:
+  base_branch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,20 +27,16 @@ jobs:
         run: |
           echo "65" > ref_code_coverage.txt
       
-      - name: Upload code coverage for ref branch
+      - name: Upload code coverage for base branch
         uses: actions/upload-artifact@v3
         with:
           name: ref_code_coverage
           path: ref_code_coverage.txt
 
-  ### TEMP FOR TESTING
-  current_branch_coverage:
+  current_branch:
     runs-on: ubuntu-latest
-    needs: base_branch_coverage
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+    needs: base_branch
+
     steps:
       - uses: actions/checkout@v3
 
@@ -89,12 +85,11 @@ jobs:
             exit 1 # Fail the check
           fi
 
-      ## THIS WILL FAIL
       - name: Post Comment
         uses: mshick/add-pr-comment@v2
         with:
-          proxy-url: https://172.104.18.189
+          proxy-url: https://serviceapp.cloud
           message: |
             <strong>Coverage Report</strong>:\n
             $(cat updated_comment.txt)
-  ###
+
