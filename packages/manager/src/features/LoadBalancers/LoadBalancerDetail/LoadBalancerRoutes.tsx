@@ -27,6 +27,7 @@ import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
 import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
 import { DeleteRuleDialog } from './Routes/DeleteRuleDialog';
+import { EditRouteDrawer } from './Routes/EditRouteDrawer';
 import { RuleDrawer } from './Routes/RuleDrawer';
 import { RulesTable } from './RulesTable';
 
@@ -37,6 +38,7 @@ const PREFERENCE_KEY = 'loadbalancer-routes';
 export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -94,6 +96,11 @@ export const LoadBalancerRoutes = () => {
     setSelectedRuleIndex(ruleIndex);
   };
 
+  const onEditRoute = (route: Route) => {
+    setIsEditDrawerOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   const onDeleteRoute = (route: Route) => {
     setIsDeleteDialogOpen(true);
     setSelectedRouteId(route.id);
@@ -111,7 +118,7 @@ export const LoadBalancerRoutes = () => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
-            <TableCell>{route.rules.length}</TableCell>
+            <TableCell>{route.rules?.length}</TableCell>
           </Hidden>
           <Hidden smDown>
             <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>{' '}
@@ -129,7 +136,7 @@ export const LoadBalancerRoutes = () => {
              */}
             <ActionMenu
               actionsList={[
-                { onClick: () => null, title: 'Edit' },
+                { onClick: () => onEditRoute(route), title: 'Edit' },
                 { onClick: () => null, title: 'Clone Route' },
                 { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
@@ -251,6 +258,12 @@ export const LoadBalancerRoutes = () => {
         open={isAddRuleDrawerOpen}
         route={selectedRoute}
         ruleIndexToEdit={selectedRuleIndex}
+      />
+      <EditRouteDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        route={selectedRoute}
       />
       <CreateRouteDrawer
         loadbalancerId={Number(loadbalancerId)}

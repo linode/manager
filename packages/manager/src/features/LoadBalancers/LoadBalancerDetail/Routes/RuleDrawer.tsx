@@ -57,7 +57,7 @@ export const RuleDrawer = (props: Props) => {
     ruleIndexToEdit,
   } = props;
 
-  const ruleIndex = ruleIndexToEdit ?? route?.rules.length ?? 0;
+  const ruleIndex = ruleIndexToEdit ?? route?.rules?.length ?? 0;
 
   const isEditMode = ruleIndexToEdit !== undefined;
 

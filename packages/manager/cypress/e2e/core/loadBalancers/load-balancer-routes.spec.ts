@@ -22,6 +22,63 @@ import {
 } from 'support/intercepts/load-balancers';
 
 describe('Akamai Global Load Balancer routes page', () => {
+  it.only('can edit a route label and protocol', () => {
+    const indexOfRuleToEdit = 1;
+    const loadbalancer = loadbalancerFactory.build();
+    const routes = routeFactory.buildList(indexOfRuleToEdit, {
+      protocol: 'http',
+    });
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+    mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+
+    cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getRoutes',
+    ]);
+
+    cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+
+    ui.actionMenu
+      .findByTitle(`Action Menu for Rule ${indexOfRuleToEdit}`)
+      .click();
+
+    ui.actionMenuItem.findByTitle('Edit').click();
+
+    mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
+
+    ui.drawer
+      .findByTitle('Edit Route')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Route Label').should('have.value', routes[0].label);
+        // .clear() // TODO: [M3-7028] - Enable when we have real data and not mocks
+        // .type('new-label'); // TODO: [M3-7028] - Enable when we have real data and not mocks
+
+        cy.get('[data-qa-radio="HTTP"]').find('input').should('be.checked');
+        cy.get('[data-qa-radio="TCP"]').click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Edit Route')
+          .should('be.visible')
+          .should('be.enabled');
+        // .click(); // TODO: [M3-7028] - Enable when we have real data and not mocks
+      });
+
+    // TODO: [M3-7028] - Enable when we have real data and not mocks
+    // cy.wait('@updateRoute');
+    // cy.findByLabelText('Route 0').within(() => {
+    //   cy.findByText('new-label');
+    //   cy.findByText('TCP');
+    // });
+  });
   it('can add a HTTP rule', () => {
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(1, { protocol: 'http' });
