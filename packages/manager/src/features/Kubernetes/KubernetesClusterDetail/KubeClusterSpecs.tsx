@@ -69,14 +69,16 @@ export const KubeClusterSpecs = (props: Props) => {
 
   const displayRegion = region?.label ?? cluster.region;
 
-  const highAvailabilityPrice = cluster.control_plane.high_availability
-    ? parseFloat(
-        getDCSpecificPrice({
-          basePrice: LKE_HA_PRICE,
-          flags,
-          regionId: region?.id,
-        })
-      )
+  const dcSpecificPrice = cluster.control_plane.high_availability
+    ? getDCSpecificPrice({
+        basePrice: LKE_HA_PRICE,
+        flags,
+        regionId: region?.id,
+      })
+    : undefined;
+
+  const highAvailabilityPrice = dcSpecificPrice
+    ? parseFloat(dcSpecificPrice)
     : undefined;
 
   const kubeSpecsLeft = [

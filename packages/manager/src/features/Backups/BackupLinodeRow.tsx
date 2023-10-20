@@ -8,6 +8,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import {
+  PRICE_ERROR_TOOLTIP_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 
 interface Props {
   error?: string;
@@ -20,7 +24,9 @@ export const BackupLinodeRow = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const flags = useFlags();
 
-  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+  const backupsMonthlyPrice:
+    | PriceObject['monthly']
+    | undefined = getMonthlyBackupsPrice({
     flags,
     region: linode.region,
     type,
@@ -51,10 +57,12 @@ export const BackupLinodeRow = (props: Props) => {
       {flags.dcSpecificPricing && (
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       )}
-      <TableCell parentColumn="Price">
-        {backupsMonthlyPrice !== 0
-          ? `$${backupsMonthlyPrice?.toFixed(2)}/mo`
-          : '$Unknown/mo'}
+      <TableCell
+        errorCell={!Boolean(backupsMonthlyPrice)}
+        errorText={!backupsMonthlyPrice ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+        parentColumn="Price"
+      >
+        {`$${backupsMonthlyPrice?.toFixed(2) ?? UNKNOWN_PRICE}/mo`}
       </TableCell>
     </TableRow>
   );

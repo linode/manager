@@ -9,8 +9,12 @@ import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  PRICE_ERROR_TOOLTIP_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
@@ -86,15 +90,14 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // TODO: M3-7063 (defaults)
-  const price: PriceObject =
-    dcSpecificPricing && selectedRegionId
-      ? getLinodeRegionPrice(type, selectedRegionId)
-      : type.price;
-
+  const price: PriceObject | undefined = getPrice(
+    type,
+    selectedRegionId,
+    dcSpecificPricing
+  );
   type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
-    price.monthly
-  )}/mo ($${price.hourly}/hr)`;
+    price?.monthly
+  )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -154,15 +157,23 @@ export const PlanSelection = (props: Props) => {
               />
             )}
           </TableCell>
-          <TableCell data-qa-monthly>
+          <TableCell
+            data-qa-monthly
+            errorCell={!price?.monthly}
+            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+          >
             {' '}
             ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
           </TableCell>
-          <TableCell data-qa-hourly>
+          <TableCell
+            data-qa-hourly
+            errorCell={!price?.hourly}
+            errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+          >
             {isGPU ? (
-              <Currency quantity={price.hourly ?? 0} />
+              <Currency quantity={price?.hourly ?? UNKNOWN_PRICE} />
             ) : (
-              `$${price?.hourly}`
+              `$${price?.hourly ?? UNKNOWN_PRICE}`
             )}
           </TableCell>
           <TableCell center data-qa-ram noWrap>

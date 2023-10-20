@@ -5,6 +5,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useFlags } from 'src/hooks/useFlags';
@@ -12,6 +13,7 @@ import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 interface Props {
   linodeId: number | undefined;
@@ -41,7 +43,9 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+  const backupsMonthlyPrice:
+    | PriceObject['monthly']
+    | undefined = getMonthlyBackupsPrice({
     flags,
     region: linode?.region,
     type,
@@ -68,6 +72,7 @@ export const EnableBackupsDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm-enable-backups',
+        disabled: !backupsMonthlyPrice,
         label: 'Enable Backups',
         loading: isLoading,
         onClick: handleEnableBackups,
@@ -89,12 +94,21 @@ export const EnableBackupsDialog = (props: Props) => {
       open={open}
       title="Enable backups?"
     >
-      <Typography>
-        Are you sure you want to enable backups on this Linode?{` `}
-        This will add <Currency quantity={backupsMonthlyPrice ?? 0} />
-        {` `}
-        to your monthly bill.
-      </Typography>
+      {backupsMonthlyPrice ? (
+        <Typography>
+          Are you sure you want to enable backups on this Linode?{` `}
+          This will add <Currency quantity={backupsMonthlyPrice} />
+          {` `}
+          to your monthly bill.
+        </Typography>
+      ) : (
+        <Notice
+          spacingBottom={16}
+          spacingTop={8}
+          text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+          variant="error"
+        />
+      )}
     </ConfirmationDialog>
   );
 };

@@ -44,7 +44,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     // Confirms that the price will show up when the region is selected
     containsClick(selectRegionString).type(`${regionName}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
-      cy.findByText(`$10.00/month`).should('be.visible');
+      cy.findByText(`$10/month`).should('be.visible');
     });
 
     // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
@@ -55,7 +55,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     // Confirms that the summary updates to reflect price changes if the user changes their region.
     cy.get(`[value="${regionName}"]`).click().type(`${newRegion.label}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
-      cy.findByText(`$14.00/month`).should('be.visible');
+      cy.findByText(`$14/month`).should('be.visible');
     });
 
     // Confirms that a notice is shown in the "Region" section of the NodeBalancer Create form informing the user of DC-specific pricing

@@ -60,7 +60,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -81,6 +81,7 @@ import {
   WithMarketplaceAppsProps,
   withMarketplaceApps,
 } from 'src/containers/withMarketplaceApps';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -506,18 +507,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     const { dcSpecificPricing, selectedRegionID } = this.state;
 
-    const linodePrice: PriceObject =
-      dcSpecificPricing && type && selectedRegionID
-        ? getLinodeRegionPrice(type, selectedRegionID)
-        : type
-        ? type.price
-        : { hourly: 0, monthly: 0 }; // TODO: M3-7063 (defaults)
+    const linodePrice: PriceObject | undefined = getPrice(
+      type,
+      selectedRegionID,
+      dcSpecificPricing
+    );
 
     return (
       type && {
-        details: `$${linodePrice?.monthly}/month`,
-        hourly: linodePrice?.hourly ?? 0,
-        monthly: linodePrice?.monthly ?? 0,
+        details: `$${linodePrice ? linodePrice : UNKNOWN_PRICE}/month`,
+        hourly: linodePrice?.hourly,
+        monthly: linodePrice?.monthly,
         title: type.formattedLabel,
       }
     );
