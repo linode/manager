@@ -53,7 +53,7 @@ describe('Akamai Global Load Balancer routes page', () => {
     mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
 
     ui.drawer
-      .findByTitle(`Edit Route: ${routes[0].label}`)
+      .findByTitle(`Edit Route ${routes[0].label}`)
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Route Label').should(
