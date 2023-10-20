@@ -40,7 +40,6 @@ export const EditRouteDrawer = (props: Props) => {
     initialValues: {
       label: route?.label,
       protocol: route?.protocol,
-      rules: route?.rules ?? [],
     },
     async onSubmit(values) {
       try {
@@ -62,7 +61,7 @@ export const EditRouteDrawer = (props: Props) => {
   const generalError = error?.find((e) => !e.field)?.reason;
 
   return (
-    <Drawer onClose={onClose} open={open} title={`Edit Route: ${route?.label}`}>
+    <Drawer onClose={onClose} open={open} title={`Edit Route ${route?.label}`}>
       <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
@@ -101,7 +100,7 @@ export const EditRouteDrawer = (props: Props) => {
         </RadioGroup>
         <ActionsPanel
           primaryButtonProps={{
-            label: 'Edit Route',
+            label: 'Save',
             loading: formik.isSubmitting || isLoading,
             type: 'submit',
           }}
