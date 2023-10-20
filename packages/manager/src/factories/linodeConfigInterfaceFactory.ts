@@ -3,6 +3,7 @@ import * as Factory from 'factory.ts';
 
 export const LinodeConfigInterfaceFactory = Factory.Sync.makeFactory<Interface>(
   {
+    active: true,
     id: Factory.each((i) => i),
     ipam_address: '10.0.0.1/24',
     label: Factory.each((i) => `interface-${i}`),
@@ -15,6 +16,7 @@ export const LinodeConfigInterfaceFactoryWithVPC = Factory.Sync.makeFactory<Inte
     id: Factory.each((i) => i),
     ipam_address: '10.0.0.1/24',
     label: Factory.each((i) => `interface-${i}`),
+    active: true,
     purpose: 'vpc',
     ipv4: {
       vpc: '10.0.0.0',

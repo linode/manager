@@ -6,6 +6,7 @@ import {
   accountFactory,
   linodeFactory,
   subnetFactory,
+  subnetLinodeInformationFactory,
   vpcFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -40,7 +41,7 @@ describe('Linode Entity Detail', () => {
 
     const subnet = subnetFactory.build({
       id: 2,
-      linodes: [5],
+      linodes: [subnetLinodeInformationFactory.build({ id: 5 })],
     });
 
     const vpc = vpcFactory.build({
@@ -81,7 +82,7 @@ describe('Linode Entity Detail', () => {
 
     const subnet = subnetFactory.build({
       id: 4,
-      linodes: [85],
+      linodes: [subnetLinodeInformationFactory.build({ id: 85 })],
     });
 
     const vpc = vpcFactory.build({
@@ -116,7 +117,7 @@ describe('Linode Entity Detail', () => {
     const subnet = subnetFactory.build({
       id: 4,
       label: '1st-subnet',
-      linodes: [linode.id],
+      linodes: [subnetLinodeInformationFactory.build({ id: linode.id })],
     });
 
     const _vpcs = vpcFactory.buildList(3);

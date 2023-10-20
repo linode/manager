@@ -1,3 +1,5 @@
+import { Interface } from 'src/linodes';
+
 export interface VPC {
   id: number;
   label: string;
@@ -28,11 +30,18 @@ export interface CreateSubnetPayload {
 
 export interface Subnet extends CreateSubnetPayload {
   id: number;
-  linodes: number[];
+  linodes: SubnetLinodeInformation[];
   created: string;
   updated: string;
 }
 
 export interface ModifySubnetPayload {
   label: string;
+}
+
+export type SubnetInterfaceInformation = Pick<Interface, 'active' | 'id'>;
+
+export interface SubnetLinodeInformation {
+  id: number;
+  interfaces: SubnetInterfaceInformation[];
 }

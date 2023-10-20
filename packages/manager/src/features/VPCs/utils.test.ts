@@ -1,28 +1,52 @@
 import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
-import { subnetFactory } from 'src/factories/subnets';
+import {
+  subnetFactory,
+  subnetLinodeInformationFactory,
+} from 'src/factories/subnets';
 
 import {
   getSubnetInterfaceFromConfigs,
   getUniqueLinodesFromSubnets,
 } from './utils';
 
+const subnetLinodeInfoList1 = subnetLinodeInformationFactory.buildList(4);
+const subnetLinodeInfoId1 = subnetLinodeInformationFactory.build({ id: 1 });
+const subnetLinodeInfoId3 = subnetLinodeInformationFactory.build({ id: 3 });
+
 describe('getUniqueLinodesFromSubnets', () => {
   it(`returns the number of unique linodes within a VPC's subnets`, () => {
     const subnets0 = [subnetFactory.build({ linodes: [] })];
-    const subnets1 = [subnetFactory.build({ linodes: [1, 2, 3] })];
-    const subnets2 = [subnetFactory.build({ linodes: [1, 1, 3, 3] })];
+    const subnets1 = [subnetFactory.build({ linodes: subnetLinodeInfoList1 })];
+    const subnets2 = [
+      subnetFactory.build({
+        linodes: [
+          subnetLinodeInfoId1,
+          subnetLinodeInfoId1,
+          subnetLinodeInfoId3,
+          subnetLinodeInfoId3,
+        ],
+      }),
+    ];
     const subnets3 = [
-      subnetFactory.build({ linodes: [1, 2, 3] }),
+      subnetFactory.build({ linodes: subnetLinodeInfoList1 }),
       subnetFactory.build({ linodes: [] }),
-      subnetFactory.build({ linodes: [3] }),
-      subnetFactory.build({ linodes: [6, 7, 8, 9, 1] }),
+      subnetFactory.build({ linodes: [subnetLinodeInfoId3] }),
+      subnetFactory.build({
+        linodes: [
+          subnetLinodeInformationFactory.build({ id: 6 }),
+          subnetLinodeInformationFactory.build({ id: 7 }),
+          subnetLinodeInformationFactory.build({ id: 8 }),
+          subnetLinodeInformationFactory.build({ id: 9 }),
+          subnetLinodeInfoId1,
+        ],
+      }),
     ];
 
     expect(getUniqueLinodesFromSubnets(subnets0)).toBe(0);
-    expect(getUniqueLinodesFromSubnets(subnets1)).toBe(3);
+    expect(getUniqueLinodesFromSubnets(subnets1)).toBe(4);
     expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
-    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(7);
+    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(8);
   });
 });
 
