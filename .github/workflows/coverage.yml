@@ -71,7 +71,7 @@ jobs:
           else
             icon="✅" # Check mark icon
           fi
-          comment_message="$icon Coverage Report\nBase Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
+          comment_message="$icon **Coverage Report**\nBase Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
           echo "Coverage: $comment_message"
           echo "$comment_message" > updated_comment.txt
 
@@ -85,11 +85,11 @@ jobs:
             exit 1 # Fail the check
           fi
 
-      - name: Post Comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          proxy-url: https://serviceapp.cloud
-          message: |
-            <strong>Coverage Report</strong>:\n
-            $(cat updated_comment.txt)
+      # - name: Post Comment
+      #   uses: mshick/add-pr-comment@v2
+      #   with:
+      #     proxy-url: ""
+      #     message: |
+      #       $(cat updated_comment.txt)
+      #     update-only: true
 
