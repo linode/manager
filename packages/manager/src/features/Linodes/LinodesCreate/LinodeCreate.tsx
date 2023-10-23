@@ -37,11 +37,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -62,6 +62,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -97,14 +98,13 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
-  firewallId: number | undefined;
+  firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleShowApiAwarenessModal: () => void;
@@ -381,7 +381,11 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    if (this.props.firewallId !== undefined && this.props.firewallId !== -1) {
+    if (
+      this.props.firewallId !== null &&
+      this.props.firewallId !== undefined &&
+      this.props.firewallId !== -1
+    ) {
       displaySections.push({
         title: 'Firewall Assigned',
       });
@@ -638,6 +642,7 @@ export class LinodeCreate extends React.PureComponent<
                 // @TODO VPC: Update "Learn More" link
               }
               handleFirewallChange={this.props.handleFirewallChange}
+              selectedFirewallId={this.props.firewallId || -1}
             />
           )}
           <AddonsPanel
