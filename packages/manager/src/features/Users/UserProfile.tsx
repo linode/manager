@@ -1,7 +1,5 @@
-import { deleteUser } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -15,7 +13,6 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
@@ -44,7 +41,6 @@ interface UserProfileProps {
 export const UserProfile = (props: UserProfileProps) => {
   const theme = useTheme();
   const { push } = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
   const {
     accountErrors,
     accountSaving,
@@ -68,7 +64,6 @@ export const UserProfile = (props: UserProfileProps) => {
     deleteConfirmDialogOpen,
     setDeleteConfirmDialogOpen,
   ] = React.useState<boolean>(false);
-  const [userDeleteError, setUserDeleteError] = React.useState<boolean>(false);
 
   const renderProfileSection = () => {
     const hasAccountErrorFor = getAPIErrorFor(
@@ -166,22 +161,6 @@ export const UserProfile = (props: UserProfileProps) => {
     );
   };
 
-  const onDeleteConfirm = (username: string) => {
-    setUserDeleteError(false);
-    setDeleteConfirmDialogOpen(false);
-    deleteUser(username)
-      .then(() => {
-        enqueueSnackbar(`User ${username} has been deleted successfully.`, {
-          variant: 'success',
-        });
-        push(`/account/users`, { deletedUsername: username });
-      })
-      .catch(() => {
-        setUserDeleteError(true);
-        scrollErrorIntoView();
-      });
-  };
-
   const onDelete = () => {
     setDeleteConfirmDialogOpen(true);
   };
@@ -196,16 +175,6 @@ export const UserProfile = (props: UserProfileProps) => {
         <Typography data-qa-delete-user-header variant="h2">
           Delete User
         </Typography>
-        {userDeleteError && (
-          <Notice
-            sx={{
-              marginLeft: 0,
-              marginTop: theme.spacing(2),
-            }}
-            text="Error when deleting user, please try again later"
-            variant="error"
-          />
-        )}
         <Button
           sx={{
             marginLeft: 0,
@@ -250,8 +219,10 @@ export const UserProfile = (props: UserProfileProps) => {
           {renderProfileSection()}
           {renderDeleteSection()}
           <UserDeleteConfirmationDialog
-            onCancel={onDeleteCancel}
-            onDelete={() => onDeleteConfirm(username)}
+            onSuccess={() => {
+              push(`/account/users`);
+            }}
+            onClose={onDeleteCancel}
             open={deleteConfirmDialogOpen}
             username={username}
           />

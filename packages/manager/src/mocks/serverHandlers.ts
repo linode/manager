@@ -1086,7 +1086,20 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/account/users', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([accountUserFactory.build()])));
+    const accountUsers = [
+      accountUserFactory.build({
+        last_login: { status: 'failed', login_datetime: '2023-10-16T17:04' },
+        tfa_enabled: true,
+      }),
+      accountUserFactory.build({
+        last_login: {
+          status: 'successful',
+          login_datetime: '2023-10-06T12:04',
+        },
+      }),
+      accountUserFactory.build({ last_login: null }),
+    ];
+    return res(ctx.json(makeResourcePage(accountUsers)));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     return res(ctx.json(profileFactory.build()));
