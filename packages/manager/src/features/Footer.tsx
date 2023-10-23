@@ -6,14 +6,13 @@ import {
   SIDEBAR_COLLAPSED_WIDTH,
   SIDEBAR_WIDTH,
 } from 'src/components/SideMenu';
+import { DEVELOPERS_LINK, FEEDBACK_LINK } from 'src/constants';
 
 import packageJson from '../../package.json';
 
 interface Props {
   desktopMenuIsOpen: boolean;
 }
-
-const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
 export const Footer = React.memo((props: Props) => {
   const { desktopMenuIsOpen } = props;
@@ -31,7 +30,7 @@ export const Footer = React.memo((props: Props) => {
             xs: 2,
           },
           paddingY: theme.spacing(2.5),
-          transition: 'all .1s linear', // match the sidebar transition speed
+          transition: 'padding-left .1s linear', // match the sidebar transition speed
         })}
         direction={{ sm: 'row', xs: 'column' }}
         spacing={{ sm: 4, xs: 1 }}
@@ -42,7 +41,7 @@ export const Footer = React.memo((props: Props) => {
         >
           v{packageJson.version}
         </Link>
-        <Link forceCopyColor to="https://developers.linode.com">
+        <Link forceCopyColor to={DEVELOPERS_LINK}>
           API Reference
         </Link>
         <Link forceCopyColor to={FEEDBACK_LINK}>
