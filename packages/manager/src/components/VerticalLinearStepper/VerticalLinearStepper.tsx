@@ -23,7 +23,7 @@ type VerticalLinearStep = {
   label: string;
 };
 
-interface VerticalLinearStepperProps {
+export interface VerticalLinearStepperProps {
   steps: VerticalLinearStep[];
 }
 
@@ -114,9 +114,9 @@ export const VerticalLinearStepper = ({
                       primaryButtonProps={
                         index !== 2
                           ? {
-                              'data-testid': steps[
-                                index + 1
-                              ]?.label.toLocaleLowerCase(),
+                              'data-testid': steps[index + 1]?.label
+                                .toLocaleLowerCase()
+                                .replace(/\s/g, ''),
                               label: `Next: ${steps[index + 1]?.label}`,
                               onClick: () => {
                                 handleNext();

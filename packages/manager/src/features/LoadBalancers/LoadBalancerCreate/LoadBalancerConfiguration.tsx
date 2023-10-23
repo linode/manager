@@ -6,23 +6,26 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
+export const configurationSteps = [
+  {
+    content: <div>TODO: Implement Details step content.</div>,
+    handler: () => null,
+    label: 'Details',
+  },
+  {
+    content: <div>TODO: Implement Service Targets Configuration.</div>,
+    handler: () => null,
+    label: 'Service Targets',
+  },
+  {
+    content: <div>TODO: Implement Routes Confiugataion.</div>,
+    handler: () => null,
+    label: 'Routes',
+  },
+];
+
 export const LoadBalancerConfiguration = () => {
   const theme = useTheme();
-
-  const steps = [
-    {
-      content: <>TODO: Implement Details step content.</>,
-      label: 'Details',
-    },
-    {
-      content: <>TODO: Implement Service Targets Configuration.</>,
-      label: 'Service Targets',
-    },
-    {
-      content: <>TODO: Implement Routes Confiugataion.</>,
-      label: 'Routes',
-    },
-  ];
 
   return (
     <Paper
@@ -45,7 +48,7 @@ export const LoadBalancerConfiguration = () => {
           A Configuration listens on a port and uses Route Rules to forward
           request to Service Target Endpoints
         </Typography>
-        <VerticalLinearStepper steps={steps} />
+        <VerticalLinearStepper steps={configurationSteps} />
       </Stack>
     </Paper>
   );
