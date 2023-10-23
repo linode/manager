@@ -8,6 +8,9 @@ import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { omittedProps } from 'src/utilities/omittedProps';
 
+const DEFAULT_LIST_HEIGHT = 427;
+const DEFAULT_LIST_WIDTH = 416;
+
 export type RemovableItem = {
   id: number;
   label: string;
@@ -75,8 +78,10 @@ export const RemovableSelectionsList = (props: Props) => {
       {selectionData.length > 0 ? (
         <SelectedOptionsList
           sx={{
-            maxHeight: maxHeight ? `${maxHeight}px` : '450px',
-            maxWidth: maxWidth ? `${maxWidth}px` : '416px',
+            maxHeight: maxHeight
+              ? `${maxHeight}px`
+              : `${DEFAULT_LIST_HEIGHT}px`,
+            maxWidth: maxWidth ? `${maxWidth}px` : `${DEFAULT_LIST_WIDTH}px`,
           }}
           isRemovable={isRemovable}
         >
