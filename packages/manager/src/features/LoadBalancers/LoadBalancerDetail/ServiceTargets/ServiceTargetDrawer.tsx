@@ -92,14 +92,15 @@ export const ServiceTargetDrawer = (props: Props) => {
 
   const isEditMode = serviceTarget !== undefined;
 
-  const { mutateAsync: createServiceTarget } = useServiceTargetCreateMutation(
-    loadbalancerId
-  );
+  const {
+    mutateAsync: createServiceTarget,
+    reset: resetCreateServiceTarget,
+  } = useServiceTargetCreateMutation(loadbalancerId);
 
-  const { mutateAsync: updateServiceTarget } = useServiceTargetUpdateMutation(
-    loadbalancerId,
-    serviceTarget?.id ?? -1
-  );
+  const {
+    mutateAsync: updateServiceTarget,
+    reset: resetUpdateServiceTarget,
+  } = useServiceTargetUpdateMutation(loadbalancerId, serviceTarget?.id ?? -1);
 
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
@@ -138,7 +139,8 @@ export const ServiceTargetDrawer = (props: Props) => {
 
   const onClose = () => {
     formik.resetForm();
-    // reset(); // TODO
+    resetCreateServiceTarget();
+    resetUpdateServiceTarget();
     _onClose();
   };
 
@@ -198,8 +200,8 @@ export const ServiceTargetDrawer = (props: Props) => {
           Endpoints
         </Typography>
         <EndpointTable
-          // TODO: fix this
-          // errors={errors={error?.filter((error) = error.field?.startsWith('endpoints'))}}
+          // TODO: Is this error handling possible? Types no longer work to find fields that start with "endpoints".
+          // errors={error?.filter((error) = error.field?.startsWith('endpoints'))}
           // errors={formik.errors.endpoints}
           endpoints={formik.values.endpoints}
           onRemove={onRemoveEndpoint}
