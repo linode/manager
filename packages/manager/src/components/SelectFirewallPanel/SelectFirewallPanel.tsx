@@ -66,7 +66,7 @@ export const SelectFirewallPanel = (props: Props) => {
           errorText={error?.[0].reason}
           label="Assign Firewall"
           loading={isLoading}
-          noOptionsText="Create a Firewall to assign to this Linode."
+          noOptionsText="No Firewalls available"
           options={firewallsDropdownOptions}
           placeholder={'None'}
           value={selectedFirewall}

@@ -381,7 +381,11 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    if (this.props.firewallId != null && this.props.firewallId !== -1) {
+    if (
+      this.props.firewallId !== null &&
+      this.props.firewallId !== undefined &&
+      this.props.firewallId !== -1
+    ) {
       displaySections.push({
         title: 'Firewall Assigned',
       });
