@@ -51,8 +51,13 @@ export const SearchItem = (props: Props) => {
         <>
           <div className={classes.row}>
             <div
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHTML({
+                  sanitizingTier: 'flexible',
+                  text: getLabel(),
+                }),
+              }}
               className={classes.label}
-              dangerouslySetInnerHTML={{ __html: sanitizeHTML(getLabel()) }}
             />
             <Arrow className={classes.icon} />
           </div>

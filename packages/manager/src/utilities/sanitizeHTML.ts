@@ -5,10 +5,11 @@ import { allowedHTMLAttr } from 'src/constants';
 import { getAllowedHTMLTags } from './sanitizeHTML.utils';
 
 import type { AllowedHTMLTagsTier } from './sanitizeHTML.utils';
+import type { IOptions } from 'sanitize-html';
 
 interface SanitizeHTMLOptions {
   allowMoreTags?: string[];
-  options?: sanitize.IOptions;
+  options?: IOptions;
   sanitizingTier: AllowedHTMLTagsTier;
   text: string;
 }
