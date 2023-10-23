@@ -46,7 +46,6 @@ export const VerticalLinearStepper = ({
         backgroundColor: theme.bg.bgPaper,
         display: 'flex',
         margin: 'auto',
-        maxWidth: 800,
         p: `${theme.spacing(2)}`,
       })}
     >
