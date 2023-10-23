@@ -1,7 +1,6 @@
 import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
-import { Stack } from 'src/components/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -11,6 +10,8 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Spacer } from 'src/components/Spacer';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -30,7 +31,6 @@ import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetD
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 
 import type { Filter } from '@linode/api-v4';
-import { Spacer } from 'src/components/Spacer';
 
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
 
