@@ -1,5 +1,6 @@
 /* eslint-disable xss/no-mixed-html */
 import { isURLValid, sanitizeHTML } from './sanitizeHTML';
+import { getAllowedHTMLTags } from './sanitizeHTML.utils';
 
 describe('sanitizeHTML', () => {
   it('should escape non-allowlisted tags', () => {
@@ -94,7 +95,33 @@ describe('sanitizeHTML', () => {
           '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>',
       })
     ).not.toContain('rel="dns-prefetch"');
+    // safe
+    expect(
+      sanitizeHTML({
+        sanitizingTier: 'flexible',
+        text:
+          '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>',
+      })
+    ).not.toContain('rel="dns-prefetch"');
   });
+
+  it('should remove HTML from the output if disallowedTagsMode is "discard"', () => {
+    // safe
+    expect(
+      sanitizeHTML({
+        disallowedTagsMode: 'discard',
+        sanitizingTier: 'strict',
+        text: '<h1>click me</h1>',
+      }).toString()
+    ).not.toContain('h1');
+  });
+});
+
+describe('getAllowedHTMLTags', () => {
+  expect(getAllowedHTMLTags('flexible')).toContain('span');
+  expect(getAllowedHTMLTags('strict')).not.toContain('span');
+  expect(getAllowedHTMLTags('none')).toEqual([]);
+  expect(getAllowedHTMLTags('none', ['code'])).toContain('code');
 });
 
 describe('isURLValid', () => {

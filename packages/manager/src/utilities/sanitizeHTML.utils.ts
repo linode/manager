@@ -3,10 +3,8 @@ import { allowedHTMLTagsFlexible, allowedHTMLTagsStrict } from 'src/constants';
 /**
  * Returns the list of allowed HTML tags for a given tier.
  * Those tiers are usually tied to where an element is rendered.
- * For instance, a title should be rendered with a "strict" tier,
+ * For instance, a title should be rendered with a "strict" or "none" tier,
  * while a description could be rendered with a "flexible" tier, depending on the use case.
- *
- * We also have a "none" tier, which is used when we don't want to allow any HTML tags.
  *
  * This is used for sanitizing both API responses and user input, therefore even the "flexible" tier
  * is restrictive as in not allowing certain tags that could be used for XSS attacks.
@@ -28,6 +26,6 @@ export const getAllowedHTMLTags = (
     case 'flexible':
       return [...allowedHTMLTagsFlexible, ...(allowMoreTags ?? [])];
     case 'none':
-      return [];
+      return allowMoreTags ?? [];
   }
 };
