@@ -129,7 +129,7 @@ export const TCPRuleSchema = BaseRuleSchema.concat(
 );
 
 export const UpdateRouteSchema = object({
-  label: string(),
+  label: string().ensure().min(1, 'Label must not be empty.'),
   protocol: string().oneOf(['tcp', 'http']),
   rules: array().when('protocol', {
     is: 'tcp',

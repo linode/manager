@@ -14,9 +14,9 @@ import { TextField } from 'src/components/TextField';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { Route } from '@linode/api-v4';
+import { UpdateRouteSchema } from '@linode/validation';
 
 interface Props {
   loadbalancerId: number;
@@ -46,10 +46,11 @@ export const EditRouteDrawer = (props: Props) => {
         await updateRoute(values);
         onClose();
       } catch (errors) {
-        scrollErrorIntoView();
         formik.setErrors(getFormikErrorsFromAPIErrors(errors));
       }
     },
+    validateOnChange: true,
+    validationSchema: UpdateRouteSchema,
   });
 
   const onClose = () => {
@@ -65,7 +66,7 @@ export const EditRouteDrawer = (props: Props) => {
       <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
-          errorText={formik.touched.label ? formik.errors.label : undefined}
+          errorText={formik.errors.label}
           label="Route Label"
           name="label"
           onChange={formik.handleChange}
