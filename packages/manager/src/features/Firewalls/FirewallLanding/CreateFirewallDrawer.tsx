@@ -1,4 +1,4 @@
-import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -22,7 +22,9 @@ export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
+  label?: string;
   onClose: () => void;
+  onFirewallCreated?: (firewall: Firewall) => void;
   open: boolean;
 }
 
@@ -39,15 +41,10 @@ const initialValues: CreateFirewallPayload = {
 
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
-    const { onClose, open } = props;
-
-    /**
-     * We'll eventually want to check the read_write firewall
-     * grant here too, but it doesn't exist yet.
-     */
+    // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
+    const { label, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
-
     const { mutateAsync } = useCreateFirewall();
 
     const {
@@ -90,8 +87,11 @@ export const CreateFirewallDrawer = React.memo(
         }
 
         mutateAsync(payload)
-          .then(() => {
+          .then((response) => {
             setSubmitting(false);
+            if (onFirewallCreated) {
+              onFirewallCreated(response);
+            }
             onClose();
           })
           .catch((err) => {
@@ -181,6 +181,7 @@ export const CreateFirewallDrawer = React.memo(
             disabled={userCannotAddFirewall}
             errorText={errors['devices.linodes']}
             helperText={firewallHelperText}
+            label={label}
             multiple
             onBlur={handleBlur}
             optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
