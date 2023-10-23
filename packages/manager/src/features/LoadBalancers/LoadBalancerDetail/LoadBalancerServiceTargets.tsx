@@ -31,6 +31,7 @@ import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetD
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 
 import type { Filter } from '@linode/api-v4';
+import { Spacer } from 'src/components/Spacer';
 
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
 
@@ -118,7 +119,7 @@ export const LoadBalancerServiceTargets = () => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Box flexGrow={1} />
+        <Spacer />
         <Button
           buttonType="primary"
           onClick={() => setIsCreateDrawerOpen(true)}

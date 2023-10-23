@@ -22,6 +22,7 @@ import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
+import { Spacer } from 'src/components/Spacer';
 
 interface Props {
   configuration: Configuration;
@@ -143,7 +144,7 @@ export const ConfigurationAccordion = (props: Props) => {
             <Stack alignItems="center" direction="row">
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
               <TooltipIcon status="help" text="OMG!" />
-              <Box flexGrow={1} />
+              <Spacer />
               <Button>Upload Certificate</Button>
             </Stack>
             <CertificateTable
