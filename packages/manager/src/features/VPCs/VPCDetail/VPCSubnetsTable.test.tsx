@@ -4,8 +4,8 @@ import * as React from 'react';
 import { QueryClient } from 'react-query';
 
 import {
+  subnetAssignedLinodeDataFactory,
   subnetFactory,
-  subnetLinodeInformationFactory,
 } from 'src/factories/subnets';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
@@ -26,9 +26,9 @@ describe('VPC Subnets table', () => {
   it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
     const subnet = subnetFactory.build({
       linodes: [
-        subnetLinodeInformationFactory.build({ id: 1 }),
-        subnetLinodeInformationFactory.build({ id: 2 }),
-        subnetLinodeInformationFactory.build({ id: 3 }),
+        subnetAssignedLinodeDataFactory.build({ id: 1 }),
+        subnetAssignedLinodeDataFactory.build({ id: 2 }),
+        subnetAssignedLinodeDataFactory.build({ id: 3 }),
       ],
     });
     server.use(
@@ -91,7 +91,7 @@ describe('VPC Subnets table', () => {
 
   it('should show linode table head data when table is expanded', async () => {
     const subnet = subnetFactory.build({
-      linodes: [subnetLinodeInformationFactory.build({ id: 1 })],
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
     server.use(
       rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {

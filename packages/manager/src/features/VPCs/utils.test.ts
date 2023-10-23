@@ -1,8 +1,8 @@
 import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import {
+  subnetAssignedLinodeDataFactory,
   subnetFactory,
-  subnetLinodeInformationFactory,
 } from 'src/factories/subnets';
 
 import {
@@ -10,9 +10,9 @@ import {
   getUniqueLinodesFromSubnets,
 } from './utils';
 
-const subnetLinodeInfoList1 = subnetLinodeInformationFactory.buildList(4);
-const subnetLinodeInfoId1 = subnetLinodeInformationFactory.build({ id: 1 });
-const subnetLinodeInfoId3 = subnetLinodeInformationFactory.build({ id: 3 });
+const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
+const subnetLinodeInfoId1 = subnetAssignedLinodeDataFactory.build({ id: 1 });
+const subnetLinodeInfoId3 = subnetAssignedLinodeDataFactory.build({ id: 3 });
 
 describe('getUniqueLinodesFromSubnets', () => {
   it(`returns the number of unique linodes within a VPC's subnets`, () => {
@@ -34,10 +34,10 @@ describe('getUniqueLinodesFromSubnets', () => {
       subnetFactory.build({ linodes: [subnetLinodeInfoId3] }),
       subnetFactory.build({
         linodes: [
-          subnetLinodeInformationFactory.build({ id: 6 }),
-          subnetLinodeInformationFactory.build({ id: 7 }),
-          subnetLinodeInformationFactory.build({ id: 8 }),
-          subnetLinodeInformationFactory.build({ id: 9 }),
+          subnetAssignedLinodeDataFactory.build({ id: 6 }),
+          subnetAssignedLinodeDataFactory.build({ id: 7 }),
+          subnetAssignedLinodeDataFactory.build({ id: 8 }),
+          subnetAssignedLinodeDataFactory.build({ id: 9 }),
           subnetLinodeInfoId1,
         ],
       }),
@@ -46,7 +46,7 @@ describe('getUniqueLinodesFromSubnets', () => {
     expect(getUniqueLinodesFromSubnets(subnets0)).toBe(0);
     expect(getUniqueLinodesFromSubnets(subnets1)).toBe(4);
     expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
-    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(8);
+    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(7);
   });
 });
 

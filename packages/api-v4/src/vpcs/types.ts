@@ -30,7 +30,7 @@ export interface CreateSubnetPayload {
 
 export interface Subnet extends CreateSubnetPayload {
   id: number;
-  linodes: SubnetLinodeInformation[];
+  linodes: SubnetAssignedLinodeData[];
   created: string;
   updated: string;
 }
@@ -39,9 +39,9 @@ export interface ModifySubnetPayload {
   label: string;
 }
 
-export type SubnetInterfaceInformation = Pick<Interface, 'active' | 'id'>;
+export type SubnetLinodeInterfaceData = Pick<Interface, 'active' | 'id'>;
 
-export interface SubnetLinodeInformation {
+export interface SubnetAssignedLinodeData {
   id: number;
-  interfaces: SubnetInterfaceInformation[];
+  interfaces: SubnetLinodeInterfaceData[];
 }
