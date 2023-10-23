@@ -1,39 +1,63 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { useAccountUserDeleteMutation } from 'src/queries/accountUsers';
 
 interface Props {
-  onCancel: () => void;
-  onDelete: () => void;
+  onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   username: string;
 }
 
-export const UserDeleteConfirmationDialog = ({
-  onCancel,
-  onDelete,
-  open,
-  username,
-}: Props) => {
+export const UserDeleteConfirmationDialog = (props: Props) => {
+  const { onClose: _onClose, onSuccess, open, username } = props;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const {
+    error,
+    mutateAsync: deleteUser,
+    reset,
+    isLoading,
+  } = useAccountUserDeleteMutation(username);
+
+  const onClose = () => {
+    reset(); // resets the error state of the useMutation
+    _onClose();
+  };
+
+  const onDelete = async () => {
+    await deleteUser();
+    enqueueSnackbar(`User ${username} has been deleted successfully.`, {
+      variant: 'success',
+    });
+    if (onSuccess) {
+      onSuccess();
+    }
+    onClose();
+  };
+
   return (
     <ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
-            'data-testid': 'confirm-delete',
             label: 'Delete',
+            loading: isLoading,
             onClick: onDelete,
           }}
           secondaryButtonProps={{
-            'data-testid': 'cancel-delete',
             label: 'Cancel',
-            onClick: onCancel,
+            onClick: onClose,
           }}
           style={{ padding: 0 }}
         />
       }
-      onClose={onCancel}
+      error={error?.[0].reason}
+      onClose={onClose}
       open={open}
       title="Confirm Deletion"
     >
