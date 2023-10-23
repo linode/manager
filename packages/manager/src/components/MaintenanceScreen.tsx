@@ -1,5 +1,5 @@
 import BuildIcon from '@mui/icons-material/Build';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
