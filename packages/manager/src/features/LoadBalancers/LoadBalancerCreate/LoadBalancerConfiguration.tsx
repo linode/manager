@@ -1,7 +1,9 @@
+import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
 export const LoadBalancerConfiguration = () => {
@@ -31,7 +33,20 @@ export const LoadBalancerConfiguration = () => {
       }}
       data-qa-label-header
     >
-      <VerticalLinearStepper steps={steps} />
+      <Typography
+        data-qa-tp-title
+        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+        variant="h2"
+      >
+        Configuration -{' '}
+      </Typography>
+      <Stack>
+        <Typography sx={(theme) => ({ marginBottom: theme.spacing(1) })}>
+          A Configuration listens on a port and uses Route Rules to forward
+          request to Service Target Endpoints
+        </Typography>
+        <VerticalLinearStepper steps={steps} />
+      </Stack>
     </Paper>
   );
 };

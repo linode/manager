@@ -48,6 +48,6 @@ export const StyledColorlibConnector = styled(StepConnector, {
   '& .MuiStepConnector-line': {
     borderColor: '#eaeaf0',
     borderLeftWidth: '3px',
-    minHeight: '28px',
+    minHeight: '16px',
   },
 }));
