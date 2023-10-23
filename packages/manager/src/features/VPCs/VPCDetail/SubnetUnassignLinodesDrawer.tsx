@@ -320,22 +320,24 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               onRemove={handleRemoveLinode}
               selectionData={selectedLinodes}
             />
-            <DownloadCSV
-              sx={{
-                alignItems: 'flex-start',
-                display: 'flex',
-                gap: 1,
-                marginTop: 2,
-                textAlign: 'left',
-              }}
-              buttonType="styledLink"
-              csvRef={csvRef}
-              data={selectedLinodes}
-              filename={`linodes-unassigned-${formattedDate}.csv`}
-              headers={SUBNET_LINODE_CSV_HEADERS}
-              onClick={downloadCSV}
-              text={'Download List of Unassigned Linodes (.csv)'}
-            />
+            {selectedLinodes.length > 0 && (
+              <DownloadCSV
+                sx={{
+                  alignItems: 'flex-start',
+                  display: 'flex',
+                  gap: 1,
+                  marginTop: 2,
+                  textAlign: 'left',
+                }}
+                buttonType="styledLink"
+                csvRef={csvRef}
+                data={selectedLinodes}
+                filename={`linodes-unassigned-${formattedDate}.csv`}
+                headers={SUBNET_LINODE_CSV_HEADERS}
+                onClick={downloadCSV}
+                text={'Download List of Unassigned Linodes (.csv)'}
+              />
+            )}
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'unassign-submit-button',

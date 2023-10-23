@@ -133,6 +133,7 @@ const SelectedOptionsHeader = styled('h4', {
   color: theme.color.headline,
   fontFamily: theme.font.bold,
   fontSize: '14px',
+  fontWeight: 300,
   textTransform: 'initial',
 }));
 
