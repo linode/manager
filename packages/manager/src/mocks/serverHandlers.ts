@@ -377,7 +377,7 @@ const aglb = [
   // Service Targets
   rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     const service_target = serviceTargetFactory.build({
-      ca_certificate: 'tls-certificate',
+      ca_certificate: 'certificate-1',
       load_balancing_policy: 'random',
     });
     const service_targets = serviceTargetFactory.buildList(3);

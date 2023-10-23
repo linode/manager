@@ -156,11 +156,6 @@ describe('Akamai Global Load Balancer service targets', () => {
           .click()
           .type(mockServiceTarget.label);
 
-        // Confirm endpoint empty state text is visible without any endpoints.
-        cy.findByText('No endpoints to display.')
-          .scrollIntoView()
-          .should('be.visible');
-
         // Fill out the first endpoint using the mocked Linode's label.
         cy.findByText('Linode or Public IP Address')
           .should('be.visible')
@@ -344,7 +339,15 @@ describe('Akamai Global Load Balancer service targets', () => {
           .should('be.visible');
 
         // Confirm the endpoint can be deleted.
-        // TODO?
+        cy.findByLabelText(
+          `Remove Endpoint ${mockServiceTarget.endpoints[0].ip}:${mockServiceTarget.endpoints[0].port}`,
+          { exact: false }
+        ).click();
+
+        // Confirm endpoint empty state text is visible without any endpoints.
+        cy.findByText('No endpoints to display.')
+          .scrollIntoView()
+          .should('be.visible');
 
         // Select the certificate mocked for this load balancer.
         cy.findByLabelText('Certificate')
