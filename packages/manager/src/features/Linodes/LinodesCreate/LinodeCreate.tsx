@@ -813,7 +813,7 @@ export class LinodeCreate extends React.PureComponent<
         vpc_id: this.props.selectedVPCId,
       };
 
-      interfaces.push(vpcInterfaceData);
+      interfaces.unshift(vpcInterfaceData);
     }
 
     if (
@@ -828,11 +828,6 @@ export class LinodeCreate extends React.PureComponent<
         label: this.props.vlanLabel,
         purpose: 'vlan',
       });
-
-      // If there are no VPC interfaces, insert a default public interface in interfaces[0]
-      if (!interfaces.some((_interface) => _interface.purpose === 'vpc')) {
-        interfaces.unshift(defaultPublicInterface);
-      }
     }
 
     if (this.props.userData) {
@@ -841,9 +836,33 @@ export class LinodeCreate extends React.PureComponent<
       };
     }
 
+    const vpcAssigned = interfaces.some(
+      (_interface) => _interface.purpose === 'vpc'
+    );
+    const vlanAssigned = interfaces.some(
+      (_interface) => _interface.purpose === 'vlan'
+    );
+
     // Only submit 'interfaces' in the payload if there are VPCs
     // or VLANs
     if (interfaces.length > 0) {
+      // Determine position of the default public interface
+
+      // Case 1: VLAN assigned, no VPC assigned
+      if (!vpcAssigned) {
+        interfaces.unshift(defaultPublicInterface);
+      }
+
+      // Case 2: VPC assigned, no VLAN assigned, "Private IP" enabled
+      if (!vlanAssigned && this.props.privateIPEnabled) {
+        interfaces.push(defaultPublicInterface);
+      }
+
+      // Case 3: VPC and VLAN assigned + Private IP enabled
+      if (vpcAssigned && vlanAssigned && this.props.privateIPEnabled) {
+        interfaces.push(defaultPublicInterface);
+      }
+
       payload['interfaces'] = interfaces;
     }
 
