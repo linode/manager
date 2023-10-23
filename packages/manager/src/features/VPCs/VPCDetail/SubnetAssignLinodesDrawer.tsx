@@ -389,7 +389,7 @@ export const SubnetAssignLinodesDrawer = (
           />
           <TooltipIcon
             text={
-              'A range of non-internet facing IP addresses used in an internal network.'
+              'A VPC IPv4 is the private IP address for this Linode in the VPC.'
             }
             status="help"
           />
