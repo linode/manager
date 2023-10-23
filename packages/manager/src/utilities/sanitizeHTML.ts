@@ -9,6 +9,7 @@ import type { IOptions } from 'sanitize-html';
 
 interface SanitizeHTMLOptions {
   allowMoreTags?: string[];
+  disallowedTagsMode?: IOptions['disallowedTagsMode'];
   options?: IOptions;
   sanitizingTier: AllowedHTMLTagsTier;
   text: string;
@@ -16,6 +17,7 @@ interface SanitizeHTMLOptions {
 
 export const sanitizeHTML = ({
   allowMoreTags,
+  disallowedTagsMode = 'escape',
   options = {},
   sanitizingTier,
   text,
@@ -31,7 +33,7 @@ export const sanitizeHTML = ({
       span: ['version'],
     },
     allowedTags: getAllowedHTMLTags(sanitizingTier, allowMoreTags),
-    disallowedTagsMode: 'escape',
+    disallowedTagsMode,
     transformTags: {
       // This transformation function does the following to anchor tags:
       // 1. Turns the <a /> into a <span /> if the "href" is invalid

@@ -117,6 +117,8 @@ export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 export const IMAGE_DEFAULT_LIMIT = 6144;
 
 export const allowedHTMLTagsStrict: string[] = [
+  'a',
+  'p',
   'b',
   'del',
   'em',
@@ -127,7 +129,6 @@ export const allowedHTMLTagsStrict: string[] = [
 
 export const allowedHTMLTagsFlexible: string[] = [
   ...allowedHTMLTagsStrict,
-  'a',
   'abbr',
   'acronym',
   'blockquote',
@@ -136,7 +137,6 @@ export const allowedHTMLTagsFlexible: string[] = [
   'li',
   'ol',
   'ul',
-  'p',
   'pre',
   'h1',
   'h2',
