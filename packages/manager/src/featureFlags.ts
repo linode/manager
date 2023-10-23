@@ -50,6 +50,7 @@ export interface Flags {
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
+  objDcSpecificPricing: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   productInformationBanners: ProductInformationBannerFlag[];
