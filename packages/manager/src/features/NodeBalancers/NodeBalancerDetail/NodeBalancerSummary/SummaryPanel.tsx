@@ -2,10 +2,11 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { Paper } from 'src/components/Paper';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
@@ -13,6 +14,7 @@ import {
 } from 'src/queries/nodebalancers';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+// import { CircleProgress } from 'src/components/CircleProgress';
 
 export const SummaryPanel = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -20,6 +22,16 @@ export const SummaryPanel = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
   const { data: regions } = useRegionsQuery();
+
+  const {
+    data: attachedFirewallData,
+    // error,
+    // isLoading,
+  } = useNodeBalancersFirewallsQuery(id);
+  // console.log('#####################', attachedFirewallData?.data);
+  const linkText = attachedFirewallData?.data[0]?.label;
+  const linkID = attachedFirewallData?.data[0]?.id;
+  const displayFirewallLink = attachedFirewallData?.data?.length ? true : false;
 
   const region = regions?.find((r) => r.id === nodebalancer?.region);
 
@@ -43,6 +55,8 @@ export const SummaryPanel = () => {
 
   return (
     <StyledRootDiv>
+
+
       <StyledSummarySectionWrapper>
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
@@ -90,6 +104,19 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
+
+      {displayFirewallLink ? (
+        <StyledSummarySection>
+          <StyledTitle data-qa-title variant="h3">
+            Firewall
+          </StyledTitle>
+          <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+            {linkText}
+          </Link>
+        </StyledSummarySection>)
+        : null}
+
+
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           IP Addresses
@@ -105,6 +132,8 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
+
+
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           Tags

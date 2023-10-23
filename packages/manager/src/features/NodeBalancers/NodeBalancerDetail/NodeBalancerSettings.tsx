@@ -5,15 +5,17 @@ import { useParams } from 'react-router-dom';
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { TextField } from 'src/components/TextField';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
+import { TextField } from 'src/components/TextField';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
+import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
@@ -21,6 +23,11 @@ export const NodeBalancerSettings = () => {
   const id = Number(nodeBalancerId);
 
   const { data: nodebalancer } = useNodeBalancerQuery(id);
+
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  console.log('#####################', attachedFirewallData?.data);
+  const displayFirewallInfoText = attachedFirewallData?.data?.length ? false : true;
+  console.log('$$$$$$$$$$$$', displayFirewallInfoText);
 
   const {
     error: labelError,
@@ -84,6 +91,12 @@ export const NodeBalancerSettings = () => {
         >
           Save
         </Button>
+      </Accordion>
+      <Accordion defaultExpanded heading="Firewalls">
+        <NodeBalancerFirewalls
+          displayFirewallInfoText={displayFirewallInfoText}
+          nodeBalancerID={id}
+        />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
