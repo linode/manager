@@ -114,6 +114,10 @@ export const VerticalLinearStepper = ({
                       primaryButtonProps={
                         index !== 2
                           ? {
+                              /** Generate a 'data-testid' attribute value based on the label of the next step.
+                               * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
+                               * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                               */
                               'data-testid': steps[index + 1]?.label
                                 .toLocaleLowerCase()
                                 .replace(/\s/g, ''),

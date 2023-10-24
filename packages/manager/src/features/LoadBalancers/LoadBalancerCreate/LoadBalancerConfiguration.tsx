@@ -8,17 +8,17 @@ import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/Vert
 
 export const configurationSteps = [
   {
-    content: <div>TODO: Implement Details step content.</div>,
+    content: <div>TODO: AGLB - Implement Details step content.</div>,
     handler: () => null,
     label: 'Details',
   },
   {
-    content: <div>TODO: Implement Service Targets Configuration.</div>,
+    content: <div>TODO: AGLB - Implement Service Targets Configuration.</div>,
     handler: () => null,
     label: 'Service Targets',
   },
   {
-    content: <div>TODO: Implement Routes Confiugataion.</div>,
+    content: <div>TODO: AGLB - Implement Routes Confiugataion.</div>,
     handler: () => null,
     label: 'Routes',
   },

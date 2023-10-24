@@ -58,7 +58,7 @@ export const LoadBalancerRegions = () => {
               marginBottom={theme.spacing(1)}
               spacing={2}
             >
-              <Grid className="py0">
+              <Grid sx={{ paddingBottom: 0, paddingTop: 0 }}>
                 <Flag country={region.country as Lowercase<Country>} />
               </Grid>
               <Grid>
