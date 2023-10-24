@@ -56,8 +56,8 @@ export const getInitialValuesFromUserPreferences = (
   preferenceKey: string,
   preferences: ManagerPreferences,
   params: Record<string, string>,
-  defaultOrderBy: string,
-  defaultOrder: Order,
+  defaultOrderBy?: string,
+  defaultOrder?: Order,
   prefix?: string
 ) => {
   /**
@@ -162,12 +162,16 @@ export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
     props.preferenceKey ?? '',
     preferences ?? {},
     params as Record<string, string>,
-    props.orderBy ?? 'label',
-    props.order ?? 'desc'
+    props.orderBy,
+    props.order
   );
 
-  const [orderBy, setOrderBy] = React.useState<string>(initialValues.orderBy);
-  const [order, setOrder] = React.useState<Order>(initialValues.order as Order);
+  const [orderBy, setOrderBy] = React.useState<string>(
+    initialValues.orderBy ?? 'label'
+  );
+  const [order, setOrder] = React.useState<Order>(
+    (initialValues.order as Order) ?? 'desc'
+  );
 
   // Stash a copy of the previous data for equality check.
   const prevData = usePrevious(props.data);

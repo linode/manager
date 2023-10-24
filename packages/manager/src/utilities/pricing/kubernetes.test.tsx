@@ -47,7 +47,7 @@ describe('helper functions', () => {
           type: badPool.type,
           types,
         })
-      ).toBe(0);
+      ).toBe(undefined);
     });
   });
 

@@ -45,7 +45,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { HAControlPlane } from './HAControlPlane';
@@ -247,17 +247,10 @@ export const CreateCluster = () => {
    * @returns dynamically calculated high availability price by region
    */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    if (!regionId) {
-      return undefined;
-    } else {
-      return parseFloat(
-        getDCSpecificPrice({
-          basePrice: LKE_HA_PRICE,
-          flags,
-          regionId,
-        })
-      );
-    }
+    const dcSpecificPrice = regionId
+      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, flags, regionId })
+      : undefined;
+    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
   const showPricingNotice =

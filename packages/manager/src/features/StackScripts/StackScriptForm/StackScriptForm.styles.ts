@@ -7,11 +7,12 @@ import { TextField } from 'src/components/TextField';
 
 export const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',
-})({
+})(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
+  marginTop: theme.spacing(3),
   paddingBottom: 0,
-});
+}));
 
 export const StyledGridWithTips = styled(Grid, { label: 'StyledGridWithTips' })(
   ({ theme }) => ({

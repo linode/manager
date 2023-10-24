@@ -40,10 +40,13 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import {
+  getDCSpecificPrice,
+  renderMonthlyPriceToCorrectDecimalPlace,
+} from 'src/utilities/pricing/dynamicPricing';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
@@ -426,7 +429,9 @@ const NodeBalancerCreate = () => {
   });
 
   if (nodeBalancerFields.region) {
-    summaryItems.unshift({ title: `$${price}/month` });
+    summaryItems.unshift({
+      title: `$${renderMonthlyPriceToCorrectDecimalPlace(Number(price))}/month`,
+    });
   }
 
   return (
