@@ -100,6 +100,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   makeInitialRequests = async () => {
     // When loading Lish we avoid all this extra data loading
     if (window.location?.pathname?.match(/linodes\/[0-9]+\/lish/)) {
+      this.setState({ showChildren: true });
       return;
     }
 
