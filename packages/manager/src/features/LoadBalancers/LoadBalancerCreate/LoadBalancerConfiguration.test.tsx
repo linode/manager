@@ -11,15 +11,15 @@ describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
     renderWithTheme(<LoadBalancerConfiguration />);
     expect(
-      screen.getByText('TODO: AGLB -  Implement Details step content.')
+      screen.getByText('TODO: AGLB - Implement Details step content.')
     ).toBeInTheDocument();
     expect(
       screen.queryByText(
-        'TODO: AGLB -  Implement Service Targets Configuration.'
+        'TODO: AGLB - Implement Service Targets Configuration.'
       )
     ).toBeNull();
     expect(
-      screen.queryByText('TODO: AGLB -  Implement Routes Configuration.')
+      screen.queryByText('TODO: AGLB - Implement Routes Confiugataion.')
     ).toBeNull();
     expect(screen.getByText('Next: Service Targets')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Details')).toBeNull();
@@ -28,13 +28,13 @@ describe('LoadBalancerConfiguration', () => {
     renderWithTheme(<LoadBalancerConfiguration />);
     userEvent.click(screen.getByTestId('servicetargets'));
     expect(
-      screen.getByText('TODO: AGLB -  Implement Service Targets Configuration.')
+      screen.getByText('TODO: AGLB - Implement Service Targets Configuration.')
     ).toBeInTheDocument();
     expect(
-      screen.queryByText('TODO: AGLB -  Implement Details step content.')
+      screen.queryByText('TODO: AGLB - Implement Details step content.')
     ).toBeNull();
     expect(
-      screen.queryByText('TODO: AGLB -  Implement Routes Configuration.')
+      screen.queryByText('TODO: AGLB - Implement Routes Confiugataion.')
     ).toBeNull();
     expect(screen.getByText('Next: Routes')).toBeInTheDocument();
     expect(screen.getByText('Previous: Details')).toBeInTheDocument();
@@ -45,15 +45,15 @@ describe('LoadBalancerConfiguration', () => {
     userEvent.click(screen.getByTestId('servicetargets'));
     userEvent.click(screen.getByTestId('routes'));
     expect(
-      screen.queryByText('TODO: AGLB -  Implement Details step content.')
+      screen.queryByText('TODO: AGLB - Implement Details step content.')
     ).toBeNull();
     expect(
       screen.queryByText(
-        'TODO: AGLB -  Implement Service Targets Configuration.'
+        'TODO: AGLB - Implement Service Targets Configuration.'
       )
     ).toBeNull();
     expect(
-      screen.getByText('TODO: AGLB -  Implement Routes Configuration.')
+      screen.getByText('TODO: AGLB - Implement Routes Confiugataion.')
     ).toBeInTheDocument();
     expect(screen.getByText('Previous: Service Targets')).toBeInTheDocument();
   });
@@ -62,7 +62,7 @@ describe('LoadBalancerConfiguration', () => {
     userEvent.click(screen.getByTestId('servicetargets'));
     userEvent.click(screen.getByText('Previous: Details'));
     expect(
-      screen.getByText('TODO: AGLB -  Implement Details step content.')
+      screen.getByText('TODO: AGLB - Implement Details step content.')
     ).toBeInTheDocument();
   });
 });
