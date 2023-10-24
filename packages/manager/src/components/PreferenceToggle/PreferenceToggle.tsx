@@ -1,7 +1,5 @@
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-type PreferenceValue = boolean | number | string;
-
 export interface PreferenceToggleProps<T> {
   preference: T;
   togglePreference: () => T;
@@ -14,7 +12,7 @@ interface RenderChildrenProps<T> {
 
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
-interface Props<T = PreferenceValue> {
+interface Props<T> {
   children: RenderChildren<T>;
   initialSetCallbackFn?: (value: T) => void;
   preferenceKey: string;
@@ -23,7 +21,7 @@ interface Props<T = PreferenceValue> {
   value?: T;
 }
 
-export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
+export const PreferenceToggle = <T,>(props: Props<T>) => {
   const {
     children,
     preferenceKey,
@@ -40,6 +38,7 @@ export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
     let newPreferenceToSet: T;
 
     if (preferences?.[preferenceKey] === undefined) {
+      // Because we default to preferenceOptions[0], toggling with no preference should pick preferenceOptions[1]
       newPreferenceToSet = preferenceOptions[1];
     } else if (preferences[preferenceKey] === preferenceOptions[0]) {
       newPreferenceToSet = preferenceOptions[1];
