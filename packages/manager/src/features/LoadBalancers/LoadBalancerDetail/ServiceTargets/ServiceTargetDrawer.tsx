@@ -1,6 +1,7 @@
 import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
+import { UpdateServiceTargetSchema } from '@linode/validation';
 import Stack from '@mui/material/Stack';
-import { useFormik } from 'formik';
+import { useFormik, yupToFormErrors } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -117,6 +118,19 @@ export const ServiceTargetDrawer = (props: Props) => {
         scrollErrorIntoView();
       }
     },
+    validate(values) {
+      // We must use `validate` instead of validationSchema because Formik decided to convert
+      // "" to undefined before passing the values to yup. This makes it hard to validate `label`.
+      // See https://github.com/jaredpalmer/formik/issues/805
+      try {
+        UpdateServiceTargetSchema.validateSync(values, { abortEarly: false });
+        return {};
+      } catch (error) {
+        return yupToFormErrors(error);
+      }
+    },
+    validateOnBlur: false,
+    validateOnChange: !errorUpdateServiceTarget || !errorCreateServiceTarget,
   });
 
   const onClose = () => {
