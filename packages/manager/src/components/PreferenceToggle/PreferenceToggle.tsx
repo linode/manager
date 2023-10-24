@@ -191,7 +191,5 @@ export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
     return newPreferenceToSet;
   };
 
-  return typeof children === 'function'
-    ? children({ preference: currentlySetPreference, togglePreference })
-    : null;
+  return children({ preference: currentlySetPreference, togglePreference });
 };
