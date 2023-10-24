@@ -1,6 +1,6 @@
 import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
 import Stack from '@mui/material/Stack';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -24,10 +24,7 @@ import {
   useServiceTargetCreateMutation,
   useServiceTargetUpdateMutation,
 } from 'src/queries/aglb/serviceTargets';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
@@ -93,11 +90,13 @@ export const ServiceTargetDrawer = (props: Props) => {
   const isEditMode = serviceTarget !== undefined;
 
   const {
+    error: errorCreateServiceTarget,
     mutateAsync: createServiceTarget,
     reset: resetCreateServiceTarget,
   } = useServiceTargetCreateMutation(loadbalancerId);
 
   const {
+    error: errorUpdateServiceTarget,
     mutateAsync: updateServiceTarget,
     reset: resetUpdateServiceTarget,
   } = useServiceTargetUpdateMutation(loadbalancerId, serviceTarget?.id ?? -1);
@@ -105,14 +104,7 @@ export const ServiceTargetDrawer = (props: Props) => {
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
-    async onSubmit(
-      values: ServiceTargetPayload,
-      {
-        setErrors,
-        setStatus,
-        setSubmitting,
-      }: FormikHelpers<ServiceTargetPayload>
-    ) {
+    async onSubmit(values: ServiceTargetPayload) {
       try {
         if (isEditMode) {
           await updateServiceTarget(values);
@@ -120,18 +112,8 @@ export const ServiceTargetDrawer = (props: Props) => {
           await createServiceTarget(values);
         }
         onClose();
-      } catch (error) {
-        setSubmitting(false);
-
-        const defaultMessage = `Unable to ${
-          isEditMode ? 'edit' : 'create'
-        } service target. Please try again later.`;
-        const mapErrorToStatus = (generalError: string) =>
-          setStatus({ generalError });
-
-        setSubmitting(false);
-        handleFieldErrors(setErrors, error);
-        handleGeneralErrors(mapErrorToStatus, error, defaultMessage);
+      } catch (errors) {
+        formik.setErrors(getFormikErrorsFromAPIErrors(errors));
         scrollErrorIntoView();
       }
     },
@@ -153,7 +135,31 @@ export const ServiceTargetDrawer = (props: Props) => {
     formik.setFieldValue('endpoints', formik.values.endpoints);
   };
 
-  const generalError = formik.status?.generalError;
+  const generalCreateErrors = errorCreateServiceTarget
+    ?.filter((error) => {
+      if (!error.field) {
+        return true;
+      }
+      if (error.field?.startsWith('endpoints')) {
+        return true;
+      }
+      return false;
+    })
+    .map((error) => error.reason)
+    .join(', ');
+
+  const generalUpdateErrors = errorUpdateServiceTarget
+    ?.filter((error) => {
+      if (!error.field) {
+        return true;
+      }
+      if (error.field?.startsWith('endpoints')) {
+        return true;
+      }
+      return false;
+    })
+    .map((error) => error.reason)
+    .join(', ');
 
   const drawerTitle = isEditMode
     ? `Edit ${serviceTarget.label}`
@@ -162,7 +168,12 @@ export const ServiceTargetDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>
       <form onSubmit={formik.handleSubmit}>
-        {generalError && <Notice text={generalError} variant="error" />}
+        {generalCreateErrors && (
+          <Notice text={generalCreateErrors} variant="error" />
+        )}
+        {generalUpdateErrors && (
+          <Notice text={generalUpdateErrors} variant="error" />
+        )}
         <TextField
           errorText={formik.errors.label}
           label="Service Target Label"
@@ -200,9 +211,6 @@ export const ServiceTargetDrawer = (props: Props) => {
           Endpoints
         </Typography>
         <EndpointTable
-          // TODO: Is this error handling possible? Types no longer work to find fields that start with "endpoints".
-          // errors={error?.filter((error) = error.field?.startsWith('endpoints'))}
-          // errors={formik.errors.endpoints}
           endpoints={formik.values.endpoints}
           onRemove={onRemoveEndpoint}
         />

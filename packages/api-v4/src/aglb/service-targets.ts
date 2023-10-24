@@ -8,7 +8,10 @@ import Request, {
 import { Filter, Params, ResourcePage } from '../types';
 import { BETA_API_ROOT } from '../constants';
 import type { ServiceTarget, ServiceTargetPayload } from './types';
-import { CreateServiceTargetSchema } from '@linode/validation';
+import {
+  CreateServiceTargetSchema,
+  UpdateServiceTargetSchema,
+} from '@linode/validation';
 
 /**
  * getLoadbalancerServiceTargets
@@ -84,7 +87,7 @@ export const updateLoadbalancerServiceTarget = (
         loadbalancerId
       )}/service-targets/${encodeURIComponent(serviceTargetId)}`
     ),
-    setData(data, CreateServiceTargetSchema), // TODO
+    setData(data, UpdateServiceTargetSchema),
     setMethod('PUT')
   );
 
