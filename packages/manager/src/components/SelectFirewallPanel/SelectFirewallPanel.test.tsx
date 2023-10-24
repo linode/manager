@@ -37,7 +37,7 @@ describe('SelectFirewallPanel', () => {
   it('should open a Create Firewall drawer when the link is clicked', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
-        handleFirewallChange={jest.fn()}
+        handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
       />,
