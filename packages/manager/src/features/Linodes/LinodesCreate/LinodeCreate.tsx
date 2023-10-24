@@ -858,8 +858,11 @@ export class LinodeCreate extends React.PureComponent<
         interfaces.push(defaultPublicInterface);
       }
 
-      // Case 3: VPC and VLAN assigned + Private IP enabled
-      if (vpcAssigned && vlanAssigned && this.props.privateIPEnabled) {
+      /*
+        Case 3: VPC and VLAN assigned (this is inclusive
+        of whether the user enables "Private IP" or not)
+      */
+      if (vpcAssigned && vlanAssigned) {
         interfaces.push(defaultPublicInterface);
       }
 
