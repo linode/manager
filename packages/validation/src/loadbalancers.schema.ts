@@ -129,17 +129,7 @@ export const TCPRuleSchema = BaseRuleSchema.concat(
 );
 
 export const UpdateRouteSchema = object({
-  label: string(),
-  protocol: string().oneOf(['tcp', 'http']),
-  rules: array().when('protocol', {
-    is: 'tcp',
-    then: (o) => o.of(TCPRuleSchema),
-    otherwise: (o) => o.of(HTTPRuleSchema),
-  }),
-});
-
-export const TestUpdateRouteSchema = object({
-  label: string(),
+  label: string().min(1, 'Label must not be empty.'),
   protocol: string().oneOf(['tcp', 'http']),
   rules: array().when('protocol', {
     is: 'tcp',
