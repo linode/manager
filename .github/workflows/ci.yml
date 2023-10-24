@@ -165,7 +165,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4
       - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run test:ci
+      - run: yarn workspace linode-manager run test
 
   typecheck-manager:
     runs-on: ubuntu-latest

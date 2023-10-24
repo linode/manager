@@ -54,7 +54,7 @@ jobs:
         run: yarn
 
       - name: Yarn test with coverage
-        run: yarn workspace linode-manager run test:ci
+        run: yarn workspace linode-manager run test:coverage
 
       - name: Run current branch coverage and write to a file
         run: |
