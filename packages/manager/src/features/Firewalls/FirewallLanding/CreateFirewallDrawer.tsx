@@ -37,7 +37,7 @@ export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
-  label?: string;
+  inCreateFlow?: boolean;
   onClose: () => void;
   onFirewallCreated?: (firewall: Firewall) => void;
   open: boolean;
@@ -58,7 +58,7 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
-    const { label, onClose, onFirewallCreated, open } = props;
+    const { inCreateFlow, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
@@ -275,7 +275,7 @@ export const CreateFirewallDrawer = React.memo(
             disabled={userCannotAddFirewall || !!linodeError}
             errorText={errors['devices.linodes']}
             helperText={FIREWALL_HELPER_TEXT}
-            label={label ? label : 'Linodes'}
+            label={inCreateFlow ? 'Additional Linodes (Optional)' : 'Linodes'}
             loading={linodeIsLoading}
             multiple
             noMarginTop={false}
@@ -284,6 +284,11 @@ export const CreateFirewallDrawer = React.memo(
             value={selectedLinodes}
           />
           <Autocomplete
+            label={
+              inCreateFlow
+                ? 'Additional NodeBalancers (Optional)'
+                : 'NodeBalancers'
+            }
             onChange={(_, nodebalancers) => {
               setFieldValue(
                 'devices.nodebalancers',
@@ -296,7 +301,6 @@ export const CreateFirewallDrawer = React.memo(
             })}
             disabled={userCannotAddFirewall || !!nodebalancerError}
             errorText={errors['devices.nodebalancers']}
-            label={label ? label : 'NodeBalancers'}
             loading={nodebalancerIsLoading}
             multiple
             noMarginTop={false}
