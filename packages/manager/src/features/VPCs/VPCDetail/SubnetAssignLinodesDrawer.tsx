@@ -108,7 +108,7 @@ export const SubnetAssignLinodesDrawer = (
   // assigned to this subnet
   const findUnassignedLinodes = React.useCallback(() => {
     return linodes?.filter((linode) => {
-      return !subnet?.linodes.includes(linode.id);
+      return !subnet?.linodes.some((linodeInfo) => linodeInfo.id === linode.id);
     });
   }, [subnet, linodes]);
 
@@ -232,7 +232,9 @@ export const SubnetAssignLinodesDrawer = (
     // Check if the selected Linode is already assigned to the subnet
     if (
       values.selectedLinode &&
-      subnet?.linodes.includes(values.selectedLinode.id)
+      subnet?.linodes.some(
+        (linodeInfo) => linodeInfo.id === values.selectedLinode?.id
+      )
     ) {
       const configId = getConfigId(linodeConfigs, values.selectedConfig);
 
@@ -280,7 +282,9 @@ export const SubnetAssignLinodesDrawer = (
     // we want to remove it from assignedLinodesAndConfigData
     const isLinodeToRemoveValid =
       removedLinodeId.current !== -1 &&
-      !subnet?.linodes.includes(removedLinodeId.current) &&
+      !subnet?.linodes.some(
+        (linodeInfo) => linodeInfo.id === removedLinodeId.current
+      ) &&
       !!assignedLinodesAndConfigData.find(
         (data) => data.id === removedLinodeId.current
       );

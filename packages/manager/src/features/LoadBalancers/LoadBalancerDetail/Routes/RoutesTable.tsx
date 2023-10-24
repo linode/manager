@@ -24,18 +24,22 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
-import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
-import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
-import { DeleteRuleDialog } from './Routes/DeleteRuleDialog';
-import { EditRouteDrawer } from './Routes/EditRouteDrawer';
-import { RuleDrawer } from './Routes/RuleDrawer';
-import { RulesTable } from './RulesTable';
+import { RulesTable } from '../RulesTable';
+import { CreateRouteDrawer } from './CreateRouteDrawer';
+import { DeleteRouteDialog } from './DeleteRouteDialog';
+import { DeleteRuleDialog } from './DeleteRuleDialog';
+import { EditRouteDrawer } from './EditRouteDrawer';
+import { RuleDrawer } from './RuleDrawer';
 
-import type { Filter, Route } from '@linode/api-v4';
+import type { Configuration, Filter, Route } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 
-export const LoadBalancerRoutes = () => {
+interface Props {
+  configuredRoutes?: Configuration['routes'];
+}
+
+export const RoutesTable = ({ configuredRoutes }: Props) => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -66,6 +70,14 @@ export const LoadBalancerRoutes = () => {
     filter['label'] = { '+contains': query };
   }
 
+  /**
+   * If configuredRoutes is passed, it filters the configured routes form API
+   *  Otherwise, it fetches routes without filter in the routes table.
+   */
+  if (configuredRoutes) {
+    filter['+or'] = configuredRoutes.map((route) => ({ id: route.id }));
+  }
+
   const { data: routes, isLoading } = useLoadBalancerRoutesQuery(
     Number(loadbalancerId),
     {
@@ -75,7 +87,7 @@ export const LoadBalancerRoutes = () => {
     filter
   );
 
-  const selectedRoute = routes?.data.find(
+  const selectedRoute = routes?.data?.find(
     (route) => route.id === selectedRouteId
   );
 
@@ -111,10 +123,10 @@ export const LoadBalancerRoutes = () => {
   }
 
   const getTableItems = (): TableItem[] => {
-    if (!routes) {
+    if (!routes?.data) {
       return [];
     }
-    return routes.data?.map((route) => {
+    return routes?.data?.map((route) => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
