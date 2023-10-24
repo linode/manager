@@ -18,7 +18,7 @@ import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { Footer } from 'src/features/Footer/Footer';
+import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationContext,
@@ -155,7 +155,9 @@ const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
-const StackScripts = React.lazy(() => import('src/features/StackScripts/StackScripts'));
+const StackScripts = React.lazy(
+  () => import('src/features/StackScripts/StackScripts')
+);
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );

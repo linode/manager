@@ -6,6 +6,8 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { TooltipIcon } from 'src/components/TooltipIcon';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   actionCell: {
     // Prevents Safari from adding margins to the ActionMenu button
@@ -72,6 +74,8 @@ export interface TableCellProps extends _TableCellProps {
   center?: boolean;
   className?: string;
   compact?: boolean;
+  errorCell?: boolean;
+  errorText?: string;
   noWrap?: boolean;
   /*
    * parent column will either be the name of the column this
@@ -90,6 +94,8 @@ export const TableCell = (props: TableCellProps) => {
     center,
     className,
     compact,
+    errorCell,
+    errorText,
     noWrap,
     parentColumn,
     sortable,
@@ -116,6 +122,15 @@ export const TableCell = (props: TableCellProps) => {
     >
       {statusCell ? (
         <div className={classes.status}>{props.children}</div>
+      ) : errorCell && errorText ? (
+        <>
+          {props.children}
+          <TooltipIcon
+            status="error"
+            style={{ paddingBottom: 0, paddingTop: 0 }}
+            text={errorText}
+          />
+        </>
       ) : (
         props.children
       )}
