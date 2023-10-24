@@ -29,11 +29,11 @@ export const LoadBalancerConfiguration = () => {
 
   return (
     <Paper
-      sx={{
+      sx={(theme) => ({
         flexGrow: 1,
         marginTop: theme.spacing(3),
         width: '100%',
-      }}
+      })}
       data-qa-label-header
     >
       <Typography
