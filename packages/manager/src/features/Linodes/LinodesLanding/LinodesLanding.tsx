@@ -190,7 +190,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         <PreferenceToggle<boolean>
           preferenceKey="linodes_group_by_tag"
           preferenceOptions={[false, true]}
-          toggleCallbackFnDebounced={sendGroupByAnalytic}
+          toggleCallbackFn={sendGroupByAnalytic}
         >
           {({
             preference: linodesAreGrouped,
@@ -200,8 +200,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
               <PreferenceToggle<'grid' | 'list'>
                 preferenceKey="linodes_view_style"
                 preferenceOptions={['list', 'grid']}
-                toggleCallbackFn={this.changeViewInstant}
-                toggleCallbackFnDebounced={this.changeViewDelayed}
+                toggleCallbackFn={this.changeView}
                 /**
                  * we want the URL query param to take priority here, but if it's
                  * undefined, just use the user preference
@@ -336,17 +335,9 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     );
   }
 
-  /**
-   * when you change the linode view, send analytics event, debounced.
-   */
-  changeViewDelayed = (style: 'grid' | 'list') => {
+  changeView = (style: 'grid' | 'list') => {
     sendLinodesViewEvent(eventCategory, style);
-  };
 
-  /**
-   * when you change the linode view, instantly update the query params
-   */
-  changeViewInstant = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
     const query = new URLSearchParams(location.search);
