@@ -188,7 +188,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Linodes" />
         <ProductInformationBanner bannerLocation="Linodes" />
         <PreferenceToggle<boolean>
-          localStorageKey="GROUP_LINODES"
           preferenceKey="linodes_group_by_tag"
           preferenceOptions={[false, true]}
           toggleCallbackFnDebounced={sendGroupByAnalytic}
@@ -199,7 +198,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           }: PreferenceToggleProps<boolean>) => {
             return (
               <PreferenceToggle<'grid' | 'list'>
-                localStorageKey="LINODE_VIEW"
                 preferenceKey="linodes_view_style"
                 preferenceOptions={['list', 'grid']}
                 toggleCallbackFn={this.changeViewInstant}

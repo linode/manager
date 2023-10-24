@@ -19,9 +19,8 @@ interface RenderChildrenProps<T> {
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
 interface Props<T = PreferenceValue> {
-  children: RenderChildren<T>;
+  children: RenderChildren<T | undefined>;
   initialSetCallbackFn?: (value: T) => void;
-  localStorageKey?: string;
   preferenceKey: string;
   preferenceOptions: [T, T];
   toggleCallbackFn?: (value: T) => void;
@@ -39,17 +38,17 @@ export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
     value,
   } = props;
 
-  /** will be undefined and render-block children unless otherwise specified */
-  const [currentlySetPreference, setPreference] = React.useState<T | undefined>(
-    value
-  );
-  const [lastUpdated, setLastUpdated] = React.useState<number>(0);
-
   const {
     data: preferences,
     error: preferencesError,
     refetch: refetchUserPreferences,
   } = usePreferences();
+
+  const [currentlySetPreference, setPreference] = React.useState<T | undefined>(
+    value ?? preferences?.[preferenceKey]
+  );
+
+  const [lastUpdated, setLastUpdated] = React.useState<number>(0);
 
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
@@ -191,17 +190,6 @@ export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
 
     return newPreferenceToSet;
   };
-
-  /**
-   * render-block the children. We can prevent
-   * render-blocking by passing a default value as a prop
-   *
-   * So if you want to handle local state outside of this component,
-   * you can do so and pass the value explicitly with the _value_ prop
-   */
-  if (isNullOrUndefined(currentlySetPreference)) {
-    return null;
-  }
 
   return typeof children === 'function'
     ? children({ preference: currentlySetPreference, togglePreference })
