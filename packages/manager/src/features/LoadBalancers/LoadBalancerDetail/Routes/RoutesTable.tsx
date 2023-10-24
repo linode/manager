@@ -28,6 +28,7 @@ import { RulesTable } from '../RulesTable';
 import { CreateRouteDrawer } from './CreateRouteDrawer';
 import { DeleteRouteDialog } from './DeleteRouteDialog';
 import { DeleteRuleDialog } from './DeleteRuleDialog';
+import { EditRouteDrawer } from './EditRouteDrawer';
 import { RuleDrawer } from './RuleDrawer';
 
 import type { Configuration, Filter, Route } from '@linode/api-v4';
@@ -41,6 +42,7 @@ interface Props {
 export const RoutesTable = ({ configuredRoutes }: Props) => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -106,6 +108,11 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     setSelectedRuleIndex(ruleIndex);
   };
 
+  const onEditRoute = (route: Route) => {
+    setIsEditDrawerOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   const onDeleteRoute = (route: Route) => {
     setIsDeleteDialogOpen(true);
     setSelectedRouteId(route.id);
@@ -141,7 +148,7 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
              */}
             <ActionMenu
               actionsList={[
-                { onClick: () => null, title: 'Edit' },
+                { onClick: () => onEditRoute(route), title: 'Edit' },
                 { onClick: () => null, title: 'Clone Route' },
                 { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
@@ -263,6 +270,12 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
         open={isAddRuleDrawerOpen}
         route={selectedRoute}
         ruleIndexToEdit={selectedRuleIndex}
+      />
+      <EditRouteDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        route={selectedRoute}
       />
       <CreateRouteDrawer
         loadbalancerId={Number(loadbalancerId)}
