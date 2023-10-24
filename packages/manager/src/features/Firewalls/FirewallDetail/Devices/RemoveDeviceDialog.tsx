@@ -8,12 +8,13 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { queryKey as nodeBalancerQueryKey } from 'src/queries/nodebalancers';
 
 export interface Props {
   device: FirewallDevice | undefined;
+  deviceId?: number;
   firewallId: number;
   firewallLabel: string;
-  linodeId?: number;
   onClose: () => void;
   onLinodeNetworkTab?: boolean;
   open: boolean;
@@ -22,15 +23,16 @@ export interface Props {
 export const RemoveDeviceDialog = React.memo((props: Props) => {
   const {
     device,
+    deviceId,
     firewallId,
     firewallLabel,
-    linodeId,
     onClose,
     onLinodeNetworkTab,
     open,
   } = props;
 
   const { enqueueSnackbar } = useSnackbar();
+  const deviceType = device?.entity.type;
 
   const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
@@ -50,11 +52,14 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       });
     }
 
+    const querykey =
+      deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
+
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
     queryClient.invalidateQueries([
-      linodesQueryKey,
-      'linode',
-      linodeId,
+      querykey,
+      deviceType,
+      deviceId,
       'firewalls',
     ]);
 

@@ -14,7 +14,6 @@ import {
 } from 'src/queries/nodebalancers';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-// import { CircleProgress } from 'src/components/CircleProgress';
 
 export const SummaryPanel = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -22,19 +21,11 @@ export const SummaryPanel = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
   const { data: regions } = useRegionsQuery();
-
-  const {
-    data: attachedFirewallData,
-    // error,
-    // isLoading,
-  } = useNodeBalancersFirewallsQuery(id);
-  // console.log('#####################', attachedFirewallData?.data);
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const displayFirewallLink = attachedFirewallData?.data?.length ? true : false;
-
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
 
   const configPorts = configs?.reduce((acc, config) => {
@@ -55,8 +46,6 @@ export const SummaryPanel = () => {
 
   return (
     <StyledRootDiv>
-
-
       <StyledSummarySectionWrapper>
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
@@ -104,7 +93,6 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-
       {displayFirewallLink ? (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
@@ -113,10 +101,8 @@ export const SummaryPanel = () => {
           <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
             {linkText}
           </Link>
-        </StyledSummarySection>)
-        : null}
-
-
+        </StyledSummarySection>
+      ) : null}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           IP Addresses
@@ -132,8 +118,6 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
-
-
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           Tags

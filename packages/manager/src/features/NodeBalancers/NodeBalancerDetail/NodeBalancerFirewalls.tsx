@@ -15,14 +15,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
-// import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
-// import { LinodeFirewallsRow } from '../../Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/LinodeFirewallsRow';
 import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
 interface Props {
-  // linodeID: number;
   displayFirewallInfoText: boolean;
   nodeBalancerID: number;
 }
@@ -35,8 +32,6 @@ export const NodeBalancerFirewalls = (props: Props) => {
     error,
     isLoading,
   } = useNodeBalancersFirewallsQuery(nodeBalancerID);
-
-  // console.log('#####################', attachedFirewallData);
 
   const attachedFirewalls = attachedFirewallData?.data;
 
@@ -76,20 +71,19 @@ export const NodeBalancerFirewalls = (props: Props) => {
         firewall={attachedFirewall}
         key={`firewall-${attachedFirewall.id}`}
         nodeBalancerID={nodeBalancerID}
-        // linodeID={linodeID}
-        // test
         onClickUnassign={handleClickUnassign}
       />
     ));
   };
 
+  // TODO: NBFW - Add Documentation Link
   const learnMoreLink = <a href="#">Learn more about creating Firewalls.</a>;
   const firewallLink = <Link to="/firewalls/">Firewalls</Link>;
 
   return (
     <Stack sx={{ marginTop: '0px' }}>
       <Box bgcolor={(theme) => theme.color.white} display="flex">
-        {displayFirewallInfoText ?
+        {displayFirewallInfoText ? (
           <Typography
             sx={(theme) => ({
               marginBottom: theme.spacing(),
@@ -101,7 +95,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
             <br />
             {learnMoreLink}
           </Typography>
-          : null}
+        ) : null}
       </Box>
       <Table>
         <TableHead>
@@ -116,9 +110,9 @@ export const NodeBalancerFirewalls = (props: Props) => {
       </Table>
       <RemoveDeviceDialog
         device={deviceToBeRemoved}
+        deviceId={nodeBalancerID}
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
-        linodeId={nodeBalancerID}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
         onLinodeNetworkTab
         open={isRemoveDeviceDialogOpen}

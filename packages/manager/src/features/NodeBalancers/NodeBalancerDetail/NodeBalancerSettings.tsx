@@ -21,13 +21,9 @@ export const NodeBalancerSettings = () => {
   const theme = useTheme();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
-
   const { data: nodebalancer } = useNodeBalancerQuery(id);
-
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
-  console.log('#####################', attachedFirewallData?.data);
-  const displayFirewallInfoText = attachedFirewallData?.data?.length ? false : true;
-  console.log('$$$$$$$$$$$$', displayFirewallInfoText);
+  const displayFirewallInfoText = attachedFirewallData?.data ? true : false;
 
   const {
     error: labelError,

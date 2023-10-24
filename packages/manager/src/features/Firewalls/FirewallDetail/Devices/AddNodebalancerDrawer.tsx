@@ -1,6 +1,7 @@
 import { NodeBalancer } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -14,6 +15,7 @@ import {
   useAllFirewallDevicesQuery,
   useFirewallQuery,
 } from 'src/queries/firewalls';
+import { queryKey } from 'src/queries/nodebalancers';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -27,15 +29,12 @@ interface Props {
 
 export const AddNodebalancerDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
-
   const { enqueueSnackbar } = useSnackbar();
-
   const { id } = useParams<{ id: string }>();
-
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
-
+  const queryClient = useQueryClient();
   const { data: firewall } = useFirewallQuery(Number(id));
   const {
     data: currentDevices,
@@ -69,6 +68,12 @@ export const AddNodebalancerDrawer = (props: Props) => {
       const id = selectedNodebalancers[index].id;
       if (result.status === 'fulfilled') {
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
+        queryClient.invalidateQueries([
+          queryKey,
+          'nodebalancer',
+          id,
+          'firewalls',
+        ]);
       } else {
         failedNodebalancers?.push(selectedNodebalancers[index]);
         const errorReason = getAPIErrorOrDefault(
