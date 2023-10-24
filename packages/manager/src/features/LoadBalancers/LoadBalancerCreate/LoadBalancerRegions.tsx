@@ -44,7 +44,7 @@ export const LoadBalancerRegions = () => {
           <BetaChip sx={{ marginLeft: '0 !important' }} />
           <Typography sx={(theme) => ({ marginBottom: theme.spacing(1) })}>
             Load Balancers will be automatically provisioned in these 5 Regions.
-            No charges with be incured.
+            No charges with be incurred.
           </Typography>
         </Grid>
         <Grid marginTop={theme.spacing(2)}>
