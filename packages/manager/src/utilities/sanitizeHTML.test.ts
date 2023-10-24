@@ -1,6 +1,6 @@
 /* eslint-disable xss/no-mixed-html */
-import { isURLValid, sanitizeHTML } from './sanitizeHTML';
-import { getAllowedHTMLTags } from './sanitizeHTML.utils';
+import { sanitizeHTML } from './sanitizeHTML';
+import { getAllowedHTMLTags, isURLValid } from './sanitizeHTML.utils';
 
 describe('sanitizeHTML', () => {
   it('should escape non-allowlisted tags', () => {

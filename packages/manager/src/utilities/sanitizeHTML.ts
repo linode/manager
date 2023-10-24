@@ -2,7 +2,7 @@ import sanitize from 'sanitize-html';
 
 import { allowedHTMLAttr } from 'src/constants';
 
-import { getAllowedHTMLTags } from './sanitizeHTML.utils';
+import { getAllowedHTMLTags, isURLValid } from './sanitizeHTML.utils';
 
 import type { AllowedHTMLTagsTier } from './sanitizeHTML.utils';
 import type { IOptions } from 'sanitize-html';
@@ -75,9 +75,3 @@ export const sanitizeHTML = ({
     },
     ...options,
   }).trim();
-
-export const isURLValid = (url: string) =>
-  offSiteURL.test(url) || onSiteURL.test(url);
-
-export const offSiteURL = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
-export const onSiteURL = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;

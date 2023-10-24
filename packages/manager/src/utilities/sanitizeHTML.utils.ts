@@ -1,3 +1,4 @@
+import { OFFSITE_URL_REGEX, ONSITE_URL_REGEX } from 'src/constants';
 import { allowedHTMLTagsFlexible, allowedHTMLTagsStrict } from 'src/constants';
 
 /**
@@ -29,3 +30,11 @@ export const getAllowedHTMLTags = (
       return allowMoreTags ?? [];
   }
 };
+
+/**
+ * Returns true if the URL is valid.
+ *
+ * @param url The URL to validate.
+ */
+export const isURLValid = (url: string): boolean =>
+  OFFSITE_URL_REGEX.test(url) || ONSITE_URL_REGEX.test(url);

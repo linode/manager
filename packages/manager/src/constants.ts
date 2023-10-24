@@ -263,3 +263,7 @@ export const LINODE_COMMUNITY_URL = 'https://linode.com/community';
 export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
 export const DEVELOPERS_LINK = 'https://developers.linode.com';
+
+// URL validators
+export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;

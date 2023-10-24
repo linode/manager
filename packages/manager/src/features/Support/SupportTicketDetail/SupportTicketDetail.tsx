@@ -24,6 +24,7 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
@@ -31,7 +32,6 @@ import AttachmentError from './AttachmentError';
 import { ReplyContainer } from './TabbedReply/ReplyContainer';
 
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   closed: {
