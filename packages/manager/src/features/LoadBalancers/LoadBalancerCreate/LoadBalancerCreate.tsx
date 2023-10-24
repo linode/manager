@@ -1,5 +1,8 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -20,6 +23,16 @@ export const StyledAddConfigurationButton = styled(Button, {
 }));
 
 const LoadBalancerCreate = () => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const smallScreenActionsPanelStyles = {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(2),
+    width: '100%',
+  };
   return (
     <Grid className="m0" container spacing={0}>
       <DocumentTitleSegment segment="Create a Load Balancer" />
@@ -40,15 +53,15 @@ const LoadBalancerCreate = () => {
        * Implement Cancel Behavior
        * Implement Add Another Configuration Behavior
        */}
-      <div
-        style={{
-          display: 'flex',
+      <Grid
+        sx={(theme) => ({
           justifyContent: 'space-between',
-          marginTop: '16px',
+          marginTop: theme.spacing(2),
           width: '100%',
-        }}
+        })}
+        container
       >
-        <div>
+        <Grid>
           <StyledAddConfigurationButton
             buttonType="outlined"
             data-qa-api-cli-linode
@@ -56,17 +69,21 @@ const LoadBalancerCreate = () => {
           >
             Add Another Configuration
           </StyledAddConfigurationButton>
-        </div>
+        </Grid>
 
         <ActionsPanel
           primaryButtonProps={{
             label: 'Review Load Balancer',
             onClick: () => null,
           }}
+          sx={{
+            margin: 0,
+            padding: 0,
+            ...(matchesSmDown ? smallScreenActionsPanelStyles : {}),
+          }}
           secondaryButtonProps={{ label: 'Cancel', onClick: () => null }}
-          sx={{ margin: 0, padding: 0 }}
         />
-      </div>
+      </Grid>
     </Grid>
   );
 };
