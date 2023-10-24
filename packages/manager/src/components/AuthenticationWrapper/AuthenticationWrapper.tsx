@@ -34,11 +34,6 @@ type CombinedProps = Props &
   WithApplicationStoreProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
-  state = {
-    hasEnsuredAllTypes: false,
-    showChildren: false,
-  };
-
   componentDidMount() {
     const { initSession } = this.props;
     /**
@@ -54,8 +49,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      * to show the children onMount
      */
     if (this.props.isAuthenticated) {
-      this.setState({ showChildren: true });
-
       this.makeInitialRequests();
     }
   }
@@ -142,6 +135,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.markAppAsDoneLoading();
       this.setState({ showChildren: true });
     }
+  };
+
+  state = {
+    hasEnsuredAllTypes: false,
+    showChildren: false,
   };
 }
 

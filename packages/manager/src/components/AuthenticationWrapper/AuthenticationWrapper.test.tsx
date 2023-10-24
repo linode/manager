@@ -32,10 +32,9 @@ describe('AuthenticationWrapper', () => {
   it('should invoke props.initSession when the component is mounted', () => {
     expect(component.instance().props.initSession).toHaveBeenCalledTimes(1);
   });
-
-  it('should set showChildren state to true when the isAuthenticated prop goes from false to true', () => {
+  it('should not showChildren initially because they should be shown after makeInitialRequests', () => {
     component.setState({ showChildren: false });
     component.setProps({ isAuthenticated: true });
-    expect(component.state('showChildren')).toBeTruthy();
+    expect(component.state('showChildren')).toBeFalsy();
   });
 });
