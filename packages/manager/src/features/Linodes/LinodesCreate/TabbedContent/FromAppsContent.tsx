@@ -233,22 +233,24 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
               </StyledFilterBox>
             </StyledSearchFilterBox>
           </Paper>
-          <SelectAppPanel
-            appInstances={
-              isSearching || isFiltering ? filteredApps : appInstances
-            }
-            appInstancesError={appInstancesError}
-            appInstancesLoading={appInstancesLoading}
-            disabled={userCannotCreateLinode}
-            error={hasErrorFor('stackscript_id')}
-            flags={flags}
-            handleClick={handleSelectStackScript}
-            isFiltering={isFiltering}
-            isSearching={isSearching}
-            openDrawer={this.openDrawer}
-            searchValue={query}
-            selectedStackScriptID={selectedStackScriptID}
-          />
+          <StyledBoxShadowWrapper>
+            <SelectAppPanel
+              appInstances={
+                isSearching || isFiltering ? filteredApps : appInstances
+              }
+              appInstancesError={appInstancesError}
+              appInstancesLoading={appInstancesLoading}
+              disabled={userCannotCreateLinode}
+              error={hasErrorFor('stackscript_id')}
+              flags={flags}
+              handleClick={handleSelectStackScript}
+              isFiltering={isFiltering}
+              isSearching={isSearching}
+              openDrawer={this.openDrawer}
+              searchValue={query}
+              selectedStackScriptID={selectedStackScriptID}
+            />
+          </StyledBoxShadowWrapper>
           {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel
               updateFor={[
@@ -415,3 +417,18 @@ const StyledSearchBox = styled(Box, { label: 'StyledSearchBox' })({
   },
   flexGrow: 10,
 });
+
+const StyledBoxShadowWrapper = styled('div', {
+  label: 'StyledBoxShadowWrapper',
+})(({ theme }) => ({
+  '&:after': {
+    content: '""',
+    width: '100%',
+    height: '15px',
+    boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+    position: 'absolute',
+    bottom: 0,
+  },
+  position: 'relative',
+  //marginBottom: theme.spacing(3),
+}));
