@@ -72,8 +72,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       !this.state.showChildren
     ) {
       this.makeInitialRequests();
-
-      return this.setState({ showChildren: true });
     }
 
     /** basically handles for the case where our token is expired or we got a 401 error */
@@ -142,6 +140,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       /** We choose to do nothing, relying on the Redux error state. */
     } finally {
       this.props.markAppAsDoneLoading();
+      this.setState({ showChildren: true });
     }
   };
 }
