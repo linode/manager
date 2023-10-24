@@ -138,7 +138,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   state = {
-    hasEnsuredAllTypes: false,
     showChildren: false,
   };
 }
