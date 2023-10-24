@@ -44,10 +44,10 @@ export const CustomStepIcon = styled(StepIcon, { label: 'StyledCircleIcon' })(
 
 export const StyledColorlibConnector = styled(StepConnector, {
   label: 'StyledColorlibConnector',
-})(() => ({
+})(({ theme }) => ({
   '& .MuiStepConnector-line': {
     borderColor: '#eaeaf0',
     borderLeftWidth: '3px',
-    minHeight: '16px',
+    minHeight: theme.spacing(2),
   },
 }));
