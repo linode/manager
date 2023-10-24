@@ -239,7 +239,7 @@ export const CreateFirewallDrawer = React.memo(
             }
             disabled={userCannotAddFirewall}
             errorText={errors['devices.linodes']}
-            helperText={firewallHelperText}
+            helperText={FIREWALL_HELPER_TEXT}
             label={label}
             multiple
             onBlur={handleBlur}

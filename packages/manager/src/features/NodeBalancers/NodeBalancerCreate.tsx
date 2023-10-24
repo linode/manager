@@ -507,6 +507,7 @@ const NodeBalancerCreate = () => {
             <Link to="">Learn more about creating Firewalls</Link>.
           </Typography>
         }
+        selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
       />
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {

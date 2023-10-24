@@ -17,7 +17,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
+import { READ_ONLY_DEVICES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 
 interface Props {
   label?: string;
@@ -111,7 +111,7 @@ export const AddDeviceDrawer = (props: Props) => {
     : [];
 
   const linodeSelectGuidance =
-    readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
+    readOnlyLinodeIds.length > 0 ? READ_ONLY_DEVICES_HIDDEN_MESSAGE : undefined;
 
   return (
     <Drawer
