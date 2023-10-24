@@ -85,7 +85,6 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     filter
   );
 
-  const routesList = routes?.data;
 
   const selectedRoute = routesList?.find(
     (route) => route.id === selectedRouteId
