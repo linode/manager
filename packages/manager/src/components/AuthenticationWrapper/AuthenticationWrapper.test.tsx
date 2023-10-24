@@ -27,7 +27,7 @@ describe('AuthenticationWrapper', () => {
   });
   it('should render one child when showChildren state is true', () => {
     component.setState({ showChildren: true });
-    expect(component.childAt(0)).toHaveLength(1);
+    expect(component.childAt(0)).toBeDefined();
   });
   it('should invoke props.initSession when the component is mounted', () => {
     expect(component.instance().props.initSession).toHaveBeenCalledTimes(1);

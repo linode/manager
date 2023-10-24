@@ -22,6 +22,7 @@ import { handleInitTokens } from 'src/store/authentication/authentication.action
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
+import SplashScreen from '../SplashScreen';
 
 interface Props {
   children: React.ReactNode;
@@ -81,8 +82,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
-    // eslint-disable-next-line
-    return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
+
+    if (showChildren) {
+      return children;
+    }
+
+    return <SplashScreen />;
   }
 
   static defaultProps = {
