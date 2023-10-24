@@ -5,6 +5,7 @@ export type Capabilities =
   | 'GPU Linodes'
   | 'Kubernetes'
   | 'Linodes'
+  | 'Managed Databases'
   | 'Metadata'
   | 'NodeBalancers'
   | 'Object Storage'

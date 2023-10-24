@@ -1,6 +1,5 @@
 // RulesTable.test.tsx
 
-import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 
 import { routeFactory } from 'src/factories';
@@ -24,7 +23,12 @@ const mockRoute = routeFactory.build({
 describe('RulesTable', () => {
   it('renders table headers', () => {
     const { getByText } = renderWithTheme(
-      <RulesTable loadbalancerId={1} onEditRule={vi.fn()} route={mockRoute} />
+      <RulesTable
+        loadbalancerId={1}
+        onDeleteRule={vi.fn()}
+        onEditRule={vi.fn()}
+        route={mockRoute}
+      />
     );
     expect(getByText('Execution')).toBeInTheDocument();
     expect(getByText('Match Value')).toBeInTheDocument();
@@ -34,6 +38,7 @@ describe('RulesTable', () => {
     const { getByText } = renderWithTheme(
       <RulesTable
         loadbalancerId={1}
+        onDeleteRule={vi.fn()}
         onEditRule={vi.fn()}
         route={{ id: 0, label: 'test', protocol: 'http', rules: [] }}
       />
@@ -43,7 +48,12 @@ describe('RulesTable', () => {
 
   it('renders rules correctly', () => {
     const { getByText } = renderWithTheme(
-      <RulesTable loadbalancerId={1} onEditRule={vi.fn()} route={mockRoute} />
+      <RulesTable
+        loadbalancerId={1}
+        onDeleteRule={vi.fn()}
+        onEditRule={vi.fn()}
+        route={mockRoute}
+      />
     );
 
     expect(getByText('First')).toBeInTheDocument();

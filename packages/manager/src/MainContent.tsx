@@ -18,7 +18,7 @@ import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { Footer } from 'src/features/Footer/Footer';
+import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationContext,
@@ -155,7 +155,9 @@ const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
-const StackScripts = React.lazy(() => import('src/features/StackScripts/StackScripts'));
+const StackScripts = React.lazy(
+  () => import('src/features/StackScripts/StackScripts')
+);
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
@@ -207,7 +209,10 @@ const MainContent = (props: CombinedProps) => {
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
   const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const { error: enginesError } = useDatabaseEnginesQuery(checkRestrictedUser);
+  const {
+    error: enginesError,
+    isLoading: enginesLoading,
+  } = useDatabaseEnginesQuery(checkRestrictedUser);
 
   const showDatabases =
     isFeatureEnabled(
@@ -215,7 +220,7 @@ const MainContent = (props: CombinedProps) => {
       Boolean(flags.databases),
       account?.capabilities ?? []
     ) ||
-    (checkRestrictedUser && !enginesError);
+    (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
@@ -413,8 +418,8 @@ export default compose<CombinedProps, Props>(
 export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
   return Boolean(
     flags.mainContentBanner &&
-    !isEmpty(flags.mainContentBanner) &&
-    flags.mainContentBanner.key
+      !isEmpty(flags.mainContentBanner) &&
+      flags.mainContentBanner.key
   );
 };
 
