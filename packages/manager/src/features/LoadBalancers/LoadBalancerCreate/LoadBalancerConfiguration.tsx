@@ -1,5 +1,4 @@
 import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
@@ -25,8 +24,6 @@ export const configurationSteps = [
 ];
 
 export const LoadBalancerConfiguration = () => {
-  const theme = useTheme();
-
   return (
     <Paper
       sx={(theme) => ({

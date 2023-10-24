@@ -1,6 +1,5 @@
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
@@ -9,7 +8,7 @@ import { Flag } from 'src/components/Flag';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-// TODO: Regious should be updated with the real values
+// TODO: AGLB -  Regious should be updated with the real values
 const regions = [
   { country: 'ga', id: 'us-southeast', label: 'Atlanta, GA' },
   { country: 'ca', id: 'ca-central', label: 'Toronto, CA' },
@@ -19,7 +18,6 @@ const regions = [
 ];
 
 export const LoadBalancerRegions = () => {
-  const theme = useTheme();
   return (
     <Paper
       sx={(theme) => ({
@@ -47,7 +45,7 @@ export const LoadBalancerRegions = () => {
             No charges with be incurred.
           </Typography>
         </Grid>
-        <Grid marginTop={theme.spacing(2)}>
+        <Grid sx={(theme) => ({ marginTop: theme.spacing(2) })}>
           {regions.map((region) => (
             <Grid
               alignItems={'center'}
@@ -55,8 +53,8 @@ export const LoadBalancerRegions = () => {
               direction="row"
               justifyContent="flex-start"
               key={region.id}
-              marginBottom={theme.spacing(1)}
               spacing={2}
+              sx={(theme) => ({ marginBottom: theme.spacing(1) })}
             >
               <Grid sx={{ paddingBottom: 0, paddingTop: 0 }}>
                 <Flag country={region.country as Lowercase<Country>} />
