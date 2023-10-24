@@ -26,7 +26,7 @@ export const Default: StoryObj<typeof Stack> = {
   render: (args) => <Stack {...args} />,
 };
 
-export const Vertial: StoryObj<typeof Stack> = {
+export const Vertical: StoryObj<typeof Stack> = {
   args: {
     children,
     spacing: 2,
