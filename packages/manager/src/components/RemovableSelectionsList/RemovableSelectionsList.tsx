@@ -25,6 +25,10 @@ interface Props {
    */
   headerText: string;
   /**
+   * Hides the drop shadow when the list is <= given list size
+   */
+  hideShadowOnListSizeOrLess?: number;
+  /**
    * If false, hide the remove button
    */
   isRemovable?: boolean;
@@ -59,6 +63,9 @@ interface Props {
 export const RemovableSelectionsList = (props: Props) => {
   const {
     headerText,
+    // Defaulting this value to 10: With the default height of 427px, a list of size 10 or
+    // less does not scroll, so it doesn't yet need the drop-shadow to indicate scrollability.
+    hideShadowOnListSizeOrLess = 10,
     isRemovable = true,
     maxHeight,
     maxWidth,
@@ -77,6 +84,10 @@ export const RemovableSelectionsList = (props: Props) => {
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
         <SelectedOptionsList
+          hideShadow={
+            hideShadowOnListSizeOrLess !== undefined &&
+            selectionData.length < hideShadowOnListSizeOrLess
+          }
           sx={{
             maxHeight: maxHeight
               ? `${maxHeight}px`
@@ -143,13 +154,18 @@ const SelectedOptionsHeader = styled('h4', {
 
 const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
-  shouldForwardProp: omittedProps(['isRemovable']),
-})<{ isRemovable?: boolean }>(({ isRemovable, theme }) => ({
-  background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
-  overflow: 'auto',
-  padding: !isRemovable ? '16px 0' : '5px 0',
-  width: '100%',
-}));
+  shouldForwardProp: omittedProps(['hideShadowOnListSize', 'isRemovable']),
+})<{ hideShadow?: boolean; isRemovable?: boolean }>(
+  ({ hideShadow, isRemovable, theme }) => ({
+    background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
+    overflow: 'auto',
+    padding: !isRemovable ? '16px 0' : '5px 0',
+    width: '100%',
+    ...(!hideShadow && {
+      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+    }),
+  })
+);
 
 const SelectedOptionsListItem = styled(ListItem, {
   label: 'SelectedOptionsListItem',
