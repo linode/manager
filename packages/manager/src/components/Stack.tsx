@@ -3,7 +3,7 @@ import React from 'react';
 
 /**
  * A Stack is a layout component that uses flexbox to
- * vertically or horozintally align elements with optional spacing.
+ * vertically or horizontally align elements with optional spacing.
  *
  * > Stack is ideal for one-dimensional layouts, while Grid is preferable when you need both vertical and horizontal arrangement.
  */
