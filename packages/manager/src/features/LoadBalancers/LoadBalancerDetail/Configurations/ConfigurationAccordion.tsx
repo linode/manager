@@ -22,7 +22,6 @@ import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
-import { Spacer } from 'src/components/Spacer';
 
 interface Props {
   configuration: Configuration;
@@ -141,10 +140,17 @@ export const ConfigurationAccordion = (props: Props) => {
             />
           </Stack>
           <Stack maxWidth="600px">
-            <Stack alignItems="center" direction="row">
-              <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="OMG!" />
-              <Spacer />
+            <Stack
+              alignItems="center"
+              direction="row"
+              justifyContent="space-between"
+            >
+              <Stack alignItems="center" direction="row">
+                <InputLabel sx={{ marginBottom: 0 }}>
+                  TLS Certificates
+                </InputLabel>
+                <TooltipIcon status="help" text="OMG!" />
+              </Stack>
               <Button>Upload Certificate</Button>
             </Stack>
             <CertificateTable

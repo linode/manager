@@ -10,7 +10,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Spacer } from 'src/components/Spacer';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
@@ -86,10 +85,10 @@ export const LoadBalancerServiceTargets = () => {
   return (
     <>
       <Stack
-        alignItems="flex-end"
         direction="row"
         flexWrap="wrap"
         gap={2}
+        justifyContent="space-between"
         mb={2}
         mt={1.5}
       >
@@ -118,7 +117,6 @@ export const LoadBalancerServiceTargets = () => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Spacer />
         <Button
           buttonType="primary"
           onClick={() => setIsCreateDrawerOpen(true)}

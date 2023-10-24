@@ -30,7 +30,6 @@ import { RuleDrawer } from './Routes/RuleDrawer';
 import { RulesTable } from './RulesTable';
 
 import type { Filter, Route } from '@linode/api-v4';
-import { Spacer } from 'src/components/Spacer';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 
@@ -191,6 +190,7 @@ export const LoadBalancerRoutes = () => {
         direction="row"
         flexWrap="wrap"
         gap={2}
+        justifyContent="space-between"
         mb={2}
         mt={1.5}
       >
@@ -219,7 +219,6 @@ export const LoadBalancerRoutes = () => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Spacer />
         {/**
          * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
          */}
