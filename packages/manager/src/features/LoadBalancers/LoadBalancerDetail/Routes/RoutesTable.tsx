@@ -85,8 +85,7 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     filter
   );
 
-
-  const selectedRoute = routesList?.find(
+  const selectedRoute = routes?.data?.find(
     (route) => route.id === selectedRouteId
   );
 
@@ -117,10 +116,10 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
   }
 
   const getTableItems = (): TableItem[] => {
-    if (!routesList) {
+    if (!routes?.data) {
       return [];
     }
-    return routesList?.map((route) => {
+    return routes?.data?.map((route) => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
