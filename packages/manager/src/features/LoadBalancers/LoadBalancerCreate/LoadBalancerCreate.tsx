@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
@@ -36,7 +36,18 @@ const LoadBalancerCreate = () => {
   return (
     <Grid className="m0" container spacing={0}>
       <DocumentTitleSegment segment="Create a Load Balancer" />
-      <LandingHeader title="Create" />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Global Load Balancers',
+              position: 1,
+            },
+          ],
+          pathname: location.pathname,
+        }}
+        title="Create"
+      />
       <LoadBalancerLabel
         labelFieldProps={{
           disabled: false,
