@@ -38,7 +38,7 @@ export interface TagProps extends ChipProps {
  * This component is an abstraction of the Chip component.
  * It is used to display deletable tags in the Linode Manager.
  * It contains two elements:
- * - a label, linked to its corresponding tag search result page
+ * - a label, linking to its corresponding tag search result page
  * - an optional delete icon
  */
 export const Tag = (props: TagProps) => {

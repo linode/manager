@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import { Chip } from 'src/components/Chip';
 import { omittedProps } from 'src/utilities/omittedProps';
 
+import { StyledLinkButton } from '../Button/StyledLinkButton';
+
 import type { TagProps } from './Tag';
 
 export const StyledChip = styled(Chip, {
@@ -15,6 +17,7 @@ export const StyledChip = styled(Chip, {
     },
     borderRadius: 4,
     color: theme.name === 'light' ? '#3a3f46' : '#fff',
+    fontWeight: 'normal',
     maxWidth: 350,
     padding: '7px 10px',
   },
@@ -67,10 +70,9 @@ export const StyledChip = styled(Chip, {
   }),
 }));
 
-export const StyledDeleteButton = styled('button', {
+export const StyledDeleteButton = styled(StyledLinkButton, {
   label: 'StyledDeleteButton',
 })(({ theme }) => ({
-  ...theme.applyLinkStyles,
   '& svg': {
     borderRadius: 0,
     color: theme.color.tagIcon,
