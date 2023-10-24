@@ -68,12 +68,7 @@ export const useLoadBalancerRouteUpdateMutation = (
       onMutate(variables) {
         const key = [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'];
         // Optimistically update the route on mutate
-        updateInPaginatedStore<Route>(
-          key,
-          routeId,
-          { rules: variables.rules },
-          queryClient
-        );
+        updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
       },
     }
   );

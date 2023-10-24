@@ -18,7 +18,7 @@ import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { Footer } from 'src/features/Footer/Footer';
+import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationContext,

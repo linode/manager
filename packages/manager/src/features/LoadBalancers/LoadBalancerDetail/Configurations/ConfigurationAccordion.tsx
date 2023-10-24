@@ -17,6 +17,7 @@ import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configura
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { RoutesTable } from '../Routes/RoutesTable';
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
@@ -172,8 +173,7 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
-          {/* @TODO Add AGLB routes table */}
-          <Typography>Routes Table will go here ⚠️🔜</Typography>
+          <RoutesTable configuredRoutes={configuration.routes} />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
         <ActionsPanel
