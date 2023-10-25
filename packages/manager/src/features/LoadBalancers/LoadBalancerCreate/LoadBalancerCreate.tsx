@@ -11,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle
 import { LandingHeader } from 'src/components/LandingHeader';
 
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
-import { LoadBalancerLabel } from './LoadBalancerLable';
+import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
 export const StyledAddConfigurationButton = styled(Button, {

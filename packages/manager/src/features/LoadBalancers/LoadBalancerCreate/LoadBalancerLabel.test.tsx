@@ -2,7 +2,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LoadBalancerLabel } from './LoadBalancerLable';
+import { LoadBalancerLabel } from './LoadBalancerLabel';
 
 describe('LoadBalancerLabel', () => {
   it('should render the component with a label and no error', () => {
