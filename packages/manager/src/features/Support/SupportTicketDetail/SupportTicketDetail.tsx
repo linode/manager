@@ -1,5 +1,5 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
