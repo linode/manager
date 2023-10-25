@@ -1,6 +1,6 @@
 import { PriceObject } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';

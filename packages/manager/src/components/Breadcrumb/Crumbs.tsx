@@ -1,6 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -11,7 +10,7 @@ import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   crumb: {
     fontSize: '1.125rem',
     lineHeight: 'normal',
@@ -56,7 +55,7 @@ interface Props {
 }
 
 export const Crumbs = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const {
     crumbOverrides,
@@ -94,9 +93,7 @@ export const Crumbs = React.memo((props: Props) => {
               data-qa-link
             >
               <Typography
-                className={classNames({
-                  [classes.crumb]: true,
-                  [classes.crumbLink]: true,
+                className={cx(classes.crumb, classes.crumbLink, {
                   [classes.noCap]: override && override.noCap,
                 })}
                 data-qa-link-text
@@ -115,11 +112,10 @@ export const Crumbs = React.memo((props: Props) => {
           </div>
         );
       })}
-
       {/*
-        for prepending some SVG or other element before the final crumb.
-        See users detail page for example
-      */}
+      for prepending some SVG or other element before the final crumb.
+      See users detail page for example
+    */}
       {labelOptions && labelOptions.prefixComponent && (
         <FinalCrumbPrefix
           prefixComponent={labelOptions.prefixComponent}
@@ -128,9 +124,9 @@ export const Crumbs = React.memo((props: Props) => {
       )}
 
       {/*
-        the final crumb has the possibility of being a link, editable text
-        or just static text
-      */}
+      the final crumb has the possibility of being a link, editable text
+      or just static text
+    */}
       <FinalCrumb
         crumb={labelTitle || lastCrumb}
         labelOptions={labelOptions}
@@ -138,9 +134,9 @@ export const Crumbs = React.memo((props: Props) => {
       />
 
       {/*
-        for appending some SVG or other element after the final crumb.
-        See support ticket detail as an example
-      */}
+      for appending some SVG or other element after the final crumb.
+      See support ticket detail as an example
+    */}
       {labelOptions &&
         labelOptions.suffixComponent &&
         labelOptions.suffixComponent}
