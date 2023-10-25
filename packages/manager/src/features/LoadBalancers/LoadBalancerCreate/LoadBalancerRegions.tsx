@@ -1,5 +1,4 @@
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
@@ -19,52 +18,32 @@ const regions = [
 
 export const LoadBalancerRegions = () => {
   return (
-    <Paper
-      sx={(theme) => ({
-        flexGrow: 1,
-        marginTop: theme.spacing(3),
-        width: '100%',
-      })}
-      data-qa-label-header
-    >
-      <Typography
-        data-qa-tp-title
-        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
-        variant="h2"
-      >
-        Regions
-      </Typography>
-      <Stack>
-        <Typography sx={(theme) => ({ marginBottom: theme.spacing(1) })}>
-          Where this Load Balancer instance will be deployed.
-        </Typography>
-        <Grid container>
-          <BetaChip sx={{ marginLeft: '0 !important' }} />
-          <Typography sx={(theme) => ({ marginBottom: theme.spacing(1) })}>
-            Load Balancers will be automatically provisioned in these 5 Regions.
-            No charges with be incurred.
+    <Paper>
+      <Stack spacing={2}>
+        <Typography variant="h2">Regions</Typography>
+        <Stack spacing={1}>
+          <Typography>
+            Where this Load Balancer instance will be deployed.
           </Typography>
-        </Grid>
-        <Grid sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+          <Typography>
+            <BetaChip sx={{ marginLeft: '0 !important' }} /> Load Balancers will
+            be automatically provisioned in these 5 Regions. No charges with be
+            incurred.
+          </Typography>
+        </Stack>
+        <Stack py={0.5} spacing={1.25}>
           {regions.map((region) => (
-            <Grid
-              alignItems={'center'}
-              container
+            <Stack
+              alignItems="center"
               direction="row"
-              justifyContent="flex-start"
               key={region.id}
               spacing={2}
-              sx={(theme) => ({ marginBottom: theme.spacing(1) })}
             >
-              <Grid sx={{ paddingBottom: 0, paddingTop: 0 }}>
-                <Flag country={region.country as Lowercase<Country>} />
-              </Grid>
-              <Grid>
-                <Typography>{`${region.label} (${region.id})`}</Typography>
-              </Grid>
-            </Grid>
+              <Flag country={region.country as Lowercase<Country>} />
+              <Typography>{`${region.label} (${region.id})`}</Typography>
+            </Stack>
           ))}
-        </Grid>
+        </Stack>
       </Stack>
     </Paper>
   );

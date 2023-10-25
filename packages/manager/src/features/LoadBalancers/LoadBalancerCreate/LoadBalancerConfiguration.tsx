@@ -25,23 +25,15 @@ export const configurationSteps = [
 
 export const LoadBalancerConfiguration = () => {
   return (
-    <Paper
-      sx={(theme) => ({
-        flexGrow: 1,
-        marginTop: theme.spacing(3),
-        width: '100%',
-      })}
-      data-qa-label-header
-    >
+    <Paper>
       <Typography
-        data-qa-tp-title
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
       >
         Configuration -{' '}
       </Typography>
-      <Stack>
-        <Typography sx={(theme) => ({ marginBottom: theme.spacing(1) })}>
+      <Stack spacing={1}>
+        <Typography>
           A Configuration listens on a port and uses Route Rules to forward
           request to Service Target Endpoints
         </Typography>

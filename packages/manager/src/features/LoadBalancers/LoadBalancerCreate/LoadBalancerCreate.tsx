@@ -1,11 +1,7 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
+import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -14,26 +10,9 @@ import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
-export const StyledAddConfigurationButton = styled(Button, {
-  label: 'StyledAddConfigurationButton',
-})(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    marginRight: theme.spacing(1),
-  },
-}));
-
 const LoadBalancerCreate = () => {
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-
-  const smallScreenActionsPanelStyles = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(2),
-    width: '100%',
-  };
   return (
-    <Grid className="m0" container spacing={0}>
+    <>
       <DocumentTitleSegment segment="Create a Load Balancer" />
       <LandingHeader
         breadcrumbProps={{
@@ -47,54 +26,36 @@ const LoadBalancerCreate = () => {
         }}
         title="Create"
       />
-      <LoadBalancerLabel
-        labelFieldProps={{
-          disabled: false,
-          errorText: '',
-          label: 'Linode Label',
-          onChange: () => null,
-          value: '',
-        }}
-      />
-      <LoadBalancerRegions />
-      <LoadBalancerConfiguration />
-      {/* TODO: AGLB -
-       * Implement Review Load Balancer Action Behavior
-       * Implement Cancel Behavior
-       * Implement Add Another Configuration Behavior
-       */}
-      <Grid
-        sx={(theme) => ({
-          justifyContent: 'space-between',
-          marginTop: theme.spacing(2),
-          width: '100%',
-        })}
-        container
-      >
-        <Grid>
-          <StyledAddConfigurationButton
-            buttonType="outlined"
-            data-qa-api-cli-linode
-            onClick={() => null}
-          >
-            Add Another Configuration
-          </StyledAddConfigurationButton>
-        </Grid>
-
-        <ActionsPanel
-          primaryButtonProps={{
-            label: 'Review Load Balancer',
-            onClick: () => null,
+      <Stack spacing={3}>
+        <LoadBalancerLabel
+          labelFieldProps={{
+            disabled: false,
+            errorText: '',
+            label: 'Linode Label',
+            onChange: () => null,
+            value: '',
           }}
-          sx={{
-            margin: 0,
-            padding: 0,
-            ...(matchesSmDown ? smallScreenActionsPanelStyles : {}),
-          }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: () => null }}
         />
-      </Grid>
-    </Grid>
+        <LoadBalancerRegions />
+        <LoadBalancerConfiguration />
+        {/* TODO: AGLB -
+         * Implement Review Load Balancer Action Behavior
+         * Implement Add Another Configuration Behavior
+         */}
+        <Box
+          columnGap={1}
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="space-between"
+          rowGap={3}
+        >
+          <Button buttonType="outlined">Add Another Configuration</Button>
+          <Button buttonType="primary" sx={{ marginLeft: 'auto' }}>
+            Review Load Balancer
+          </Button>
+        </Box>
+      </Stack>
+    </>
   );
 };
 
