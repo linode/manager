@@ -2,7 +2,7 @@ import {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';

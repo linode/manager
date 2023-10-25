@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 
@@ -17,6 +17,7 @@ import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configura
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { RoutesTable } from '../Routes/RoutesTable';
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
@@ -140,10 +141,17 @@ export const ConfigurationAccordion = (props: Props) => {
             />
           </Stack>
           <Stack maxWidth="600px">
-            <Stack alignItems="center" direction="row">
-              <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="OMG!" />
-              <Box flexGrow={1} />
+            <Stack
+              alignItems="center"
+              direction="row"
+              justifyContent="space-between"
+            >
+              <Stack alignItems="center" direction="row">
+                <InputLabel sx={{ marginBottom: 0 }}>
+                  TLS Certificates
+                </InputLabel>
+                <TooltipIcon status="help" text="OMG!" />
+              </Stack>
               <Button>Upload Certificate</Button>
             </Stack>
             <CertificateTable
@@ -165,8 +173,7 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
-          {/* @TODO Add AGLB routes table */}
-          <Typography>Routes Table will go here ⚠️🔜</Typography>
+          <RoutesTable configuredRoutes={configuration.routes} />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
         <ActionsPanel

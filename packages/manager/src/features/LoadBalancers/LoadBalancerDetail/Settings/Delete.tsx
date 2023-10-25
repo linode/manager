@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
