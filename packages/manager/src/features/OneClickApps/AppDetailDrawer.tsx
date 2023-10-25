@@ -9,12 +9,12 @@ import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { oneClickApps } from './oneClickApps';
 import { mapStackScriptLabelToOCA } from './utils';
 
 import type { OCA } from './types';
-import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appName: {
@@ -150,7 +150,10 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
             />
             <Typography
               dangerouslySetInnerHTML={{
-                __html: sanitizeHTML(selectedApp.name),
+                __html: sanitizeHTML({
+                  sanitizingTier: 'flexible',
+                  text: selectedApp.name,
+                }),
               }}
               className={classes.appName}
               data-qa-drawer-title={stackScriptLabel}
@@ -163,7 +166,10 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
               <Typography variant="h3">{selectedApp.summary}</Typography>
               <Typography
                 dangerouslySetInnerHTML={{
-                  __html: sanitizeHTML(selectedApp.description),
+                  __html: sanitizeHTML({
+                    sanitizingTier: 'flexible',
+                    text: selectedApp.description,
+                  }),
                 }}
                 className={classes.description}
                 variant="body1"
@@ -194,7 +200,10 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                       key={`${selectedApp.name}-guide-${idx}`}
                       to={link.href}
                     >
-                      {sanitizeHTML(link.title)}
+                      {sanitizeHTML({
+                        sanitizingTier: 'flexible',
+                        text: link.title,
+                      })}
                     </Link>
                   ))}
                 </Box>

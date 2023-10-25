@@ -7,7 +7,6 @@ import yaml from 'highlight.js/lib/languages/yaml';
 import HLJSDarkTheme from 'highlight.js/styles/a11y-dark.css?raw';
 import HLJSLightTheme from 'highlight.js/styles/a11y-light.css?raw';
 import * as React from 'react';
-import sanitize from 'sanitize-html';
 
 import { Typography } from 'src/components/Typography';
 import 'src/formatted-text.css';
@@ -15,6 +14,8 @@ import { ThemeName } from 'src/foundations/themes';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
+
+import type { IOptions } from 'sanitize-html';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -34,7 +35,7 @@ export type SupportedLanguage =
 export interface HighlightedMarkdownProps {
   className?: string;
   language?: SupportedLanguage;
-  sanitizeOptions?: sanitize.IOptions;
+  sanitizeOptions?: IOptions;
   textOrMarkdown: string;
 }
 
@@ -86,7 +87,12 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
 
   const unsafe_parsedMarkdown = unsafe_MarkdownIt.render(textOrMarkdown);
 
-  const sanitizedHtml = sanitizeHTML(unsafe_parsedMarkdown, sanitizeOptions);
+  const sanitizedHtml = sanitizeHTML({
+    // eslint-disable-next-line xss/no-mixed-html
+    options: sanitizeOptions,
+    sanitizingTier: 'flexible',
+    text: unsafe_parsedMarkdown,
+  });
 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
   // All the safety checking is due to a reported error from certain versions of FireFox.

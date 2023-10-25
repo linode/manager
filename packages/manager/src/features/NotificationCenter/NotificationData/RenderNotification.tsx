@@ -38,7 +38,12 @@ export const RenderNotification: React.FC<Props> = (props) => {
 
   const message = (
     <Typography
-      dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
+      dangerouslySetInnerHTML={{
+        __html: sanitizeHTML({
+          sanitizingTier: 'flexible',
+          text: notification.message,
+        }),
+      }}
       sx={sxMessage}
     />
   );

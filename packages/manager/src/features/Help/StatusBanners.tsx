@@ -98,7 +98,10 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
         </Typography>
         <Typography
           dangerouslySetInnerHTML={{
-            __html: sanitizeHTML(truncateEnd(message, 500)),
+            __html: sanitizeHTML({
+              sanitizingTier: 'flexible',
+              text: truncateEnd(message, 500),
+            }),
           }}
           sx={{
             fontSize: '0.875rem',
