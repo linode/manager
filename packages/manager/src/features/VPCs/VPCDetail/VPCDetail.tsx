@@ -10,6 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { VPC_LABEL } from 'src/features/VPCs/utils';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
@@ -99,7 +100,7 @@ const VPCDetail = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Virtual Private Cloud (VPC)',
+              label: VPC_LABEL,
               position: 1,
             },
           ],

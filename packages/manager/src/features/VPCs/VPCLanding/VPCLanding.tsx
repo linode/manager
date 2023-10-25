@@ -13,12 +13,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { VPCDeleteDialog } from './VPCDeleteDialog';
+import { VPC_LABEL } from 'src/features/VPCs/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
@@ -94,7 +95,7 @@ const VPCLanding = () => {
         createButtonText="Create VPC"
         docsLink="#" // @TODO VPC: Add docs link
         onButtonClick={createVPC}
-        title="Virtual Private Cloud (VPC)"
+        title={VPC_LABEL}
       />
       <Table>
         <TableHead>
