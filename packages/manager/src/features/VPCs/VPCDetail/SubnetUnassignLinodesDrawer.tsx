@@ -94,7 +94,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       }
     }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
 
-    // 4. When a linode is selected, we need to get the configs with VPC interfaces.
+    // 3. When a linode is selected, we need to get the configs with VPC interfaces.
     const getConfigWithVPCInterface = React.useCallback(
       async (selectedLinodes: Linode[]) => {
         try {
@@ -202,7 +202,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       }
     };
 
-    // 5. When the user submits the form, we need to process the unassign linodes.
+    // 4. When the user submits the form, we need to process the unassign linodes.
     const handleUnassignLinode = async () => {
       await processUnassignLinodes();
 
