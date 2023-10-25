@@ -124,7 +124,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
       purpose,
     });
 
-  const handleVPCLabelChange = (selectedVPCId: number) => {
+  const handleVPCLabelChange = (selectedVPCId: number) =>
     handleChange({
       ipam_address: null,
       ipv4: {
@@ -136,7 +136,6 @@ export const InterfaceSelect = (props: CombinedProps) => {
       subnet_id: undefined,
       vpc_id: selectedVPCId,
     });
-  };
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
