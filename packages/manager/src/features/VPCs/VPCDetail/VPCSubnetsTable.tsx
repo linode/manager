@@ -308,8 +308,8 @@ export const VPCSubnetsTable = (props: Props) => {
             setSelectedLinode(undefined);
           }}
           open={subnetUnassignLinodesDrawerOpen}
+          singleLinodeToBeUnassigned={selectedLinode}
           subnet={selectedSubnet}
-          unassignSingleLinode={selectedLinode}
           vpcId={vpcId}
         />
       )}

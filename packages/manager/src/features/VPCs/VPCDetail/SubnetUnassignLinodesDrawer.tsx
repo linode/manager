@@ -31,13 +31,13 @@ import type {
 interface Props {
   onClose: () => void;
   open: boolean;
+  singleLinodeToBeUnassigned?: Linode;
   subnet?: Subnet;
-  unassignSingleLinode?: Linode;
   vpcId: number;
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
-  ({ onClose, open, subnet, unassignSingleLinode, vpcId }: Props) => {
+  ({ onClose, open, singleLinodeToBeUnassigned, subnet, vpcId }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
     const subnetId = subnet?.id;
@@ -53,7 +53,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
-      unassignSingleLinode ? [unassignSingleLinode] : []
+      singleLinodeToBeUnassigned ? [singleLinodeToBeUnassigned] : []
     );
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
@@ -156,10 +156,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     );
 
     React.useEffect(() => {
-      if (unassignSingleLinode) {
-        getConfigWithVPCInterface([unassignSingleLinode]);
+      if (singleLinodeToBeUnassigned) {
+        getConfigWithVPCInterface([singleLinodeToBeUnassigned]);
       }
-    }, [unassignSingleLinode, getConfigWithVPCInterface]);
+    }, [singleLinodeToBeUnassigned, getConfigWithVPCInterface]);
 
     const downloadCSV = async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -249,11 +249,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
         <Notice
-          spacingBottom={unassignSingleLinode ? 0 : 16}
+          spacingBottom={singleLinodeToBeUnassigned ? 0 : 16}
           text={SUBNET_UNASSIGN_LINODES_WARNING}
           variant="warning"
         />
-        {!unassignSingleLinode && (
+        {!singleLinodeToBeUnassigned && (
           <Typography>
             Select the Linodes you would like to unassign from this subnet. Only
             Linodes in this VPC&rsquo;s region are displayed.
@@ -261,7 +261,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         )}
         <form onSubmit={handleSubmit}>
           <Stack>
-            {!unassignSingleLinode && (
+            {!singleLinodeToBeUnassigned && (
               <Autocomplete
                 onChange={(_, value) => {
                   setSelectedLinodes(value);
@@ -279,7 +279,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             )}
             <RemovableSelectionsList
               headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
-              isRemovable={!Boolean(unassignSingleLinode)}
+              isRemovable={!Boolean(singleLinodeToBeUnassigned)}
               noDataText={'Select Linodes to be Unassigned from Subnet.'}
               onRemove={handleRemoveLinode}
               selectionData={selectedLinodes}
