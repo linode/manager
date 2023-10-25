@@ -82,7 +82,7 @@ export const IdentifyUser = () => {
 
         // We also need to make sure client is defined. Launch Darkly has a weird API.
         // If client is undefined, that means flags are loading. Even if flags fail to load,
-        // client will become defind and we and allow the app to render.
+        // client will become defined and we and allow the app to render.
 
         // If we're being honest, featureFlagsLoading shouldn't be tracked by Redux
         // and this code should go away eventually.
