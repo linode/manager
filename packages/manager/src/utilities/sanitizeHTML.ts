@@ -1,8 +1,27 @@
 import sanitize from 'sanitize-html';
 
-import { allowedHTMLAttr, allowedHTMLTags } from 'src/constants';
+import { allowedHTMLAttr } from 'src/constants';
 
-export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
+import { getAllowedHTMLTags, isURLValid } from './sanitizeHTML.utils';
+
+import type { AllowedHTMLTagsTier } from './sanitizeHTML.utils';
+import type { IOptions } from 'sanitize-html';
+
+interface SanitizeHTMLOptions {
+  allowMoreTags?: string[];
+  disallowedTagsMode?: IOptions['disallowedTagsMode'];
+  options?: IOptions;
+  sanitizingTier: AllowedHTMLTagsTier;
+  text: string;
+}
+
+export const sanitizeHTML = ({
+  allowMoreTags,
+  disallowedTagsMode = 'escape',
+  options = {},
+  sanitizingTier,
+  text,
+}: SanitizeHTMLOptions) =>
   sanitize(text, {
     allowedAttributes: {
       '*': allowedHTMLAttr,
@@ -13,8 +32,8 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
     allowedClasses: {
       span: ['version'],
     },
-    allowedTags: allowedHTMLTags,
-    disallowedTagsMode: 'escape',
+    allowedTags: getAllowedHTMLTags(sanitizingTier, allowMoreTags),
+    disallowedTagsMode,
     transformTags: {
       // This transformation function does the following to anchor tags:
       // 1. Turns the <a /> into a <span /> if the "href" is invalid
@@ -56,9 +75,3 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
     },
     ...options,
   }).trim();
-
-export const isURLValid = (url: string) =>
-  offSiteURL.test(url) || onSiteURL.test(url);
-
-export const offSiteURL = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
-export const onSiteURL = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;

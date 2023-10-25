@@ -939,7 +939,7 @@ export function applyLinking(event: Event, message: string) {
   if (event.entity?.label && entityLinkTarget) {
     const label = event.entity.label;
     const nonTickedLabels = new RegExp(
-      `(^|[^\\\`])${escapeRegExp(label)}`,
+      `(\\B|^|[^\`])${escapeRegExp(label)}(\\B|$|[^\`])`,
       'g'
     );
 

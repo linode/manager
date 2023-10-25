@@ -116,22 +116,27 @@ export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 // Default size limit for Images (some users have custom limits)
 export const IMAGE_DEFAULT_LIMIT = 6144;
 
-export const allowedHTMLTags = [
+export const allowedHTMLTagsStrict: string[] = [
   'a',
-  'abbr',
-  'acronym',
+  'p',
   'b',
-  'blockquote',
-  'br',
-  'code',
   'del',
   'em',
-  'hr',
   'i',
+  'code',
+  'strong',
+];
+
+export const allowedHTMLTagsFlexible: string[] = [
+  ...allowedHTMLTagsStrict,
+  'abbr',
+  'acronym',
+  'blockquote',
+  'br',
+  'hr',
   'li',
   'ol',
   'ul',
-  'p',
   'pre',
   'h1',
   'h2',
@@ -140,7 +145,6 @@ export const allowedHTMLTags = [
   'h5',
   'h6',
   'span',
-  'strong',
   'table',
   'tbody',
   'td',
@@ -259,3 +263,7 @@ export const LINODE_COMMUNITY_URL = 'https://linode.com/community';
 export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
 export const DEVELOPERS_LINK = 'https://developers.linode.com';
+
+// URL validators
+export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
