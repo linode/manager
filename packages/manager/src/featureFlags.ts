@@ -50,6 +50,7 @@ export interface Flags {
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
+  objDcSpecificPricing: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   productInformationBanners: ProductInformationBannerFlag[];
@@ -58,10 +59,12 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
   selfServeBetas: boolean;
+  soldOutTokyo: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
+  unifiedMigrations: boolean;
   vpc: boolean;
 }
 

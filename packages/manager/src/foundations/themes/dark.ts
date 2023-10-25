@@ -235,6 +235,10 @@ export const darkTheme: ThemeOptions = {
       },
     },
     MuiChip: {
+      defaultProps: {
+        // In dark mode, we decided our Chips will be our primary color by default.
+        color: 'primary',
+      },
       styleOverrides: {
         clickable: {
           '&:focus': {
@@ -245,12 +249,14 @@ export const darkTheme: ThemeOptions = {
           },
           backgroundColor: '#415d81',
         },
+        colorInfo: {
+          color: primaryColors.dark,
+        },
         outlined: {
           backgroundColor: 'transparent',
           borderRadius: 1,
         },
         root: {
-          backgroundColor: primaryColors.main,
           color: primaryColors.text,
         },
       },
@@ -318,7 +324,7 @@ export const darkTheme: ThemeOptions = {
           '&$error': {
             color: '#c9cacb',
           },
-          '&$focused': {
+          '&.Mui-focused': {
             color: '#c9cacb',
           },
           color: '#c9cacb',

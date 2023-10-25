@@ -1,6 +1,6 @@
 import { randomItem } from 'support/util/random';
 
-import type { Region } from '@linode/api-v4';
+import type { Capabilities, Region } from '@linode/api-v4';
 
 /**
  * Returns an object describing a Cloud Manager region if specified by the user.
@@ -76,6 +76,14 @@ export const getRegionByLabel = (label: string) => {
   return region;
 };
 
+interface ChooseRegionOptions {
+  /**
+   * If specified, the region returned will support the defined capability
+   * @example 'Managed Databases'
+   */
+  capability?: Capabilities;
+}
+
 /**
  * Returns a known Cloud Manager region at random, or returns a user-chosen
  * region if one was specified.
@@ -86,9 +94,22 @@ export const getRegionByLabel = (label: string) => {
  *
  * @returns Object describing a Cloud Manager region to use during tests.
  */
-export const chooseRegion = (): Region => {
+export const chooseRegion = (options?: ChooseRegionOptions): Region => {
   const overrideRegion = getOverrideRegion();
-  return overrideRegion ? overrideRegion : randomItem(regions);
+
+  if (overrideRegion) {
+    return overrideRegion;
+  }
+
+  if (options?.capability) {
+    const regionsWithCapability = regions.filter((region) =>
+      region.capabilities.includes(options.capability!)
+    );
+
+    return randomItem(regionsWithCapability);
+  }
+
+  return randomItem(regions);
 };
 
 /**

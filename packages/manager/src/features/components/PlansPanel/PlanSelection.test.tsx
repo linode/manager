@@ -5,6 +5,7 @@ import { planSelectionTypeFactory } from 'src/factories/types';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
@@ -19,13 +20,15 @@ describe('PlanSelection (table, desktop)', () => {
 
   it('renders the table row', () => {
     const { container } = renderWithTheme(
-      <PlanSelection
-        flags={{ dcSpecificPricing: false }}
-        idx={0}
-        isCreate={true}
-        onSelect={() => jest.fn()}
-        type={mockPlan}
-      />
+      wrapWithTableBody(
+        <PlanSelection
+          flags={{ dcSpecificPricing: false }}
+          idx={0}
+          isCreate={true}
+          onSelect={() => jest.fn()}
+          type={mockPlan}
+        />
+      )
     );
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
@@ -49,7 +52,9 @@ describe('PlanSelection (table, desktop)', () => {
     const mockOnSelect = jest.fn();
 
     const { getByRole } = renderWithTheme(
-      <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />
+      wrapWithTableBody(
+        <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />
+      )
     );
 
     const radioInput = getByRole('radio');
@@ -60,13 +65,15 @@ describe('PlanSelection (table, desktop)', () => {
 
   it('shows the dynamic prices with dcSpecificPricing ON', () => {
     const { container } = renderWithTheme(
-      <PlanSelection
-        flags={{ dcSpecificPricing: true }}
-        idx={0}
-        onSelect={() => {}}
-        selectedRegionId={'br-gru'}
-        type={mockPlan}
-      />
+      wrapWithTableBody(
+        <PlanSelection
+          flags={{ dcSpecificPricing: true }}
+          idx={0}
+          onSelect={() => {}}
+          selectedRegionId={'br-gru'}
+          type={mockPlan}
+        />
+      )
     );
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
@@ -153,7 +160,7 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('Dedicated 20 GB');
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
-    ).toHaveTextContent('$14/mo ($0.021/hr)');
+    ).toHaveTextContent('$14.40/mo ($0.021/hr)');
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-2"]')
     ).toHaveTextContent('1 CPU, 50 GB Storage, 2 GB RAM');

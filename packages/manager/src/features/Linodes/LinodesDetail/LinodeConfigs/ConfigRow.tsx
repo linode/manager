@@ -1,4 +1,4 @@
-import { Config, Interface } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,6 +9,7 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
+import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
 
 interface Props {
@@ -59,7 +60,7 @@ export const ConfigRow = React.memo((props: Props) => {
             return undefined;
           }
           return (
-            <li style={{ paddingBottom: 4 }} key={thisDevice}>
+            <li key={thisDevice} style={{ paddingBottom: 4 }}>
               /dev/{thisDevice} - {label}
             </li>
           );
@@ -76,17 +77,12 @@ export const ConfigRow = React.memo((props: Props) => {
   const InterfaceList = (
     <StyledUl>
       {interfaces.map((interfaceEntry, idx) => {
-        // The order of the config.interfaces array as returned by the API is significant.
-        // Index 0 is eth0, index 1 is eth1, index 2 is eth2.
-        const interfaceName = `eth${idx}`;
-
         return (
-          <li
-            style={{ paddingBottom: 4 }}
+          <InterfaceListItem
+            idx={idx}
+            interfaceEntry={interfaceEntry}
             key={interfaceEntry.label ?? 'public' + idx}
-          >
-            {interfaceName} – {getInterfaceLabel(interfaceEntry)}
-          </li>
+          />
         );
       })}
     </StyledUl>
@@ -132,15 +128,3 @@ const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
   },
   padding: '0 !important',
 });
-
-export const getInterfaceLabel = (configInterface: Interface): string => {
-  if (configInterface.purpose === 'public') {
-    return 'Public Internet';
-  }
-
-  const interfaceLabel = configInterface.label;
-  const ipamAddress = configInterface.ipam_address;
-  const hasIPAM = Boolean(ipamAddress);
-
-  return `VLAN: ${interfaceLabel} ${hasIPAM ? `(${ipamAddress})` : ''}`;
-};

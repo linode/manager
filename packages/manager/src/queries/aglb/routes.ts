@@ -1,6 +1,13 @@
-import { deleteLoadbalancerRoute, getLoadbalancerRoutes } from '@linode/api-v4';
+import {
+  CreateRoutePayload,
+  createLoadbalancerRoute,
+  deleteLoadbalancerRoute,
+  getLoadbalancerRoutes,
+  updateLoadbalancerRoute,
+} from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
@@ -9,6 +16,7 @@ import type {
   Params,
   ResourcePage,
   Route,
+  UpdateRoutePayload,
 } from '@linode/api-v4';
 
 export const useLoadBalancerRoutesQuery = (
@@ -20,6 +28,49 @@ export const useLoadBalancerRoutesQuery = (
     [QUERY_KEY, 'loadbalancer', id, 'routes', params, filter],
     () => getLoadbalancerRoutes(id, params, filter),
     { keepPreviousData: true }
+  );
+};
+
+export const useLoadBalancerRouteCreateMutation = (loadbalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Route, APIError[], CreateRoutePayload>(
+    (data) => createLoadbalancerRoute(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerRouteUpdateMutation = (
+  loadbalancerId: number,
+  routeId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<Route, APIError[], UpdateRoutePayload>(
+    (data) => updateLoadbalancerRoute(loadbalancerId, routeId, data),
+    {
+      onError() {
+        // On error, refetch to keep the client in sync with the API
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+        ]);
+      },
+      onMutate(variables) {
+        const key = [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'];
+        // Optimistically update the route on mutate
+        updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
+      },
+    }
   );
 };
 

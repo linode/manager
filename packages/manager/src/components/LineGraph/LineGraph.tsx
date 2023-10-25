@@ -16,7 +16,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { setUpCharts } from 'src/utilities/charts';
-import roundTo from 'src/utilities/roundTo';
+import { roundTo } from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
 
 import AccessibleGraphData from './AccessibleGraphData';

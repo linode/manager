@@ -7,9 +7,9 @@ import { Button } from 'src/components/Button/Button';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
 import {
-  calculateAvailableIPv4sRFC1918,
-  SubnetFieldState,
   RESERVED_IP_NUMBER,
+  SubnetFieldState,
+  calculateAvailableIPv4sRFC1918,
 } from 'src/utilities/subnets';
 
 interface Props {
@@ -26,7 +26,7 @@ interface Props {
   subnet: SubnetFieldState;
 }
 
-// TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
+// @TODO VPC: currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
   const { disabled, idx, isRemovable, onChange, subnet } = props;
 
@@ -56,22 +56,22 @@ export const SubnetNode = (props: Props) => {
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
-          xs={isRemovable ? 11 : 12}
           sx={{ ...(!isRemovable && { width: '100%' }) }}
+          xs={isRemovable ? 11 : 12}
         >
           <TextField
             disabled={disabled}
             errorText={subnet.labelError}
             inputId={`subnet-label-${idx}`}
-            label="Subnet label"
+            label="Subnet Label"
             onChange={onLabelChange}
             placeholder="Enter a subnet label"
             value={subnet.label}
           />
         </Grid>
-        {isRemovable && !!idx && (
+        {isRemovable && (
           <Grid xs={1}>
-            <StyledButton onClick={removeSubnet}>
+            <StyledButton onClick={removeSubnet} aria-label="Remove Subnet">
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>

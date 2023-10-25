@@ -1,8 +1,27 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { set } from 'lodash';
 import { reverse } from 'ramda';
 
 import { getAPIErrorOrDefault } from './errorUtils';
 import { isNilOrEmpty } from './isNilOrEmpty';
+
+import type { FormikErrors } from 'formik';
+
+export const getFormikErrorsFromAPIErrors = <T>(
+  errors: APIError[],
+  prefixToRemoveFromFields?: string
+): FormikErrors<T> => {
+  return errors.reduce((acc: FormikErrors<T>, error: APIError) => {
+    if (error.field) {
+      const field = prefixToRemoveFromFields
+        ? error.field.replace(prefixToRemoveFromFields, '')
+        : error.field;
+
+      set(acc, field, error.reason);
+    }
+    return acc;
+  }, {});
+};
 
 export const handleFieldErrors = (
   callback: (error: unknown) => void,
@@ -68,9 +87,9 @@ export const handleAPIErrors = (
 };
 
 export interface SubnetError {
-  label?: string;
   ipv4?: string;
   ipv6?: string;
+  label?: string;
 }
 
 /**

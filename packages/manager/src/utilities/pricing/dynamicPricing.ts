@@ -1,3 +1,5 @@
+import { UNKNOWN_PRICE } from './constants';
+
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
 
@@ -25,17 +27,14 @@ export const priceIncreaseMap = {
   'id-cgk': 0.2, // Jakarta
 };
 
-// TODO: DC Pricing - M3-6973: Update these values when beta pricing ends.
 export const objectStoragePriceIncreaseMap = {
   'br-gru': {
-    monthly: 0.0,
-    storage_overage: 0.0,
-    transfer_overage: 0.0,
+    storage_overage: 0.028,
+    transfer_overage: 0.007,
   },
   'id-cgk': {
-    monthly: 0.0,
-    storage_overage: 0.0,
-    transfer_overage: 0.0,
+    storage_overage: 0.024,
+    transfer_overage: 0.015,
   },
 };
 
@@ -54,8 +53,11 @@ export const getDCSpecificPrice = ({
   flags,
   regionId,
 }: DataCenterPricingOptions) => {
-  if (!flags?.dcSpecificPricing || !regionId) {
-    // TODO: M3-7063 (defaults)
+  if (!regionId || !basePrice) {
+    return undefined;
+  }
+
+  if (!flags?.dcSpecificPricing) {
     return basePrice.toFixed(2);
   }
 
@@ -69,4 +71,15 @@ export const getDCSpecificPrice = ({
   }
 
   return basePrice.toFixed(2);
+};
+
+export const renderMonthlyPriceToCorrectDecimalPlace = (
+  monthlyPrice: null | number | undefined
+) => {
+  if (!monthlyPrice) {
+    return UNKNOWN_PRICE;
+  }
+  return Number.isInteger(monthlyPrice)
+    ? monthlyPrice
+    : monthlyPrice.toFixed(2);
 };

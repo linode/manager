@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
 import { Tooltip, TooltipProps } from 'src/components/Tooltip';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export interface CopyTooltipProps {
   /**
@@ -73,7 +73,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
 
 const StyledCopyTooltipButton = styled('button', {
   label: 'StyledCopyTooltipButton',
-  shouldForwardProp: (prop) => isPropValid(['copyableText', 'text'], prop),
+  shouldForwardProp: omittedProps(['copyableText', 'text']),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {
     color: theme.color.grey1,

@@ -2,7 +2,7 @@ import { default as _Chip, ChipProps as _ChipProps } from '@mui/material/Chip';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export interface ChipProps extends _ChipProps {
   /**
@@ -46,8 +46,7 @@ export const Chip = ({
 
 const StyledChip = styled(_Chip, {
   label: 'StyledChip',
-  shouldForwardProp: (prop) =>
-    isPropValid(['inTable', 'outlineColor', 'pill'], prop),
+  shouldForwardProp: omittedProps(['inTable', 'outlineColor', 'pill']),
 })<ChipProps>(({ theme, ...props }) => ({
   ...(props.inTable && {
     marginBottom: 0,

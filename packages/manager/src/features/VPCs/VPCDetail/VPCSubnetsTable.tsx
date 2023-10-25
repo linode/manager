@@ -31,6 +31,7 @@ import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
+import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
@@ -46,6 +47,9 @@ export const VPCSubnetsTable = (props: Props) => {
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
     Subnet | undefined
+  >();
+  const [selectedLinode, setSelectedLinode] = React.useState<
+    Linode | undefined
   >();
   const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
     false
@@ -125,6 +129,12 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const handleSubnetUnassignLinodes = (subnet: Subnet) => {
     setSelectedSubnet(subnet);
+    setSubnetUnassignLinodesDrawerOpen(true);
+  };
+
+  const handleSubnetUnassignLinode = (subnet: Subnet, linode: Linode) => {
+    setSelectedSubnet(subnet);
+    setSelectedLinode(linode);
     setSubnetUnassignLinodesDrawerOpen(true);
   };
 
@@ -220,15 +230,17 @@ export const VPCSubnetsTable = (props: Props) => {
           </TableHead>
           <TableBody>
             {subnet.linodes.length > 0 ? (
-              subnet.linodes.map((linodeId) => (
+              subnet.linodes.map((linodeInfo) => (
                 <SubnetLinodeRow
-                  key={linodeId}
-                  linodeId={linodeId}
+                  handleUnassignLinode={handleSubnetUnassignLinode}
+                  key={linodeInfo.id}
+                  linodeId={linodeInfo.id}
+                  subnet={subnet}
                   subnetId={subnet.id}
                 />
               ))
             ) : (
-              <TableRowEmpty colSpan={5} message={'No Linodes'} />
+              <TableRowEmpty colSpan={6} message={'No Linodes'} />
             )}
           </TableBody>
         </Table>
@@ -276,8 +288,10 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcId={vpcId}
       />
       <CollapsibleTable
+        TableRowEmpty={
+          <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
+        }
         TableItems={getTableItems()}
-        TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Subnets'} />}
         TableRowHead={SubnetTableRowHead}
       />
       <PaginationFooter
@@ -291,8 +305,10 @@ export const VPCSubnetsTable = (props: Props) => {
         <SubnetUnassignLinodesDrawer
           onClose={() => {
             setSubnetUnassignLinodesDrawerOpen(false);
+            setSelectedLinode(undefined);
           }}
           open={subnetUnassignLinodesDrawerOpen}
+          selectedLinode={selectedLinode}
           subnet={selectedSubnet}
           vpcId={vpcId}
         />
