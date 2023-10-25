@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner';

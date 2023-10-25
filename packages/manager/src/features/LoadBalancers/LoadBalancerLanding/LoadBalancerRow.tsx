@@ -1,5 +1,5 @@
 import { Loadbalancer } from '@linode/api-v4';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 

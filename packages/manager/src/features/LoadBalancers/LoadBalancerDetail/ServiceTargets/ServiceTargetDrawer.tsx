@@ -1,6 +1,5 @@
 import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
 import { UpdateServiceTargetSchema } from '@linode/validation';
-import Stack from '@mui/material/Stack';
 import { useFormik, yupToFormErrors } from 'formik';
 import React from 'react';
 
@@ -17,6 +16,7 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
