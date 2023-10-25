@@ -7385,6 +7385,11 @@ eslint-plugin-jsx-a11y@^6.7.1:
     object.fromentries "^2.0.6"
     semver "^6.3.0"
 
+eslint-plugin-local-rules@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-local-rules/-/eslint-plugin-local-rules-2.0.0.tgz#cda95d7616cc0e2609d76c347c187ca2be1e252e"
+  integrity sha512-sWueme0kUcP0JC1+6OBDQ9edBDVFJR92WJHSRbhiRExlenMEuUisdaVBPR+ItFBFXo2Pdw6FD2UfGZWkz8e93g==
+
 eslint-plugin-node@^11.0.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-node/-/eslint-plugin-node-11.1.0.tgz#c95544416ee4ada26740a30474eefc5402dc671d"
@@ -14903,9 +14908,9 @@ yallist@^4.0.0:
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
 yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2, yaml@^2.2.2, yaml@^2.3.0:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.2.tgz#f522db4313c671a0ca963a75670f1c12ea909144"
-  integrity sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.3.tgz#01f6d18ef036446340007db8e016810e5d64aad9"
+  integrity sha512-zw0VAJxgeZ6+++/su5AFoqBbZbrEakwu+X0M5HmcwUiBL7AzcuPKjj5we4xfQLp78LkEMpD0cOnUhmgOVy3KdQ==
 
 yargs-parser@^11.1.1, yargs-parser@^18.1.2, yargs-parser@^18.1.3, yargs-parser@^20.2.2, yargs-parser@^20.2.9:
   version "18.1.3"

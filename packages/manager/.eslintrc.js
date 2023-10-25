@@ -109,6 +109,7 @@ module.exports = {
     'scanjs-rules',
     'xss',
     'perfectionist',
+    'eslint-plugin-local-rules',
   ],
   rules: {
     '@typescript-eslint/camelcase': 'off',
@@ -269,6 +270,7 @@ module.exports = {
         htmlVariableRules: ['__html', 'sanitize/i'],
       },
     ],
+    'local-rules/no-custom-fontWeight': 'error',
   },
   settings: {
     react: {
