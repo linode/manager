@@ -1,11 +1,10 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import {
@@ -210,6 +209,7 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
         direction="row"
         flexWrap="wrap"
         gap={2}
+        justifyContent="space-between"
         mb={2}
         mt={1.5}
       >
@@ -238,7 +238,6 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Box flexGrow={1} />
         {/**
          * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
          */}
