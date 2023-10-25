@@ -124,10 +124,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
       purpose,
     });
 
-  const handleVPCLabelChange = (selectedVPCId: number) =>
+  const handleVPCLabelChange = (selectedVPCId: number) => {
     handleChange({
       ipam_address: null,
       ipv4: {
+        nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
         vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
       },
       label: null,
@@ -135,11 +136,13 @@ export const InterfaceSelect = (props: CombinedProps) => {
       subnet_id: undefined,
       vpc_id: selectedVPCId,
     });
+  };
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
       ipam_address: null,
       ipv4: {
+        nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
         vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
       },
       label: null,
