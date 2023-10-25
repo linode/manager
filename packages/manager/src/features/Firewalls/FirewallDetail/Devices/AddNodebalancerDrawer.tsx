@@ -75,7 +75,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
           'firewalls',
         ]);
       } else {
-        failedNodebalancers?.push(selectedNodebalancers[index]);
+        failedNodebalancers.push(selectedNodebalancers[index]);
         const errorReason = getAPIErrorOrDefault(
           result.reason,
           `Failed to add NodeBalancer ${label} (ID ${id}).`
@@ -84,8 +84,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
         if (!firstError) {
           firstError = errorReason;
         }
-
-        enqueueSnackbar(`Failed to add ${label}.`, { variant: 'error' });
       }
     });
 

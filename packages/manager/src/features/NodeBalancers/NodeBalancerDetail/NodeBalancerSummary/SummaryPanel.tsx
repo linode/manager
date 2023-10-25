@@ -24,9 +24,9 @@ export const SummaryPanel = () => {
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
-  const displayFirewallLink = attachedFirewallData?.data?.length ? true : false;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];

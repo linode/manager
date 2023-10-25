@@ -228,9 +228,9 @@ export const nodebalanacerEventHandler = ({
   }
 };
 
-export const useNodeBalancersFirewallsQuery = (linodeID: number) =>
+export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(
-    [queryKey, 'nodebalancer', linodeID, 'firewalls'],
-    () => getNodeBalancerFirewalls(linodeID),
+    [queryKey, 'nodebalancer', nodebalancerId, 'firewalls'],
+    () => getNodeBalancerFirewalls(nodebalancerId),
     queryPresets.oneTimeFetch
   );
