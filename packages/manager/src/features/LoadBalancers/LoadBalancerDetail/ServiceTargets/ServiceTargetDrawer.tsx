@@ -145,8 +145,10 @@ export const ServiceTargetDrawer = (props: Props) => {
   };
 
   const onRemoveEndpoint = (index: number) => {
-    formik.values.endpoints.splice(index, 1);
-    formik.setFieldValue('endpoints', formik.values.endpoints);
+    formik.setFieldValue(
+      'endpoints',
+      formik.values.endpoints.filter((endpoint) => endpoint[index] === index)
+    );
   };
 
   const generalCreateErrors = errorCreateServiceTarget
