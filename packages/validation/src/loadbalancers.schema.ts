@@ -63,6 +63,20 @@ export const CreateServiceTargetSchema = object({
   healthcheck: HealthCheckSchema,
 });
 
+export const UpdateServiceTargetSchema = object({
+  label: string().min(1, 'Label must not be empty.'),
+  endpoints: array(EndpointSchema),
+  ca_certificate: string().nullable(),
+  load_balancing_policy: string().oneOf([
+    'round_robin',
+    'least_request',
+    'ring_hash',
+    'random',
+    'maglev',
+  ]),
+  healthcheck: HealthCheckSchema,
+});
+
 export const CreateRouteSchema = object({
   label: string().required('Label is required.'),
   protocol: string().oneOf(['http', 'tcp']),

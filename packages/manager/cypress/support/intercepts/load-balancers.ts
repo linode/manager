@@ -152,6 +152,25 @@ export const mockCreateServiceTarget = (
 };
 
 /**
+ * Intercepts PUT request to update a service target and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param serviceTarget - Service target with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateServiceTarget = (
+  loadBalancer: Loadbalancer,
+  serviceTarget: ServiceTarget
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
+    makeResponse(serviceTarget)
+  );
+};
+
+/**
  * Intercepts POST request to create a route and mocks response.
  *
  * @param loadBalancer - Load balancer for mocked route.
