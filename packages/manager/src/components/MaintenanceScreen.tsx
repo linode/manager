@@ -1,5 +1,4 @@
 import BuildIcon from '@mui/icons-material/Build';
-import Stack from '@mui/material/Stack';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,6 +6,7 @@ import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 export const MaintenanceScreen = () => {

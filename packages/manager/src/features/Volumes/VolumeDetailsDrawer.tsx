@@ -1,9 +1,9 @@
 import { Volume } from '@linode/api-v4';
-import Stack from '@mui/material/Stack/Stack';
 import React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 interface Props {

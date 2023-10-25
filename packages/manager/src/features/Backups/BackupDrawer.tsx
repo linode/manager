@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import { isNumber } from 'lodash';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

@@ -1,5 +1,5 @@
 import { Firewall } from '@linode/api-v4';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';

@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 
@@ -141,10 +141,17 @@ export const ConfigurationAccordion = (props: Props) => {
             />
           </Stack>
           <Stack maxWidth="600px">
-            <Stack alignItems="center" direction="row">
-              <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="OMG!" />
-              <Box flexGrow={1} />
+            <Stack
+              alignItems="center"
+              direction="row"
+              justifyContent="space-between"
+            >
+              <Stack alignItems="center" direction="row">
+                <InputLabel sx={{ marginBottom: 0 }}>
+                  TLS Certificates
+                </InputLabel>
+                <TooltipIcon status="help" text="OMG!" />
+              </Stack>
               <Button>Upload Certificate</Button>
             </Stack>
             <CertificateTable

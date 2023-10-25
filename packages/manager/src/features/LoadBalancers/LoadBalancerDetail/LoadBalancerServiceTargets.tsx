@@ -1,17 +1,16 @@
 import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
-import Stack from '@mui/material/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -86,10 +85,10 @@ export const LoadBalancerServiceTargets = () => {
   return (
     <>
       <Stack
-        alignItems="flex-end"
         direction="row"
         flexWrap="wrap"
         gap={2}
+        justifyContent="space-between"
         mb={2}
         mt={1.5}
       >
@@ -118,7 +117,6 @@ export const LoadBalancerServiceTargets = () => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Box flexGrow={1} />
         <Button
           buttonType="primary"
           onClick={() => setIsCreateDrawerOpen(true)}
