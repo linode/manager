@@ -28,7 +28,6 @@ const LoadBalancerCreate = () => {
 
   const smallScreenActionsPanelStyles = {
     display: 'flex',
-    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     marginTop: theme.spacing(2),
     width: '100%',
