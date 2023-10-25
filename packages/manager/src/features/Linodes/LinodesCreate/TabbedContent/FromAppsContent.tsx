@@ -422,13 +422,12 @@ const StyledBoxShadowWrapper = styled('div', {
   label: 'StyledBoxShadowWrapper',
 })(({ theme }) => ({
   '&:after': {
-    content: '""',
-    width: '100%',
-    height: '15px',
-    boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
-    position: 'absolute',
     bottom: 0,
+    boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+    content: '""',
+    height: '15px',
+    position: 'absolute',
+    width: '100%',
   },
   position: 'relative',
-  //marginBottom: theme.spacing(3),
 }));
