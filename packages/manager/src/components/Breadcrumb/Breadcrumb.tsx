@@ -6,14 +6,41 @@ import { CrumbOverridesProps, Crumbs } from './Crumbs';
 import { EditableProps, LabelProps } from './types';
 
 export interface BreadcrumbProps {
+  /**
+   * Data attributes passed to the root div for testing
+   */
   breadcrumbDataAttrs?: { [key: string]: boolean };
+  /**
+   * Optional className passed to the root div
+   */
   className?: string;
+  /**
+   * An array of objects that can be used to customize any crumb.
+   */
   crumbOverrides?: CrumbOverridesProps[];
+  /**
+   * A boolean that if true will only show the first and last crumb.
+   */
   firstAndLastOnly?: boolean;
+  /**
+   * An object that can be used to configure the final crumb.
+   */
   labelOptions?: LabelProps;
+  /**
+   * A string that can be used to set a custom title for the last crumb.
+   */
   labelTitle?: string;
+  /**
+   * An object that can be used to define functions, errors, and crumb title for an editable final crumb
+   */
   onEditHandlers?: EditableProps;
+  /*
+   * A string representation of the path of a resource. Each crumb is separated by a `/` character.
+   */
   pathname: string;
+  /**
+   * A number indicating the position of the crumb to remove. Not zero indexed.
+   */
   removeCrumbX?: number;
 }
 
@@ -42,7 +69,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Breadcrumb = (props: BreadcrumbProps) => {
+/**
+ * ## Usage
+ * - Include the current page as the last item in the breadcrumb trail.
+ * - In the breadcrumb trail, the breadcrumb corresponding the the current page should not be a link.
+ */
+export const Breadcrumb = (props: BreadcrumbProps) => {
   const { classes, cx } = useStyles();
 
   const {
@@ -101,5 +133,3 @@ const removeByIndex = (list: string[], indexToRemove: number) => {
     return index !== indexToRemove;
   });
 };
-
-export { Breadcrumb };
