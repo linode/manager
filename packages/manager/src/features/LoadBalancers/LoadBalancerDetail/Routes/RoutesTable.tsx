@@ -1,11 +1,10 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import {
@@ -24,19 +23,25 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
-import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
-import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
-import { DeleteRuleDialog } from './Routes/DeleteRuleDialog';
-import { RuleDrawer } from './Routes/RuleDrawer';
-import { RulesTable } from './RulesTable';
+import { RulesTable } from '../RulesTable';
+import { CreateRouteDrawer } from './CreateRouteDrawer';
+import { DeleteRouteDialog } from './DeleteRouteDialog';
+import { DeleteRuleDialog } from './DeleteRuleDialog';
+import { EditRouteDrawer } from './EditRouteDrawer';
+import { RuleDrawer } from './RuleDrawer';
 
-import type { Filter, Route } from '@linode/api-v4';
+import type { Configuration, Filter, Route } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 
-export const LoadBalancerRoutes = () => {
+interface Props {
+  configuredRoutes?: Configuration['routes'];
+}
+
+export const RoutesTable = ({ configuredRoutes }: Props) => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -64,6 +69,14 @@ export const LoadBalancerRoutes = () => {
     filter['label'] = { '+contains': query };
   }
 
+  /**
+   * If configuredRoutes is passed, it filters the configured routes form API
+   *  Otherwise, it fetches routes without filter in the routes table.
+   */
+  if (configuredRoutes) {
+    filter['+or'] = configuredRoutes.map((route) => ({ id: route.id }));
+  }
+
   const { data: routes, isLoading } = useLoadBalancerRoutesQuery(
     Number(loadbalancerId),
     {
@@ -73,7 +86,7 @@ export const LoadBalancerRoutes = () => {
     filter
   );
 
-  const selectedRoute = routes?.data.find(
+  const selectedRoute = routes?.data?.find(
     (route) => route.id === selectedRouteId
   );
 
@@ -94,6 +107,11 @@ export const LoadBalancerRoutes = () => {
     setSelectedRuleIndex(ruleIndex);
   };
 
+  const onEditRoute = (route: Route) => {
+    setIsEditDrawerOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   const onDeleteRoute = (route: Route) => {
     setIsDeleteDialogOpen(true);
     setSelectedRouteId(route.id);
@@ -104,10 +122,10 @@ export const LoadBalancerRoutes = () => {
   }
 
   const getTableItems = (): TableItem[] => {
-    if (!routes) {
+    if (!routes?.data) {
       return [];
     }
-    return routes.data?.map((route) => {
+    return routes?.data?.map((route) => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
@@ -129,7 +147,7 @@ export const LoadBalancerRoutes = () => {
              */}
             <ActionMenu
               actionsList={[
-                { onClick: () => null, title: 'Edit' },
+                { onClick: () => onEditRoute(route), title: 'Edit' },
                 { onClick: () => null, title: 'Clone Route' },
                 { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
@@ -191,6 +209,7 @@ export const LoadBalancerRoutes = () => {
         direction="row"
         flexWrap="wrap"
         gap={2}
+        justifyContent="space-between"
         mb={2}
         mt={1.5}
       >
@@ -219,7 +238,6 @@ export const LoadBalancerRoutes = () => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Box flexGrow={1} />
         {/**
          * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
          */}
@@ -251,6 +269,12 @@ export const LoadBalancerRoutes = () => {
         open={isAddRuleDrawerOpen}
         route={selectedRoute}
         ruleIndexToEdit={selectedRuleIndex}
+      />
+      <EditRouteDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        route={selectedRoute}
       />
       <CreateRouteDrawer
         loadbalancerId={Number(loadbalancerId)}

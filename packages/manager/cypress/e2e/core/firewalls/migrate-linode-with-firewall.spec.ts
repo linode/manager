@@ -1,52 +1,68 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { linodeFactory } from '@src/factories';
-import { authenticate } from 'support/api/authentication';
-import { createLinode } from 'support/api/linodes';
 import {
-  getClick,
-  containsClick,
-  fbtClick,
-  getVisible,
-  fbtVisible,
-  containsVisible,
-} from 'support/helpers';
-import { mockGetLinodeDetails } from 'support/intercepts/linodes';
+  createLinodeRequestFactory,
+  firewallFactory,
+  linodeFactory,
+  regionFactory,
+} from '@src/factories';
+import { authenticate } from 'support/api/authentication';
+import { createLinode } from '@linode/api-v4';
+import {
+  interceptCreateFirewall,
+  interceptGetFirewalls,
+  mockGetFirewalls,
+} from 'support/intercepts/firewalls';
+import {
+  interceptMigrateLinode,
+  mockGetLinodeDetails,
+  mockMigrateLinode,
+} from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { selectRegionString } from 'support/ui/constants';
 import { cleanUp } from 'support/util/cleanup';
-import { apiMatcher } from 'support/util/intercepts';
-import { randomString } from 'support/util/random';
+import { randomLabel, randomNumber } from 'support/util/random';
+import type { Linode, Region } from '@linode/api-v4';
+import { chooseRegions } from 'support/util/regions';
 
-const fakeRegionsData = {
-  data: [
-    {
-      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-      country: 'us',
-      id: 'us-central',
-      status: 'ok',
-      label: 'Dallas, TX',
-    },
-    {
-      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-      country: 'uk',
-      id: 'eu-west',
-      status: 'ok',
-      label: 'London, UK',
-    },
-    {
-      capabilities: [
-        'Linodes',
-        'NodeBalancers',
-        'Block Storage',
-        'Cloud Firewall',
-      ],
-      country: 'sg',
-      id: 'ap-south',
-      status: 'ok',
-      label: 'Singapore, SG',
-    },
-  ],
-};
+const mockRegions: Region[] = [
+  regionFactory.build({
+    capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
+    id: 'us-central',
+    status: 'ok',
+    label: 'Dallas, TX',
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
+    country: 'uk',
+    id: 'eu-west',
+    status: 'ok',
+    label: 'London, UK',
+  }),
+  regionFactory.build({
+    capabilities: [
+      'Linodes',
+      'NodeBalancers',
+      'Block Storage',
+      'Cloud Firewall',
+    ],
+    country: 'sg',
+    id: 'ap-south',
+    status: 'ok',
+    label: 'Singapore, SG',
+  }),
+];
+
+// Migration notes and warnings that are shown to the user.
+// We want to confirm that these are displayed so that users are not surprised
+// by migration side effects.
+const migrationNoticeSubstrings = [
+  'assigned new IPv4 and IPv6 addresses',
+  'existing backups with the Linode Backup Service will not be migrated',
+  'DNS records (including Reverse DNS) will need to be updated',
+  'attached VLANs will be inaccessible if the destination region does not support VLANs',
+  'Your Linode will be powered off.',
+];
 
 authenticate();
 describe('Migrate Linode With Firewall', () => {
@@ -54,196 +70,131 @@ describe('Migrate Linode With Firewall', () => {
     cleanUp('firewalls');
   });
 
+  /*
+   * - Tests Linode migration flow for Linodes with Firewalls using mock API data.
+   * - Confirms that user is warned of migration consequences.
+   */
   it('test migrate flow - mocking all data', () => {
-    const fakeLinodeId = 9999;
-    const fakeFirewallId = 6666;
-
-    // modify incoming response
-    cy.intercept(apiMatcher('networking/firewalls*'), (req) => {
-      req.reply((res) => {
-        res.send({
-          data: [
-            {
-              id: fakeFirewallId,
-              label: 'test',
-              created: '2020-08-03T15:49:50',
-              updated: '2020-08-03T15:49:50',
-              status: 'enabled',
-              rules: {
-                inbound: [
-                  {
-                    ports: '80',
-                    protocol: 'TCP',
-                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
-                  },
-                ],
-                outbound: [
-                  {
-                    ports: '80',
-                    protocol: 'TCP',
-                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
-                  },
-                ],
-              },
-              tags: [],
-              devices: { linodes: [fakeLinodeId] },
-            },
-          ],
-          page: 1,
-          pages: 1,
-          results: 1,
-        });
-      });
-    }).as('getFirewalls');
-
-    const fakeLinodeData = linodeFactory.build({
-      id: fakeLinodeId,
-      label: 'debian-us-central',
-      group: '',
-      status: 'running',
-      created: '2020-06-23T16:02:14',
-      updated: '2020-06-23T16:05:23',
-      type: 'g6-standard-1',
-      ipv4: ['104.237.129.173'],
-      ipv6: '2600:3c00::f03c:92ff:feeb:98f9/64',
-      image: 'linode/debian10',
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
       region: 'us-central',
-      specs: {
-        disk: 51200,
-        memory: 2048,
-        vcpus: 1,
-        gpus: 0,
-        transfer: 2000,
-      },
-      alerts: {
-        cpu: 90,
-        network_in: 10,
-        network_out: 10,
-        transfer_quota: 80,
-        io: 10000,
-      },
-      backups: {
-        enabled: true,
-        schedule: { day: 'Scheduling', window: 'Scheduling' },
-        last_successful: '2020-08-02T22:26:19',
-      },
-      hypervisor: 'kvm',
-      watchdog_enabled: true,
-      tags: [],
     });
 
-    // modify incoming response
-    cy.intercept(apiMatcher('regions*'), (req) => {
-      req.reply((res) => {
-        res.send(fakeRegionsData);
-      });
-    }).as('getRegions');
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      status: 'enabled',
+      devices: {
+        linodes: [mockLinode.id],
+      },
+    });
 
-    // intercept request and stub it, respond with 200
-    cy.intercept(
-      'POST',
-      apiMatcher(`linode/instances/${fakeLinodeId}/migrate`),
-      {
-        statusCode: 200,
-      }
-    ).as('migrateReq');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockMigrateLinode(mockLinode.id).as('migrateLinode');
 
-    // modify incoming response
-    mockGetLinodeDetails(fakeLinodeId, fakeLinodeData).as('getLinode');
-
-    // modify incoming response
-    cy.intercept(
-      'GET',
-      apiMatcher(`linode/instances/${fakeLinodeId}/migrate`),
-      (req) => {
-        req.reply((res) => {
-          res.send(fakeLinodeData);
-        });
-      }
-    ).as('getLinode');
-
-    cy.visitWithLogin(`/linodes/${fakeLinodeId}/migrate`);
-    cy.wait('@getLinode');
-    cy.wait('@getRegions');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
+    cy.wait(['@getLinode', '@getRegions']);
     cy.findByText('Dallas, TX').should('be.visible');
-    getClick('[data-qa-checked="false"]');
-    cy.findByText(`North America: Dallas, TX`).should('be.visible');
-    containsClick(selectRegionString);
 
-    ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
+    ui.dialog
+      .findByTitle(`Migrate Linode ${mockLinode.label} to another region`)
+      .should('be.visible')
+      .within(() => {
+        // Confirm that 'Enter Migration Queue' button is disabled.
+        ui.button
+          .findByTitle('Enter Migration Queue')
+          .should('be.visible')
+          .should('be.disabled');
 
-    fbtClick('Enter Migration Queue');
-    cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
+        // Confirm that user is warned of Migration side effects.
+        cy.findByText('Caution:').should('be.visible');
+        migrationNoticeSubstrings.forEach((noticeSubstring: string) => {
+          cy.contains(noticeSubstring).should('be.visible');
+        });
+
+        // Click the "Accept" check box.
+        cy.findByText('Accept').should('be.visible').click();
+
+        // Select migration region.
+        cy.findByText(`North America: Dallas, TX`).should('be.visible');
+        cy.contains(selectRegionString).click();
+        ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
+
+        ui.button
+          .findByTitle('Enter Migration Queue')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
   });
 
-  // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
+  /*
+   * - Uses real API data to create a Firewall, attach a Linode to it, then migrate the Linode.
+   */
   it('migrates linode with firewall - real data', () => {
-    const validateMigration = () => {
+    const [migrationRegionStart, migrationRegionEnd] = chooseRegions(2);
+    const firewallLabel = randomLabel();
+    const linodePayload = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: migrationRegionStart.id,
+    });
+
+    interceptCreateFirewall().as('createFirewall');
+    interceptGetFirewalls().as('getFirewalls');
+
+    // Create a Linode, then navigate to the Firewalls landing page.
+    cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+      interceptMigrateLinode(linode.id).as('migrateLinode');
+      cy.visitWithLogin('/firewalls');
+      cy.wait('@getFirewalls');
+
       ui.button
-        .findByTitle('Enter Migration Queue')
+        .findByTitle('Create Firewall')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
-      cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
-    };
+      ui.drawer
+        .findByTitle('Create Firewall')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Label')
+            .should('be.visible')
+            .click()
+            .type(firewallLabel);
 
-    const firewallLabel = `cy-test-firewall-${randomString(5)}`;
-    // intercept create firewall request
-    cy.intercept('POST', apiMatcher('networking/firewalls')).as(
-      'createFirewall'
-    );
-    // modify incoming response
-    cy.intercept(apiMatcher('networking/firewalls*')).as('getFirewalls');
+          cy.findByText('Linodes')
+            .should('be.visible')
+            .click()
+            .type(linode.label);
 
-    cy.visitWithLogin('/firewalls');
+          ui.autocompletePopper
+            .findByTitle(linode.label)
+            .should('be.visible')
+            .click();
 
-    createLinode({ region: 'ap-southeast' }).then((linode) => {
-      // intercept migrate linode request
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/migrate`)
-      ).as('migrateLinode');
+          // Click on the Select again to dismiss the autocomplete popper.
+          cy.findByLabelText('Linodes').should('be.visible').click();
 
-      getVisible('[data-qa-header]').within(() => {
-        fbtVisible('Firewalls');
-      });
-
-      cy.wait('@getFirewalls').then(({ response }) => {
-        const length = response?.body.data['length'];
-        console.log(`THIS: ${length}`);
-        getVisible('[data-qa-header]').within(() => {
-          fbtVisible('Firewalls');
+          ui.buttonGroup
+            .findButtonByTitle('Create Firewall')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
-        fbtClick('Create Firewall');
-      });
 
-      cy.get('[data-testid="textfield-input"]:first')
-        .should('be.visible')
-        .type(firewallLabel);
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click()
-        .type(linode.label);
-
-      cy.get('[data-qa-autocomplete-popper]')
-        .findByText(linode.label)
-        .should('be.visible')
-        .click();
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click();
-
-      cy.findByText(linode.label).should('be.visible');
-
-      getClick('[data-qa-submit="true"]');
       cy.wait('@createFirewall');
-      cy.visit(`/linodes/${linode.id}`);
-      getVisible('[data-qa-link-text="true"]').within(() => {
-        fbtVisible('linodes');
-      });
+      cy.visitWithLogin(`/linodes/${linode.id}`);
+      cy.get('[data-qa-link-text="true"]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('linodes').should('be.visible');
+        });
 
       // Make sure Linode is running before attempting to migrate.
       cy.get('[data-qa-linode-status]').within(() => {
@@ -257,56 +208,28 @@ describe('Migrate Linode With Firewall', () => {
 
       ui.actionMenuItem.findByTitle('Migrate').should('be.visible').click();
 
-      containsVisible(`Migrate Linode ${linode.label}`);
-      getClick('[data-qa-checked="false"]');
-      fbtClick(selectRegionString);
+      ui.dialog
+        .findByTitle(`Migrate Linode ${linode.label} to another region`)
+        .should('be.visible')
+        .within(() => {
+          // Click "Accept" check box.
+          cy.findByText('Accept').should('be.visible').click();
 
-      ui.regionSelect.findItemByRegionLabel('Toronto, CA').click();
-      validateMigration();
-    });
-  });
+          // Select region for migration.
+          cy.findByText(selectRegionString).click();
+          ui.regionSelect
+            .findItemByRegionLabel(migrationRegionEnd.label)
+            .click();
 
-  it('adds linode to firewall - real data', () => {
-    const firewallLabel = `cy-test-firewall-${randomString(5)}`;
-    // intercept firewall requests
-    cy.intercept('POST', apiMatcher('networking/firewalls')).as(
-      'createFirewall'
-    );
-    cy.intercept(apiMatcher('networking/firewalls*')).as('getFirewall');
-
-    cy.visitWithLogin('/firewalls');
-    createLinode().then((linode) => {
-      const linodeLabel = linode.label;
-      cy.wait('@getFirewall').then(() => {
-        getVisible('[data-qa-header]').within(() => {
-          fbtVisible('Firewalls');
+          // Initiate migration.
+          ui.button
+            .findByTitle('Enter Migration Queue')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
-        fbtClick('Create Firewall');
-      });
 
-      cy.get('[data-testid="textfield-input"]:first')
-        .should('be.visible')
-        .type(firewallLabel);
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click()
-        .type(linodeLabel);
-
-      cy.get('[data-qa-autocomplete-popper]')
-        .findByText(linode.label)
-        .should('be.visible')
-        .click();
-
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click();
-
-      cy.findByText(linodeLabel).should('be.visible');
-
-      getClick('[data-qa-submit="true"]');
-      cy.wait('@createFirewall').its('response.statusCode').should('eq', 200);
-      fbtVisible(linodeLabel);
+      cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
     });
   });
 });
