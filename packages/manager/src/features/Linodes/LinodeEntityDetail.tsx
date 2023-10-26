@@ -14,6 +14,7 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
@@ -578,7 +579,9 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
               return thisRow.text ? (
                 <StyledTableRow key={thisRow.text}>
                   {thisRow.heading ? (
-                    <th scope="row">{thisRow.heading}</th>
+                    <TableCell component="th" scope="row">
+                      {thisRow.heading}
+                    </TableCell>
                   ) : null}
                   <StyledTableCell>
                     <StyledGradientDiv>
