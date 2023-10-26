@@ -81,4 +81,12 @@ describe('Removable Selections List', () => {
     fireEvent.click(removeButton);
     expect(props.onRemove).toHaveBeenCalled();
   });
+
+  it('should not display the remove button for a list item', () => {
+    const screen = renderWithTheme(
+      <RemovableSelectionsList {...props} isRemovable={false} />
+    );
+    const removeButton = screen.queryByLabelText(`remove my-linode-1`);
+    expect(removeButton).not.toBeInTheDocument();
+  });
 });

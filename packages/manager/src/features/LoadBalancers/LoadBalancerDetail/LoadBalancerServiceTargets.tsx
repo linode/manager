@@ -1,7 +1,7 @@
 import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu';
@@ -26,8 +26,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
-import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetDrawer';
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
+import { ServiceTargetDrawer } from './ServiceTargets/ServiceTargetDrawer';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -37,7 +37,7 @@ export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [query, setQuery] = useState<string>();
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [
     selectedServiceTarget,
@@ -59,10 +59,22 @@ export const LoadBalancerServiceTargets = () => {
     ['+order_by']: orderBy,
   };
 
+  const handleEditServiceTarget = (serviceTarget: ServiceTarget) => {
+    setIsDrawerOpen(true);
+    setSelectedServiceTarget(serviceTarget);
+  };
+
   const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
     setIsDeleteDialogOpen(true);
     setSelectedServiceTarget(serviceTarget);
   };
+
+  // Once the drawer is closed, clear the selected service target for the correct add/edit drawer data.
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      setSelectedServiceTarget(undefined);
+    }
+  }, [isDrawerOpen]);
 
   // If the user types in a search query, filter results by label.
   if (query) {
@@ -117,10 +129,7 @@ export const LoadBalancerServiceTargets = () => {
           style={{ minWidth: '320px' }}
           value={query}
         />
-        <Button
-          buttonType="primary"
-          onClick={() => setIsCreateDrawerOpen(true)}
-        >
+        <Button buttonType="primary" onClick={() => setIsDrawerOpen(true)}>
           Create Service Target
         </Button>
       </Stack>
@@ -181,7 +190,10 @@ export const LoadBalancerServiceTargets = () => {
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
-                    { onClick: () => null, title: 'Edit' },
+                    {
+                      onClick: () => handleEditServiceTarget(serviceTarget),
+                      title: 'Edit',
+                    },
                     { onClick: () => null, title: 'Clone Service Target' },
                     {
                       onClick: () => handleDeleteServiceTarget(serviceTarget),
@@ -202,10 +214,11 @@ export const LoadBalancerServiceTargets = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <CreateServiceTargetDrawer
+      <ServiceTargetDrawer
         loadbalancerId={Number(loadbalancerId)}
-        onClose={() => setIsCreateDrawerOpen(false)}
-        open={isCreateDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        serviceTarget={selectedServiceTarget}
       />
       <DeleteServiceTargetDialog
         loadbalancerId={Number(loadbalancerId)}

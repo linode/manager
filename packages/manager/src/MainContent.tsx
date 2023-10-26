@@ -161,8 +161,12 @@ const StackScripts = React.lazy(
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
-const SupportTicketDetail = React.lazy(
-  () => import('src/features/Support/SupportTicketDetail')
+const SupportTicketDetail = React.lazy(() =>
+  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
+    (module) => ({
+      default: module.SupportTicketDetail,
+    })
+  )
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
