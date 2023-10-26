@@ -12,6 +12,7 @@ import { useTheme } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import {
   CustomStepIcon,
@@ -133,9 +134,9 @@ export const VerticalLinearStepper = ({
                                * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
                                * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
                                */
-                              'data-testid': steps[index + 1]?.label
-                                .toLocaleLowerCase()
-                                .replace(/\s/g, ''),
+                              'data-testid': convertToKebabCase(
+                                steps[index + 1]?.label
+                              ),
                               label: `Next: ${steps[index + 1]?.label}`,
                               onClick: () => {
                                 handleNext();
