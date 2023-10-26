@@ -17,6 +17,7 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
+import NullComponent from './components/NullComponent';
 import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
 import { queryClientFactory } from './queries/base';
@@ -35,63 +36,58 @@ const LoginAsCustomerCallback = React.lazy(
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
-const NullAuth = () => <span>null auth route</span>;
-
-const Null = () => <span>null route</span>;
-
-const ContextWrapper = () => (
-  <ReduxStoreProvider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <LinodeThemeWrapper>
-        <CssBaseline />
-        <React.Suspense fallback={<SplashScreen />}>
-          <Switch>
-            <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
-            <Route
-              component={LoginAsCustomerCallback}
-              exact
-              path="/admin/callback"
-            />
-            {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-            <Route component={NullAuth} exact path="/nullauth" />
-            <Route component={Logout} exact path="/logout" />
-            <Route component={CancelLanding} exact path="/cancel" />
-            <Snackbar
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-              autoHideDuration={4000}
-              data-qa-toast
-              hideIconVariant={true}
-              maxSnack={3}
-            >
-              <Switch>
-                <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
-                <Route component={App} />
-              </Switch>
-            </Snackbar>
-          </Switch>
-        </React.Suspense>
-      </LinodeThemeWrapper>
-      <ReactQueryDevtools
-        initialIsOpen={false}
-        toggleButtonProps={{ style: { marginLeft: '3em' } }}
-      />
-    </QueryClientProvider>
-  </ReduxStoreProvider>
-);
-
 const Main = () => {
   if (!navigator.cookieEnabled) {
     return <CookieWarning />;
   }
 
   return (
-    <Router>
-      <Switch>
-        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-        <Route component={Null} exact path="/null" />
-        <Route component={ContextWrapper} />
-      </Switch>
-    </Router>
+    <ReduxStoreProvider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <LinodeThemeWrapper>
+          <CssBaseline />
+          <React.Suspense fallback={<SplashScreen />}>
+            <Router>
+              <Switch>
+                <Route
+                  component={OAuthCallbackPage}
+                  exact
+                  path="/oauth/callback"
+                />
+                <Route
+                  component={LoginAsCustomerCallback}
+                  exact
+                  path="/admin/callback"
+                />
+                {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+                <Route component={NullComponent} exact path="/nullauth" />
+                <Route component={Logout} exact path="/logout" />
+                <Route component={CancelLanding} exact path="/cancel" />
+                <Snackbar
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                  autoHideDuration={4000}
+                  data-qa-toast
+                  hideIconVariant={true}
+                  maxSnack={3}
+                >
+                  <Switch>
+                    <Route
+                      component={Lish}
+                      path="/linodes/:linodeId/lish/:type"
+                    />
+                    <Route component={App} />
+                  </Switch>
+                </Snackbar>
+              </Switch>
+            </Router>
+          </React.Suspense>
+        </LinodeThemeWrapper>
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          toggleButtonProps={{ style: { marginLeft: '3em' } }}
+        />
+      </QueryClientProvider>
+    </ReduxStoreProvider>
   );
 };
 
