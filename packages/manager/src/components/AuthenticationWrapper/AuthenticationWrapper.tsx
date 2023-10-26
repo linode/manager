@@ -7,6 +7,7 @@ import { useSelector, useStore } from 'react-redux';
 import { startEventsInterval } from 'src/events';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { queryKey as accountQueryKey } from 'src/queries/account';
+import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 
@@ -20,9 +21,9 @@ export const useInitialRequests = () => {
 
   const { token } = useAuthentication();
   const isAuthenticated = Boolean(token);
-  // const pendingUpload = usePendingUpload();
+  const pendingUpload = usePendingUpload();
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     /**
@@ -32,6 +33,17 @@ export const useInitialRequests = () => {
      * if nothing exists in local storage, we get shot off to login
      */
     store.dispatch(handleInitTokens());
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      !isAuthenticated &&
+      // Do not redirect to Login if there is a pending image upload.
+      !pendingUpload &&
+      !isLoading
+    ) {
+      redirectToLogin(location.pathname, location.search);
+    }
 
     /**
      * this is the case where we've just come back from login and need
@@ -40,7 +52,7 @@ export const useInitialRequests = () => {
     if (isAuthenticated) {
       makeInitialRequests();
     }
-  }, []);
+  }, [isAuthenticated, isLoading, pendingUpload]);
 
   /**
    * We make a series of requests for data on app load. The flow is:
