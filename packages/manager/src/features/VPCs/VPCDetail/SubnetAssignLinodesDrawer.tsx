@@ -146,12 +146,15 @@ export const SubnetAssignLinodesDrawer = (
 
     const interfacePayload: InterfacePayload = {
       ipam_address: null,
+      ipv4: {
+        nat_1_1: 'any',
+        vpc: !autoAssignIPv4 ? chosenIP : undefined,
+      },
       label: null,
       primary: true,
       purpose: 'vpc',
       subnet_id: subnet?.id,
       vpc_id: vpcId,
-      ...(!autoAssignIPv4 && { ipv4: { nat_1_1: 'any', vpc: chosenIP } }),
     };
 
     try {
