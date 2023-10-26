@@ -13,6 +13,7 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
+import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
 import {
   StyledBodyTypography,
@@ -52,16 +53,7 @@ const VPCCreate = () => {
         docsLink="#" // @TODO VPC: add correct docs link
         title="Create"
       />
-      {userCannotAddVPC && (
-        <Notice
-          text={
-            "You don't have permissions to create a new VPC. Please contact an account administrator for details."
-          }
-          important
-          spacingTop={16}
-          variant="error"
-        />
-      )}
+      {userCannotAddVPC && <CannotCreateVPCNotice />}
       <Grid>
         {generalAPIError ? (
           <Notice text={generalAPIError} variant="error" />

@@ -9,6 +9,7 @@ import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelec
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponents/CannotCreateVPCNotice';
 import { MultipleSubnetInput } from 'src/features/VPCs/VPCCreate/MultipleSubnetInput';
 import {
   StyledBodyTypography,
@@ -53,16 +54,7 @@ export const VPCCreateDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title={'Create VPC'}>
-      {userCannotAddVPC && (
-        <Notice
-          text={
-            "You don't have permissions to create a new VPC. Please contact an account administrator for details."
-          }
-          important
-          spacingTop={16}
-          variant="error"
-        />
-      )}
+      {userCannotAddVPC && <CannotCreateVPCNotice />}
       <Grid>
         {generalAPIError ? (
           <Notice text={generalAPIError} variant="error" />
