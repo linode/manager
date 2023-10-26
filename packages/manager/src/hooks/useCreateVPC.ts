@@ -9,6 +9,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
 import {
   SubnetError,
@@ -21,10 +22,6 @@ import {
 } from 'src/utilities/subnets';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
-
-// so far differences:
-// 1) page pushes to new page, drawer sets value
-// 2) drawer presets the region
 
 export interface UseCreateVPCInputs {
   handleSelectVPC?: (vpcId: number) => void;
@@ -40,6 +37,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
+
+  const { data: regions } = useRegionsQuery();
+  const regionsWithVPCCapability =
+    regions?.filter((region) => region.capabilities.includes('VPCs')) ?? [];
 
   const [
     generalSubnetErrorsFromAPI,
@@ -202,6 +203,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     isLoadingCreateVPC,
     onChangeField,
     onCreateVPC,
+    regionsWithVPCCapability,
     setGeneralAPIError,
     setGeneralSubnetErrorsFromAPI,
     userCannotAddVPC,

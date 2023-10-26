@@ -12,7 +12,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
-import { useRegionsQuery } from 'src/queries/regions';
 
 import { MultipleSubnetInput } from './MultipleSubnetInput';
 import {
@@ -22,9 +21,6 @@ import {
 
 const VPCCreate = () => {
   const theme = useTheme();
-  const { data: regions } = useRegionsQuery();
-  const regionsWithVPCCapability =
-    regions?.filter((region) => region.capabilities.includes('VPCs')) ?? [];
 
   const {
     formik,
@@ -33,6 +29,7 @@ const VPCCreate = () => {
     isLoadingCreateVPC,
     onChangeField,
     onCreateVPC,
+    regionsWithVPCCapability,
     userCannotAddVPC,
   } = useCreateVPC({ pushToPage: true });
 

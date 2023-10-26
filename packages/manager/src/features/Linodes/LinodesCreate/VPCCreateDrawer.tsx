@@ -15,7 +15,6 @@ import {
   StyledHeaderTypography,
 } from 'src/features/VPCs/VPCCreate/VPCCreate.styles';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
-import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
   handleSelectVPC: (vpcId: number) => void;
@@ -28,7 +27,6 @@ export const VPCCreateDrawer = (props: Props) => {
   const { handleSelectVPC, onClose, open, selectedRegion } = props;
 
   const theme = useTheme();
-  const { data: regions } = useRegionsQuery();
 
   const {
     formik,
@@ -37,6 +35,7 @@ export const VPCCreateDrawer = (props: Props) => {
     isLoadingCreateVPC,
     onChangeField,
     onCreateVPC,
+    regionsWithVPCCapability,
     setGeneralAPIError,
     setGeneralSubnetErrorsFromAPI,
     userCannotAddVPC,
@@ -80,7 +79,7 @@ export const VPCCreateDrawer = (props: Props) => {
               onChangeField('region', region)
             }
             disabled={true}
-            regions={regions ?? []}
+            regions={regionsWithVPCCapability}
             selectedID={selectedRegion ?? ''}
           />
           <TextField
