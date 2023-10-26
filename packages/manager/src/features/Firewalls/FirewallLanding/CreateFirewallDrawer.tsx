@@ -136,6 +136,7 @@ export const CreateFirewallDrawer = React.memo(
     React.useEffect(() => {
       if (open) {
         resetForm();
+        setSelectedLinodes([]);
         setSelectedNodeBalancers([]);
       }
     }, [open, resetForm]);
