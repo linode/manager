@@ -7,13 +7,12 @@ import { Flag } from 'src/components/Flag';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-// TODO: AGLB -  Regious should be updated with the real values
 const regions = [
-  { country: 'ga', id: 'us-southeast', label: 'Atlanta, GA' },
-  { country: 'ca', id: 'ca-central', label: 'Toronto, CA' },
-  { country: 'au', id: 'ap-southeast', label: 'Sydney, AU' },
-  { country: 'gb', id: 'eu-west', label: 'London, UK' },
+  { country: 'us', id: 'us-iad', label: 'Washington, DC' },
+  { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
   { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
+  { country: 'jp', id: 'jp-osa', label: 'Osaka, JP' },
+  { country: 'au', id: 'ap-southeast', label: 'Sydney, AU' },
 ];
 
 export const LoadBalancerRegions = () => {
