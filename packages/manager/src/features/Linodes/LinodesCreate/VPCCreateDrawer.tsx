@@ -295,7 +295,7 @@ export const VPCCreateDrawer = (props: Props) => {
               label: 'Cancel',
               onClick: handleOnClose,
             }}
-            style={{ marginTop: theme.spacing(1) }}
+            style={{ marginTop: theme.spacing(3) }}
           />
         </form>
       </Grid>
