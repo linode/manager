@@ -60,6 +60,7 @@ module.exports = {
       JSXOpeningElement(node) {
         for (const attribute of node.attributes) {
           if (attribute.type === "JSXAttribute") {
+            // Any component with sx or style
             if (
               (attribute?.name?.name === "sx" ||
                 attribute.name.name === "style") &&
@@ -72,6 +73,16 @@ module.exports = {
                 context,
                 ERROR_MESSAGE
               );
+            }
+
+            // Any component with a fontWeight prop
+            if (
+              attribute.name.name === css.key
+            ) {
+              context.report({
+                node,
+                message: ERROR_MESSAGE,
+              });
             }
           }
         }
