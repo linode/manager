@@ -155,6 +155,7 @@ a.h-u:hover {
 strong,
 b {
   font-family: 'LatoWebBold', sans-serif;
+  font-weight: normal;
 }
 
 .visually-hidden {
@@ -334,7 +335,7 @@ button::-moz-focus-inner {
   background: #3683dc;
   color: white;
   font-size: 14px;
-  font-weight: bold;
+  font-family: 'LatoWebBold', sans-serif;
   padding: 8px;
   position: absolute;
   top: -40px;

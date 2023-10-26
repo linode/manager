@@ -58,6 +58,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& p': {
       lineHeight: '1.5rem',
     },
+    '& span': {
+      fontFamily: theme.font.bold,
+    },
     background: theme.bg.bgAccessRow,
     border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
     padding: '8px 15px',
