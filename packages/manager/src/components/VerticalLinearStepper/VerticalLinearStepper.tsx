@@ -7,6 +7,8 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -31,6 +33,9 @@ export const VerticalLinearStepper = ({
   steps,
 }: VerticalLinearStepperProps) => {
   const [activeStep, setActiveStep] = useState(0);
+  const theme = useTheme<Theme>();
+
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -45,7 +50,8 @@ export const VerticalLinearStepper = ({
       sx={(theme: Theme) => ({
         backgroundColor: theme.bg.bgPaper,
         display: 'flex',
-        p: `${theme.spacing(2)}`,
+        flexDirection: matchesSmDown ? 'column' : 'row',
+        p: matchesSmDown ? `${theme.spacing(2)}px 0px` : `${theme.spacing(2)}`,
       })}
     >
       {/* Left Column - Vertical Steps */}
@@ -99,7 +105,16 @@ export const VerticalLinearStepper = ({
           {steps.map(({ content, handler, label }, index) => (
             <Step key={label}>
               {index === activeStep ? (
-                <StepContent sx={{ border: 'none' }}>
+                <StepContent
+                  sx={{
+                    border: 'none',
+                    marginLeft: matchesSmDown ? '0px' : undefined,
+                    paddingLeft: matchesSmDown ? '0px' : undefined,
+                    paddingTop: matchesSmDown
+                      ? `${theme.spacing(2)}`
+                      : undefined,
+                  }}
+                >
                   <Box
                     sx={(theme) => ({
                       bgcolor: theme.bg.app,
