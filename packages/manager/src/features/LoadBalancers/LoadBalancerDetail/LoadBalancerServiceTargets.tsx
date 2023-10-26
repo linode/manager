@@ -1,3 +1,4 @@
+import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -26,6 +27,9 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
+import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetDrawer';
+import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
+
 import type { Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
@@ -34,6 +38,12 @@ export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [query, setQuery] = useState<string>();
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [
+    selectedServiceTarget,
+    setSelectedServiceTarget,
+  ] = useState<ServiceTarget>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -48,6 +58,11 @@ export const LoadBalancerServiceTargets = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+  };
+
+  const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedServiceTarget(serviceTarget);
   };
 
   // If the user types in a search query, filter results by label.
@@ -104,7 +119,12 @@ export const LoadBalancerServiceTargets = () => {
           value={query}
         />
         <Box flexGrow={1} />
-        <Button buttonType="primary">Create Service Target</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Create Service Target
+        </Button>
       </Stack>
       <Table>
         <TableHead>
@@ -139,7 +159,7 @@ export const LoadBalancerServiceTargets = () => {
                 <Link to={String(serviceTarget.id)}>{serviceTarget.label}</Link>
               </TableCell>
               <TableCell>
-                <Stack alignItems="center" direction="row" spacing={0.5}>
+                <Stack alignItems="center" direction="row" spacing={1}>
                   <StatusIcon status="active" />
                   <Typography noWrap>4 up</Typography>
                   <Typography>&mdash;</Typography>
@@ -165,7 +185,10 @@ export const LoadBalancerServiceTargets = () => {
                   actionsList={[
                     { onClick: () => null, title: 'Edit' },
                     { onClick: () => null, title: 'Clone Service Target' },
-                    { onClick: () => null, title: 'Delete' },
+                    {
+                      onClick: () => handleDeleteServiceTarget(serviceTarget),
+                      title: 'Delete',
+                    },
                   ]}
                   ariaLabel={`Action Menu for service target ${serviceTarget.label}`}
                 />
@@ -180,6 +203,17 @@ export const LoadBalancerServiceTargets = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <CreateServiceTargetDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
+      />
+      <DeleteServiceTargetDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        serviceTarget={selectedServiceTarget}
       />
     </>
   );

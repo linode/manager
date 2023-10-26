@@ -157,7 +157,7 @@ export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 export const MBpsIntraDC = 200;
 
 /**
- * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
+ * MBps rate for inter DC migrations (AKA Cross-Data-Center migrations )
  */
 export const MBpsInterDC = 7.5;
 
@@ -255,3 +255,7 @@ export const ACCESS_LEVELS = {
 
 // Linode Community URL accessible from the TopMenu Community icon
 export const LINODE_COMMUNITY_URL = 'https://linode.com/community';
+
+export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
+
+export const DEVELOPERS_LINK = 'https://developers.linode.com';

@@ -10,6 +10,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { omittedProps } from '../../utilities/omittedProps';
+
 export interface EntityDetailProps {
   body?: JSX.Element;
   footer: JSX.Element;
@@ -38,18 +40,19 @@ const GridBody = styled(Grid)(({ theme }) => ({
   paddingRight: theme.spacing(),
 }));
 
-const GridFooter = styled(Grid)<Partial<EntityDetailProps>>(
-  ({ theme, ...props }) => ({
-    alignItems: 'center',
-    backgroundColor: theme.bg.bgPaper,
-    borderTop:
-      props.body === undefined
-        ? `1px solid ${theme.borderColors.borderTable}`
-        : undefined,
-    display: 'flex',
-    flexDirection: 'row',
-    padding: `7px 16px`,
-  })
-);
+const GridFooter = styled(Grid, {
+  label: 'EntityDetailGridFooter',
+  shouldForwardProp: omittedProps(['body']),
+})<Partial<EntityDetailProps>>(({ theme, ...props }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.bg.bgPaper,
+  borderTop:
+    props.body === undefined
+      ? `1px solid ${theme.borderColors.borderTable}`
+      : undefined,
+  display: 'flex',
+  flexDirection: 'row',
+  padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+}));
 
 export default EntityDetail;

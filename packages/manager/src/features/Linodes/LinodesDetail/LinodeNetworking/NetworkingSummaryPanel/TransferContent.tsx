@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import BarPercent from 'src/components/BarPercent';
+import { BarPercent } from 'src/components/BarPercent';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 
@@ -106,9 +106,9 @@ export const TransferContent = (props: ContentProps) => {
                 ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
                     totalUsagePercent
                   )}%)`
-                : `Global Pool Used (${totalUsedInGB} GB) - ${Math.ceil(
+                : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
                     totalUsagePercent
-                  )}%`}
+                  )}%)`}
             </span>
           </StyledPoolUsage>
           <StyledRemainingPoolUsage>

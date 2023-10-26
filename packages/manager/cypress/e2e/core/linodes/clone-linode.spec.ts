@@ -62,7 +62,7 @@ describe('clone linode', () => {
 
     const newLinodeLabel = `${linodePayload.label}-clone`;
 
-    // TODO Remove feature flag mocks once DC pricing is live.
+    // TODO: DC Pricing - M3-7073: Remove feature flag mocks once DC pricing is live.
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
@@ -116,7 +116,7 @@ describe('clone linode', () => {
 
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
       ui.toast.assertMessage(
-        `Linode ${linode.label} has been cloned successfully to ${newLinodeLabel}.`
+        `Linode ${linode.label} successfully cloned to ${newLinodeLabel}.`
       );
     });
   });
@@ -156,11 +156,9 @@ describe('clone linode', () => {
       '@getLinodeTypes',
     ]);
 
-    // TODO Move these assertions to end-to-end test once `dcSpecificPricing` flag goes away.
-    // TODO Remove this assertion when DC-specific pricing notice goes away.
     cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
 
-    // TODO Uncomment docs link assertion when docs links are added.
+    // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
     // cy.findByText(dcPricingDocsLabel)
     //   .should('be.visible')
     //   .should('have.attr', 'href', dcPricingDocsUrl);

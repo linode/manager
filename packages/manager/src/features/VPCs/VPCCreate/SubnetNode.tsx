@@ -6,9 +6,11 @@ import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
-import { RESERVED_IP_NUMBER } from 'src/utilities/subnets';
-import { SubnetFieldState } from 'src/utilities/subnets';
-import { calculateAvailableIPv4s } from 'src/utilities/subnets';
+import {
+  RESERVED_IP_NUMBER,
+  SubnetFieldState,
+  calculateAvailableIPv4sRFC1918,
+} from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
@@ -24,7 +26,7 @@ interface Props {
   subnet: SubnetFieldState;
 }
 
-// TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
+// @TODO VPC: currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
   const { disabled, idx, isRemovable, onChange, subnet } = props;
 
@@ -38,7 +40,7 @@ export const SubnetNode = (props: Props) => {
   };
 
   const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const availIPs = calculateAvailableIPv4s(e.target.value);
+    const availIPs = calculateAvailableIPv4sRFC1918(e.target.value);
     const newSubnet = {
       ...subnet,
       ip: { availIPv4s: availIPs, ipv4: e.target.value },
@@ -53,19 +55,23 @@ export const SubnetNode = (props: Props) => {
   return (
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
-        <Grid xs={isRemovable ? 11 : 12}>
+        <Grid
+          sx={{ ...(!isRemovable && { width: '100%' }) }}
+          xs={isRemovable ? 11 : 12}
+        >
           <TextField
             disabled={disabled}
             errorText={subnet.labelError}
             inputId={`subnet-label-${idx}`}
-            label="Subnet label"
+            label="Subnet Label"
             onChange={onLabelChange}
+            placeholder="Enter a subnet label"
             value={subnet.label}
           />
         </Grid>
-        {isRemovable && !!idx && (
+        {isRemovable && (
           <Grid xs={1}>
-            <StyledButton onClick={removeSubnet}>
+            <StyledButton onClick={removeSubnet} aria-label="Remove Subnet">
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
@@ -82,9 +88,9 @@ export const SubnetNode = (props: Props) => {
         />
         {subnet.ip.availIPv4s && (
           <FormHelperText>
-            Available IP Addresses:{' '}
+            Number of Available IP Addresses:{' '}
             {subnet.ip.availIPv4s > 4
-              ? subnet.ip.availIPv4s - RESERVED_IP_NUMBER
+              ? (subnet.ip.availIPv4s - RESERVED_IP_NUMBER).toLocaleString()
               : 0}
           </FormHelperText>
         )}

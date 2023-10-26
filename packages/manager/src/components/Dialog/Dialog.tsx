@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface DialogProps extends _DialogProps {
@@ -81,6 +81,7 @@ export const Dialog = (props: DialogProps) => {
         {titleBottomBorder && <StyledHr />}
         <DialogContent
           sx={{
+            overflowX: 'hidden',
             paddingBottom: theme.spacing(3),
           }}
           className={className}
@@ -94,7 +95,7 @@ export const Dialog = (props: DialogProps) => {
 };
 
 const StyledDialog = styled(_Dialog, {
-  shouldForwardProp: (prop) => isPropValid(['fullHeight'], prop),
+  shouldForwardProp: omittedProps(['fullHeight', 'title']),
 })<DialogProps>(({ theme, ...props }) => ({
   '& .MuiDialog-paper': {
     height: props.fullHeight ? '100vh' : undefined,

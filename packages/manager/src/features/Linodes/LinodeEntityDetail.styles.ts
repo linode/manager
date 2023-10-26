@@ -1,15 +1,19 @@
-import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
+import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
-import { isPropValid } from 'src/utilities/isPropValid';
-import type { HeaderProps } from './LinodeEntityDetail';
+import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
+import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { HeaderProps } from './LinodeEntityDetail';
 
 // ---------------------------------------------------------------------
 // Header Styles
@@ -34,31 +38,22 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
 
 export const StyledChip = styled(Chip, {
   label: 'StyledChip',
-  shouldForwardProp: (prop) =>
-    isPropValid(
-      [
-        'isSummaryView',
-        'hasSecondaryStatus',
-        'isOffline',
-        'isOther',
-        'isRunning',
-      ],
-      prop
-    ),
+  shouldForwardProp: omittedProps([
+    'isSummaryView',
+    'hasSecondaryStatus',
+    'isOffline',
+    'isOther',
+    'isRunning',
+  ]),
 })<StyledChipProps>(
   ({
-    theme,
-    isSummaryView,
     hasSecondaryStatus,
     isOffline,
     isOther,
     isRunning,
+    isSummaryView,
+    theme,
   }) => ({
-    borderRadius: 0,
-    fontSize: '0.875rem',
-    height: theme.spacing(3),
-    letterSpacing: '.5px',
-    marginLeft: theme.spacing(2),
     '&:before': {
       ...(isOffline && {
         backgroundColor: theme.color.grey8,
@@ -70,6 +65,11 @@ export const StyledChip = styled(Chip, {
         backgroundColor: theme.color.teal,
       }),
     },
+    borderRadius: 0,
+    fontSize: '0.875rem',
+    height: theme.spacing(3),
+    letterSpacing: '.5px',
+    marginLeft: theme.spacing(2),
     ...(hasSecondaryStatus && {
       borderRight: `1px solid ${theme.borderColors.borderTypography}`,
       paddingRight: `${theme.spacing(2)}`,
@@ -125,6 +125,63 @@ export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
     },
   })
 );
+
+export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
+  ({ theme }) => ({
+    padding: 0,
+    [theme.breakpoints.down('md')]: {
+      paddingBottom: theme.spacing(0.5),
+    },
+  })
+);
+
+export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  [theme.breakpoints.down('md')]: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+}));
+
+export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
+  ({ theme }) => ({
+    fontFamily: theme.font.bold,
+    marginRight: '4px',
+  })
+);
+
+export const sxListItemMdBp = {
+  borderRight: 0,
+  flex: '50%',
+  padding: 0,
+};
+
+export const sxLastListItem = {
+  borderRight: 0,
+  paddingRight: 0,
+};
+
+export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
+    display: 'flex',
+    padding: `0px 10px`,
+    [theme.breakpoints.down('md')]: {
+      ...sxListItemMdBp,
+    },
+  })
+);
+
+export const sxListItemFirstChild = (theme: Theme) => ({
+  [theme.breakpoints.down('md')]: {
+    ...sxListItemMdBp,
+    '&:first-of-type': {
+      paddingBottom: theme.spacing(0.5),
+    },
+  },
+});
 
 // ---------------------------------------------------------------------
 // AccessTable Styles

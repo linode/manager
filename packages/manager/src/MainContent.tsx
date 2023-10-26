@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
-import MainContentBanner from 'src/components/MainContentBanner';
+import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -17,8 +17,8 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
-import { useDialogContext } from 'src/context';
-import { Footer } from 'src/features/Footer/Footer';
+import { useDialogContext } from 'src/context/useDialogContext';
+import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationContext,
@@ -26,9 +26,9 @@ import {
 } from 'src/features/NotificationCenter/NotificationContext';
 import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import { usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -135,7 +135,11 @@ interface Props {
 
 type CombinedProps = Props & GlobalErrorProps;
 
-const Account = React.lazy(() => import('src/features/Account'));
+const Account = React.lazy(() =>
+  import('src/features/Account').then((module) => ({
+    default: module.Account,
+  }))
+);
 const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
@@ -151,7 +155,9 @@ const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
-const StackScripts = React.lazy(() => import('src/features/StackScripts'));
+const StackScripts = React.lazy(
+  () => import('src/features/StackScripts/StackScripts')
+);
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
@@ -191,17 +197,30 @@ const MainContent = (props: CombinedProps) => {
   const complianceUpdateContextValue = useDialogContext();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const { _isManagedAccount, account, profile } = useAccountManagement();
+  const {
+    _isManagedAccount,
+    account,
+    accountError,
+    profile,
+  } = useAccountManagement();
 
   const username = profile?.username || '';
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
+  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
+  const {
+    error: enginesError,
+    isLoading: enginesLoading,
+  } = useDatabaseEnginesQuery(checkRestrictedUser);
+
+  const showDatabases =
+    isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
+      account?.capabilities ?? []
+    ) ||
+    (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
@@ -381,7 +400,6 @@ const MainContent = (props: CombinedProps) => {
             </NotificationProvider>
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <ToastNotifications />
-            <VolumeDrawer />
           </ComplianceUpdateProvider>
         )}
       </PreferenceToggle>

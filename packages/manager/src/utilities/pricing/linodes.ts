@@ -15,9 +15,13 @@ import type { ExtendedType } from 'src/utilities/extendType';
  * @returns pricing information for this specific linode type in a region
  */
 export const getLinodeRegionPrice = (
-  type: ExtendedType | LinodeType | PlanSelectionType,
-  regionId: string
-): PriceObject => {
+  type?: ExtendedType | LinodeType | PlanSelectionType,
+  regionId?: null | string
+): PriceObject | undefined => {
+  if (!type || !regionId) {
+    return undefined;
+  }
+
   const regionSpecificPrice = type.region_prices?.find(
     (regionPrice) => regionPrice.id === regionId
   );
@@ -29,8 +33,31 @@ export const getLinodeRegionPrice = (
     };
   }
 
-  // TODO: M3-7063 (defaults)
   return type.price;
+};
+
+/**
+ * Get the price based on provided conditions.
+ * @param type - The Linode type.
+ * @param selectedRegionId - The selected region ID.
+ * @param dcSpecificPricing - The data center specific pricing.
+ * @returns The price or undefined if not available.
+ * TODO: DC Pricing - M3-7073: Remove this function and replace with getLinodeRegionPrice once dcSpecificPricing flag is removed.
+ */
+
+export const getPrice = (
+  type: ExtendedType | LinodeType | PlanSelectionType | undefined,
+  selectedRegionId: string | undefined,
+  dcSpecificPricing: boolean | undefined
+) => {
+  // Check if both dcSpecificPricing and selectedRegionId are available
+  if (dcSpecificPricing && selectedRegionId) {
+    // If available, return  price of a Linode type
+    return getLinodeRegionPrice(type, selectedRegionId);
+  } else {
+    // If not available, fall back to type.price (may still be undefined)
+    return type?.price;
+  }
 };
 
 interface IsPriceDifferentOptions {
@@ -59,7 +86,7 @@ export const isLinodeTypeDifferentPriceInSelectedRegion = ({
   const currentRegionPrice = getLinodeRegionPrice(type, regionA);
   const selectedRegionPrice = getLinodeRegionPrice(type, regionB);
 
-  if (currentRegionPrice.monthly !== selectedRegionPrice.monthly) {
+  if (currentRegionPrice?.monthly !== selectedRegionPrice?.monthly) {
     return true;
   }
 
@@ -128,4 +155,26 @@ export const getDynamicDCNetworkTransferData = ({
     quota: networkTransferData.quota || 0,
     used: networkTransferData.used || 0,
   };
+};
+
+/**
+ * This function is used to determine if specific pricing exists in a region
+ * given any number of Linode Types
+ * @param regionId the region to check for specific pricing
+ * @param types an array of Linode Types
+ * @returns true if there is at least one linode type with a DC specific price for the provided region
+ */
+export const doesRegionHaveUniquePricing = (
+  regionId: Region['id'] | undefined,
+  types: LinodeType[] | undefined
+) => {
+  if (!regionId || !types) {
+    return false;
+  }
+
+  return types?.some(
+    (type) =>
+      type.region_prices?.some((regionPrice) => regionPrice.id === regionId) ??
+      false
+  );
 };

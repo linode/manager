@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
-export default (
+export const getAPIErrorFor = (
   errorMap: { [index: string]: string },
   arr: APIError[] = []
 ) => (field: string): string | undefined => {

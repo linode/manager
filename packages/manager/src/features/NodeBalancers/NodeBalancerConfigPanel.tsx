@@ -6,11 +6,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormHelperText } from 'src/components/FormHelperText';
 
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
@@ -18,6 +18,7 @@ import { PassiveCheck } from './NodeBalancerPassiveCheck';
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
+import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const DATA_NODE = 'data-node-idx';
@@ -104,10 +105,10 @@ export const NodeBalancerConfigPanel = (
   };
 
   const onNodeModeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    nodeIdx: number
+    nodeIdx: number,
+    mode: NodeBalancerConfigNodeMode
   ) => {
-    props.onNodeModeChange!(nodeIdx, e.target.value);
+    props.onNodeModeChange!(nodeIdx, mode);
   };
 
   const addNode = () => {
@@ -117,14 +118,13 @@ export const NodeBalancerConfigPanel = (
     props.addNode();
   };
 
-  const removeNode = (e: React.MouseEvent<HTMLElement>) => {
+  const removeNode = (nodeIndex: number) => {
     if (props.disabled) {
       return;
     }
-    const nodeIdx: null | string = e.currentTarget.getAttribute(DATA_NODE);
     const { removeNode } = props;
-    if (removeNode && nodeIdx) {
-      return removeNode(+nodeIdx);
+    if (removeNode) {
+      return removeNode(nodeIndex);
     }
   };
 
@@ -224,42 +224,40 @@ export const NodeBalancerConfigPanel = (
         </Grid>
 
         {protocol === 'https' && (
-          <Grid xs={12}>
-            <Grid container spacing={2}>
-              <Grid xs={12}>
-                <TextField
-                  data-qa-cert-field
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.ssl_cert}
-                  label="SSL Certificate"
-                  multiline
-                  onChange={onSslCertificateChange}
-                  required={protocol === 'https'}
-                  rows={3}
-                  value={sslCertificate || ''}
-                />
-              </Grid>
-              <Grid xs={12}>
-                <TextField
-                  data-qa-private-key-field
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.ssl_key}
-                  label="Private Key"
-                  multiline
-                  onChange={onPrivateKeyChange}
-                  required={protocol === 'https'}
-                  rows={3}
-                  value={privateKey || ''}
-                />
-              </Grid>
+          <Grid container spacing={2} xs={12}>
+            <Grid md={5} sm={6} xs={12}>
+              <TextField
+                data-qa-cert-field
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_cert}
+                label="SSL Certificate"
+                multiline
+                onChange={onSslCertificateChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={sslCertificate || ''}
+              />
+            </Grid>
+            <Grid md={5} sm={6} xs={12}>
+              <TextField
+                data-qa-private-key-field
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_key}
+                label="Private Key"
+                multiline
+                onChange={onPrivateKeyChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={privateKey || ''}
+              />
             </Grid>
           </Grid>
         )}
 
         {tcpSelected && (
-          <Grid md={3} xs={6}>
+          <Grid md={6} xs={12}>
             <Select
               textFieldProps={{
                 dataAttrs: {

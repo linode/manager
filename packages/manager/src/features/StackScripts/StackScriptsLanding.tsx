@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
-import StackScriptPanel from './StackScriptPanel';
+import StackScriptPanel from './StackScriptPanel/StackScriptPanel';
 
 export const StackScriptsLanding = () => {
   const history = useHistory<{

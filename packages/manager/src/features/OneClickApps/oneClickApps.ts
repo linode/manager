@@ -1,40 +1,6 @@
-export interface OCA {
-  alt_description: string;
-  alt_name: string;
-  categories: AppCategory[];
-  colors: Colors;
-  description: string;
-  href?: string;
-  logo_url: string;
-  name: string;
-  related_guides?: Doc[];
-  summary: string;
-  tips?: string[];
-  website?: string;
-}
+import { oneClickAppFactory } from 'src/factories/stackscripts';
 
-export interface Doc {
-  href: string;
-  title: string;
-}
-
-export interface Colors {
-  end: string;
-  start: string;
-}
-
-export type AppCategory =
-  | 'App Creators'
-  | 'Control Panels'
-  | 'Databases'
-  | 'Development'
-  | 'Games'
-  | 'Media and Entertainment'
-  | 'Monitoring'
-  | 'Productivity'
-  | 'Security'
-  | 'Stacks'
-  | 'Website';
+import type { OCA } from './types';
 
 export const oneClickApps: OCA[] = [
   {
@@ -1922,14 +1888,14 @@ export const oneClickApps: OCA[] = [
       end: '722b20',
       start: '222222',
     },
-    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
+    description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
     logo_url: 'redis.svg',
-    name: 'Redis',
+    name: 'Marketplace App for Redis&reg;',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
-        title: 'Deploy Redis through the Linode Marketplace',
+        title: 'Deploy Redis&reg; through the Linode Marketplace',
       },
     ],
     summary:
@@ -1944,14 +1910,15 @@ export const oneClickApps: OCA[] = [
       end: '722b20',
       start: '222222',
     },
-    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
+    description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
     logo_url: 'redissentinelmarketplaceocc.svg',
-    name: 'Redis Sentinel Cluster',
+    name: 'Marketplace App for Redis&reg; Sentinel Cluster',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title: 'Deploy Redis Sentinel Cluster through the Linode Marketplace',
+        title:
+          'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
       },
     ],
     summary:
@@ -2560,5 +2527,10 @@ export const oneClickApps: OCA[] = [
     ],
     summary: 'Enterprise-class open source distributed monitoring solution.',
     website: 'https://www.zabbix.com',
+  },
+  {
+    ...oneClickAppFactory.build({
+      name: 'E2E Test App',
+    }),
   },
 ];

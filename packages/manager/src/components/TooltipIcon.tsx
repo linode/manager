@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
@@ -8,7 +9,8 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
-import { Tooltip, TooltipProps } from 'src/components/Tooltip';
+import { Tooltip, TooltipProps, tooltipClasses } from 'src/components/Tooltip';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 type TooltipIconStatus =
   | 'error'
@@ -18,7 +20,9 @@ type TooltipIconStatus =
   | 'success'
   | 'warning';
 
-interface Props
+type EnhancedTooltipProps = TooltipProps & { width?: number };
+
+export interface TooltipIconProps
   extends Omit<TooltipProps, 'children' | 'leaveDelay' | 'title'> {
   /**
    * An optional className that does absolutely nothing
@@ -38,7 +42,7 @@ interface Props
    * Enables a leaveDelay of 3000ms
    * @default false
    */
-  leaveDelay?: boolean;
+  leaveDelay?: number;
   /**
    * Sets the icon and color
    */
@@ -64,6 +68,10 @@ interface Props
    * @default 'bottom'
    */
   tooltipPosition?: TooltipProps['placement'];
+  /**
+   * Allows for a custom width to be set on the tooltip
+   */
+  width?: number;
 }
 /**
  * ## Usage
@@ -76,7 +84,7 @@ interface Props
  * - Support _both_ mouse _and_ keyboard hover.
  * - Present a link to additional content if needed.
  */
-export const TooltipIcon = (props: Props) => {
+export const TooltipIcon = (props: TooltipIconProps) => {
   const theme = useTheme();
 
   const {
@@ -90,6 +98,7 @@ export const TooltipIcon = (props: Props) => {
     text,
     tooltipAnalyticsEvent,
     tooltipPosition,
+    width,
   } = props;
 
   const handleOpenTooltip = () => {
@@ -140,8 +149,9 @@ export const TooltipIcon = (props: Props) => {
   }
 
   return (
-    <Tooltip
+    <StyledTooltip
       classes={classes}
+      componentsProps={props.componentsProps}
       data-qa-help-tooltip
       disableInteractive={!interactive}
       enterTouchDelay={0}
@@ -151,10 +161,25 @@ export const TooltipIcon = (props: Props) => {
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       sx={sx}
       title={text}
+      width={width}
     >
       <IconButton data-qa-help-button size="large" sx={sxTooltipIcon}>
         {renderIcon}
       </IconButton>
-    </Tooltip>
+    </StyledTooltip>
   );
 };
+
+const StyledTooltip = styled(
+  ({ className, ...props }: EnhancedTooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ),
+  {
+    label: 'StyledTooltip',
+    shouldForwardProp: omittedProps(['width']),
+  }
+)`
+  & .${tooltipClasses.tooltip} {
+    max-width: ${(props) => (props.width ? props.width + 'px' : undefined)};
+  }
+`;

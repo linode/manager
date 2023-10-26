@@ -1,12 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -18,7 +17,9 @@ import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -26,16 +27,17 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { useSnackbar } from 'notistack';
 
-const FIREWALL_LABEL_TEXT = `Assign devices to the Firewall.`;
-const FIREWALL_HELPER_TEXT = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
-const NODEBALANCER_HELPER_TEXT = `Only the Firewall's inbound rules apply to NodeBalancers.`;
+const FIREWALL_LABEL_TEXT = `Assign services to the firewall.`;
+const FIREWALL_HELPER_TEXT = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
+const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to NodeBalancers.`;
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
-  'Only Devices you have permission to modify are shown.';
+  'Only services you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
+  label?: string;
   onClose: () => void;
+  onFirewallCreated?: (firewall: Firewall) => void;
   open: boolean;
 }
 
@@ -54,7 +56,7 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
-    const { onClose, open } = props;
+    const { label, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
@@ -105,7 +107,7 @@ export const CreateFirewallDrawer = React.memo(
         // const querykey = deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
 
         mutateAsync(payload)
-          .then(() => {
+          .then((response) => {
             setSubmitting(false);
             enqueueSnackbar(`Firewall ${payload.label} successfully created`);
 
@@ -133,6 +135,9 @@ export const CreateFirewallDrawer = React.memo(
               });
             }
 
+            if (onFirewallCreated) {
+              onFirewallCreated(response);
+            }
             onClose();
           })
           .catch((err) => {
@@ -270,6 +275,8 @@ export const CreateFirewallDrawer = React.memo(
             }
             disabled={userCannotAddFirewall}
             errorText={errors['devices.linodes']}
+            helperText={FIREWALL_HELPER_TEXT}
+            label={label}
             multiple
             onBlur={handleBlur}
             optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}

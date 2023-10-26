@@ -11,6 +11,7 @@ import { pathOr } from 'ramda';
 import { ADDRESSES } from 'src/constants';
 import { FlagSet } from 'src/featureFlags';
 import { formatDate } from 'src/utilities/formatDate';
+import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
@@ -44,6 +45,7 @@ const formatDateForTable = (
 export const createPaymentsTable = (
   doc: JSPDF,
   payment: Payment,
+  startY: number,
   timezone?: string
 ) => {
   autoTable(doc, {
@@ -63,7 +65,7 @@ export const createPaymentsTable = (
     headStyles: {
       fillColor: '#444444',
     },
-    startY: 165,
+    startY,
     styles: {
       lineWidth: 1,
     },
@@ -95,6 +97,11 @@ interface CreateInvoiceItemsTableOptions {
    * Used to add Region labels to the `Region` column
    */
   regions: Region[];
+  shouldShowRegions: boolean;
+  /**
+   * The start position of the table on the Y axis
+   */
+  startY: number;
   timezone?: string;
 }
 
@@ -104,7 +111,15 @@ interface CreateInvoiceItemsTableOptions {
 export const createInvoiceItemsTable = (
   options: CreateInvoiceItemsTableOptions
 ) => {
-  const { doc, flags, items, regions, timezone } = options;
+  const {
+    doc,
+    flags,
+    items,
+    regions,
+    timezone,
+    shouldShowRegions,
+    startY,
+  } = options;
 
   autoTable(doc, {
     body: items.map((item) => {
@@ -130,7 +145,7 @@ export const createInvoiceItemsTable = (
           content: item.quantity || '',
           styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
         },
-        ...(flags.dcSpecificPricing
+        ...(flags.dcSpecificPricing && shouldShowRegions
           ? [
               {
                 content: getInvoiceRegion(item, regions) ?? '',
@@ -172,7 +187,7 @@ export const createInvoiceItemsTable = (
         'From',
         'To',
         'Quantity',
-        ...(flags.dcSpecificPricing ? ['Region'] : []),
+        ...(flags.dcSpecificPricing && shouldShowRegions ? ['Region'] : []),
         'Unit Price',
         'Amount',
         'Tax',
@@ -182,7 +197,7 @@ export const createInvoiceItemsTable = (
     headStyles: {
       fillColor: '#444444',
     },
-    startY: 165,
+    startY,
     styles: {
       lineWidth: 1,
     },
@@ -395,3 +410,25 @@ export interface PdfResult {
 }
 
 export const dateConversion = (str: string): number => Date.parse(str);
+
+/**
+ * @param _invoiceDate When the invoice was generated
+ * @returns True if invoice is dated on or after the release of DC-specific pricing (10/05/23). From then on, invoice items return a region.
+ */
+export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
+  // Default to `true` for bad input.
+  if (!_invoiceDate) {
+    return false;
+  }
+
+  const dcPricingDate = new Date(
+    MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED
+  ).getTime();
+  const invoiceDate = new Date(_invoiceDate).getTime();
+
+  if (isNaN(invoiceDate)) {
+    return false;
+  }
+
+  return invoiceDate >= dcPricingDate;
+};

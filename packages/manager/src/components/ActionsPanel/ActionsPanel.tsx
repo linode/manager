@@ -9,7 +9,7 @@ import { Box, BoxProps } from '../Box';
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
   'data-testid'?: string;
-  label?: string;
+  label: string;
 }
 
 export interface ActionPanelProps extends BoxProps {
@@ -52,7 +52,7 @@ export const ActionsPanel = (props: ActionPanelProps) => {
           data-qa-cancel
           {...secondaryButtonProps}
         >
-          {secondaryButtonProps?.label}
+          {secondaryButtonProps.label}
         </Button>
       ) : null}
       {primaryButtonProps ? (
@@ -61,7 +61,7 @@ export const ActionsPanel = (props: ActionPanelProps) => {
           buttonType="primary"
           {...primaryButtonProps}
         >
-          {primaryButtonProps?.label}
+          {primaryButtonProps.label}
         </Button>
       ) : null}
     </StyledBox>
@@ -79,9 +79,8 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   '& > button': {
     marginBottom: spacing(1),
   },
-  display: 'flex',
   justifyContent: 'flex-end',
-  marginTop: spacing(2),
+  marginTop: spacing(1),
   paddingBottom: spacing(1),
-  paddingTop: spacing(2),
+  paddingTop: spacing(1),
 }));

@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -44,11 +45,12 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
+import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inner: {
@@ -245,18 +247,15 @@ export const CreateCluster = () => {
    * @returns dynamically calculated high availability price by region
    */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    if (!regionId) {
-      return undefined;
-    } else {
-      return parseFloat(
-        getDCSpecificPrice({
-          basePrice: LKE_HA_PRICE,
-          flags,
-          regionId,
-        })
-      );
-    }
+    const dcSpecificPrice = regionId
+      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, flags, regionId })
+      : undefined;
+    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
+
+  const showPricingNotice =
+    flags.dcSpecificPricing &&
+    doesRegionHaveUniquePricing(selectedRegionID, typesData);
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
@@ -314,6 +313,12 @@ export const CreateCluster = () => {
               regions={filteredRegions}
               selectedID={selectedID}
             />
+            {showPricingNotice && (
+              <DynamicPriceNotice
+                region={selectedRegionID}
+                spacingBottom={16}
+              />
+            )}
             <Select
               onChange={(selected: Item<string>) => {
                 setVersion(selected);

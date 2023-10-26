@@ -28,6 +28,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
+import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { InvoiceTable } from './InvoiceTable';
 
@@ -51,6 +52,8 @@ export const InvoiceDetail = () => {
   );
 
   const flags = useFlags();
+
+  const shouldShowRegion = invoiceCreatedAfterDCPricingLaunch(invoice?.date);
 
   const requestData = () => {
     setLoading(true);
@@ -93,7 +96,7 @@ export const InvoiceDetail = () => {
       flags,
       invoice,
       items,
-      regions: regions ?? [],
+      regions: shouldShowRegion && regions ? regions : [],
       taxes,
     });
 
@@ -105,7 +108,9 @@ export const InvoiceDetail = () => {
     { key: 'from', label: 'From' },
     { key: 'to', label: 'To' },
     { key: 'quantity', label: 'Quantity' },
-    ...(flags.dcSpecificPricing ? [{ key: 'region', label: 'Region' }] : []),
+    ...(flags.dcSpecificPricing && shouldShowRegion
+      ? [{ key: 'region', label: 'Region' }]
+      : []),
     { key: 'unit_price', label: 'Unit Price' },
     { key: 'amount', label: 'Amount (USD)' },
     { key: 'tax', label: 'Tax (USD)' },
@@ -129,15 +134,22 @@ export const InvoiceDetail = () => {
     >
       <Grid container rowGap={2}>
         <Grid xs={12}>
-          <Grid container spacing={2} sx={sxGrid}>
+          <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
             <Grid sm={4} sx={sxGrid} xs={12}>
-              <Link to={`/account/billing`}>
+              <Link
+                accessibleAriaLabel="Back to Billing"
+                data-qa-back-to-billing
+                to={`/account/billing`}
+              >
                 <IconButton
                   sx={{
                     padding: 0,
                   }}
-                  data-qa-back-to-billing
+                  component="span"
+                  disableFocusRipple
+                  role="none"
                   size="large"
+                  tabIndex={-1}
                 >
                   <KeyboardArrowLeft
                     sx={{
@@ -199,7 +211,12 @@ export const InvoiceDetail = () => {
           {pdfGenerationError && (
             <Notice variant="error">Failed generating PDF.</Notice>
           )}
-          <InvoiceTable errors={errors} items={items} loading={loading} />
+          <InvoiceTable
+            errors={errors}
+            items={items}
+            loading={loading}
+            shouldShowRegion={shouldShowRegion}
+          />
         </Grid>
         <Grid xs={12}>
           {invoice && (
@@ -211,6 +228,7 @@ export const InvoiceDetail = () => {
                 gap: theme.spacing(2),
                 padding: theme.spacing(1),
               }}
+              data-qa-invoice-summary
             >
               <Typography variant="h2">
                 Subtotal:{' '}
@@ -246,5 +264,3 @@ export const InvoiceDetail = () => {
     </Paper>
   );
 };
-
-export default InvoiceDetail;

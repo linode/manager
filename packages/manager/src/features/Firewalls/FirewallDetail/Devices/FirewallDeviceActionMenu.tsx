@@ -9,7 +9,7 @@ export interface ActionHandlers {
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceActionMenuProps extends ActionHandlers {
-  deviceEntityID: string;
+  deviceEntityID: number;
   deviceID: number;
   deviceLabel: string;
   deviceType: FirewallDeviceEntityType;

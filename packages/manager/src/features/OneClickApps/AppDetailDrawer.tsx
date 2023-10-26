@@ -8,11 +8,13 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { OCA } from 'src/features/OneClickApps/oneClickApps';
 import { useFlags } from 'src/hooks/useFlags';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './oneClickApps';
+import { mapStackScriptLabelToOCA } from './utils';
+
+import type { OCA } from './types';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appName: {
@@ -92,14 +94,9 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   };
 
   React.useEffect(() => {
-    const app = oneClickApps.find((app) => {
-      const cleanedStackScriptLabel = stackScriptLabel
-        .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
-        .trim();
-
-      const cleanedAppName = app.name.replace('&reg;', '');
-
-      return cleanedStackScriptLabel === cleanedAppName;
+    const app = mapStackScriptLabelToOCA({
+      oneClickApps,
+      stackScriptLabel,
     });
 
     if (!app) {
@@ -117,6 +114,9 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
     <Drawer
       anchor="right"
       classes={{ paper: classes.paper }}
+      data-qa-drawer
+      data-testid="drawer"
+      disablePortal
       onClose={onClose}
       open={open}
     >
@@ -124,6 +124,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
         <Button
           aria-label="Close drawer"
           className={classes.button}
+          data-qa-close-drawer
           onClick={onClose}
         >
           <Close />
@@ -152,6 +153,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 __html: sanitizeHTML(selectedApp.name),
               }}
               className={classes.appName}
+              data-qa-drawer-title={stackScriptLabel}
               data-testid="app-name"
               variant="h2"
             />
@@ -192,7 +194,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                       key={`${selectedApp.name}-guide-${idx}`}
                       to={link.href}
                     >
-                      {link.title}
+                      {sanitizeHTML(link.title)}
                     </Link>
                   ))}
                 </Box>

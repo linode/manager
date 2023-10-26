@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { SuppliedMaintenanceData } from 'src/featureFlags';
 import { queryPresets } from 'src/queries/base';
 import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;

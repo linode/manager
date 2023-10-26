@@ -28,11 +28,20 @@ export const vpcQueryKey = 'vpcs';
 export const subnetQueryKey = 'subnets';
 
 // VPC queries
-export const useVPCsQuery = (params: Params, filter: Filter) => {
+export const useVPCsQuery = (
+  params: Params,
+  filter: Filter,
+  enabled: boolean = true,
+  alwaysRefetch: boolean = false
+) => {
   return useQuery<ResourcePage<VPC>, APIError[]>(
     [vpcQueryKey, 'paginated', params, filter],
     () => getVPCs(params, filter),
-    { keepPreviousData: true }
+    {
+      enabled,
+      keepPreviousData: true,
+      refetchOnWindowFocus: alwaysRefetch ? 'always' : false,
+    }
   );
 };
 
@@ -79,12 +88,13 @@ export const useDeleteVPCMutation = (id: number) => {
 export const useSubnetsQuery = (
   vpcID: number,
   params: Params,
-  filter: Filter
+  filter: Filter,
+  enabled: boolean = true
 ) => {
   return useQuery<ResourcePage<Subnet>, APIError[]>(
     [vpcQueryKey, 'vpc', vpcID, subnetQueryKey, 'paginated', params, filter],
     () => getSubnets(vpcID, params, filter),
-    { keepPreviousData: true }
+    { enabled, keepPreviousData: true }
   );
 };
 

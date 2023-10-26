@@ -1,5 +1,16 @@
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
+// Define a custom type for the _satellite object
+declare global {
+  interface Window {
+    _satellite: DTMSatellite;
+  }
+}
+
+type DTMSatellite = {
+  track: (eventName: string, eventPayload: AnalyticsEvent) => void;
+};
+
 interface AnalyticsEvent {
   action: string;
   category: string;
@@ -13,12 +24,12 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   }
 
   // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
-  if ((window as any)._satellite) {
+  if (window._satellite) {
     // Just don't allow pipes in strings for Adobe Analytics processing.
-    (window as any)._satellite.track('custom event', {
-      action: eventPayload.action.replace('|', ''),
-      category: eventPayload.category.replace('|', ''),
-      label: eventPayload.label?.replace('|', ''),
+    window._satellite.track('custom event', {
+      action: eventPayload.action.replace(/\|/g, ''),
+      category: eventPayload.category.replace(/\|/g, ''),
+      label: eventPayload.label?.replace(/\|/g, ''),
       value: eventPayload.value,
     });
   }
@@ -404,6 +415,15 @@ export const sendApiAwarenessClickEvent = (
   sendEvent({
     action: `Click:${clickType}`,
     category: 'Linode Create API CLI Awareness Modal',
+    label,
+  });
+};
+
+// LinodeConfigs.tsx
+export const sendLinodeConfigurationDocsEvent = (label: string) => {
+  sendEvent({
+    action: 'Click:link',
+    category: 'Linode Configuration Contextual Help',
     label,
   });
 };

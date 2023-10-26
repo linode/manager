@@ -35,7 +35,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import { CautionNotice } from './CautionNotice';
@@ -212,7 +212,7 @@ export const MigrateLinode = React.memo((props: Props) => {
       </Typography>
       {/*
          commenting out for now because we need further clarification from
-         stakeholders about whether or not we want to prevent multiple cross-datacenter migrations.
+         stakeholders about whether or not we want to prevent multiple cross-data-center migrations.
          */}
       {/* <MigrationImminentNotice
         linodeID={props.linodeID}

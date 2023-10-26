@@ -17,6 +17,8 @@ import { TooltipProps } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
+import type { BoxProps } from 'src/components/Box';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   absolute: {
     position: 'absolute',
@@ -144,6 +146,10 @@ interface BaseProps {
    */
   trimmed?: boolean;
   value?: Value;
+  /**
+   * Props applied to the root element
+   */
+  containerProps?: BoxProps;
 }
 
 type Value = null | number | string | undefined;
@@ -179,6 +185,7 @@ export const TextField = (props: TextFieldProps) => {
     SelectProps,
     children,
     className,
+    containerProps,
     dataAttrs,
     editable,
     error,
@@ -296,11 +303,15 @@ export const TextField = (props: TextFieldProps) => {
     inputId || (label ? convertToKebabCase(`${label}`) : undefined);
 
   return (
-    <div
-      className={cx({
-        [classes.helpWrapper]: Boolean(tooltipText),
-        [errorScrollClassName]: !!errorText,
-      })}
+    <Box
+      {...containerProps}
+      className={cx(
+        {
+          [classes.helpWrapper]: Boolean(tooltipText),
+          [errorScrollClassName]: !!errorText,
+        },
+        containerProps?.className
+      )}
     >
       <Box display="flex">
         <InputLabel
@@ -443,6 +454,6 @@ export const TextField = (props: TextFieldProps) => {
             {helperText}
           </FormHelperText>
         )}
-    </div>
+    </Box>
   );
 };

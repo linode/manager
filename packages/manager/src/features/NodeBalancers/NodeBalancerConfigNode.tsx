@@ -2,10 +2,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
-import { MenuItem } from 'src/components/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -13,6 +14,8 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 import { NodeBalancerConfigNodeFields } from './types';
+
+import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
   configIdx?: number;
@@ -23,14 +26,21 @@ export interface NodeBalancerConfigNodeProps {
   nodeBalancerRegion?: string;
   onNodeAddressChange: (nodeIdx: number, value: string) => void;
   onNodeLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNodeModeChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    nodeId: number
-  ) => void;
+  onNodeModeChange: (nodeId: number, mode: NodeBalancerConfigNodeMode) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  removeNode: (e: React.MouseEvent<HTMLElement>) => void;
+  removeNode: (nodeIndex: number) => void;
 }
+
+const modeOptions: {
+  label: string;
+  value: NodeBalancerConfigNodeMode;
+}[] = [
+  { label: 'Accept', value: 'accept' },
+  { label: 'Reject', value: 'reject' },
+  { label: 'Backup', value: 'backup' },
+  { label: 'Drain', value: 'drain' },
+];
 
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
@@ -61,7 +71,7 @@ export const NodeBalancerConfigNode = React.memo(
 
     return (
       <React.Fragment>
-        <Grid data-qa-node sx={{ padding: 0 }} xs={12}>
+        <Grid data-qa-node sx={{ padding: 1 }} xs={12}>
           {idx !== 0 && (
             <Grid xs={12}>
               <Divider
@@ -86,7 +96,7 @@ export const NodeBalancerConfigNode = React.memo(
               }}
               lg={forEdit ? 2 : 4}
               sm={forEdit ? 4 : 6}
-              xs={6}
+              xs={12}
             >
               <TextField
                 data-qa-backend-ip-label
@@ -112,7 +122,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-        <Grid sx={{ padding: 0 }} xs={12}>
+        <Grid sx={{ padding: 1 }} xs={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
             <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
               <ConfigNodeIPSelect
@@ -160,47 +170,26 @@ export const NodeBalancerConfigNode = React.memo(
             </Grid>
             {forEdit && (
               <Grid lg={2} sm={3} xs={6}>
-                <TextField
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onNodeModeChange(e, idx)
-                  }
-                  data-qa-backend-ip-mode
+                <Autocomplete
+                  value={modeOptions.find(
+                    (option) => option.value === node.mode
+                  )}
+                  disableClearable
                   disabled={disabled}
                   errorText={nodesErrorMap.mode}
-                  inputId={`mode-${idx}`}
-                  inputProps={{ 'data-node-idx': idx }}
-                  // className={classes.mode}
                   label="Mode"
                   noMarginTop
-                  select
-                  value={node.mode}
-                >
-                  <MenuItem data-node-idx={idx} value="accept">
-                    Accept
-                  </MenuItem>
-                  <MenuItem data-node-idx={idx} value="reject">
-                    Reject
-                  </MenuItem>
-                  <MenuItem data-node-idx={idx} value="backup">
-                    Backup
-                  </MenuItem>
-                  <MenuItem data-node-idx={idx} value="drain">
-                    Drain
-                  </MenuItem>
-                </TextField>
+                  onChange={(_, option) => onNodeModeChange(idx, option.value)}
+                  options={modeOptions}
+                />
               </Grid>
             )}
             {(forEdit || idx !== 0) && (
-              <StyledActionsPanel
-                secondaryButtonProps={{
-                  'data-node-idx': idx,
-                  'data-testid': 'remove-node',
-                  disabled,
-                  label: 'Remove',
-                  onClick: removeNode,
-                  sx: { minWidth: 'auto', padding: 0, top: 8 },
-                }}
-              />
+              <Box alignSelf="flex-end" paddingBottom={1}>
+                <Button disabled={disabled} onClick={() => removeNode(idx)}>
+                  Remove
+                </Button>
+              </Box>
             )}
           </Grid>
         </Grid>
@@ -208,23 +197,6 @@ export const NodeBalancerConfigNode = React.memo(
     );
   }
 );
-
-const StyledActionsPanel = styled(ActionsPanel)(({ theme }) => ({
-  '& .remove': {
-    margin: 0,
-    padding: theme.spacing(2.5),
-  },
-  alignItems: 'flex-end',
-  display: 'flex',
-  marginLeft: `-${theme.spacing()}`,
-  paddingLeft: theme.spacing(2),
-  [theme.breakpoints.down('lg')]: {
-    marginTop: `-${theme.spacing()}`,
-  },
-  [theme.breakpoints.down('sm')]: {
-    marginTop: 0,
-  },
-}));
 
 const StyledStatusHeader = styled(Typography, {
   label: 'StyledStatusHeader',

@@ -19,21 +19,25 @@ describe('VPC create page', () => {
     const { getAllByText } = renderWithTheme(<VPCCreate />);
 
     getAllByText('Region');
-    getAllByText('VPC label');
+    getAllByText('VPC Label');
     getAllByText('Select a Region');
     getAllByText('Description');
     getAllByText('Subnets');
-    getAllByText('Subnet label');
+    getAllByText('Subnet Label');
     getAllByText('Subnet IP Address Range');
-    getAllByText('Add a Subnet');
+    getAllByText('Add another Subnet');
     getAllByText('Create VPC');
   });
 
-  // test fails due to new default value for subnet ip addresses
+  // test fails due to new default value for subnet ip addresses - if we remove default text and just
+  // have a placeholder, we can put this test back in
   it.skip('should require vpc labels and region and ignore subnets that are blank', async () => {
-    const { getAllByTestId, getByText, queryByText } = renderWithTheme(
-      <VPCCreate />
-    );
+    const {
+      getAllByTestId,
+      getByText,
+      getAllByText,
+      queryByText,
+    } = renderWithTheme(<VPCCreate />);
     const createVPCButton = getByText('Create VPC');
     const subnetIP = getAllByTestId('textfield-input');
     expect(createVPCButton).toBeInTheDocument();
@@ -43,25 +47,21 @@ describe('VPC create page', () => {
     });
     const regionError = getByText('Region is required');
     expect(regionError).toBeInTheDocument();
-    const labelError = getByText('Label is required');
-    expect(labelError).toBeInTheDocument();
+    const labelErrors = getAllByText('Label is required');
+    expect(labelErrors).toHaveLength(1);
     const badSubnetIP = queryByText('The IPv4 range must be in CIDR format');
     expect(badSubnetIP).not.toBeInTheDocument();
-    const badSubnetLabel = queryByText(
-      'Label is required. Must only be ASCII letters, numbers, and dashes'
-    );
-    expect(badSubnetLabel).not.toBeInTheDocument();
   });
 
   it('should add and delete subnets correctly', async () => {
     renderWithTheme(<VPCCreate />);
-    const addSubnet = screen.getByText('Add a Subnet');
+    const addSubnet = screen.getByText('Add another Subnet');
     expect(addSubnet).toBeInTheDocument();
     await act(async () => {
       userEvent.click(addSubnet);
     });
 
-    const subnetLabels = screen.getAllByText('Subnet label');
+    const subnetLabels = screen.getAllByText('Subnet Label');
     const subnetIps = screen.getAllByText('Subnet IP Address Range');
     expect(subnetLabels).toHaveLength(2);
     expect(subnetIps).toHaveLength(2);
@@ -72,7 +72,7 @@ describe('VPC create page', () => {
       userEvent.click(deleteSubnet);
     });
 
-    const subnetLabelAfter = screen.getAllByText('Subnet label');
+    const subnetLabelAfter = screen.getAllByText('Subnet Label');
     const subnetIpsAfter = screen.getAllByText('Subnet IP Address Range');
     expect(subnetLabelAfter).toHaveLength(1);
     expect(subnetIpsAfter).toHaveLength(1);
@@ -80,7 +80,7 @@ describe('VPC create page', () => {
 
   it('should display that a subnet ip is invalid and require a subnet label if a user adds an invalid subnet ip', async () => {
     renderWithTheme(<VPCCreate />);
-    const subnetLabel = screen.getByText('Subnet label');
+    const subnetLabel = screen.getByText('Subnet Label');
     expect(subnetLabel).toBeInTheDocument();
     const subnetIp = screen.getByText('Subnet IP Address Range');
     expect(subnetIp).toBeInTheDocument();
@@ -96,16 +96,14 @@ describe('VPC create page', () => {
       'The IPv4 range must be in CIDR format'
     );
     expect(badSubnetIP).toBeInTheDocument();
-    const badSubnetLabel = screen.getByText(
-      'Label is required. Must only be ASCII letters, numbers, and dashes'
-    );
-    expect(badSubnetLabel).toBeInTheDocument();
+    const badLabels = screen.getAllByText('Label is required');
+    expect(badLabels).toHaveLength(2);
   });
 
   it('should have a default value for the subnet ip address', () => {
     const { getAllByTestId } = renderWithTheme(<VPCCreate />);
     const subnetIP = getAllByTestId('textfield-input');
     expect(subnetIP[3]).toBeInTheDocument();
-    expect(subnetIP[3]).toHaveValue('10.0.0.0/24');
+    expect(subnetIP[3]).toHaveValue('10.0.4.0/24');
   });
 });

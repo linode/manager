@@ -14,8 +14,10 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
 
@@ -97,10 +99,11 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode =
-    (flags.dcSpecificPricing && planType
-      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
-      : planType?.price.monthly) || 0;
+  const pricePerNode = getPrice(
+    planType,
+    kubernetesRegionId,
+    flags.dcSpecificPricing
+  )?.monthly;
 
   const totalMonthlyPrice =
     planType &&
@@ -126,11 +129,15 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         }}
       >
         <div className={classes.section}>
-          <Typography className={classes.summary}>
-            Current pool: ${totalMonthlyPrice}/month (
-            {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
-            /month)
-          </Typography>
+          {totalMonthlyPrice && (
+            <Typography className={classes.summary}>
+              Current pool: $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month{' '}
+              ({pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month)
+            </Typography>
+          )}
         </div>
 
         {error && <Notice text={error?.[0].reason} variant="error" />}
@@ -147,10 +154,17 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         </div>
 
         <div className={classes.section}>
-          <Typography className={classes.summary}>
-            Resized pool: ${updatedCount * pricePerNode}/month (
-            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
-          </Typography>
+          {/* Renders total pool price/month for N nodes at price per node/month. */}
+          {pricePerNode && (
+            <Typography className={classes.summary}>
+              {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
+                updatedCount * pricePerNode
+              )}/month`}{' '}
+              ({pluralize('node', 'nodes', updatedCount)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month)
+            </Typography>
+          )}
         </div>
 
         {updatedCount < nodePool.count && (
@@ -159,6 +173,15 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         {updatedCount < 3 && (
           <Notice important text={nodeWarning} variant="warning" />
+        )}
+
+        {nodePool.count && (!pricePerNode || !totalMonthlyPrice) && (
+          <Notice
+            spacingBottom={16}
+            spacingTop={8}
+            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+            variant="error"
+          />
         )}
 
         <ActionsPanel

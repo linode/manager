@@ -2,14 +2,20 @@
  * @file Utilities for polling APIs and other resources.
  */
 
-import {
+import type {
+  Disk,
   ImageStatus,
   LinodeStatus,
+  VolumeStatus,
+} from '@linode/api-v4';
+
+import { pageSize } from 'support/constants/api';
+import {
   getImage,
   getLinode,
   getLinodeDisk,
-  VolumeStatus,
   getVolume,
+  getLinodeDisks,
 } from '@linode/api-v4';
 
 import {
@@ -18,9 +24,12 @@ import {
   FibonacciBackoffMethod,
   attemptWithBackoff,
 } from './backoff';
+import { depaginate } from './paginate';
 
-// / Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,
-// / an instance of a BackoffMethod implementation, or undefined.
+/**
+ * Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,
+ * an instance of a BackoffMethod implementation, or undefined.
+ */
 export type PollBackoffConfiguration =
   | BackoffMethod
   | Partial<BackoffOptions>
@@ -116,6 +125,32 @@ export const pollLinodeStatus = async (
     status === desiredStatus;
 
   return poll(getLinodeStatus, checkLinodeStatus, backoffOptions, label);
+};
+
+/**
+ * Polls the status of a Linode's disks until all of them are in the desired state.
+ *
+ * @param linodeId - ID of Linode containing the disks to poll.
+ * @param desiredStatus - Desired status of the disks that are being polled.
+ * @param backoffMethod - Backoff method implementation to manage re-attempts.
+ * @param label - Optional label to assign to poll for logging and troubleshooting.
+ *
+ * @returns A Promise that resolves to an array of disks or rejects on timeout.
+ */
+export const pollLinodeDiskStatuses = async (
+  linodeId: number,
+  desiredStatus: string,
+  backoffOptions: PollBackoffConfiguration = undefined,
+  label: string | undefined = undefined
+) => {
+  const getDisks = async () =>
+    depaginate((page) =>
+      getLinodeDisks(linodeId, { page, page_size: pageSize })
+    );
+  const checkDisksStatus = (disks: Disk[]): boolean =>
+    disks.every((disk: Disk) => disk.status === desiredStatus);
+
+  return poll(getDisks, checkDisksStatus, backoffOptions, label);
 };
 
 /**

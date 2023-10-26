@@ -20,10 +20,21 @@ import {
   mockGetDashboardUrl,
   mockGetApiEndpoints,
 } from 'support/intercepts/lke';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockGetLinodeType,
+  mockGetLinodeTypes,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 import type { PoolNodeResponse, Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel } from 'support/util/random';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { getRegionById } from 'support/util/regions';
+import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -727,5 +738,250 @@ describe('LKE cluster updates', () => {
       .findByTitle('Delete Pool')
       .should('be.visible')
       .should('be.disabled');
+  });
+});
+
+describe('LKE cluster updates for DC-specific prices', () => {
+  beforeEach(() => {
+    //TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+  });
+
+  /*
+   * - Confirms node pool resize UI flow using mocked API responses.
+   * - Confirms that pool size can be increased and decreased.
+   * - Confirms that drawer reflects prices in regions with DC-specific pricing.
+   * - Confirms that details page updates total cluster price with DC-specific pricing.
+   */
+  it('can resize pools with DC-specific prices', () => {
+    const dcSpecificPricingRegion = getRegionById('us-east');
+
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+      region: dcSpecificPricingRegion.id,
+      control_plane: {
+        high_availability: false,
+      },
+    });
+
+    const mockNodePoolResized = nodePoolFactory.build({
+      count: 3,
+      type: dcPricingMockLinodeTypes[0].id,
+      nodes: kubeLinodeFactory.buildList(3),
+    });
+
+    const mockNodePoolInitial = {
+      ...mockNodePoolResized,
+      count: 1,
+      nodes: [mockNodePoolResized.nodes[0]],
+    };
+
+    const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
+      (node: PoolNodeResponse): Linode => {
+        return linodeFactory.build({
+          id: node.instance_id,
+          ipv4: [randomIp()],
+          region: dcSpecificPricingRegion.id,
+          type: dcPricingMockLinodeTypes[0].id,
+        });
+      }
+    );
+
+    const mockNodePoolDrawerTitle = 'Resize Pool: Linode 0 GB Plan';
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+      'getNodePools'
+    );
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getLinodes',
+      '@getVersions',
+      '@getLinodeType',
+    ]);
+
+    // Confirm that nodes are visible.
+    mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
+      cy.get(`tr[data-qa-node-row="${node.id}"]`)
+        .should('be.visible')
+        .within(() => {
+          const nodeLinode = mockLinodes.find(
+            (linode: Linode) => linode.id === node.instance_id
+          );
+          if (nodeLinode) {
+            cy.findByText(nodeLinode.label).should('be.visible');
+          }
+        });
+    });
+
+    // Confirm total price is listed in Kube Specs.
+    cy.findByText('$14.40/month').should('be.visible');
+
+    // Click "Resize Pool" and increase size to 3 nodes.
+    ui.button
+      .findByTitle('Resize Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
+      'resizeNodePool'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
+      'getNodePools'
+    );
+    ui.drawer
+      .findByTitle(mockNodePoolDrawerTitle)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        cy.findByText(
+          'Current pool: $14.40/month (1 node at $14.40/month)'
+        ).should('be.visible');
+        cy.findByText(
+          'Resized pool: $14.40/month (1 node at $14.40/month)'
+        ).should('be.visible');
+
+        cy.findByLabelText('Add 1')
+          .should('be.visible')
+          .should('be.enabled')
+          .click()
+          .click()
+          .click();
+
+        cy.findByLabelText('Edit Quantity').should('have.value', '4');
+        cy.findByText(
+          'Current pool: $14.40/month (1 node at $14.40/month)'
+        ).should('be.visible');
+        cy.findByText(
+          'Resized pool: $57.60/month (4 nodes at $14.40/month)'
+        ).should('be.visible');
+
+        cy.findByLabelText('Subtract 1')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.findByLabelText('Edit Quantity').should('have.value', '3');
+        cy.findByText(
+          'Resized pool: $43.20/month (3 nodes at $14.40/month)'
+        ).should('be.visible');
+
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@resizeNodePool', '@getNodePools']);
+
+    // Confirm total price updates in Kube Specs.
+    cy.findByText('$43.20/month').should('be.visible');
+  });
+
+  /*
+   * - Confirms UI flow when adding node pools using mocked API responses.
+   * - Confirms that drawer reflects prices in regions with DC-specific pricing.
+   * - Confirms that details page updates total cluster price with DC-specific pricing.
+   */
+  it('can add node pools with DC-specific prices', () => {
+    const dcSpecificPricingRegion = getRegionById('us-east');
+
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+      region: dcSpecificPricingRegion.id,
+      control_plane: {
+        high_availability: false,
+      },
+    });
+
+    const mockNewNodePool = nodePoolFactory.build({
+      count: 2,
+      type: dcPricingMockLinodeTypes[0].id,
+      nodes: kubeLinodeFactory.buildList(2),
+    });
+
+    const mockNodePool = nodePoolFactory.build({
+      count: 1,
+      type: dcPricingMockLinodeTypes[0].id,
+      nodes: kubeLinodeFactory.buildList(1),
+    });
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+    mockGetKubernetesVersions().as('getVersions');
+    mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
+    mockGetLinodeTypes(dcPricingMockLinodeTypes);
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getLinodeType']);
+
+    // Assert that initial node pool is shown on the page.
+    cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
+
+    // Confirm total price is listed in Kube Specs.
+    cy.findByText('$14.40/month').should('be.visible');
+
+    // Add a new node pool, select plan, submit form in drawer.
+    ui.button
+      .findByTitle('Add a Node Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
+      'getNodePools'
+    );
+
+    ui.drawer
+      .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Linode 0 GB')
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
+            cy.findByText('$14.40').should('be.visible');
+            cy.findByText('$0.021').should('be.visible');
+            cy.findByLabelText('Add 1').should('be.visible').click().click();
+          });
+
+        // Assert that DC-specific prices are displayed as helper text.
+        cy.contains(
+          'This pool will add $28.80/month (2 nodes at $14.40/month) to this cluster.'
+        ).should('be.visible');
+
+        ui.button
+          .findByTitle('Add pool')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Wait for API responses.
+    cy.wait(['@addNodePool', '@getNodePools']);
+
+    // Confirm total price updates in Kube Specs: $14.40/mo existing pool + $28.80/mo new pool.
+    cy.findByText('$43.20/month').should('be.visible');
   });
 });
