@@ -275,7 +275,6 @@ export const CreateFirewallDrawer = React.memo(
             })}
             disabled={userCannotAddFirewall || !!linodeError}
             errorText={errors['devices.linodes']}
-            helperText={FIREWALL_HELPER_TEXT}
             label={inCreateFlow ? 'Additional Linodes (Optional)' : 'Linodes'}
             loading={linodeIsLoading}
             multiple
