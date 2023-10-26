@@ -303,7 +303,11 @@ const VPCCreate = () => {
               loading: isLoading,
               onClick: onCreateVPC,
             }}
-            style={{ marginTop: theme.spacing(1) }}
+            style={{
+              marginTop: theme.spacing(1),
+              display: 'flex',
+              justifyContent: 'right',
+            }}
           />
         </form>
       </Grid>
