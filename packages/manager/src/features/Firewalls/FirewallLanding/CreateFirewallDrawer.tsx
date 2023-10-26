@@ -4,6 +4,9 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -23,6 +26,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { useSnackbar } from 'notistack';
 
 const FIREWALL_LABEL_TEXT = `Assign devices to the Firewall.`;
 const FIREWALL_HELPER_TEXT = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
@@ -54,6 +58,10 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
+
+    const { enqueueSnackbar } = useSnackbar();
+    const queryClient = useQueryClient();
+    // const deviceType = device?.entity.type;
 
     const {
       errors,
@@ -94,9 +102,37 @@ export const CreateFirewallDrawer = React.memo(
           payload.rules.outbound = undefined;
         }
 
+        // const querykey = deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
+
         mutateAsync(payload)
           .then(() => {
             setSubmitting(false);
+            enqueueSnackbar(`Firewall ${payload.label} successfully created`);
+
+            // Invalidate for Linodes
+            if (payload.devices?.linodes) {
+              payload.devices.linodes.forEach((linodeId) => {
+                queryClient.invalidateQueries([
+                  linodesQueryKey,
+                  'linode',
+                  linodeId,
+                  'firewalls',
+                ]);
+              });
+            }
+
+            // Invalidate for NodeBalancers
+            if (payload.devices?.nodebalancers) {
+              payload.devices.nodebalancers.forEach((nodebalancerId) => {
+                queryClient.invalidateQueries([
+                  nodebalancerQueryKey,
+                  'nodebalancer',
+                  nodebalancerId,
+                  'firewalls',
+                ]);
+              });
+            }
+
             onClose();
           })
           .catch((err) => {
