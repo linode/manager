@@ -1,5 +1,6 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -32,8 +33,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     display: 'flex',
+    fontFamily: theme.font.bold,
     fontSize: 14,
-    fontWeight: 'bold',
     paddingTop: theme.spacing(),
   },
 }));
@@ -141,6 +142,7 @@ interface BodyProps {
 
 const ContentBody = React.memo((props: BodyProps) => {
   const { classes } = useStyles();
+  const theme = useTheme();
 
   const { content, count, emptyMessage, header, loading } = props;
 
@@ -172,7 +174,7 @@ const ContentBody = React.memo((props: BodyProps) => {
           <StyledLinkButton
             sx={{
               color: 'primary.main',
-              fontWeight: 'bold',
+              fontFamily: theme.font.bold,
               textDecoration: 'none !important',
             }}
             aria-label={`Display all ${content.length} items`}

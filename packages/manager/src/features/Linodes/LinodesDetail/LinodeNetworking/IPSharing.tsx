@@ -336,7 +336,7 @@ const IPSharingPanel = (props: Props) => {
                     width: '100%',
                   }}
                 >
-                  <Typography style={{ fontWeight: 'bold' }}>
+                  <Typography style={{ fontFamily: theme.font.bold }}>
                     IP Addresses
                   </Typography>
                 </Grid>
