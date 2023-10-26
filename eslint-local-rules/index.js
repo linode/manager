@@ -1,11 +1,23 @@
+"use strict";
+
 function checkFontWeightRecursively(properties, context) {
   for (const property of properties) {
-    if (property.type === "Property" && property.key?.name === "fontWeight") {
-      context.report({
-        node: property,
-        message:
-          "Avoid using fontWeight declaration in our code since we declare font weight using fontFamily",
-      });
+    if (
+      property.type === "Property" &&
+      (property.key?.name === "fontWeight" ||
+        (property.key?.type === "Literal" &&
+          property.key.value === "font-weight"))
+    ) {
+      if (
+        property.value?.type === "Literal" &&
+        property.value.value === "normal"
+      ) {
+        context.report({
+          node: property,
+          message:
+            "Avoid using fontWeight declaration in our code since we declare font weight using fontFamily",
+        });
+      }
     } else if (
       property.type === "Property" &&
       property.value?.type === "ObjectExpression"
