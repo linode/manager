@@ -39,20 +39,6 @@ const NullAuth = () => <span>null auth route</span>;
 
 const Null = () => <span>null route</span>;
 
-const AppWrapper = () => (
-  <>
-    <Snackbar
-      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      autoHideDuration={4000}
-      data-qa-toast
-      hideIconVariant={true}
-      maxSnack={3}
-    >
-      <App />
-    </Snackbar>
-  </>
-);
-
 const ContextWrapper = () => (
   <ReduxStoreProvider store={store}>
     <QueryClientProvider client={queryClient}>
@@ -70,10 +56,18 @@ const ContextWrapper = () => (
             <Route component={NullAuth} exact path="/nullauth" />
             <Route component={Logout} exact path="/logout" />
             <Route component={CancelLanding} exact path="/cancel" />
-            <Switch>
-              <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
-              <Route component={AppWrapper} />
-            </Switch>
+            <Snackbar
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              autoHideDuration={4000}
+              data-qa-toast
+              hideIconVariant={true}
+              maxSnack={3}
+            >
+              <Switch>
+                <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
+                <Route component={App} />
+              </Switch>
+            </Snackbar>
           </Switch>
         </React.Suspense>
       </LinodeThemeWrapper>

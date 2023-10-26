@@ -20,7 +20,6 @@ import { useInitialRequests } from './components/AuthenticationWrapper/Authentic
 import { SplashScreen } from './components/SplashScreen';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
-import { useAuthentication } from './hooks/useAuthentication';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -267,7 +266,7 @@ const BaseApp = withDocumentTitleProvider(
       return (
         <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
           {/** Accessibility helper */}
-          <a href="#main-content" className="skip-link">
+          <a className="skip-link" href="#main-content">
             Skip to main content
           </a>
           <div hidden>
@@ -277,7 +276,7 @@ const BaseApp = withDocumentTitleProvider(
               Opens an external site in a new window
             </span>
           </div>
-          <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+          <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
           {/** Update the LD client with the user's id as soon as we know it */}
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
           <MainContent />

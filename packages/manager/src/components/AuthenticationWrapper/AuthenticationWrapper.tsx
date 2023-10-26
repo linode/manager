@@ -1,5 +1,5 @@
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
-import { getProfile } from '@linode/api-v4/lib/profile';
+import { getProfile, getUserPreferences } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import { useSelector, useStore } from 'react-redux';
@@ -20,7 +20,7 @@ export const useInitialRequests = () => {
 
   const { token } = useAuthentication();
   const isAuthenticated = Boolean(token);
-  const pendingUpload = usePendingUpload();
+  // const pendingUpload = usePendingUpload();
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -75,6 +75,12 @@ export const useInitialRequests = () => {
       queryClient.prefetchQuery({
         queryFn: getAccountSettings,
         queryKey: 'account-settings',
+      }),
+
+      // preferences
+      queryClient.prefetchQuery({
+        queryFn: getUserPreferences,
+        queryKey: 'preferences',
       }),
     ];
 
