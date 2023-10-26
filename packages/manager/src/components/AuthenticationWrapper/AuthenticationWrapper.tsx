@@ -9,7 +9,6 @@ import { useAuthentication } from 'src/hooks/useAuthentication';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
-import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 
 export const usePendingUpload = () => {
   return useSelector((state: ApplicationState) => state.pendingUpload);
@@ -26,21 +25,10 @@ export const useInitialRequests = () => {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    /**
-     * set redux state to what's in local storage
-     * or expire the tokens if the expiry time is in the past
-     *
-     * if nothing exists in local storage, we get shot off to login
-     */
-    store.dispatch(handleInitTokens());
-  }, []);
-
-  React.useEffect(() => {
     if (
       !isAuthenticated &&
       // Do not redirect to Login if there is a pending image upload.
-      !pendingUpload &&
-      !isLoading
+      !pendingUpload
     ) {
       redirectToLogin(location.pathname, location.search);
     }

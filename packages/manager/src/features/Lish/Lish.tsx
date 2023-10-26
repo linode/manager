@@ -18,11 +18,14 @@ import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
+import { useInitialRequests } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
 const Lish = () => {
   const history = useHistory();
+
+  const { isLoading: isMakingInitalRequests } = useInitialRequests();
 
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
   const id = Number(linodeId);
@@ -40,7 +43,7 @@ const Lish = () => {
     refetch,
   } = useLinodeLishTokenQuery(id);
 
-  const isLoading = isLinodeLoading || isTokenLoading;
+  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
 
   const token = data?.lish_token;
 

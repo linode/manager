@@ -12,18 +12,20 @@ import {
 import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
 
-export const defaultState: State = {
-  expiration: null,
-  loggedInAsCustomer: false,
-  scopes: null,
-  token: null,
-};
-
 const {
   expire: expiryInLocalStorage,
   scopes: scopesInLocalStorage,
   token: tokenInLocalStorage,
 } = authentication;
+
+const defaultToken = tokenInLocalStorage.get();
+
+export const defaultState: State = {
+  expiration: expiryInLocalStorage.get(),
+  loggedInAsCustomer: (defaultToken || '').toLowerCase().includes('admin'),
+  scopes: scopesInLocalStorage.get(),
+  token: defaultToken,
+};
 
 const reducer = reducerWithInitialState(defaultState)
   .case(handleStartSession, (state, payload) => {
