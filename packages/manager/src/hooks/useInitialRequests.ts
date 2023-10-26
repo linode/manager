@@ -41,7 +41,9 @@ export const useInitialRequests = () => {
     if (isAuthenticated) {
       makeInitialRequests();
     }
-  }, [isAuthenticated, isLoading, pendingUpload]);
+
+    // We only want this useEffect running when `isAuthenticated` changes.
+  }, [isAuthenticated]);
 
   /**
    * We make a series of requests for data on app load. The flow is:
