@@ -7,7 +7,11 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 const KubernetesLanding = React.lazy(
   () => import('./KubernetesLanding/KubernetesLanding')
 );
-const ClusterCreate = React.lazy(() => import('./CreateCluster'));
+const ClusterCreate = React.lazy(() =>
+  import('./CreateCluster/CreateCluster').then((module) => ({
+    default: module.CreateCluster,
+  }))
+);
 const ClusterDetail = React.lazy(() => import('./KubernetesClusterDetail'));
 
 const Kubernetes: React.FC = () => {

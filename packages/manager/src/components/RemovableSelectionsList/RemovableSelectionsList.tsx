@@ -1,12 +1,17 @@
 import Close from '@mui/icons-material/Close';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { omittedProps } from 'src/utilities/omittedProps';
+
+import {
+  SelectedOptionsHeader,
+  SelectedOptionsList,
+  SelectedOptionsListItem,
+  StyledBoxShadowWrapper,
+  StyledLabel,
+  StyledNoAssignedLinodesBox,
+  StyledScrollBox,
+} from './RemovableSelectionsList.style';
 
 export type RemovableItem = {
   id: number;
@@ -16,7 +21,7 @@ export type RemovableItem = {
   // Trying to type them as 'unknown' led to type errors.
 } & { [key: string]: any };
 
-interface Props {
+export interface RemovableSelectionsListProps {
   /**
    * The descriptive text to display above the list
    */
@@ -26,11 +31,11 @@ interface Props {
    */
   isRemovable?: boolean;
   /**
-   * The maxHeight of the list component, in px
+   * The maxHeight of the list component, in px. The default max height is 427px.
    */
   maxHeight?: number;
   /**
-   * The maxWidth of the list component, in px
+   * The maxWidth of the list component, in px. The default max width is 416px.
    */
   maxWidth?: number;
   /**
@@ -53,17 +58,29 @@ interface Props {
   selectionData: RemovableItem[];
 }
 
-export const RemovableSelectionsList = (props: Props) => {
+export const RemovableSelectionsList = (
+  props: RemovableSelectionsListProps
+) => {
   const {
     headerText,
     isRemovable = true,
-    maxHeight,
-    maxWidth,
+    maxHeight = 427,
+    maxWidth = 416,
     noDataText,
     onRemove,
     preferredDataLabel,
     selectionData,
   } = props;
+
+  // used to determine when to display a box-shadow to indicate scrollability
+  const listRef = React.useRef<HTMLUListElement>(null);
+  const [listHeight, setListHeight] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    if (listRef.current) {
+      setListHeight(listRef.current.clientHeight);
+    }
+  }, [selectionData]);
 
   const handleOnClick = (selection: RemovableItem) => {
     onRemove(selection);
@@ -73,37 +90,38 @@ export const RemovableSelectionsList = (props: Props) => {
     <>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
-        <SelectedOptionsList
-          sx={{
-            maxHeight: maxHeight ? `${maxHeight}px` : '450px',
-            maxWidth: maxWidth ? `${maxWidth}px` : '416px',
-          }}
-          isRemovable={isRemovable}
+        <StyledBoxShadowWrapper
+          displayShadow={listHeight > maxHeight}
+          maxWidth={maxWidth}
         >
-          {selectionData.map((selection) => (
-            <SelectedOptionsListItem alignItems="center" key={selection.id}>
-              <StyledLabel>
-                {preferredDataLabel
-                  ? selection[preferredDataLabel]
-                  : selection.label}
-              </StyledLabel>
-              {isRemovable && (
-                <IconButton
-                  aria-label={`remove ${
-                    preferredDataLabel
+          <StyledScrollBox maxHeight={maxHeight} maxWidth={maxWidth}>
+            <SelectedOptionsList isRemovable={isRemovable} ref={listRef}>
+              {selectionData.map((selection) => (
+                <SelectedOptionsListItem alignItems="center" key={selection.id}>
+                  <StyledLabel>
+                    {preferredDataLabel
                       ? selection[preferredDataLabel]
-                      : selection.label
-                  }`}
-                  disableRipple
-                  onClick={() => handleOnClick(selection)}
-                  size="medium"
-                >
-                  <Close />
-                </IconButton>
-              )}
-            </SelectedOptionsListItem>
-          ))}
-        </SelectedOptionsList>
+                      : selection.label}
+                  </StyledLabel>
+                  {isRemovable && (
+                    <IconButton
+                      aria-label={`remove ${
+                        preferredDataLabel
+                          ? selection[preferredDataLabel]
+                          : selection.label
+                      }`}
+                      disableRipple
+                      onClick={() => handleOnClick(selection)}
+                      size="medium"
+                    >
+                      <Close />
+                    </IconButton>
+                  )}
+                </SelectedOptionsListItem>
+              ))}
+            </SelectedOptionsList>
+          </StyledScrollBox>
+        </StyledBoxShadowWrapper>
       ) : (
         <StyledNoAssignedLinodesBox maxWidth={maxWidth}>
           <StyledLabel>{noDataText}</StyledLabel>
@@ -112,52 +130,3 @@ export const RemovableSelectionsList = (props: Props) => {
     </>
   );
 };
-
-const StyledNoAssignedLinodesBox = styled(Box, {
-  label: 'StyledNoAssignedLinodesBox',
-  shouldForwardProp: omittedProps(['maxWidth']),
-})(({ maxWidth, theme }) => ({
-  background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
-  display: 'flex',
-  flexDirection: 'column',
-  height: '52px',
-  justifyContent: 'center',
-  maxWidth: maxWidth ? `${maxWidth}px` : '416px',
-  paddingLeft: theme.spacing(2),
-  width: '100%',
-}));
-
-const SelectedOptionsHeader = styled('h4', {
-  label: 'SelectedOptionsHeader',
-})(({ theme }) => ({
-  color: theme.color.headline,
-  fontFamily: theme.font.bold,
-  fontSize: '14px',
-  fontWeight: 300,
-  textTransform: 'initial',
-}));
-
-const SelectedOptionsList = styled(List, {
-  label: 'SelectedOptionsList',
-  shouldForwardProp: omittedProps(['isRemovable']),
-})<{ isRemovable?: boolean }>(({ isRemovable, theme }) => ({
-  background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
-  overflow: 'auto',
-  padding: !isRemovable ? '16px 0' : '5px 0',
-  width: '100%',
-}));
-
-const SelectedOptionsListItem = styled(ListItem, {
-  label: 'SelectedOptionsListItem',
-})(() => ({
-  justifyContent: 'space-between',
-  paddingBottom: 0,
-  paddingRight: 4,
-  paddingTop: 0,
-}));
-
-const StyledLabel = styled('span', { label: 'StyledLabel' })(({ theme }) => ({
-  color: theme.color.label,
-  fontFamily: theme.font.semiBold,
-  fontSize: '14px',
-}));

@@ -7,9 +7,12 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import {
   CustomStepIcon,
@@ -23,7 +26,7 @@ type VerticalLinearStep = {
   label: string;
 };
 
-interface VerticalLinearStepperProps {
+export interface VerticalLinearStepperProps {
   steps: VerticalLinearStep[];
 }
 
@@ -31,6 +34,9 @@ export const VerticalLinearStepper = ({
   steps,
 }: VerticalLinearStepperProps) => {
   const [activeStep, setActiveStep] = useState(0);
+  const theme = useTheme<Theme>();
+
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -45,9 +51,8 @@ export const VerticalLinearStepper = ({
       sx={(theme: Theme) => ({
         backgroundColor: theme.bg.bgPaper,
         display: 'flex',
-        margin: 'auto',
-        maxWidth: 800,
-        p: `${theme.spacing(2)}`,
+        flexDirection: matchesSmDown ? 'column' : 'row',
+        p: matchesSmDown ? `${theme.spacing(2)}px 0px` : `${theme.spacing(2)}`,
       })}
     >
       {/* Left Column - Vertical Steps */}
@@ -101,7 +106,16 @@ export const VerticalLinearStepper = ({
           {steps.map(({ content, handler, label }, index) => (
             <Step key={label}>
               {index === activeStep ? (
-                <StepContent sx={{ border: 'none' }}>
+                <StepContent
+                  sx={{
+                    border: 'none',
+                    marginLeft: matchesSmDown ? '0px' : undefined,
+                    paddingLeft: matchesSmDown ? '0px' : undefined,
+                    paddingTop: matchesSmDown
+                      ? `${theme.spacing(2)}`
+                      : undefined,
+                  }}
+                >
                   <Box
                     sx={(theme) => ({
                       bgcolor: theme.bg.app,
@@ -116,9 +130,13 @@ export const VerticalLinearStepper = ({
                       primaryButtonProps={
                         index !== 2
                           ? {
-                              'data-testid': steps[
-                                index + 1
-                              ]?.label.toLocaleLowerCase(),
+                              /** Generate a 'data-testid' attribute value based on the label of the next step.
+                               * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
+                               * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                               */
+                              'data-testid': convertToKebabCase(
+                                steps[index + 1]?.label
+                              ),
                               label: `Next: ${steps[index + 1]?.label}`,
                               onClick: () => {
                                 handleNext();
