@@ -389,6 +389,7 @@ export const SubnetAssignLinodesDrawer = (
               </Typography>
             }
             data-testid="vpc-ipv4-checkbox"
+            disabled={userCannotAssignLinodes}
             sx={{ marginRight: 0 }}
           />
           <TooltipIcon
