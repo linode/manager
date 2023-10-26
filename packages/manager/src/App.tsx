@@ -14,12 +14,11 @@ import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import GoTo from './GoTo';
-import { useSetupFeatureFlags } from './IdentifyUser';
 import MainContent from './MainContent';
-import { useInitialRequests } from './components/AuthenticationWrapper/AuthenticationWrapper';
 import { SplashScreen } from './components/SplashScreen';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
+import { useInitialRequests } from './hooks/useInitialRequests';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -36,6 +35,7 @@ import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
 import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
+import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 import { getNextThemeValue } from './utilities/theme';
 import { isOSMac } from './utilities/userAgent';
 

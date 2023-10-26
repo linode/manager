@@ -8,12 +8,10 @@ import { useAccount } from './queries/account';
 import { useProfile } from './queries/profile';
 
 /**
- * This has to be a FC rather than just a function
- * to use the useLDClient hook. We could pass in
- * the client as a prop, but the parents are class components
- * and this is a good side-effect usage of useEffect().
+ * This hook uses Linode account data to set Sentry and Launch Darkly context.
+ * It exposes a `areFeatureFlagsLoading` value so we can display a loading
+ * page while we wait for our feature flags to be setup.
  */
-
 export const useSetupFeatureFlags = () => {
   const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();

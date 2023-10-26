@@ -7,8 +7,9 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { useInitialRequests } from 'src/hooks/useInitialRequests';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,
@@ -18,7 +19,6 @@ import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
-import { useInitialRequests } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
 const AUTH_POLLING_INTERVAL = 2000;
 

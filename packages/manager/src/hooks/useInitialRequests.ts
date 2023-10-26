@@ -2,18 +2,19 @@ import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { getProfile, getUserPreferences } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
-import { useSelector, useStore } from 'react-redux';
+import { useStore } from 'react-redux';
 
 import { startEventsInterval } from 'src/events';
 import { useAuthentication } from 'src/hooks/useAuthentication';
+import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
-import { ApplicationState } from 'src/store';
 
-export const usePendingUpload = () => {
-  return useSelector((state: ApplicationState) => state.pendingUpload);
-};
-
+/**
+ * This hook is responsible for making Cloud Manager's initial requests.
+ * It exposes a `isLoading` value so that we can render a loading page
+ * as we make our inital requests.
+ */
 export const useInitialRequests = () => {
   const store = useStore();
   const queryClient = useQueryClient();
