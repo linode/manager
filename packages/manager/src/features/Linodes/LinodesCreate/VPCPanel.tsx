@@ -211,7 +211,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
           {from === 'linodeCreate' && (
             <LinkButton
-              isDisabled={region === undefined}
+              isDisabled={!regionSupportsVPCs}
               onClick={() => setIsVPCCreateDrawerOpen(true)}
               style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
             >
@@ -332,7 +332,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
       </Paper>
       {isVPCCreateDrawerOpen &&
         from === 'linodeCreate' &&
-        region !== undefined && (
+        regionSupportsVPCs && (
           <VPCCreateDrawer
             handleSelectVPC={(vpcId: number) => handleSelectVPC(vpcId)}
             onClose={() => setIsVPCCreateDrawerOpen(false)}
