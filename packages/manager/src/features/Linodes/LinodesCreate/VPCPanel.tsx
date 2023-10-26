@@ -8,11 +8,11 @@ import { Checkbox } from 'src/components/Checkbox';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
+import { LinkButton } from 'src/components/LinkButton';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { APP_ROOT } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -22,8 +22,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { StyledCreateLink } from './LinodeCreate.styles';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
+import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 export interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
@@ -79,6 +79,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
     selectedRegion,
     regions,
     'VPCs'
+  );
+
+  const [isVPCCreateDrawerOpen, setIsVPCCreateDrawerOpen] = React.useState(
+    false
   );
 
   const displayVPCPanel = isFeatureEnabled(
@@ -156,167 +160,186 @@ export const VPCPanel = (props: VPCPanelProps) => {
   };
 
   return (
-    <Paper
-      sx={(theme) => ({
-        ...(fromLinodeCreate && {
-          marginTop: theme.spacing(3),
-        }),
-        ...(fromLinodeConfig && {
-          padding: 0,
-        }),
-      })}
-      data-testid="vpc-panel"
-    >
-      {fromLinodeCreate && (
-        <Typography
-          sx={(theme) => ({ marginBottom: theme.spacing(2) })}
-          variant="h2"
-        >
-          VPC
-        </Typography>
-      )}
-      <Stack>
-        <Typography>{getMainCopyVPC()}</Typography>
-        <Select
-          onChange={(selectedVPC: Item<number, string>) => {
-            handleSelectVPC(selectedVPC.value);
-          }}
-          textFieldProps={{
-            tooltipText: REGION_CAVEAT_HELPER_TEXT,
-          }}
-          value={vpcDropdownOptions.find(
-            (option) => option.value === selectedVPCId
-          )}
-          defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
-          disabled={!regionSupportsVPCs}
-          errorText={vpcIdError ?? vpcError}
-          isClearable={false}
-          isLoading={isLoading}
-          label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
-          noOptionsMessage={() => 'Create a VPC to assign to this Linode.'}
-          options={vpcDropdownOptions}
-          placeholder={'Select a VPC'}
-        />
-        {vpcDropdownOptions.length <= 1 && regionSupportsVPCs && (
-          <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
-            No VPCs exist in the selected region. Click Create VPC to create
-            one.
+    <>
+      <Paper
+        sx={(theme) => ({
+          ...(fromLinodeCreate && {
+            marginTop: theme.spacing(3),
+          }),
+          ...(fromLinodeConfig && {
+            padding: 0,
+          }),
+        })}
+        data-testid="vpc-panel"
+      >
+        {fromLinodeCreate && (
+          <Typography
+            sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+            variant="h2"
+          >
+            VPC
           </Typography>
         )}
-
-        {from === 'linodeCreate' && (
-          <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
-            Create VPC
-          </StyledCreateLink>
-        )}
-
-        {selectedVPCId !== -1 && regionSupportsVPCs && (
-          <Stack data-testid="subnet-and-additional-options-section">
-            <Select
-              onChange={(selectedSubnet: Item<number, string>) =>
-                handleSubnetChange(selectedSubnet.value)
-              }
-              value={
-                subnetDropdownOptions.find(
-                  (option) => option.value === selectedSubnetId
-                ) || null
-              }
-              errorGroup={ERROR_GROUP_STRING}
-              errorText={subnetError}
-              isClearable={false}
-              label="Subnet"
-              options={subnetDropdownOptions}
-              placeholder="Select Subnet"
-            />
-            <Box
-              sx={(theme) => ({
-                marginLeft: '2px',
-                paddingTop: theme.spacing(),
-              })}
-              alignItems="center"
-              display="flex"
-              flexDirection="row"
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={autoassignIPv4WithinVPC}
-                    onChange={toggleAutoassignIPv4WithinVPCEnabled}
-                  />
-                }
-                label={
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    flexDirection="row"
-                    sx={{}}
-                  >
-                    <Typography noWrap={!isSmallBp && from === 'linodeConfig'}>
-                      Auto-assign a VPC IPv4 address for this Linode in the VPC
-                    </Typography>
-                    <TooltipIcon
-                      text={
-                        'A range of non-internet facing IP addresses used in an internal network.'
-                      }
-                      status="help"
-                    />
-                  </Box>
-                }
-                data-testid="vpc-ipv4-checkbox"
-              />
-            </Box>
-            {!autoassignIPv4WithinVPC && (
-              <TextField
-                errorGroup={ERROR_GROUP_STRING}
-                errorText={vpcIPv4Error}
-                label="VPC IPv4"
-                onChange={(e) => handleVPCIPv4Change(e.target.value)}
-                required={!autoassignIPv4WithinVPC}
-                value={vpcIPv4AddressOfLinode}
-              />
+        <Stack>
+          <Typography>{getMainCopyVPC()}</Typography>
+          <Select
+            onChange={(selectedVPC: Item<number, string>) => {
+              handleSelectVPC(selectedVPC.value);
+            }}
+            textFieldProps={{
+              tooltipText: REGION_CAVEAT_HELPER_TEXT,
+            }}
+            value={vpcDropdownOptions.find(
+              (option) => option.value === selectedVPCId
             )}
-            <Box
-              sx={(theme) => ({
-                marginLeft: '2px',
-                marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
-              })}
-              alignItems="center"
-              display="flex"
+            defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
+            disabled={!regionSupportsVPCs}
+            errorText={vpcIdError ?? vpcError}
+            isClearable={false}
+            isLoading={isLoading}
+            label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
+            noOptionsMessage={() => 'Create a VPC to assign to this Linode.'}
+            options={vpcDropdownOptions}
+            placeholder={'Select a VPC'}
+          />
+          {vpcDropdownOptions.length <= 1 && regionSupportsVPCs && (
+            <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
+              No VPCs exist in the selected region. Click Create VPC to create
+              one.
+            </Typography>
+          )}
+
+          {from === 'linodeCreate' && (
+            <LinkButton
+              isDisabled={region === undefined}
+              onClick={() => setIsVPCCreateDrawerOpen(true)}
+              style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
             >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={assignPublicIPv4Address}
-                    onChange={toggleAssignPublicIPv4Address}
-                  />
+              Create VPC
+            </LinkButton>
+          )}
+
+          {selectedVPCId !== -1 && regionSupportsVPCs && (
+            <Stack data-testid="subnet-and-additional-options-section">
+              <Select
+                onChange={(selectedSubnet: Item<number, string>) =>
+                  handleSubnetChange(selectedSubnet.value)
                 }
-                label={
-                  <Box alignItems="center" display="flex" flexDirection="row">
-                    <Typography>
-                      Assign a public IPv4 address for this Linode
-                    </Typography>
-                    <TooltipIcon
-                      text={
-                        'Assign a public IP address for this VPC via 1:1 static NAT.'
-                      }
-                      status="help"
-                    />
-                  </Box>
+                value={
+                  subnetDropdownOptions.find(
+                    (option) => option.value === selectedSubnetId
+                  ) || null
                 }
+                errorGroup={ERROR_GROUP_STRING}
+                errorText={subnetError}
+                isClearable={false}
+                label="Subnet"
+                options={subnetDropdownOptions}
+                placeholder="Select Subnet"
               />
-              {assignPublicIPv4Address && publicIPv4Error && (
-                <Typography
-                  sx={(theme) => ({
-                    color: theme.color.red,
-                  })}
-                >
-                  {publicIPv4Error}
-                </Typography>
+              <Box
+                sx={(theme) => ({
+                  marginLeft: '2px',
+                  paddingTop: theme.spacing(),
+                })}
+                alignItems="center"
+                display="flex"
+                flexDirection="row"
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={autoassignIPv4WithinVPC}
+                      onChange={toggleAutoassignIPv4WithinVPCEnabled}
+                    />
+                  }
+                  label={
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      flexDirection="row"
+                      sx={{}}
+                    >
+                      <Typography
+                        noWrap={!isSmallBp && from === 'linodeConfig'}
+                      >
+                        Auto-assign a VPC IPv4 address for this Linode in the
+                        VPC
+                      </Typography>
+                      <TooltipIcon
+                        text={
+                          'A range of non-internet facing IP addresses used in an internal network.'
+                        }
+                        status="help"
+                      />
+                    </Box>
+                  }
+                  data-testid="vpc-ipv4-checkbox"
+                />
+              </Box>
+              {!autoassignIPv4WithinVPC && (
+                <TextField
+                  errorGroup={ERROR_GROUP_STRING}
+                  errorText={vpcIPv4Error}
+                  label="VPC IPv4"
+                  onChange={(e) => handleVPCIPv4Change(e.target.value)}
+                  required={!autoassignIPv4WithinVPC}
+                  value={vpcIPv4AddressOfLinode}
+                />
               )}
-            </Box>
-          </Stack>
+              <Box
+                sx={(theme) => ({
+                  marginLeft: '2px',
+                  marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
+                })}
+                alignItems="center"
+                display="flex"
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={assignPublicIPv4Address}
+                      onChange={toggleAssignPublicIPv4Address}
+                    />
+                  }
+                  label={
+                    <Box alignItems="center" display="flex" flexDirection="row">
+                      <Typography>
+                        Assign a public IPv4 address for this Linode
+                      </Typography>
+                      <TooltipIcon
+                        text={
+                          'Assign a public IP address for this VPC via 1:1 static NAT.'
+                        }
+                        status="help"
+                      />
+                    </Box>
+                  }
+                />
+                {assignPublicIPv4Address && publicIPv4Error && (
+                  <Typography
+                    sx={(theme) => ({
+                      color: theme.color.red,
+                    })}
+                  >
+                    {publicIPv4Error}
+                  </Typography>
+                )}
+              </Box>
+            </Stack>
+          )}
+        </Stack>
+      </Paper>
+      {isVPCCreateDrawerOpen &&
+        from === 'linodeCreate' &&
+        region !== undefined && (
+          <VPCCreateDrawer
+            handleSelectVPC={(vpcId: number) => handleSelectVPC(vpcId)}
+            onClose={() => setIsVPCCreateDrawerOpen(false)}
+            open={isVPCCreateDrawerOpen}
+            selectedRegion={region}
+          />
         )}
-      </Stack>
-    </Paper>
+    </>
   );
 };

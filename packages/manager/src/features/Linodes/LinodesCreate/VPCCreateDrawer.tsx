@@ -22,6 +22,7 @@ import {
 } from 'src/features/VPCs/VPCCreate/VPCCreate.styles';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   SubnetError,
   handleVPCAndSubnetErrors,
@@ -43,6 +44,7 @@ export const VPCCreateDrawer = (props: Props) => {
   const { handleSelectVPC, onClose, open, selectedRegion } = props;
 
   const theme = useTheme();
+  const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
@@ -173,7 +175,7 @@ export const VPCCreateDrawer = (props: Props) => {
     initialValues: {
       description: '',
       label: '',
-      region: '',
+      region: selectedRegion ?? '',
       subnets: [
         {
           ip: {
@@ -207,7 +209,7 @@ export const VPCCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title={'Create VPC'}>
+    <Drawer onClose={handleOnClose} open={open} title={'Create VPC'}>
       {userCannotAddVPC && (
         <Notice
           text={
@@ -234,7 +236,7 @@ export const VPCCreateDrawer = (props: Props) => {
               onChangeField('region', region)
             }
             disabled={true}
-            regions={[]}
+            regions={regions ?? []}
             selectedID={selectedRegion ?? ''}
           />
           <TextField
