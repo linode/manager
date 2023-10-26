@@ -16,7 +16,7 @@ export interface Props {
   firewallId: number;
   firewallLabel: string;
   onClose: () => void;
-  onLinodeNetworkTab?: boolean;
+  onService?: boolean;
   open: boolean;
 }
 
@@ -27,7 +27,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     firewallId,
     firewallLabel,
     onClose,
-    onLinodeNetworkTab,
+    onService,
     open,
   } = props;
 
@@ -41,9 +41,14 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const queryClient = useQueryClient();
 
+  const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
+
   const onDelete = async () => {
     await mutateAsync();
-    enqueueSnackbar(`Service ${device?.entity.label} successfully removed`, {
+    const toastMessage = onService
+      ? `Firewall ${firewallLabel} successfully unassigned`
+      : `${deviceDialog} ${device?.entity.label} successfully removed`;
+    enqueueSnackbar(toastMessage, {
       variant: 'success',
     });
 
@@ -65,21 +70,20 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     onClose();
   };
 
-  const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
-  const dialogTitle = onLinodeNetworkTab
+  const dialogTitle = onService
     ? `Unassign Firewall ${firewallLabel}?`
     : `Remove ${deviceDialog} ${device?.entity.label}?`;
 
   const confirmationText = (
     <Typography>
       Are you sure you want to{' '}
-      {onLinodeNetworkTab
+      {onService
         ? `unassign Firewall ${firewallLabel} from ${deviceDialog} ${device?.entity.label}?`
         : `remove ${deviceDialog} ${device?.entity.label} from Firewall ${firewallLabel}?`}
     </Typography>
   );
 
-  const primaryButtonText = onLinodeNetworkTab ? 'Unassign Firewall' : 'Remove';
+  const primaryButtonText = onService ? 'Unassign Firewall' : 'Remove';
 
   return (
     <ConfirmationDialog

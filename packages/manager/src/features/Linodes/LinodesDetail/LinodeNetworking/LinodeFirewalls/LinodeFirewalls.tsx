@@ -104,7 +104,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
-        onLinodeNetworkTab
+        onService
         open={isRemoveDeviceDialogOpen}
       />
     </Stack>

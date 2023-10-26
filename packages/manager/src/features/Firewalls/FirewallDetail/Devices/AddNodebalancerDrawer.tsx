@@ -67,7 +67,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       const label = selectedNodebalancers[index].label;
       const id = selectedNodebalancers[index].id;
       if (result.status === 'fulfilled') {
-        enqueueSnackbar(`NodeBalancer ${label} added successfully.`, {
+        enqueueSnackbar(`NodeBalancer ${label} added successfully`, {
           variant: 'success',
         });
         queryClient.invalidateQueries([

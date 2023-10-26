@@ -66,7 +66,7 @@ export const AddLinodeDrawer = (props: Props) => {
       const label = selectedLinodes[index].label;
       const id = selectedLinodes[index].id;
       if (result.status === 'fulfilled') {
-        enqueueSnackbar(`Linode ${label} added successfully.`, {
+        enqueueSnackbar(`Linode ${label} added successfully`, {
           variant: 'success',
         });
       } else {
