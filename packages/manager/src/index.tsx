@@ -7,10 +7,9 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
-import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
-import SplashScreen from 'src/components/SplashScreen';
+import { SplashScreen } from 'src/components/SplashScreen';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
@@ -42,7 +41,6 @@ const Null = () => <span>null route</span>;
 
 const AppWrapper = () => (
   <>
-    <SplashScreen />
     <Snackbar
       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       autoHideDuration={4000}
@@ -72,12 +70,10 @@ const ContextWrapper = () => (
             <Route component={NullAuth} exact path="/nullauth" />
             <Route component={Logout} exact path="/logout" />
             <Route component={CancelLanding} exact path="/cancel" />
-            <AuthenticationWrapper>
-              <Switch>
-                <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
-                <Route component={AppWrapper} />
-              </Switch>
-            </AuthenticationWrapper>
+            <Switch>
+              <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
+              <Route component={AppWrapper} />
+            </Switch>
           </Switch>
         </React.Suspense>
       </LinodeThemeWrapper>

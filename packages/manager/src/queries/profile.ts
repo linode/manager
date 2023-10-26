@@ -39,9 +39,10 @@ import { queryPresets } from './base';
 
 export const queryKey = 'profile';
 
-export const useProfile = (givenProfile?: Profile) =>
+export const useProfile = (givenProfile?: Profile, enabled = true) =>
   useQuery<Profile, APIError[]>(queryKey, getProfile, {
     ...queryPresets.oneTimeFetch,
+    enabled,
     initialData: givenProfile,
   });
 

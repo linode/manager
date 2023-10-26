@@ -2,8 +2,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles } from 'tss-react/mui';
 
 import Logo from 'src/assets/logo/akamai-logo.svg';
@@ -14,9 +14,6 @@ import { NotFound } from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { SideMenu } from 'src/components/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import withGlobalErrors, {
-  Props as GlobalErrorProps,
-} from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
@@ -36,6 +33,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
+import { ApplicationState } from './store';
 
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
@@ -98,10 +96,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     width: '100%',
   },
-  hidden: {
-    display: 'none',
-    overflow: 'hidden',
-  },
   logo: {
     '& > g': {
       fill: theme.color.black,
@@ -127,13 +121,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     position: 'relative',
   },
 }));
-
-interface Props {
-  appIsLoading: boolean;
-  isLoggedInAsCustomer: boolean;
-}
-
-type CombinedProps = Props & GlobalErrorProps;
 
 const Account = React.lazy(() =>
   import('src/features/Account').then((module) => ({
@@ -189,10 +176,16 @@ const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
-const MainContent = (props: CombinedProps) => {
+export const useGlobalErrors = () => {
+  return useSelector((state: ApplicationState) => state.globalErrors);
+};
+
+const MainContent = () => {
   const { classes, cx } = useStyles();
   const flags = useFlags();
   const { data: preferences } = usePreferences();
+
+  const globalErrors = useGlobalErrors();
 
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
@@ -249,7 +242,7 @@ const MainContent = (props: CombinedProps) => {
    *
    * So in this case, we'll show something more user-friendly
    */
-  if (props.globalErrors.account_unactivated) {
+  if (globalErrors.account_unactivated) {
     return (
       <div className={classes.bgStyling}>
         <div className={classes.activationWrapper}>
@@ -283,7 +276,7 @@ const MainContent = (props: CombinedProps) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (props.globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
+  if (globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
 
@@ -294,10 +287,6 @@ const MainContent = (props: CombinedProps) => {
     <div
       className={cx({
         [classes.appFrame]: true,
-        /**
-         * hidden to prevent some jankiness with the app loading before the splash screen
-         */
-        [classes.hidden]: props.appIsLoading,
       })}
     >
       <PreferenceToggle<boolean>
@@ -334,7 +323,6 @@ const MainContent = (props: CombinedProps) => {
                 >
                   <TopMenu
                     desktopMenuToggle={desktopMenuToggle}
-                    isLoggedInAsCustomer={props.isLoggedInAsCustomer}
                     isSideMenuOpen={!desktopMenuIsOpen}
                     openSideMenu={() => toggleMenu(true)}
                     username={username}
@@ -411,10 +399,7 @@ const MainContent = (props: CombinedProps) => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withGlobalErrors()
-)(MainContent);
+export default React.memo(MainContent);
 
 // =============================================================================
 // Utilities

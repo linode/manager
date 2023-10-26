@@ -17,13 +17,13 @@ import { queryPresets } from './base';
 
 export const queryKey = 'account-settings';
 
-export const useAccountSettings = () => {
+export const useAccountSettings = (enabled = true) => {
   const { data: profile } = useProfile();
 
   return useQuery<AccountSettings, APIError[]>(queryKey, getAccountSettings, {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
-    enabled: !profile?.restricted,
+    enabled: !profile?.restricted && enabled,
   });
 };
 

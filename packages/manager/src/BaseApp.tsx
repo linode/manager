@@ -1,9 +1,8 @@
-import '@reach/tabs/styles.css';
 import { ErrorBoundary } from '@sentry/react';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-
 import {
   DocumentTitleSegment,
   withDocumentTitleProvider,
@@ -12,15 +11,13 @@ import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.cont
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-
 import GoTo from './GoTo';
-import { useSetupFeatureFlags } from './IdentifyUser';
+import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import { useInitialRequests } from './components/AuthenticationWrapper/AuthenticationWrapper';
-import { SplashScreen } from './components/SplashScreen';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
+import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -37,13 +34,13 @@ import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
 import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
+import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
 import { isOSMac } from './utilities/userAgent';
+import { useInitialRequests } from './components/AuthenticationWrapper/AuthenticationWrapper';
+import { SplashScreen } from './components/SplashScreen';
 
-// Ensure component's display name is 'App'
-export const App = () => <BaseApp />;
-
-const BaseApp = withDocumentTitleProvider(
+export const BaseApp = withDocumentTitleProvider(
   withFeatureFlagProvider(
     withFeatureFlagConsumer(() => {
       const history = useHistory();
@@ -53,7 +50,11 @@ const BaseApp = withDocumentTitleProvider(
 
       const { isLoading } = useInitialRequests();
 
-      const { areFeatureFlagsLoading } = useSetupFeatureFlags();
+      const { featureFlagsLoading } = useFeatureFlagsLoad();
+      const appIsLoading = useSelector(
+        (state: ApplicationState) => state.initialLoad.appIsLoading
+      );
+      const { loggedInAsCustomer } = useAuthentication();
 
       const { enqueueSnackbar } = useSnackbar();
 
@@ -260,7 +261,7 @@ const BaseApp = withDocumentTitleProvider(
         };
       }, [handleMigrationEvent]);
 
-      if (isLoading || areFeatureFlagsLoading) {
+      if (isLoading) {
         return <SplashScreen />;
       }
 
@@ -279,8 +280,9 @@ const BaseApp = withDocumentTitleProvider(
           </div>
           <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
           {/** Update the LD client with the user's id as soon as we know it */}
+          <IdentifyUser />
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
-          <MainContent />
+          <MainContent isLoggedInAsCustomer={loggedInAsCustomer} />
         </ErrorBoundary>
       );
     })
