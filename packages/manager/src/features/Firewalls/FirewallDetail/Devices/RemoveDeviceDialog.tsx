@@ -43,16 +43,12 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    enqueueSnackbar(`Device ${device?.entity.label} successfully removed`, {
+    enqueueSnackbar(`Service ${device?.entity.label} successfully removed`, {
       variant: 'success',
     });
 
     if (error) {
       enqueueSnackbar(error[0].reason, { variant: 'error' });
-    } else {
-      enqueueSnackbar(`${device?.entity.label} removed successfully.`, {
-        variant: 'success',
-      });
     }
 
     const querykey =
@@ -69,16 +65,17 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     onClose();
   };
 
+  const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
   const dialogTitle = onLinodeNetworkTab
     ? `Unassign Firewall ${firewallLabel}?`
-    : `Remove ${device?.entity.label} from ${firewallLabel}?`;
+    : `Remove ${deviceDialog} ${device?.entity.label}?`;
 
   const confirmationText = (
     <Typography>
       Are you sure you want to{' '}
       {onLinodeNetworkTab
-        ? 'unassign this Firewall?'
-        : `remove ${device?.entity.label} from ${firewallLabel}?`}
+        ? `unassign Firewall ${firewallLabel} from ${deviceDialog} ${device?.entity.label}?`
+        : `remove ${deviceDialog} ${device?.entity.label} from Firewall ${firewallLabel}?`}
     </Typography>
   );
 

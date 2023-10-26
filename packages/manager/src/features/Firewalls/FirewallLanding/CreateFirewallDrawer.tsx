@@ -109,7 +109,9 @@ export const CreateFirewallDrawer = React.memo(
         mutateAsync(payload)
           .then((response) => {
             setSubmitting(false);
-            enqueueSnackbar(`Firewall ${payload.label} successfully created`);
+            enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
+              variant: 'success',
+            });
 
             // Invalidate for Linodes
             if (payload.devices?.linodes) {

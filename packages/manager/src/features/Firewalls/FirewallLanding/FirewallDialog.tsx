@@ -81,7 +81,7 @@ export const FirewallDialog = React.memo((props: Props) => {
       open={open}
       title={`${capitalize(mode)} Firewall ${label}?`}
     >
-      Are you sure you want to {mode} this Firewall?
+      Are you sure you want to {mode} this firewall?
     </ConfirmationDialog>
   );
 });
