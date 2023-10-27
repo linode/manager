@@ -26,7 +26,7 @@ const VPCCreate = () => {
     onCreateVPC,
     regionsWithVPCCapability,
     userCannotAddVPC,
-  } = useCreateVPC({ pushToPage: true });
+  } = useCreateVPC({ pushToVPCPage: true });
 
   const { errors, handleSubmit, setFieldValue, values } = formik;
 

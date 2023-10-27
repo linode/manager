@@ -33,12 +33,17 @@ export interface CreateVPCFieldState {
 export interface UseCreateVPCInputs {
   handleSelectVPC?: (vpcId: number) => void;
   onDrawerClose?: () => void;
-  pushToPage?: boolean;
+  pushToVPCPage?: boolean;
   selectedRegion?: string;
 }
 
 export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
-  const { handleSelectVPC, onDrawerClose, pushToPage, selectedRegion } = inputs;
+  const {
+    handleSelectVPC,
+    onDrawerClose,
+    pushToVPCPage,
+    selectedRegion,
+  } = inputs;
 
   const history = useHistory();
   const { data: profile } = useProfile();
@@ -125,7 +130,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
 
     try {
       const response = await createVPC(createVPCPayload);
-      if (pushToPage) {
+      if (pushToVPCPage) {
         history.push(`/vpcs/${response.id}`);
       } else {
         if (handleSelectVPC && onDrawerClose) {
