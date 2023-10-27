@@ -23,8 +23,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
+import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 
 export interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
@@ -209,16 +209,19 @@ export const VPCPanel = (props: VPCPanelProps) => {
               one.
             </Typography>
           )}
-
-          {from === 'linodeCreate' && (
-            <LinkButton
-              isDisabled={!regionSupportsVPCs}
-              onClick={() => setIsVPCCreateDrawerOpen(true)}
-              style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
-            >
-              Create VPC
-            </LinkButton>
-          )}
+          {from === 'linodeCreate' &&
+            (regionSupportsVPCs ? (
+              <LinkButton
+                onClick={() => setIsVPCCreateDrawerOpen(true)}
+                style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
+              >
+                Create VPC
+              </LinkButton>
+            ) : (
+              <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
+                VPC is not available in the selected region.
+              </Typography>
+            ))}
 
           {selectedVPCId !== -1 && regionSupportsVPCs && (
             <Stack data-testid="subnet-and-additional-options-section">
@@ -268,8 +271,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                         VPC
                       </Typography>
                       <TooltipIcon
-                        text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                         status="help"
+                        text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                       />
                     </Box>
                   }
