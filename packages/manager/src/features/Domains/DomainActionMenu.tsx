@@ -1,7 +1,7 @@
 import { Domain } from '@linode/api-v4/lib/domains';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
