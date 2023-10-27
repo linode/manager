@@ -1137,11 +1137,11 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mcffmpegplugins/',
-        title: 'Deploy MainConcept FFmpeg Plugins through the Linode Marketplace',
+        title:
+          'Deploy MainConcept FFmpeg Plugins through the Linode Marketplace',
       },
     ],
-    summary:
-      'MainConcept FFmpeg Plugins are advanced video encoding tools.',
+    summary: 'MainConcept FFmpeg Plugins are advanced video encoding tools.',
     website: 'https://www.mainconcept.com/ffmpeg',
   },
   {
@@ -1162,8 +1162,7 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy MainConcept Live Encoder through the Linode Marketplace',
       },
     ],
-    summary:
-      'MainConcept Live Encoder is a real time video encoding engine.',
+    summary: 'MainConcept Live Encoder is a real time video encoding engine.',
     website: 'https://www.mainconcept.com/live-encoder',
   },
   {
@@ -1181,7 +1180,8 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2avcultratranscoder/',
-        title: 'Deploy MainConcept P2 AVC Ultra Transcoder through the Linode Marketplace',
+        title:
+          'Deploy MainConcept P2 AVC Ultra Transcoder through the Linode Marketplace',
       },
     ],
     summary:
@@ -1203,7 +1203,8 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2xavc/',
-        title: 'Deploy MainConcept XAVC Transcoder through the Linode Marketplace',
+        title:
+          'Deploy MainConcept XAVC Transcoder through the Linode Marketplace',
       },
     ],
     summary:
@@ -1225,7 +1226,8 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2xdcam/',
-        title: 'Deploy MainConcept XDCAM Transcoder through the Linode Marketplace',
+        title:
+          'Deploy MainConcept XDCAM Transcoder through the Linode Marketplace',
       },
     ],
     summary:
@@ -2250,8 +2252,7 @@ export const oneClickApps: OCA[] = [
     website: 'https://docs.splunk.com/Documentation/Splunk',
   },
   {
-    alt_description:
-      'A private by design messaging platform.',
+    alt_description: 'A private by design messaging platform.',
     alt_name: 'Anonymous messaging platform.',
     categories: ['Productivity'],
     colors: {
