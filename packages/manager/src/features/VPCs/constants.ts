@@ -12,3 +12,8 @@ export const REBOOT_LINODE_WARNING_VPCDETAILS =
   'Assigned or unassigned Linodes will not take affect until the Linodes are rebooted.';
 
 export const SUBNET_UNASSIGN_LINODES_WARNING = `Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`;
+
+export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
+
+export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
+  'A VPC IPv4 is the private IP address for this Linode in the VPC.';

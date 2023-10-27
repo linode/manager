@@ -1,4 +1,3 @@
-import { Stack } from 'src/components/Stack';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -9,10 +8,12 @@ import Select, { Item } from 'src/components/EnhancedSelect';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { APP_ROOT } from 'src/constants';
+import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -255,10 +256,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                       Auto-assign a VPC IPv4 address for this Linode in the VPC
                     </Typography>
                     <TooltipIcon
-                      text={
-                        'A VPC IPv4 is the private IP address for this Linode in the VPC.'
-                      }
                       status="help"
+                      text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                     />
                   </Box>
                 }

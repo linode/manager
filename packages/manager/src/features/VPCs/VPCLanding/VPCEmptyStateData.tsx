@@ -1,4 +1,4 @@
-import { VPC_LABEL } from 'src/features/VPCs/utils';
+import { VPC_LABEL } from 'src/features/VPCs/constants';
 
 import type {
   ResourcesHeaders,

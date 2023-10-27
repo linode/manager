@@ -1,7 +1,5 @@
 import type { Config, Subnet } from '@linode/api-v4';
 
-export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
-
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
   for (const subnet of subnets) {

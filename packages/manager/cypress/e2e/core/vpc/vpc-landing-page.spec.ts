@@ -12,7 +12,7 @@ import { vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
-import { VPC_LABEL } from 'src/features/VPCs/utils';
+import { VPC_LABEL } from 'src/features/VPCs/constants';
 
 // TODO Remove feature flag mocks when feature flag is removed from codebase.
 describe('VPC landing page', () => {

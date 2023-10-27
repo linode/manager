@@ -16,6 +16,7 @@ import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -392,12 +393,7 @@ export const SubnetAssignLinodesDrawer = (
             disabled={userCannotAssignLinodes}
             sx={{ marginRight: 0 }}
           />
-          <TooltipIcon
-            text={
-              'A VPC IPv4 is the private IP address for this Linode in the VPC.'
-            }
-            status="help"
-          />
+          <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
         </Box>
         {!autoAssignIPv4 && (
           <TextField
