@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponents/CannotCreateVPCNotice';
@@ -53,14 +54,16 @@ export const VPCCreateDrawer = (props: Props) => {
           <Notice text={generalAPIError} variant="error" />
         ) : null}
         <form onSubmit={handleSubmit}>
-          <VPCSpecificContent
-            disabled={userCannotAddVPC}
-            errors={errors}
-            isDrawer
-            onChangeField={onChangeField}
-            regions={regionsWithVPCCapability}
-            values={values}
-          />
+          <Box sx={{ marginTop: theme.spacing(3) }}>
+            <VPCSpecificContent
+              disabled={userCannotAddVPC}
+              errors={errors}
+              isDrawer
+              onChangeField={onChangeField}
+              regions={regionsWithVPCCapability}
+              values={values}
+            />
+          </Box>
           <SubnetContent
             disabled={userCannotAddVPC}
             isDrawer

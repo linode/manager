@@ -53,6 +53,7 @@ export const VPCSpecificContent = (props: Props) => {
         label="Description"
         multiline
         optional
+        sx={{ ...(isDrawer && { maxHeight: '58px' }) }}
         value={values.description}
       />
     </>

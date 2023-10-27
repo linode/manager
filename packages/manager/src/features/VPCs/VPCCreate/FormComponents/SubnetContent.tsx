@@ -46,6 +46,7 @@ export const SubnetContent = (props: Props) => {
         : null}
       <MultipleSubnetInput
         disabled={disabled}
+        isDrawer={isDrawer}
         onChange={(subnets) => onChangeField('subnets', subnets)}
         subnets={subnets}
       />
