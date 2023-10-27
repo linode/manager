@@ -11,6 +11,8 @@ import {
   StyledHeaderTypography,
 } from './VPCCreateForm.styles';
 
+import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
+
 interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
@@ -28,9 +30,7 @@ export const SubnetContent = (props: Props) => {
         Subnets
       </StyledHeaderTypography>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
-        A subnet divides a VPC into multiple logically defined networks to allow
-        for controlled access to VPC resources. Subnets within a VPC are
-        routable regardless of the address spaces they are in.
+        {VPC_CREATE_FORM_SUBNET_HELPER_TEXT}
         <Link to="#"> Learn more</Link>.
         {/* @TODO VPC: subnet learn more link here */}
       </StyledBodyTypography>

@@ -74,6 +74,7 @@ export const SubnetNode = (props: Props) => {
         >
           <Stack>
             <TextField
+              aria-label="Enter a subnet label"
               disabled={disabled}
               errorText={subnet.labelError}
               inputId={`subnet-label-${idx}`}
@@ -83,6 +84,7 @@ export const SubnetNode = (props: Props) => {
               value={subnet.label}
             />
             <TextField
+              aria-label="Enter an IPv4"
               disabled={disabled}
               errorText={subnet.ip.ipv4Error}
               inputId={`subnet-ipv4-${idx}`}
@@ -102,7 +104,7 @@ export const SubnetNode = (props: Props) => {
         </Grid>
         {showRemoveButton && (
           <Grid xs={1}>
-            <StyledButton aria-label="Remove Subnet" onClick={removeSubnet}>
+            <StyledButton aria-label={`Remove subnet`} onClick={removeSubnet}>
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>

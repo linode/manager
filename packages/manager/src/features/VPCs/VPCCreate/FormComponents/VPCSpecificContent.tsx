@@ -7,6 +7,7 @@ import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
 import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
+import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 interface Props {
@@ -23,11 +24,11 @@ export const VPCSpecificContent = (props: Props) => {
   return (
     <>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
-        A virtual private cloud (VPC) is an isolated network which allows for
-        control over how resources are networked and can communicate.
+        {VPC_CREATE_FORM_VPC_HELPER_TEXT}
         <Link to="#"> Learn more</Link>.{/* @TODO VPC: learn more link here */}
       </StyledBodyTypography>
       <RegionSelect
+        aria-label="Choose a region"
         disabled={isDrawer ? true : disabled}
         errorText={errors.region}
         handleSelection={(region: string) => onChangeField('region', region)}
@@ -39,6 +40,7 @@ export const VPCSpecificContent = (props: Props) => {
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           onChangeField('label', e.target.value)
         }
+        aria-label="Enter a label"
         disabled={disabled}
         errorText={errors.label}
         label="VPC Label"

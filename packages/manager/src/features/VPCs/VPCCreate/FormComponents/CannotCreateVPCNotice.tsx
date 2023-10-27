@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 
+import { CANNOT_CREATE_VPC_MESSAGE } from '../../constants';
+
 export const CannotCreateVPCNotice = () => {
   return (
     <Notice
-      text={
-        "You don't have permissions to create a new VPC. Please contact an account administrator for details."
-      }
       important
       spacingTop={16}
+      text={`${CANNOT_CREATE_VPC_MESSAGE}`}
       variant="error"
     />
   );
