@@ -7,11 +7,11 @@ import { EditableProps, LabelProps } from './types';
 
 export interface BreadcrumbProps {
   /**
-   * Data attributes passed to the root div for testing
+   * Data attributes passed to the root div for testing.
    */
   breadcrumbDataAttrs?: { [key: string]: boolean };
   /**
-   * Optional className passed to the root div
+   * Optional className passed to the root div.
    */
   className?: string;
   /**
@@ -31,7 +31,7 @@ export interface BreadcrumbProps {
    */
   labelTitle?: string;
   /**
-   * An object that can be used to define functions, errors, and crumb title for an editable final crumb
+   * An object that can be used to define functions, errors, and crumb title for an editable final crumb.
    */
   onEditHandlers?: EditableProps;
   /*

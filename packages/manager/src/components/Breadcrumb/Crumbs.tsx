@@ -112,27 +112,19 @@ export const Crumbs = React.memo((props: Props) => {
           </div>
         );
       })}
-      {/*
-      for prepending some SVG or other element before the final crumb.
-      See users detail page for example
-    */}
+      {/* for prepending some SVG or other element before the final crumb. */}
       {labelOptions && labelOptions.prefixComponent && (
         <FinalCrumbPrefix
           prefixComponent={labelOptions.prefixComponent}
           prefixStyle={labelOptions.prefixStyle}
         />
       )}
-
-      {/*
-      the final crumb has the possibility of being a link, editable text
-      or just static text
-    */}
+      {/* the final crumb has the possibility of being a link, editable text or just static text */}
       <FinalCrumb
         crumb={labelTitle || lastCrumb}
         labelOptions={labelOptions}
         onEditHandlers={onEditHandlers}
       />
-
       {/*
       for appending some SVG or other element after the final crumb.
       See support ticket detail as an example
