@@ -13,6 +13,11 @@ export const REBOOT_LINODE_WARNING_VPCDETAILS =
 
 export const SUBNET_UNASSIGN_LINODES_WARNING = `Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`;
 
+export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
+
+export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
+  'A VPC IPv4 is the private IP address for this Linode in the VPC.';
+
 export const CANNOT_CREATE_VPC_MESSAGE = `You don't have permissions to create a new VPC. Please contact an account administrator for details`;
 
 export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT = `A subnet divides a VPC into multiple logically defined networks to allow for controlled access to VPC resources. Subnets within a VPC are routable regardless of the address spaces they are in.`;

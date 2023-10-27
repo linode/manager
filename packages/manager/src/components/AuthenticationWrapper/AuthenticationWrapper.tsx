@@ -22,6 +22,7 @@ import { handleInitTokens } from 'src/store/authentication/authentication.action
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
+import SplashScreen from '../SplashScreen';
 
 interface Props {
   children: React.ReactNode;
@@ -34,11 +35,6 @@ type CombinedProps = Props &
   WithApplicationStoreProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
-  state = {
-    hasEnsuredAllTypes: false,
-    showChildren: false,
-  };
-
   componentDidMount() {
     const { initSession } = this.props;
     /**
@@ -54,8 +50,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      * to show the children onMount
      */
     if (this.props.isAuthenticated) {
-      this.setState({ showChildren: true });
-
       this.makeInitialRequests();
     }
   }
@@ -72,8 +66,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       !this.state.showChildren
     ) {
       this.makeInitialRequests();
-
-      return this.setState({ showChildren: true });
     }
 
     /** basically handles for the case where our token is expired or we got a 401 error */
@@ -90,8 +82,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
-    // eslint-disable-next-line
-    return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
+
+    if (showChildren) {
+      return children;
+    }
+
+    return <SplashScreen />;
   }
 
   static defaultProps = {
@@ -109,6 +105,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   makeInitialRequests = async () => {
     // When loading Lish we avoid all this extra data loading
     if (window.location?.pathname?.match(/linodes\/[0-9]+\/lish/)) {
+      this.setState({ showChildren: true });
       return;
     }
 
@@ -142,7 +139,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       /** We choose to do nothing, relying on the Redux error state. */
     } finally {
       this.props.markAppAsDoneLoading();
+      this.setState({ showChildren: true });
     }
+  };
+
+  state = {
+    showChildren: false,
   };
 }
 

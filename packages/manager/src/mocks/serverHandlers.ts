@@ -354,6 +354,10 @@ const aglb = [
   }),
   // Routes
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
+    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+    if (headers['+or']) {
+      return res(ctx.json(makeResourcePage(routeFactory.buildList(2))));
+    }
     return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
   }),
   rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
@@ -372,8 +376,14 @@ const aglb = [
   }),
   // Service Targets
   rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
+    const service_target = serviceTargetFactory.build({
+      ca_certificate: 'certificate-1',
+      load_balancing_policy: 'random',
+    });
     const service_targets = serviceTargetFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(service_targets)));
+    return res(
+      ctx.json(makeResourcePage([service_target, ...service_targets]))
+    );
   }),
   rest.post('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));

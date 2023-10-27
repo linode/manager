@@ -1,4 +1,3 @@
-import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -10,9 +9,11 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -267,9 +268,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                         VPC
                       </Typography>
                       <TooltipIcon
-                        text={
-                          'A range of non-internet facing IP addresses used in an internal network.'
-                        }
+                        text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                         status="help"
                       />
                     </Box>

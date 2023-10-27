@@ -1,5 +1,5 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
@@ -24,6 +24,7 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
@@ -59,7 +60,7 @@ export interface AttachmentError {
   file: string;
 }
 
-const SupportTicketDetail = () => {
+export const SupportTicketDetail = () => {
   const history = useHistory<{ attachmentErrors?: AttachmentError[] }>();
   const location = useLocation();
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -135,6 +136,12 @@ const SupportTicketDetail = () => {
     />
   );
 
+  const ticketTitle = sanitizeHTML({
+    disallowedTagsMode: 'discard',
+    sanitizingTier: 'none',
+    text: `#${ticket.id}: ${ticket.summary}`,
+  }).toString();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
@@ -161,7 +168,7 @@ const SupportTicketDetail = () => {
           },
           pathname: location.pathname,
         }}
-        title={`#${ticket.id}: ${ticket.summary}`}
+        title={ticketTitle}
       />
 
       {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
@@ -217,5 +224,3 @@ const SupportTicketDetail = () => {
     </React.Fragment>
   );
 };
-
-export default SupportTicketDetail;
