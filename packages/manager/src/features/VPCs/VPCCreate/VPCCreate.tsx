@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -15,8 +15,6 @@ import { StyledHeaderTypography } from './FormComponents/VPCCreateForm.styles';
 import { VPCSpecificContent } from './FormComponents/VPCSpecificContent';
 
 const VPCCreate = () => {
-  const theme = useTheme();
-
   const {
     formik,
     generalAPIError,
@@ -63,7 +61,7 @@ const VPCCreate = () => {
               values={values}
             />
           </Paper>
-          <Paper sx={{ marginTop: theme.spacing(2.5) }}>
+          <Paper sx={(theme) => ({ marginTop: theme.spacing(2.5) })}>
             <SubnetContent
               disabled={userCannotAddVPC}
               onChangeField={setFieldValue}
@@ -71,7 +69,7 @@ const VPCCreate = () => {
               subnets={values.subnets}
             />
           </Paper>
-          <ActionsPanel
+          <StyledActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
               disabled: userCannotAddVPC,
@@ -79,16 +77,19 @@ const VPCCreate = () => {
               loading: isLoadingCreateVPC,
               onClick: onCreateVPC,
             }}
-            style={{
-              display: 'flex',
-              justifyContent: 'right',
-              marginTop: theme.spacing(1),
-            }}
           />
         </form>
       </Grid>
     </>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'right',
+  marginTop: theme.spacing(2),
+}));
 
 export default VPCCreate;

@@ -19,9 +19,8 @@ interface Props {
 }
 
 export const VPCCreateDrawer = (props: Props) => {
-  const { handleSelectVPC, onClose, open, selectedRegion } = props;
-
   const theme = useTheme();
+  const { handleSelectVPC, onClose, open, selectedRegion } = props;
 
   const {
     formik,
