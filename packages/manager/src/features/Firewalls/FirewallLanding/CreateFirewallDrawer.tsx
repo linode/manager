@@ -268,7 +268,6 @@ export const CreateFirewallDrawer = React.memo(
                 'devices.linodes',
                 linodes.map((linode) => linode.id)
               );
-              setSelectedLinodes(linodes);
             }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
