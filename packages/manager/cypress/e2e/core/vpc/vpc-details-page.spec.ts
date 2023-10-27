@@ -117,7 +117,7 @@ describe('VPC details page', () => {
 
     // Confirm that user is redirected to VPC landing page.
     cy.url().should('endWith', '/vpcs');
-    cy.findByText('Create a private and isolated network.');
+    cy.findByText('Create a private and isolated network');
   });
 
   /**

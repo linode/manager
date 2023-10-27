@@ -7,8 +7,9 @@ import {
   gettingStartedGuides,
   youtubeLinkData,
 } from 'src/features/Linodes/LinodesLanding/LinodesLandingEmptyStateData';
-import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 import { sendEvent } from 'src/utilities/analytics';
+
+import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 
 export const VPCEmptyState = () => {
   const { push } = useHistory();
