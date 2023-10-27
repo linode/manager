@@ -1,20 +1,13 @@
-import { APIError } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
 import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponents/CannotCreateVPCNotice';
-import { MultipleSubnetInput } from 'src/features/VPCs/VPCCreate/MultipleSubnetInput';
-import {
-  StyledBodyTypography,
-  StyledHeaderTypography,
-} from 'src/features/VPCs/VPCCreate/VPCCreate.styles';
+import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
+import { VPCSpecificContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCSpecificContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
 interface Props {
@@ -60,61 +53,19 @@ export const VPCCreateDrawer = (props: Props) => {
           <Notice text={generalAPIError} variant="error" />
         ) : null}
         <form onSubmit={handleSubmit}>
-          <StyledBodyTypography variant="body1">
-            A virtual private cloud (VPC) is an isolated network which allows
-            for control over how resources are networked and can communicate.
-            <Link to="#"> Learn more</Link>.
-            {/* @TODO VPC: learn more link here */}
-          </StyledBodyTypography>
-          <RegionSelect
-            handleSelection={(region: string) =>
-              onChangeField('region', region)
-            }
-            disabled={true}
+          <VPCSpecificContent
+            disabled={userCannotAddVPC}
+            errors={errors}
+            isDrawer
+            onChangeField={onChangeField}
             regions={regionsWithVPCCapability}
-            selectedID={selectedRegion ?? ''}
+            values={values}
           />
-          <TextField
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChangeField('label', e.target.value)
-            }
+          <SubnetContent
             disabled={userCannotAddVPC}
-            errorText={errors.label}
-            label="VPC Label"
-            value={values.label}
-          />
-          <TextField
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChangeField('description', e.target.value)
-            }
-            disabled={userCannotAddVPC}
-            errorText={errors.description}
-            label="Description"
-            multiline
-            optional
-            value={values.description}
-          />
-          <StyledHeaderTypography variant="h2">Subnets</StyledHeaderTypography>
-          <StyledBodyTypography variant="body1">
-            A subnet divides a VPC into multiple logically defined networks to
-            allow for controlled access to VPC resources. Subnets within a VPC
-            are routable regardless of the address spaces they are in.
-            <Link to="#"> Learn more</Link>.
-            {/* @TODO VPC: subnet learn more link here */}
-          </StyledBodyTypography>
-          {generalSubnetErrorsFromAPI
-            ? generalSubnetErrorsFromAPI.map((apiError: APIError) => (
-                <Notice
-                  key={apiError.reason}
-                  spacingBottom={8}
-                  text={apiError.reason}
-                  variant="error"
-                />
-              ))
-            : null}
-          <MultipleSubnetInput
-            disabled={userCannotAddVPC}
-            onChange={(subnets) => setFieldValue('subnets', subnets)}
+            isDrawer
+            onChangeField={setFieldValue}
+            subnetErrors={generalSubnetErrorsFromAPI}
             subnets={values.subnets}
           />
           <ActionsPanel

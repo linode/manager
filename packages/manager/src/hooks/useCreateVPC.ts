@@ -23,6 +23,13 @@ import {
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 
+export interface CreateVPCFieldState {
+  description: string;
+  label: string;
+  region: string;
+  subnets: SubnetFieldState[];
+}
+
 export interface UseCreateVPCInputs {
   handleSelectVPC?: (vpcId: number) => void;
   onDrawerClose?: () => void;
@@ -182,7 +189,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
           labelError: '',
         },
       ] as SubnetFieldState[],
-    },
+    } as CreateVPCFieldState,
     onSubmit: onCreateVPC,
     validateOnChange: false,
     validationSchema: createVPCSchema,
