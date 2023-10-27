@@ -77,7 +77,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
 
     for (let i = 0; i < formik.values.subnets.length; i++) {
       const { ip, label } = formik.values.subnets[i];
-      if (ip.ipv4 || label) {
+      if ((onDrawerClose && i === 0) || ip.ipv4 || label) {
         subnetsPayload.push({ ipv4: ip.ipv4, label });
         subnetIdxMapping[i] = apiSubnetIdx;
         apiSubnetIdx++;
