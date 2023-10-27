@@ -104,7 +104,7 @@ export const SubnetNode = (props: Props) => {
         </Grid>
         {showRemoveButton && (
           <Grid xs={1}>
-            <StyledButton aria-label={`Remove subnet`} onClick={removeSubnet}>
+            <StyledButton aria-label={`Remove Subnet`} onClick={removeSubnet}>
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
