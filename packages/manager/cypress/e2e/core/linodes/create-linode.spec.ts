@@ -134,6 +134,7 @@ describe('create linode', () => {
    * - Confirms DC-specific pricing UI flow works as expected during Linode creation.
    * - Confirms that pricing notice is shown in "Region" section.
    * - Confirms that notice is shown when selecting a region with a different price structure.
+   * - Confirms that backups pricing is correct when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during create flow', () => {
     const rootpass = randomString(32);
