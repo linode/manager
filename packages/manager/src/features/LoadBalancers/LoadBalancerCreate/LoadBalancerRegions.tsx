@@ -7,10 +7,10 @@ import { Flag } from 'src/components/Flag';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-import { useLoadBalancerInputLabel } from '../useLoadBalancerState';
+import { useLoadBalancerState } from '../useLoadBalancerState';
 
 export const LoadBalancerRegions = () => {
-  const { loadBalancerRegions } = useLoadBalancerInputLabel();
+  const { loadBalancerRegions } = useLoadBalancerState();
   return (
     <Paper>
       <Stack spacing={2}>

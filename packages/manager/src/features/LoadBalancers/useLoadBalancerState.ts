@@ -2,7 +2,7 @@ import { loadBalancerLabelValidation } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useState } from 'react';
 
-export function useLoadBalancerInputLabel() {
+export function useLoadBalancerState() {
   const initialValues = {
     label: '',
   };

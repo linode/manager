@@ -9,7 +9,7 @@ const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
 
 jest.mock('../useLoadBalancerState', () => ({
-  useLoadBalancerInputLabel: jest.fn(() => ({
+  useLoadBalancerState: jest.fn(() => ({
     errors: { label: null }, // Mock the errors state
     handleLabelChange: jest.fn(), // Mock the handleLabelChange function
     loadBalancerLabelValue, // Mock the loadBalancerLabelValue state
@@ -32,7 +32,7 @@ describe('LoadBalancerLabel', () => {
   it('should render the component with an error message', () => {
     // Mock the error state to test the error scenario
     jest
-      .spyOn(require('../useLoadBalancerState'), 'useLoadBalancerInputLabel')
+      .spyOn(require('../useLoadBalancerState'), 'useLoadBalancerState')
       .mockImplementation(() => ({
         errors: { label: 'This is an error' }, // Mock the errors state with an error message
         handleLabelChange: jest.fn(), // Mock the handleLabelChange function
@@ -50,7 +50,7 @@ describe('LoadBalancerLabel', () => {
     // Mock the useLoadBalancerInputLabel hook to track the function call
     const mockHandleLabelChange = jest.fn();
     jest
-      .spyOn(require('../useLoadBalancerState'), 'useLoadBalancerInputLabel')
+      .spyOn(require('../useLoadBalancerState'), 'useLoadBalancerState')
       .mockImplementation(() => ({
         errors: { label: null },
         handleLabelChange: mockHandleLabelChange, // Use the mock function

@@ -3,14 +3,14 @@ import * as React from 'react';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 
-import { useLoadBalancerInputLabel } from '../useLoadBalancerState';
+import { useLoadBalancerState } from '../useLoadBalancerState';
 
 export const LoadBalancerLabel = () => {
   const {
     errors,
     handleLabelChange,
     loadBalancerLabelValue,
-  } = useLoadBalancerInputLabel();
+  } = useLoadBalancerState();
 
   return (
     <Paper

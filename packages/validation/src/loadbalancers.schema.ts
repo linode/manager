@@ -163,8 +163,6 @@ export const loadBalancerLabelValidation = object({
     .required('Label is required.'),
 });
 
-// The payload may optionally contain Configurations, routes, and service targets.
-
 // Endpoint Schema
 const endpointSchema = object({
   ip: string(),
