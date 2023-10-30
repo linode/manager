@@ -78,7 +78,7 @@ export const SelectFirewallPanel = (props: Props) => {
           Create Firewall
         </LinkButton>
         <CreateFirewallDrawer
-          label={createFirewallLabel}
+          inCreateFlow
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}
