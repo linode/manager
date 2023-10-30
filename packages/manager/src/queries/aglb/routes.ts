@@ -1,4 +1,6 @@
 import {
+  CreateRoutePayload,
+  createLoadbalancerRoute,
   deleteLoadbalancerRoute,
   getLoadbalancerRoutes,
   updateLoadbalancerRoute,
@@ -29,6 +31,23 @@ export const useLoadBalancerRoutesQuery = (
   );
 };
 
+export const useLoadBalancerRouteCreateMutation = (loadbalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Route, APIError[], CreateRoutePayload>(
+    (data) => createLoadbalancerRoute(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+        ]);
+      },
+    }
+  );
+};
+
 export const useLoadBalancerRouteUpdateMutation = (
   loadbalancerId: number,
   routeId: number
@@ -49,12 +68,7 @@ export const useLoadBalancerRouteUpdateMutation = (
       onMutate(variables) {
         const key = [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'];
         // Optimistically update the route on mutate
-        updateInPaginatedStore<Route>(
-          key,
-          routeId,
-          { rules: variables.rules },
-          queryClient
-        );
+        updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
       },
     }
   );

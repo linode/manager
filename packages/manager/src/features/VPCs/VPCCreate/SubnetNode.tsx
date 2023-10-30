@@ -26,7 +26,7 @@ interface Props {
   subnet: SubnetFieldState;
 }
 
-// TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
+// @TODO VPC: currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
   const { disabled, idx, isRemovable, onChange, subnet } = props;
 

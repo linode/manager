@@ -366,7 +366,11 @@ export const Body = React.memo((props: BodyProps) => {
   const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
     const subnets = vpc.subnets;
 
-    return Boolean(subnets.find((subnet) => subnet.linodes.includes(linodeId)));
+    return Boolean(
+      subnets.find((subnet) =>
+        subnet.linodes.some((linodeInfo) => linodeInfo.id === linodeId)
+      )
+    );
   });
 
   const { data: configs } = useAllLinodeConfigsQuery(

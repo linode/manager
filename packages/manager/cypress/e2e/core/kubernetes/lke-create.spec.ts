@@ -73,12 +73,7 @@ const getSimilarPlans = (
 authenticate();
 describe('LKE Cluster Creation', () => {
   before(() => {
-    cleanUp('lke-clusters');
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+    cleanUp(['linodes', 'lke-clusters']);
   });
 
   /*
@@ -91,11 +86,16 @@ describe('LKE Cluster Creation', () => {
   it('can create an LKE cluster', () => {
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
-    const clusterVersion = '1.26';
+    const clusterVersion = '1.27';
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(lkeClusterPlans));
 
+    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
@@ -225,10 +225,6 @@ describe('LKE Cluster Creation', () => {
 describe('LKE Cluster Creation with DC-specific pricing', () => {
   before(() => {
     cleanUp('lke-clusters');
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
   });
 
   /*
@@ -242,11 +238,15 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     const clusterRegion = getRegionById('us-southeast');
     const dcSpecificPricingRegion = getRegionById('us-east');
     const clusterLabel = randomLabel();
-    const clusterVersion = '1.26';
+    const clusterVersion = '1.27';
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(dcPricingLkeClusterPlans));
 
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');

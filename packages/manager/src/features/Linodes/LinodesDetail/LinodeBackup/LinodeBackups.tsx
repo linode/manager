@@ -82,7 +82,9 @@ export const LinodeBackups = () => {
     );
   }
 
-  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+  const backupsMonthlyPrice:
+    | PriceObject['monthly']
+    | undefined = getMonthlyBackupsPrice({
     flags,
     region: linode?.region,
     type,
@@ -95,7 +97,7 @@ export const LinodeBackups = () => {
   if (!linode?.backups.enabled) {
     return (
       <BackupsPlaceholder
-        backupsMonthlyPrice={backupsMonthlyPrice ?? 0}
+        backupsMonthlyPrice={backupsMonthlyPrice}
         disabled={doesNotHavePermission}
         linodeId={id}
       />

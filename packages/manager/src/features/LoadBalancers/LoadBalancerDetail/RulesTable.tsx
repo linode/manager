@@ -3,46 +3,30 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 
-import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
-import { TextTooltip } from 'src/components/TextTooltip';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
+import { RuleRow } from './RuleRow';
 import {
-  StyledDragIndicator,
   StyledInnerBox,
-  StyledRuleBox,
   StyledUl,
   sxBox,
   sxItemSpacing,
 } from './RulesTable.styles';
 
-import type { MatchField, Route } from '@linode/api-v4';
+import type { Route } from '@linode/api-v4';
 
 interface Props {
   loadbalancerId: number;
+  onDeleteRule: (ruleIndex: number) => void;
+  onEditRule: (ruleIndex: number) => void;
   route: Route;
 }
 
-const matchFieldMap: Record<MatchField, string> = {
-  header: 'HTTP Header',
-  host: 'Host',
-  method: 'HTTP Method',
-  path_prefix: 'Path',
-  query: 'Query String',
-};
-
-const screenReaderMessage =
-  'Some screen readers may require you to enter focus mode to interact with Loadbalancer rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
-
-export const RulesTable = ({ loadbalancerId, route }: Props) => {
+export const RulesTable = (props: Props) => {
+  const { loadbalancerId, onDeleteRule, onEditRule, route } = props;
   const { label, protocol, rules } = route;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -139,157 +123,16 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
               <StyledUl {...provided.droppableProps} ref={provided.innerRef}>
                 {rules.length > 0 ? (
                   rules.map((rule, index) => (
-                    <Draggable
-                      draggableId={String(index)}
+                    <RuleRow
                       index={index}
-                      key={index}
-                    >
-                      {(provided) => (
-                        <li
-                          aria-label={
-                            rule.match_condition.hostname ??
-                            `Rule ${rule.match_condition.hostname}`
-                          }
-                          aria-roledescription={screenReaderMessage}
-                          aria-selected={false}
-                          ref={provided.innerRef}
-                          role="option"
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <StyledRuleBox
-                            aria-label={`Rule ${rule.match_condition.hostname}`}
-                            key={index}
-                            sx={{ backgroundColor: theme.bg.bgPaper }}
-                          >
-                            <Box
-                              aria-label={`Label: ${
-                                index === 0
-                                  ? 'First'
-                                  : index === rules.length - 1
-                                  ? 'Last'
-                                  : null
-                              }`}
-                              sx={{
-                                ...sxItemSpacing,
-                                overflowWrap: 'break-word',
-                                paddingLeft: '8px',
-                                width: xsDown ? '50%' : '15%',
-                              }}
-                            >
-                              <StyledDragIndicator aria-label="Drag indicator icon" />
-                              {index === 0
-                                ? 'First'
-                                : index === rules.length - 1
-                                ? 'Last'
-                                : null}
-                            </Box>
-                            <Box
-                              sx={{
-                                ...sxItemSpacing,
-                                width: xsDown ? '45%' : '20%',
-                              }}
-                              aria-label={`Match value: ${rule.match_condition.match_value}`}
-                            >
-                              {rule.match_condition.match_value}
-                            </Box>
-
-                            <Hidden smDown>
-                              <Box
-                                aria-label={`Match Field: ${
-                                  matchFieldMap[
-                                    rule.match_condition.match_field
-                                  ]
-                                }`}
-                                sx={{ ...sxItemSpacing, width: '20%' }}
-                              >
-                                {
-                                  matchFieldMap[
-                                    rule.match_condition.match_field
-                                  ]
-                                }
-                              </Box>
-                            </Hidden>
-                            <Hidden smDown>
-                              <Box
-                                sx={{
-                                  ...sxItemSpacing,
-                                  overflowWrap: 'break-word',
-                                  width: '20%',
-                                }}
-                                aria-label={`Service Targets: ${rule.service_targets.length}`}
-                              >
-                                <TextTooltip
-                                  displayText={String(
-                                    rule.service_targets.length
-                                  )}
-                                  tooltipText={
-                                    <>
-                                      {rule.service_targets.map(
-                                        ({ id, label }) => (
-                                          <div key={label}>
-                                            {label}:{id}
-                                          </div>
-                                        )
-                                      )}
-                                    </>
-                                  }
-                                />
-                              </Box>
-                            </Hidden>
-                            <Hidden smDown>
-                              <Box
-                                aria-label={`Session Stickiness: ${
-                                  rule.match_condition
-                                    .session_stickiness_cookie &&
-                                  rule.match_condition.session_stickiness_ttl
-                                    ? 'Yes'
-                                    : 'No'
-                                }`}
-                                sx={{
-                                  ...sxItemSpacing,
-                                  overflowWrap: 'break-word',
-                                  width: '20%',
-                                }}
-                              >
-                                {rule.match_condition
-                                  .session_stickiness_cookie &&
-                                rule.match_condition.session_stickiness_ttl
-                                  ? 'Yes'
-                                  : 'No'}
-                              </Box>
-                            </Hidden>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                flexDirection: 'row-reverse',
-                                width: '5%',
-                              }}
-                              aria-label={`Action Menu`}
-                            >
-                              {/** TODO: AGLB: The Edit and Delete Action menu behavior should be implemented in future AGLB tickets. */}
-                              <ActionMenu
-                                actionsList={[
-                                  { onClick: () => null, title: 'Edit' },
-                                  {
-                                    disabled: index === 0,
-                                    onClick: () => handleMoveUp(index),
-                                    title: 'Move Up',
-                                  },
-                                  {
-                                    disabled: index === rules.length - 1,
-                                    onClick: () => handleMoveDown(index),
-                                    title: 'Move Down',
-                                  },
-                                  { onClick: () => null, title: 'Remove' },
-                                ]}
-                                ariaLabel={`Action Menu for Rule ${rule.match_condition.match_value}`}
-                              />
-                            </Box>
-                          </StyledRuleBox>
-                        </li>
-                      )}
-                    </Draggable>
+                      key={`rule-${index}`}
+                      onDeleteRule={() => onDeleteRule(index)}
+                      onEditRule={() => onEditRule(index)}
+                      onMoveDown={() => handleMoveDown(index)}
+                      onMoveUp={() => handleMoveUp(index)}
+                      rule={rule}
+                      totalRules={rules.length}
+                    />
                   ))
                 ) : (
                   <Box

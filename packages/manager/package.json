@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.105.0",
+  "version": "1.106.0",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -138,6 +138,7 @@
     "@types/luxon": "^3.2.0",
     "@types/markdown-it": "^10.0.2",
     "@types/md5": "^2.1.32",
+    "@types/mocha": "^10.0.2",
     "@types/node": "^12.7.1",
     "@types/qrcode.react": "^0.8.0",
     "@types/ramda": "0.25.16",

@@ -12,7 +12,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import { v4 } from 'uuid';
 
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -62,6 +62,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -103,7 +104,7 @@ export interface LinodeCreateProps {
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
-  firewallId: number | undefined;
+  firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleShowApiAwarenessModal: () => void;
@@ -326,14 +327,16 @@ export class LinodeCreate extends React.PureComponent<
 
       if (this.props.createType === 'fromApp' && this.state.numberOfNodes > 0) {
         const { hourlyPrice, monthlyPrice } = getMonthlyAndHourlyNodePricing(
-          typeDisplayInfoCopy.monthly,
-          typeDisplayInfoCopy.hourly,
+          typeDisplayInfoCopy?.monthly,
+          typeDisplayInfoCopy?.hourly,
           this.state.numberOfNodes
         );
 
         typeDisplayInfoCopy.details = `${
           this.state.numberOfNodes
-        } Nodes - $${monthlyPrice.toFixed(2)}/month $${hourlyPrice}/hr`;
+        } Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(
+          monthlyPrice
+        )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);
@@ -343,7 +346,9 @@ export class LinodeCreate extends React.PureComponent<
       (type) => type.id === this.props.selectedTypeID
     );
 
-    const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    const backupsMonthlyPrice:
+      | PriceObject['monthly']
+      | undefined = getMonthlyBackupsPrice({
       flags: this.props.flags,
       region: selectedRegionID,
       type,
@@ -376,7 +381,11 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    if (this.props.firewallId !== undefined && this.props.firewallId !== -1) {
+    if (
+      this.props.firewallId !== null &&
+      this.props.firewallId !== undefined &&
+      this.props.firewallId !== -1
+    ) {
       displaySections.push({
         title: 'Firewall Assigned',
       });
@@ -612,6 +621,7 @@ export class LinodeCreate extends React.PureComponent<
             }
             assignPublicIPv4Address={this.props.assignPublicIPv4Address}
             autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
+            from="linodeCreate"
             handleSelectVPC={this.props.setSelectedVPC}
             handleSubnetChange={this.props.handleSubnetChange}
             handleVPCIPv4Change={this.props.handleVPCIPv4Change}
@@ -632,6 +642,7 @@ export class LinodeCreate extends React.PureComponent<
                 // @TODO VPC: Update "Learn More" link
               }
               handleFirewallChange={this.props.handleFirewallChange}
+              selectedFirewallId={this.props.firewallId || -1}
             />
           )}
           <AddonsPanel

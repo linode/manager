@@ -23,8 +23,6 @@ declare global {
           | string
       ): Chainable<>;
 
-      // mockCommonRequests(options?: CommonRequestMockOptions | undefined): Chainable<>;
-
       /**
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
@@ -34,6 +32,13 @@ declare global {
         linodeOptions?: LinodeVisitOptions,
         cypressOptions?: Partial<Cypress.VisitOptions>
       ): Chainable<any>;
+
+      /**
+       * Internal Cypress command to retrieve test state.
+       *
+       * @param state - Cypress internal state to retrieve.
+       */
+      state(state: string): any;
     }
   }
 }
