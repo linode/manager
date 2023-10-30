@@ -1,16 +1,16 @@
 import * as React from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
-interface LabelProps {
-  error?: string;
-  labelFieldProps: TextFieldProps;
-}
+import { useLoadBalancerInputLabel } from '../useLoadBalancerState';
 
-export const LoadBalancerLabel = (props: LabelProps) => {
-  const { error, labelFieldProps } = props;
+export const LoadBalancerLabel = () => {
+  const {
+    errors,
+    handleLabelChange,
+    loadBalancerLabelValue,
+  } = useLoadBalancerInputLabel();
 
   return (
     <Paper
@@ -20,16 +20,15 @@ export const LoadBalancerLabel = (props: LabelProps) => {
       }}
       data-qa-label-header
     >
-      {error && <Notice text={error} variant="error" />}
       <TextField
         data-qa-label-input
-        disabled={labelFieldProps.disabled}
-        errorText={labelFieldProps.errorText}
+        disabled={false}
+        errorText={errors.label}
         label="Load Balancer Label"
         noMarginTop
-        onChange={() => labelFieldProps.onChange}
+        onChange={handleLabelChange}
         placeholder="Enter a label"
-        value={labelFieldProps.value}
+        value={loadBalancerLabelValue}
       />
     </Paper>
   );

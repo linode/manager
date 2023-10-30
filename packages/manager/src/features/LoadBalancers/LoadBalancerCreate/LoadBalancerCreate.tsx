@@ -27,15 +27,7 @@ const LoadBalancerCreate = () => {
         title="Create"
       />
       <Stack spacing={3}>
-        <LoadBalancerLabel
-          labelFieldProps={{
-            disabled: false,
-            errorText: '',
-            label: 'Linode Label',
-            onChange: () => null,
-            value: '',
-          }}
-        />
+        <LoadBalancerLabel />
         <LoadBalancerRegions />
         <LoadBalancerConfiguration />
         {/* TODO: AGLB -
