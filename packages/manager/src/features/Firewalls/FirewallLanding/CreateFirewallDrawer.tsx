@@ -187,16 +187,14 @@ export const CreateFirewallDrawer = React.memo(
       optionsFilter(linode.id, 'linode')
     );
 
-    const linodeIdSet = new Set(values?.devices?.linodes);
-
     const selectedLinodes: Linode[] =
-      linodes?.filter((linode) => linodeIdSet.has(linode.id)) || [];
-
-    const nodebalancerIdSet = new Set(values?.devices?.nodebalancers);
+      linodes?.filter((linode) =>
+        values.devices?.linodes?.includes(linode.id)
+      ) || [];
 
     const selectedNodeBalancers: NodeBalancer[] =
       nodebalancers?.filter((nodebalancer) =>
-        nodebalancerIdSet.has(nodebalancer.id)
+        values.devices?.nodebalancers?.includes(nodebalancer.id)
       ) || [];
 
     // TODO: NBFW - Placeholder until real link is available
