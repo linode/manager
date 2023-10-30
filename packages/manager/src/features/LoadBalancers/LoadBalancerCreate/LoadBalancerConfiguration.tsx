@@ -5,9 +5,11 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
+import { ConfigurationDetails } from './ConfigurationDetails';
+
 export const configurationSteps = [
   {
-    content: <div>TODO: AGLB - Implement Details step content.</div>,
+    content: <ConfigurationDetails />,
     handler: () => null,
     label: 'Details',
   },
@@ -17,7 +19,7 @@ export const configurationSteps = [
     label: 'Service Targets',
   },
   {
-    content: <div>TODO: AGLB - Implement Routes Confiugataion.</div>,
+    content: <div>TODO: AGLB - Implement Routes Configuration.</div>,
     handler: () => null,
     label: 'Routes',
   },
