@@ -7,7 +7,7 @@ const css = {
   literal: "font-weight",
 };
 const ERROR_MESSAGE =
-  '** No font weight declarations in our code **.\nWe manage font weights through font family declarations.\nFor example, instead of specifying `fontWeight: "bold"`,\nuse: `fontFamily: theme.font.bold`.';
+  '** No font weight declarations in our code in order to avoid faux-bold **.\nWe manage font weights through font family declarations.\nFor example, instead of specifying `fontWeight: "bold"`,\nuse: `fontFamily: theme.font.bold`.';
 
 /**
  * Disallow the use of fontWeight css declarations in Cloud Manager styling
