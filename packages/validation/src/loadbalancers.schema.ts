@@ -1,12 +1,14 @@
 import { number, object, string, array } from 'yup';
 
+const LABEL_REQUIRED = 'Label is required';
+
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
   key: string().when('type', {
     is: 'downstream',
     then: string().required('Private Key is required.'),
   }),
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   type: string().oneOf(['downstream', 'ca']).required('Type is required.'),
 });
 
@@ -54,7 +56,7 @@ const HealthCheckSchema = object({
 });
 
 export const CreateServiceTargetSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   endpoints: array(EndpointSchema).required(),
   ca_certificate: string().nullable(),
   load_balancing_policy: string()
@@ -78,7 +80,7 @@ export const UpdateServiceTargetSchema = object({
 });
 
 export const CreateRouteSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   protocol: string().oneOf(['http', 'tcp']),
 });
 
@@ -150,4 +152,86 @@ export const UpdateRouteSchema = object({
     then: (o) => o.of(TCPRuleSchema),
     otherwise: (o) => o.of(HTTPRuleSchema),
   }),
+});
+
+export const loadBalancerLabelValidation = object({
+  label: string()
+    .matches(
+      /^[a-zA-Z0-9.\-_]+$/,
+      'Label may only contain letters, numbers, periods, dashes, and underscores.'
+    )
+    .required('Label is required.'),
+});
+
+// Endpoint Schema
+const endpointSchema = object({
+  ip: string(),
+  hostname: string(),
+  port: number().integer().required(),
+  capacity: number().integer().required(),
+});
+
+// Service Target Schema
+const createLoadBalancerServiceTargetSchema = object({
+  percentage: number().integer().required(),
+  label: string().required(),
+  endpoints: array().of(endpointSchema).required(),
+  certificate_id: number().integer(),
+  load_balancing_policy: string()
+    .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
+    .required(),
+  healthcheck: HealthCheckSchema.required(),
+});
+
+// Rule Schema
+const createLoadBalancerRuleSchema = object({
+  match_condition: object().shape({
+    hostname: string().required(),
+    match_field: string()
+      .oneOf(['path_prefix', 'host', 'query', 'hostname', 'header', 'method'])
+      .required(),
+    match_value: string().required(),
+    session_stickiness_cookie: string(),
+    session_stickiness_ttl: number().integer(),
+  }),
+  service_targets: array().of(createLoadBalancerServiceTargetSchema).required(),
+});
+
+export const configurationSchema = object({
+  label: string().required('Label is required.'),
+  port: number().required('Port is required.').min(0).max(65_535),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
+  certificates: string().when('protocol', {
+    is: (val: string) => val !== 'http' && val !== 'tcp',
+    then: array().of(certificateConfigSchema).required(),
+    otherwise: array().strip(),
+  }),
+  routes: string().when('protocol', {
+    is: 'tcp',
+    then: array()
+      .of(
+        object({
+          label: string().required(),
+          protocol: string().oneOf(['tcp']).required(),
+          rules: array().of(createLoadBalancerRuleSchema).required(),
+        })
+      )
+      .required(),
+    otherwise: array()
+      .of(
+        object().shape({
+          label: string().required(),
+          protocol: string().oneOf(['http']).required(),
+          rules: array().of(createLoadBalancerRuleSchema).required(),
+        })
+      )
+      .required(),
+  }),
+});
+
+export const createLoadBalancerSchema = object({
+  label: loadBalancerLabelValidation.required(LABEL_REQUIRED),
+  tags: array().of(string()).notRequired(), // TODO: AGLB - Should confirm on this with API team.
+  regions: array().of(string()).required(),
+  configurations: array().of(configurationSchema),
 });

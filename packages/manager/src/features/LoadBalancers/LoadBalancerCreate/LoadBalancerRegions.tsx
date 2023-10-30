@@ -7,15 +7,10 @@ import { Flag } from 'src/components/Flag';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-const regions = [
-  { country: 'us', id: 'us-iad', label: 'Washington, DC' },
-  { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
-  { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
-  { country: 'jp', id: 'jp-osa', label: 'Osaka, JP' },
-  { country: 'au', id: 'ap-southeast', label: 'Sydney, AU' },
-];
+import { useLoadBalancerState } from '../useLoadBalancerState';
 
 export const LoadBalancerRegions = () => {
+  const { loadBalancerRegions } = useLoadBalancerState();
   return (
     <Paper>
       <Stack spacing={2}>
@@ -31,7 +26,7 @@ export const LoadBalancerRegions = () => {
           </Typography>
         </Stack>
         <Stack py={0.5} spacing={1.25}>
-          {regions.map((region) => (
+          {loadBalancerRegions.map((region) => (
             <Stack
               alignItems="center"
               direction="row"
