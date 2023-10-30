@@ -310,9 +310,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'unassign-submit-button',
-                disabled:
-                  configInterfacesToDelete.length === 0 ||
-                  selectedLinodes.length === 0,
+                disabled: configInterfacesToDelete.length === 0,
                 label: 'Unassign Linodes',
                 type: 'submit',
               }}
