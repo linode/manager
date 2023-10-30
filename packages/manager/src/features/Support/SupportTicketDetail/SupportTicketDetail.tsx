@@ -1,27 +1,22 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
-import { makeStyles } from 'tss-react/mui';
 
-import { Chip } from 'src/components/Chip';
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
 } from 'src/queries/support';
-import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
@@ -30,30 +25,6 @@ import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import { ReplyContainer } from './TabbedReply/ReplyContainer';
-
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  closed: {
-    backgroundColor: theme.color.red,
-  },
-  open: {
-    backgroundColor: theme.color.green,
-  },
-  status: {
-    color: theme.color.white,
-    marginLeft: theme.spacing(1),
-    marginTop: 5,
-  },
-  ticketLabel: {
-    position: 'relative',
-    top: -3,
-  },
-  title: {
-    alignItems: 'center',
-    display: 'flex',
-  },
-}));
 
 export interface AttachmentError {
   error: string;
@@ -65,8 +36,6 @@ export const SupportTicketDetail = () => {
   const location = useLocation();
   const { ticketId } = useParams<{ ticketId: string }>();
   const id = Number(ticketId);
-
-  const { classes, cx } = useStyles();
 
   const attachmentErrors = history.location.state?.attachmentErrors;
 
@@ -101,7 +70,7 @@ export const SupportTicketDetail = () => {
 
   const status = ticket.status === 'closed' ? 'Closed' : 'Last updated';
 
-  const renderEntityLabelWithIcon = () => {
+  const renderEntityLabel = () => {
     const entity = ticket?.entity;
 
     if (!entity) {
@@ -111,30 +80,12 @@ export const SupportTicketDetail = () => {
     const target = getLinkTargets(entity);
 
     return (
-      <Notice spacingTop={12} variant="success">
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <EntityIcon size={20} variant={entity.type as EntityVariants} />
-          <Typography>
-            This ticket is associated with your {capitalize(entity.type)}{' '}
-            {target ? <Link to={target}>{entity.label}</Link> : entity.label}
-          </Typography>
-        </Stack>
-      </Notice>
+      <Typography>
+        &nbsp; | Regarding:{' '}
+        {target ? <Link to={target}>{entity.label}</Link> : entity.label}
+      </Typography>
     );
   };
-
-  const _Chip = () => (
-    <Chip
-      className={cx({
-        [classes.closed]: ticket.status === 'closed',
-        [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-        [classes.status]: true,
-      })}
-      component="div"
-      label={ticket.status}
-      role="term"
-    />
-  );
 
   const ticketTitle = sanitizeHTML({
     disallowedTagsMode: 'discard',
@@ -162,14 +113,26 @@ export const SupportTicketDetail = () => {
               position: 2,
             },
           ],
-          labelOptions: {
-            subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
-            suffixComponent: <_Chip />,
-          },
           pathname: location.pathname,
         }}
         title={ticketTitle}
       />
+      <Box
+        sx={(theme) => ({
+          alignItems: 'center',
+          display: 'flex',
+          marginBottom: theme.spacing(3),
+          [theme.breakpoints.down('md')]: {
+            marginLeft: theme.spacing(1),
+          },
+        })}
+      >
+        <StatusIcon
+          status={ticket.status === 'closed' ? 'inactive' : 'active'}
+        />{' '}
+        {status === 'Closed' ? status : 'Open'} | {status} by{' '}
+        {ticket.updated_by} at {formattedDate} {renderEntityLabel()}
+      </Box>
 
       {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
       {attachmentErrors !== undefined &&
@@ -181,8 +144,6 @@ export const SupportTicketDetail = () => {
             reason={error.error}
           />
         ))}
-
-      {ticket.entity && renderEntityLabelWithIcon()}
 
       <Grid container spacing={2}>
         <Grid xs={12}>
