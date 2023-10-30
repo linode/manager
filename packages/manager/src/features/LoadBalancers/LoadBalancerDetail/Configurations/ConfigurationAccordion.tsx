@@ -2,10 +2,10 @@ import { useFormik } from 'formik';
 import React, { useState } from 'react';
 
 import { Accordion } from 'src/components/Accordion';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import Select from 'src/components/EnhancedSelect/Select';
 import { InputLabel } from 'src/components/InputLabel';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -16,13 +16,13 @@ import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configura
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 import { RoutesTable } from '../Routes/RoutesTable';
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
-import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 
 interface Props {
   configuration: Configuration;
@@ -46,6 +46,12 @@ export const ConfigurationAccordion = (props: Props) => {
   const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const [routesTableQuery, setRoutesTableQuery] = useState('');
+
+  const routesTableFilter = routesTableQuery
+    ? { label: { '+contains': routesTableQuery } }
+    : {};
 
   const {
     error,
@@ -128,21 +134,20 @@ export const ConfigurationAccordion = (props: Props) => {
         />
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
-            <Select
+            <Autocomplete
+              onChange={(e, { value }) =>
+                formik.setFieldValue('protocol', value)
+              }
               textFieldProps={{
                 labelTooltipText: 'TODO',
               }}
-              value={
-                protocolOptions.find(
-                  (option) => option.value === formik.values.protocol
-                ) ?? null
-              }
+              value={protocolOptions.find(
+                (option) => option.value === formik.values.protocol
+              )}
+              disableClearable
               errorText={errorMap.protocol}
-              isClearable={false}
               label="Protocol"
-              onChange={({ value }) => formik.setFieldValue('protocol', value)}
               options={protocolOptions}
-              styles={{ container: () => ({ width: 'unset' }) }}
             />
             <TextField
               errorText={errorMap.port}
@@ -156,7 +161,7 @@ export const ConfigurationAccordion = (props: Props) => {
           <Stack maxWidth="600px">
             <Stack alignItems="center" direction="row">
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="OMG!" />
+              <TooltipIcon status="help" text="TODO: AGLB" />
             </Stack>
             <CertificateTable
               certificates={formik.values.certificates}
@@ -187,11 +192,15 @@ export const ConfigurationAccordion = (props: Props) => {
             <TextField
               hideLabel
               label={`Filter ${configuration.label}'s Routes`}
+              onChange={(e) => setRoutesTableQuery(e.target.value)}
               placeholder="Filter"
               sx={{ minWidth: 300 }}
             />
           </Stack>
-          <RoutesTable configuredRoutes={configuration.routes} />
+          <RoutesTable
+            configuredRoutes={configuration.routes}
+            filter={routesTableFilter}
+          />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack direction="row" justifyContent="flex-end" spacing={2}>

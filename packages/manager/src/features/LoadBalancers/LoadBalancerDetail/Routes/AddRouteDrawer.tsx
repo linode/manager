@@ -38,7 +38,7 @@ export const AddRouteDrawer = (props: Props) => {
   ).toLocaleUpperCase();
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add Rule">
+    <Drawer onClose={onClose} open={open} title="Add Route">
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>
         <FormControlLabel
           control={<Radio />}
