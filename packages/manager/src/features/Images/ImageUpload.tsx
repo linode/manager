@@ -309,7 +309,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             setCancelFn={setCancelFn}
             setErrors={setErrors}
           />
-          <Typography sx={{ paddingBottom: 8, paddingTop: 16 }}>
+          <Typography sx={{ paddingBottom: 1, paddingTop: 2 }}>
             Or, upload an image using the{' '}
             <button
               className={classes.cliModalButton}

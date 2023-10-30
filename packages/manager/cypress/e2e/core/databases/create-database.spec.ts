@@ -4,11 +4,13 @@ import {
   databaseClusterConfiguration,
   databaseConfigurations,
   mockDatabaseEngineTypes,
+  mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 import {
   mockCreateDatabase,
   mockGetDatabases,
   mockGetDatabaseEngines,
+  mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
 import { getRegionById } from 'support/util/regions';
@@ -71,9 +73,10 @@ describe('create a database cluster, mocked data', () => {
         );
         mockCreateDatabase(databaseMock).as('createDatabase');
         mockGetDatabases([databaseMock]).as('getDatabases');
+        mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
         cy.visitWithLogin('/databases/create');
-        cy.wait(['@getAccount', '@getDatabaseEngines']);
+        cy.wait(['@getAccount', '@getDatabaseEngines', '@getDatabaseTypes']);
 
         ui.entityHeader
           .find()

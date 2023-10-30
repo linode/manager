@@ -3,12 +3,14 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import {
   getLinodeRegionPrice,
   isLinodeTypeDifferentPriceInSelectedRegion,
@@ -69,15 +71,15 @@ export const ConfigureForm = React.memo((props: Props) => {
       })
   );
 
-  const currentRegionPrice =
-    currentLinodeType && getLinodeRegionPrice(currentLinodeType, currentRegion);
+  const currentRegionPrice: PriceObject | undefined = getLinodeRegionPrice(
+    currentLinodeType,
+    currentRegion
+  );
 
-  // TODO: M3-7063 (defaults)
-  const selectedRegionPrice: PriceObject | undefined =
-    (currentLinodeType &&
-      selectedRegion &&
-      getLinodeRegionPrice(currentLinodeType, selectedRegion)) ||
-    currentRegionPrice;
+  const selectedRegionPrice: PriceObject | undefined = getLinodeRegionPrice(
+    currentLinodeType,
+    selectedRegion
+  );
 
   const panelPrice = React.useCallback(
     (
@@ -148,6 +150,14 @@ export const ConfigureForm = React.memo((props: Props) => {
           )}
         </StyledMigrationBox>
       </StyledMigrationContainer>
+      {!currentRegionPrice && selectedRegion && (
+        <Notice
+          spacingBottom={16}
+          spacingTop={8}
+          text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+          variant="error"
+        />
+      )}
     </StyledPaper>
   );
 });

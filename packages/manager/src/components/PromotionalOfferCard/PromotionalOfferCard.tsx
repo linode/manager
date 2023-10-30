@@ -5,14 +5,11 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import {
-  offSiteURL,
-  onSiteURL,
-} from 'src/utilities/sanitize-html/sanitizeHTML';
+import { OFFSITE_URL_REGEX, ONSITE_URL_REGEX } from 'src/constants';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alignLeft: {
@@ -217,12 +214,12 @@ export const logoMap: Record<PromotionalOffer['logo'], any> = {
 const buttonProps = (url: string) => {
   let linkProps;
 
-  if (onSiteURL.test(url)) {
+  if (ONSITE_URL_REGEX.test(url)) {
     linkProps = {
       component: Link,
       to: url,
     };
-  } else if (offSiteURL.test(url)) {
+  } else if (OFFSITE_URL_REGEX.test(url)) {
     linkProps = {
       href: url,
       rel: 'noopener noreferrer',

@@ -6,7 +6,7 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Paper } from 'src/components/Paper';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { StyledGrid } from './CommonTabbedContent.styles';
 
 import SelectLinodePanel from '../SelectLinodePanel';
@@ -43,7 +43,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
 
   const extendedTypes = typesData?.map(extendType);
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+  const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
   const history = useHistory();
 

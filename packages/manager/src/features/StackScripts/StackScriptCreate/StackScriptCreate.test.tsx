@@ -17,10 +17,6 @@ describe('StackScriptCreate', () => {
   const component = shallow(
     <StackScriptCreate
       {...reactRouterProps}
-      classes={{
-        backButton: '',
-        createTitle: '',
-      }}
       profile={
         { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
       }

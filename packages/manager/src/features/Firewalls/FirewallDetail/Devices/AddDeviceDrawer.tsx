@@ -20,12 +20,13 @@ import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 
 interface Props {
+  label?: string;
   onClose: () => void;
   open: boolean;
 }
 
 export const AddDeviceDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { label, onClose, open } = props;
 
   const { id } = useParams<{ id: string }>();
 
@@ -136,6 +137,7 @@ export const AddDeviceDrawer = (props: Props) => {
             ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
           }
           disabled={currentDevicesLoading}
+          label={label}
           loading={currentDevicesLoading}
           multiple
           noOptionsMessage="No Linodes available to add"

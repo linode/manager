@@ -165,6 +165,7 @@ export interface Interface {
   purpose: InterfacePurpose;
   ipam_address: string | null;
   primary?: boolean;
+  active: boolean;
   subnet_id?: number | null;
   vpc_id?: number | null;
   ipv4?: ConfigInterfaceIPv4;
@@ -172,7 +173,7 @@ export interface Interface {
   ip_ranges?: string[];
 }
 
-export type InterfacePayload = Omit<Interface, 'id'>;
+export type InterfacePayload = Omit<Interface, 'id' | 'active'>;
 
 export interface ConfigInterfaceOrderPayload {
   ids: number[];

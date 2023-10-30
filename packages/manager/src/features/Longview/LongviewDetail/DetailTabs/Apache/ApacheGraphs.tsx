@@ -1,5 +1,5 @@
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -9,7 +9,7 @@ import {
   generateNetworkUnits,
   statMax,
 } from 'src/features/Longview/shared/utilities';
-import roundTo from 'src/utilities/roundTo';
+import { roundTo } from 'src/utilities/roundTo';
 
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';

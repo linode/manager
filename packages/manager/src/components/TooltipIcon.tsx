@@ -10,7 +10,7 @@ import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
 import { Tooltip, TooltipProps, tooltipClasses } from 'src/components/Tooltip';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 type TooltipIconStatus =
   | 'error'
@@ -176,7 +176,7 @@ const StyledTooltip = styled(
   ),
   {
     label: 'StyledTooltip',
-    shouldForwardProp: (prop) => isPropValid(['width'], prop),
+    shouldForwardProp: omittedProps(['width']),
   }
 )`
   & .${tooltipClasses.tooltip} {

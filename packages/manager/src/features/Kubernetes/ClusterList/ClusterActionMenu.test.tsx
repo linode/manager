@@ -9,6 +9,16 @@ import { ClusterActionMenu } from './ClusterActionMenu';
 
 const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
 
+// Mock snackbar to prevent "Can't perform a React state update on an unmounted component" warning.
+jest.mock('notistack', () => ({
+  ...jest.requireActual('notistack'),
+  useSnackbar: () => {
+    return {
+      enqueueSnackbar: jest.fn(),
+    };
+  },
+}));
+
 const props = {
   closeSnackbar: jest.fn(),
   clusterId: 123456,

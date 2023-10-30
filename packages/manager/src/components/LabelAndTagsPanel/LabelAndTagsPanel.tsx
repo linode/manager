@@ -19,7 +19,6 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
   return (
     <Paper
       sx={{
-        backgroundColor: theme.color.white,
         flexGrow: 1,
         marginTop: theme.spacing(3),
         width: '100%',

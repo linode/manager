@@ -1,6 +1,6 @@
 import { randomItem } from 'support/util/random';
 
-import type { Region } from '@linode/api-v4';
+import type { Capabilities, Region } from '@linode/api-v4';
 
 /**
  * Returns an object describing a Cloud Manager region if specified by the user.
@@ -76,19 +76,84 @@ export const getRegionByLabel = (label: string) => {
   return region;
 };
 
+interface ChooseRegionOptions {
+  /**
+   * If specified, the region returned will support the defined capability
+   * @example 'Managed Databases'
+   */
+  capability?: Capabilities;
+}
+
 /**
  * Returns a known Cloud Manager region at random, or returns a user-chosen
  * region if one was specified.
  *
- * Region selection can be configured via the `CY_TEST_REGION_ID` and
- * `CY_TEST_REGION_NAME` environment variables. Both must be specified in
- * order to override the region that is returned by this function.
+ * Region selection can be configured via the `CY_TEST_REGION` environment
+ * variable. If defined, the region returned by this function will be
+ * overridden using the chosen region.
  *
  * @returns Object describing a Cloud Manager region to use during tests.
  */
-export const chooseRegion = (): Region => {
+export const chooseRegion = (options?: ChooseRegionOptions): Region => {
   const overrideRegion = getOverrideRegion();
-  return overrideRegion ? overrideRegion : randomItem(regions);
+
+  if (overrideRegion) {
+    return overrideRegion;
+  }
+
+  if (options?.capability) {
+    const regionsWithCapability = regions.filter((region) =>
+      region.capabilities.includes(options.capability!)
+    );
+
+    return randomItem(regionsWithCapability);
+  }
+
+  return randomItem(regions);
+};
+
+/**
+ * Returns an array of unique Cloud Manager regions at random.
+ *
+ * If an override region is defined via the `CY_TEST_REGION` environment
+ * variable, the first item in the array will be the override region, and
+ * subsequent items will be chosen at random.
+ *
+ * @param count - Number of Regions to include in the returned array.
+ *
+ * @throws When `count` is less than 0.
+ * @throws When there are not enough regions to satisfy the given `count`.
+ *
+ * @returns Array of Cloud Manager Region objects.
+ */
+export const chooseRegions = (count: number): Region[] => {
+  if (count < 0) {
+    throw new Error(
+      'Unable to choose regions. The desired number of regions must be 0 or greater'
+    );
+  }
+  if (regions.length < count) {
+    throw new Error(
+      `Unable to choose regions. The desired number of regions exceeds the number of known regions (${regions.length})`
+    );
+  }
+  const overrideRegion = getOverrideRegion();
+
+  return new Array(count).fill(null).reduce((acc: Region[], _cur, index) => {
+    const chosenRegion: Region = ((): Region => {
+      if (index === 0 && overrideRegion) {
+        return overrideRegion;
+      }
+      // Get an array of regions that have not already been selected.
+      const unusedRegions = regions.filter(
+        (regionA: Region) =>
+          !!regions.find((regionB: Region) => regionA.id !== regionB.id)
+      );
+      return randomItem(unusedRegions);
+    })();
+    acc.push(chosenRegion);
+    return acc;
+  }, []);
 };
 
 /**

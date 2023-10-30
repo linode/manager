@@ -211,6 +211,7 @@ Environment variables related to Cypress logging and reporting, as well as repor
 | `CY_TEST_USER_REPORT`           | Log test account information when tests begin | `1`       | Unset; disabled by default |
 | `CY_TEST_JUNIT_REPORT`          | Enable JUnit reporting                        | `1`       | Unset; disabled by default |
 | `CY_TEST_DISABLE_FILE_WATCHING` | Disable file watching in Cypress UI           | `1`       | Unset; disabled by default |
+| `CY_TEST_FAIL_ON_MANAGED`       | Fail affected tests when Managed is enabled   | `1`       | Unset; disabled by default |
 
 ### Writing End-to-End Tests
 

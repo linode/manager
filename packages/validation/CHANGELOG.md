@@ -1,3 +1,14 @@
+## [2023-10-30] - v0.34.0
+
+### Changed:
+
+- Require vpc_id when interface purpose is 'vpc' in LinodeInterfaceSchema ([#9709](https://github.com/linode/manager/pull/9709))
+
+### Upcoming Features:
+
+- Add AGLB `UpdateServiceTargetSchema`([#9800](https://github.com/linode/manager/pull/9800))
+- Add AGLB `CreateRouteSchema` ([#9806](https://github.com/linode/manager/pull/9806))
+
 ## [2023-10-16] - v0.33.0
 
 ### Upcoming Features:

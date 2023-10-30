@@ -1,17 +1,24 @@
 import type { CypressPlugin } from './plugin';
-import { getAccountInfo } from '@linode/api-v4';
+import { getAccountInfo, getAccountSettings } from '@linode/api-v4';
 
 /**
- * Fetches Linode account info and stores data in Cypress `cloudManagerAccount` env.
+ * Fetches and caches Linode account info and settings.
+ *
+ * Cached account data is stored in Cypress's `cloudManagerAccount` and
+ * `cloudManagerAccountSettings` env, respectively.
  */
 export const fetchAccount: CypressPlugin = async (_on, config) => {
-  const account = await getAccountInfo();
+  const [account, accountSettings] = await Promise.all([
+    getAccountInfo(),
+    getAccountSettings(),
+  ]);
 
   return {
     ...config,
     env: {
       ...config.env,
       cloudManagerAccount: account,
+      cloudManagerAccountSettings: accountSettings,
     },
   };
 };

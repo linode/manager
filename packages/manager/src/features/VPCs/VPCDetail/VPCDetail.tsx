@@ -189,6 +189,7 @@ const VPCDetail = () => {
       {numLinodes > 0 && (
         <DismissibleBanner
           preferenceKey={`reboot-linodes-warning-banner-${vpc.id}`}
+          sx={{ marginBottom: theme.spacing(2) }}
           variant="warning"
         >
           <Typography variant="body1">

@@ -5,7 +5,7 @@ import { OptionProps } from 'react-select';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { Typography } from 'src/components/Typography';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 interface Props extends OptionProps<any, any> {
   data: {
@@ -51,8 +51,13 @@ export const SearchItem = (props: Props) => {
         <>
           <div className={classes.row}>
             <div
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHTML({
+                  sanitizingTier: 'flexible',
+                  text: getLabel(),
+                }),
+              }}
               className={classes.label}
-              dangerouslySetInnerHTML={{ __html: sanitizeHTML(getLabel()) }}
             />
             <Arrow className={classes.icon} />
           </div>

@@ -14,18 +14,18 @@ import {
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { queryKey } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import UserPermissions from './UserPermissions';
-import UserProfile from './UserProfile';
+import { UserProfile } from './UserProfile';
 
-const UserDetail: React.FC = () => {
+export const UserDetail = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
   const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();
@@ -260,5 +260,3 @@ const UserDetail: React.FC = () => {
     </>
   );
 };
-
-export default UserDetail;

@@ -8,12 +8,13 @@ import {
   randomIp,
   randomString,
 } from 'support/util/random';
-import { databaseFactory } from 'src/factories/databases';
+import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetDatabase,
   mockGetDatabaseCredentials,
+  mockGetDatabaseTypes,
   mockResetPassword,
   mockResetPasswordProvisioningDatabase,
   mockUpdateDatabase,
@@ -22,6 +23,7 @@ import {
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
+  mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 import { accountFactory } from '@src/factories';
 
@@ -169,6 +171,7 @@ describe('Update database clusters', () => {
           // Mock account to ensure 'Managed Databases' capability.
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockResetPassword(database.id, database.engine).as(
             'resetRootPassword'
           );
@@ -179,7 +182,7 @@ describe('Update database clusters', () => {
           ).as('getCredentials');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait(['@getAccount', '@getDatabase']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           cy.get('[data-qa-cluster-config]').within(() => {
             cy.findByText(configuration.region.label).should('be.visible');
@@ -282,6 +285,7 @@ describe('Update database clusters', () => {
 
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
           mockUpdateProvisioningDatabase(
             database.id,
@@ -296,7 +300,7 @@ describe('Update database clusters', () => {
           ).as('resetRootPassword');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait(['@getAccount', '@getDatabase']);
+          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Cannot update database label.
           updateDatabaseLabel(initialLabel, updateAttemptLabel);

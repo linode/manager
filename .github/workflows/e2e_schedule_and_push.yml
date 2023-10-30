@@ -6,6 +6,7 @@ env:
   USER_3: ${{ secrets.USER_3 }}
   USER_4: ${{ secrets.USER_4 }}
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+  CY_TEST_FAIL_ON_MANAGED: 1
 on:
   schedule:
     - cron: "0 13 * * 1-5"

@@ -7,7 +7,7 @@ import {
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 
 import { parseAPIDate } from 'src/utilities/date';
-import updateRight from 'src/utilities/updateRight';
+import { updateRight } from 'src/utilities/updateRight';
 
 import { EntityEvent, ExtendedEvent } from './event.types';
 

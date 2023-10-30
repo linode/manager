@@ -1,12 +1,13 @@
-import {
+import type {
   ClusterSize,
   Engine,
   Region,
   DatabaseEngine,
+  DatabaseType,
 } from '@linode/api-v4/types';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { databaseEngineFactory } from '@src/factories';
+import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 
 export interface databaseClusterConfiguration {
   clusterSize: ClusterSize;
@@ -39,6 +40,19 @@ export const mockDatabaseEngineTypes: DatabaseEngine[] = [
   }),
 ];
 
+// The database type IDs in this array should correspond to the DBaaS cluster
+// `linodeType` values used by the tests.
+export const mockDatabaseNodeTypes: DatabaseType[] = [
+  databaseTypeFactory.build({
+    class: 'nanode',
+    id: 'g6-nanode-1',
+  }),
+  databaseTypeFactory.build({
+    class: 'dedicated',
+    id: 'g6-dedicated-16',
+  }),
+];
+
 // Array of database cluster configurations for which to test creation.
 export const databaseConfigurations: databaseClusterConfiguration[] = [
   {
@@ -47,7 +61,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
-    region: chooseRegion(),
+    region: chooseRegion({ capability: 'Managed Databases' }),
     version: '8',
   },
   {
@@ -56,7 +70,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     label: randomLabel(),
     linodeType: 'g6-dedicated-16',
-    region: chooseRegion(),
+    region: chooseRegion({ capability: 'Managed Databases' }),
     version: '5',
   },
   // {
@@ -75,7 +89,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'PostgreSQL',
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
-    region: chooseRegion(),
+    region: chooseRegion({ capability: 'Managed Databases' }),
     version: '13',
   },
 ];

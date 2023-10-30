@@ -3,9 +3,9 @@ import type { Config, Subnet } from '@linode/api-v4';
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
   for (const subnet of subnets) {
-    subnet.linodes.forEach((linodeId) => {
-      if (!linodes.includes(linodeId)) {
-        linodes.push(linodeId);
+    subnet.linodes.forEach((linodeInfo) => {
+      if (!linodes.includes(linodeInfo.id)) {
+        linodes.push(linodeInfo.id);
       }
     });
   }

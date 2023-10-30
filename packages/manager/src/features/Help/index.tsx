@@ -15,8 +15,12 @@ const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
 
-const SupportTicketDetail = React.lazy(
-  () => import('src/features/Support/SupportTicketDetail')
+const SupportTicketDetail = React.lazy(() =>
+  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
+    (module) => ({
+      default: module.SupportTicketDetail,
+    })
+  )
 );
 
 export const HelpAndSupport = () => {

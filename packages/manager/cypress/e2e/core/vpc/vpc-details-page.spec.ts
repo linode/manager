@@ -128,6 +128,7 @@ describe('VPC details page', () => {
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
       label: randomLabel(),
+      linodes: [],
     });
     const mockVPC = vpcFactory.build({
       id: randomNumber(),

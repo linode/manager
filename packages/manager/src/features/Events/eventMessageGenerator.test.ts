@@ -122,11 +122,22 @@ describe('Event message generation', () => {
     });
 
     it('should not replace entity label if label is inside backticks', () => {
-      const mockEvent = eventFactory.build({ entity });
-      const message = 'created `foo`';
-      const result = applyLinking(mockEvent, message);
+      const mockEvent1 = eventFactory.build({ entity });
+      const message1 = 'created `foo`';
+      const result1 = applyLinking(mockEvent1, message1);
 
-      expect(result).toEqual('created `foo`');
+      expect(result1).toEqual('created `foo`');
+
+      // In this case we also should not replace the label
+      // This tests the regex strength of the function so
+      // so "something.com" does not return a match for "mail.something.com"
+      const mockEvent2 = eventFactory.build(
+        entityFactory.build({ id: 10, label: 'something.com' })
+      );
+      const message2 = 'created `mail.something.com`';
+      const result2 = applyLinking(mockEvent2, message2);
+
+      expect(result2).toEqual('created `mail.something.com`');
     });
 
     it('should escape regex special characters', () => {

@@ -19,11 +19,16 @@ const EntityTransfersCreate = React.lazy(() =>
     default: module.EntityTransfersCreate,
   }))
 );
-const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
+
+const UserDetail = React.lazy(() =>
+  import('../Users/UserDetail').then((module) => ({
+    default: module.UserDetail,
+  }))
+);
 
 type Props = RouteComponentProps<{}>;
 
-class Account extends React.Component<Props> {
+export class Account extends React.Component<Props> {
   render() {
     const {
       match: { path },
@@ -55,4 +60,3 @@ class Account extends React.Component<Props> {
     );
   }
 }
-export default Account;

@@ -2,6 +2,7 @@ import {
   createLoadbalancerServiceTarget,
   deleteLoadbalancerServiceTarget,
   getLoadbalancerServiceTargets,
+  updateLoadbalancerServiceTarget,
 } from '@linode/api-v4';
 import {
   useInfiniteQuery,
@@ -37,6 +38,27 @@ export const useServiceTargetCreateMutation = (loadbalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
     (data) => createLoadbalancerServiceTarget(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'service-targets',
+        ]);
+      },
+    }
+  );
+};
+
+export const useServiceTargetUpdateMutation = (
+  loadbalancerId: number,
+  serviceTargetId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
+    (data) =>
+      updateLoadbalancerServiceTarget(loadbalancerId, serviceTargetId, data),
     {
       onSuccess() {
         queryClient.invalidateQueries([
