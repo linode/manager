@@ -171,6 +171,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       setSelectedLinodes((prevSelectedLinodes) =>
         prevSelectedLinodes.filter((option) => option.id !== optionToRemove.id)
       );
+      setConfigInterfacesToDelete((prevInterfacesToDelete) =>
+        prevInterfacesToDelete.filter(
+          (option) => option.linodeId !== optionToRemove.id
+        )
+      );
     };
 
     const processUnassignLinodes = async () => {
@@ -305,7 +310,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'unassign-submit-button',
-                disabled: configInterfacesToDelete.length === 0,
+                disabled:
+                  configInterfacesToDelete.length === 0 ||
+                  selectedLinodes.length === 0,
                 label: 'Unassign Linodes',
                 type: 'submit',
               }}
