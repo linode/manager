@@ -1,5 +1,5 @@
 ---
-"@linode/manager": Upcoming Features
+"@linode/manager": Fixed
 ---
 
-Fix Subnet Unassign Drawer unassigning linodes it shouldn't be ([#9851](https://github.com/linode/manager/pull/9851))
+Only unassign linodes in the 'Linodes to be Unassigned from Subnet' list for Subnet Unassign Drawer ([#9851](https://github.com/linode/manager/pull/9851))
