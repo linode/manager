@@ -29,6 +29,7 @@ import { SubscriptionDialog } from './SubscriptionDialog';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
+const CloudviewLanding =React.lazy(() => import('./CloudView/CloudViewLanding'))
 
 type CombinedProps = LongviewProps & RouteComponentProps<{}>;
 
@@ -67,6 +68,10 @@ export const LongviewLanding = (props: CombinedProps) => {
       routeName: `${props.match.url}/plan-details`,
       title: 'Plan Details',
     },
+    {
+      routeName: `${props.match.url}/cloudview`,
+      title: 'Cloudview',
+    }
   ];
 
   const matches = (p: string) => {
@@ -157,6 +162,11 @@ export const LongviewLanding = (props: CombinedProps) => {
             <SafeTabPanel index={1}>
               <LongviewPlans
                 subscriptionRequestHook={subscriptionsRequestHook}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <CloudviewLanding
+                {...props}
               />
             </SafeTabPanel>
           </TabPanels>
