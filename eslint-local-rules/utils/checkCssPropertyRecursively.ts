@@ -1,4 +1,13 @@
-function checkCssPropertyRecursively(css, properties, context, message) {
+/**
+ * Check if the css property is used in the object recursively
+ * The object can be a styled component, a makeStyles hook, or a JSX element with sx or style
+ */
+export function checkCssPropertyRecursively({
+  css,
+  properties,
+  context,
+  message,
+}) {
   for (const property of properties) {
     if (
       property.type === "Property" &&
@@ -14,36 +23,32 @@ function checkCssPropertyRecursively(css, properties, context, message) {
       property.type === "Property" &&
       property.value?.type === "ObjectExpression"
     ) {
-      checkCssPropertyRecursively(
+      checkCssPropertyRecursively({
         css,
-        property.value.properties,
+        properties: property.value.properties,
         context,
-        message
-      );
+        message,
+      });
     } else if (property.type === "Property" && property.key?.name === "sx") {
       if (property.value?.type === "ObjectExpression") {
-        checkCssPropertyRecursively(
+        checkCssPropertyRecursively({
           css,
-          property.value.properties,
+          properties: property.value.properties,
           context,
-          message
-        );
+          message,
+        });
       }
     } else if (
       property.type === "Property" &&
       property.key?.name === "style" &&
       property.value?.type === "ObjectExpression"
     ) {
-      checkCssPropertyRecursively(
+      checkCssPropertyRecursively({
         css,
-        property.value.properties,
+        properties: property.value.properties,
         context,
-        message
-      );
+        message,
+      });
     }
   }
 }
-
-module.exports = {
-  checkCssPropertyRecursively,
-};

@@ -1,3 +1,8 @@
-module.exports = {
-  "no-custom-fontWeight": require("./rules/no-custom-fontWeight"),
-};
+require("ts-node").register({
+  transpileOnly: true,
+  compilerOptions: {
+    module: "commonjs",
+  },
+});
+
+module.exports = require("./rules/index").default;

@@ -1,5 +1,6 @@
-const utils = require("../utils");
-const checkCssPropertyRecursively = utils.checkCssPropertyRecursively;
+import { checkCssPropertyRecursively } from "../utils/checkCssPropertyRecursively";
+
+import type { Rule } from "eslint";
 
 const css = {
   key: "fontWeight",
@@ -8,10 +9,18 @@ const css = {
 const ERROR_MESSAGE =
   '** No font weight declarations in our code **.\nWe manage font weights through font family declarations.\nFor example, instead of specifying `fontWeight: "bold"`,\nuse: `fontFamily: theme.font.bold`.';
 
-module.exports = {
-  /**
-   * Disallow the use of fontWeight css declarations in Cloud Manager styling
-   */
+/**
+ * Disallow the use of fontWeight css declarations in Cloud Manager styling
+ */
+export const noCustomFontWeight: Rule.RuleModule = {
+  meta: {
+    docs: {
+      category: "Stylistic Issues",
+      description:
+        "Disallow the use of fontWeight css declarations in Cloud Manager styling",
+      recommended: true,
+    },
+  },
   create(context) {
     return {
       // MakeStyle handler
@@ -19,18 +28,21 @@ module.exports = {
         if (node.declarations) {
           for (const declarator of node.declarations) {
             if (
-              declarator.id?.name === "useStyles" &&
-              declarator.init?.arguments?.[0]?.type ===
+              declarator.id &&
+              "name" in declarator.id && // adding type guard to satisfy TS
+              declarator.id.name === "useStyles" &&
+              declarator.init?.type === "CallExpression" &&
+              declarator.init.arguments?.[0]?.type ===
                 "ArrowFunctionExpression" &&
               declarator.init.arguments[0].body?.type === "ObjectExpression"
             ) {
               const properties = declarator.init.arguments[0].body.properties;
-              checkCssPropertyRecursively(
+              checkCssPropertyRecursively({
                 css,
                 properties,
                 context,
-                ERROR_MESSAGE
-              );
+                message: ERROR_MESSAGE,
+              });
             }
           }
         }
@@ -39,6 +51,7 @@ module.exports = {
       CallExpression(node) {
         if (
           node.callee.type === "CallExpression" &&
+          "name" in node.callee.callee && // adding type guard to satisfy TS
           node.callee.callee.name === "styled"
         ) {
           const styledComponent = node.arguments?.[0];
@@ -47,12 +60,12 @@ module.exports = {
             styledComponent?.body?.type === "ObjectExpression"
           ) {
             const properties = styledComponent.body.properties;
-            checkCssPropertyRecursively(
+            checkCssPropertyRecursively({
               css,
               properties,
               context,
-              ERROR_MESSAGE
-            );
+              message: ERROR_MESSAGE,
+            });
           }
         }
       },
@@ -67,18 +80,16 @@ module.exports = {
               attribute.value?.type === "JSXExpressionContainer" &&
               attribute.value.expression?.type === "ObjectExpression"
             ) {
-              checkCssPropertyRecursively(
+              checkCssPropertyRecursively({
                 css,
-                attribute.value.expression.properties,
+                properties: attribute.value.expression.properties,
                 context,
-                ERROR_MESSAGE
-              );
+                message: ERROR_MESSAGE,
+              });
             }
 
             // Any component with a fontWeight prop
-            if (
-              attribute.name.name === css.key
-            ) {
+            if (attribute.name.name === css.key) {
               context.report({
                 node,
                 message: ERROR_MESSAGE,
@@ -88,15 +99,5 @@ module.exports = {
         }
       },
     };
-  },
-  meta: {
-    docs: {
-      description:
-        "Disallow the use of fontWeight css declarations in Cloud Manager styling",
-      recommended: true,
-      url: null,
-    },
-    fixable: null,
-    type: "problem",
   },
 };
