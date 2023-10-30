@@ -6,7 +6,7 @@ import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControl } from 'src/components/FormControl';
 import { titlecase } from 'src/features/Linodes/presentation';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 export interface ExtendedDisk extends Disk {
   _id: string;

@@ -1,4 +1,6 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -18,25 +20,28 @@ import { useVPCsQuery } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { StyledCreateLink } from './LinodeCreate.styles';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 
-interface VPCPanelProps {
+export interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
+  from: 'linodeConfig' | 'linodeCreate';
   handleSelectVPC: (vpcId: number) => void;
   handleSubnetChange: (subnetId: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
+  publicIPv4Error?: string;
   region: string | undefined;
-  selectedSubnetId: number | undefined;
-  selectedVPCId: number | undefined;
+  selectedSubnetId: null | number | undefined;
+  selectedVPCId: null | number | undefined;
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
   vpcIPv4AddressOfLinode: string | undefined;
   vpcIPv4Error?: string;
+  vpcIdError?: string;
 }
 
 const ERROR_GROUP_STRING = 'vpc-errors';
@@ -45,9 +50,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
   const {
     assignPublicIPv4Address,
     autoassignIPv4WithinVPC,
+    from,
     handleSelectVPC,
     handleSubnetChange,
     handleVPCIPv4Change,
+    publicIPv4Error,
     region,
     selectedSubnetId,
     selectedVPCId,
@@ -56,7 +63,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
     toggleAutoassignIPv4WithinVPCEnabled,
     vpcIPv4AddressOfLinode,
     vpcIPv4Error,
+    vpcIdError,
   } = props;
+
+  const theme = useTheme();
+  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
   const flags = useFlags();
   const { account } = useAccountManagement();
@@ -104,10 +115,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
       : accumulator;
   }, []);
 
-  vpcDropdownOptions.unshift({
-    label: 'None',
-    value: -1,
-  });
+  const fromLinodeCreate = from === 'linodeCreate';
+  const fromLinodeConfig = from === 'linodeConfig';
+
+  if (fromLinodeCreate) {
+    vpcDropdownOptions.unshift({
+      label: 'None',
+      value: -1,
+    });
+  }
 
   const subnetDropdownOptions: Item[] =
     vpcs
@@ -121,27 +137,46 @@ export const VPCPanel = (props: VPCPanelProps) => {
     ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
     : undefined;
 
-  const mainCopyVPC =
-    vpcDropdownOptions.length <= 1
-      ? 'Allow Linode to communicate in an isolated environment.'
-      : 'Assign this Linode to an existing VPC.';
+  const getMainCopyVPC = () => {
+    if (fromLinodeConfig) {
+      return null;
+    }
+
+    const copy =
+      vpcDropdownOptions.length <= 1
+        ? 'Allow Linode to communicate in an isolated environment.'
+        : 'Assign this Linode to an existing VPC.';
+
+    return (
+      <>
+        {/* @TODO VPC: Update link */}
+        {copy} <Link to="">Learn more</Link>.
+      </>
+    );
+  };
 
   return (
     <Paper
+      sx={(theme) => ({
+        ...(fromLinodeCreate && {
+          marginTop: theme.spacing(3),
+        }),
+        ...(fromLinodeConfig && {
+          padding: 0,
+        }),
+      })}
       data-testid="vpc-panel"
-      sx={(theme) => ({ marginTop: theme.spacing(3) })}
     >
-      <Typography
-        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
-        variant="h2"
-      >
-        VPC
-      </Typography>
-      <Stack>
-        <Typography>
-          {/* @TODO VPC: Update link */}
-          {mainCopyVPC} <Link to="">Learn more</Link>.
+      {fromLinodeCreate && (
+        <Typography
+          sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+          variant="h2"
+        >
+          VPC
         </Typography>
+      )}
+      <Stack>
+        <Typography>{getMainCopyVPC()}</Typography>
         <Select
           onChange={(selectedVPC: Item<number, string>) => {
             handleSelectVPC(selectedVPC.value);
@@ -152,15 +187,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
           value={vpcDropdownOptions.find(
             (option) => option.value === selectedVPCId
           )}
-          defaultValue={vpcDropdownOptions[0]}
+          defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
           disabled={!regionSupportsVPCs}
-          errorText={vpcError}
+          errorText={vpcIdError ?? vpcError}
           isClearable={false}
           isLoading={isLoading}
-          label="Assign VPC"
+          label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
           noOptionsMessage={() => 'Create a VPC to assign to this Linode.'}
           options={vpcDropdownOptions}
-          placeholder={''}
+          placeholder={'Select a VPC'}
         />
         {vpcDropdownOptions.length <= 1 && regionSupportsVPCs && (
           <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
@@ -169,9 +204,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
           </Typography>
         )}
 
-        <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
-          Create VPC
-        </StyledCreateLink>
+        {from === 'linodeCreate' && (
+          <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
+            Create VPC
+          </StyledCreateLink>
+        )}
 
         {selectedVPCId !== -1 && regionSupportsVPCs && (
           <Stack data-testid="subnet-and-additional-options-section">
@@ -214,7 +251,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     flexDirection="row"
                     sx={{}}
                   >
-                    <Typography noWrap>
+                    <Typography noWrap={!isSmallBp && from === 'linodeConfig'}>
                       Auto-assign a VPC IPv4 address for this Linode in the VPC
                     </Typography>
                     <TooltipIcon
@@ -245,7 +282,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
               })}
               alignItems="center"
               display="flex"
-              flexDirection="row"
             >
               <FormControlLabel
                 control={
@@ -268,6 +304,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   </Box>
                 }
               />
+              {assignPublicIPv4Address && publicIPv4Error && (
+                <Typography
+                  sx={(theme) => ({
+                    color: theme.color.red,
+                  })}
+                >
+                  {publicIPv4Error}
+                </Typography>
+              )}
             </Box>
           </Stack>
         )}

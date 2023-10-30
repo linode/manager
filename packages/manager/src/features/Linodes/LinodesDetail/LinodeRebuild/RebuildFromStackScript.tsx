@@ -9,15 +9,15 @@ import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
-import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
-import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -32,7 +32,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
 interface Props {

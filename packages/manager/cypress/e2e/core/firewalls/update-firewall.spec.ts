@@ -1,10 +1,11 @@
-import {
-  createLinode,
-  createFirewall,
+import type {
   Linode,
   Firewall,
   FirewallRuleType,
+  CreateLinodeRequest,
+  CreateFirewallPayload,
 } from '@linode/api-v4';
+import { createLinode, createFirewall } from '@linode/api-v4';
 import {
   createLinodeRequestFactory,
   firewallFactory,
@@ -12,9 +13,8 @@ import {
   linodeFactory,
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
-import { containsClick, getClick } from 'support/helpers';
+import { containsClick } from 'support/helpers';
 import {
-  interceptCreateFirewall,
   interceptUpdateFirewallLinodes,
   interceptUpdateFirewallRules,
 } from 'support/intercepts/firewalls';
@@ -44,10 +44,6 @@ const outboundRule = firewallRuleFactory.build({
   description: randomString(),
   action: 'Drop',
   ports: randomItem(Object.keys(portPresetMap)),
-});
-
-const firewall = firewallFactory.build({
-  label: randomLabel(),
 });
 
 /**
@@ -154,8 +150,8 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
 };
 
 const createLinodeAndFirewall = async (
-  linodeRequestPayload,
-  firewallRequestPayload
+  linodeRequestPayload: CreateLinodeRequest,
+  firewallRequestPayload: CreateFirewallPayload
 ) => {
   return Promise.all([
     createLinode(linodeRequestPayload),

@@ -15,7 +15,7 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   onClose: () => void;
@@ -96,7 +96,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
 
-  const hasErrorFor = getAPIErrorsFor(
+  const hasErrorFor = getAPIErrorFor(
     errorResources,
     error === null ? undefined : error
   );
