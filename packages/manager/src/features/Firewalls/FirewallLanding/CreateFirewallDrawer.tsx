@@ -176,12 +176,7 @@ export const CreateFirewallDrawer = React.memo(
       const readOnlyIds =
         serviceType === 'linode' ? readOnlyLinodeIds : readOnlyNodebalancerIds;
 
-      const selectedIds =
-        serviceType === 'linode'
-          ? values.devices?.nodebalancers || []
-          : values.devices?.linodes || [];
-
-      return ![...readOnlyIds, ...selectedIds].includes(id);
+      return ![...readOnlyIds].includes(id);
     };
 
     const nodebalancers = nodebalancerData?.filter((nb) =>
