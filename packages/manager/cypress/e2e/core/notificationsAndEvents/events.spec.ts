@@ -16,6 +16,7 @@ const eventActions: RecPartial<EventAction>[] = [
   'disk_duplicate',
   'disk_resize',
   'disk_update',
+  'database_low_disk_space',
   'entity_transfer_accept',
   'entity_transfer_cancel',
   'entity_transfer_create',
