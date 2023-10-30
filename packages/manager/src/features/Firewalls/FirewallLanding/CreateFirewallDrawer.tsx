@@ -136,16 +136,8 @@ export const CreateFirewallDrawer = React.memo(
     React.useEffect(() => {
       if (open) {
         resetForm();
-        setSelectedLinodes([]);
-        setSelectedNodeBalancers([]);
       }
     }, [open, resetForm]);
-
-    const [selectedNodeBalancers, setSelectedNodeBalancers] = React.useState<
-      NodeBalancer[]
-    >([]);
-
-    const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 
     const {
       data: nodebalancerData,
@@ -186,8 +178,8 @@ export const CreateFirewallDrawer = React.memo(
 
       const selectedIds =
         serviceType === 'linode'
-          ? selectedNodeBalancers.map((nb) => nb.id)
-          : selectedLinodes.map((linode) => linode.id);
+          ? values.devices?.nodebalancers || []
+          : values.devices?.linodes || [];
 
       return ![...readOnlyIds, ...selectedIds].includes(id);
     };
@@ -199,6 +191,18 @@ export const CreateFirewallDrawer = React.memo(
     const linodes = linodeData?.filter((linode) =>
       optionsFilter(linode.id, 'linode')
     );
+
+    const linodeIdSet = new Set(values?.devices?.linodes);
+
+    const selectedLinodes: Linode[] =
+      linodes?.filter((linode) => linodeIdSet.has(linode.id)) || [];
+
+    const nodebalancerIdSet = new Set(values?.devices?.nodebalancers);
+
+    const selectedNodeBalancers: NodeBalancer[] =
+      nodebalancers?.filter((nodebalancer) =>
+        nodebalancerIdSet.has(nodebalancer.id)
+      ) || [];
 
     // TODO: NBFW - Placeholder until real link is available
     const learnMoreLink = <a href="#">Learn more</a>;
@@ -293,7 +297,6 @@ export const CreateFirewallDrawer = React.memo(
                 'devices.nodebalancers',
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
-              setSelectedNodeBalancers(nodebalancers);
             }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
