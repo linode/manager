@@ -22,7 +22,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
  * @returns {order, orderBy, handleOrderChange}
  */
 export const useOrder = (
-  initial: OrderSet,
+  initial?: OrderSet,
   preferenceKey?: string,
   prefix?: string
 ) => {
@@ -36,8 +36,8 @@ export const useOrder = (
     preferenceKey || '',
     preferences || {},
     params as Record<string, string>,
-    initial.orderBy,
-    initial.order,
+    initial?.orderBy,
+    initial?.order,
     prefix
   ) as OrderSet;
 

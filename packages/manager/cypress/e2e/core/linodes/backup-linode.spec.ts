@@ -29,8 +29,9 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
-import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
+import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
+import { expectManagedDisabled } from 'support/api/managed';
 
 authenticate();
 describe('linode backups', () => {
@@ -45,6 +46,10 @@ describe('linode backups', () => {
    * - Confirms that Linode details page updates to reflect that backups are enabled.
    */
   it('can enable backups', () => {
+    // Skip or optionally fail if test account has Managed enabled.
+    // This is necessary because Managed accounts have backups enabled implicitly.
+    expectManagedDisabled();
+
     // Create a Linode that is not booted and which does not have backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
@@ -196,6 +201,11 @@ describe('"Enable Linode Backups" banner', () => {
     const enableBackupsMessage =
       'Enable Linode Backups to protect your data and recover quickly in an emergency.';
 
+    const mockAccountSettings = accountSettingsFactory.build({
+      backups_enabled: false,
+      managed: false,
+    });
+
     // Mock Linodes that do not have backups enabled.
     const mockLinodes = linodeFactory.buildList(2, {
       backups: { enabled: false },
@@ -212,12 +222,13 @@ describe('"Enable Linode Backups" banner', () => {
     // Confirm notice appears when Linodes do not have backups enabled,
     // and confirm that the notice can be dismissed.
     mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
     cy.visitWithLogin('/linodes', {
       preferenceOverrides: {
         backups_cta_dismissed: false,
       },
     });
-    cy.wait('@getLinodes');
+    cy.wait(['@getLinodes', '@getAccountSettings']);
     cy.contains(enableBackupsMessage).should('be.visible');
 
     // Click dismiss button.
@@ -272,6 +283,7 @@ describe('"Enable Linode Backups" banner', () => {
     // Mock account settings before and after enabling auto backup enrollment.
     const mockInitialAccountSettings = accountSettingsFactory.build({
       backups_enabled: false,
+      managed: false,
     });
 
     const mockUpdatedAccountSettings = {
@@ -363,6 +375,11 @@ describe('"Enable Linode Backups" banner', () => {
    * - Confirms that DC-specific pricing information is displayed in backups drawer when feature is enabled.
    */
   it('displays DC-specific pricing information when feature flag is enabled', () => {
+    const mockAccountSettings = accountSettingsFactory.build({
+      backups_enabled: false,
+      managed: false,
+    });
+
     // TODO: DC Pricing - M3-7073: Move assertions involving pricing to above test when DC-specific pricing goes live.
     // TODO: DC Pricing - M3-7073: Remove this test when DC-specific pricing goes live.
     const mockLinodes = [
@@ -374,13 +391,13 @@ describe('"Enable Linode Backups" banner', () => {
         label: randomLabel(),
         region: 'us-east',
         backups: { enabled: false },
-        type: dcPricingMockLinodeTypes[0].id,
+        type: dcPricingMockLinodeTypesForBackups[0].id,
       }),
       linodeFactory.build({
         label: randomLabel(),
         region: 'us-west',
         backups: { enabled: false },
-        type: dcPricingMockLinodeTypes[1].id,
+        type: dcPricingMockLinodeTypesForBackups[1].id,
       }),
       linodeFactory.build({
         label: randomLabel(),
@@ -398,17 +415,18 @@ describe('"Enable Linode Backups" banner', () => {
     ];
 
     // The expected total cost of enabling backups, as shown in backups drawer.
-    const expectedTotal = '$7.74/mo';
+    const expectedTotal = '$9.74/mo';
 
-    mockGetLinodeType(dcPricingMockLinodeTypes[0]);
-    mockGetLinodeType(dcPricingMockLinodeTypes[1]);
-    mockGetLinodeTypes(dcPricingMockLinodeTypes);
+    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[0]);
+    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[1]);
+    mockGetLinodeTypes(dcPricingMockLinodeTypesForBackups);
 
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientstream');
     mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
 
     cy.visitWithLogin('/linodes', {
       preferenceOverrides: {
@@ -416,7 +434,12 @@ describe('"Enable Linode Backups" banner', () => {
       },
     });
 
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getLinodes']);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientstream',
+      '@getLinodes',
+      '@getAccountSettings',
+    ]);
 
     // Click "Enable Linode Backups" link within backups notice.
     cy.findByText('Enable Linode Backups').should('be.visible').click();

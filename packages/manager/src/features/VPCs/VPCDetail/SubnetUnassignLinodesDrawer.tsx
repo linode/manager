@@ -84,7 +84,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     // 2. We need to filter only the linodes that are assigned to the subnet.
     const findAssignedLinodes = React.useCallback(() => {
       return linodes?.filter((linode) => {
-        return subnetLinodeIds?.includes(linode.id);
+        return subnetLinodeIds?.some(
+          (linodeInfo) => linodeInfo.id === linode.id
+        );
       });
     }, [linodes, subnetLinodeIds]);
 

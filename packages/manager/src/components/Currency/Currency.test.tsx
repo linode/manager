@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Currency } from './Currency';
@@ -43,6 +44,13 @@ describe('Currency Component', () => {
     getByText('$99.999');
     rerender(<Currency decimalPlaces={3} quantity={-5} />);
     getByText('-$5.000');
+  });
+
+  it('handles custom default values', () => {
+    const { getByText } = renderWithTheme(
+      <Currency quantity={UNKNOWN_PRICE} />
+    );
+    getByText(`$${UNKNOWN_PRICE}`);
   });
 
   it('groups by comma', () => {

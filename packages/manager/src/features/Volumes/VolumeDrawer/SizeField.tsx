@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -8,9 +9,10 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
-import { makeStyles } from '@mui/styles';
 
 interface Props {
   disabled?: boolean;
@@ -75,7 +77,9 @@ export const SizeField = (props: Props) => {
   const priceDisplayText = (
     <FormHelperText>
       {resize || isFromLinode ? null : (
-        <span className={classes.createVolumeText}>${price}/month</span>
+        <span className={classes.createVolumeText}>
+          ${price ?? UNKNOWN_PRICE}/month
+        </span>
       )}
     </FormHelperText>
   );

@@ -1,8 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/tabs/styles.css';
 import { ErrorBoundary } from '@sentry/react';
 import { useSnackbar } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -41,6 +39,7 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
+import { isOSMac } from './utilities/userAgent';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -292,18 +291,3 @@ const BaseApp = withDocumentTitleProvider(
     })
   )
 );
-
-export const hasOauthError = (...args: (APIError[] | Error | undefined)[]) => {
-  return args.some((eachError) => {
-    const cleanedError: JSX.Element | string = pathOr(
-      '',
-      [0, 'reason'],
-      eachError
-    );
-    return typeof cleanedError !== 'string'
-      ? false
-      : cleanedError.toLowerCase().includes('oauth');
-  });
-};
-
-export const isOSMac = navigator.userAgent.includes('Mac');

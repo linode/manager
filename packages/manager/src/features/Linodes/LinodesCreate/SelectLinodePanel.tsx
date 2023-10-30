@@ -10,7 +10,7 @@ import { Paper } from 'src/components/Paper';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -105,7 +105,7 @@ export type StyledTypographyProps = { component: string };
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: (prop) => isPropValid(['component'], prop),
+  shouldForwardProp: omittedProps(['component']),
 })<StyledTypographyProps>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
 }));

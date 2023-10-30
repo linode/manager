@@ -10,7 +10,7 @@ import { TextField } from 'src/components/TextField';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useUpdateOAuthClientMutation } from 'src/queries/accountOAuth';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   client: OAuthClient | undefined;
@@ -47,7 +47,7 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
     redirect_uri: 'A callback URL',
   };
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, error ?? undefined);
+  const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
 
   return (
     <Drawer onClose={onClose} open={open} title="Create OAuth App">

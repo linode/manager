@@ -16,9 +16,9 @@ import { APP_ROOT } from 'src/constants';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
-import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
 import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import SelectAppPanel from '../SelectAppPanel';
 import {
@@ -184,7 +184,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
       query,
     } = this.state;
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
     return (
       <React.Fragment>

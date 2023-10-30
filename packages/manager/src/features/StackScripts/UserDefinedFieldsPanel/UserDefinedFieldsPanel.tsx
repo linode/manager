@@ -1,16 +1,12 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
@@ -19,40 +15,7 @@ import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  advDescription: {
-    margin: `${theme.spacing(2)} 0`,
-  },
-  clusterNotice: {
-    paddingTop: '1rem',
-  },
-  header: {
-    '& > img': {
-      height: 60,
-      width: 60,
-    },
-    alignItems: 'center',
-    columnGap: theme.spacing(),
-    display: 'flex',
-  },
-  marketplaceSpacing: {
-    paddingBottom: theme.spacing(),
-    paddingTop: theme.spacing(),
-  },
-  root: {
-    '& > div:last-child': {
-      border: 0,
-      marginBottom: 0,
-      paddingBottom: 0,
-    },
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(3),
-  },
-  username: {
-    color: theme.color.grey1,
-  },
-}));
+import { StyledBox, StyledPaper } from './UserDefinedFieldsPanel.styles';
 
 interface Props {
   appLogo?: JSX.Element;
@@ -65,8 +28,6 @@ interface Props {
   udf_data: any;
   userDefinedFields?: UserDefinedField[];
 }
-
-type CombinedProps = Props;
 
 const renderField = (
   udf_data: any,
@@ -177,14 +138,13 @@ const renderField = (
 };
 
 const handleOpenDrawer = (
-  openDrawer: CombinedProps['openDrawer'],
+  openDrawer: Props['openDrawer'],
   selectedLabel: string
 ) => () => {
   openDrawer?.(selectedLabel);
 };
 
-const UserDefinedFieldsPanel = (props: CombinedProps) => {
-  const classes = useStyles();
+const UserDefinedFieldsPanel = (props: Props) => {
   const {
     appLogo,
     errors,
@@ -217,13 +177,11 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
   const isDrawerOpenable = openDrawer !== undefined;
 
   return (
-    <Paper
-      className={classnames(classes.root, {
-        [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
-      })}
+    <StyledPaper
       data-testid="user-defined-fields-panel"
+      isDrawerOpenable={isDrawerOpenable}
     >
-      <Box className={classes.header}>
+      <StyledBox>
         {appLogo}
         <Typography data-qa-user-defined-field-header variant="h2">
           <span>{`${selectedLabel} Setup`}</span>
@@ -231,19 +189,16 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
         {isDrawerOpenable ? (
           <AppInfo onClick={handleOpenDrawer(openDrawer, selectedLabel)} />
         ) : null}
-      </Box>
+      </StyledBox>
 
       {isCluster ? (
-        <div
-          className={classes.clusterNotice}
-          data-testid="create-cluster-notice"
-        >
+        <Box data-testid="create-cluster-notice" sx={{ paddingTop: '1rem' }}>
           <Notice variant="success">
             <strong>
               You are creating a cluster with {numberOfNodes} nodes.
             </strong>
           </Notice>
-        </div>
+        </Box>
       ) : null}
 
       {/* Required Fields */}
@@ -255,7 +210,10 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       {optionalUDFs.length !== 0 && (
         <ShowMoreExpansion defaultExpanded={true} name="Advanced Options">
           <>
-            <Typography className={classes.advDescription} variant="body1">
+            <Typography
+              sx={(theme) => ({ margin: `${theme.spacing(2)} 0px` })}
+              variant="body1"
+            >
               These fields are additional configuration options and are not
               required for creation.
             </Typography>
@@ -268,7 +226,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
           </>
         </ShowMoreExpansion>
       )}
-    </Paper>
+    </StyledPaper>
   );
 };
 

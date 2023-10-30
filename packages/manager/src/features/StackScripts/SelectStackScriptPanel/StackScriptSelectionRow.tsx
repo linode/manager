@@ -1,10 +1,7 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { WithStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { compose as recompose } from 'recompose';
 
-import { Button } from 'src/components/Button/Button';
 import { Radio } from 'src/components/Radio/Radio';
 import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
@@ -12,7 +9,16 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/stackScriptDialog';
 
-import { ClassNames, styles } from '../StackScriptRowHelpers';
+import {
+  StyledDetailsButton,
+  StyledLabel,
+  StyledSelectionButtonGrid,
+  StyledSelectionDetailsGrid,
+  StyledSelectionGrid,
+  StyledTableCell,
+  StyledTypography,
+  StyledUsernameLabel,
+} from '../CommonStackScript.styles';
 
 export interface Props {
   checked?: boolean;
@@ -31,10 +37,7 @@ interface DispatchProps {
   openStackScriptDialog: (stackScriptId: number) => void;
 }
 
-export type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  DispatchProps &
-  RenderGuardProps;
+export type CombinedProps = Props & DispatchProps & RenderGuardProps;
 
 export class StackScriptSelectionRow extends React.Component<
   CombinedProps,
@@ -43,7 +46,6 @@ export class StackScriptSelectionRow extends React.Component<
   render() {
     const {
       checked,
-      classes,
       description,
       disabled,
       disabledCheckedSelect,
@@ -60,41 +62,30 @@ export class StackScriptSelectionRow extends React.Component<
         openStackScriptDialog(stackScriptID);
       };
       return (
-        <Grid alignItems="center" className={classes.selectionGrid} container>
-          <Grid className={classes.selectionGridDetails}>
+        <StyledSelectionGrid alignItems="center" container>
+          <StyledSelectionDetailsGrid>
             <Typography variant="h3">
               {stackScriptUsername && (
-                <label
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
-                  htmlFor={`${stackScriptID}`}
-                >
+                <StyledUsernameLabel htmlFor={`${stackScriptID}`}>
                   {stackScriptUsername} /&nbsp;
-                </label>
+                </StyledUsernameLabel>
               )}
-              <label
-                className={classes.libRadioLabel}
-                htmlFor={`${stackScriptID}`}
-              >
-                {label}
-              </label>
+              <StyledLabel htmlFor={`${stackScriptID}`}>{label}</StyledLabel>
             </Typography>
             {description && (
-              <Typography className={classes.libDescription} variant="body1">
-                {description}
-              </Typography>
+              <StyledTypography variant="body1">{description}</StyledTypography>
             )}
-          </Grid>
-          <Grid className={classes.selectionGridButton}>
-            <Button
+          </StyledSelectionDetailsGrid>
+          <StyledSelectionButtonGrid>
+            <StyledDetailsButton
               buttonType="secondary"
-              className={classes.detailsButton}
               compactX
               onClick={openDialog}
             >
               Show Details
-            </Button>
-          </Grid>
-        </Grid>
+            </StyledDetailsButton>
+          </StyledSelectionButtonGrid>
+        </StyledSelectionGrid>
       );
     };
 
@@ -108,12 +99,9 @@ export class StackScriptSelectionRow extends React.Component<
             onChange={onSelect}
           />
         </TableCell>
-        <TableCell
-          className={classes.stackScriptCell}
-          data-qa-stackscript-title
-        >
+        <StyledTableCell data-qa-stackscript-title>
           {renderLabel()}
-        </TableCell>
+        </StyledTableCell>
       </TableRow>
     );
   }
@@ -130,6 +118,5 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 export default recompose<CombinedProps, Props & RenderGuardProps>(
   connect(undefined, mapDispatchToProps),
-  RenderGuard,
-  withStyles(styles)
+  RenderGuard
 )(StackScriptSelectionRow);

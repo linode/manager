@@ -10,7 +10,7 @@ import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
@@ -28,7 +28,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
 import {

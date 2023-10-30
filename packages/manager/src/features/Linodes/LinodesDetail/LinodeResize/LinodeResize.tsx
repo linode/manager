@@ -32,7 +32,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { getPermissionsForLinode } from 'src/utilities/linodes';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';

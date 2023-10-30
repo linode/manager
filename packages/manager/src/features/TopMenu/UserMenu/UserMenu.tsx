@@ -2,7 +2,7 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 

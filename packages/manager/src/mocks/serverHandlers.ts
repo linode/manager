@@ -354,7 +354,11 @@ const aglb = [
   }),
   // Routes
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(routeFactory.buildList(1))));
+    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+    if (headers['+or']) {
+      return res(ctx.json(makeResourcePage(routeFactory.buildList(2))));
+    }
+    return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
   }),
   rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));
@@ -362,15 +366,24 @@ const aglb = [
   rest.put('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     const id = Number(req.params.routeId);
     const body = req.body as any;
-    return res(ctx.json(createRouteFactory.build({ id, ...body })));
+    return res(
+      ctx.delay(1000),
+      ctx.json(createRouteFactory.build({ id, ...body }))
+    );
   }),
   rest.delete('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Service Targets
   rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
+    const service_target = serviceTargetFactory.build({
+      ca_certificate: 'certificate-1',
+      load_balancing_policy: 'random',
+    });
     const service_targets = serviceTargetFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(service_targets)));
+    return res(
+      ctx.json(makeResourcePage([service_target, ...service_targets]))
+    );
   }),
   rest.post('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));
@@ -1083,7 +1096,20 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/account/users', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([accountUserFactory.build()])));
+    const accountUsers = [
+      accountUserFactory.build({
+        last_login: { status: 'failed', login_datetime: '2023-10-16T17:04' },
+        tfa_enabled: true,
+      }),
+      accountUserFactory.build({
+        last_login: {
+          status: 'successful',
+          login_datetime: '2023-10-06T12:04',
+        },
+      }),
+      accountUserFactory.build({ last_login: null }),
+    ];
+    return res(ctx.json(makeResourcePage(accountUsers)));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     return res(ctx.json(profileFactory.build()));

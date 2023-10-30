@@ -9,7 +9,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import SupportTicketDetail from './SupportTicketDetail';
+import { SupportTicketDetail } from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
   it('should display a loading spinner', () => {

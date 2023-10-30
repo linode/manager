@@ -5,6 +5,7 @@ import * as React from 'react';
 import {
   accountFactory,
   linodeFactory,
+  subnetAssignedLinodeDataFactory,
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
@@ -40,7 +41,7 @@ describe('Linode Entity Detail', () => {
 
     const subnet = subnetFactory.build({
       id: 2,
-      linodes: [5],
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: 5 })],
     });
 
     const vpc = vpcFactory.build({
@@ -81,7 +82,7 @@ describe('Linode Entity Detail', () => {
 
     const subnet = subnetFactory.build({
       id: 4,
-      linodes: [85],
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: 85 })],
     });
 
     const vpc = vpcFactory.build({
@@ -116,7 +117,7 @@ describe('Linode Entity Detail', () => {
     const subnet = subnetFactory.build({
       id: 4,
       label: '1st-subnet',
-      linodes: [linode.id],
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: linode.id })],
     });
 
     const _vpcs = vpcFactory.buildList(3);

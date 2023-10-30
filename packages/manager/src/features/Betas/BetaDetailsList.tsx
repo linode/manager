@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4';
 import { AccountBeta } from '@linode/api-v4/lib/account';
 import { Beta } from '@linode/api-v4/lib/betas';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';

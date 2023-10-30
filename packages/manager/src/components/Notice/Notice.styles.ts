@@ -28,6 +28,7 @@ export const useStyles = makeStyles<
     [`& .${classes.noticeText}`]: {
       fontFamily: theme.font.normal,
     },
+    backgroundColor: theme.bg.bgPaper,
   },
   info: {
     [`&.${classes.important}`]: {
@@ -56,11 +57,7 @@ export const useStyles = makeStyles<
     [`& .${classes.error}`]: {
       borderLeftColor: theme.color.red,
     },
-    [`& .${classes.important}`]: {
-      backgroundColor: theme.bg.bgPaper,
-    },
     alignItems: 'center',
-    backgroundColor: theme.bg.bgPaper,
     borderRadius: 1,
     display: 'flex',
     fontSize: '1rem',

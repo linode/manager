@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 
 import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 interface DropZoneClassProps {
   dropzoneDisabled: boolean;
@@ -13,11 +13,12 @@ interface DropZoneClassProps {
 
 export const StyledDropZoneDiv = styled('div', {
   label: 'StyledDropZoneDiv',
-  shouldForwardProp: (prop) =>
-    isPropValid(
-      ['dropzoneDisabled', 'isDragActive', 'isDragAccept', 'isDragReject'],
-      prop
-    ),
+  shouldForwardProp: omittedProps([
+    'dropzoneDisabled',
+    'isDragActive',
+    'isDragAccept',
+    'isDragReject',
+  ]),
 })<DropZoneClassProps>(({ theme, ...props }) => ({
   backgroundColor: 'transparent',
   borderColor: theme.palette.primary.main,
@@ -68,7 +69,7 @@ export const StyledFileUploadsDiv = styled('div', {
 
 export const StyledDropZoneContentDiv = styled('div', {
   label: 'StyledDropZoneContentDiv',
-  shouldForwardProp: (prop) => isPropValid(['uploadZoneActive'], prop),
+  shouldForwardProp: omittedProps(['uploadZoneActive']),
 })<{
   uploadZoneActive: boolean;
 }>(({ theme, ...props }) => ({

@@ -5,12 +5,12 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   onClose: () => void;
@@ -45,7 +45,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     const { onClose, open } = this.props;
     const { email, errors, restricted, submitting, username } = this.state;
 
-    const hasErrorFor = getAPIErrorsFor(
+    const hasErrorFor = getAPIErrorFor(
       { email: 'Email', username: 'Username' },
       errors
     );

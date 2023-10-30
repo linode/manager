@@ -1,7 +1,7 @@
-import { createLinode, getLinodeConfigs } from '@linode/api-v4';
+import { createLinode, Devices, getLinodeConfigs } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { SimpleBackoffMethod } from 'support/util/backoff';
-import { pollLinodeStatus } from 'support/util/polling';
+import { pollLinodeStatus, pollLinodeDiskStatuses } from 'support/util/polling';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -54,6 +54,18 @@ export const createLinodeAndGetConfig = async ({
       'running',
       new SimpleBackoffMethod(5000, {
         initialDelay: 15000,
+        maxAttempts: 25,
+      })
+    ));
+
+  // If we don't wait for the Linode to boot, we wait for the disks to be ready.
+  // Wait 7.5 seconds, then poll the Linode disks every 5 seconds until they are ready.
+  !waitForLinodeToBeRunning &&
+    (await pollLinodeDiskStatuses(
+      linode.id,
+      'ready',
+      new SimpleBackoffMethod(5000, {
+        initialDelay: 7500,
         maxAttempts: 25,
       })
     ));

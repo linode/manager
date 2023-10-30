@@ -1,17 +1,22 @@
-import { WithStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 
 import { Hidden } from 'src/components/Hidden';
-import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { StackScriptActionMenu } from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
-import { ClassNames, styles } from '../StackScriptRowHelpers';
+import {
+  StyledImagesTableCell,
+  StyledLabelSpan,
+  StyledLink,
+  StyledRowTableCell,
+  StyledTableRow,
+  StyledTitleTableCell,
+  StyledTitleTypography,
+  StyledTypography,
+  StyledUsernameSpan,
+} from '../CommonStackScript.styles';
 
 export interface Props {
   canAddLinodes: boolean;
@@ -33,14 +38,11 @@ export interface Props {
   updated: string;
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
-
-export const StackScriptRow: React.FC<CombinedProps> = (props) => {
+export const StackScriptRow = (props: Props) => {
   const {
     canAddLinodes,
     canModify,
     category,
-    classes,
     deploymentsTotal,
     description,
     images,
@@ -58,36 +60,28 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   const renderLabel = () => {
     return (
       <>
-        <Link className={classes.link} to={`/stackscripts/${stackScriptID}`}>
-          <Typography className={classes.libTitle} variant="h3">
+        <StyledLink to={`/stackscripts/${stackScriptID}`}>
+          <StyledTitleTypography variant="h3">
             {stackScriptUsername && (
-              <span
-                className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
-              >
+              <StyledUsernameSpan>
                 {stackScriptUsername} /&nbsp;
-              </span>
+              </StyledUsernameSpan>
             )}
-            <span className={classes.libRadioLabel}>{label}</span>
-          </Typography>
-        </Link>
+            <StyledLabelSpan>{label}</StyledLabelSpan>
+          </StyledTitleTypography>
+        </StyledLink>
         {description && (
-          <Typography className={classes.libDescription} variant="body1">
-            {description}
-          </Typography>
+          <StyledTypography variant="body1">{description}</StyledTypography>
         )}
       </>
     );
   };
 
   return (
-    <TableRow
-      ariaLabel={label}
-      className={classes.row}
-      data-qa-table-row={label}
-    >
-      <TableCell className={classes.libTitle} data-qa-stackscript-title>
+    <StyledTableRow ariaLabel={label} data-qa-table-row={label}>
+      <StyledTitleTableCell data-qa-stackscript-title>
         {renderLabel()}
-      </TableCell>
+      </StyledTitleTableCell>
       <TableCell>
         <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
       </TableCell>
@@ -97,9 +91,9 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell className={classes.images} data-qa-stackscript-images>
+        <StyledImagesTableCell data-qa-stackscript-images>
           {images.includes('any/all') ? 'Any/All' : images.join(',  ')}
-        </TableCell>
+        </StyledImagesTableCell>
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.
         <Hidden lgDown>
@@ -108,7 +102,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
           </TableCell>
         </Hidden>
       )}
-      <TableCell actionCell className={classes.row}>
+      <StyledRowTableCell actionCell>
         <StackScriptActionMenu
           canAddLinodes={canAddLinodes}
           canModify={canModify}
@@ -120,12 +114,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
           triggerDelete={triggerDelete}
           triggerMakePublic={triggerMakePublic}
         />
-      </TableCell>
-    </TableRow>
+      </StyledRowTableCell>
+    </StyledTableRow>
   );
 };
-
-export default recompose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withStyles(styles)
-)(StackScriptRow);

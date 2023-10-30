@@ -13,7 +13,9 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
 const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
-const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
+const StackScriptCreate = React.lazy(
+  () => import('./StackScriptCreate/StackScriptCreate')
+);
 
 export const StackScripts = () => {
   const { search } = useLocation();
