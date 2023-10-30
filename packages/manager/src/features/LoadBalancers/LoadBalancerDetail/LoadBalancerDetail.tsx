@@ -32,8 +32,8 @@ const LoadBalancerServiceTargets = React.lazy(() =>
   }))
 );
 const LoadBalancerRoutes = React.lazy(() =>
-  import('./Routes/RoutesTable').then((module) => ({
-    default: module.RoutesTable,
+  import('./LoadBalancerRoutes').then((module) => ({
+    default: module.LoadBalancerRoutes,
   }))
 );
 

@@ -1,14 +1,13 @@
-import { Stack } from 'src/components/Stack';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 
 import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
 import { InputLabel } from 'src/components/InputLabel';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -23,15 +22,29 @@ import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
+import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 
 interface Props {
   configuration: Configuration;
   loadbalancerId: number;
 }
 
+function getConfigurationPayloadFromConfiguration(
+  configuration: Configuration
+) {
+  return {
+    certificates: configuration.certificates,
+    label: configuration.label,
+    port: configuration.port,
+    protocol: configuration.protocol,
+    routes: configuration.routes.map((r) => r.id),
+  };
+}
+
 export const ConfigurationAccordion = (props: Props) => {
   const { configuration, loadbalancerId } = props;
   const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
+  const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
@@ -42,7 +55,7 @@ export const ConfigurationAccordion = (props: Props) => {
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: configuration,
+    initialValues: getConfigurationPayloadFromConfiguration(configuration),
     onSubmit(values) {
       mutateAsync(values);
     },
@@ -141,18 +154,9 @@ export const ConfigurationAccordion = (props: Props) => {
             />
           </Stack>
           <Stack maxWidth="600px">
-            <Stack
-              alignItems="center"
-              direction="row"
-              justifyContent="space-between"
-            >
-              <Stack alignItems="center" direction="row">
-                <InputLabel sx={{ marginBottom: 0 }}>
-                  TLS Certificates
-                </InputLabel>
-                <TooltipIcon status="help" text="OMG!" />
-              </Stack>
-              <Button>Upload Certificate</Button>
+            <Stack alignItems="center" direction="row">
+              <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
+              <TooltipIcon status="help" text="OMG!" />
             </Stack>
             <CertificateTable
               certificates={formik.values.certificates}
@@ -173,19 +177,47 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
+          <Stack direction="row" spacing={2}>
+            <Button
+              buttonType="outlined"
+              onClick={() => setIsAddRouteDrawerOpen(true)}
+            >
+              Add Route
+            </Button>
+            <TextField
+              hideLabel
+              label={`Filter ${configuration.label}'s Routes`}
+              placeholder="Filter"
+              sx={{ minWidth: 300 }}
+            />
+          </Stack>
           <RoutesTable configuredRoutes={configuration.routes} />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
-        <ActionsPanel
-          primaryButtonProps={{
-            label: 'Save Configuration',
-            loading: isLoading,
-            type: 'submit',
+        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+          <Button
+            buttonType="secondary"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
+            Delete Configuration
+          </Button>
+          <Button
+            buttonType="primary"
+            disabled={!formik.dirty}
+            loading={isLoading}
+            type="submit"
+          >
+            Save Configuration
+          </Button>
+        </Stack>
+        <AddRouteDrawer
+          onAdd={(route) => {
+            formik.setFieldValue('routes', [...formik.values.routes, route]);
           }}
-          secondaryButtonProps={{
-            label: 'Delete Configuration',
-            onClick: () => setIsDeleteDialogOpen(true),
-          }}
+          configuration={configuration}
+          loadbalancerId={loadbalancerId}
+          onClose={() => setIsAddRouteDrawerOpen(false)}
+          open={isAddRouteDrawerOpen}
         />
         <ApplyCertificatesDrawer
           loadbalancerId={loadbalancerId}

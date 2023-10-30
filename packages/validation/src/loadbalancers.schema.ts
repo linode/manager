@@ -151,3 +151,16 @@ export const UpdateRouteSchema = object({
     otherwise: (o) => o.of(HTTPRuleSchema),
   }),
 });
+
+export const UpdateConfigurationSchema = object({
+  label: string().min(1),
+  port: number(),
+  protocol: string().oneOf(['tcp', 'http', 'https']),
+  certificates: array().of(
+    object({
+      hostname: string().required(),
+      id: number().required(),
+    })
+  ),
+  routes: array().of(number()),
+});

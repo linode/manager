@@ -104,6 +104,14 @@ export interface Configuration {
   routes: { id: number; label: string }[];
 }
 
+export type UpdateConfigurationPayload = Partial<{
+  label: string;
+  port: number;
+  protocol: Protocol;
+  certificates: CertificateConfig[];
+  routes: number[];
+}>;
+
 export interface CertificateConfig {
   hostname: string;
   id: number;

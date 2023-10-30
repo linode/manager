@@ -1,30 +1,24 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { Hidden, IconButton } from '@mui/material';
-import { Stack } from 'src/components/Stack';
+import { Hidden } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import {
   CollapsibleTable,
   TableItem,
 } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
 import { RulesTable } from '../RulesTable';
-import { CreateRouteDrawer } from './CreateRouteDrawer';
 import { DeleteRouteDialog } from './DeleteRouteDialog';
 import { DeleteRuleDialog } from './DeleteRuleDialog';
 import { EditRouteDrawer } from './EditRouteDrawer';
@@ -36,14 +30,15 @@ const PREFERENCE_KEY = 'loadbalancer-routes';
 
 interface Props {
   configuredRoutes?: Configuration['routes'];
+  filter?: Filter;
 }
 
-export const RoutesTable = ({ configuredRoutes }: Props) => {
+export const RoutesTable = (props: Props) => {
+  const { configuredRoutes, filter: additionalFilter } = props;
+
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
-  const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleteRuleDialogOpen, setIsDeleteRuleDialogOpen] = useState(false);
   const [selectedRouteId, setSelectedRouteId] = useState<number>();
@@ -64,11 +59,6 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
     ['+order_by']: orderBy,
   };
 
-  // If the user types in a search query, API filter by the label.
-  if (query) {
-    filter['label'] = { '+contains': query };
-  }
-
   /**
    * If configuredRoutes is passed, it filters the configured routes form API
    *  Otherwise, it fetches routes without filter in the routes table.
@@ -83,7 +73,7 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    { ...filter, ...additionalFilter }
   );
 
   const selectedRoute = routes?.data?.find(
@@ -135,20 +125,13 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
             <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>{' '}
           </Hidden>
           <TableCell actionCell>
-            {/**
-             * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.
-             */}
             <InlineMenuAction
               actionText="Add Rule"
               onClick={() => onAddRule(route)}
             />
-            {/**
-             * TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets.
-             */}
             <ActionMenu
               actionsList={[
                 { onClick: () => onEditRoute(route), title: 'Edit' },
-                { onClick: () => null, title: 'Clone Route' },
                 { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
               ariaLabel={`Action Menu for Route ${route.label}`}
@@ -204,50 +187,6 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
 
   return (
     <>
-      <Stack
-        alignItems="flex-end"
-        direction="row"
-        flexWrap="wrap"
-        gap={2}
-        justifyContent="space-between"
-        mb={2}
-        mt={1.5}
-      >
-        <TextField
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="Clear"
-                  onClick={() => setQuery('')}
-                  size="small"
-                  sx={{ padding: 'unset' }}
-                >
-                  <CloseIcon
-                    color="inherit"
-                    sx={{ color: '#aaa !important' }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          hideLabel
-          label="Filter"
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filter"
-          style={{ minWidth: '320px' }}
-          value={query}
-        />
-        {/**
-         * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
-         */}
-        <Button
-          buttonType="primary"
-          onClick={() => setIsCreateDrawerOpen(true)}
-        >
-          Create Route
-        </Button>
-      </Stack>
       <CollapsibleTable
         TableItems={getTableItems()}
         TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Routes'} />}
@@ -275,11 +214,6 @@ export const RoutesTable = ({ configuredRoutes }: Props) => {
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
         route={selectedRoute}
-      />
-      <CreateRouteDrawer
-        loadbalancerId={Number(loadbalancerId)}
-        onClose={() => setIsCreateDrawerOpen(false)}
-        open={isCreateDrawerOpen}
       />
       <DeleteRouteDialog
         loadbalancerId={Number(loadbalancerId)}
