@@ -23,6 +23,7 @@ describe('VPC navigation', () => {
 
     cy.visitWithLogin('/linodes');
     cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.findByTestId('open-nav-menu').click();
 
     ui.nav.findItemByTitle('VPC').should('be.visible').click();
 
@@ -41,6 +42,7 @@ describe('VPC navigation', () => {
 
     cy.visitWithLogin('/linodes');
     cy.wait(['@getFeatureFlags', '@getClientStream']);
+    // cy.findByTestId('open-nav-menu').click();
 
     ui.nav.find().within(() => {
       cy.findByText('VPC').should('not.exist');

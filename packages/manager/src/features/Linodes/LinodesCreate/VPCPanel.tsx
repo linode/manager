@@ -212,14 +212,23 @@ export const VPCPanel = (props: VPCPanelProps) => {
           {from === 'linodeCreate' &&
             (regionSupportsVPCs ? (
               <LinkButton
+                style={{
+                  marginBottom: 16,
+                  marginTop: 12,
+                  maxWidth: '73px',
+                  textAlign: 'left',
+                }}
                 onClick={() => setIsVPCCreateDrawerOpen(true)}
-                style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
               >
                 Create VPC
               </LinkButton>
-            ) : (
+            ) : region ? (
               <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
                 VPC is not available in the selected region.
+              </Typography>
+            ) : (
+              <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
+                Please select a region for your Linode.
               </Typography>
             ))}
 

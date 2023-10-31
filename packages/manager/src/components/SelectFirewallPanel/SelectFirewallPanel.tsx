@@ -1,8 +1,8 @@
 import { Firewall } from '@linode/api-v4';
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
@@ -72,8 +72,13 @@ export const SelectFirewallPanel = (props: Props) => {
           value={selectedFirewall}
         />
         <LinkButton
+          style={{
+            marginBottom: 16,
+            marginTop: 12,
+            maxWidth: '95px',
+            textAlign: 'left',
+          }}
           onClick={handleCreateFirewallClick}
-          style={{ marginBottom: 16, marginTop: 12, textAlign: 'left' }}
         >
           Create Firewall
         </LinkButton>

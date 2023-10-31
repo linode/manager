@@ -53,9 +53,9 @@ export const VPCSpecificContent = (props: Props) => {
         disabled={disabled}
         errorText={errors.description}
         label="Description"
+        maxRows={1}
         multiline
         optional
-        sx={{ ...(isDrawer && { maxHeight: '58px' }) }}
         value={values.description}
       />
     </>
