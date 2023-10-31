@@ -89,6 +89,30 @@ describe('Support Ticket Detail', () => {
     ).toBeInTheDocument();
   });
 
+  it('should display an entity in the status details if the ticket has one', async () => {
+    const mockEntity = {
+      id: 1,
+      label: 'my-linode-entity',
+      type: 'linode',
+      url: '/',
+    };
+    server.use(
+      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+        const ticket = supportTicketFactory.build({
+          entity: mockEntity,
+          id: req.params.ticketId,
+        });
+        return res(ctx.json(ticket));
+      })
+    );
+    render(wrapWithTheme(<SupportTicketDetail />));
+    const entity = await screen.findByText(mockEntity.label, { exact: false });
+    const entityTextLink = await screen.findByRole('link');
+
+    expect(entity).toBeInTheDocument();
+    expect(entityTextLink).toBeInTheDocument();
+  });
+
   it('should display replies', async () => {
     server.use(
       rest.get('*/support/tickets/:ticketId/replies', (req, res, ctx) => {
