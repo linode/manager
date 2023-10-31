@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/styles';
 import React from 'react';
 
 import { Grid } from '../Grid';
@@ -7,13 +6,17 @@ import { Typography } from '../Typography';
 import { SummaryItem as Props } from './CheckoutSummary';
 
 export const SummaryItem = ({ details, title }: Props) => {
-  const theme = useTheme();
-
   return (
     <StyledGrid item>
       {title ? (
         <>
-          <Typography component="span" fontFamily={theme.font.bold}>
+          <Typography
+            sx={(theme) => ({
+              fontFamily: theme.font.bold,
+              fontWeight: 'bold',
+            })}
+            component="span"
+          >
             {title}
           </Typography>{' '}
         </>

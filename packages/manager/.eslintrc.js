@@ -109,9 +109,10 @@ module.exports = {
     'scanjs-rules',
     'xss',
     'perfectionist',
-    'eslint-plugin-local-rules',
+    '@linode/eslint-plugin-cloud-manager',
   ],
   rules: {
+    '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -127,8 +128,8 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     'array-callback-return': 'error',
     'comma-dangle': 'off', // Prettier and TS both handle and check for this one
-    curly: 'warn',
     // radix: Codacy considers it as an error, i put it here to fix it before push
+    curly: 'warn',
     // See: https://www.w3.org/TR/graphics-aria-1.0/
     'jsx-a11y/aria-role': [
       'error',
@@ -270,7 +271,6 @@ module.exports = {
         htmlVariableRules: ['__html', 'sanitize/i'],
       },
     ],
-    'local-rules/no-custom-fontWeight': 'error',
   },
   settings: {
     react: {

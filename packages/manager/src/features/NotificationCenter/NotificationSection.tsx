@@ -1,6 +1,5 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -142,7 +141,6 @@ interface BodyProps {
 
 const ContentBody = React.memo((props: BodyProps) => {
   const { classes } = useStyles();
-  const theme = useTheme();
 
   const { content, count, emptyMessage, header, loading } = props;
 
@@ -172,11 +170,11 @@ const ContentBody = React.memo((props: BodyProps) => {
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
           <StyledLinkButton
-            sx={{
+            sx={(theme) => ({
               color: 'primary.main',
               fontFamily: theme.font.bold,
               textDecoration: 'none !important',
-            }}
+            })}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
             onClick={() => setShowAll(!showAll)}
