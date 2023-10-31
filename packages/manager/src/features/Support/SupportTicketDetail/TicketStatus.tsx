@@ -5,6 +5,7 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useProfile } from 'src/queries/profile';
+import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
@@ -21,7 +22,7 @@ export const TicketStatus = (props: Props) => {
   const formattedDate = formatDate(updated, {
     timezone: profile?.timezone,
   });
-  const statusText = status === 'closed' ? 'Closed' : 'Last updated';
+  const statusUpdateText = status === 'closed' ? 'Closed' : 'Last updated';
 
   const renderEntityLabel = () => {
     if (!entity) {
@@ -57,11 +58,11 @@ export const TicketStatus = (props: Props) => {
           status={status === 'closed' ? 'inactive' : 'active'}
           sx={{ alignSelf: 'center' }}
         />
-        {statusText === 'Closed' ? statusText : 'Open'}
+        {capitalize(status)}
       </Typography>
       &nbsp;
       <Typography>
-        | {statusText} by {updated_by} at {formattedDate}
+        | {statusUpdateText} by {updated_by} at {formattedDate}
       </Typography>
       &nbsp;
       {renderEntityLabel()}
