@@ -171,6 +171,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       setSelectedLinodes((prevSelectedLinodes) =>
         prevSelectedLinodes.filter((option) => option.id !== optionToRemove.id)
       );
+      setConfigInterfacesToDelete((prevInterfacesToDelete) =>
+        prevInterfacesToDelete.filter(
+          (option) => option.linodeId !== optionToRemove.id
+        )
+      );
     };
 
     const processUnassignLinodes = async () => {
