@@ -191,7 +191,6 @@ export const LoadBalancerServiceTargets = () => {
                       onClick: () => handleEditServiceTarget(serviceTarget),
                       title: 'Edit',
                     },
-                    { onClick: () => null, title: 'Clone Service Target' },
                     {
                       onClick: () => handleDeleteServiceTarget(serviceTarget),
                       title: 'Delete',

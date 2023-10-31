@@ -81,6 +81,12 @@ export const timeUnitOptions = Object.keys(timeUnitFactorMap).map(
 
 export const defaultTTL = timeUnitFactorMap['hour'] * 8;
 
+/**
+ * Routes can be `http` or `tcp`.
+ * Configurations can be `http`, `https`, or `tcp`.
+ *
+ * Use this function to get the corresponding Route protocol from a Configuration
+ */
 export function getRouteProtocolFromConfiguration(
   configuration: Configuration
 ): Route['protocol'] {
