@@ -36,8 +36,7 @@ describe('Support Ticket Detail', () => {
     expect(await findByText(/TEST Support Ticket body/i)).toBeInTheDocument();
   });
 
-  // TODO: revisit this, pending UX
-  it.skip("should display a 'new' icon and 'updated by' messaging", async () => {
+  it("should display a 'new' status and 'updated by' messaging", async () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
@@ -49,7 +48,25 @@ describe('Support Ticket Detail', () => {
       })
     );
     render(wrapWithTheme(<SupportTicketDetail />));
-    expect(await screen.findByText(/new/)).toBeInTheDocument();
+    expect(await screen.findByText(/New/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/updated by test-account/i)
+    ).toBeInTheDocument();
+  });
+
+  it("should display an 'open' status and 'updated by' messaging", async () => {
+    server.use(
+      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+        const ticket = supportTicketFactory.build({
+          id: req.params.ticketId,
+          status: 'open',
+          updated_by: 'test-account',
+        });
+        return res(ctx.json(ticket));
+      })
+    );
+    render(wrapWithTheme(<SupportTicketDetail />));
+    expect(await screen.findByText(/Open/)).toBeInTheDocument();
     expect(
       await screen.findByText(/updated by test-account/i)
     ).toBeInTheDocument();
