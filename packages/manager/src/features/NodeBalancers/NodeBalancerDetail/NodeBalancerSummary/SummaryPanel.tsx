@@ -2,10 +2,11 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { Paper } from 'src/components/Paper';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
@@ -20,10 +21,12 @@ export const SummaryPanel = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
   const { data: regions } = useRegionsQuery();
-
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  const linkText = attachedFirewallData?.data[0]?.label;
+  const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
@@ -90,6 +93,16 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
+      {displayFirewallLink ? (
+        <StyledSummarySection>
+          <StyledTitle data-qa-title variant="h3">
+            Firewall
+          </StyledTitle>
+          <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+            {linkText}
+          </Link>
+        </StyledSummarySection>
+      ) : null}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           IP Addresses

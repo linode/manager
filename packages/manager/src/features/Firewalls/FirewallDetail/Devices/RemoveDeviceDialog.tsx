@@ -8,29 +8,22 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { queryKey as nodeBalancerQueryKey } from 'src/queries/nodebalancers';
 
 export interface Props {
   device: FirewallDevice | undefined;
   firewallId: number;
   firewallLabel: string;
-  linodeId?: number;
   onClose: () => void;
-  onLinodeNetworkTab?: boolean;
+  onService?: boolean;
   open: boolean;
 }
 
 export const RemoveDeviceDialog = React.memo((props: Props) => {
-  const {
-    device,
-    firewallId,
-    firewallLabel,
-    linodeId,
-    onClose,
-    onLinodeNetworkTab,
-    open,
-  } = props;
+  const { device, firewallId, firewallLabel, onClose, onService, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
+  const deviceType = device?.entity.type;
 
   const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
@@ -39,45 +32,49 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const queryClient = useQueryClient();
 
+  const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
+
   const onDelete = async () => {
     await mutateAsync();
-    enqueueSnackbar(`Device ${device?.entity.label} successfully removed`, {
+    const toastMessage = onService
+      ? `Firewall ${firewallLabel} successfully unassigned`
+      : `${deviceDialog} ${device?.entity.label} successfully removed`;
+    enqueueSnackbar(toastMessage, {
       variant: 'success',
     });
 
     if (error) {
       enqueueSnackbar(error[0].reason, { variant: 'error' });
-    } else {
-      enqueueSnackbar(`${device?.entity.label} removed successfully.`, {
-        variant: 'success',
-      });
     }
+
+    const querykey =
+      deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
 
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
     queryClient.invalidateQueries([
-      linodesQueryKey,
-      'linode',
-      linodeId,
+      querykey,
+      deviceType,
+      device?.entity.id,
       'firewalls',
     ]);
 
     onClose();
   };
 
-  const dialogTitle = onLinodeNetworkTab
+  const dialogTitle = onService
     ? `Unassign Firewall ${firewallLabel}?`
-    : `Remove ${device?.entity.label} from ${firewallLabel}?`;
+    : `Remove ${deviceDialog} ${device?.entity.label}?`;
 
   const confirmationText = (
     <Typography>
       Are you sure you want to{' '}
-      {onLinodeNetworkTab
-        ? 'unassign this Firewall?'
-        : `remove ${device?.entity.label} from ${firewallLabel}?`}
+      {onService
+        ? `unassign Firewall ${firewallLabel} from ${deviceDialog} ${device?.entity.label}?`
+        : `remove ${deviceDialog} ${device?.entity.label} from Firewall ${firewallLabel}?`}
     </Typography>
   );
 
-  const primaryButtonText = onLinodeNetworkTab ? 'Unassign Firewall' : 'Remove';
+  const primaryButtonText = onService ? 'Unassign Firewall' : 'Remove';
 
   return (
     <ConfirmationDialog

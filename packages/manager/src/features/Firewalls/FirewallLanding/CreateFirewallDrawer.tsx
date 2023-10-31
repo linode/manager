@@ -10,6 +10,7 @@ import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -20,8 +21,10 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -64,6 +67,7 @@ export const CreateFirewallDrawer = React.memo(
     const { mutateAsync } = useCreateFirewall();
 
     const { enqueueSnackbar } = useSnackbar();
+    const queryClient = useQueryClient();
 
     const {
       errors,
@@ -107,6 +111,34 @@ export const CreateFirewallDrawer = React.memo(
         mutateAsync(payload)
           .then((response) => {
             setSubmitting(false);
+            enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
+              variant: 'success',
+            });
+
+            // Invalidate for Linodes
+            if (payload.devices?.linodes) {
+              payload.devices.linodes.forEach((linodeId) => {
+                queryClient.invalidateQueries([
+                  linodesQueryKey,
+                  'linode',
+                  linodeId,
+                  'firewalls',
+                ]);
+              });
+            }
+
+            // Invalidate for NodeBalancers
+            if (payload.devices?.nodebalancers) {
+              payload.devices.nodebalancers.forEach((nodebalancerId) => {
+                queryClient.invalidateQueries([
+                  nodebalancerQueryKey,
+                  'nodebalancer',
+                  nodebalancerId,
+                  'firewalls',
+                ]);
+              });
+            }
+
             if (onFirewallCreated) {
               onFirewallCreated(response);
             }
