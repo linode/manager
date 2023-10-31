@@ -110,7 +110,6 @@ export const NodeBalancerFirewalls = (props: Props) => {
       </Table>
       <RemoveDeviceDialog
         device={deviceToBeRemoved}
-        deviceId={nodeBalancerID}
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}

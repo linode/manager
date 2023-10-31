@@ -68,7 +68,6 @@ export const CreateFirewallDrawer = React.memo(
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
-    // const deviceType = device?.entity.type;
 
     const {
       errors,
@@ -108,8 +107,6 @@ export const CreateFirewallDrawer = React.memo(
         ) {
           payload.rules.outbound = undefined;
         }
-
-        // const querykey = deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
 
         mutateAsync(payload)
           .then((response) => {

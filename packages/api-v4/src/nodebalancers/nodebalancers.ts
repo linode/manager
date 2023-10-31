@@ -130,5 +130,3 @@ export const getNodeBalancerFirewalls = (
     setXFilter(filter),
     setParams(params)
   );
-
-// nodebalancers/446329/firewalls

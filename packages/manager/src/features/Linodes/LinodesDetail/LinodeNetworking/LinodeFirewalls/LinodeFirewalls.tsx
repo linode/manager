@@ -100,7 +100,6 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
       </Table>
       <RemoveDeviceDialog
         device={deviceToBeRemoved}
-        deviceId={linodeID}
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}

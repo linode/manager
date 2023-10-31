@@ -12,7 +12,6 @@ import { queryKey as nodeBalancerQueryKey } from 'src/queries/nodebalancers';
 
 export interface Props {
   device: FirewallDevice | undefined;
-  deviceId?: number;
   firewallId: number;
   firewallLabel: string;
   onClose: () => void;
@@ -21,15 +20,7 @@ export interface Props {
 }
 
 export const RemoveDeviceDialog = React.memo((props: Props) => {
-  const {
-    device,
-    deviceId,
-    firewallId,
-    firewallLabel,
-    onClose,
-    onService,
-    open,
-  } = props;
+  const { device, firewallId, firewallLabel, onClose, onService, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
   const deviceType = device?.entity.type;
@@ -63,7 +54,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     queryClient.invalidateQueries([
       querykey,
       deviceType,
-      deviceId,
+      device?.entity.id,
       'firewalls',
     ]);
 

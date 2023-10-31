@@ -176,7 +176,6 @@ export const FirewallDeviceLanding = React.memo(
         )}
         <RemoveDeviceDialog
           device={selectedDevice}
-          deviceId={selectedDevice?.entity.id}
           firewallId={firewallID}
           firewallLabel={firewallLabel}
           onClose={() => setIsRemoveDeviceDialogOpen(false)}
