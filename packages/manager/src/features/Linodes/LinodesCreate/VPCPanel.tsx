@@ -9,6 +9,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { Paper } from 'src/components/Paper';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -211,25 +212,19 @@ export const VPCPanel = (props: VPCPanelProps) => {
           )}
           {from === 'linodeCreate' &&
             (regionSupportsVPCs ? (
-              <LinkButton
-                style={{
-                  marginBottom: 16,
-                  marginTop: 12,
-                  maxWidth: '73px',
-                  textAlign: 'left',
-                }}
-                onClick={() => setIsVPCCreateDrawerOpen(true)}
-              >
-                Create VPC
-              </LinkButton>
-            ) : region ? (
-              <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
-                VPC is not available in the selected region.
-              </Typography>
+              <StyledLinkButtonBox>
+                <LinkButton onClick={() => setIsVPCCreateDrawerOpen(true)}>
+                  Create VPC
+                </LinkButton>
+              </StyledLinkButtonBox>
             ) : (
-              <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
-                Please select a region for your Linode.
-              </Typography>
+              region && (
+                <Typography
+                  sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}
+                >
+                  VPC is not available in the selected region.
+                </Typography>
+              )
             ))}
 
           {selectedVPCId !== -1 && regionSupportsVPCs && (

@@ -1,6 +1,8 @@
 import { Firewall } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
@@ -71,17 +73,11 @@ export const SelectFirewallPanel = (props: Props) => {
           placeholder={'None'}
           value={selectedFirewall}
         />
-        <LinkButton
-          style={{
-            marginBottom: 16,
-            marginTop: 12,
-            maxWidth: '95px',
-            textAlign: 'left',
-          }}
-          onClick={handleCreateFirewallClick}
-        >
-          Create Firewall
-        </LinkButton>
+        <StyledLinkButtonBox>
+          <LinkButton onClick={handleCreateFirewallClick}>
+            Create Firewall
+          </LinkButton>
+        </StyledLinkButtonBox>
         <CreateFirewallDrawer
           label={createFirewallLabel}
           onClose={() => setIsDrawerOpen(false)}
@@ -92,3 +88,12 @@ export const SelectFirewallPanel = (props: Props) => {
     </Paper>
   );
 };
+
+export const StyledLinkButtonBox = styled(Box, {
+  label: 'StyledLinkButtonBox',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-start',
+  marginBottom: theme.spacing(2),
+  marginTop: '12px',
+}));
