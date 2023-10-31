@@ -1,5 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
+import { Linode } from '@linode/api-v4';
+import {
+  CreateFirewallPayload,
+  Firewall,
+  FirewallDeviceEntityType,
+} from '@linode/api-v4/lib/firewalls';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
@@ -14,10 +19,10 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
@@ -35,7 +40,7 @@ export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
-  label?: string;
+  inCreateFlow?: boolean;
   onClose: () => void;
   onFirewallCreated?: (firewall: Firewall) => void;
   open: boolean;
@@ -56,7 +61,7 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
-    const { label, onClose, onFirewallCreated, open } = props;
+    const { inCreateFlow, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
@@ -140,6 +145,9 @@ export const CreateFirewallDrawer = React.memo(
             if (onFirewallCreated) {
               onFirewallCreated(response);
             }
+            enqueueSnackbar('Firewall created successfully.', {
+              variant: 'success',
+            });
             onClose();
           })
           .catch((err) => {
@@ -163,19 +171,20 @@ export const CreateFirewallDrawer = React.memo(
     React.useEffect(() => {
       if (open) {
         resetForm();
-        setSelectedNodeBalancers([]);
       }
     }, [open, resetForm]);
 
-    const [selectedNodeBalancers, setSelectedNodeBalancers] = React.useState<
-      NodeBalancer[]
-    >([]);
-
     const {
-      data,
+      data: nodebalancerData,
       error: nodebalancerError,
       isLoading: nodebalancerIsLoading,
     } = useAllNodeBalancersQuery();
+
+    const {
+      data: linodeData,
+      error: linodeError,
+      isLoading: linodeIsLoading,
+    } = useAllLinodesQuery();
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -195,16 +204,33 @@ export const CreateFirewallDrawer = React.memo(
         ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
         : null;
 
-    const optionsFilter = (nodebalancer: NodeBalancer) => {
-      const selectedNodeBalancersIds = selectedNodeBalancers.map((nb) => nb.id);
+    const optionsFilter = (
+      id: number,
+      serviceType: FirewallDeviceEntityType
+    ) => {
+      const readOnlyIds =
+        serviceType === 'linode' ? readOnlyLinodeIds : readOnlyNodebalancerIds;
 
-      return ![
-        ...readOnlyNodebalancerIds,
-        ...selectedNodeBalancersIds,
-      ].includes(nodebalancer.id);
+      return !readOnlyIds.includes(id);
     };
 
-    const nodebalancers = data?.filter(optionsFilter);
+    const nodebalancers = nodebalancerData?.filter((nb) =>
+      optionsFilter(nb.id, 'nodebalancer')
+    );
+
+    const linodes = linodeData?.filter((linode) =>
+      optionsFilter(linode.id, 'linode')
+    );
+
+    const selectedLinodes: Linode[] =
+      linodes?.filter((linode) =>
+        values.devices?.linodes?.includes(linode.id)
+      ) || [];
+
+    const selectedNodeBalancers: NodeBalancer[] =
+      nodebalancers?.filter((nodebalancer) =>
+        values.devices?.nodebalancers?.includes(nodebalancer.id)
+      ) || [];
 
     // TODO: NBFW - Placeholder until real link is available
     const learnMoreLink = <a href="#">Learn more</a>;
@@ -268,37 +294,43 @@ export const CreateFirewallDrawer = React.memo(
               {learnMoreLink}
             </Typography>
           </Box>
-          <LinodeSelect
-            onSelectionChange={(selected) =>
+          <Autocomplete
+            onChange={(_, linodes) => {
               setFieldValue(
                 'devices.linodes',
-                selected.map((linode) => linode.id)
-              )
-            }
-            disabled={userCannotAddFirewall}
+                linodes.map((linode) => linode.id)
+              );
+            }}
+            sx={(theme) => ({
+              marginTop: theme.spacing(2),
+            })}
+            disabled={userCannotAddFirewall || !!linodeError}
             errorText={errors['devices.linodes']}
-            helperText={FIREWALL_HELPER_TEXT}
-            label={label}
+            label={inCreateFlow ? 'Additional Linodes (Optional)' : 'Linodes'}
+            loading={linodeIsLoading}
             multiple
-            onBlur={handleBlur}
-            optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
-            value={values.devices?.linodes ?? []}
+            noMarginTop={false}
+            noOptionsText="No Linodes available to add"
+            options={linodes || []}
+            value={selectedLinodes}
           />
           <Autocomplete
+            label={
+              inCreateFlow
+                ? 'Additional NodeBalancers (Optional)'
+                : 'NodeBalancers'
+            }
             onChange={(_, nodebalancers) => {
               setFieldValue(
                 'devices.nodebalancers',
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
-              setSelectedNodeBalancers(nodebalancers);
             }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
             disabled={userCannotAddFirewall || !!nodebalancerError}
             errorText={errors['devices.nodebalancers']}
-            isOptionEqualToValue={optionsFilter}
-            label="NodeBalancers"
             loading={nodebalancerIsLoading}
             multiple
             noMarginTop={false}
