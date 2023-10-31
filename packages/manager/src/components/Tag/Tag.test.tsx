@@ -31,7 +31,7 @@ describe('Tag Component', () => {
     expect(tagElement).toBeInTheDocument();
   });
 
-  it('calls closeMenu and navigates when clicked', () => {
+  it('calls closeMenu when clicked', () => {
     const closeMenuMock = jest.fn();
 
     const { getByText } = renderWithTheme(
