@@ -182,7 +182,7 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" flexWrap="wrap" gap={2}>
             <Button
               buttonType="outlined"
               onClick={() => setIsAddRouteDrawerOpen(true)}
@@ -194,7 +194,6 @@ export const ConfigurationAccordion = (props: Props) => {
               label={`Filter ${configuration.label}'s Routes`}
               onChange={(e) => setRoutesTableQuery(e.target.value)}
               placeholder="Filter"
-              sx={{ minWidth: 300 }}
             />
           </Stack>
           <RoutesTable
@@ -203,12 +202,17 @@ export const ConfigurationAccordion = (props: Props) => {
           />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
-        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          gap={2}
+          justifyContent="flex-end"
+        >
           <Button
             buttonType="secondary"
             onClick={() => setIsDeleteDialogOpen(true)}
           >
-            Delete Configuration
+            Delete
           </Button>
           <Button
             buttonType="primary"
