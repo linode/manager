@@ -322,16 +322,16 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     </Box>
                   }
                 />
-                {assignPublicIPv4Address && publicIPv4Error && (
-                  <Typography
-                    sx={(theme) => ({
-                      color: theme.color.red,
-                    })}
-                  >
-                    {publicIPv4Error}
-                  </Typography>
-                )}
               </Box>
+              {assignPublicIPv4Address && publicIPv4Error && (
+                <Typography
+                  sx={(theme) => ({
+                    color: theme.color.red,
+                  })}
+                >
+                  {publicIPv4Error}
+                </Typography>
+              )}
             </Stack>
           )}
         </Stack>
