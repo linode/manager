@@ -2265,7 +2265,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/simplexchat/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/simplex/',
         title: 'Deploy SimpleX chat through the Linode Marketplace',
       },
     ],
