@@ -107,10 +107,13 @@ describe('Support Ticket Detail', () => {
     );
     render(wrapWithTheme(<SupportTicketDetail />));
     const entity = await screen.findByText(mockEntity.label, { exact: false });
-    const entityTextLink = await screen.findByRole('link');
+    const entityTextLink = entity.closest('a');
 
     expect(entity).toBeInTheDocument();
     expect(entityTextLink).toBeInTheDocument();
+    expect(entityTextLink?.getAttribute('aria-label')).toContain(
+      mockEntity.label
+    );
   });
 
   it('should display replies', async () => {
