@@ -16,6 +16,7 @@ import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -144,16 +145,34 @@ export const SubnetAssignLinodesDrawer = (
 
     const configId = getConfigId(linodeConfigs, selectedConfig);
 
+    const configToBeModified = linodeConfigs.find(
+      (config) => config.id === configId
+    );
+
     const interfacePayload: InterfacePayload = {
       ipam_address: null,
+      ipv4: {
+        nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
+        vpc: !autoAssignIPv4 ? chosenIP : undefined,
+      },
       label: null,
+      primary: true,
       purpose: 'vpc',
       subnet_id: subnet?.id,
       vpc_id: vpcId,
-      ...(!autoAssignIPv4 && { ipv4: { vpc: chosenIP } }),
     };
 
     try {
+      // If the config has only an implicit public interface, make it explicit and
+      // add it in eth0
+      if (configToBeModified?.interfaces.length === 0) {
+        appendConfigInterface(
+          selectedLinode?.id ?? -1,
+          configId,
+          defaultPublicInterface
+        );
+      }
+
       const newInterface = await appendConfigInterface(
         selectedLinode?.id ?? -1,
         configId,

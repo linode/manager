@@ -962,7 +962,7 @@ export class LinodeCreate extends React.PureComponent<
   ];
 }
 
-const defaultPublicInterface: InterfacePayload = {
+export const defaultPublicInterface: InterfacePayload = {
   ipam_address: '',
   label: '',
   purpose: 'public',
