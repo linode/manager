@@ -5,11 +5,11 @@ import * as React from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
@@ -81,7 +81,7 @@ export const SupportTicketDetail = () => {
 
     return (
       <Typography>
-        &nbsp; | Regarding:{' '}
+        | Regarding:{' '}
         {target ? <Link to={target}>{entity.label}</Link> : entity.label}
       </Typography>
     );
@@ -117,22 +117,33 @@ export const SupportTicketDetail = () => {
         }}
         title={ticketTitle}
       />
-      <Box
+      <Stack
         sx={(theme) => ({
-          alignItems: 'center',
-          display: 'flex',
+          flexFlow: 'row wrap',
           marginBottom: theme.spacing(3),
           [theme.breakpoints.down('md')]: {
             marginLeft: theme.spacing(1),
           },
         })}
       >
-        <StatusIcon
-          status={ticket.status === 'closed' ? 'inactive' : 'active'}
-        />{' '}
-        {status === 'Closed' ? status : 'Open'} | {status} by{' '}
-        {ticket.updated_by} at {formattedDate} {renderEntityLabel()}
-      </Box>
+        <Typography
+          sx={{
+            display: 'inline-flex',
+          }}
+        >
+          <StatusIcon
+            status={ticket.status === 'closed' ? 'inactive' : 'active'}
+            sx={{ alignSelf: 'center' }}
+          />
+          {status === 'Closed' ? status : 'Open'}
+        </Typography>
+        &nbsp;
+        <Typography>
+          | {status} by {ticket.updated_by} at {formattedDate}
+        </Typography>
+        &nbsp;
+        {renderEntityLabel()}
+      </Stack>
 
       {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
       {attachmentErrors !== undefined &&
