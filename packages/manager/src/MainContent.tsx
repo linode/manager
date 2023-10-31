@@ -2,7 +2,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
@@ -32,7 +31,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-import { ApplicationState } from './store';
+import { useGlobalErrors } from './hooks/useGlobalErrors';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -172,10 +171,6 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
-
-export const useGlobalErrors = () => {
-  return useSelector((state: ApplicationState) => state.globalErrors);
-};
 
 const MainContent = () => {
   const { classes, cx } = useStyles();
