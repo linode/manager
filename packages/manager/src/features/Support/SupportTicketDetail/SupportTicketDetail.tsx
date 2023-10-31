@@ -2,29 +2,25 @@ import { SupportReply } from '@linode/api-v4/lib/support';
 import Grid from '@mui/material/Unstable_Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Stack } from 'src/components/Stack';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
 } from 'src/queries/support';
-import { formatDate } from 'src/utilities/formatDate';
-import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import { ReplyContainer } from './TabbedReply/ReplyContainer';
+import { TicketStatus } from './TicketStatus';
 
 export interface AttachmentError {
   error: string;
@@ -64,29 +60,6 @@ export const SupportTicketDetail = () => {
     return null;
   }
 
-  const formattedDate = formatDate(ticket.updated, {
-    timezone: profile?.timezone,
-  });
-
-  const status = ticket.status === 'closed' ? 'Closed' : 'Last updated';
-
-  const renderEntityLabel = () => {
-    const entity = ticket?.entity;
-
-    if (!entity) {
-      return null;
-    }
-
-    const target = getLinkTargets(entity);
-
-    return (
-      <Typography>
-        | Regarding:{' '}
-        {target ? <Link to={target}>{entity.label}</Link> : entity.label}
-      </Typography>
-    );
-  };
-
   const ticketTitle = sanitizeHTML({
     disallowedTagsMode: 'discard',
     sanitizingTier: 'none',
@@ -117,33 +90,7 @@ export const SupportTicketDetail = () => {
         }}
         title={ticketTitle}
       />
-      <Stack
-        sx={(theme) => ({
-          flexFlow: 'row wrap',
-          marginBottom: theme.spacing(3),
-          [theme.breakpoints.down('md')]: {
-            marginLeft: theme.spacing(1),
-          },
-        })}
-      >
-        <Typography
-          sx={{
-            display: 'inline-flex',
-          }}
-        >
-          <StatusIcon
-            status={ticket.status === 'closed' ? 'inactive' : 'active'}
-            sx={{ alignSelf: 'center' }}
-          />
-          {status === 'Closed' ? status : 'Open'}
-        </Typography>
-        &nbsp;
-        <Typography>
-          | {status} by {ticket.updated_by} at {formattedDate}
-        </Typography>
-        &nbsp;
-        {renderEntityLabel()}
-      </Stack>
+      <TicketStatus {...ticket} />
 
       {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
       {attachmentErrors !== undefined &&
