@@ -1,4 +1,3 @@
-```
 ---
 "@linode/manager": Fixed
 ---
