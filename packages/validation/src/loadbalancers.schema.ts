@@ -151,3 +151,9 @@ export const UpdateRouteSchema = object({
     otherwise: (o) => o.of(HTTPRuleSchema),
   }),
 });
+
+export const CreateBasicLoadbalancerSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required'),
+});

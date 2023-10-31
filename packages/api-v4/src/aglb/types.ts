@@ -17,6 +17,13 @@ export interface CreateLoadbalancerPayload {
   configurations?: ConfigurationPayload[];
 }
 
+/**
+ * @TODO AGLB remove when we move to full creation flow
+ */
+export interface CreateBasicLoadbalancerPayload {
+  label: string;
+}
+
 export interface UpdateLoadbalancerPayload {
   label?: string;
   regions?: string[];
