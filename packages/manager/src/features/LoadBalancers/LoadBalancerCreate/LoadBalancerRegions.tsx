@@ -5,6 +5,8 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
+import { LoadBalancerRegions as Regions } from '../LoadBalancerDetail/LoadBalancerRegions';
+
 export const LoadBalancerRegions = () => {
   return (
     <Paper>
@@ -20,7 +22,7 @@ export const LoadBalancerRegions = () => {
             incurred.
           </Typography>
         </Stack>
-        <LoadBalancerRegions />
+        <Regions />
       </Stack>
     </Paper>
   );
