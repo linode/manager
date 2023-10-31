@@ -49,9 +49,10 @@ export const TicketStatus = (props: Props) => {
         },
       })}
     >
-      <Typography
+      <Stack
         sx={{
           display: 'inline-flex',
+          flexDirection: 'row',
         }}
       >
         <StatusIcon
@@ -59,7 +60,7 @@ export const TicketStatus = (props: Props) => {
           sx={{ alignSelf: 'center' }}
         />
         {capitalize(status)}
-      </Typography>
+      </Stack>
       &nbsp;
       <Typography>
         | {statusUpdateText} by {updated_by} at {formattedDate}
