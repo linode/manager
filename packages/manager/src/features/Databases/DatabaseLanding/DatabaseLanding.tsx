@@ -9,6 +9,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
@@ -111,14 +112,7 @@ const DatabaseLanding = () => {
               Engine
             </TableSortCell>
             <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'region'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="region"
-              >
-                Region
-              </TableSortCell>
+              <TableCell>Region</TableCell>
             </Hidden>
             <Hidden lgDown>
               <TableSortCell
