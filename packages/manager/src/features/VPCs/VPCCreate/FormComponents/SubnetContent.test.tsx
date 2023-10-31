@@ -10,7 +10,7 @@ const props = {
   subnets: [
     {
       ip: { ipv4: '', ipv4Error: '' },
-      label: 'subnet 1',
+      label: '',
       labelError: '',
     },
   ],

@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export const MultipleSubnetInput = (props: Props) => {
-  const theme = useTheme();
   const { disabled, isDrawer, onChange, subnets } = props;
 
   const addSubnet = () => {
@@ -52,7 +50,7 @@ export const MultipleSubnetInput = (props: Props) => {
       {subnets.map((subnet, subnetIdx) => (
         <Grid data-qa-subnet-node={subnetIdx} key={`subnet-${subnetIdx}`}>
           {subnetIdx !== 0 && (
-            <Divider sx={{ marginTop: theme.spacing(2.5) }} />
+            <Divider sx={(theme) => ({ marginTop: theme.spacing(2.5) })} />
           )}
           <SubnetNode
             onChange={(subnet, subnetIdx, removable) =>
@@ -70,7 +68,7 @@ export const MultipleSubnetInput = (props: Props) => {
         buttonType="outlined"
         disabled={disabled}
         onClick={addSubnet}
-        sx={{ marginTop: theme.spacing(3) }}
+        sx={(theme) => ({ marginTop: theme.spacing(3) })}
       >
         Add {subnets.length > 0 ? 'another' : 'a'} Subnet
       </Button>

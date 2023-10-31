@@ -262,12 +262,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     />
                   }
                   label={
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      flexDirection="row"
-                      sx={{}}
-                    >
+                    <Box alignItems="center" display="flex" flexDirection="row">
                       <Typography
                         noWrap={!isSmallBp && from === 'linodeConfig'}
                       >
