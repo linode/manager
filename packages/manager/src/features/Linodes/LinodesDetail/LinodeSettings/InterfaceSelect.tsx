@@ -128,6 +128,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     handleChange({
       ipam_address: null,
       ipv4: {
+        nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
         vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
       },
       label: null,
@@ -140,6 +141,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     handleChange({
       ipam_address: null,
       ipv4: {
+        nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
         vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
       },
       label: null,
