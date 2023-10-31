@@ -9,9 +9,7 @@ import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
 describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
     renderWithTheme(<LoadBalancerConfiguration />);
-    expect(
-      screen.getByText('TODO: AGLB - Implement Details step content.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Protocol')).toBeInTheDocument();
     expect(
       screen.queryByText(
         'TODO: AGLB - Implement Service Targets Configuration.'
@@ -60,8 +58,6 @@ describe('LoadBalancerConfiguration', () => {
     renderWithTheme(<LoadBalancerConfiguration />);
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByText('Previous: Details'));
-    expect(
-      screen.getByText('TODO: AGLB - Implement Details step content.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Protocol')).toBeInTheDocument();
   });
 });
