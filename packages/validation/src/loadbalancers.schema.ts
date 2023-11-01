@@ -235,3 +235,12 @@ export const createLoadBalancerSchema = object({
   regions: array().of(string()).required(),
   configurations: array().of(configurationSchema),
 });
+
+/**
+ * TODO: AGLB - remove this create schema
+ */
+export const CreateBasicLoadbalancerSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required'),
+});
