@@ -156,8 +156,16 @@ export const UpdateRouteSchema = object({
 
 // Endpoint Schema
 const endpointSchema = object({
-  ip: string(),
-  hostname: string(),
+  ip: string().when('hostname', {
+    is: (hostname: string) => !hostname,
+    then: string().required(),
+    otherwise: string(),
+  }),
+  hostname: string().when('ip', {
+    is: (ip: string) => !ip,
+    then: string().required(),
+    otherwise: string(),
+  }),
   port: number().integer().required(),
   capacity: number().integer().required(),
 });
