@@ -1,6 +1,6 @@
 import { number, object, string, array } from 'yup';
 
-const LABEL_REQUIRED = 'Label is required';
+const LABEL_REQUIRED = 'Label is required.';
 
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
@@ -197,7 +197,7 @@ const createLoadBalancerRuleSchema = object({
 });
 
 export const configurationSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   port: number().required('Port is required.').min(0).max(65_535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: string().when('protocol', {
