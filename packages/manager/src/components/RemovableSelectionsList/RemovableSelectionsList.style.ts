@@ -5,6 +5,8 @@ import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { omittedProps } from 'src/utilities/omittedProps';
 
+import { Typography } from '../Typography';
+
 import type { RemovableSelectionsListProps } from './RemovableSelectionsList';
 
 export const StyledNoAssignedLinodesBox = styled(Box, {
@@ -21,13 +23,12 @@ export const StyledNoAssignedLinodesBox = styled(Box, {
   width: '100%',
 }));
 
-export const SelectedOptionsHeader = styled('h4', {
+export const SelectedOptionsHeader = styled(Typography, {
   label: 'SelectedOptionsHeader',
 })(({ theme }) => ({
   color: theme.color.headline,
   fontFamily: theme.font.bold,
-  fontSize: '14px',
-  textTransform: 'initial',
+  marginBottom: theme.spacing(2),
 }));
 
 export const SelectedOptionsList = styled(List, {
@@ -51,7 +52,6 @@ export const SelectedOptionsListItem = styled(ListItem, {
 export const StyledLabel = styled('span', { label: 'StyledLabel' })(
   ({ theme }) => ({
     color: theme.color.label,
-    fontFamily: theme.font.semiBold,
     fontSize: '14px',
   })
 );

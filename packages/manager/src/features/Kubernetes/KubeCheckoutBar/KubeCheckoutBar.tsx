@@ -170,8 +170,8 @@ export default RenderGuard(KubeCheckoutBar);
 const StyledHAHeader = styled(Typography, {
   label: 'StyledHAHeader',
 })(({ theme }) => ({
+  fontFamily: theme.font.bold,
   fontSize: '16px',
-  fontWeight: 600,
   paddingBottom: theme.spacing(0.5),
   paddingTop: theme.spacing(0.5),
 }));

@@ -306,7 +306,7 @@ const IPSharingPanel = (props: Props) => {
             <Grid lg={8} sm={12} xl={6}>
               {flags.ipv6Sharing ? (
                 <Notice variant="warning">
-                  <Typography style={{ fontSize: '0.875rem' }}>
+                  <Typography sx={{ fontSize: '0.875rem' }}>
                     <strong>Warning:</strong> Converting a statically routed
                     IPv6 range to a shared range will break existing IPv6
                     connectivity unless each Linode that shares the range has
@@ -336,7 +336,7 @@ const IPSharingPanel = (props: Props) => {
                     width: '100%',
                   }}
                 >
-                  <Typography style={{ fontWeight: 'bold' }}>
+                  <Typography sx={{ fontFamily: theme.font.bold }}>
                     IP Addresses
                   </Typography>
                 </Grid>

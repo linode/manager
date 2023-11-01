@@ -1,5 +1,6 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { useTheme } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -45,9 +46,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
       cursor: 'default',
     },
     color: theme.palette.primary.main,
-    fontFamily: theme.font.normal,
+    fontFamily: theme.font.bold,
     fontSize: '0.875rem',
-    fontWeight: theme.typography.fontWeightRegular,
     lineHeight: '1.125rem',
     marginLeft: theme.spacing(),
     minHeight: 'auto',
@@ -56,10 +56,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   connectionDetailsCtn: {
     '& p': {
-      '& span': {
-        fontWeight: 'bold',
-      },
       lineHeight: '1.5rem',
+    },
+    '& span': {
+      fontFamily: theme.font.bold,
     },
     background: theme.bg.bgAccessRow,
     border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
@@ -100,8 +100,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: 22,
   },
   provisioningText: {
+    fontFamily: theme.font.normal,
     fontStyle: 'italic',
-    fontWeight: 'lighter !important' as 'lighter',
   },
   showBtn: {
     color: theme.palette.primary.main,
@@ -131,6 +131,7 @@ const mongoHostHelperCopy =
 export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const { database } = props;
   const { classes } = useStyles();
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
@@ -283,7 +284,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                 <>
                   <Typography>
                     <span>host</span> ={' '}
-                    <span style={{ fontWeight: 'normal' }}>
+                    <span style={{ fontFamily: theme.font.normal }}>
                       {database.hosts?.primary}
                     </span>{' '}
                   </Typography>
@@ -333,7 +334,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                           marginTop: 0,
                         }}
                       >
-                        <span style={{ fontWeight: 'normal' }}>{hostname}</span>
+                        <span style={{ fontFamily: theme.font.normal }}>
+                          {hostname}
+                        </span>
                       </Typography>
                       <CopyTooltip
                         className={classes.inlineCopyToolTip}
@@ -377,7 +380,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             <Box alignItems="center" display="flex" flexDirection="row">
               <Typography>
                 <span>replica set</span> ={' '}
-                <span style={{ fontWeight: 'normal' }}>
+                <span style={{ fontFamily: theme.font.normal }}>
                   {database.replica_set}
                 </span>
               </Typography>

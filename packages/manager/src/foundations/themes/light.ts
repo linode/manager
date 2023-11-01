@@ -1352,7 +1352,6 @@ export const lightTheme: ThemeOptions = {
   font: {
     bold: latoWeb.bold,
     normal: latoWeb.normal,
-    semiBold: latoWeb.semiBold,
   },
   graphs: {
     aborted: {
