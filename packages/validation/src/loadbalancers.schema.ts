@@ -154,15 +154,6 @@ export const UpdateRouteSchema = object({
   }),
 });
 
-export const loadBalancerLabelValidation = object({
-  label: string()
-    .matches(
-      /^[a-zA-Z0-9.\-_]+$/,
-      'Label may only contain letters, numbers, periods, dashes, and underscores.'
-    )
-    .required('Label is required.'),
-});
-
 // Endpoint Schema
 const endpointSchema = object({
   ip: string(),
@@ -228,9 +219,13 @@ export const configurationSchema = object({
       .required(),
   }),
 });
-
 export const createLoadBalancerSchema = object({
-  label: loadBalancerLabelValidation.required(LABEL_REQUIRED),
+  label: string()
+    .matches(
+      /^[a-zA-Z0-9.\-_]+$/,
+      'Label may only contain letters, numbers, periods, dashes, and underscores.'
+    )
+    .required(LABEL_REQUIRED),
   tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
   configurations: array().of(configurationSchema),
