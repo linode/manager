@@ -7,13 +7,13 @@ import {
 } from 'src/factories/support';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { SupportTicketDetail } from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
   it('should display a loading spinner', () => {
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
   });
 
@@ -47,7 +47,7 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(await screen.findByText(/New/)).toBeInTheDocument();
     expect(
       await screen.findByText(/updated by test-account/i)
@@ -65,7 +65,7 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(await screen.findByText(/Open/)).toBeInTheDocument();
     expect(
       await screen.findByText(/updated by test-account/i)
@@ -82,7 +82,7 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(await screen.findByText('Closed')).toBeInTheDocument();
     expect(
       await screen.findByText(/closed by test-account/i)
@@ -105,7 +105,7 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     const entity = await screen.findByText(mockEntity.label, { exact: false });
     const entityTextLink = entity.closest('a');
 
@@ -135,7 +135,7 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(
       await screen.findByText(
         'Hi, this is lindoe support! OMG, sorry your Linode is broken!'
