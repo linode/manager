@@ -1,56 +1,68 @@
+import { Grid } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+
+const protocolOptions = [
+  { label: 'HTTPS', value: 'https' },
+  { label: 'HTTP', value: 'http' },
+  { label: 'TCP', value: 'tcp' },
+];
 
 export const ConfigurationDetails = () => {
   return (
-    <Stack spacing={1}>
-      <Grid>
-        <Typography variant="h2">Details</Typography>
-        <Typography sx={(theme) => ({ marginRight: theme.spacing(1) })}>
-          The port the load balancer listens on, and the protocol for routing
-          incoming traffic to the targets.
-        </Typography>
-      </Grid>
-      <Grid container>
-        <Autocomplete
-          onChange={(_, selection) => {
-            //   handleFirewallChange(selection?.value ?? -1);
-          }}
-          errorText={''}
-          label="Protocol"
-          noOptionsText="No Protocols available"
-          options={[]}
-          sx={(theme) => ({ marginRight: theme.spacing(2) })}
-          //   value={''}
-        />
-        <TextField
-          errorText={''}
-          label="Port"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => null}
-          sx={{ maxWidth: '60px' }}
-          tooltipText="tbd"
-          value={''}
-        />
-      </Grid>
-      <Grid>
-        <Typography variant="h3">TLS Certificates</Typography>
-        <Typography>
-          Upload and apply downstream Certificate after LB provisioning Learn
-          more.
-        </Typography>
-      </Grid>
+    <Grid padding={1}>
+      <Typography variant="h2">Details</Typography>
+      <Typography sx={(theme) => ({ marginRight: theme.spacing(1) })}>
+        The port the load balancer listens on, and the protocol for routing
+        incoming traffic to the targets.
+      </Typography>
+      <Stack spacing={2}>
+        <Stack direction="row" spacing={2}>
+          <Select
+            textFieldProps={{
+              labelTooltipText: 'TODO',
+            }}
+            value={
+              protocolOptions.find((option) => option.value === '') ?? null
+            }
+            errorText={''}
+            isClearable={false}
+            label="Protocol"
+            onChange={() => null}
+            options={protocolOptions}
+            styles={{ container: () => ({ width: 'unset' }) }}
+          />
+          <TextField
+            errorText={''}
+            label="Port"
+            labelTooltipText="TODO"
+            name="port"
+            onChange={() => null}
+            value={''}
+          />
+        </Stack>
+        <Stack maxWidth="600px">
+          <Typography variant="h3">
+            TLS Certificates
+            <TooltipIcon status="help" text="OMG!" />
+          </Typography>
+          <Typography>
+            Upload and apply downstream Certificate after LB provisioning Learn
+            more.
+          </Typography>
+        </Stack>
+      </Stack>
       <TextField
-        errorText={''}
         label="Configuration Label"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => null}
-        tooltipText="tbd"
+        name="label"
+        onChange={() => null}
         value={''}
       />
-    </Stack>
+    </Grid>
   );
 };
