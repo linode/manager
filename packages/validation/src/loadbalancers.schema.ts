@@ -189,7 +189,7 @@ const createLoadBalancerRuleSchema = object({
 });
 
 export const configurationSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   port: number().required('Port is required.').min(0).max(65_535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: string().when('protocol', {
