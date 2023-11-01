@@ -2,4 +2,4 @@
 "@linode/api-v4": Upcoming Features
 ---
 
-Create DC Get Well endpoints for api-v4 ([#9860](https://github.com/linode/manager/pull/9860))
+Add `getAccountAvailabilities` and `getAccountAvailability` methods for DC Get Well initiative ([#9860](https://github.com/linode/manager/pull/9860))
