@@ -69,7 +69,7 @@ export type AccountCapability =
   | 'Vlans'
   | 'VPCs';
 
-export interface AccountRegionAvailabilty {
+export interface AccountAvailability {
   id: string; // will be ID of region
   unavailable: AccountCapability[];
 }

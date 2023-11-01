@@ -12,7 +12,7 @@ import Request, {
 } from '../request';
 import {
   Account,
-  AccountRegionAvailabilty,
+  AccountAvailability,
   AccountSettings,
   CancelAccount,
   CancelAccountPayload,
@@ -115,7 +115,7 @@ export const getAccountAgreements = () =>
  *
  */
 export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
-  Request<Page<AccountRegionAvailabilty>>(
+  Request<Page<AccountAvailability>>(
     setURL(`${API_ROOT}/account/availability`),
     setMethod('GET'),
     setParams(params),
@@ -130,7 +130,7 @@ export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
  *
  */
 export const getAccountAvailability = (regionId: string) =>
-  Request<AccountRegionAvailabilty>(
+  Request<AccountAvailability>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(regionId)}`),
     setMethod('GET')
   );
