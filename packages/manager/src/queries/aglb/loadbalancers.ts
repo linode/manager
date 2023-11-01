@@ -42,6 +42,7 @@ export const useLoadBalancerMutation = (id: number) => {
     {
       onSuccess(data) {
         queryClient.setQueryData([QUERY_KEY, 'aglb', id], data);
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
       },
     }
   );
@@ -54,6 +55,7 @@ export const useLoadBalancerBasicCreateMutation = () => {
     {
       onSuccess(data) {
         queryClient.setQueryData([QUERY_KEY, 'aglb', data.id], data);
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
       },
     }
   );
@@ -64,6 +66,7 @@ export const useLoadBalancerDeleteMutation = (id: number) => {
   return useMutation<{}, APIError[]>(() => deleteLoadbalancer(id), {
     onSuccess() {
       queryClient.removeQueries([QUERY_KEY, 'aglb', id]);
+      queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
     },
   });
 };
