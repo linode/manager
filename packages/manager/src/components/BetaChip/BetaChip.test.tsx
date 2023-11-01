@@ -22,10 +22,10 @@ describe('BetaChip', () => {
 
   it('triggers an onClick callback', () => {
     const onClickMock = jest.fn();
-    const { getByText } = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       <BetaChip color="default" onClick={onClickMock} />
     );
-    const betaChip = getByText('beta');
+    const betaChip = getByTestId('betaChip');
     fireEvent.click(betaChip);
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
