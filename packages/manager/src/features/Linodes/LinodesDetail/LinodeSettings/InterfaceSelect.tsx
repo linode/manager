@@ -104,7 +104,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const [autoAssignVPCIPv4, setAutoAssignVPCIPv4] = React.useState(true);
+  const [autoAssignVPCIPv4, setAutoAssignVPCIPv4] = React.useState(
+    !Boolean(vpcIPv4)
+  );
   const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(
     Boolean(iPv4_nat_1_1)
   );
