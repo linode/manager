@@ -6,12 +6,10 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
 import {
@@ -19,9 +17,6 @@ import {
   withProfile,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import type { StyledTypographyProps } from './SelectLinodePanel';
 
 export const aggregateBackups = (
   backups: LinodeBackupsResponse
@@ -57,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & WithProfileProps;
 
-const SelectBackupPanel = (props: CombinedProps) => {
+export const SelectBackupPanel = withProfile((props: CombinedProps) => {
   const {
     error,
     handleChangeBackup,
@@ -126,7 +121,7 @@ const SelectBackupPanel = (props: CombinedProps) => {
           <React.Fragment>
             {aggregatedBackups.length !== 0 ? (
               <StyledTypography component="div">
-                <Grid container>
+                <Grid container spacing={2}>
                   {aggregatedBackups.map((backup) => {
                     return renderCard(backup);
                   })}
@@ -142,12 +137,11 @@ const SelectBackupPanel = (props: CombinedProps) => {
       </StyledWrapperGrid>
     </StyledRootPaper>
   );
-};
+});
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: omittedProps(['component']),
-})<StyledTypographyProps>(({ theme }) => ({
+})<{ component: string }>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
   width: '100%',
 }));
@@ -167,8 +161,3 @@ const StyledWrapperGrid = styled(Grid, { label: 'StyledWrapperGrid' })(
     padding: theme.spacing(1),
   })
 );
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withProfile
-)(SelectBackupPanel);
