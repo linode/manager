@@ -231,7 +231,16 @@ export const configurationSchema = object({
 
 export const createLoadBalancerSchema = object({
   label: loadBalancerLabelValidation.required(LABEL_REQUIRED),
-  tags: array().of(string()).notRequired(), // TODO: AGLB - Should confirm on this with API team.
+  tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
   configurations: array().of(configurationSchema),
+});
+
+/**
+ * TODO: AGLB - remove this create schema
+ */
+export const CreateBasicLoadbalancerSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required'),
 });

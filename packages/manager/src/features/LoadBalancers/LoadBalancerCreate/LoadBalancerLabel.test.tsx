@@ -9,12 +9,17 @@ import { LoadBalancerLabel } from './LoadBalancerLabel';
 const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
 
-import { FormValues } from './LoadBalancerCreate';
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 type MockFormikContext = {
   initialErrors?: {};
   initialTouched?: {};
-  initialValues: FormValues;
+  initialValues: CreateLoadbalancerPayload;
+};
+
+const initialValues = {
+  label: loadBalancerLabelValue,
+  regions: [],
 };
 
 const renderWithFormikWrapper = (mockFormikContext: MockFormikContext) =>
@@ -27,7 +32,7 @@ const renderWithFormikWrapper = (mockFormikContext: MockFormikContext) =>
 describe('LoadBalancerLabel', () => {
   it('should render the component with a label and no error', () => {
     const { getByTestId, queryByText } = renderWithFormikWrapper({
-      initialValues: { label: loadBalancerLabelValue },
+      initialValues,
     });
 
     const labelInput = getByTestId(loadBalancerTestId);
@@ -43,7 +48,7 @@ describe('LoadBalancerLabel', () => {
     const { getByTestId, getByText } = renderWithFormikWrapper({
       initialErrors: { label: 'This is an error' },
       initialTouched: { label: true },
-      initialValues: { label: loadBalancerLabelValue },
+      initialValues,
     });
 
     const labelInput = getByTestId(loadBalancerTestId);
@@ -55,7 +60,7 @@ describe('LoadBalancerLabel', () => {
 
   it('should update formik values on input change', () => {
     const { getByTestId } = renderWithFormikWrapper({
-      initialValues: { label: loadBalancerLabelValue },
+      initialValues,
     });
 
     const labelInput = getByTestId(loadBalancerTestId);

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 
-import { FormValues } from './LoadBalancerCreate';
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 export const LoadBalancerLabel = () => {
   const {
@@ -12,7 +12,7 @@ export const LoadBalancerLabel = () => {
     handleChange,
     touched,
     values,
-  } = useFormikContext<FormValues>();
+  } = useFormikContext<CreateLoadbalancerPayload>();
 
   return (
     <Paper

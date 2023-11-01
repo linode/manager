@@ -1136,7 +1136,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mcffmpegplugins/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins/',
         title:
           'Deploy MainConcept FFmpeg Plugins through the Linode Marketplace',
       },
@@ -1158,7 +1158,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mcliveencoder/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder/',
         title: 'Deploy MainConcept Live Encoder through the Linode Marketplace',
       },
     ],
@@ -1179,7 +1179,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2avcultratranscoder/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra/',
         title:
           'Deploy MainConcept P2 AVC Ultra Transcoder through the Linode Marketplace',
       },
@@ -1202,7 +1202,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2xavc/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder/',
         title:
           'Deploy MainConcept XAVC Transcoder through the Linode Marketplace',
       },
@@ -1225,7 +1225,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2xdcam/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder/',
         title:
           'Deploy MainConcept XDCAM Transcoder through the Linode Marketplace',
       },
@@ -2265,7 +2265,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/simplexchat/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/simplex/',
         title: 'Deploy SimpleX chat through the Linode Marketplace',
       },
     ],
