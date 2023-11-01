@@ -131,7 +131,7 @@ export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
  */
 export const getAccountAvailability = (regionId: string) =>
   Request<AccountAvailability>(
-    setURL(`${API_ROOT}/vpcs/${encodeURIComponent(regionId)}`),
+    setURL(`${API_ROOT}/account/availability/${encodeURIComponent(regionId)}`),
     setMethod('GET')
   );
 
