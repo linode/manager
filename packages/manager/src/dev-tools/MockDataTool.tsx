@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import ServiceWorkerTool from './ServiceWorkerTool';
+import { ServiceWorkerTool } from './ServiceWorkerTool';
 import { MockData, mockDataController } from './mockDataController';
 
 const options: { key: keyof MockData; label: string }[] = [
@@ -11,7 +11,7 @@ const options: { key: keyof MockData; label: string }[] = [
   { key: 'volume', label: 'Volumes' },
 ];
 
-const MockDataTool: React.FC<{}> = () => {
+export const MockDataTool = () => {
   // Keep track of mockData state locally to this component, so it can be referenced during render.
   const [localMockData, setLocalMockData] = React.useState<MockData>(
     mockDataController.mockData
@@ -61,5 +61,3 @@ const MockDataTool: React.FC<{}> = () => {
     </Grid>
   );
 };
-
-export default MockDataTool;

@@ -72,6 +72,13 @@ self.addEventListener('fetch', async function(event) {
   const requestClone = request.clone();
   const getOriginalResponse = () => fetch(requestClone);
 
+  /**
+   * Fixes streaming issues with Launch Darkly in dev on Safari
+   */
+  if (event.request.url.includes("launchdarkly")) {
+    return;
+  }
+
   // Opening the DevTools triggers the "only-if-cached" request
   // that cannot be handled by the worker. Bypass such requests.
   if (request.cache === 'only-if-cached' && request.mode !== 'same-origin') {
