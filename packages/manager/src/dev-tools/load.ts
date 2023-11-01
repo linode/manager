@@ -14,7 +14,7 @@ export async function loadDevTools(store: ApplicationStore) {
   if (isMSWEnabled) {
     const { worker } = await import('../mocks/testBrowser');
 
-    await worker.start();
+    await worker.start({ onUnhandledRequest: 'bypass' });
   }
 
   devTools.install(store);

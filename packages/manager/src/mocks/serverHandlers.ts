@@ -218,8 +218,8 @@ const databases = [
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
     const database = databaseFactory.build({
       compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
-      engine: req.params.engine,
-      id: req.params.id,
+      engine: req.params.engine as 'mysql',
+      id: Number(req.params.id),
       label: `database-${req.params.id}`,
       replication_commit_type:
         req.params.engine === 'postgresql' ? 'local' : undefined,
@@ -271,7 +271,7 @@ const databases = [
     return res(
       ctx.json({
         ...databaseFactory.build({
-          engine: req.params.engine,
+          engine: req.params.engine as 'mysql',
           label: payload?.label ?? 'Database',
         }),
       })
@@ -331,7 +331,7 @@ const aglb = [
     return res(
       ctx.json(
         loadbalancerFactory.build({
-          id: req.params.loadbalancerId,
+          id: Number(req.params.loadbalancerId),
           label: `aglb-${req.params.loadbalancerId}`,
         })
       )
@@ -737,7 +737,7 @@ export const handlers = [
   }),
   rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
-    const k8s_version = req.params.k8s_version;
+    const k8s_version = req.params.k8s_version as string;
     const cluster = kubernetesAPIResponse.build({
       id,
       k8s_version,
@@ -791,13 +791,13 @@ export const handlers = [
   }),
   rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
     const nodeBalancer = nodeBalancerFactory.build({
-      id: req.params.nodeBalancerID,
+      id: Number(req.params.nodeBalancerID),
     });
     return res(ctx.json(nodeBalancer));
   }),
   rest.get('*/nodebalancers/:nodeBalancerID/configs', (req, res, ctx) => {
     const configs = nodeBalancerConfigFactory.buildList(2, {
-      nodebalancer_id: req.params.nodeBalancerID,
+      nodebalancer_id: Number(req.params.nodeBalancerID),
     });
     return res(ctx.json(makeResourcePage(configs)));
   }),
@@ -805,7 +805,7 @@ export const handlers = [
     '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
     (req, res, ctx) => {
       const configs = nodeBalancerConfigNodeFactory.buildList(2, {
-        nodebalancer_id: req.params.nodeBalancerID,
+        nodebalancer_id: Number(req.params.nodeBalancerID),
       });
       return res(ctx.json(makeResourcePage(configs)));
     }
@@ -1215,7 +1215,9 @@ export const handlers = [
     return res(ctx.json(ticket));
   }),
   rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
-    const ticket = supportTicketFactory.build({ id: req.params.ticketId });
+    const ticket = supportTicketFactory.build({
+      id: Number(req.params.ticketId),
+    });
     return res(ctx.json(ticket));
   }),
   rest.get('*/support/tickets/:ticketId/replies', (req, res, ctx) => {
@@ -1582,7 +1584,9 @@ export const handlers = [
   }),
   rest.get('*/account/betas/:id', (req, res, ctx) => {
     if (req.params.id !== 'undefined') {
-      return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+      return res(
+        ctx.json(accountBetaFactory.build({ id: req.params.id as string }))
+      );
     }
     return res(ctx.status(404));
   }),
@@ -1591,7 +1595,7 @@ export const handlers = [
   }),
   rest.get('*/betas/:id', (req, res, ctx) => {
     if (req.params.id !== 'undefined') {
-      return res(ctx.json(betaFactory.build({ id: req.params.id })));
+      return res(ctx.json(betaFactory.build({ id: req.params.id as string })));
     }
     return res(ctx.status(404));
   }),

@@ -1,235 +1,308 @@
+/* eslint-disable */
+/* tslint:disable */
+
 /**
- * Mock Service Worker.
+ * Mock Service Worker (1.3.2).
  * @see https://github.com/mswjs/msw
  * - Please do NOT modify this file.
  * - Please do NOT serve this file on production.
  */
-/* eslint-disable */
-/* tslint:disable */
 
-const INTEGRITY_CHECKSUM = 'ca2c3cd7453d8c614e2c19db63ede1a1';
-const bypassHeaderName = 'x-msw-bypass';
+const INTEGRITY_CHECKSUM = '3d6b9f06410d179a7f7404d4bf4c3c70'
+const activeClientIds = new Set()
 
-let clients = {};
+self.addEventListener('install', function () {
+  self.skipWaiting()
+})
 
-self.addEventListener('install', function() {
-  return self.skipWaiting();
-});
+self.addEventListener('activate', function (event) {
+  event.waitUntil(self.clients.claim())
+})
 
-self.addEventListener('activate', async function(event) {
-  return self.clients.claim();
-});
+self.addEventListener('message', async function (event) {
+  const clientId = event.source.id
 
-self.addEventListener('message', async function(event) {
-  const clientId = event.source.id;
-  const client = await event.currentTarget.clients.get(clientId);
-  const allClients = await self.clients.matchAll();
-  const allClientIds = allClients.map(client => client.id);
+  if (!clientId || !self.clients) {
+    return
+  }
+
+  const client = await self.clients.get(clientId)
+
+  if (!client) {
+    return
+  }
+
+  const allClients = await self.clients.matchAll({
+    type: 'window',
+  })
 
   switch (event.data) {
+    case 'KEEPALIVE_REQUEST': {
+      sendToClient(client, {
+        type: 'KEEPALIVE_RESPONSE',
+      })
+      break
+    }
+
     case 'INTEGRITY_CHECK_REQUEST': {
       sendToClient(client, {
         type: 'INTEGRITY_CHECK_RESPONSE',
-        payload: INTEGRITY_CHECKSUM
-      });
-      break;
+        payload: INTEGRITY_CHECKSUM,
+      })
+      break
     }
 
     case 'MOCK_ACTIVATE': {
-      clients = ensureKeys(allClientIds, clients);
-      clients[clientId] = true;
+      activeClientIds.add(clientId)
 
       sendToClient(client, {
         type: 'MOCKING_ENABLED',
-        payload: true
-      });
-      break;
+        payload: true,
+      })
+      break
     }
 
     case 'MOCK_DEACTIVATE': {
-      clients = ensureKeys(allClientIds, clients);
-      clients[clientId] = false;
-      break;
+      activeClientIds.delete(clientId)
+      break
     }
 
     case 'CLIENT_CLOSED': {
-      const remainingClients = allClients.filter(client => {
-        return client.id !== clientId;
-      });
+      activeClientIds.delete(clientId)
+
+      const remainingClients = allClients.filter((client) => {
+        return client.id !== clientId
+      })
 
       // Unregister itself when there are no more clients
       if (remainingClients.length === 0) {
-        self.registration.unregister();
+        self.registration.unregister()
       }
 
-      break;
+      break
     }
   }
-});
+})
 
-self.addEventListener('fetch', async function(event) {
-  const { clientId, request } = event;
-  const requestClone = request.clone();
-  const getOriginalResponse = () => fetch(requestClone);
+self.addEventListener('fetch', function (event) {
+  const { request } = event
+  const accept = request.headers.get('accept') || ''
 
-  /**
-   * Fixes streaming issues with Launch Darkly in dev on Safari
-   */
-  if (event.request.url.includes("launchdarkly")) {
-    return;
+  // Bypass launch darkly
+  if (request.url.includes("launchdarkly.com")) {
+    return
+  }
+
+  // Bypass server-sent events.
+  if (accept.includes('text/event-stream')) {
+    return
+  }
+
+  // Bypass navigation requests.
+  if (request.mode === 'navigate') {
+    return
   }
 
   // Opening the DevTools triggers the "only-if-cached" request
   // that cannot be handled by the worker. Bypass such requests.
   if (request.cache === 'only-if-cached' && request.mode !== 'same-origin') {
-    return;
+    return
   }
 
+  // Bypass all requests when there are no active clients.
+  // Prevents the self-unregistered worked from handling requests
+  // after it's been deleted (still remains active until the next reload).
+  if (activeClientIds.size === 0) {
+    return
+  }
+
+  // Generate unique request ID.
+  const requestId = Math.random().toString(16).slice(2)
+
   event.respondWith(
-    new Promise(async (resolve, reject) => {
-      const client = await event.target.clients.get(clientId);
-
-      if (
-        // Bypass mocking when no clients active
-        !client ||
-        // Bypass mocking if the current client has mocking disabled
-        !clients[clientId] ||
-        // Bypass mocking for navigation requests
-        request.mode === 'navigate'
-      ) {
-        return resolve(getOriginalResponse());
+    handleRequest(event, requestId).catch((error) => {
+      if (error.name === 'NetworkError') {
+        console.warn(
+          '[MSW] Successfully emulated a network error for the "%s %s" request.',
+          request.method,
+          request.url,
+        )
+        return
       }
 
-      // Bypass requests with the explicit bypass header
-      if (requestClone.headers.get(bypassHeaderName) === 'true') {
-        const modifiedHeaders = serializeHeaders(requestClone.headers);
-        // Remove the bypass header to comply with the CORS preflight check
-        delete modifiedHeaders[bypassHeaderName];
-
-        const originalRequest = new Request(requestClone, {
-          headers: new Headers(modifiedHeaders)
-        });
-
-        return resolve(fetch(originalRequest));
-      }
-
-      const reqHeaders = serializeHeaders(request.headers);
-      const body = await request.text();
-
-      const rawClientMessage = await sendToClient(client, {
-        type: 'REQUEST',
-        payload: {
-          url: request.url,
-          method: request.method,
-          headers: reqHeaders,
-          cache: request.cache,
-          mode: request.mode,
-          credentials: request.credentials,
-          destination: request.destination,
-          integrity: request.integrity,
-          redirect: request.redirect,
-          referrer: request.referrer,
-          referrerPolicy: request.referrerPolicy,
-          body,
-          bodyUsed: request.bodyUsed,
-          keepalive: request.keepalive
-        }
-      });
-
-      const clientMessage = rawClientMessage;
-
-      switch (clientMessage.type) {
-        case 'MOCK_SUCCESS': {
-          setTimeout(
-            resolve.bind(this, createResponse(clientMessage)),
-            clientMessage.payload.delay
-          );
-          break;
-        }
-
-        case 'MOCK_NOT_FOUND': {
-          return resolve(getOriginalResponse());
-        }
-
-        case 'NETWORK_ERROR': {
-          const { name, message } = clientMessage.payload;
-          const networkError = new Error(message);
-          networkError.name = name;
-
-          // Rejecting a request Promise emulates a network error.
-          return reject(networkError);
-        }
-
-        case 'INTERNAL_ERROR': {
-          const parsedBody = JSON.parse(clientMessage.payload.body);
-
-          console.error(
-            `\
-[MSW] Request handler function for "%s %s" has thrown the following exception:
-
-${parsedBody.errorType}: ${parsedBody.message}
-(see more detailed error stack trace in the mocked response body)
-
-This exception has been gracefully handled as a 500 response, however, it's strongly recommended to resolve this error.
-If you wish to mock an error response, please refer to this guide: https://mswjs.io/docs/recipes/mocking-error-responses\
-  `,
-            request.method,
-            request.url
-          );
-
-          return resolve(createResponse(clientMessage));
-        }
-      }
-    }).catch(error => {
+      // At this point, any exception indicates an issue with the original request/response.
       console.error(
-        '[MSW] Failed to mock a "%s" request to "%s": %s',
+        `\
+[MSW] Caught an exception from the "%s %s" request (%s). This is probably not a problem with Mock Service Worker. There is likely an additional logging output above.`,
         request.method,
         request.url,
-        error
-      );
-    })
-  );
-});
+        `${error.name}: ${error.message}`,
+      )
+    }),
+  )
+})
 
-function serializeHeaders(headers) {
-  const reqHeaders = {};
-  headers.forEach((value, name) => {
-    reqHeaders[name] = reqHeaders[name]
-      ? [].concat(reqHeaders[name]).concat(value)
-      : value;
-  });
-  return reqHeaders;
+async function handleRequest(event, requestId) {
+  const client = await resolveMainClient(event)
+  const response = await getResponse(event, client, requestId)
+
+  // Send back the response clone for the "response:*" life-cycle events.
+  // Ensure MSW is active and ready to handle the message, otherwise
+  // this message will pend indefinitely.
+  if (client && activeClientIds.has(client.id)) {
+    ;(async function () {
+      const clonedResponse = response.clone()
+      sendToClient(client, {
+        type: 'RESPONSE',
+        payload: {
+          requestId,
+          type: clonedResponse.type,
+          ok: clonedResponse.ok,
+          status: clonedResponse.status,
+          statusText: clonedResponse.statusText,
+          body:
+            clonedResponse.body === null ? null : await clonedResponse.text(),
+          headers: Object.fromEntries(clonedResponse.headers.entries()),
+          redirected: clonedResponse.redirected,
+        },
+      })
+    })()
+  }
+
+  return response
+}
+
+// Resolve the main client for the given event.
+// Client that issues a request doesn't necessarily equal the client
+// that registered the worker. It's with the latter the worker should
+// communicate with during the response resolving phase.
+async function resolveMainClient(event) {
+  const client = await self.clients.get(event.clientId)
+
+  if (client?.frameType === 'top-level') {
+    return client
+  }
+
+  const allClients = await self.clients.matchAll({
+    type: 'window',
+  })
+
+  return allClients
+    .filter((client) => {
+      // Get only those clients that are currently visible.
+      return client.visibilityState === 'visible'
+    })
+    .find((client) => {
+      // Find the client ID that's recorded in the
+      // set of clients that have registered the worker.
+      return activeClientIds.has(client.id)
+    })
+}
+
+async function getResponse(event, client, requestId) {
+  const { request } = event
+  const clonedRequest = request.clone()
+
+  function passthrough() {
+    // Clone the request because it might've been already used
+    // (i.e. its body has been read and sent to the client).
+    const headers = Object.fromEntries(clonedRequest.headers.entries())
+
+    // Remove MSW-specific request headers so the bypassed requests
+    // comply with the server's CORS preflight check.
+    // Operate with the headers as an object because request "Headers"
+    // are immutable.
+    delete headers['x-msw-bypass']
+
+    return fetch(clonedRequest, { headers })
+  }
+
+  // Bypass mocking when the client is not active.
+  if (!client) {
+    return passthrough()
+  }
+
+  // Bypass initial page load requests (i.e. static assets).
+  // The absence of the immediate/parent client in the map of the active clients
+  // means that MSW hasn't dispatched the "MOCK_ACTIVATE" event yet
+  // and is not ready to handle requests.
+  if (!activeClientIds.has(client.id)) {
+    return passthrough()
+  }
+
+  // Bypass requests with the explicit bypass header.
+  // Such requests can be issued by "ctx.fetch()".
+  if (request.headers.get('x-msw-bypass') === 'true') {
+    return passthrough()
+  }
+
+  // Notify the client that a request has been intercepted.
+  const clientMessage = await sendToClient(client, {
+    type: 'REQUEST',
+    payload: {
+      id: requestId,
+      url: request.url,
+      method: request.method,
+      headers: Object.fromEntries(request.headers.entries()),
+      cache: request.cache,
+      mode: request.mode,
+      credentials: request.credentials,
+      destination: request.destination,
+      integrity: request.integrity,
+      redirect: request.redirect,
+      referrer: request.referrer,
+      referrerPolicy: request.referrerPolicy,
+      body: await request.text(),
+      bodyUsed: request.bodyUsed,
+      keepalive: request.keepalive,
+    },
+  })
+
+  switch (clientMessage.type) {
+    case 'MOCK_RESPONSE': {
+      return respondWithMock(clientMessage.data)
+    }
+
+    case 'MOCK_NOT_FOUND': {
+      return passthrough()
+    }
+
+    case 'NETWORK_ERROR': {
+      const { name, message } = clientMessage.data
+      const networkError = new Error(message)
+      networkError.name = name
+
+      // Rejecting a "respondWith" promise emulates a network error.
+      throw networkError
+    }
+  }
+
+  return passthrough()
 }
 
 function sendToClient(client, message) {
   return new Promise((resolve, reject) => {
-    const channel = new MessageChannel();
+    const channel = new MessageChannel()
 
-    channel.port1.onmessage = event => {
+    channel.port1.onmessage = (event) => {
       if (event.data && event.data.error) {
-        reject(event.data.error);
-      } else {
-        resolve(event.data);
+        return reject(event.data.error)
       }
-    };
 
-    client.postMessage(JSON.stringify(message), [channel.port2]);
-  });
-}
-
-function createResponse(clientMessage) {
-  return new Response(clientMessage.payload.body, {
-    ...clientMessage.payload,
-    headers: clientMessage.payload.headers
-  });
-}
-
-function ensureKeys(keys, obj) {
-  return Object.keys(obj).reduce((acc, key) => {
-    if (keys.includes(key)) {
-      acc[key] = obj[key];
+      resolve(event.data)
     }
 
-    return acc;
-  }, {});
+    client.postMessage(message, [channel.port2])
+  })
+}
+
+function sleep(timeMs) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeMs)
+  })
+}
+
+async function respondWithMock(response) {
+  await sleep(response.delay)
+  return new Response(response.body, response)
 }

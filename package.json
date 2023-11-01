@@ -69,5 +69,8 @@
   "volta": {
     "node": "18.14.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "msw": {
+    "workerDirectory": "packages/manager/public"
+  }
 }
