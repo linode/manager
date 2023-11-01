@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 16,
   },
   label: {
-    fontWeight: 'bold',
+    fontFamily: theme.font.bold,
     marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
 }));
