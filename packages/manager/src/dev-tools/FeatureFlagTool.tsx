@@ -17,6 +17,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aglb', label: 'AGLB' },
   { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
+  { flag: 'dcGetWell', label: 'DC Get Well' },
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
   { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
