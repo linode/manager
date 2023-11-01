@@ -1,6 +1,6 @@
 import { number, object, string, array } from 'yup';
 
-const LABEL_REQUIRED = 'Label is required';
+const LABEL_REQUIRED = 'Label is required.';
 
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
