@@ -1,5 +1,5 @@
 import { APIWarning } from '../types';
-import type { Region } from '../regions';
+import type { Capabilities, Region } from '../regions';
 
 export interface User {
   username: string;
@@ -71,7 +71,7 @@ export type AccountCapability =
 
 export interface AccountAvailability {
   id: string; // will be ID of region
-  unavailable: AccountCapability[];
+  unavailable: Capabilities[];
 }
 
 export interface AccountSettings {
