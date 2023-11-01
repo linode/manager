@@ -69,6 +69,11 @@ export type AccountCapability =
   | 'Vlans'
   | 'VPCs';
 
+export interface AccountRegionAvailabilty {
+  id: string; // will be ID of region
+  unavailable: AccountCapability[];
+}
+
 export interface AccountSettings {
   managed: boolean;
   longview_subscription: string | null;
