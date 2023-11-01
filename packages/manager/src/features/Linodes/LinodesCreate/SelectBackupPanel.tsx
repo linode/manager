@@ -12,10 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
+import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 
 export const aggregateBackups = (
@@ -50,15 +47,13 @@ interface Props {
   selectedLinodeWithBackups?: LinodeWithBackups;
 }
 
-type CombinedProps = Props & WithProfileProps;
-
-export const SelectBackupPanel = withProfile((props: CombinedProps) => {
+export const SelectBackupPanel = (props: Props) => {
+  const { data: profile } = useProfile();
   const {
     error,
     handleChangeBackup,
     handleChangeBackupInfo,
     loading,
-    profile,
     selectedBackupID,
     selectedLinodeID,
     selectedLinodeWithBackups,
@@ -75,12 +70,13 @@ export const SelectBackupPanel = withProfile((props: CombinedProps) => {
       ? 'Automatic'
       : 'Snapshot';
     const subheading = formatDate(backup.created, {
-      timezone: profile.data?.timezone,
+      timezone: profile?.timezone,
     });
     const infoName =
       heading === 'Automatic'
         ? 'From automatic backup'
         : `From backup ${heading}`;
+
     return {
       heading,
       infoName,
@@ -137,7 +133,7 @@ export const SelectBackupPanel = withProfile((props: CombinedProps) => {
       </StyledWrapperGrid>
     </StyledRootPaper>
   );
-});
+};
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
