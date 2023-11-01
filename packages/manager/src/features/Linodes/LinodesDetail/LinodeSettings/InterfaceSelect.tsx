@@ -2,7 +2,6 @@ import {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,6 +9,7 @@ import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
 import { useFlags } from 'src/hooks/useFlags';
@@ -40,6 +40,7 @@ interface VPCStateErrors {
 
 interface VPCState {
   errors: VPCStateErrors;
+  iPv4_nat_1_1?: string;
   subnetId?: null | number;
   vpcIPv4?: string;
   vpcId?: null | number;
@@ -59,6 +60,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     errors,
     fromAddonsPanel,
     handleChange,
+    iPv4_nat_1_1,
     ipamAddress,
     label,
     purpose,
@@ -103,7 +105,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
   }
 
   const [autoAssignVPCIPv4, setAutoAssignVPCIPv4] = React.useState(true);
-  const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(false);
+  const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(
+    Boolean(iPv4_nat_1_1)
+  );
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
