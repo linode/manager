@@ -2,7 +2,6 @@ import '@reach/tabs/styles.css';
 import { ErrorBoundary } from '@sentry/react';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -14,13 +13,12 @@ import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.cont
 import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import GoTo from './GoTo';
-import IdentifyUser from './IdentifyUser';
-import MainContent from './MainContent';
+import { GoTo } from './GoTo';
+import { MainContent } from './MainContent';
+import { SplashScreen } from './components/SplashScreen';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
-import { useAuthentication } from './hooks/useAuthentication';
-import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
+import { useInitialRequests } from './hooks/useInitialRequests';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -37,7 +35,7 @@ import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
 import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
-import { ApplicationState } from './store';
+import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 import { getNextThemeValue } from './utilities/theme';
 import { isOSMac } from './utilities/userAgent';
 
@@ -52,11 +50,9 @@ const BaseApp = withDocumentTitleProvider(
       const { data: preferences } = usePreferences();
       const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
-      const { featureFlagsLoading } = useFeatureFlagsLoad();
-      const appIsLoading = useSelector(
-        (state: ApplicationState) => state.initialLoad.appIsLoading
-      );
-      const { loggedInAsCustomer } = useAuthentication();
+      const { isLoading } = useInitialRequests();
+
+      const { areFeatureFlagsLoading } = useSetupFeatureFlags();
 
       const { enqueueSnackbar } = useSnackbar();
 
@@ -263,10 +259,14 @@ const BaseApp = withDocumentTitleProvider(
         };
       }, [handleMigrationEvent]);
 
+      if (isLoading || areFeatureFlagsLoading) {
+        return <SplashScreen />;
+      }
+
       return (
         <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
           {/** Accessibility helper */}
-          <a href="#main-content" className="skip-link">
+          <a className="skip-link" href="#main-content">
             Skip to main content
           </a>
           <div hidden>
@@ -276,16 +276,10 @@ const BaseApp = withDocumentTitleProvider(
               Opens an external site in a new window
             </span>
           </div>
-          <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+          <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
           {/** Update the LD client with the user's id as soon as we know it */}
-          <IdentifyUser />
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
-          {featureFlagsLoading ? null : (
-            <MainContent
-              appIsLoading={appIsLoading}
-              isLoggedInAsCustomer={loggedInAsCustomer}
-            />
-          )}
+          <MainContent />
         </ErrorBoundary>
       );
     })

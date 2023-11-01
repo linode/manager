@@ -38,14 +38,6 @@ import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
 } from 'src/store/stackScriptDialog';
 
-import featureFlagsLoad, {
-  State as FeatureFlagsLoadState,
-  defaultState as featureFlagsLoadState,
-} from './featureFlagsLoad/featureFlagsLoad.reducer';
-import initialLoad, {
-  State as InitialLoadState,
-  defaultState as initialLoadState,
-} from './initialLoad/initialLoad.reducer';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import mockFeatureFlags, {
   MockFeatureFlagState,
@@ -62,9 +54,7 @@ export interface ApplicationState {
   authentication: AuthState;
   createLinode: LinodeCreateState;
   events: EventsState;
-  featureFlagsLoad: FeatureFlagsLoadState;
   globalErrors: GlobalErrorState;
-  initialLoad: InitialLoadState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
@@ -76,9 +66,7 @@ export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
   createLinode: linodeCreateDefaultState,
   events: eventsDefaultState,
-  featureFlagsLoad: featureFlagsLoadState,
   globalErrors: defaultGlobalErrorState,
-  initialLoad: initialLoadState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
   mockFeatureFlags: defaultMockFeatureFlagState,
@@ -93,9 +81,7 @@ const reducers = combineReducers<ApplicationState>({
   authentication,
   createLinode: linodeCreateReducer,
   events,
-  featureFlagsLoad,
   globalErrors,
-  initialLoad,
   longviewClients: longview,
   longviewStats,
   mockFeatureFlags,
