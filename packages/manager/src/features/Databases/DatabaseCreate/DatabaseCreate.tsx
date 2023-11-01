@@ -460,7 +460,7 @@ const DatabaseCreate = () => {
             },
           ],
           labelOptions: {
-            suffixComponent: flags.databaseBeta ? (
+            suffixComponent: !flags.databaseBeta ? (
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
