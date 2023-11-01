@@ -1173,20 +1173,20 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept P2 AVC Ultra Transcoder is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
+    description: `MainConcept P2 AVC-ULTRA Transcoder is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept P2 AVC Ultra Transcoder',
+    name: 'MainConcept P2 AVC-ULTRA Transcoder',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra/',
         title:
-          'Deploy MainConcept P2 AVC Ultra Transcoder through the Linode Marketplace',
+          'Deploy MainConcept P2 AVC-ULTRA Transcoder through the Linode Marketplace',
       },
     ],
     summary:
-      'MainConcept P2 AVC Ultra Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+      'MainConcept P2 AVC-ULTRA Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Sony camera format encoder.',
@@ -1209,7 +1209,7 @@ export const oneClickApps: OCA[] = [
     ],
     summary:
       'MainConcept XAVC Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Sony XDCAM format encoder.',
@@ -1232,7 +1232,7 @@ export const oneClickApps: OCA[] = [
     ],
     summary:
       'MainConcept XDCAM Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Open source Twitter alternative.',
