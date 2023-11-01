@@ -35,21 +35,14 @@ describe('Database Backups', () => {
   it('should render a list of backups after loading', async () => {
     const backups = databaseBackupFactory.buildList(7);
 
+    // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       rest.get('*/profile', (req, res, ctx) => {
         return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
-      })
-    );
-
-    // Mock the Database because the Backups Details page requires it to be loaded
-    server.use(
+      }),
       rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
         return res(ctx.json(databaseFactory.build()));
-      })
-    );
-
-    // Mock a list of 7 backups
-    server.use(
+      }),
       rest.get('*/databases/:engine/instances/:id/backups', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage(backups)));
       })
