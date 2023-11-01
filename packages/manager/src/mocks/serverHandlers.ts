@@ -1024,7 +1024,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage([florida, singapore, tokyo])));
   }),
   rest.get('*/account/availability/:regionId', (req, res, ctx) => {
-    return res(ctx.json(accountFactory.build()));
+    return res(ctx.json(accountAvailabilityFactory.build()));
   }),
   rest.put('*/account', (req, res, ctx) => {
     return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
