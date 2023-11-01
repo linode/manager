@@ -1,6 +1,6 @@
 import { number, object, string, array } from 'yup';
 
-const LABEL_REQUIRED = 'Label is required';
+const LABEL_REQUIRED = 'Label is required.';
 
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
@@ -154,19 +154,18 @@ export const UpdateRouteSchema = object({
   }),
 });
 
-export const loadBalancerLabelValidation = object({
-  label: string()
-    .matches(
-      /^[a-zA-Z0-9.\-_]+$/,
-      'Label may only contain letters, numbers, periods, dashes, and underscores.'
-    )
-    .required('Label is required.'),
-});
-
 // Endpoint Schema
 const endpointSchema = object({
-  ip: string(),
-  hostname: string(),
+  ip: string().when('hostname', {
+    is: (hostname: string) => !hostname,
+    then: string().required(),
+    otherwise: string(),
+  }),
+  hostname: string().when('ip', {
+    is: (ip: string) => !ip,
+    then: string().required(),
+    otherwise: string(),
+  }),
   port: number().integer().required(),
   capacity: number().integer().required(),
 });
@@ -198,7 +197,7 @@ const createLoadBalancerRuleSchema = object({
 });
 
 export const configurationSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   port: number().required('Port is required.').min(0).max(65_535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: string().when('protocol', {
@@ -228,9 +227,13 @@ export const configurationSchema = object({
       .required(),
   }),
 });
-
 export const createLoadBalancerSchema = object({
-  label: loadBalancerLabelValidation.required(LABEL_REQUIRED),
+  label: string()
+    .matches(
+      /^[a-zA-Z0-9.\-_]+$/,
+      'Label may only contain letters, numbers, periods, dashes, and underscores.'
+    )
+    .required(LABEL_REQUIRED),
   tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
   configurations: array().of(configurationSchema),
