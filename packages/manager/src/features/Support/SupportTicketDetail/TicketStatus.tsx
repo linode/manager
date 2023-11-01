@@ -1,9 +1,11 @@
 import { SupportTicket } from '@linode/api-v4/lib/support/types';
-import { Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
@@ -55,9 +57,8 @@ export const TicketStatus = (props: Props) => {
           flexDirection: 'row',
         }}
       >
-        <StatusIcon
+        <StyledStatusIcon
           status={status === 'closed' ? 'inactive' : 'active'}
-          sx={{ alignSelf: 'center' }}
         />
         {capitalize(status)}
       </Stack>
@@ -70,3 +71,13 @@ export const TicketStatus = (props: Props) => {
     </Stack>
   );
 };
+
+const StyledStatusIcon = styled(StatusIcon, {
+  label: 'StyledStatusIcon',
+})(({ theme, ...props }) => ({
+  alignSelf: 'center',
+  ...(props.status === 'inactive' &&
+    theme.name === 'light' && {
+      backgroundColor: theme.color.grey3,
+    }),
+}));
