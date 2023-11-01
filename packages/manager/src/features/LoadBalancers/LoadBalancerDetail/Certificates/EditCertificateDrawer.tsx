@@ -89,7 +89,6 @@ export const EditCertificateDrawer = (props: Props) => {
       title={`Edit ${certificate?.label ?? 'Certificate'}`}
       wide
     >
-      {errorMap.none && <Notice variant="error">{errorMap.none}</Notice>}
       {!certificate ? (
         <Notice variant="error">Error loading certificate.</Notice>
       ) : (
