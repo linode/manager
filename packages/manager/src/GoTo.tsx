@@ -58,7 +58,7 @@ interface Props {
   open: boolean;
 }
 
-const GoTo = (props: Props) => {
+export const GoTo = React.memo((props: Props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
@@ -195,6 +195,4 @@ const GoTo = (props: Props) => {
       </div>
     </Dialog>
   );
-};
-
-export default React.memo(GoTo);
+});
