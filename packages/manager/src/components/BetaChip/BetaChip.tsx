@@ -36,7 +36,14 @@ export interface BetaChipProps
 export const BetaChip = (props: BetaChipProps) => {
   const { color } = props;
 
-  return <StyledBetaChip {...props} color={color} label="beta" />;
+  return (
+    <StyledBetaChip
+      {...props}
+      color={color}
+      data-testid="betaChip"
+      label="beta"
+    />
+  );
 };
 
 const StyledBetaChip = styled(Chip, {
