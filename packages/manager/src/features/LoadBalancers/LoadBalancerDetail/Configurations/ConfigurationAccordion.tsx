@@ -106,7 +106,7 @@ export const ConfigurationAccordion = (props: Props) => {
               {pluralize('Route', 'Routes', configuration.routes.length)}
             </Typography>
           </Stack>
-          {/* @TODO Hook up endpoint status */}
+          {/* TODO: AGLB - Hook up endpoint status */}
           <Stack direction="row" spacing={2}>
             <Stack alignItems="center" direction="row" spacing={1}>
               <Typography>Endpoints:</Typography>
@@ -139,7 +139,7 @@ export const ConfigurationAccordion = (props: Props) => {
                 formik.setFieldValue('protocol', value)
               }
               textFieldProps={{
-                labelTooltipText: 'TODO',
+                labelTooltipText: 'TODO: AGLB',
               }}
               value={protocolOptions.find(
                 (option) => option.value === formik.values.protocol
@@ -152,7 +152,7 @@ export const ConfigurationAccordion = (props: Props) => {
             <TextField
               errorText={errorMap.port}
               label="Port"
-              labelTooltipText="TODO"
+              labelTooltipText="TODO: AGLB"
               name="port"
               onChange={formik.handleChange}
               value={formik.values.port}

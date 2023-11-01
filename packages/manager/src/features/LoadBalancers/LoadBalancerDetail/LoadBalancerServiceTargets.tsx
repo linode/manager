@@ -111,12 +111,9 @@ export const LoadBalancerServiceTargets = () => {
                   aria-label="Clear"
                   onClick={() => setQuery('')}
                   size="small"
-                  sx={{ padding: 'unset' }}
+                  sx={{ color: '#aaa', padding: 'unset' }}
                 >
-                  <CloseIcon
-                    color="inherit"
-                    sx={{ color: '#aaa !important' }}
-                  />
+                  <CloseIcon color="inherit" />
                 </IconButton>
               </InputAdornment>
             ),
@@ -153,6 +150,16 @@ export const LoadBalancerServiceTargets = () => {
             <Hidden lgDown>
               <TableCell>Health Checks</TableCell>
             </Hidden>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'id'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="id"
+              >
+                ID
+              </TableSortCell>
+            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -183,6 +190,9 @@ export const LoadBalancerServiceTargets = () => {
                 <TableCell>
                   {serviceTarget.healthcheck.interval !== 0 ? 'Yes' : 'No'}
                 </TableCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableCell>{serviceTarget.id}</TableCell>
               </Hidden>
               <TableCell actionCell>
                 <ActionMenu
