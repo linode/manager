@@ -20,9 +20,16 @@ const {
 
 const defaultToken = tokenInLocalStorage.get();
 
+function getIsLoggedInAsCustomer(token: string) {
+  if (!token) {
+    return false;
+  }
+  return token.toLowerCase().includes('admin');
+}
+
 export const defaultState: State = {
   expiration: expiryInLocalStorage.get(),
-  loggedInAsCustomer: (defaultToken || '').toLowerCase().includes('admin'),
+  loggedInAsCustomer: getIsLoggedInAsCustomer(defaultToken),
   scopes: scopesInLocalStorage.get(),
   token: defaultToken,
 };
@@ -78,7 +85,7 @@ const reducer = reducerWithInitialState(defaultState)
     }
 
     /** token will either be "Admin: 1234" or "Bearer: 1234" */
-    const isLoggedInAsCustomer = (token || '').toLowerCase().includes('admin');
+    const isLoggedInAsCustomer = getIsLoggedInAsCustomer(token);
 
     return {
       ...state,

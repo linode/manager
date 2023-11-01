@@ -172,7 +172,7 @@ const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
-const MainContent = () => {
+export const MainContent = () => {
   const { classes, cx } = useStyles();
   const flags = useFlags();
   const { data: preferences } = usePreferences();
@@ -285,11 +285,7 @@ const MainContent = () => {
    * otherwise just show the rest of the app.
    */
   return (
-    <div
-      className={cx({
-        [classes.appFrame]: true,
-      })}
-    >
+    <div className={classes.appFrame}>
       <ComplianceUpdateProvider value={complianceUpdateContextValue}>
         <NotificationProvider value={contextValue}>
           <>
@@ -359,15 +355,13 @@ const MainContent = () => {
                         <Route component={SearchLanding} path="/search" />
                         <Route component={EventsLanding} path="/events" />
                         <Route component={Firewalls} path="/firewalls" />
-                        {showDatabases ? (
+                        {showDatabases && (
                           <Route component={Databases} path="/databases" />
-                        ) : null}
-                        {flags.selfServeBetas ? (
+                        )}
+                        {flags.selfServeBetas && (
                           <Route component={BetaRoutes} path="/betas" />
-                        ) : null}
-                        {showVPCs ? (
-                          <Route component={VPC} path="/vpcs" />
-                        ) : null}
+                        )}
+                        {showVPCs && <Route component={VPC} path="/vpcs" />}
                         <Redirect exact from="/" to={defaultRoot} />
                         {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                         <Redirect from="/dashboard" to={defaultRoot} />
@@ -386,8 +380,6 @@ const MainContent = () => {
     </div>
   );
 };
-
-export default React.memo(MainContent);
 
 // =============================================================================
 // Utilities

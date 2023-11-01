@@ -13,8 +13,8 @@ import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.cont
 import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import GoTo from './GoTo';
-import MainContent from './MainContent';
+import { GoTo } from './GoTo';
+import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
