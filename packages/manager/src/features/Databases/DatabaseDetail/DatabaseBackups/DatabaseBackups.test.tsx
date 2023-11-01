@@ -2,7 +2,11 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
-import { databaseBackupFactory, databaseFactory } from 'src/factories';
+import {
+  databaseBackupFactory,
+  databaseFactory,
+  profileFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
@@ -31,6 +35,12 @@ describe('Database Backups', () => {
   it('should render a list of backups after loading', async () => {
     const backups = databaseBackupFactory.buildList(7);
 
+    server.use(
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      })
+    );
+
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
@@ -57,7 +67,9 @@ describe('Database Backups', () => {
 
     for (const backup of backups) {
       // Check to see if all 7 backups are rendered
-      expect(getByText(formatDate(backup.created))).toBeInTheDocument();
+      expect(
+        getByText(formatDate(backup.created, { timezone: 'utc' }))
+      ).toBeInTheDocument();
     }
   });
 
