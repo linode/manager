@@ -1,4 +1,5 @@
 import { fireEvent } from '@testing-library/react';
+import { Formik } from 'formik';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -8,17 +9,26 @@ import { LoadBalancerLabel } from './LoadBalancerLabel';
 const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
 
-jest.mock('../useLoadBalancerState', () => ({
-  useLoadBalancerState: jest.fn(() => ({
-    errors: { label: null }, // Mock the errors state
-    handleLabelChange: jest.fn(), // Mock the handleLabelChange function
-    loadBalancerLabelValue, // Mock the loadBalancerLabelValue state
-  })),
-}));
+import { FormValues } from './LoadBalancerCreate';
+
+type MockFormikContext = {
+  initialErrors?: {};
+  initialTouched?: {};
+  initialValues: FormValues;
+};
+
+const renderWithFormikWrapper = (mockFormikContext: MockFormikContext) =>
+  renderWithTheme(
+    <Formik {...mockFormikContext} onSubmit={jest.fn()}>
+      <LoadBalancerLabel />
+    </Formik>
+  );
 
 describe('LoadBalancerLabel', () => {
   it('should render the component with a label and no error', () => {
-    const { getByTestId, queryByText } = renderWithTheme(<LoadBalancerLabel />);
+    const { getByTestId, queryByText } = renderWithFormikWrapper({
+      initialValues: { label: loadBalancerLabelValue },
+    });
 
     const labelInput = getByTestId(loadBalancerTestId);
     const errorNotice = queryByText('Error Text');
@@ -30,15 +40,11 @@ describe('LoadBalancerLabel', () => {
   });
 
   it('should render the component with an error message', () => {
-    // Mock the error state to test the error scenario
-    jest
-      .spyOn(require('../useLoadBalancerState'), 'useLoadBalancerState')
-      .mockImplementation(() => ({
-        errors: { label: 'This is an error' }, // Mock the errors state with an error message
-        handleLabelChange: jest.fn(), // Mock the handleLabelChange function
-        loadBalancerLabelValue, // Mock the loadBalancerLabelValue state
-      }));
-    const { getByTestId, getByText } = renderWithTheme(<LoadBalancerLabel />);
+    const { getByTestId, getByText } = renderWithFormikWrapper({
+      initialErrors: { label: 'This is an error' },
+      initialTouched: { label: true },
+      initialValues: { label: loadBalancerLabelValue },
+    });
 
     const labelInput = getByTestId(loadBalancerTestId);
     const errorNotice = getByText('This is an error');
@@ -46,31 +52,18 @@ describe('LoadBalancerLabel', () => {
     expect(labelInput).toBeInTheDocument();
     expect(errorNotice).toBeInTheDocument();
   });
-  it('should call handleLabelChange with the input value', () => {
-    // Mock the useLoadBalancerInputLabel hook to track the function call
-    const mockHandleLabelChange = jest.fn();
-    jest
-      .spyOn(require('../useLoadBalancerState'), 'useLoadBalancerState')
-      .mockImplementation(() => ({
-        errors: { label: null },
-        handleLabelChange: mockHandleLabelChange, // Use the mock function
-        loadBalancerLabelValue,
-      }));
 
-    const { getByTestId } = renderWithTheme(<LoadBalancerLabel />);
+  it('should update formik values on input change', () => {
+    const { getByTestId } = renderWithFormikWrapper({
+      initialValues: { label: loadBalancerLabelValue },
+    });
 
     const labelInput = getByTestId(loadBalancerTestId);
 
     // Simulate typing 'New Label' in the input field
     fireEvent.change(labelInput, { target: { value: 'New Label' } });
 
-    // Expect the handleLabelChange function to have been called with 'New Label' as the argument
-    expect(mockHandleLabelChange).toHaveBeenCalledWith(
-      expect.objectContaining({
-        target: expect.objectContaining({
-          value: 'New Label',
-        }),
-      })
-    );
+    // Expect the input to have the new value
+    expect(labelInput).toHaveValue('New Label');
   });
 });

@@ -1,16 +1,18 @@
+import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 
-import { useLoadBalancerState } from '../useLoadBalancerState';
+import { FormValues } from './LoadBalancerCreate';
 
 export const LoadBalancerLabel = () => {
   const {
     errors,
-    handleLabelChange,
-    loadBalancerLabelValue,
-  } = useLoadBalancerState();
+    handleChange,
+    touched,
+    values,
+  } = useFormikContext<FormValues>();
 
   return (
     <Paper
@@ -23,12 +25,13 @@ export const LoadBalancerLabel = () => {
       <TextField
         data-qa-label-input
         disabled={false}
-        errorText={errors.label}
+        errorText={touched.label && errors.label ? errors.label : undefined} // Display errors if the field is touched and there's an error
         label="Load Balancer Label"
+        name="label"
         noMarginTop
-        onChange={handleLabelChange}
+        onChange={handleChange}
         placeholder="Enter a label"
-        value={loadBalancerLabelValue}
+        value={values?.label}
       />
     </Paper>
   );

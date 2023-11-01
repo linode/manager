@@ -7,10 +7,15 @@ import { Flag } from 'src/components/Flag';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-import { useLoadBalancerState } from '../useLoadBalancerState';
+const loadBalancerRegions = [
+  { country: 'us', id: 'us-iad', label: 'Washington, DC' },
+  { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
+  { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
+  { country: 'jp', id: 'jp-osa', label: 'Osaka, JP' },
+  { country: 'au', id: 'ap-southeast', label: 'Sydney, AU' },
+];
 
 export const LoadBalancerRegions = () => {
-  const { loadBalancerRegions } = useLoadBalancerState();
   return (
     <Paper>
       <Stack spacing={2}>
