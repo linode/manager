@@ -77,8 +77,9 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
 
     for (let i = 0; i < formik.values.subnets.length; i++) {
       const { ip, label } = formik.values.subnets[i];
-      // if we are inside the VPCCreateDrawer, we force the first subnet to
-      // always be included in the payload, even if its fields are empty.
+      // if we are inside the VPCCreateDrawer, we force the first subnet to always be included in the payload,
+      // even if its fields are empty. This is for validation purposes - so that errors can be surfaced on the
+      // first subnet's label and ipv4 field if applicable.
       if ((onDrawerClose && i === 0) || ip.ipv4 || label) {
         subnetsPayload.push({ ipv4: ip.ipv4, label });
         subnetIdxMapping[i] = apiSubnetIdx;

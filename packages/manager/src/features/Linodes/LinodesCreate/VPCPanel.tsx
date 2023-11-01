@@ -331,16 +331,14 @@ export const VPCPanel = (props: VPCPanelProps) => {
           )}
         </Stack>
       </Paper>
-      {isVPCCreateDrawerOpen &&
-        from === 'linodeCreate' &&
-        regionSupportsVPCs && (
-          <VPCCreateDrawer
-            handleSelectVPC={(vpcId: number) => handleSelectVPC(vpcId)}
-            onClose={() => setIsVPCCreateDrawerOpen(false)}
-            open={isVPCCreateDrawerOpen}
-            selectedRegion={region}
-          />
-        )}
+      {isVPCCreateDrawerOpen && (
+        <VPCCreateDrawer
+          handleSelectVPC={(vpcId: number) => handleSelectVPC(vpcId)}
+          onClose={() => setIsVPCCreateDrawerOpen(false)}
+          open={isVPCCreateDrawerOpen}
+          selectedRegion={region}
+        />
+      )}
     </>
   );
 };

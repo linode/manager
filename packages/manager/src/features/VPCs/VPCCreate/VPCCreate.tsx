@@ -45,7 +45,7 @@ const VPCCreate = () => {
         docsLink="#" // @TODO VPC: add correct docs link
         title="Create"
       />
-      {userCannotAddVPC && <CannotCreateVPCNotice />}
+      {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
         {generalAPIError ? (
           <Notice text={generalAPIError} variant="error" />

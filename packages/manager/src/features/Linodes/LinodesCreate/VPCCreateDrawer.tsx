@@ -47,7 +47,7 @@ export const VPCCreateDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title={'Create VPC'}>
-      {userCannotAddVPC && <CannotCreateVPCNotice />}
+      {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
         {generalAPIError ? (
           <Notice text={generalAPIError} variant="error" />
