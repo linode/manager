@@ -1,4 +1,4 @@
-import { loadBalancerLabelValidation } from '@linode/validation';
+import { createLoadBalancerSchema } from '@linode/validation';
 import Stack from '@mui/material/Stack';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
@@ -11,13 +11,11 @@ import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
-export interface FormValues {
-  label: string;
-  // add other fields here as needed
-}
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 const initialValues = {
   label: '',
+  regions: [],
 };
 
 const LoadBalancerCreate = () => {
@@ -36,13 +34,13 @@ const LoadBalancerCreate = () => {
         }}
         title="Create"
       />
-      <Formik<FormValues>
+      <Formik<CreateLoadbalancerPayload>
         onSubmit={(values, actions) => {
           // TODO: AGLB - Implement form submit
           // console.log('Values ', values);
         }}
         initialValues={initialValues}
-        validationSchema={loadBalancerLabelValidation}
+        validationSchema={createLoadBalancerSchema}
       >
         <Form>
           <Stack spacing={3}>
