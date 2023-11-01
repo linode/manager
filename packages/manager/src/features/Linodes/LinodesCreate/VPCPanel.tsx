@@ -198,12 +198,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
           options={vpcDropdownOptions}
           placeholder={'Select a VPC'}
         />
-        {vpcDropdownOptions.length <= 1 && regionSupportsVPCs && (
-          <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
-            No VPCs exist in the selected region. Click Create VPC to create
-            one.
-          </Typography>
-        )}
+        {/* todo - Connie - do we want the create VPC link in the add/edit config flow? */}
+        {from === 'linodeCreate' &&
+          vpcDropdownOptions.length <= 1 &&
+          regionSupportsVPCs && (
+            <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
+              No VPCs exist in the selected region. Click Create VPC to create
+              one.
+            </Typography>
+          )}
 
         {from === 'linodeCreate' && (
           <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
