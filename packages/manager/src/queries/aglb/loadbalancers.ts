@@ -36,34 +36,34 @@ export const useLoadBalancerQuery = (id: number, enabled = true) => {
 };
 
 export const useLoadBalancerMutation = (id: number) => {
-  const queryCleint = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation<Loadbalancer, APIError[], UpdateLoadbalancerPayload>(
     (data) => updateLoadbalancer(id, data),
     {
       onSuccess(data) {
-        queryCleint.setQueryData([QUERY_KEY, 'aglb', id], data);
+        queryClient.setQueryData([QUERY_KEY, 'aglb', id], data);
       },
     }
   );
 };
 
 export const useLoadBalancerBasicCreateMutation = () => {
-  const queryCleint = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation<Loadbalancer, APIError[], CreateBasicLoadbalancerPayload>(
     (data) => createBasicLoadbalancer(data),
     {
       onSuccess(data) {
-        queryCleint.setQueryData([QUERY_KEY, 'aglb', data.id], data);
+        queryClient.setQueryData([QUERY_KEY, 'aglb', data.id], data);
       },
     }
   );
 };
 
 export const useLoadBalancerDeleteMutation = (id: number) => {
-  const queryCleint = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteLoadbalancer(id), {
     onSuccess() {
-      queryCleint.removeQueries([QUERY_KEY, 'aglb', id]);
+      queryClient.removeQueries([QUERY_KEY, 'aglb', id]);
     },
   });
 };

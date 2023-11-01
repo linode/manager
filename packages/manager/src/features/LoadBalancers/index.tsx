@@ -26,6 +26,9 @@ const LoadBalancer = () => {
     <React.Suspense fallback={<SuspenseLoader />}>
       <ProductInformationBanner bannerLocation="LoadBalancers" />
       <Switch>
+        {/**
+         * TODO: AGLB - remove alternative create flow
+         */}
         <Route
           component={
             flags.aglbFullCreateFlow

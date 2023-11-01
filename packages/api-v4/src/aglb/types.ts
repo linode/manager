@@ -18,7 +18,7 @@ export interface CreateLoadbalancerPayload {
 }
 
 /**
- * @TODO AGLB remove when we move to full creation flow
+ * TODO: AGLB - remove when we move to full creation flow
  */
 export interface CreateBasicLoadbalancerPayload {
   label: string;

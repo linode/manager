@@ -152,6 +152,9 @@ export const UpdateRouteSchema = object({
   }),
 });
 
+/**
+ * TODO: AGLB - remove this create schema
+ */
 export const CreateBasicLoadbalancerSchema = object({
   label: string()
     .min(1, 'Label must not be empty.')
