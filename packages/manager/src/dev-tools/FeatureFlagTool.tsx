@@ -15,6 +15,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'metadata', label: 'Metadata' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
+  { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
   { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },

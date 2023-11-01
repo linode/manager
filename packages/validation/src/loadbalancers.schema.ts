@@ -24,7 +24,7 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
-export const certificateConfigSchema = object({
+export const CertificateConfigSchema = object({
   certificates: array(
     object({
       id: number()
@@ -163,4 +163,13 @@ export const UpdateConfigurationSchema = object({
     })
   ),
   routes: array().of(number()),
+});
+
+/**
+ * TODO: AGLB - remove this create schema
+ */
+export const CreateBasicLoadbalancerSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required'),
 });
