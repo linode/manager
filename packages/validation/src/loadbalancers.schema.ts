@@ -157,23 +157,23 @@ export const UpdateRouteSchema = object({
 // Endpoint Schema
 const CreateLoadBalancerEndpointSchema = object({
   ip: string().test(
-    'ip-or-hostname',
-    'Either IP or hostname must be provided.',
+    'ip-or-host',
+    'Either IP or host must be provided.',
     function (value) {
-      const { hostname } = this.parent;
-      return !!value || !!hostname;
+      const { host } = this.parent;
+      return !!value || !!host;
     }
   ),
-  hostname: string().test(
-    'hostname-or-ip',
-    'Either hostname or IP must be provided.',
+  host: string().test(
+    'host-or-ip',
+    'Either host or IP must be provided.',
     function (value) {
       const { ip } = this.parent;
       return !!value || !!ip;
     }
   ),
   port: number().integer().required(),
-  capacity: number().integer().required(),
+  rate_capacity: number().integer().required(),
 });
 
 // Service Target Schema
