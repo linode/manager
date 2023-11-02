@@ -7,8 +7,9 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { useInitialRequests } from 'src/hooks/useInitialRequests';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,
@@ -23,6 +24,8 @@ const AUTH_POLLING_INTERVAL = 2000;
 
 const Lish = () => {
   const history = useHistory();
+
+  const { isLoading: isMakingInitalRequests } = useInitialRequests();
 
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
   const id = Number(linodeId);
@@ -40,7 +43,7 @@ const Lish = () => {
     refetch,
   } = useLinodeLishTokenQuery(id);
 
-  const isLoading = isLinodeLoading || isTokenLoading;
+  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
 
   const token = data?.lish_token;
 

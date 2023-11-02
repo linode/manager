@@ -85,9 +85,7 @@ export const StyledLabel = styled(Typography, {
   label: 'StyledLabel',
 })(({ theme }) => ({
   color: theme.name === 'light' ? '#555' : '#c9cacb',
-  fontFamily: 'LatoWebBold',
   fontSize: '.875rem',
-  fontWeight: 400,
   lineHeight: '1',
   marginBottom: '8px',
   marginTop: theme.spacing(2),
