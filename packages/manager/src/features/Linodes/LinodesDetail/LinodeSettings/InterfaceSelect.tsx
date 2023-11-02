@@ -17,8 +17,9 @@ import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { Typography } from 'src/components/Typography';
 
-export interface Props {
+interface Props {
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;
@@ -27,6 +28,8 @@ export interface Props {
   readOnly: boolean;
   region?: string;
   slotNumber: number;
+  regionHasVLANs?: boolean;
+  regionHasVPCs?: boolean;
 }
 
 interface VPCStateErrors {
@@ -68,6 +71,8 @@ export const InterfaceSelect = (props: CombinedProps) => {
     subnetId,
     vpcIPv4,
     vpcId,
+    regionHasVLANs,
+    regionHasVPCs,
   } = props;
 
   const theme = useTheme();
@@ -313,13 +318,27 @@ export const InterfaceSelect = (props: CombinedProps) => {
     );
   };
 
+  const displayUnavailableInRegionTextVPC =
+    purpose === 'vpc' && regionHasVPCs === false;
+  const displayUnavailableInRegionTextVLAN =
+    purpose === 'vlan' && regionHasVLANs === false;
+
+  const unavailableInRegionHelperTextJSX =
+    !displayUnavailableInRegionTextVPC &&
+    !displayUnavailableInRegionTextVLAN ? null : (
+      <Typography sx={{ marginTop: theme.spacing() }}>
+        {displayUnavailableInRegionTextVPC ? 'VPC ' : 'VLAN '}{' '}
+        {unavailableInRegionHelperTextSegment}
+      </Typography>
+    );
+
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
         <Grid xs={isSmallBp ? 12 : 6}>
           <Select
             options={
-              // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
+              // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
               slotNumber > 0
                 ? purposeOptions
                 : purposeOptions.filter(
@@ -334,11 +353,13 @@ export const InterfaceSelect = (props: CombinedProps) => {
             label={`eth${slotNumber}`}
             onChange={handlePurposeChange}
           />
+          {unavailableInRegionHelperTextJSX}
         </Grid>
       )}
       {purpose === 'vlan' &&
+        regionHasVLANs !== false &&
         enclosingJSXForVLANFields(jsxSelectVLAN, jsxIPAMForVLAN)}
-      {purpose === 'vpc' && (
+      {purpose === 'vpc' && regionHasVPCs !== false && (
         <Grid xs={isSmallBp ? 12 : 6}>
           <VPCPanel
             toggleAssignPublicIPv4Address={() =>
@@ -406,3 +427,6 @@ const getPurposeOptions = (showVPCs: boolean) => {
 
   return purposeOptions;
 };
+
+const unavailableInRegionHelperTextSegment =
+  "is not available in this Linode's region";
