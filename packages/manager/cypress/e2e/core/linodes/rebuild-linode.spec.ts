@@ -1,17 +1,21 @@
-import { createLinode } from 'support/api/linodes';
-import { containsClick, getClick } from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
+import { createLinode, CreateLinodeRequest, Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomString, randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { createStackScript } from '@linode/api-v4/lib';
 import { interceptGetStackScripts } from 'support/intercepts/stackscripts';
-import { createLinodeRequestFactory } from '@src/factories';
+import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { cleanUp } from 'support/util/cleanup';
+import { chooseRegion } from 'support/util/regions';
+import {
+  interceptRebuildLinode,
+  mockGetLinodeDetails,
+  mockRebuildLinodeError,
+} from 'support/intercepts/linodes';
 
 const createStackScriptAndLinode = async (
-  stackScriptRequestPayload,
-  linodeRequestPayload
+  stackScriptRequestPayload: any,
+  linodeRequestPayload: CreateLinodeRequest
 ) => {
   return Promise.all([
     createStackScript(stackScriptRequestPayload),
@@ -19,22 +23,51 @@ const createStackScriptAndLinode = async (
   ]);
 };
 
-const checkPasswordComplexity = (rootPassword: string) => {
-  const weakPassword = '123';
-  const fairPassword = 'Akamai123';
+/**
+ * Opens the Rebuild Linode dialog by selecting it from the Linode's action menu.
+ *
+ * Assumes that the user has first navigated to the Linode's details page.
+ *
+ * @param linodeLabel - Label of the Linode being rebuilt.
+ */
+const openRebuildDialog = (linodeLabel: string) => {
+  ui.actionMenu
+    .findByTitle(`Action menu for Linode ${linodeLabel}`)
+    .should('be.visible')
+    .click();
 
-  // weak or fair root password cannot rebuild the linode
-  cy.get('[id="root-password"]').clear().type(weakPassword);
-  ui.button.findByTitle('Rebuild Linode').should('be.enabled').click();
-  cy.contains('Password does not meet complexity requirements.');
+  ui.actionMenuItem.findByTitle('Rebuild').should('be.visible').click();
+};
 
-  cy.get('[id="root-password"]').clear().type(fairPassword);
-  ui.button.findByTitle('Rebuild Linode').should('be.enabled').click();
-  cy.contains('Password does not meet complexity requirements.');
+/**
+ * Finds the Rebuild Linode dialog.
+ *
+ * @param linodeLabel - Label of the Linode being rebuilt.
+ *
+ * @returns Cypress chainable.
+ */
+const findRebuildDialog = (linodeLabel: string) => {
+  return ui.dialog
+    .findByTitle(`Rebuild Linode ${linodeLabel}`)
+    .should('be.visible');
+};
 
-  // Only strong password is allowed to rebuild the linode
-  cy.get('[id="root-password"]').type(rootPassword);
-  ui.button.findByTitle('Rebuild Linode').should('be.enabled').click();
+/**
+ * Enters a password into the "Root Password" field and confirms it is rated a given strength.
+ *
+ * @param desiredPassword - Password whose strength should be tested.
+ * @param passwordStrength - Expected strength for `desiredPassword`.
+ */
+const assertPasswordComplexity = (
+  desiredPassword: string,
+  passwordStrength: 'Weak' | 'Fair' | 'Good'
+) => {
+  cy.findByLabelText('Root Password')
+    .should('be.visible')
+    .clear()
+    .type(desiredPassword);
+
+  cy.contains(`Strength: ${passwordStrength}`).should('be.visible');
 };
 
 authenticate();
@@ -43,36 +76,56 @@ describe('rebuild linode', () => {
   const rootPassword = randomString(16);
 
   before(() => {
-    cleanUp(['linodes', 'stackscripts']);
+    cleanUp(['lke-clusters', 'linodes', 'stackscripts', 'images']);
   });
 
   it('rebuilds a linode from Image', () => {
-    createLinode().then((linode) => {
-      cy.visitWithLogin(`/linodes`);
-      cy.get(`[data-qa-linode="${linode.label}"]`)
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Running');
+    const weakPassword = 'abc123';
+    const fairPassword = 'Akamai123';
+
+    const linodeCreatePayload = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+    });
+
+    cy.defer(createLinode(linodeCreatePayload), 'creating Linode').then(
+      (linode: Linode) => {
+        interceptRebuildLinode(linode.id).as('linodeRebuild');
+
+        cy.visitWithLogin(`/linodes/${linode.id}`);
+        cy.findByText('RUNNING').should('be.visible');
+
+        openRebuildDialog(linode.label);
+        findRebuildDialog(linode.label).within(() => {
+          // "From Image" should be selected by default; no need to change the value.
+          ui.select.findByText('From Image').should('be.visible');
+
+          ui.select
+            .findByText('Choose an image')
+            .should('be.visible')
+            .click()
+            .type(`${image}{enter}`);
+
+          // Type to confirm.
+          cy.findByLabelText('Linode Label').type(linode.label);
+
+          // checkPasswordComplexity(rootPassword);
+          assertPasswordComplexity(weakPassword, 'Weak');
+          assertPasswordComplexity(fairPassword, 'Fair');
+          assertPasswordComplexity(rootPassword, 'Good');
+
+          ui.button
+            .findByTitle('Rebuild Linode')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/rebuild`)
-      ).as('linodeRebuild');
-      cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
-      cy.get('[data-qa-enhanced-select="From Image"]').within(() => {
-        containsClick('From Image').type('From Image{enter}');
-      });
-      cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-        containsClick('Choose an image').type(`${image}{enter}`);
-      });
-      cy.get('[id="linode-label"]').type(linode.label);
-
-      checkPasswordComplexity(rootPassword);
-
-      cy.wait('@linodeRebuild');
-      cy.contains('REBUILDING').should('be.visible');
-    });
+        cy.wait('@linodeRebuild');
+        cy.contains('REBUILDING').should('be.visible');
+      }
+    );
   });
 
   it('rebuilds a linode from Community StackScript', () => {
@@ -80,39 +133,63 @@ describe('rebuild linode', () => {
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';
 
-    createLinode().then((linode) => {
-      cy.visitWithLogin(`/linodes`);
-      cy.get(`[data-qa-linode="${linode.label}"]`)
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Running');
+    const linodeCreatePayload = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+    });
+
+    cy.defer(createLinode(linodeCreatePayload), 'creating Linode').then(
+      (linode: Linode) => {
+        interceptRebuildLinode(linode.id).as('linodeRebuild');
+        interceptGetStackScripts().as('getStackScripts');
+        cy.visitWithLogin(`/linodes/${linode.id}`);
+        cy.findByText('RUNNING').should('be.visible');
+
+        openRebuildDialog(linode.label);
+        findRebuildDialog(linode.label).within(() => {
+          ui.select.findByText('From Image').click();
+
+          ui.select
+            .findItemByText('From Community StackScript')
+            .should('be.visible')
+            .click();
+
+          cy.wait('@getStackScripts');
+          cy.findByLabelText('Search by Label, Username, or Description')
+            .should('be.visible')
+            .type(`${stackScriptName}`);
+
+          cy.wait('@getStackScripts');
+          cy.findByLabelText('List of StackScripts').within(() => {
+            cy.get(`[id="${stackScriptId}"][type="radio"]`).click();
+          });
+
+          ui.select
+            .findByText('Choose an image')
+            .scrollIntoView()
+            .should('be.visible')
+            .click();
+
+          ui.select.findItemByText(image).should('be.visible').click();
+
+          cy.findByLabelText('Linode Label')
+            .should('be.visible')
+            .type(linode.label);
+
+          assertPasswordComplexity(rootPassword, 'Good');
+
+          ui.button
+            .findByTitle('Rebuild Linode')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/rebuild`)
-      ).as('linodeRebuild');
-      cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
-      interceptGetStackScripts().as('getStackScripts');
-      cy.get('[data-qa-enhanced-select="From Image"]').within(() => {
-        containsClick('From Image').type('From Community StackScript{enter}');
-      });
-      cy.wait('@getStackScripts');
-      // Search the corresponding community stack script
-      cy.get('[id="search-by-label,-username,-or-description"]')
-        .click()
-        .type(`${stackScriptName}{enter}`);
-      getClick(`[id="${stackScriptId}"][type="radio"]`);
-      cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-        containsClick('Choose an image').type(`${image}{enter}`);
-      });
-      cy.get('[id="linode-label"]').type(linode.label);
-
-      checkPasswordComplexity(rootPassword);
-
-      cy.wait('@linodeRebuild');
-      cy.contains('REBUILDING').should('be.visible');
-    });
+        cy.wait('@linodeRebuild');
+        cy.contains('REBUILDING').should('be.visible');
+      }
+    );
   });
 
   it('rebuilds a linode from Account StackScript', () => {
@@ -145,33 +222,49 @@ describe('rebuild linode', () => {
     cy.defer(
       createStackScriptAndLinode(stackScriptRequest, linodeRequest),
       'creating stackScript and linode'
-    ).then(([stackScript, linodeBody]) => {
-      const linode = linodeBody.body;
-      cy.visitWithLogin(`/linodes`);
-      cy.get(`[data-qa-linode="${linode.label}"]`)
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Running');
+    ).then(([stackScript, linode]) => {
+      interceptRebuildLinode(linode.id).as('linodeRebuild');
+      cy.visitWithLogin(`/linodes/${linode.id}`);
+      cy.findByText('RUNNING').should('be.visible');
+
+      openRebuildDialog(linode.label);
+      findRebuildDialog(linode.label).within(() => {
+        ui.select.findByText('From Image').should('be.visible').click();
+
+        ui.select
+          .findItemByText('From Account StackScript')
+          .should('be.visible')
+          .click();
+
+        cy.findByLabelText('Search by Label, Username, or Description')
+          .should('be.visible')
+          .type(`${stackScript.label}`);
+
+        cy.findByLabelText('List of StackScripts').within(() => {
+          cy.get(`[id="${stackScript.id}"][type="radio"]`).click();
         });
 
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/rebuild`)
-      ).as('linodeRebuild');
-      cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
-      cy.get('[data-qa-enhanced-select="From Image"]').within(() => {
-        containsClick('From Image').type('From Account StackScript{enter}');
-      });
-      cy.get('[id="search-by-label,-username,-or-description"]')
-        .click()
-        .type(`${stackScript.label}{enter}`);
-      getClick(`[id="${stackScript.id}"][type="radio"]`);
-      cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-        containsClick('Choose an image').type(`${image}{enter}`);
-      });
-      cy.get('[id="linode-label"]').type(linode.label);
+        ui.select
+          .findByText('Choose an image')
+          .scrollIntoView()
+          .should('be.visible')
+          .click();
 
-      checkPasswordComplexity(rootPassword);
+        ui.select.findItemByText(image).should('be.visible').click();
+
+        cy.findByLabelText('Linode Label')
+          .should('be.visible')
+          .type(linode.label);
+
+        assertPasswordComplexity(rootPassword, 'Good');
+
+        ui.button
+          .findByTitle('Rebuild Linode')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
 
       cy.wait('@linodeRebuild');
       cy.contains('REBUILDING').should('be.visible');
@@ -179,23 +272,45 @@ describe('rebuild linode', () => {
   });
 
   it('cannot rebuild a provisioning linode', () => {
-    createLinode().then((linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/rebuild`)
-      ).as('linodeRebuild');
-      cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
-      cy.get('[data-qa-enhanced-select="From Image"]').within(() => {
-        containsClick('From Image').type('From Image{enter}');
-      });
-      cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-        containsClick('Choose an image').type(`${image}{enter}`);
-      });
-      cy.get('[id="linode-label"]').type(linode.label);
-      cy.get('[id="root-password"]').type(rootPassword);
-      ui.button.findByTitle('Rebuild Linode').should('be.enabled').click();
-      cy.wait('@linodeRebuild');
-      cy.contains('Linode busy.');
+    const mockLinode = linodeFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+      status: 'provisioning',
+    });
+
+    const mockErrorMessage = 'Linode busy.';
+
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    mockRebuildLinodeError(mockLinode.id, mockErrorMessage).as('rebuildLinode');
+
+    cy.visitWithLogin(`/linodes/${mockLinode.id}`);
+    cy.findByText('PROVISIONING').should('be.visible');
+
+    openRebuildDialog(mockLinode.label);
+    findRebuildDialog(mockLinode.label).within(() => {
+      ui.select.findByText('From Image').should('be.visible');
+      ui.select
+        .findByText('Choose an image')
+        .should('be.visible')
+        .click()
+        .type(`${image}{enter}`);
+
+      assertPasswordComplexity(rootPassword, 'Good');
+
+      cy.findByLabelText('Linode Label')
+        .should('be.visible')
+        .click()
+        .type(mockLinode.label);
+
+      ui.button
+        .findByTitle('Rebuild Linode')
+        .scrollIntoView()
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@rebuildLinode');
+      cy.findByText(mockErrorMessage);
     });
   });
 });
