@@ -14,9 +14,14 @@ import {
 import { randomDomainName } from 'support/util/random';
 import { readDownload } from 'support/util/downloads';
 import { ui } from 'support/ui';
+import { cleanUpDownloadFiles } from 'support/util/downloads';
 
 authenticate();
 describe('Download a Zone file', () => {
+  before(() => {
+    cleanUpDownloadFiles();
+  });
+
   /*
    * - Clicks "Import A Zone" button and confirms operation.
    * - Confirms that Domain won't be imported when the domain is empty or invalid.

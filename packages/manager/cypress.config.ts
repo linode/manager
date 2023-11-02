@@ -14,6 +14,7 @@ import { fetchAccount } from './cypress/support/plugins/fetch-account';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
+import { downloadProcess } from './cypress/support/plugins/download-processor';
 
 /**
  * Exports a Cypress configuration object.
@@ -68,6 +69,7 @@ export default defineConfig({
         regionOverrideCheck,
         splitCypressRun,
         enableJunitReport,
+        downloadProcess,
       ]);
     },
   },

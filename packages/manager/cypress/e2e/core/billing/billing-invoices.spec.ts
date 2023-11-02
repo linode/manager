@@ -2,19 +2,29 @@
  * @file Integration tests for account invoice functionality.
  */
 
-import type { InvoiceItem, TaxSummary } from '@linode/api-v4';
+import type { InvoiceItem, TaxSummary, Profile } from '@linode/api-v4';
 import { invoiceFactory, invoiceItemFactory } from '@src/factories';
 import { DateTime } from 'luxon';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'support/constants/dc-specific-pricing';
 import {
   mockGetInvoice,
   mockGetInvoiceItems,
+  mockGetInvoices,
 } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { formatUsd } from 'support/util/currency';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+import { readDownload, cleanUpDownloadFiles } from 'support/util/downloads';
+import {
+  maximumInvoiceSize,
+  invoicePdfName,
+  invoiceCsvName,
+} from 'support/constants/accounts';
+import { getProfile } from '@linode/api-v4';
+import { formatDate } from '@src/utilities/formatDate';
+import { authenticate } from 'support/api/authentication';
 
 /**
  * Returns a string representation of a region, as shown on the invoice details page.
@@ -28,7 +38,12 @@ const getRegionLabel = (regionId: string) => {
   return `${region.label} (${region.id})`;
 };
 
+authenticate();
 describe('Account invoices', () => {
+  beforeEach(() => {
+    cleanUpDownloadFiles();
+  });
+
   /*
    * - Confirms that invoice items are listed on invoice details page using mock API data.
    * - Confirms that each invoice item is displayed with correct accompanying info.
@@ -344,6 +359,129 @@ describe('Account invoices', () => {
       mockInvoiceItems.forEach((invoiceItem: InvoiceItem) => {
         cy.findByText(invoiceItem.label).should('be.visible');
       });
+    });
+  });
+
+  /*
+   * - Confirms that invoice with maximum size can be downloaded correctly.
+   */
+  it('can download an invoice with maximum size correctly from billing landing page', () => {
+    const mockInvoice = invoiceFactory.build();
+    const mockInvoiceItems = invoiceItemFactory.buildList(maximumInvoiceSize);
+    // mockInvoice.date = "2022-08-01T03:00:12";
+
+    cy.defer(getProfile()).then((profile: Profile) => {
+      const timezone = profile.timezone;
+      const invoiceDate = formatDate(mockInvoice.date, {
+        timezone,
+        displayTime: false,
+      });
+
+      console.log('Invoice date: ' + invoiceDate);
+
+      // Confirms that it can download the PDF from billing landing page
+      mockGetInvoices([mockInvoice]).as('getInvoices');
+      mockGetInvoiceItems(mockInvoice, mockInvoiceItems);
+      cy.visitWithLogin(`/account/billing`);
+      cy.wait('@getInvoices');
+
+      // Confirms that it can download the PDF file.
+      ui.button
+        .findByTitle('Download PDF')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      readDownload(invoicePdfName(invoiceDate));
+    });
+  });
+
+  it('can download an invoice with maximum size correctly invoice details page', () => {
+    const mockInvoice = invoiceFactory.build();
+    const mockInvoiceItems = invoiceItemFactory.buildList(maximumInvoiceSize);
+    const pages = [1, 2, 3, 4];
+
+    cy.defer(getProfile()).then((profile: Profile) => {
+      const timezone = profile.timezone;
+      const invoiceDate = formatDate(mockInvoice.date, {
+        timezone,
+        displayTime: false,
+      });
+      const invoiceDateWithTime = formatDate(mockInvoice.date, {
+        timezone,
+        displayTime: true,
+      });
+
+      console.log('Invoice date: ' + invoiceDate);
+      console.log(
+        'Invoice date with time: ' +
+          invoiceDateWithTime.replace(' ', 'T').replace(':', '_')
+      );
+
+      // Confirms that it can download the CSV / PDF from invoice details page
+      mockGetInvoice(mockInvoice).as('getInvoice');
+      mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
+
+      cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+      cy.wait(['@getInvoice', '@getInvoiceItems']);
+
+      cy.findByLabelText('Invoice Details').within(() => {
+        // Confirm that page size selection is set to "Show 25".
+        ui.pagination.findPageSizeSelect().click();
+        ui.select.findItemByText('Show 25').should('be.visible').click();
+
+        // Confirm that pagination controls list exactly 4 pages.
+        ui.pagination
+          .findControls()
+          .should('be.visible')
+          .within(() => {
+            pages.forEach((page: number) =>
+              cy.findByText(`${page}`).should('be.visible')
+            );
+          });
+
+        // Click through each page and confirm correct invoice items are displayed.
+        pages.forEach((page: number) => {
+          const invoiceItemSubset = mockInvoiceItems.slice(
+            25 * (page - 1),
+            25 * (page - 1) + 24
+          );
+          ui.pagination.findControls().within(() => {
+            cy.findByText(`${page}`).should('be.visible').click();
+          });
+
+          // Confirm that 25 invoice items are shown, and they correspond to the
+          // expected items given the selected pagination page. There are two
+          // additional table rows to account for: the table header, and the
+          // table row containing pagination.
+          cy.get('tr').should('have.length', 27);
+          invoiceItemSubset.forEach((invoiceItem: InvoiceItem) => {
+            cy.findByText(invoiceItem.label).should('be.visible');
+          });
+        });
+
+        // Change pagination size selection from "Show 25" to "Show 100".
+        ui.pagination.findPageSizeSelect().click();
+        ui.select.findItemByText('Show 100').should('be.visible').click();
+      });
+
+      // Confirms that it can download the CSV / PDF files.
+      ui.button
+        .findByTitle('Download CSV')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.button
+        .findByTitle('Download PDF')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      readDownload(
+        invoiceCsvName(invoiceDateWithTime.replace(' ', 'T').replace(':', '_'))
+      );
+      readDownload(invoicePdfName(invoiceDate));
     });
   });
 });
