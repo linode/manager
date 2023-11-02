@@ -488,6 +488,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleVPCChange = (vpcId: number) => {
+    // Only clear VPC related fields if VPC selection changes
     if (vpcId !== this.state.selectedVPCId) {
       this.setState({
         selectedSubnetId: undefined, // Ensure the selected subnet is cleared

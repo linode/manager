@@ -125,6 +125,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     });
 
   const handleVPCLabelChange = (selectedVPCId: number) => {
+    // Only clear VPC related fields if VPC selection changes
     if (selectedVPCId !== vpcId) {
       handleChange({
         ipam_address: null,

@@ -198,7 +198,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
           options={vpcDropdownOptions}
           placeholder={'Select a VPC'}
         />
-        {/* todo - Connie - do we want the create VPC link in the add/edit config flow? */}
         {from === 'linodeCreate' &&
           vpcDropdownOptions.length <= 1 &&
           regionSupportsVPCs && (
