@@ -12,6 +12,7 @@ import {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4/lib/aglb/types';
 import * as Factory from 'factory.ts';
+
 import { pickRandom } from 'src/utilities/random';
 
 export const mockCertificate = `
@@ -119,6 +120,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
         routes: [
           {
             label: 'my-route',
+            protocol: 'tcp',
             rules: [
               {
                 match_condition: {
@@ -149,6 +151,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                     },
                     label: 'my-service-target',
                     load_balancing_policy: 'round_robin',
+                    percentage: 0,
                   },
                 ],
               },
@@ -278,6 +281,7 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `images-backend-aws-${i}`),
   load_balancing_policy: 'round_robin',
+  percentage: 0,
 });
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
@@ -301,6 +305,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     },
     label: 'my-service-target',
     load_balancing_policy: 'least_request',
+    percentage: 0,
   }
 );
 

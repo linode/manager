@@ -155,27 +155,32 @@ export const UpdateRouteSchema = object({
 });
 
 // Endpoint Schema
-const endpointSchema = object({
-  ip: string().when('hostname', {
-    is: (hostname: string) => !hostname,
-    then: string().required(),
-    otherwise: string(),
-  }),
-  hostname: string().when('ip', {
-    is: (ip: string) => !ip,
-    then: string().required(),
-    otherwise: string(),
-  }),
+const endpointSchema = object().shape({
+  ip: string().test(
+    'ip-or-hostname',
+    'Either IP or hostname must be provided.',
+    function (value) {
+      const { hostname } = this.parent;
+      return !!value || !!hostname;
+    }
+  ),
+  hostname: string().test(
+    'hostname-or-ip',
+    'Either hostname or IP must be provided.',
+    function (value) {
+      const { ip } = this.parent;
+      return !!value || !!ip;
+    }
+  ),
   port: number().integer().required(),
   capacity: number().integer().required(),
 });
-
 // Service Target Schema
 const createLoadBalancerServiceTargetSchema = object({
   percentage: number().integer().required(),
   label: string().required(),
   endpoints: array().of(endpointSchema).required(),
-  certificate_id: number().integer(),
+  ca_certificate: string(),
   load_balancing_policy: string()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
     .required(),

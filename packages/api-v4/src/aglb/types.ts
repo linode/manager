@@ -46,6 +46,7 @@ export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
+  protocol: Protocol;
   rules: RuleCreatePayload[];
 }
 
@@ -136,6 +137,7 @@ export interface RouteServiceTargetPayload {
 
 export interface ServiceTargetPayload {
   label: string;
+  percentage: number;
   endpoints: Endpoint[];
   ca_certificate: string;
   load_balancing_policy: Policy;

@@ -13,7 +13,58 @@ import { LoadBalancerRegions } from './LoadBalancerRegions';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
-const initialValues = {
+const initialValues: CreateLoadbalancerPayload = {
+  configurations: [
+    {
+      certificates: [{ hostname: '', id: 0 }],
+      label: '',
+      port: 80,
+      protocol: 'tcp',
+      // TODO: AGLB - Below initial values may change as we develop following create flow tickets
+      routes: [
+        {
+          label: '',
+          protocol: 'tcp',
+          rules: [
+            {
+              match_condition: {
+                hostname: '',
+                match_field: 'path_prefix',
+                match_value: '',
+                session_stickiness_cookie: '',
+                session_stickiness_ttl: 0,
+              },
+              service_targets: [
+                {
+                  ca_certificate: '', // TODO: AGLB - Need to confirm with API team on this field.
+                  endpoints: [
+                    {
+                      host: '',
+                      ip: '',
+                      port: 80, // Default port, update as necessary
+                      rate_capacity: 1, // Assuming a default capacity, update as necessary
+                    },
+                  ],
+                  healthcheck: {
+                    healthy_threshold: 0,
+                    host: '',
+                    interval: 0,
+                    path: '',
+                    protocol: 'tcp',
+                    timeout: 0,
+                    unhealthy_threshold: 0,
+                  },
+                  label: '',
+                  load_balancing_policy: 'round_robin',
+                  percentage: 0,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
   label: '',
   regions: [],
 };

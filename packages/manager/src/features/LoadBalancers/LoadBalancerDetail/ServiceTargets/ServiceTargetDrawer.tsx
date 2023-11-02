@@ -83,6 +83,7 @@ const initialValues: ServiceTargetPayload = {
   },
   label: '',
   load_balancing_policy: 'round_robin',
+  percentage: 0,
 };
 
 export const ServiceTargetDrawer = (props: Props) => {
