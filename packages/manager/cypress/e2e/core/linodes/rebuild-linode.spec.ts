@@ -13,6 +13,14 @@ import {
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
 
+/**
+ * Creates a Linode and StackScript.
+ *
+ * @param stackScriptRequestPayload - StackScript create request payload.
+ * @param linodeRequestPayload - Linode create request payload.
+ *
+ * @returns Promise that resolves when Linode and StackScript are created.
+ */
 const createStackScriptAndLinode = async (
   stackScriptRequestPayload: any,
   linodeRequestPayload: CreateLinodeRequest
@@ -70,6 +78,22 @@ const assertPasswordComplexity = (
   cy.contains(`Strength: ${passwordStrength}`).should('be.visible');
 };
 
+/**
+ * Submits rebuild dialog.
+ */
+const submitRebuild = () => {
+  ui.button
+    .findByTitle('Rebuild Linode')
+    .scrollIntoView()
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+};
+
+// Error message that is displayed when desired password is not strong enough.
+const passwordComplexityError =
+  'Password does not meet complexity requirements.';
+
 authenticate();
 describe('rebuild linode', () => {
   const image = 'Alpine 3.18';
@@ -79,6 +103,10 @@ describe('rebuild linode', () => {
     cleanUp(['lke-clusters', 'linodes', 'stackscripts', 'images']);
   });
 
+  /*
+   * - Confirms that Linode can be rebuilt using an image.
+   * - Confirms that password complexity
+   */
   it('rebuilds a linode from Image', () => {
     const weakPassword = 'abc123';
     const fairPassword = 'Akamai123';
@@ -111,15 +139,16 @@ describe('rebuild linode', () => {
 
           // checkPasswordComplexity(rootPassword);
           assertPasswordComplexity(weakPassword, 'Weak');
-          assertPasswordComplexity(fairPassword, 'Fair');
-          assertPasswordComplexity(rootPassword, 'Good');
+          submitRebuild();
+          cy.findByText(passwordComplexityError).should('be.visible');
 
-          ui.button
-            .findByTitle('Rebuild Linode')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+          assertPasswordComplexity(fairPassword, 'Fair');
+          submitRebuild();
+          cy.findByText(passwordComplexityError).should('be.visible');
+
+          assertPasswordComplexity(rootPassword, 'Good');
+          submitRebuild();
+          cy.findByText(passwordComplexityError).should('not.exist');
         });
 
         cy.wait('@linodeRebuild');
@@ -128,6 +157,9 @@ describe('rebuild linode', () => {
     );
   });
 
+  /*
+   * - Confirms that a Linode can be rebuilt using a Community StackScript.
+   */
   it('rebuilds a linode from Community StackScript', () => {
     const stackScriptId = '443929';
     const stackScriptName = 'OpenLiteSpeed-WordPress';
@@ -177,13 +209,7 @@ describe('rebuild linode', () => {
             .type(linode.label);
 
           assertPasswordComplexity(rootPassword, 'Good');
-
-          ui.button
-            .findByTitle('Rebuild Linode')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+          submitRebuild();
         });
 
         cy.wait('@linodeRebuild');
@@ -192,6 +218,9 @@ describe('rebuild linode', () => {
     );
   });
 
+  /*
+   * - Confirms that a Linode can be rebuilt using an Account StackScript.
+   */
   it('rebuilds a linode from Account StackScript', () => {
     const image = 'Alpine';
     const region = 'us-east';
@@ -257,13 +286,7 @@ describe('rebuild linode', () => {
           .type(linode.label);
 
         assertPasswordComplexity(rootPassword, 'Good');
-
-        ui.button
-          .findByTitle('Rebuild Linode')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        submitRebuild();
       });
 
       cy.wait('@linodeRebuild');
@@ -271,6 +294,10 @@ describe('rebuild linode', () => {
     });
   });
 
+  /*
+   * - Confirms UI error flow when attempting to rebuild a Linode that is provisioning.
+   * - Confirms that API error message is displayed in the rebuild dialog.
+   */
   it('cannot rebuild a provisioning linode', () => {
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
@@ -283,10 +310,7 @@ describe('rebuild linode', () => {
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockRebuildLinodeError(mockLinode.id, mockErrorMessage).as('rebuildLinode');
 
-    cy.visitWithLogin(`/linodes/${mockLinode.id}`);
-    cy.findByText('PROVISIONING').should('be.visible');
-
-    openRebuildDialog(mockLinode.label);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}?rebuild=true`);
     findRebuildDialog(mockLinode.label).within(() => {
       ui.select.findByText('From Image').should('be.visible');
       ui.select
@@ -302,13 +326,7 @@ describe('rebuild linode', () => {
         .click()
         .type(mockLinode.label);
 
-      ui.button
-        .findByTitle('Rebuild Linode')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
+      submitRebuild();
       cy.wait('@rebuildLinode');
       cy.findByText(mockErrorMessage);
     });
