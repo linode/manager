@@ -26,7 +26,7 @@ import { LoadBalancerRow } from './LoadBalancerRow';
 const LOADBALANCER_CREATE_ROUTE = 'loadbalancers/create';
 const preferenceKey = 'loadbalancers';
 
-const LoadBalancerLanding = () => {
+export const LoadBalancerLanding = () => {
   const history = useHistory();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -156,5 +156,3 @@ const LoadBalancerLanding = () => {
     </>
   );
 };
-
-export default LoadBalancerLanding;
