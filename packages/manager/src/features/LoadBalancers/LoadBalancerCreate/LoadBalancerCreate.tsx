@@ -10,7 +10,7 @@ import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
-const LoadBalancerCreate = () => {
+export const LoadBalancerCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Load Balancer" />
@@ -58,5 +58,3 @@ const LoadBalancerCreate = () => {
     </>
   );
 };
-
-export default LoadBalancerCreate;

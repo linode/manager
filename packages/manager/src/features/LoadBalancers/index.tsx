@@ -5,22 +5,31 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useFlags } from 'src/hooks/useFlags';
 
-const LoadBalancerLanding = React.lazy(
-  () => import('./LoadBalancerLanding/LoadBalancerLanding')
+const LoadBalancerLanding = React.lazy(() =>
+  import('./LoadBalancerLanding/LoadBalancerLanding').then((module) => ({
+    default: module.LoadBalancerLanding,
+  }))
 );
-const LoadBalancerDetail = React.lazy(
-  () => import('./LoadBalancerDetail/LoadBalancerDetail')
+
+const LoadBalancerDetail = React.lazy(() =>
+  import('./LoadBalancerDetail/LoadBalancerDetail').then((module) => ({
+    default: module.LoadBalancerDetail,
+  }))
 );
-const LoadBalancerCreate = React.lazy(
-  () => import('./LoadBalancerCreate/LoadBalancerCreate')
+
+const LoadBalancerCreate = React.lazy(() =>
+  import('./LoadBalancerCreate/LoadBalancerCreate').then((module) => ({
+    default: module.LoadBalancerCreate,
+  }))
 );
+
 const LoadBalancerBasicCreate = React.lazy(() =>
   import('./LoadBalancerCreate/LoadBalancerBasicCreate').then((module) => ({
     default: module.LoadBalancerBasicCreate,
   }))
 );
 
-const LoadBalancer = () => {
+export const LoadBalancers = () => {
   const flags = useFlags();
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
@@ -46,5 +55,3 @@ const LoadBalancer = () => {
     </React.Suspense>
   );
 };
-
-export default LoadBalancer;

@@ -23,6 +23,7 @@ import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   configuration: Configuration;
@@ -43,6 +44,7 @@ function getConfigurationPayloadFromConfiguration(
 
 export const ConfigurationAccordion = (props: Props) => {
   const { configuration, loadbalancerId } = props;
+  const { configurationId } = useParams<{ configurationId: string }>();
   const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -122,6 +124,7 @@ export const ConfigurationAccordion = (props: Props) => {
           </Stack>
         </Stack>
       }
+      defaultExpanded={configuration.id === Number(configurationId)}
       headingProps={{ sx: { width: '100%' } }}
     >
       <form onSubmit={formik.handleSubmit}>
