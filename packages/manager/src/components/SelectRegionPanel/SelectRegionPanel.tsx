@@ -1,4 +1,5 @@
 import { Region } from '@linode/api-v4/lib/regions';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -50,6 +51,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
 
   const location = useLocation();
   const flags = useFlags();
+  const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
 
   const isCloning = /clone/i.test(params.type);
@@ -132,7 +134,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           spacingTop={8}
           variant="warning"
         >
-          <Typography fontWeight="bold">
+          <Typography fontFamily={theme.font.bold}>
             {CROSS_DATA_CENTER_CLONE_WARNING}
           </Typography>
         </Notice>
@@ -152,7 +154,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           spacingTop={12}
           variant="warning"
         >
-          <Typography fontWeight="bold">
+          <Typography fontFamily={theme.font.bold}>
             {DIFFERENT_PRICE_STRUCTURE_WARNING}{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>
