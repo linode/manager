@@ -19,7 +19,7 @@ interface Props {
   values: CreateVPCFieldState;
 }
 
-export const VPCSpecificContent = (props: Props) => {
+export const VPCTopSectionContent = (props: Props) => {
   const { disabled, errors, isDrawer, onChangeField, regions, values } = props;
   return (
     <>

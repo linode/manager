@@ -8,7 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponents/CannotCreateVPCNotice';
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
-import { VPCSpecificContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCSpecificContent';
+import { VPCTopSectionContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCTopSectionContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
 interface Props {
@@ -54,7 +54,7 @@ export const VPCCreateDrawer = (props: Props) => {
         ) : null}
         <form onSubmit={handleSubmit}>
           <Box sx={{ marginTop: theme.spacing(3) }}>
-            <VPCSpecificContent
+            <VPCTopSectionContent
               disabled={userCannotAddVPC}
               errors={errors}
               isDrawer

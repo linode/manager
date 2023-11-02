@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VPCSpecificContent } from './VPCSpecificContent';
+import { VPCTopSectionContent } from './VPCTopSectionContent';
 
 const props = {
   errors: {},
@@ -13,7 +13,7 @@ const props = {
 
 describe('Subnet form content', () => {
   it('renders the subnet content correctly', () => {
-    const { getByText } = renderWithTheme(<VPCSpecificContent {...props} />);
+    const { getByText } = renderWithTheme(<VPCTopSectionContent {...props} />);
 
     getByText('Region');
     getByText('VPC Label');

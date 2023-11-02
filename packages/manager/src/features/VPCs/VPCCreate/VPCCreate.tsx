@@ -12,7 +12,7 @@ import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
 import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
 import { StyledHeaderTypography } from './FormComponents/VPCCreateForm.styles';
-import { VPCSpecificContent } from './FormComponents/VPCSpecificContent';
+import { VPCTopSectionContent } from './FormComponents/VPCTopSectionContent';
 
 const VPCCreate = () => {
   const {
@@ -53,7 +53,7 @@ const VPCCreate = () => {
         <form onSubmit={handleSubmit}>
           <Paper>
             <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
-            <VPCSpecificContent
+            <VPCTopSectionContent
               disabled={userCannotAddVPC}
               errors={errors}
               onChangeField={onChangeField}
