@@ -6,9 +6,10 @@ import {
   interceptRebootLinodeIntoRescueMode,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { createAndBootLinode } from '../../../support/util/linode-utils';
+import { createAndBootLinode } from 'support/util/linodes';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {
@@ -21,6 +22,10 @@ const rebootInRescueMode = () => {
 
 authenticate();
 describe('Rescue Linodes', () => {
+  before(() => {
+    cleanUp(['linodes', 'lke-clusters']);
+  });
+
   /*
    * - Creates a Linode, waits for it to boot, and reboots it into rescue mode.
    * - Confirms that rescue mode API requests succeed.
@@ -30,7 +35,6 @@ describe('Rescue Linodes', () => {
   it('Can reboot a Linode into rescue mode', () => {
     cy.defer(createAndBootLinode(), 'creating and booting Linode').then(
       (linode: Linode) => {
-        // mock 200 response
         interceptGetLinodeDetails(linode.id).as('getLinode');
         interceptRebootLinodeIntoRescueMode(linode.id).as(
           'rebootLinodeRescueMode'
@@ -47,7 +51,7 @@ describe('Rescue Linodes', () => {
             rebootInRescueMode();
           });
 
-        // Check mocked response and make sure UI responded correctly.
+        // Check intercepted response and make sure UI responded correctly.
         cy.wait('@rebootLinodeRescueMode')
           .its('response.statusCode')
           .should('eq', 200);
