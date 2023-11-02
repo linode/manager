@@ -266,4 +266,3 @@ export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
   SA: 'South America',
 });
 
-export type ContinentNames = typeof CONTINENT_CODE_TO_CONTINENT[keyof typeof CONTINENT_CODE_TO_CONTINENT];

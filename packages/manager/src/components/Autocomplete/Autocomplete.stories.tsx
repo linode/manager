@@ -259,6 +259,9 @@ export const NoOptionsMessage: Story = {
 
 type RegionStory = StoryObj<EnhancedAutocompleteProps<OptionType>>;
 
+console.log('fakeRegionsData', fakeRegionsData);
+console.log('regions', getRegionsOptions(fakeRegionsData));
+
 export const Regions: RegionStory = {
   args: {
     groupBy: (option) => option.data.region,

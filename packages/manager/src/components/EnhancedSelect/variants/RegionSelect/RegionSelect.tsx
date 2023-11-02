@@ -3,6 +3,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import Select, {
   BaseSelectProps,
   GroupType,
@@ -15,9 +16,11 @@ import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionItem, RegionOption } from './RegionOption';
 import { listOfDisabledRegions } from './disabledRegions';
-import { ContinentNames, Country } from './utils';
 
+import type { Country } from './utils';
 import type { FlagSet } from 'src/featureFlags';
+
+const NORTH_AMERICA = 'North America';
 
 interface Props<IsClearable extends boolean>
   extends Omit<
@@ -37,29 +40,11 @@ export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
 
-type RegionGroup = 'Other' | ContinentNames;
-
 export const getRegionOptions = (
   regions: Region[],
   flags: FlagSet,
   path: string
 ) => {
-  // Note: Do not re-order this list even though ESLint is complaining.
-  const groups: Record<RegionGroup, RegionItem[]> = {
-    'North America': [],
-    Europe: [],
-    Asia: [],
-    'South America': [],
-    Oceania: [],
-    Africa: [],
-    Antartica: [],
-    Other: [],
-  };
-
-  const hasUserAccessToDisabledRegions = listOfDisabledRegions.some(
-    (disabledRegion) =>
-      regions.some((region) => region.id === disabledRegion.fakeRegion.id)
-  );
   const allRegions = [
     ...regions,
     ...listOfDisabledRegions
@@ -80,55 +65,65 @@ export const getRegionOptions = (
       .map((disabledRegion) => disabledRegion.fakeRegion),
   ];
 
-  for (const region of allRegions) {
-    const group = getRegionCountryGroup(region);
+  // for (const region of allRegions) {
+  //   const group = getRegionCountryGroup(region);
 
-    groups[group].push({
-      country: region.country,
-      disabledMessage: hasUserAccessToDisabledRegions
-        ? undefined
-        : listOfDisabledRegions.find(
-            (disabledRegion) => disabledRegion.fakeRegion.id === region.id
-          )?.disabledMessage,
-      flag: <Flag country={region.country as Lowercase<Country>} />,
-      label: `${region.label} (${region.id})`,
-      value: region.id,
+  //   groups[group].push({
+  //     country: region.country,
+  //     disabledMessage: hasUserAccessToDisabledRegions
+  //       ? undefined
+  //       : listOfDisabledRegions.find(
+  //           (disabledRegion) => disabledRegion.fakeRegion.id === region.id
+  //         )?.disabledMessage,
+  //     flag: <Flag country={region.country as Lowercase<Country>} />,
+  //     label: `${region.label} (${region.id})`,
+  //     value: region.id,
+  //   });
+  // }
+  return allRegions
+    .map((region: Region) => {
+      const group = getRegionCountryGroup(region);
+
+      return {
+        data: {
+          country: region.country,
+          flag: <Flag country={region.country as Lowercase<Country>} />,
+          region: group,
+        },
+        label: `${region.label} (${region.id})`,
+        value: region.id,
+      };
+    })
+    .sort((region1, region2) => {
+      // North America group comes first
+      if (
+        region1.data.region === NORTH_AMERICA &&
+        region2.data.region !== NORTH_AMERICA
+      ) {
+        return -1;
+      }
+      if (
+        region1.data.region !== NORTH_AMERICA &&
+        region2.data.region === NORTH_AMERICA
+      ) {
+        return 1;
+      }
+
+      // Everything else is sorted alphabetically by region
+      if (region1.data.region < region2.data.region) {
+        return -1;
+      }
+      if (region1.data.region > region2.data.region) {
+        return 1;
+      }
+      return 0;
     });
-  }
-
-  return Object.keys(groups).map((group: RegionGroup) => ({
-    label: group,
-    options: groups[group].sort(sortRegions),
-  }));
 };
 
-export const getSelectedRegionById = (
-  regionID: string,
-  options: GroupType<string>[]
-) => {
-  const regions = options.reduce(
-    (accum, thisGroup) => [...accum, ...thisGroup.options],
-    []
-  );
-  return regions.find((thisRegion) => regionID === thisRegion.value);
-};
-
-const sortRegions = (region1: RegionItem, region2: RegionItem) => {
-  // By country desc so USA is on top
-  if (region1.country > region2.country) {
-    return -1;
-  }
-  if (region1.country < region2.country) {
-    return 1;
-  }
-  // Alphabetically by display name, which is the city
-  if (region1.label < region2.label) {
-    return -1;
-  }
-  if (region1.label > region2.label) {
-    return 1;
-  }
-  return 0;
+export const getSelectedRegionById = (regionId: string, options: any) => {
+  // const regions = options.flatMap((option) => option.options);
+  // console.log('regions', regions);
+  return options.find((option: any) => regionId === option.id);
 };
 
 export const RegionSelect = React.memo(
@@ -166,32 +161,30 @@ export const RegionSelect = React.memo(
       [handleSelection]
     );
 
-    const options = React.useMemo(
+    const options: any = React.useMemo(
       () => getRegionOptions(regions, flags, path),
       [flags, regions]
     );
 
     return (
       <div style={{ width }}>
-        <Select
-          isOptionDisabled={(option: RegionItem) =>
-            Boolean(option.disabledMessage)
-          }
+        <Autocomplete
+          // isOptionDisabled={(option: RegionItem) =>
+          //   Boolean(option.disabledMessage)
+          // }
           textFieldProps={{
             tooltipText: helperText,
           }}
-          components={{ Option: RegionOption, SingleValue: _SingleValue }}
+          // components={{ Option: RegionOption, SingleValue: _SingleValue }}
           data-testid="region-select"
           disabled={disabled}
-          isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
+          groupBy={(option: RegionItem) => option.data.region}
           label={label ?? 'Region'}
-          onChange={onChange}
+          onChange={() => onChange}
           options={options}
-          placeholder="Select a Region"
-          required={required}
-          styles={styles || selectStyles}
-          value={getSelectedRegionById(selectedID || '', options) ?? null}
-          {...restOfReactSelectProps}
+          // placeholder="Select a Region"
+          value={getSelectedRegionById(selectedID || '', options)}
+          // {...restOfReactSelectProps}
         />
       </div>
     );
