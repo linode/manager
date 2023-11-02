@@ -105,15 +105,15 @@ export const LoadBalancerServiceTargets = () => {
       >
         <TextField
           InputProps={{
-            endAdornment: (
+            endAdornment: query && (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Clear"
                   onClick={() => setQuery('')}
                   size="small"
-                  sx={{ color: '#aaa', padding: 'unset' }}
+                  sx={{ padding: 'unset' }}
                 >
-                  <CloseIcon color="inherit" />
+                  <CloseIcon sx={{ color: '#aaa !important' }} />
                 </IconButton>
               </InputAdornment>
             ),

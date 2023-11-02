@@ -33,7 +33,7 @@ export const LoadBalancerRoutes = () => {
       >
         <TextField
           InputProps={{
-            endAdornment: (
+            endAdornment: query && (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Clear"
@@ -41,10 +41,7 @@ export const LoadBalancerRoutes = () => {
                   size="small"
                   sx={{ padding: 'unset' }}
                 >
-                  <CloseIcon
-                    color="inherit"
-                    sx={{ color: '#aaa !important' }}
-                  />
+                  <CloseIcon sx={{ color: '#aaa !important' }} />
                 </IconButton>
               </InputAdornment>
             ),
