@@ -11,8 +11,8 @@ const props = {
   values: { description: '', label: '', region: '', subnets: [] },
 };
 
-describe('Subnet form content', () => {
-  it('renders the subnet content correctly', () => {
+describe('VPC Top Section form content', () => {
+  it('renders the vpc top section form content correctly', () => {
     const { getByText } = renderWithTheme(<VPCTopSectionContent {...props} />);
 
     getByText('Region');
