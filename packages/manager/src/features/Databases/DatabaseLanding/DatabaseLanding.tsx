@@ -112,6 +112,7 @@ const DatabaseLanding = () => {
               Engine
             </TableSortCell>
             <Hidden mdDown>
+              {/* TODO add back TableSortCell once API is updated to support sort by Region */}
               <TableCell>Region</TableCell>
             </Hidden>
             <Hidden lgDown>
