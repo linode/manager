@@ -1,4 +1,4 @@
-import { CreateLoadBalancerSchema } from '@linode/validation';
+import { createLoadBalancerSchema } from '@linode/validation';
 import Stack from '@mui/material/Stack';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
@@ -40,7 +40,7 @@ const LoadBalancerCreate = () => {
           // console.log('Values ', values);
         }}
         initialValues={initialValues}
-        validationSchema={CreateLoadBalancerSchema}
+        validationSchema={createLoadBalancerSchema}
       >
         <Form>
           <Stack spacing={3}>

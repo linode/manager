@@ -155,7 +155,7 @@ export const UpdateRouteSchema = object({
 });
 
 // Endpoint Schema
-const CreateLoadBalancerEndpointSchema = object({
+const endpointSchema = object({
   ip: string().when('hostname', {
     is: (hostname: string) => !hostname,
     then: string().required(),
@@ -171,29 +171,19 @@ const CreateLoadBalancerEndpointSchema = object({
 });
 
 // Service Target Schema
-const CreateLoadBalancerServiceTargetSchema = object({
-  ip: string().test(
-    'ip-or-hostname',
-    'Either IP or hostname must be provided.',
-    function (value) {
-      const { hostname } = this.parent;
-      return !!value || !!hostname;
-    }
-  ),
-  hostname: string().test(
-    'hostname-or-ip',
-    'Either hostname or IP must be provided.',
-    function (value) {
-      const { ip } = this.parent;
-      return !!value || !!ip;
-    }
-  ),
-  port: number().integer().required(),
-  capacity: number().integer().required(),
+const createLoadBalancerServiceTargetSchema = object({
+  percentage: number().integer().required(),
+  label: string().required(),
+  endpoints: array().of(endpointSchema).required(),
+  certificate_id: number().integer(),
+  load_balancing_policy: string()
+    .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
+    .required(),
+  healthcheck: HealthCheckSchema.required(),
 });
 
 // Rule Schema
-const CreateLoadBalancerRuleSchema = object({
+const createLoadBalancerRuleSchema = object({
   match_condition: object().shape({
     hostname: string().required(),
     match_field: string()
@@ -203,10 +193,10 @@ const CreateLoadBalancerRuleSchema = object({
     session_stickiness_cookie: string(),
     session_stickiness_ttl: number().integer(),
   }),
-  service_targets: array().of(CreateLoadBalancerServiceTargetSchema).required(),
+  service_targets: array().of(createLoadBalancerServiceTargetSchema).required(),
 });
 
-export const ConfigurationSchema = object({
+export const configurationSchema = object({
   label: string().required(LABEL_REQUIRED),
   port: number().required('Port is required.').min(0).max(65_535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
@@ -222,7 +212,7 @@ export const ConfigurationSchema = object({
         object({
           label: string().required(),
           protocol: string().oneOf(['tcp']).required(),
-          rules: array().of(CreateLoadBalancerRuleSchema).required(),
+          rules: array().of(createLoadBalancerRuleSchema).required(),
         })
       )
       .required(),
@@ -231,13 +221,13 @@ export const ConfigurationSchema = object({
         object().shape({
           label: string().required(),
           protocol: string().oneOf(['http']).required(),
-          rules: array().of(CreateLoadBalancerRuleSchema).required(),
+          rules: array().of(createLoadBalancerRuleSchema).required(),
         })
       )
       .required(),
   }),
 });
-export const CreateLoadBalancerSchema = object({
+export const createLoadBalancerSchema = object({
   label: string()
     .matches(
       /^[a-zA-Z0-9.\-_]+$/,
@@ -246,7 +236,7 @@ export const CreateLoadBalancerSchema = object({
     .required(LABEL_REQUIRED),
   tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
-  configurations: array().of(ConfigurationSchema),
+  configurations: array().of(configurationSchema),
 });
 
 /**
