@@ -7,7 +7,7 @@ import { Flag } from 'src/components/Flag';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-const regions = [
+const loadBalancerRegions = [
   { country: 'us', id: 'us-iad', label: 'Washington, DC' },
   { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
   { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
@@ -31,7 +31,7 @@ export const LoadBalancerRegions = () => {
           </Typography>
         </Stack>
         <Stack py={0.5} spacing={1.25}>
-          {regions.map((region) => (
+          {loadBalancerRegions.map((region) => (
             <Stack
               alignItems="center"
               direction="row"

@@ -18,7 +18,7 @@ describe('LoadBalancerConfiguration', () => {
       )
     ).toBeNull();
     expect(
-      screen.queryByText('TODO: AGLB - Implement Routes Confiugataion.')
+      screen.queryByText('TODO: AGLB - Implement Routes Configuration.')
     ).toBeNull();
     expect(screen.getByText('Next: Service Targets')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Details')).toBeNull();
@@ -33,7 +33,7 @@ describe('LoadBalancerConfiguration', () => {
       screen.queryByText('TODO: AGLB - Implement Details step content.')
     ).toBeNull();
     expect(
-      screen.queryByText('TODO: AGLB - Implement Routes Confiugataion.')
+      screen.queryByText('TODO: AGLB - Implement Routes Configuration.')
     ).toBeNull();
     expect(screen.getByText('Next: Routes')).toBeInTheDocument();
     expect(screen.getByText('Previous: Details')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('LoadBalancerConfiguration', () => {
       )
     ).toBeNull();
     expect(
-      screen.getByText('TODO: AGLB - Implement Routes Confiugataion.')
+      screen.getByText('TODO: AGLB - Implement Routes Configuration.')
     ).toBeInTheDocument();
     expect(screen.getByText('Previous: Service Targets')).toBeInTheDocument();
   });
