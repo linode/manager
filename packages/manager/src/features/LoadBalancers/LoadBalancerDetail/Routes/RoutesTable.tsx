@@ -118,11 +118,14 @@ export const RoutesTable = (props: Props) => {
     return routes?.data?.map((route) => {
       const OuterTableCells = (
         <>
-          <Hidden smDown>
+          <Hidden mdDown>
             <TableCell>{route.rules.length}</TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>{' '}
+            <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>
+          </Hidden>
+          <Hidden xsDown>
+            <TableCell>{route.id}</TableCell>
           </Hidden>
           <TableCell actionCell>
             <InlineMenuAction
@@ -168,7 +171,7 @@ export const RoutesTable = (props: Props) => {
       >
         Route Label
       </TableSortCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell>Rules</TableCell>
       </Hidden>
       <Hidden smDown>
@@ -179,6 +182,16 @@ export const RoutesTable = (props: Props) => {
           label="protocol"
         >
           Protocol
+        </TableSortCell>
+      </Hidden>
+      <Hidden xsDown>
+        <TableSortCell
+          active={orderBy === 'id'}
+          direction={order}
+          handleClick={handleOrderChange}
+          label="id"
+        >
+          ID
         </TableSortCell>
       </Hidden>
       <TableCell></TableCell>
