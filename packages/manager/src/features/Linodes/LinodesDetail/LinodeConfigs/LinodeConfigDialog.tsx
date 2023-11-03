@@ -425,20 +425,9 @@ export const LinodeConfigDialog = (props: Props) => {
         });
       };
 
-      // @TODO VPC: Remove this override and surface the field errors appropriately
-      // once API fixes interface index bug for ipv4.vpc & ipv4.nat_1_1 errors
-      const overrideFieldForIPv4 = (error: APIError[]) => {
-        error.forEach((err) => {
-          if (err.field && ['ipv4.nat_1_1', 'ipv4.vpc'].includes(err.field)) {
-            err.field = 'interfaces';
-          }
-        });
-      };
-
       formik.setSubmitting(false);
 
       overrideFieldForDevices(error);
-      overrideFieldForIPv4(error);
 
       handleFieldErrors(formik.setErrors, error);
 

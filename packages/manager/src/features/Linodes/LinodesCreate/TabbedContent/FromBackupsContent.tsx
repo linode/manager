@@ -3,18 +3,17 @@ import {
   LinodeBackupsResponse,
   getLinodeBackups,
 } from '@linode/api-v4/lib/linodes';
-import { StyledGrid } from './CommonTabbedContent.styles';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Paper } from 'src/components/Paper';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { reportException } from 'src/exceptionReporting';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import SelectBackupPanel from '../SelectBackupPanel';
+import { SelectBackupPanel } from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
 import {
   BackupFormStateHandlers,
@@ -23,6 +22,7 @@ import {
   WithLinodesTypesRegionsAndImages,
 } from '../types';
 import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
@@ -134,13 +134,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               updateFor={[selectedLinodeID, errors]}
             />
             <SelectBackupPanel
-              updateFor={[
-                selectedLinodeID,
-                selectedBackupID,
-                errors,
-                selectedLinodeWithBackups,
-                isGettingBackups,
-              ]}
               error={hasErrorFor('backup_id') || this.state.backupsError}
               handleChangeBackup={setBackupID}
               handleChangeBackupInfo={this.handleSelectBackupInfo}

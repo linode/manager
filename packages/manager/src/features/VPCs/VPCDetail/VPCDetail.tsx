@@ -10,6 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
@@ -99,7 +100,7 @@ const VPCDetail = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Virtual Private Cloud (VPC)',
+              label: VPC_LABEL,
               position: 1,
             },
           ],
@@ -132,15 +133,21 @@ const VPCDetail = () => {
         </Box>
       </EntityHeader>
       <StyledPaper>
-        <StyledSummaryBox display="flex" flex={1} data-qa-vpc-summary>
+        <StyledSummaryBox data-qa-vpc-summary display="flex" flex={1}>
           {summaryData.map((col) => {
             return (
               <Box key={col[0].label} paddingRight={6}>
                 <StyledSummaryTextTypography>
-                  <strong>{col[0].label}</strong> {col[0].value}
+                  <span style={{ fontFamily: theme.font.bold }}>
+                    {col[0].label}
+                  </span>{' '}
+                  {col[0].value}
                 </StyledSummaryTextTypography>
                 <StyledSummaryTextTypography>
-                  <strong>{col[1].label}</strong> {col[1].value}
+                  <span style={{ fontFamily: theme.font.bold }}>
+                    {col[1].label}
+                  </span>{' '}
+                  {col[1].value}
                 </StyledSummaryTextTypography>
               </Box>
             );
@@ -149,7 +156,9 @@ const VPCDetail = () => {
         {vpc.description.length > 0 && (
           <StyledDescriptionBox display="flex" flex={1}>
             <Typography>
-              <strong style={{ paddingRight: 8 }}>Description</strong>{' '}
+              <span style={{ fontFamily: theme.font.bold, paddingRight: 8 }}>
+                Description
+              </span>{' '}
             </Typography>
             <Typography>
               {description}{' '}
@@ -184,7 +193,9 @@ const VPCDetail = () => {
         })}
         padding={`${theme.spacing(2)} ${theme.spacing()}`}
       >
-        <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
+        <Typography sx={{ fontSize: '1rem' }} variant="h2">
+          Subnets ({vpc.subnets.length})
+        </Typography>
       </Box>
       {numLinodes > 0 && (
         <DismissibleBanner

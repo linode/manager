@@ -32,8 +32,8 @@ const LoadBalancerServiceTargets = React.lazy(() =>
   }))
 );
 const LoadBalancerRoutes = React.lazy(() =>
-  import('./Routes/RoutesTable').then((module) => ({
-    default: module.RoutesTable,
+  import('./LoadBalancerRoutes').then((module) => ({
+    default: module.LoadBalancerRoutes,
   }))
 );
 
@@ -49,7 +49,7 @@ const LoadBalancerSettings = React.lazy(() =>
   }))
 );
 
-const LoadBalancerDetailLanding = () => {
+export const LoadBalancerDetail = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const location = useLocation();
   const { path, url } = useRouteMatch();
@@ -60,32 +60,26 @@ const LoadBalancerDetailLanding = () => {
 
   const tabs = [
     {
-      component: LoadBalancerSummary,
       path: 'summary',
       title: 'Summary',
     },
     {
-      component: LoadBalancerConfigurations,
       path: 'configurations',
       title: 'Configurations',
     },
     {
-      component: LoadBalancerRoutes,
       path: 'routes',
       title: 'Routes',
     },
     {
-      component: LoadBalancerServiceTargets,
       path: 'service-targets',
       title: 'Service Targets',
     },
     {
-      component: LoadBalancerCertificates,
       path: 'certificates',
       title: 'Certificates',
     },
     {
-      component: LoadBalancerSettings,
       path: 'settings',
       title: 'Settings',
     },
@@ -118,13 +112,20 @@ const LoadBalancerDetailLanding = () => {
         />
         <React.Suspense fallback={<SuspenseLoader />}>
           <Switch>
-            {tabs.map((tab) => (
-              <Route
-                component={tab.component}
-                key={tab.title}
-                path={`${path}/${tab.path}`}
-              />
-            ))}
+            <Route
+              component={LoadBalancerConfigurations}
+              path={`${path}/configurations/:configurationId?`}
+            />
+            <Route component={LoadBalancerRoutes} path={`${path}/routes`} />
+            <Route
+              component={LoadBalancerCertificates}
+              path={`${path}/certificates`}
+            />
+            <Route
+              component={LoadBalancerServiceTargets}
+              path={`${path}/service-targets`}
+            />
+            <Route component={LoadBalancerSettings} path={`${path}/settings`} />
             <Route component={LoadBalancerSummary} />
           </Switch>
         </React.Suspense>
@@ -132,5 +133,3 @@ const LoadBalancerDetailLanding = () => {
     </>
   );
 };
-
-export default LoadBalancerDetailLanding;

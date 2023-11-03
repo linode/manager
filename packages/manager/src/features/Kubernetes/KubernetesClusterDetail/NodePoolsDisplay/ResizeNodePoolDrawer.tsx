@@ -29,9 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(3),
   },
   summary: {
+    fontFamily: theme.font.bold,
     fontSize: '16px',
-    fontWeight: 'bold',
-    lineHeight: '20px',
   },
 }));
 

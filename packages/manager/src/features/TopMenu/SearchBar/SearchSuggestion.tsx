@@ -74,7 +74,6 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
     }
     return tags.map((tag: string) => (
       <Tag
-        asSuggestion={true}
         className="tag"
         closeMenu={selectProps.onMenuClose}
         colorVariant={selected ? 'blue' : 'lightBlue'}

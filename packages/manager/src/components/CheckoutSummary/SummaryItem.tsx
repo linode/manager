@@ -10,7 +10,12 @@ export const SummaryItem = ({ details, title }: Props) => {
     <StyledGrid item>
       {title ? (
         <>
-          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+          <Typography
+            sx={(theme) => ({
+              fontFamily: theme.font.bold,
+            })}
+            component="span"
+          >
             {title}
           </Typography>{' '}
         </>
