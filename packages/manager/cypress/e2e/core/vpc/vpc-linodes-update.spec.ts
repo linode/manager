@@ -26,7 +26,7 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockCreateLinodeConfigInterfaces,
   mockGetLinodeConfigs,
-  mockDeleteLinodeConfignInterface,
+  mockDeleteLinodeConfigInterface,
 } from 'support/intercepts/configs';
 import {
   vpcAssignLinodeRebootNotice,
@@ -303,12 +303,12 @@ describe('VPC assign/unassign flows', () => {
         );
         cy.findByText(mockSecondLinode.label).should('be.visible');
 
-        mockDeleteLinodeConfignInterface(
+        mockDeleteLinodeConfigInterface(
           mockLinode.id,
           mockLinodeConfig.id,
           mockLinodeConfig.interfaces[0].id
         ).as('deleteLinodeConfigInterface1');
-        mockDeleteLinodeConfignInterface(
+        mockDeleteLinodeConfigInterface(
           mockSecondLinode.id,
           mockLinodeConfig.id,
           mockLinodeConfig.interfaces[0].id
