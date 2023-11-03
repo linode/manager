@@ -326,7 +326,10 @@ export const InterfaceSelect = (props: CombinedProps) => {
   const unavailableInRegionHelperTextJSX =
     !displayUnavailableInRegionTextVPC &&
     !displayUnavailableInRegionTextVLAN ? null : (
-      <Typography sx={{ marginTop: theme.spacing() }}>
+      <Typography
+        data-testid="unavailable-in-region-text"
+        sx={{ marginTop: theme.spacing() }}
+      >
         {displayUnavailableInRegionTextVPC ? 'VPC ' : 'VLAN '}{' '}
         {unavailableInRegionHelperTextSegment}
       </Typography>
