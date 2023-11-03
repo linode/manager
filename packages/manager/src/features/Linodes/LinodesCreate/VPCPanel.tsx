@@ -26,10 +26,12 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { StyledCreateLink } from './LinodeCreate.styles';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 
+export type From = 'linodeConfig' | 'linodeCreate';
+
 export interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
-  from: 'linodeConfig' | 'linodeCreate';
+  from: From;
   handleSelectVPC: (vpcId: number) => void;
   handleSubnetChange: (subnetId: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;

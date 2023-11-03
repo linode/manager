@@ -7,7 +7,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VPCPanel, VPCPanelProps } from './VPCPanel';
+import { VPCPanel, VPCPanelProps, From } from './VPCPanel';
 
 const queryClient = new QueryClient();
 
@@ -126,6 +126,40 @@ describe('VPCPanel', () => {
     await waitFor(() => {
       // the "Auto-assign a VPC IPv4 address for this Linode in the VPC" checkbox is the first one (0 index)
       expect(wrapper.getAllByRole('checkbox')[0]).toBeChecked();
+    });
+  });
+
+  it.only('should display an unchecked VPC IPv4 auto-assign checkbox and display the VPC IPv4 input field if there is already a value', async () => {
+    const _props = {
+      ...props,
+      autoassignIPv4WithinVPC: false,
+      region: 'us-east',
+      selectedVPCId: 5,
+      vpcIPv4AddressOfLinode: '10.0.4.3',
+      from: 'linodeConfig' as From,
+    };
+
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: ['VPCs'],
+          id: 'us-east',
+        });
+        const regions = regionFactory.buildList(5);
+        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+      })
+    );
+
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      // the "Auto-assign a VPC IPv4 address for this Linode in the VPC" checkbox is the first one (0 index)
+      expect(wrapper.getAllByRole('checkbox')[0]).not.toBeChecked();
+      // wrapper.getByText('VPC IPv4 (required)');
+      expect(wrapper.getAllByRole('input')[3]).toHaveTextContent('10.0.4.3');
     });
   });
 });
