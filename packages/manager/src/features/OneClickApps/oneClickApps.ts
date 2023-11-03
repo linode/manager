@@ -1175,7 +1175,7 @@ export const oneClickApps: OCA[] = [
     },
     description: `MainConcept P2 AVC-ULTRA Transcoder is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept P2 AVC-ULTRA Transcoder',
+    name: 'MainConcept P2 AVC ULTRA Transcoder',
     related_guides: [
       {
         href:
