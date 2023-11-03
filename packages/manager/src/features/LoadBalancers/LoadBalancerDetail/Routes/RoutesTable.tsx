@@ -24,17 +24,18 @@ import { DeleteRuleDialog } from './DeleteRuleDialog';
 import { EditRouteDrawer } from './EditRouteDrawer';
 import { RuleDrawer } from './RuleDrawer';
 
-import type { Configuration, Filter, Route } from '@linode/api-v4';
+import type { Filter, Route } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 
 interface Props {
-  configuredRoutes?: Configuration['routes'];
+  configuredRouteIds?: number[];
   filter?: Filter;
+  onRemove?: (routeIndex: number) => void;
 }
 
 export const RoutesTable = (props: Props) => {
-  const { configuredRoutes, filter: additionalFilter } = props;
+  const { configuredRouteIds, filter: additionalFilter, onRemove } = props;
 
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -63,8 +64,8 @@ export const RoutesTable = (props: Props) => {
    * If configuredRoutes is passed, it filters the configured routes form API
    *  Otherwise, it fetches routes without filter in the routes table.
    */
-  if (configuredRoutes) {
-    filter['+or'] = configuredRoutes.map((route) => ({ id: route.id }));
+  if (configuredRouteIds) {
+    filter['+or'] = configuredRouteIds.map((id) => ({ id }));
   }
 
   const { data: routes, isLoading } = useLoadBalancerRoutesQuery(
@@ -115,7 +116,7 @@ export const RoutesTable = (props: Props) => {
     if (!routes?.data) {
       return [];
     }
-    return routes?.data?.map((route) => {
+    return routes?.data?.map((route, index) => {
       const OuterTableCells = (
         <>
           <Hidden mdDown>
@@ -135,7 +136,9 @@ export const RoutesTable = (props: Props) => {
             <ActionMenu
               actionsList={[
                 { onClick: () => onEditRoute(route), title: 'Edit' },
-                { onClick: () => onDeleteRoute(route), title: 'Delete' },
+                onRemove
+                  ? { onClick: () => onRemove(index), title: 'Remove' }
+                  : { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
               ariaLabel={`Action Menu for Route ${route.label}`}
             />
