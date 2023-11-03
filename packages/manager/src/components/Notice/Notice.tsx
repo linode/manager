@@ -1,123 +1,13 @@
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
-import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
 import { Typography, TypographyProps } from 'src/components/Typography';
 
-export const useStyles = makeStyles<
-  void,
-  'error' | 'icon' | 'important' | 'noticeText'
->()((theme: Theme, _params, classes) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
-  breakWords: {
-    [`& .${classes.noticeText}`]: {
-      wordBreak: 'break-all',
-    },
-  },
-  error: {
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
-  },
-  errorList: {
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
-  },
-  flag: {
-    marginRight: theme.spacing(2),
-  },
-  icon: {
-    color: 'white',
-    left: -25, // This value must be static regardless of theme selection
-    position: 'absolute',
-  },
-  important: {
-    [`& .${classes.noticeText}`]: {
-      fontFamily: theme.font.normal,
-    },
-    backgroundColor: theme.bg.bgPaper,
-    padding: theme.spacing(2),
-    paddingRight: 18,
-  },
-  info: {
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  infoList: {
-    borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  inner: {
-    width: '100%',
-  },
-  marketing: {
-    borderLeft: `5px solid ${theme.color.green}`,
-  },
-  noticeText: {
-    fontFamily: theme.font.bold,
-    fontSize: '1rem',
-    lineHeight: '20px',
-  },
-  root: {
-    '& + .notice': {
-      marginTop: `${theme.spacing()} !important`,
-    },
-    [`& .${classes.error}`]: {
-      borderLeftColor: theme.color.red,
-    },
-    [`& .${classes.important}`]: {
-      backgroundColor: theme.bg.bgPaper,
-    },
-    alignItems: 'center',
-    borderRadius: 1,
-    display: 'flex',
-    fontSize: '1rem',
-    marginBottom: theme.spacing(2),
-    maxWidth: '100%',
-    padding: '4px 16px',
-    paddingRight: 18,
-    position: 'relative',
-  },
-  success: {
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.success.dark}`,
-  },
-  successList: {
-    borderLeft: `5px solid ${theme.palette.success.dark}`,
-  },
-  warning: {
-    [`& .${classes.icon}`]: {
-      color: '#555',
-    },
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-  },
-  warningList: {
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-  },
-}));
+import { useStyles } from './Notice.styles';
 
 export type NoticeVariant =
   | 'error'
@@ -127,33 +17,85 @@ export type NoticeVariant =
   | 'warning';
 
 export interface NoticeProps extends Grid2Props {
-  breakWords?: boolean;
+  /**
+   * If true, the error will be treated as "static" and will not be included in the error group.
+   * This will essentially disable the scroll to error behavior.
+   * **Note:** This only applies to notice variants of "error".
+   */
+  bypassValidation?: boolean;
+  /**
+   * Additional classes to be applied to the root element.
+   */
   className?: string;
+  /**
+   * The data-qa attribute to apply to the root element.
+   */
   dataTestId?: string;
+  /**
+   * The error group this error belongs to. This is used to scroll to the error when the user clicks on the error.
+   */
   errorGroup?: string;
-  flag?: boolean;
+  /**
+   * If true, an icon will be displayed to the left of the error, reflecting the variant of the error.
+   */
   important?: boolean;
-  notificationList?: boolean;
+  /**
+   * The function to execute when/if the error is clicked.
+   */
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  /**
+   * The amount of spacing to apply to the bottom of the error.
+   */
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
+  /**
+   * The amount of spacing to apply to the left of the error.
+   */
   spacingLeft?: number;
+  /**
+   * The amount of spacing to apply to the top of the error.
+   */
   spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
+  /**
+   * Additional styles to apply to the root element.
+   */
   sx?: SxProps;
+  /**
+   * The text to display in the error. If this is not provided, props.children will be used.
+   */
   text?: string;
+  /**
+   * Props to apply to the Typography component that wraps the error text.
+   */
   typeProps?: TypographyProps;
+  /**
+   * The variant of the error. This will determine the color treatment of the error.
+   */
   variant?: NoticeVariant;
 }
 
+/**
+## Usage
+
+- Appear within the page or modal
+- Might be triggered by user action
+- Typically used to alert the user to a new service, limited availability, or a potential consequence of the action being taken
+- Consider using a [Dismissible Banner](/docs/components-notifications-dismissible-banners--beta-banner) if it&rsquo;s not critical information
+
+## Types of Notices:
+
+- Success/Marketing (green line)
+- Info (blue line)
+- Error/critical (red line)
+- Warning (yellow line)
+ */
 export const Notice = (props: NoticeProps) => {
   const {
-    breakWords,
+    bypassValidation = false,
     children,
     className,
     dataTestId,
     errorGroup,
-    flag,
     important,
-    notificationList,
     onClick,
     spacingBottom,
     spacingLeft,
@@ -201,7 +143,9 @@ export const Notice = (props: NoticeProps) => {
       children
     );
 
-  const errorScrollClassName = errorGroup
+  const errorScrollClassName = bypassValidation
+    ? ''
+    : errorGroup
     ? `error-for-scroll-${errorGroup}`
     : `error-for-scroll`;
 
@@ -217,37 +161,34 @@ export const Notice = (props: NoticeProps) => {
   return (
     <Grid
       className={cx({
-        [classes.breakWords]: breakWords,
-        [classes.error]: variantMap.error && !notificationList,
-        [classes.errorList]: variantMap.error && notificationList,
+        [classes.error]: variantMap.error,
+        [classes.errorList]: variantMap.error,
         [classes.important]: important,
-        [classes.info]: variantMap.info && !notificationList,
-        [classes.infoList]: variantMap.info && notificationList,
+        [classes.info]: variantMap.info,
+        [classes.infoList]: variantMap.info,
         [classes.marketing]: variantMap.marketing,
-        [classes.marketing]: variantMap.marketing && !notificationList,
         [classes.root]: true,
-        [classes.success]: variantMap.success && !notificationList,
-        [classes.successList]: variantMap.success && notificationList,
-        [classes.warning]: variantMap.warning && !notificationList,
-        [classes.warningList]: variantMap.warning && notificationList,
+        [classes.success]: variantMap.success,
+        [classes.successList]: variantMap.success,
+        [classes.warning]: variantMap.warning,
+        [classes.warningList]: variantMap.warning,
         [errorScrollClassName]: variantMap.error,
         notice: true,
         ...(className && { [className]: true }),
       })}
-      style={{
-        marginBottom: spacingBottom !== undefined ? spacingBottom : 24,
-        marginLeft: spacingLeft !== undefined ? spacingLeft : 0,
-        marginTop: spacingTop !== undefined ? spacingTop : 0,
-      }}
+      data-testid={`notice${variant ? `-${variant}` : ''}${
+        important ? '-important' : ''
+      }`}
+      sx={(theme) => ({
+        marginBottom:
+          spacingBottom !== undefined ? `${spacingBottom}px` : theme.spacing(3),
+        marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
+        marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
+        sx,
+      })}
       {...dataAttributes}
       role="alert"
-      sx={sx}
     >
-      {flag && (
-        <Grid>
-          <Flag className={classes.flag} />
-        </Grid>
-      )}
       {important &&
         ((variantMap.success && (
           <Check className={classes.icon} data-qa-success-img />

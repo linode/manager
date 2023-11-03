@@ -45,7 +45,7 @@ import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
 

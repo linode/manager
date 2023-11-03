@@ -7,9 +7,7 @@ interface Props {
   subtext: string;
 }
 
-type CombinedProps = Props;
-
-const RestrictedUserLabel: React.FC<CombinedProps> = (props) => {
+export const RestrictedUserLabel = React.memo((props: Props) => {
   return (
     <React.Fragment>
       <Typography>
@@ -18,6 +16,4 @@ const RestrictedUserLabel: React.FC<CombinedProps> = (props) => {
       <Typography>{props.subtext}</Typography>
     </React.Fragment>
   );
-};
-
-export default React.memo(RestrictedUserLabel);
+});

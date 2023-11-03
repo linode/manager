@@ -26,6 +26,8 @@ export interface UpdateLoadbalancerPayload {
 
 type Protocol = 'tcp' | 'http' | 'https';
 
+type RouteProtocol = 'tcp' | 'http';
+
 type Policy =
   | 'round_robin'
   | 'least_request'
@@ -33,16 +35,17 @@ type Policy =
   | 'random'
   | 'maglev';
 
-type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
+export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
-  rules: Rule[];
+  rules: RuleCreatePayload[];
 }
 
 export interface Route {
   id: number;
   label: string;
+  protocol: RouteProtocol;
   rules: {
     match_condition: MatchCondition;
     service_targets: {
@@ -53,15 +56,33 @@ export interface Route {
   }[];
 }
 
+export type UpdateRoutePayload = Partial<{
+  label: string;
+  protocol: RouteProtocol;
+  rules: RulePayload[];
+}>;
+
 export interface CreateRoutePayload {
   label: string;
-  rules: {
-    match_condition: MatchCondition;
-    service_targets: {
-      id: number;
-      label: string;
-      percentage: number;
-    }[];
+  protocol: RouteProtocol;
+  rules: RulePayload[];
+}
+
+export interface Rule {
+  match_condition: MatchCondition;
+  service_targets: {
+    id: number;
+    label: string;
+    percentage: number;
+  }[];
+}
+
+export interface RulePayload {
+  match_condition: MatchCondition;
+  service_targets: {
+    id: number;
+    label: string;
+    percentage: number;
   }[];
 }
 
@@ -88,7 +109,7 @@ export interface CertificateConfig {
   id: number;
 }
 
-export interface Rule {
+export interface RuleCreatePayload {
   match_condition: MatchCondition;
   service_targets: ServiceTargetPayload[];
 }
@@ -97,8 +118,8 @@ export interface MatchCondition {
   hostname: string;
   match_field: MatchField;
   match_value: string;
-  affinity_cookie: string | null;
-  affinity_ttl: string | null;
+  session_stickiness_cookie: string | null;
+  session_stickiness_ttl: number | null;
 }
 
 export interface RouteServiceTargetPayload {
@@ -115,6 +136,7 @@ export interface ServiceTargetPayload {
 }
 
 interface HealthCheck {
+  protocol: 'tcp' | 'http';
   interval: number;
   timeout: number;
   unhealthy_threshold: number;
@@ -128,7 +150,7 @@ export interface ServiceTarget extends ServiceTargetPayload {
 }
 
 export interface Endpoint {
-  ip?: string;
+  ip: string;
   host?: string;
   port: number;
   rate_capacity: number;
@@ -139,6 +161,7 @@ type CertificateType = 'ca' | 'downstream';
 export interface Certificate {
   id: number;
   label: string;
+  certificate: string;
   type: CertificateType;
 }
 
@@ -147,4 +170,11 @@ export interface CreateCertificatePayload {
   certificate: string;
   label: string;
   type: CertificateType;
+}
+
+export interface UpdateCertificatePayload {
+  key?: string;
+  certificate?: string;
+  label?: string;
+  type?: CertificateType;
 }

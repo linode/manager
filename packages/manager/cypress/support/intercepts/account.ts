@@ -185,6 +185,19 @@ export const mockGetAccountSettings = (
 };
 
 /**
+ * Intercepts PUT request to update account settings and mocks response.
+ *
+ * @param settings - Account settings mock data with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountSettings = (
+  settings: AccountSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher('account/settings'), settings);
+};
+
+/**
  * Intercepts PUT request to update account username and mocks response.
  *
  * @param oldUsername - The original username which will be changed.

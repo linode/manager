@@ -18,7 +18,7 @@ import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { FlagSet } from 'src/featureFlags';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';

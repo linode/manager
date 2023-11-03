@@ -4,13 +4,13 @@ import { styled } from '@mui/material/styles';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledCopyTooltipProps = { isHovered: boolean };
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip ',
-  shouldForwardProp: (prop) => isPropValid(['isHovered'], prop),
+  shouldForwardProp: omittedProps(['isHovered']),
 })<StyledCopyTooltipProps>(({ isHovered }) => ({
   '& svg': {
     height: `12px`,

@@ -1,6 +1,5 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import ClientRow from './LongviewClientRow';
 
@@ -13,9 +12,7 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props;
-
-const LongviewListRows: React.FC<CombinedProps> = (props) => {
+export const LongviewListRows = React.memo((props: Props) => {
   const {
     longviewClientsData,
     openPackageDrawer,
@@ -42,6 +39,4 @@ const LongviewListRows: React.FC<CombinedProps> = (props) => {
       })}
     </React.Fragment>
   );
-};
-
-export default compose<CombinedProps, Props>(React.memo)(LongviewListRows);
+});

@@ -7,7 +7,7 @@ import StackScriptBase, {
   StateProps,
 } from '../StackScriptBase/StackScriptBase';
 import { StackScriptsRequest } from '../types';
-import SelectStackScriptsSection from './SelectStackScriptsSection';
+import { SelectStackScriptsSection } from './SelectStackScriptsSection';
 
 interface Props {
   category: string;

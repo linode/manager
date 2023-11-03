@@ -6,7 +6,7 @@ import { Paper } from 'src/components/Paper';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { TimeRangeSelect } from '../../../shared/TimeRangeSelect';
 
 import { StyledTypography } from '../CommonStyles.styles';
 import { CPUGraph } from './CPUGraph';

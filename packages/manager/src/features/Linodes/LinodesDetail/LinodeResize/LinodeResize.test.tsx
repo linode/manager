@@ -6,11 +6,11 @@ import { linodeFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
+import { LinodeResize } from './LinodeResize';
 import {
-  LinodeResize,
   isSmallerThanCurrentPlan,
   shouldEnableAutoResizeDiskOption,
-} from './LinodeResize';
+} from './LinodeResize.utils';
 
 beforeAll(() => {
   mockMatchMedia();

@@ -1,13 +1,20 @@
 import { Domain } from '@linode/api-v4/types';
 import { domainFactory } from '@src/factories';
+import { authenticate } from 'support/api/authentication';
 import { fbtClick, getClick, getVisible } from 'support/helpers';
 import {
   interceptCreateDomain,
   mockGetDomains,
 } from 'support/intercepts/domains';
+import { cleanUp } from 'support/util/cleanup';
 import { randomDomainName } from 'support/util/random';
 
+authenticate();
 describe('Create a Domain', () => {
+  before(() => {
+    cleanUp('domains');
+  });
+
   it('Creates first Domain', () => {
     // Mock Domains to modify incoming response.
     const mockDomains = new Array(2).fill(null).map(

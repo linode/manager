@@ -35,7 +35,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import { CautionNotice } from './CautionNotice';

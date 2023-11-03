@@ -21,7 +21,7 @@ import {
   useUpdateImageMutation,
 } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { useImageAndLinodeGrantCheck } from './utils';
 

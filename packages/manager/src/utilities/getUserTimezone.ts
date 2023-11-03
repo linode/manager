@@ -1,11 +1,9 @@
 import { DateTime, IANAZone } from 'luxon';
 
-const getUserTimezone = (profileTimezone?: string) => {
+export const getUserTimezone = (profileTimezone?: string) => {
   return profileTimezone &&
     profileTimezone != '' &&
     IANAZone.isValidZone(profileTimezone)
     ? profileTimezone
     : DateTime.local().zoneName;
 };
-
-export default getUserTimezone;

@@ -9,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles(() => ({
   regarding: {
@@ -41,15 +42,21 @@ const renderEntityLink = (ticket: SupportTicket) => {
 export const TicketRow = ({ ticket }: Props) => {
   const classes = useStyles();
 
+  const ticketSummary = sanitizeHTML({
+    disallowedTagsMode: 'discard',
+    sanitizingTier: 'none',
+    text: ticket.summary,
+  }).toString();
+
   return (
     <TableRow
-      ariaLabel={`Ticket subject ${ticket.summary}`}
+      ariaLabel={`Ticket subject ${ticketSummary}`}
       data-qa-support-ticket={ticket.id}
       data-testid="ticket-row"
       key={`ticket-${ticket.id}`}
     >
       <TableCell data-qa-support-subject>
-        <Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link>
+        <Link to={`/support/tickets/${ticket.id}`}>{ticketSummary}</Link>
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>

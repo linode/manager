@@ -29,8 +29,8 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   );
 };
 
-const configQueryKey = 'configs';
-const interfaceQueryKey = 'interfaces';
+export const configQueryKey = 'configs';
+export const interfaceQueryKey = 'interfaces';
 
 // Config queries
 export const useLinodeConfigDeleteMutation = (

@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import TimeRangeSelect from '../../shared/TimeRangeSelect';
+import { TimeRangeSelect } from '../../shared/TimeRangeSelect';
 
 export const StyledTimeRangeSelect = styled(TimeRangeSelect, {
   label: 'StyledTimeRangeSelect',

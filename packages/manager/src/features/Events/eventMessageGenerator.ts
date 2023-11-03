@@ -513,10 +513,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Linode ${e.entity?.label ?? ''} is scheduled for resizing.`,
     started: (e) => `Linode ${e.entity?.label ?? ''} is resizing.`,
   },
-  // This event type isn't currently being displayed, but I added a message here just in case.
   linode_resize_create: {
     notification: (e) =>
-      `Resize for Linode ${e.entity!.label} has been initiated.`,
+      `A cold resize for Linode ${e.entity!.label} has been initiated.`,
+  },
+  linode_resize_warm_create: {
+    notification: (e) =>
+      `A warm resize for Linode ${e.entity!.label} has been initiated.`,
   },
   linode_shutdown: {
     failed: (e) => `Linode ${e.entity!.label} could not be shut down.`,
@@ -936,7 +939,7 @@ export function applyLinking(event: Event, message: string) {
   if (event.entity?.label && entityLinkTarget) {
     const label = event.entity.label;
     const nonTickedLabels = new RegExp(
-      `(^|[^\\\`])${escapeRegExp(label)}`,
+      `(\\B|^|[^\`])${escapeRegExp(label)}(\\B|$|[^\`])`,
       'g'
     );
 

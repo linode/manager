@@ -1,40 +1,6 @@
-export interface OCA {
-  alt_description: string;
-  alt_name: string;
-  categories: AppCategory[];
-  colors: Colors;
-  description: string;
-  href?: string;
-  logo_url: string;
-  name: string;
-  related_guides?: Doc[];
-  summary: string;
-  tips?: string[];
-  website?: string;
-}
+import { oneClickAppFactory } from 'src/factories/stackscripts';
 
-export interface Doc {
-  href: string;
-  title: string;
-}
-
-export interface Colors {
-  end: string;
-  start: string;
-}
-
-export type AppCategory =
-  | 'App Creators'
-  | 'Control Panels'
-  | 'Databases'
-  | 'Development'
-  | 'Games'
-  | 'Media and Entertainment'
-  | 'Monitoring'
-  | 'Productivity'
-  | 'Security'
-  | 'Stacks'
-  | 'Website';
+import type { OCA } from './types';
 
 export const oneClickApps: OCA[] = [
   {
@@ -1157,6 +1123,116 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.magicspam.com/anti-spam-features.php',
   },
   {
+    alt_description: 'FFmpeg encoder plugins.',
+    alt_name: 'Premium video encoding',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept FFmpeg Plugins are suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
+    logo_url: 'mainconcept.svg',
+    name: 'MainConcept FFmpeg Plugins',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcffmpegplugins/',
+        title: 'Deploy MainConcept FFmpeg Plugins through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept FFmpeg Plugins are advanced video encoding tools.',
+    website: 'https://www.mainconcept.com/ffmpeg',
+  },
+  {
+    alt_description: 'Live video encoding engine.',
+    alt_name: 'Real time video encoding',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept Live Encoder is a powerful all-in-one encoding engine designed to simplify common broadcast and OTT video workflows.`,
+    logo_url: 'mainconcept.svg',
+    name: 'MainConcept Live Encoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcliveencoder/',
+        title: 'Deploy MainConcept Live Encoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept Live Encoder is a real time video encoding engine.',
+    website: 'https://www.mainconcept.com/live-encoder',
+  },
+  {
+    alt_description: 'Panasonic camera format encoder.',
+    alt_name: 'Media encoding into professional file formats.',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept P2 AVC Ultra Transcoder is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
+    logo_url: 'mainconcept.svg',
+    name: 'MainConcept P2 AVC Ultra Transcoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2avcultratranscoder/',
+        title: 'Deploy MainConcept P2 AVC Ultra Transcoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept P2 AVC Ultra Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
+    website: 'https://www.mainconcept.com/mc2go',
+  },
+  {
+    alt_description: 'Sony camera format encoder.',
+    alt_name: 'Media encoding into professional file formats.',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept XAVC Transcoder is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XAVC-Intra, XAVC Long GOP and XAVC-S.`,
+    logo_url: 'mainconcept.svg',
+    name: 'MainConcept XAVC Transcoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2xavc/',
+        title: 'Deploy MainConcept XAVC Transcoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept XAVC Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
+    website: 'https://www.mainconcept.com/mc2go',
+  },
+  {
+    alt_description: 'Sony XDCAM format encoder.',
+    alt_name: 'Media encoding into professional file formats.',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept XDCAM Transcoder is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XDCAM HD, XDCAM EX, XDCAM IMX and DVCAM (XDCAM DV).`,
+    logo_url: 'mainconcept.svg',
+    name: 'MainConcept XDCAM Transcoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcp2xdcam/',
+        title: 'Deploy MainConcept XDCAM Transcoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept XDCAM Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
+    website: 'https://www.mainconcept.com/mc2go',
+  },
+  {
     alt_description: 'Open source Twitter alternative.',
     alt_name: 'Open source social media',
     categories: ['Media and Entertainment'],
@@ -2175,6 +2251,28 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description:
+      'A private by design messaging platform.',
+    alt_name: 'Anonymous messaging platform.',
+    categories: ['Productivity'],
+    colors: {
+      end: '70f0f9',
+      start: '11182f',
+    },
+    description: `SimpleX Chat - The first messaging platform that has no user identifiers of any kind - 100% private by design. SMP server is the relay server used to pass messages in SimpleX network. XFTP is a new file transfer protocol focussed on meta-data protection. This One-Click APP will deploy both SMP and XFTP servers.`,
+    logo_url: 'simplexchat.svg',
+    name: 'SimpleX Chat',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/simplexchat/',
+        title: 'Deploy SimpleX chat through the Linode Marketplace',
+      },
+    ],
+    summary: 'Private by design messaging server.',
+    website: 'https://simplex.chat',
+  },
+  {
+    alt_description:
       'A simple SQL interface to store and search unstructured data.',
     alt_name: 'SuperinsightDB',
     categories: ['Databases'],
@@ -2561,5 +2659,10 @@ export const oneClickApps: OCA[] = [
     ],
     summary: 'Enterprise-class open source distributed monitoring solution.',
     website: 'https://www.zabbix.com',
+  },
+  {
+    ...oneClickAppFactory.build({
+      name: 'E2E Test App',
+    }),
   },
 ];

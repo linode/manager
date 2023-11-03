@@ -88,12 +88,7 @@ describe('volume resize flow', () => {
 
         // Confirm that volume is resized.
         cy.wait('@resizeVolume').its('response.statusCode').should('eq', 200);
-        cy.findByText('Volume scheduled to be resized.')
-          .should('be.visible')
-          .closest('[data-qa-drawer="true"]')
-          .within(() => {
-            cy.findByText('Close').click();
-          });
+        cy.findByText('Volume scheduled to be resized.').should('be.visible');
 
         cy.findByText(volume.label)
           .closest('tr')

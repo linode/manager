@@ -5,9 +5,8 @@ import {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -45,80 +44,13 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { useStyles } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
-import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  inner: {
-    '& > div': {
-      marginBottom: theme.spacing(2),
-    },
-    '& label': {
-      color: theme.color.headline,
-      fontWeight: 600,
-      letterSpacing: '0.25px',
-      lineHeight: '1.33rem',
-      margin: 0,
-    },
-  },
-  inputWidth: {
-    '& .react-select__menu': {
-      maxWidth: 440,
-    },
-    maxWidth: 440,
-  },
-  regionSubtitle: {
-    '& .MuiInput-root': {
-      maxWidth: 440,
-    },
-    '& .react-select__menu': {
-      maxWidth: 440,
-    },
-    '& p': {
-      lineHeight: '1.43rem',
-      margin: 0,
-      maxWidth: '100%',
-    },
-  },
-  root: {
-    '& .mlMain': {
-      flexBasis: '100%',
-      maxWidth: '100%',
-      [theme.breakpoints.up('lg')]: {
-        flexBasis: '78.8%',
-        maxWidth: '78.8%',
-      },
-    },
-    '& .mlSidebar': {
-      flexBasis: '100%',
-      maxWidth: '100%',
-      position: 'static',
-      [theme.breakpoints.up('lg')]: {
-        flexBasis: '21.2%',
-        maxWidth: '21.2%',
-        position: 'sticky',
-      },
-      width: '100%',
-    },
-  },
-  sidebar: {
-    background: 'none',
-    marginTop: '0px !important',
-    paddingTop: '0px !important',
-    [theme.breakpoints.down('lg')]: {
-      background: theme.color.white,
-      marginTop: `${theme.spacing(3)} !important`,
-      padding: `${theme.spacing(3)} !important`,
-    },
-    [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing()} !important`,
-    },
-  },
-}));
 
 export const CreateCluster = () => {
   const classes = useStyles();
@@ -247,17 +179,10 @@ export const CreateCluster = () => {
    * @returns dynamically calculated high availability price by region
    */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    if (!regionId) {
-      return undefined;
-    } else {
-      return parseFloat(
-        getDCSpecificPrice({
-          basePrice: LKE_HA_PRICE,
-          flags,
-          regionId,
-        })
-      );
-    }
+    const dcSpecificPrice = regionId
+      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, flags, regionId })
+      : undefined;
+    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
   const showPricingNotice =
@@ -296,61 +221,60 @@ export const CreateCluster = () => {
       <Grid className={`mlMain py0`}>
         {errorMap.none && <Notice text={errorMap.none} variant="error" />}
         <Paper data-qa-label-header>
-          <div className={classes.inner}>
-            <TextField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                updateLabel(e.target.value)
-              }
-              className={classes.inputWidth}
-              data-qa-label-input
-              errorText={errorMap.label}
-              label="Cluster Label"
-              value={label || ''}
-            />
-            <RegionSelect
-              handleSelection={(regionID: string) =>
-                setSelectedRegionID(regionID)
-              }
-              textFieldProps={{
-                helperText: <RegionHelperText mb={2} />,
-                helperTextPosition: 'top',
-              }}
-              className={classes.regionSubtitle}
-              errorText={errorMap.region}
-              regions={filteredRegions}
-              selectedID={selectedID}
-            />
-            {showPricingNotice && (
-              <DynamicPriceNotice
-                region={selectedRegionID}
-                spacingBottom={16}
+          <TextField
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              updateLabel(e.target.value)
+            }
+            className={classes.inputWidth}
+            data-qa-label-input
+            errorText={errorMap.label}
+            label="Cluster Label"
+            value={label || ''}
+          />
+          <Divider sx={{ marginTop: 4 }} />
+          <RegionSelect
+            handleSelection={(regionID: string) =>
+              setSelectedRegionID(regionID)
+            }
+            textFieldProps={{
+              helperText: <RegionHelperText mb={2} />,
+              helperTextPosition: 'top',
+            }}
+            className={classes.regionSubtitle}
+            errorText={errorMap.region}
+            regions={filteredRegions}
+            selectedID={selectedID}
+          />
+          {showPricingNotice && (
+            <DynamicPriceNotice region={selectedRegionID} spacingBottom={16} />
+          )}
+          <Divider sx={{ marginTop: 4 }} />
+          <Select
+            onChange={(selected: Item<string>) => {
+              setVersion(selected);
+            }}
+            className={classes.inputWidth}
+            errorText={errorMap.k8s_version}
+            isClearable={false}
+            label="Kubernetes Version"
+            options={versions}
+            placeholder={' '}
+            value={version || null}
+          />
+          <Divider sx={{ marginTop: 4 }} />
+          {showHighAvailability ? (
+            <Box data-testid="ha-control-plane">
+              <HAControlPlane
+                highAvailabilityPrice={
+                  flags.dcSpecificPricing
+                    ? getHighAvailabilityPrice(selectedID)
+                    : LKE_HA_PRICE
+                }
+                setHighAvailability={setHighAvailability}
               />
-            )}
-            <Select
-              onChange={(selected: Item<string>) => {
-                setVersion(selected);
-              }}
-              className={classes.inputWidth}
-              errorText={errorMap.k8s_version}
-              isClearable={false}
-              label="Kubernetes Version"
-              options={versions}
-              placeholder={' '}
-              value={version || null}
-            />
-            {showHighAvailability ? (
-              <Box data-testid="ha-control-plane">
-                <HAControlPlane
-                  highAvailabilityPrice={
-                    flags.dcSpecificPricing
-                      ? getHighAvailabilityPrice(selectedID)
-                      : LKE_HA_PRICE
-                  }
-                  setHighAvailability={setHighAvailability}
-                />
-              </Box>
-            ) : null}
-          </div>
+            </Box>
+          ) : null}
+          <Divider sx={{ marginBottom: 4 }} />
           <NodePoolPanel
             typesError={
               typesError
@@ -409,5 +333,3 @@ export const CreateCluster = () => {
     </Grid>
   );
 };
-
-export default CreateCluster;

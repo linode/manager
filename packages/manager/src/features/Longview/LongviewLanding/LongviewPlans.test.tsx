@@ -14,7 +14,7 @@ import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  CombinedProps,
+  LongviewPlansProps,
   LONGVIEW_FREE_ID,
   LongviewPlans,
   formatPrice,
@@ -22,7 +22,7 @@ import {
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 
-const props: CombinedProps = {
+const props: LongviewPlansProps = {
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,
@@ -77,7 +77,7 @@ describe('LongviewPlans', () => {
   it('renders all columns for all plan types', async () => {
     renderWithTheme(<LongviewPlans {...props} />);
 
-    testRow(
+    await testRow(
       LONGVIEW_FREE_ID,
       'Longview Free',
       '10',
@@ -86,8 +86,12 @@ describe('LongviewPlans', () => {
       'FREE'
     );
 
-    mockLongviewSubscriptions.forEach((sub) => {
-      testRow(
+    // We can't execute `testRow()` concurrently because it leads to concurrent
+    // calls to `act()`, which can lead to undefined behavior.
+    for (let i = 0; i < mockLongviewSubscriptions.length; i += 1) {
+      const sub = mockLongviewSubscriptions[i];
+      // eslint-disable-next-line no-await-in-loop
+      await testRow(
         sub.id,
         sub.label,
         String(sub.clients_included),
@@ -95,7 +99,7 @@ describe('LongviewPlans', () => {
         'Every minute',
         formatPrice(sub.price)
       );
-    });
+    }
   });
 
   it('highlights the LV subscription currently on the account', async () => {

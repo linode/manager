@@ -28,14 +28,14 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import {
   ExtendedIP,
   extendedIPToString,
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
   getInitialIPs,
@@ -137,8 +137,8 @@ export class DomainRecordDrawer extends React.Component<
       'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
     const otherErrors = [
-      getAPIErrorsFor({}, this.state.errors)('_unknown'),
-      getAPIErrorsFor({}, this.state.errors)('none'),
+      getAPIErrorFor({}, this.state.errors)('_unknown'),
+      getAPIErrorFor({}, this.state.errors)('none'),
     ].filter(Boolean);
 
     return (
@@ -192,7 +192,7 @@ export class DomainRecordDrawer extends React.Component<
     ).map(stringToExtendedIP);
     return (
       <MultipleIPInput
-        error={getAPIErrorsFor(
+        error={getAPIErrorFor(
           DomainRecordDrawer.errorFields,
           this.state.errors
         )('axfr_ips')}
@@ -316,7 +316,7 @@ export class DomainRecordDrawer extends React.Component<
   NumberField = ({ field, label, ...rest }: NumberFieldProps) => {
     return (
       <TextField
-        errorText={getAPIErrorsFor(
+        errorText={getAPIErrorFor(
           DomainRecordDrawer.errorFields,
           this.state.errors
         )(field)}
@@ -434,7 +434,7 @@ export class DomainRecordDrawer extends React.Component<
     trimmed,
   }: AdjustedTextFieldProps) => (
     <TextField
-      errorText={getAPIErrorsFor(
+      errorText={getAPIErrorFor(
         DomainRecordDrawer.errorFields,
         this.state.errors
       )(field)}

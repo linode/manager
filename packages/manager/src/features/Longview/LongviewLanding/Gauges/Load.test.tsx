@@ -3,7 +3,7 @@ import * as React from 'react';
 import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import Load from './Load';
+import { LoadGauge } from './Load';
 
 const mockError = [{ CODE: 0, SEVERITY: 3, TEXT: 'no reason' }];
 
@@ -38,7 +38,7 @@ const errorStore = {
 
 describe('Longview Load Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<Load clientID={123} />, {
+    const { getByText } = renderWithTheme(<LoadGauge clientID={123} />, {
       customStore: loadingStore,
     });
 
@@ -46,7 +46,7 @@ describe('Longview Load Gauge UI', () => {
   });
 
   it('should render an error state on 400 responses', async () => {
-    const { findByText } = renderWithTheme(<Load clientID={123} />, {
+    const { findByText } = renderWithTheme(<LoadGauge clientID={123} />, {
       customStore: errorStore,
     });
 
@@ -54,7 +54,7 @@ describe('Longview Load Gauge UI', () => {
   });
 
   it('should render a data state on 200 responses', async () => {
-    const { findByTestId } = renderWithTheme(<Load clientID={123} />, {
+    const { findByTestId } = renderWithTheme(<LoadGauge clientID={123} />, {
       customStore: dataStore,
     });
 

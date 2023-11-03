@@ -19,7 +19,7 @@ import {
   withProfile,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { StyledTypographyProps } from './SelectLinodePanel';
 
@@ -60,13 +60,13 @@ type CombinedProps = Props & WithProfileProps;
 const SelectBackupPanel = (props: CombinedProps) => {
   const {
     error,
-    loading,
-    selectedLinodeID,
-    selectedLinodeWithBackups,
-    selectedBackupID,
-    profile,
     handleChangeBackup,
     handleChangeBackupInfo,
+    loading,
+    profile,
+    selectedBackupID,
+    selectedLinodeID,
+    selectedLinodeWithBackups,
   } = props;
 
   const aggregatedBackups = selectedLinodeWithBackups
@@ -146,7 +146,7 @@ const SelectBackupPanel = (props: CombinedProps) => {
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: (prop) => isPropValid(['component'], prop),
+  shouldForwardProp: omittedProps(['component']),
 })<StyledTypographyProps>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
   width: '100%',
@@ -156,8 +156,8 @@ const StyledRootPaper = styled(Paper, { label: 'StyledRootPaper' })(
   ({ theme }) => ({
     backgroundColor: theme.color.white,
     flexGrow: 1,
-    width: '100%',
     marginTop: theme.spacing(3),
+    width: '100%',
   })
 );
 

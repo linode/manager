@@ -45,6 +45,7 @@ export const StyledProvidersListGrid = styled(Grid, {
 
 export const StyledButton = styled(Button, {
   label: 'StyledButton',
+  shouldForwardProp: (propName) => propName !== 'isButtonEnabled',
 })<{ isButtonEnabled: boolean }>(({ isButtonEnabled, theme }) => ({
   '& > span': {
     color: theme.color.headline,

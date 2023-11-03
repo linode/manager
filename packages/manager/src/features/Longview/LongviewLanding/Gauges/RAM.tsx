@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -15,110 +15,110 @@ import {
 } from '../../shared/utilities';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type commbinedProps = Props & WithTheme & LVDataProps;
+type CombinedProps = Props & LVDataProps;
 
-const RAMGauge: React.FC<commbinedProps> = (props) => {
-  const {
-    lastUpdatedError,
-    longviewClientData,
-    longviewClientDataError: error,
-    longviewClientDataLoading: loading,
-  } = props;
+export const RAMGauge = withClientData<Props>((ownProps) => ownProps.clientID)(
+  (props: CombinedProps) => {
+    const {
+      lastUpdatedError,
+      longviewClientData,
+      longviewClientDataError: error,
+      longviewClientDataLoading: loading,
+    } = props;
 
-  const usedMemory = pathOr(
-    0,
-    ['Memory', 'real', 'used', 0, 'y'],
-    longviewClientData
-  );
-  const freeMemory = pathOr(
-    0,
-    ['Memory', 'real', 'free', 0, 'y'],
-    longviewClientData
-  );
-  const buffers = pathOr(
-    0,
-    ['Memory', 'real', 'buffers', 0, 'y'],
-    longviewClientData
-  );
-  const cache = pathOr(
-    0,
-    ['Memory', 'real', 'cache', 0, 'y'],
-    longviewClientData
-  );
+    const theme = useTheme();
 
-  const finalUsedMemory = generateUsedMemory(usedMemory, buffers, cache);
-  const totalMemory = generateTotalMemory(usedMemory, freeMemory);
-
-  const generateText = (): {
-    innerText: string;
-    subTitle: JSX.Element | string;
-  } => {
-    if (error || lastUpdatedError) {
-      return {
-        innerText: 'Error',
-        subTitle: (
-          <Typography>
-            <strong>RAM</strong>
-          </Typography>
-        ),
-      };
-    }
-
-    if (loading) {
-      return {
-        innerText: 'Loading',
-        subTitle: (
-          <Typography>
-            <strong>RAM</strong>
-          </Typography>
-        ),
-      };
-    }
-
-    /** first convert memory from KB to bytes */
-    const usedMemoryToBytes = finalUsedMemory * 1024;
-    const howManyBytesInGB = 1073741824;
-
-    const convertedUsedMemory = readableBytes(
-      /** convert KB to bytes */
-      usedMemoryToBytes,
-      {
-        unit: usedMemoryToBytes > howManyBytesInGB ? 'GB' : 'MB',
-      }
+    const usedMemory = pathOr(
+      0,
+      ['Memory', 'real', 'used', 0, 'y'],
+      longviewClientData
+    );
+    const freeMemory = pathOr(
+      0,
+      ['Memory', 'real', 'free', 0, 'y'],
+      longviewClientData
+    );
+    const buffers = pathOr(
+      0,
+      ['Memory', 'real', 'buffers', 0, 'y'],
+      longviewClientData
+    );
+    const cache = pathOr(
+      0,
+      ['Memory', 'real', 'cache', 0, 'y'],
+      longviewClientData
     );
 
-    const convertedTotalMemory = readableBytes(
-      /** convert KB to bytes */
-      totalMemory * 1024,
-      {
-        unit: 'GB',
-      }
-    );
+    const finalUsedMemory = generateUsedMemory(usedMemory, buffers, cache);
+    const totalMemory = generateTotalMemory(usedMemory, freeMemory);
 
-    return {
-      innerText: `${convertedUsedMemory.value} ${convertedUsedMemory.unit}`,
-      subTitle: (
-        <React.Fragment>
-          <Typography>
-            <strong>RAM</strong>
-          </Typography>
-          <Typography>{`${convertedTotalMemory.value} GB`}</Typography>
-        </React.Fragment>
-      ),
+    const generateText = (): {
+      innerText: string;
+      subTitle: JSX.Element | string;
+    } => {
+      if (error || lastUpdatedError) {
+        return {
+          innerText: 'Error',
+          subTitle: (
+            <Typography>
+              <strong>RAM</strong>
+            </Typography>
+          ),
+        };
+      }
+
+      if (loading) {
+        return {
+          innerText: 'Loading',
+          subTitle: (
+            <Typography>
+              <strong>RAM</strong>
+            </Typography>
+          ),
+        };
+      }
+
+      /** first convert memory from KB to bytes */
+      const usedMemoryToBytes = finalUsedMemory * 1024;
+      const howManyBytesInGB = 1073741824;
+
+      const convertedUsedMemory = readableBytes(
+        /** convert KB to bytes */
+        usedMemoryToBytes,
+        {
+          unit: usedMemoryToBytes > howManyBytesInGB ? 'GB' : 'MB',
+        }
+      );
+
+      const convertedTotalMemory = readableBytes(
+        /** convert KB to bytes */
+        totalMemory * 1024,
+        {
+          unit: 'GB',
+        }
+      );
+
+      return {
+        innerText: `${convertedUsedMemory.value} ${convertedUsedMemory.unit}`,
+        subTitle: (
+          <React.Fragment>
+            <Typography>
+              <strong>RAM</strong>
+            </Typography>
+            <Typography>{`${convertedTotalMemory.value} GB`}</Typography>
+          </React.Fragment>
+        ),
+      };
     };
-  };
 
-  return (
-    <GaugePercent
-      {...baseGaugeProps}
-      filledInColor={props.theme.graphs.purple}
-      max={totalMemory}
-      value={finalUsedMemory}
-      {...generateText()}
-    />
-  );
-};
-
-export default withClientData<Props>((ownProps) => ownProps.clientID)(
-  withTheme(RAMGauge)
+    return (
+      <GaugePercent
+        {...baseGaugeProps}
+        filledInColor={theme.graphs.purple}
+        max={totalMemory}
+        value={finalUsedMemory}
+        {...generateText()}
+      />
+    );
+  }
 );

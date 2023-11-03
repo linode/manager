@@ -23,13 +23,13 @@ import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { StyledTopMenuIconWrapper, TopMenuIcon } from '../TopMenuIcon';
 
 const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   label: 'NotificationIconWrapper',
-  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
+  shouldForwardProp: omittedProps(['isMenuOpen']),
 })<{
   isMenuOpen: boolean;
 }>(({ ...props }) => ({

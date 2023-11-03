@@ -1,9 +1,8 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
+import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -16,14 +15,8 @@ import withLongviewStats, {
   LVClientData,
 } from 'src/containers/longview.stats.container';
 
-import LongviewPackageRow from './LongviewPackageRow';
+import { LongviewPackageRow } from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  new: {
-    color: theme.color.green,
-  },
-}));
 
 interface Props {
   clientID: number;
@@ -34,10 +27,11 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVClientData;
 
-export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
+export const LongviewPackageDrawer = withLongviewStats<Props>(
+  (own) => own.clientID
+)((props: CombinedProps) => {
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
-
-  const classes = useStyles();
+  const theme = useTheme();
 
   const lvPackages: LongviewPackage[] = pathOr(
     [],
@@ -57,7 +51,9 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
             <TableCell style={{ width: '40%' }}>Package</TableCell>
             <TableCell>
               Installed Version{` `}/{` `}
-              <span className={classes.new}>Latest Version</span>
+              <Box component="span" color={theme.color.green}>
+                Latest Version
+              </Box>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -87,9 +83,4 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
       </Table>
     </Drawer>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withLongviewStats<Props>((own) => own.clientID)
-);
-export default enhanced(LongviewPackageDrawer);
+});

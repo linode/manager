@@ -12,7 +12,10 @@ import type { FlagSet } from 'src/featureFlags';
 export const getLinodeBackupPrice = (
   type: LinodeType,
   regionId: string
-): PriceObject => {
+): PriceObject | undefined => {
+  if (!type || !regionId) {
+    return undefined;
+  }
   const regionSpecificBackupPrice = type.addons.backups.region_prices?.find(
     (regionPrice) => regionPrice.id === regionId
   );
@@ -24,7 +27,6 @@ export const getLinodeBackupPrice = (
     };
   }
 
-  // TODO: M3-7063 (defaults)
   return type.addons.backups.price;
 };
 
@@ -35,20 +37,20 @@ interface BackupsPriceOptions {
 }
 
 /**
- *
+ * @returns The monthly backup price for a single linode without backups enabled;
+ * if price cannot be calculated, returns undefined.
  */
 export const getMonthlyBackupsPrice = ({
   flags,
   region,
   type,
-}: BackupsPriceOptions): PriceObject['monthly'] => {
+}: BackupsPriceOptions): PriceObject['monthly'] | undefined => {
   if (!region || !type) {
-    // TODO: M3-7063 (defaults)
-    return 0;
+    return undefined;
   }
 
   return flags.dcSpecificPricing
-    ? getLinodeBackupPrice(type, region).monthly
+    ? getLinodeBackupPrice(type, region)?.monthly
     : type?.addons.backups.price.monthly;
 };
 
@@ -68,22 +70,35 @@ export interface TotalBackupsPriceOptions {
   types: LinodeType[];
 }
 
+/**
+ * @returns The summed monthly backups prices for all linodes without backups enabled;
+ * if price cannot be calculated, returns undefined.
+ */
 export const getTotalBackupsPrice = ({
   flags,
   linodes,
   types,
 }: TotalBackupsPriceOptions) => {
-  return linodes.reduce((prevValue: number, linode: Linode) => {
+  return linodes.reduce((prevValue: number | undefined, linode: Linode) => {
     const type = types.find((type) => type.id === linode.type);
 
-    // TODO: M3-7063 (defaults)
-    const backupsMonthlyPrice: PriceObject['monthly'] =
+    if (!type) {
+      return undefined;
+    }
+
+    const backupsMonthlyPrice: PriceObject['monthly'] | undefined =
       getMonthlyBackupsPrice({
         flags,
         region: linode.region,
         type,
-      }) || 0;
+      }) || undefined;
 
-    return prevValue + backupsMonthlyPrice;
+    if (backupsMonthlyPrice === null || backupsMonthlyPrice === undefined) {
+      return undefined;
+    }
+
+    return prevValue !== undefined
+      ? prevValue + backupsMonthlyPrice
+      : undefined;
   }, 0);
 };

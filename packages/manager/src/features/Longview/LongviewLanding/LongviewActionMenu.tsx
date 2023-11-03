@@ -15,9 +15,7 @@ interface Props extends ActionHandlers {
   userCanModifyClient: boolean;
 }
 
-type CombinedProps = Props;
-
-const LongviewActionMenu: React.FC<CombinedProps> = (props) => {
+export const LongviewActionMenu = React.memo((props: Props) => {
   const {
     longviewClientID,
     longviewClientLabel,
@@ -44,6 +42,4 @@ const LongviewActionMenu: React.FC<CombinedProps> = (props) => {
       ariaLabel={`Action menu for Longview Client ${props.longviewClientLabel}`}
     />
   );
-};
-
-export default React.memo(LongviewActionMenu);
+});

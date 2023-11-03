@@ -97,7 +97,11 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
             loading: formik.isSubmitting,
             type: 'submit',
           }}
-          secondaryButtonProps={{ 'data-testid': 'cancel', onClick: onClose }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
         />
       </form>
     </Drawer>

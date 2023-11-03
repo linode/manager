@@ -1,12 +1,12 @@
-import { Box } from 'src/components/Box';
-import { styled } from '@mui/material/styles';
+import { SxProps, styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import {
   CircularProgress,
   CircularProgressProps,
 } from 'src/components/CircularProgress';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 interface CircleProgressProps extends CircularProgressProps {
   children?: JSX.Element;
@@ -15,6 +15,7 @@ interface CircleProgressProps extends CircularProgressProps {
   noInner?: boolean;
   noPadding?: boolean;
   size?: number;
+  sx?: SxProps;
 }
 
 const CircleProgress = (props: CircleProgressProps) => {
@@ -25,6 +26,7 @@ const CircleProgress = (props: CircleProgressProps) => {
     noInner,
     noPadding,
     size,
+    sx,
     ...rest
   } = props;
 
@@ -46,7 +48,11 @@ const CircleProgress = (props: CircleProgressProps) => {
   }
 
   return (
-    <StyledRootDiv aria-label="Content is loading" className={className}>
+    <StyledRootDiv
+      aria-label="Content is loading"
+      className={className}
+      sx={sx}
+    >
       {children !== undefined && (
         <Box sx={{ marginTop: 4, position: 'absolute' }}>{children}</Box>
       )}
@@ -114,7 +120,7 @@ const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
 );
 
 const StyledMiniCircularProgress = styled(CircularProgress, {
-  shouldForwardProp: (prop) => isPropValid(['noPadding'], prop),
+  shouldForwardProp: omittedProps(['noPadding']),
 })<CircleProgressProps>(({ theme, ...props }) => ({
   padding: `calc(${theme.spacing()} * 1.3)`,
   ...(props.noPadding && {

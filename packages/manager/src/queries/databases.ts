@@ -150,10 +150,11 @@ export const getAllDatabaseEngines = () =>
     (data) => data.data
   );
 
-export const useDatabaseEnginesQuery = () =>
+export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>(
     `${queryKey}-versions`,
-    getAllDatabaseEngines
+    getAllDatabaseEngines,
+    { enabled }
   );
 
 export const getAllDatabaseTypes = () =>

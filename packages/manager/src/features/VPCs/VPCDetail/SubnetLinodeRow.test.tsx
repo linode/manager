@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -24,7 +25,7 @@ afterEach(() => {
 const loadingTestId = 'circle-progress';
 
 describe('SubnetLinodeRow', () => {
-  it('should display linode label, status, id, vpc ipv4 address, and associated firewalls', async () => {
+  it('should display linode label, status, id, vpc ipv4 address, associated firewalls and unassign button', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
@@ -36,13 +37,21 @@ describe('SubnetLinodeRow', () => {
       })
     );
 
+    const handleUnassignLinode = jest.fn();
+
     const {
       getAllByRole,
       getAllByText,
       getByTestId,
       getByText,
     } = renderWithTheme(
-      wrapWithTableBody(<SubnetLinodeRow linodeId={linodeFactory1.id} />),
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handleUnassignLinode={handleUnassignLinode}
+          linodeId={linodeFactory1.id}
+          subnetId={0}
+        />
+      ),
       {
         queryClient,
       }
@@ -58,8 +67,14 @@ describe('SubnetLinodeRow', () => {
       'href',
       `/linodes/${linodeFactory1.id}`
     );
+
     getAllByText(linodeFactory1.id);
     getAllByText('10.0.0.0');
     getByText('mock-firewall-0');
+
+    const unassignLinodeButton = getAllByRole('button')[0];
+    expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
+    fireEvent.click(unassignLinodeButton);
+    expect(handleUnassignLinode).toHaveBeenCalled();
   });
 });

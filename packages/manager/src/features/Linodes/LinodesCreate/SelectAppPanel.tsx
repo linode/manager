@@ -1,4 +1,3 @@
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -11,11 +10,15 @@ import { AppPanelSection } from 'src/features/Linodes/LinodesCreate/AppPanelSect
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { Panel } from './Panel';
-import { AppsData } from './types';
+
+import type { AppsData } from './types';
+import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import type { FlagSet } from 'src/featureFlags';
 
 interface Props extends AppsData {
   disabled: boolean;
   error?: string;
+  flags: FlagSet;
   handleClick: (
     id: number,
     label: string,
@@ -51,6 +54,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
       appInstancesLoading,
       disabled,
       error,
+      flags,
       handleClick,
       isFiltering,
       isSearching,
@@ -81,11 +85,9 @@ class SelectAppPanel extends React.PureComponent<Props> {
       return null;
     }
 
+    const newAppsIds = Object.keys(flags.oneClickApps || {});
     const newApps = appInstances.filter((app) => {
-      return [
-        'hashicorp nomad clients cluster',
-        'hashicorp nomad cluster',
-      ].includes(app.label.toLowerCase().trim());
+      return newAppsIds.includes(app.id.toString());
     });
 
     const popularApps = appInstances.slice(0, 10);
@@ -98,7 +100,10 @@ class SelectAppPanel extends React.PureComponent<Props> {
     const isFilteringOrSearching = isFiltering || isSearching;
 
     return (
-      <StyledPaper data-qa-tp="Select Image">
+      <StyledPaper
+        data-qa-tp="Select Image"
+        data-testid="one-click-apps-container"
+      >
         {error && <Notice text={error} variant="error" />}
         {!isFilteringOrSearching ? (
           <AppPanelSection

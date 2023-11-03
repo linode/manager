@@ -22,7 +22,7 @@ const LoadBalancer = () => {
         <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
         <Route
           component={LoadBalancerDetail}
-          path="/loadbalancers/:loadbalancerId/:tab?"
+          path="/loadbalancers/:loadbalancerId"
         />
         <Route component={LoadBalancerLanding} path="/loadbalancers" />
       </Switch>

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { imageFactory } from 'src/factories/images';
 import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';

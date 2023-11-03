@@ -1,4 +1,4 @@
-import isPathOneOf from './isPathOneOf';
+import { isPathOneOf } from './isPathOneOf';
 
 describe('isPathOneOf', () => {
   it('should return true when path is one of', () => {

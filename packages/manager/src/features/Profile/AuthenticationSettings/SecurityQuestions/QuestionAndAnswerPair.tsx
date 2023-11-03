@@ -73,6 +73,7 @@ const StyledRootContainer = styled(Box, {
 
 const StyledQuestionContainer = styled(Box, {
   label: 'StyledQuestionContainer',
+  shouldForwardProp: (propName) => propName !== 'edit',
 })<{ edit: boolean }>(({ edit, theme }) => ({
   display: 'flex',
   flexDirection: 'column',

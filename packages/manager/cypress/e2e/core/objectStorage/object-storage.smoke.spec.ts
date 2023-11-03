@@ -159,7 +159,7 @@ describe('object storage smoke tests', () => {
       objects: 0,
     });
 
-    mockGetBuckets(bucketMock).as('getBuckets');
+    mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
 
     cy.visitWithLogin('/object-storage');

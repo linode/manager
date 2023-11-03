@@ -1,4 +1,8 @@
-import { handleAPIErrors, handleVPCAndSubnetErrors } from './formikErrorUtils';
+import {
+  getFormikErrorsFromAPIErrors,
+  handleAPIErrors,
+  handleVPCAndSubnetErrors,
+} from './formikErrorUtils';
 
 const errorWithoutField = [{ reason: 'Internal server error' }];
 const errorWithField = [
@@ -120,5 +124,80 @@ describe('handleVpcAndConvertSubnetErrors', () => {
       errorWithField[0].reason
     );
     expect(setError).not.toHaveBeenCalled();
+  });
+});
+
+describe('getFormikErrorsFromAPIErrors', () => {
+  it('should convert APIError[] to errors in the shape formik expectes', () => {
+    const testCases = [
+      {
+        apiErrors: [{ field: 'ip', reason: 'Incorrect IP' }],
+        expected: {
+          ip: 'Incorrect IP',
+        },
+      },
+      {
+        apiErrors: [
+          {
+            field: 'rules[1].match_condition.match_value',
+            reason: 'Bad Match Value',
+          },
+          {
+            field: 'rules[1].match_condition.match_field',
+            reason: 'Bad Match Type',
+          },
+          {
+            field: 'rules[1].service_targets[0].id',
+            reason: 'Service Target does not exist',
+          },
+          {
+            field: 'rules[1].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+          {
+            field: 'rules[1].match_condition.session_stickiness_ttl',
+            reason: 'Invalid TTL',
+          },
+          {
+            field: 'rules[1].match_condition.session_stickiness_cookie',
+            reason: 'Invalid Cookie',
+          },
+          {
+            field: 'rules[1].match_condition.hostname',
+            reason: 'Hostname is not valid',
+          },
+          {
+            reason: 'A backend service is down',
+          },
+          {
+            reason: 'You reached a rate limit',
+          },
+        ],
+        expected: {
+          rules: [
+            undefined,
+            {
+              match_condition: {
+                hostname: 'Hostname is not valid',
+                match_field: 'Bad Match Type',
+                match_value: 'Bad Match Value',
+                session_stickiness_cookie: 'Invalid Cookie',
+                session_stickiness_ttl: 'Invalid TTL',
+              },
+              service_targets: [
+                {
+                  id: 'Service Target does not exist',
+                  percentage: 'Invalid percentage',
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ];
+
+    for (const { apiErrors, expected } of testCases) {
+      expect(getFormikErrorsFromAPIErrors(apiErrors)).toEqual(expected);
+    }
   });
 });

@@ -3,6 +3,12 @@ import { determineIPType } from '@linode/validation';
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.4.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
+export const SUBNET_LINODE_CSV_HEADERS = [
+  { key: 'label', label: 'Linode Label' },
+  { key: 'id', label: 'Linode ID' },
+  { key: 'ipv4', label: 'IPv4' },
+];
+
 // @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
   availIPv4s?: number;
@@ -63,12 +69,34 @@ export const SubnetMaskToAvailIPv4s = {
   32: 1,
 };
 
-export const calculateAvailableIPv4s = (
+export const calculateAvailableIPv4sRFC1918 = (
   address: string
 ): number | undefined => {
-  const [, mask] = address.split('/');
+  const [ip, mask] = address.split('/');
   const ipType = determineIPType(address);
   if (ipType !== 'ipv4' || mask === '' || mask === undefined) {
+    return undefined;
+  }
+
+  const [firstOctet, secondOctet] = ip.split('.');
+  const parsedMask = parseInt(mask, 10);
+  const parsedSecondOctet = parseInt(secondOctet, 10);
+
+  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs. The ranges are:
+  // 10.x.x.x (10/8 prefix)
+  // 172.16.x.x-172.31.x.x (172/12 prefix)
+  // 192.168.x.x (192.168/16 prefix)
+  if (
+    (firstOctet !== '10' && firstOctet !== '172' && firstOctet !== '192') ||
+    // Check for invalid 10.x IPs
+    (firstOctet === '10' && parsedMask < 8) ||
+    // check for invalid 172.x IPs
+    (firstOctet === '172' &&
+      (parsedSecondOctet < 16 || parsedSecondOctet > 31 || parsedMask < 12)) ||
+    // check for invalid 192.x IPs
+    (firstOctet === '192' &&
+      (secondOctet !== '168' || (secondOctet === '168' && parsedMask < 16)))
+  ) {
     return undefined;
   }
 

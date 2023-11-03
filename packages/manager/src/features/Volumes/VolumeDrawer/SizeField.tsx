@@ -8,11 +8,25 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
 
-import { SIZE_FIELD_WIDTH } from '../VolumeCreate/CreateVolumeForm';
+import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
 
-import type { FlagSet } from 'src/featureFlags';
+interface Props {
+  disabled?: boolean;
+  error?: string;
+  hasSelectedRegion?: boolean;
+  isFromLinode?: boolean;
+  name: string;
+  onBlur: (e: any) => void;
+  onChange: (e: React.ChangeEvent<any>) => void;
+  regionId: string;
+  resize?: number;
+  textFieldStyles?: string;
+  value: number;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   createVolumeText: {
@@ -31,29 +45,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  disabled?: boolean;
-  error?: string;
-  flags: FlagSet;
-  hasSelectedRegion?: boolean;
-  isFromLinode?: boolean;
-  name: string;
-  onBlur: (e: any) => void;
-  onChange: (e: React.ChangeEvent<any>) => void;
-  regionId: string;
-  resize?: number;
-  textFieldStyles?: string;
-  value: number;
-}
-
-type CombinedProps = Props;
-
-const SizeField: React.FC<CombinedProps> = (props) => {
+export const SizeField = (props: Props) => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
     error,
-    flags,
     hasSelectedRegion,
     isFromLinode,
     name,
@@ -80,7 +77,9 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   const priceDisplayText = (
     <FormHelperText>
       {resize || isFromLinode ? null : (
-        <span className={classes.createVolumeText}>${price}/month</span>
+        <span className={classes.createVolumeText}>
+          ${price ?? UNKNOWN_PRICE}/month
+        </span>
       )}
     </FormHelperText>
   );
@@ -120,5 +119,3 @@ const SizeField: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default SizeField;

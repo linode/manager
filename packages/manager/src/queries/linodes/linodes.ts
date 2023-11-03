@@ -38,7 +38,6 @@ import {
 import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
 import { queryPresets } from '../base';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
-
 import { queryKey as PROFILE_QUERY_KEY } from '../profile';
 
 export const queryKey = 'linodes';

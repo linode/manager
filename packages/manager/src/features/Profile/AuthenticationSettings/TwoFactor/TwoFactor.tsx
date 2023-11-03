@@ -9,7 +9,7 @@ import { Typography } from 'src/components/Typography';
 import { queryKey } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { DisableTwoFactorDialog } from './DisableTwoFactorDialog';
 import { EnableTwoFactorForm } from './EnableTwoFactorForm';

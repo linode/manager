@@ -1,11 +1,9 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import {
   StackScriptCategory,
@@ -13,16 +11,10 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
-import stripImageName from 'src/utilities/stripImageName';
+import { stripImageName } from 'src/utilities/stripImageName';
 
-import StackScriptRow from './StackScriptRow';
-
-const useStyles = makeStyles(() => ({
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100,
-  },
-}));
+import { StyledStackScriptSectionTableCell } from '../CommonStackScript.styles';
+import { StackScriptRow } from './StackScriptRow';
 
 export interface Props {
   // change until we're actually using it.
@@ -38,8 +30,7 @@ export interface Props {
   triggerMakePublic: (id: number, label: string) => void;
 }
 
-const StackScriptsSection: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const StackScriptsSection = (props: Props) => {
   const { category, data, isSorting, triggerDelete, triggerMakePublic } = props;
 
   const { data: profile } = useProfile();
@@ -81,13 +72,11 @@ const StackScriptsSection: React.FC<Props> = (props) => {
         data && data.map(listStackScript)
       ) : (
         <TableRow>
-          <TableCell className={classes.loadingWrapper} colSpan={5}>
+          <StyledStackScriptSectionTableCell colSpan={5}>
             <CircleProgress />
-          </TableCell>
+          </StyledStackScriptSectionTableCell>
         </TableRow>
       )}
     </TableBody>
   );
 };
-
-export default StackScriptsSection;

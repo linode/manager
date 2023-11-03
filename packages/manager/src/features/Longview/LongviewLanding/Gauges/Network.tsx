@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -15,15 +15,17 @@ import {
 } from '../../shared/utilities';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps & WithTheme;
+type CombinedProps = Props & LVDataProps;
 
-const NetworkGauge: React.FC<CombinedProps> = (props) => {
+const Network = (props: CombinedProps) => {
   const {
     lastUpdatedError,
     longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
   } = props;
+
+  const theme = useTheme();
 
   const networkUsed = generateUsedNetworkAsBytes(
     longviewClientData?.Network?.Interface ?? {}
@@ -83,7 +85,7 @@ const NetworkGauge: React.FC<CombinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      filledInColor={props.theme.graphs.green}
+      filledInColor={theme.graphs.green}
       /*
         the max here is not meant to act as an actual max
         but instead just a logical high value.
@@ -99,11 +101,10 @@ const NetworkGauge: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(
+export const NetworkGauge = compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>((ownProps) => ownProps.clientID),
-  withTheme
-)(NetworkGauge);
+  withClientStats<Props>((ownProps) => ownProps.clientID)
+)(Network);
 
 /*
   What's returned from Network is a bit of an unknown, but assuming that

@@ -7,6 +7,7 @@ import { Divider } from 'src/components/Divider';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Typography } from 'src/components/Typography';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { getAllowedHTMLTags } from 'src/utilities/sanitizeHTML.utils';
 
 import {
   RenderEventGravatar,
@@ -33,7 +34,13 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
 
   const eventMessage = (
     <div className={unseenEventClass}>
-      <HighlightedMarkdown textOrMarkdown={message} />
+      <HighlightedMarkdown
+        sanitizeOptions={{
+          allowedTags: getAllowedHTMLTags('strict'),
+          disallowedTagsMode: 'discard',
+        }}
+        textOrMarkdown={message}
+      />
     </div>
   );
 

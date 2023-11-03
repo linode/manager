@@ -195,7 +195,6 @@ describe('volume create flow', () => {
 
         // Confirm volume configuration drawer opens, then close it.
         cy.get('[data-qa-drawer="true"]').within(() => {
-          fbtVisible('Volume scheduled for creation.');
           getClick('[data-qa-close-drawer="true"]');
         });
 

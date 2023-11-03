@@ -1,10 +1,13 @@
 import { styled } from '@mui/material/styles';
-import { isPropValid } from 'src/utilities/isPropValid';
+
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
-import type { LinodeCreateProps } from './LinodeCreate';
 import { TabPanels } from 'src/components/ReachTabPanels';
+import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { LinodeCreateProps } from './LinodeCreate';
 
 type StyledLinodeCreateProps = Pick<LinodeCreateProps, 'showAgreement'>;
 
@@ -32,8 +35,8 @@ export const StyledForm = styled('form', { label: 'StyledForm' })({
 
 export const StyledMessageDiv = styled('div', {
   label: 'StyledMessageDiv',
-  shouldForwardProp: (prop) => isPropValid(['showAgreement'], prop),
-})<StyledLinodeCreateProps>(({ theme, showAgreement }) => ({
+  shouldForwardProp: omittedProps(['showAgreement']),
+})<StyledLinodeCreateProps>(({ showAgreement, theme }) => ({
   display: 'flex',
   flexDirection: 'column' as const,
   flexGrow: 1,
@@ -69,3 +72,13 @@ export const StyledTabPanel = styled(TabPanels, { label: 'StyledTabPanel' })(
     },
   })
 );
+
+// Currently used in VPC and Firewall panels
+export const StyledCreateLink = styled(Link, {
+  label: 'StyledCreateLink',
+})(({ theme }) => ({
+  fontSize: '14px',
+  marginBottom: theme.spacing(2),
+  marginTop: theme.spacing(1.5),
+  width: '100px',
+}));

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import * as React from 'react';
 
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { Box, BoxProps } from '../Box';
 
@@ -27,7 +27,7 @@ const StatusIcon = React.memo((props: StatusProps) => {
 export { StatusIcon };
 
 const StyledDiv = styled(Box, {
-  shouldForwardProp: (prop) => isPropValid(['pulse', 'status'], prop),
+  shouldForwardProp: omittedProps(['pulse', 'status']),
 })<StatusProps>(({ theme, ...props }) => ({
   borderRadius: '50%',
   display: 'inline-block',

@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner';
@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { SuppliedMaintenanceData } from 'src/featureFlags';
 import { queryPresets } from 'src/queries/base';
 import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
@@ -77,7 +77,12 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
             </Link>
           </Typography>
           <Typography
-            dangerouslySetInnerHTML={{ __html: sanitizeHTML(bannerBody) }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHTML({
+                sanitizingTier: 'flexible',
+                text: bannerBody,
+              }),
+            }}
           />
         </Stack>
       </DismissibleBanner>

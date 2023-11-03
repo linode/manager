@@ -4,8 +4,8 @@ import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { Terminal } from 'xterm';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
@@ -94,7 +94,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div className="terminal" id="terminal" />
         ) : (
-          <CircleProgress />
+          <StyledCircleProgress />
         )}
       </div>
     );

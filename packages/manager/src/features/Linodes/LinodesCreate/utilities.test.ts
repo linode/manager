@@ -1,13 +1,19 @@
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { linode1, linode2 } from 'src/__data__/linodes';
 import { imageFactory, normalizeEntities } from 'src/factories';
+import { stackScriptFactory } from 'src/factories/stackscripts';
 
 import {
   extendLinodes,
+  filterOneClickApps,
   formatLinodeSubheading,
   getMonthlyAndHourlyNodePricing,
   getRegionIDFromLinodeID,
+  handleAppLabel,
+  trimOneClickFromLabel,
 } from './utilities';
+
+import type { StackScript } from '@linode/api-v4';
 
 const linodeImage = imageFactory.build({
   id: 'linode/debian10',
@@ -69,5 +75,108 @@ describe('Marketplace cluster pricing', () => {
       hourlyPrice: 0.225,
       monthlyPrice: 150,
     });
+  });
+});
+
+describe('trimOneClickFromLabel', () => {
+  const stackScript = stackScriptFactory.build({
+    label: 'MongoDB Cluster One-Click',
+  });
+
+  it('should remove "One-Click" from the label', () => {
+    expect(trimOneClickFromLabel(stackScript)).toStrictEqual({
+      ...stackScript,
+      label: 'MongoDB Cluster ',
+    });
+  });
+});
+
+describe('filterOneClickApps', () => {
+  const baseApps = {
+    1: 'Base App 1',
+    2: 'Base App 2',
+    3: 'Base App 3',
+    4: 'Base App 4',
+  };
+  const newApps = {
+    5: 'New App 1',
+    6: 'New App 2',
+    7: 'New App 3',
+    8: 'New App 4',
+  };
+
+  const stackScript = stackScriptFactory.build();
+
+  // id: 1,2,3,4
+  const queryResultsWithHelpers: StackScript[] = [
+    ...stackScriptFactory.buildList(3),
+    { ...stackScript, id: 4, label: 'StackScript Helpers' },
+  ];
+  // id: 5,6,7,8
+  const queryResultsWithoutHelpers: StackScript[] = stackScriptFactory.buildList(
+    4
+  );
+
+  it('filters OneClickApps and trims labels, excluding StackScripts with Helpers', () => {
+    // feeding 4 Ids (1,2,3,4) getting 3 back
+    const filteredOCAsWithHelpersLabel = filterOneClickApps({
+      baseApps,
+      newApps,
+      queryResults: queryResultsWithHelpers,
+    });
+    expect(filteredOCAsWithHelpersLabel.length).toBe(3);
+
+    // feeding 4 Ids (5,6,7,8) getting 4 back
+    const filteredOCAsWithoutHelpersLabel = filterOneClickApps({
+      baseApps,
+      newApps,
+      queryResults: queryResultsWithoutHelpers,
+    });
+
+    expect(filteredOCAsWithoutHelpersLabel.length).toBe(4);
+  });
+
+  it('handles empty queryResults', () => {
+    const emptyQueryResults: StackScript[] = [];
+    const filteredOCAs = filterOneClickApps({
+      baseApps,
+      newApps,
+      queryResults: emptyQueryResults,
+    });
+
+    // Expect an empty array when queryResults is empty
+    expect(filteredOCAs).toEqual([]);
+  });
+});
+
+describe('handleAppLabel', () => {
+  jest.mock('he', () => ({
+    decode: jest.fn(),
+  }));
+
+  it('should decode the label and remove "Cluster" when cluster_size is present', () => {
+    const stackScript = stackScriptFactory.build({
+      label: 'My StackScript Cluster ',
+      user_defined_fields: [{ name: 'cluster_size' }],
+    });
+
+    const result = handleAppLabel(stackScript);
+
+    expect(result.decodedLabel).toBe('My StackScript Cluster ');
+    expect(result.isCluster).toBe(true);
+    expect(result.label).toBe('My StackScript');
+  });
+
+  it('should decode the label without removing "Cluster" when cluster_size is not present', () => {
+    const stackScript = stackScriptFactory.build({
+      label: 'My StackScript&reg; Cluster ',
+      user_defined_fields: [],
+    });
+
+    const result = handleAppLabel(stackScript);
+
+    expect(result.decodedLabel).toBe('My StackScript® Cluster ');
+    expect(result.isCluster).toBe(false);
+    expect(result.label).toBe('My StackScript® Cluster ');
   });
 });

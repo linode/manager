@@ -49,7 +49,7 @@ describe('volume update flow', () => {
           cy.findByDisplayValue(volume.label)
             .should('be.visible')
             .click()
-            .type(`{selectall}{backspace}${newLabel}{enter}`);
+            .type(`{selectall}{backspace}${newLabel}`);
 
           cy.findByText('Type to choose or create a tag.')
             .should('be.visible')

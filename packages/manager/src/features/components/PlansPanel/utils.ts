@@ -1,7 +1,7 @@
 import { Region } from '@linode/api-v4/lib/regions';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
+import { arrayToList } from 'src/utilities/arrayToList';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { PlanSelectionType } from './types';

@@ -37,10 +37,6 @@ import stackScriptDialog, {
   State as StackScriptDialogState,
   defaultState as stackScriptDialogDefaultState,
 } from 'src/store/stackScriptDialog';
-import volumeDrawer, {
-  State as VolumeDrawerState,
-  defaultState as volumeDrawerDefaultState,
-} from 'src/store/volumeForm';
 
 import featureFlagsLoad, {
   State as FeatureFlagsLoadState,
@@ -74,7 +70,6 @@ export interface ApplicationState {
   mockFeatureFlags: MockFeatureFlagState;
   pendingUpload: PendingUploadState;
   stackScriptDialog: StackScriptDialogState;
-  volumeDrawer: VolumeDrawerState;
 }
 
 export const defaultState: ApplicationState = {
@@ -89,7 +84,6 @@ export const defaultState: ApplicationState = {
   mockFeatureFlags: defaultMockFeatureFlagState,
   pendingUpload: pendingUploadState,
   stackScriptDialog: stackScriptDialogDefaultState,
-  volumeDrawer: volumeDrawerDefaultState,
 };
 
 /**
@@ -107,7 +101,6 @@ const reducers = combineReducers<ApplicationState>({
   mockFeatureFlags,
   pendingUpload,
   stackScriptDialog,
-  volumeDrawer,
 });
 
 const enhancersFactory = (queryClient: QueryClient) =>

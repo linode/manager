@@ -14,8 +14,10 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
+import { getPrice } from 'src/utilities/pricing/linodes';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../kubeUtils';
@@ -110,15 +112,16 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode =
-    flags.dcSpecificPricing && selectedType
-      ? getLinodeRegionPrice(selectedType, clusterRegionId).monthly
-      : selectedType?.price?.monthly;
+  const pricePerNode = getPrice(
+    selectedType,
+    clusterRegionId,
+    flags.dcSpecificPricing
+  )?.monthly;
 
   const totalPrice =
     selectedTypeInfo && pricePerNode
       ? selectedTypeInfo.count * pricePerNode
-      : 0;
+      : undefined;
 
   React.useEffect(() => {
     if (open) {
@@ -206,9 +209,18 @@ export const AddNodePoolDrawer = (props: Props) => {
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}
-              variant="error"
+              variant="warning"
             />
           )}
+
+        {selectedTypeInfo && !totalPrice && !pricePerNode && (
+          <Notice
+            spacingBottom={16}
+            spacingTop={8}
+            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+            variant="error"
+          />
+        )}
 
         <Box
           alignItems="center"
@@ -221,9 +233,9 @@ export const AddNodePoolDrawer = (props: Props) => {
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>
-                ${totalPrice}/month (
+                ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month (
                 {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                {pricePerNode ?? 0}
+                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
                 /month)
               </strong>{' '}
               to this cluster.

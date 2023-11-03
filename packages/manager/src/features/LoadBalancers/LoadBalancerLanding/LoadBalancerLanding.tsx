@@ -80,7 +80,7 @@ const LoadBalancerLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your LoadBalancers.')[0]
+          getAPIErrorOrDefault(error, 'Error loading your Load Balancers.')[0]
             .reason
         }
       />

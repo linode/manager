@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
+import { isNumber } from 'lodash';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -26,6 +27,7 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
@@ -147,6 +149,12 @@ all new Linodes will automatically be backed up.`
     onClose();
   };
 
+  const totalBackupsPrice = getTotalBackupsPrice({
+    flags,
+    linodes: linodesWithoutBackups,
+    types: types ?? [],
+  });
+
   return (
     <Drawer
       onClose={onClose}
@@ -191,11 +199,11 @@ all new Linodes will automatically be backed up.`
           )}
           &nbsp;
           <DisplayPrice
-            price={getTotalBackupsPrice({
-              flags,
-              linodes: linodesWithoutBackups,
-              types: types ?? [],
-            })}
+            price={
+              totalBackupsPrice && isNumber(totalBackupsPrice)
+                ? totalBackupsPrice
+                : UNKNOWN_PRICE
+            }
             interval="mo"
           />
         </StyledPricingBox>
@@ -211,7 +219,7 @@ all new Linodes will automatically be backed up.`
           }}
           style={{ margin: 0, padding: 0 }}
         />
-        <Table>
+        <Table aria-label="List of Linodes without backups">
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>

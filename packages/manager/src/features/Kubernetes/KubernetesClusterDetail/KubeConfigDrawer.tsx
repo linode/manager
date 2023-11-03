@@ -83,7 +83,10 @@ export const KubeConfigDrawer = (props: Props) => {
             <CopyTooltip className={classes.tooltip} text={data ?? ''} />
           </Grid>
         </Grid>
-        <HighlightedMarkdown textOrMarkdown={'```\n' + data + '\n```'} />
+        <HighlightedMarkdown
+          language="yaml"
+          textOrMarkdown={'```\n' + data + '\n```'}
+        />
       </DrawerContent>
     </Drawer>
   );

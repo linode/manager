@@ -1,9 +1,4 @@
-import {
-  BrowserOptions,
-  BrowserTracing,
-  Event as SentryEvent,
-  init,
-} from '@sentry/react';
+import { BrowserOptions, Event as SentryEvent, init } from '@sentry/react';
 
 import { APP_ROOT, SENTRY_URL } from 'src/constants';
 import { deepStringTransform } from 'src/utilities/deepStringTransform';
@@ -31,7 +26,6 @@ export const initSentry = () => {
         /^chrome:\/\//i,
       ],
       dsn: SENTRY_URL,
-      enableTracing: true,
       environment,
       ignoreErrors: [
         // Random plugins/extensions
@@ -80,9 +74,15 @@ export const initSentry = () => {
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
         'ResizeObserver loop limit exceeded',
       ],
-      integrations: [new BrowserTracing()],
       release: packageJson.version,
-      tracesSampleRate: environment === 'production' ? 0.025 : 1,
+      /**
+       * Uncomment the 3 lines below to enable Sentry's "Performance" feature.
+       * We're disabling it October 2nd 2023 because we are running into plan limits
+       * and this Sentry feature isn't crucial to our workflow.
+       */
+      // enableTracing: true,
+      // integrations: [new BrowserTracing()],
+      // tracesSampleRate: environment === 'production' ? 0.025 : 1,
     });
   }
 };

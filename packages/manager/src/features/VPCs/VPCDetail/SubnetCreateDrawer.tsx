@@ -60,7 +60,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   const { dirty, handleSubmit, resetForm, setValues, values } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      // TODO VPC - add IPv6 when that is supported
+      // @TODO VPC: add IPv6 when that is supported
       label: '',
       ip: {
         ipv4: DEFAULT_SUBNET_IPV4_VALUE,

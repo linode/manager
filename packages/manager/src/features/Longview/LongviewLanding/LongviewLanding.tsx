@@ -25,16 +25,14 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import SubscriptionDialog from './SubscriptionDialog';
+import { SubscriptionDialog } from './SubscriptionDialog';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 type CombinedProps = LongviewProps & RouteComponentProps<{}>;
 
-export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const LongviewLanding = (props: CombinedProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),

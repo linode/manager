@@ -1,4 +1,4 @@
-import { default as _Tooltip } from '@mui/material/Tooltip';
+import { default as _Tooltip, tooltipClasses } from '@mui/material/Tooltip';
 import React from 'react';
 
 import type { TooltipProps } from '@mui/material/Tooltip';
@@ -9,5 +9,5 @@ import type { TooltipProps } from '@mui/material/Tooltip';
 export const Tooltip = (props: TooltipProps) => {
   return <_Tooltip {...props} />;
 };
-
+export { tooltipClasses };
 export type { TooltipProps };

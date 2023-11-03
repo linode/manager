@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Paper } from 'src/components/Paper';
 
-import Instructions from '../../shared/InstallationInstructions';
+import { InstallationInstructions } from '../../shared/InstallationInstructions';
 
 interface Props {
   clientAPIKey: string;
@@ -20,7 +20,7 @@ const Installation = (props: Props) => {
           padding: theme.spacing(3),
         })}
       >
-        <Instructions
+        <InstallationInstructions
           APIKey={props.clientAPIKey}
           data-qa-instructions
           installationKey={props.clientInstallationKey}
