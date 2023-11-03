@@ -12,7 +12,10 @@ import type {
   ConfigurationPayload,
   UpdateConfigurationPayload,
 } from './types';
-import { UpdateConfigurationSchema } from '@linode/validation';
+import {
+  CreateConfigurationSchema,
+  UpdateConfigurationSchema,
+} from '@linode/validation';
 
 /**
  * getLoadbalancerConfigurations
@@ -68,7 +71,7 @@ export const createLoadbalancerConfiguration = (
         loadbalancerId
       )}/configurations`
     ),
-    setData(data, UpdateConfigurationSchema),
+    setData(data, CreateConfigurationSchema),
     setMethod('POST')
   );
 

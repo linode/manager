@@ -26,16 +26,16 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
+const CertificateEntrySchema = object({
+  id: number()
+    .typeError('Certificate ID must be a number.')
+    .required('Certificate ID is required.')
+    .min(0, 'Certificate ID is required.'),
+  hostname: string().required('A Host Header is required.'),
+});
+
 export const CertificateConfigSchema = object({
-  certificates: array(
-    object({
-      id: number()
-        .typeError('Certificate ID must be a number.')
-        .required('Certificate ID is required.')
-        .min(0, 'Certificate ID is required.'),
-      hostname: string().required('A Host Header is required.'),
-    })
-  ),
+  certificates: array(CertificateEntrySchema),
 });
 
 export const EndpointSchema = object({
@@ -156,14 +156,29 @@ export const UpdateRouteSchema = object({
 
 export const UpdateConfigurationSchema = object({
   label: string().min(1, 'Label must not be empty.'),
-  port: number().typeError('Port must be a number.'),
+  port: number().min(0).max(65_535).typeError('Port must be a number.'),
   protocol: string().oneOf(['tcp', 'http', 'https']),
-  certificates: array().of(
-    object({
-      hostname: string().required(),
-      id: number().required(),
-    })
-  ),
+  certificates: array().when('protocol', {
+    is: 'https',
+    then: (o) => o.of(CertificateEntrySchema),
+    otherwise: (o) => o.notRequired(),
+  }),
+  route_ids: array().of(number()),
+});
+
+export const CreateConfigurationSchema = object({
+  label: string().min(1, 'Label must not be empty.').required(),
+  port: number()
+    .min(0)
+    .max(65_535)
+    .typeError('Port must be a number.')
+    .required(),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
+  certificates: array().when('protocol', {
+    is: 'https',
+    then: (o) => o.of(CertificateEntrySchema),
+    otherwise: (o) => o.notRequired(),
+  }),
   route_ids: array().of(number()),
 });
 
@@ -219,10 +234,10 @@ export const ConfigurationSchema = object({
   label: string().required(LABEL_REQUIRED),
   port: number().required('Port is required.').min(0).max(65_535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
-  certificates: string().when('protocol', {
-    is: (val: string) => val !== 'http' && val !== 'tcp',
-    then: array().of(CertificateConfigSchema).required(),
-    otherwise: array().strip(),
+  certificates: array().when('protocol', {
+    is: (val: string) => val === 'https',
+    then: array().of(CertificateEntrySchema).required(),
+    otherwise: array().notRequired(),
   }),
   routes: string().when('protocol', {
     is: 'tcp',

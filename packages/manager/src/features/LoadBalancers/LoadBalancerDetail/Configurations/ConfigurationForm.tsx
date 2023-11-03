@@ -1,4 +1,7 @@
-import { UpdateConfigurationSchema } from '@linode/validation';
+import {
+  CreateConfigurationSchema,
+  UpdateConfigurationSchema,
+} from '@linode/validation';
 import { useFormik } from 'formik';
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -81,6 +84,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     return initialValues;
   }, [configuration, mode]);
 
+  const validationSchema =
+    mode === 'create' ? CreateConfigurationSchema : UpdateConfigurationSchema;
+
   const formik = useFormik<ConfigurationPayload>({
     enableReinitialize: true,
     initialValues: formValues,
@@ -94,7 +100,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
       }
     },
-    validationSchema: UpdateConfigurationSchema,
+    validationSchema,
   });
 
   const protocolOptions = [
