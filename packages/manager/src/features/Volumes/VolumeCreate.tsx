@@ -317,7 +317,6 @@ export const VolumeCreate = () => {
                 errorText={touched.region ? errors.region : undefined}
                 isClearable
                 label="Region"
-                name="region"
                 onBlur={handleBlur}
                 selectedID={values.region}
                 width={400}

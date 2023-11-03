@@ -49,9 +49,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       errorText={errorText}
       handleSelection={(id) => onChange(id)}
       isClearable={false}
-      isSearchable={false}
       label="Region"
-      name="cluster"
       onBlur={onBlur}
       placeholder="Select a Region"
       regions={regionOptions ?? []}

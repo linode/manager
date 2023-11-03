@@ -1,34 +1,40 @@
-/* eslint-disable perfectionist/sort-objects */
 import { Region } from '@linode/api-v4/lib/regions';
+import DoneIcon from '@mui/icons-material/Done';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import Select, {
-  BaseSelectProps,
-  GroupType,
-  Item,
-} from 'src/components/EnhancedSelect/Select';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
+import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { useFlags } from 'src/hooks/useFlags';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-import { RegionItem, RegionOption } from './RegionOption';
+import { RegionItem } from './RegionOption';
 import { listOfDisabledRegions } from './disabledRegions';
 
 import type { Country } from './utils';
+import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 import type { FlagSet } from 'src/featureFlags';
 
 const NORTH_AMERICA = 'North America';
 
-interface Props<IsClearable extends boolean>
+interface OptionType {
+  data?: any;
+  label: string;
+  value: string;
+}
+
+interface RegionSelectProps
   extends Omit<
-    BaseSelectProps<Item<string>, false, IsClearable>,
-    'label' | 'onChange'
+    EnhancedAutocompleteProps<OptionType, false>,
+    'label' | 'onChange' | 'options'
   > {
   handleSelection: (id: string) => void;
   helperText?: string;
+  isClearable?: boolean;
   label?: string;
   regions: Region[];
   required?: boolean;
@@ -87,7 +93,6 @@ export const getRegionOptions = (
       return {
         data: {
           country: region.country,
-          flag: <Flag country={region.country as Lowercase<Country>} />,
           region: group,
         },
         label: `${region.label} (${region.id})`,
@@ -120,73 +125,133 @@ export const getRegionOptions = (
     });
 };
 
-export const getSelectedRegionById = (regionId: string, options: any) => {
-  // const regions = options.flatMap((option) => option.options);
-  // console.log('regions', regions);
-  return options.find((option: any) => regionId === option.id);
-};
+export const RegionSelect = React.memo((props: RegionSelectProps) => {
+  const {
+    disabled,
+    handleSelection,
+    helperText,
+    isClearable,
+    label,
+    regions,
+    required,
+    selectedID,
+    width,
+  } = props;
 
-export const RegionSelect = React.memo(
-  <IsClearable extends boolean>(props: Props<IsClearable>) => {
-    const {
-      disabled,
-      handleSelection,
-      helperText,
-      isClearable,
-      label,
-      regions,
-      required,
-      selectedID,
-      styles,
-      width,
-      ...restOfReactSelectProps
-    } = props;
+  const getSelectedRegionById = (
+    selectedRegionId: string
+  ): OptionType | undefined => {
+    const selectedRegion: Region | undefined = regions.find(
+      (thisRegion) => selectedRegionId === thisRegion.id
+    );
 
-    const flags = useFlags();
-    const location = useLocation();
-    const path = location.pathname;
-    const onChange = React.useCallback(
-      (selection: RegionItem | null) => {
-        if (selection === null) {
-          handleSelection('');
-          return;
-        }
-        if (selection.disabledMessage) {
-          // React Select's disabled state should prevent anything
-          // from firing, this is basic paranoia.
-          return;
-        }
-        handleSelection(selection?.value);
+    const group = getRegionCountryGroup(selectedRegion);
+
+    if (!selectedRegion) {
+      return undefined;
+    }
+
+    return {
+      data: {
+        country: selectedRegion?.country,
+        region: group,
       },
-      [handleSelection]
-    );
+      label: `${selectedRegion.label} (${selectedRegion.id})`,
+      value: selectedRegion.id,
+    };
+  };
 
-    const options: any = React.useMemo(
-      () => getRegionOptions(regions, flags, path),
-      [flags, regions]
-    );
+  const [selectedRegion, setSelectedRegion] = React.useState<OptionType | null>(
+    getSelectedRegionById(selectedID ?? '') ?? null
+  );
+  const flags = useFlags();
+  const location = useLocation();
+  const path = location.pathname;
 
-    return (
-      <div style={{ width }}>
-        <Autocomplete
-          // isOptionDisabled={(option: RegionItem) =>
-          //   Boolean(option.disabledMessage)
-          // }
-          textFieldProps={{
-            tooltipText: helperText,
-          }}
-          // components={{ Option: RegionOption, SingleValue: _SingleValue }}
-          data-testid="region-select"
-          disabled={disabled}
-          groupBy={(option: RegionItem) => option.data.region}
-          label={label ?? 'Region'}
-          onChange={() => onChange}
-          options={options}
-          // placeholder="Select a Region"
-          value={getSelectedRegionById(selectedID || '', options)}
-          // {...restOfReactSelectProps}
-        />
-      </div>
-    );
-  }
-);
+  const handleRegionChange = (selection: OptionType) => {
+    setSelectedRegion(selection);
+    handleSelection(selection?.value);
+  };
+
+  const options: any = React.useMemo(
+    () => getRegionOptions(regions, flags, path),
+    [flags, path, regions]
+  );
+
+  return (
+    <Box sx={{ width }}>
+      <Autocomplete
+        getOptionDisabled={(option: RegionItem) =>
+          Boolean(option.disabledMessage)
+        }
+        isOptionEqualToValue={(option: RegionItem, value: RegionItem) =>
+          option.value === value.value
+        }
+        onChange={(_, selectedRegion: OptionType) => {
+          handleRegionChange(selectedRegion);
+        }}
+        renderGroup={(params) => (
+          <li key={params.key}>
+            <GroupHeader>{params.group}</GroupHeader>
+            <List>{params.children}</List>
+          </li>
+        )}
+        renderOption={(props, option, { selected }) => (
+          <ListItem {...props}>
+            <Box alignItems="center" display="flex" flexGrow={1}>
+              <StyledFlagContainer>
+                <Flag country={option.data.country} />
+              </StyledFlagContainer>
+              {option.label}
+            </Box>
+            <SelectedIcon visible={selected} />
+          </ListItem>
+        )}
+        textFieldProps={{
+          InputProps: {
+            required,
+            startAdornment: selectedRegion && (
+              <StyledFlagContainer>
+                <Flag
+                  country={selectedRegion?.data.country as Lowercase<Country>}
+                />
+              </StyledFlagContainer>
+            ),
+          },
+          tooltipText: helperText,
+        }}
+        data-testid="region-select"
+        disableClearable={!isClearable}
+        disabled={disabled}
+        groupBy={(option: RegionItem) => option.data.region}
+        label={label ?? 'Region'}
+        options={options}
+        placeholder="Select a Region"
+        value={getSelectedRegionById(selectedID || '') ?? null}
+      />
+    </Box>
+  );
+});
+
+const GroupHeader = styled('div')(({ theme }) => ({
+  color: theme.color.headline,
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
+  padding: '15px 4px 4px 10px',
+  textTransform: 'initial',
+}));
+
+const StyledFlagContainer = styled('div')(({ theme }) => ({
+  marginRight: theme.spacing(1),
+}));
+
+const SelectedIcon = styled(DoneIcon, {
+  label: 'SelectedIcon',
+  shouldForwardProp: (prop) => prop != 'visible',
+})<{ visible: boolean }>(({ visible }) => ({
+  height: 17,
+  marginLeft: '-2px',
+  marginRight: '5px',
+  visibility: visible ? 'visible' : 'hidden',
+  width: 17,
+}));

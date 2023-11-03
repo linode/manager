@@ -128,19 +128,12 @@ export const ConfigureForm = React.memo((props: Props) => {
                 (eachRegion) => eachRegion.id !== currentRegion
               ) ?? []
             }
-            styles={{
-              menuList: (base: any) => ({
-                ...base,
-                maxHeight: `30vh !important`,
-              }),
-            }}
             textFieldProps={{
               helperText,
             }}
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"
-            menuPlacement="top"
             selectedID={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (

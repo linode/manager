@@ -106,6 +106,10 @@ export const Autocomplete = <
           placeholder={placeholder || 'Select an option'}
           {...params}
           {...textFieldProps}
+          InputProps={{
+            ...params.InputProps,
+            ...textFieldProps?.InputProps,
+          }}
         />
       )}
       renderOption={(props, option, state, ownerState) => {
