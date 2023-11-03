@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useLoabalancerConfigurationsInfiniteQuery } from 'src/queries/aglb/configurations';
 
 import { ConfigurationAccordion } from './Configurations/ConfigurationAccordion';
@@ -12,6 +13,7 @@ export const LoadBalancerConfigurations = () => {
 
   const {
     data,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -20,6 +22,10 @@ export const LoadBalancerConfigurations = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
   }
 
   const configurations = data?.pages.flatMap((page) => page.data);

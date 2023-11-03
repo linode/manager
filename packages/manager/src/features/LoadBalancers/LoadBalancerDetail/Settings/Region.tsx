@@ -1,15 +1,16 @@
-import { Stack } from 'src/components/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import {
   useLoadBalancerMutation,
   useLoadBalancerQuery,
 } from 'src/queries/aglb/loadbalancers';
+
+import { LoadBalancerRegions } from '../LoadBalancerRegions';
 
 interface Props {
   loadbalancerId: number;
@@ -17,7 +18,7 @@ interface Props {
 
 export const Region = ({ loadbalancerId }: Props) => {
   const { data: loadbalancer } = useLoadBalancerQuery(loadbalancerId);
-  const { isLoading, mutateAsync } = useLoadBalancerMutation(loadbalancerId);
+  const { mutateAsync } = useLoadBalancerMutation(loadbalancerId);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -34,12 +35,11 @@ export const Region = ({ loadbalancerId }: Props) => {
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={1}>
           <Typography variant="h2">Regions</Typography>
-          <Typography>Select regions for your Load Balancer.</Typography>
-          <Box>
-            <Button buttonType="primary" loading={isLoading} type="submit">
-              Save
-            </Button>
-          </Box>
+          <Typography>
+            <BetaChip sx={{ marginLeft: '0 !important' }} /> Load Balancer
+            regions can not be changed during beta.
+          </Typography>
+          <LoadBalancerRegions />
         </Stack>
       </form>
     </Paper>

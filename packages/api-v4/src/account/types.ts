@@ -1,5 +1,5 @@
 import { APIWarning } from '../types';
-import type { Region } from '../regions';
+import type { Capabilities, Region } from '../regions';
 
 export interface User {
   username: string;
@@ -68,6 +68,11 @@ export type AccountCapability =
   | 'Object Storage'
   | 'Vlans'
   | 'VPCs';
+
+export interface AccountAvailability {
+  id: string; // will be ID of region
+  unavailable: Capabilities[];
+}
 
 export interface AccountSettings {
   managed: boolean;

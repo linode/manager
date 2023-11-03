@@ -8,10 +8,12 @@ import Request, {
 import { BETA_API_ROOT } from '../constants';
 import { Filter, Params, ResourcePage } from '../types';
 import type {
+  CreateBasicLoadbalancerPayload,
   CreateLoadbalancerPayload,
   Loadbalancer,
   UpdateLoadbalancerPayload,
 } from './types';
+import { CreateBasicLoadbalancerSchema } from '@linode/validation';
 
 /**
  * getLoadbalancers
@@ -46,6 +48,18 @@ export const createLoadbalancer = (data: CreateLoadbalancerPayload) =>
   Request<Loadbalancer>(
     setURL(`${BETA_API_ROOT}/aglb`),
     setData(data),
+    setMethod('POST')
+  );
+
+/**
+ * createBasicLoadbalancer
+ *
+ * Creates an unconfigured Akamai Global Load Balancer
+ */
+export const createBasicLoadbalancer = (data: CreateBasicLoadbalancerPayload) =>
+  Request<Loadbalancer>(
+    setURL(`${BETA_API_ROOT}/aglb`),
+    setData(data, CreateBasicLoadbalancerSchema),
     setMethod('POST')
   );
 

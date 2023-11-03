@@ -199,7 +199,7 @@ const StyledListItem = styled('li')(() => ({
 
 const StyledLabel = styled('span')(({ theme }) => ({
   color: theme.color.label,
-  fontFamily: theme.font.semiBold,
+  fontFamily: theme.font.bold,
   fontSize: '14px',
 }));
 

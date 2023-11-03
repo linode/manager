@@ -17,7 +17,7 @@ export const configurationSteps = [
     label: 'Service Targets',
   },
   {
-    content: <div>TODO: AGLB - Implement Routes Confiugataion.</div>,
+    content: <div>TODO: AGLB - Implement Routes Configuration.</div>,
     handler: () => null,
     label: 'Routes',
   },

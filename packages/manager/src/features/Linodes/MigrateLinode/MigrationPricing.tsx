@@ -47,7 +47,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
         {backups !== 'disabled' && backups?.monthly && (
           <>
             &nbsp;
-            <Typography fontSize={priceFontSize} fontWeight="bold">
+            <Typography fontFamily={theme.font.bold} fontSize={priceFontSize}>
               | Backups&nbsp;
             </Typography>
             <DisplayPrice

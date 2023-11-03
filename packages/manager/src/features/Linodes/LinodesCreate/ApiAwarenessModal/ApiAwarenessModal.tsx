@@ -179,9 +179,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       <Notice spacingBottom={0} spacingTop={24} variant="marketing">
         <Typography
           sx={{
-            fontFamily: theme.font.bold,
             fontSize: '14px !important',
-            fontWeight: 400,
           }}
         >
           Deploy and manage your infrastructure with the{' '}

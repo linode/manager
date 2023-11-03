@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cliModalButton: {
     ...theme.applyLinkStyles,
-    fontWeight: 700,
+    fontFamily: theme.font.bold,
   },
   cloudInitCheckboxWrapper: {
     marginLeft: '3px',
