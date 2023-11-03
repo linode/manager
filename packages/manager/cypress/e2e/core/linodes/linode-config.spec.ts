@@ -12,7 +12,7 @@ import {
 import {
   createLinodeAndGetConfig,
   createAndBootLinode,
-} from 'support/util/linode-utils';
+} from 'support/util/linodes';
 
 import type { Config, Linode } from '@linode/api-v4';
 

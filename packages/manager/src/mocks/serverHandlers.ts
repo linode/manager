@@ -377,14 +377,7 @@ const aglb = [
   }),
   // Service Targets
   rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
-    const service_target = serviceTargetFactory.build({
-      ca_certificate: 'certificate-1',
-      load_balancing_policy: 'random',
-    });
-    const service_targets = serviceTargetFactory.buildList(3);
-    return res(
-      ctx.json(makeResourcePage([service_target, ...service_targets]))
-    );
+    return res(ctx.json(makeResourcePage(serviceTargetFactory.buildList(5))));
   }),
   rest.post('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));

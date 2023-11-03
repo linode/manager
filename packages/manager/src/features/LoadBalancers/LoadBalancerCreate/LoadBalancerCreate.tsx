@@ -18,7 +18,7 @@ const initialValues = {
   regions: [],
 };
 
-const LoadBalancerCreate = () => {
+export const LoadBalancerCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Load Balancer" />
@@ -54,5 +54,3 @@ const LoadBalancerCreate = () => {
     </>
   );
 };
-
-export default LoadBalancerCreate;

@@ -7,16 +7,15 @@ import { chooseRegion } from 'support/util/regions';
 
 import type { Config, Linode, LinodeConfigCreationData } from '@linode/api-v4';
 
-const linodeRequest = createLinodeRequestFactory.build({
-  label: randomLabel(),
-  region: chooseRegion().id,
-});
-
 /**
  *  Creates a Linode and waits for it to be in "running" state.
  */
 export const createAndBootLinode = async (): Promise<Linode> => {
-  const linode = await createLinode(linodeRequest);
+  const createPayload = createLinodeRequestFactory.build({
+    label: randomLabel(),
+    region: chooseRegion().id,
+  });
+  const linode = await createLinode(createPayload);
 
   await pollLinodeStatus(
     linode.id,
@@ -40,8 +39,12 @@ export const createLinodeAndGetConfig = async ({
   linodeConfigRequestOverride?: Partial<Linode & LinodeConfigCreationData>;
   waitForLinodeToBeRunning?: boolean;
 }): Promise<[Linode, Config]> => {
+  const createPayload = createLinodeRequestFactory.build({
+    label: randomLabel(),
+    region: chooseRegion().id,
+  });
   const linode = await createLinode({
-    ...linodeRequest,
+    ...createPayload,
     ...linodeConfigRequestOverride,
   });
 
