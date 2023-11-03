@@ -156,7 +156,7 @@ export const UpdateRouteSchema = object({
 
 export const UpdateConfigurationSchema = object({
   label: string().min(1, 'Label must not be empty.'),
-  port: number(),
+  port: number().typeError('Port must be a number.'),
   protocol: string().oneOf(['tcp', 'http', 'https']),
   certificates: array().of(
     object({
