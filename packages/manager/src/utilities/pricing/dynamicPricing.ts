@@ -1,3 +1,5 @@
+import { UNKNOWN_PRICE } from './constants';
+
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
 
@@ -25,6 +27,17 @@ export const priceIncreaseMap = {
   'id-cgk': 0.2, // Jakarta
 };
 
+export const objectStoragePriceIncreaseMap = {
+  'br-gru': {
+    storage_overage: 0.028,
+    transfer_overage: 0.007,
+  },
+  'id-cgk': {
+    storage_overage: 0.024,
+    transfer_overage: 0.015,
+  },
+};
+
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @example
@@ -40,8 +53,11 @@ export const getDCSpecificPrice = ({
   flags,
   regionId,
 }: DataCenterPricingOptions) => {
-  if (!flags?.dcSpecificPricing || !regionId) {
-    // TODO: M3-7063 (defaults)
+  if (!regionId || !basePrice) {
+    return undefined;
+  }
+
+  if (!flags?.dcSpecificPricing) {
     return basePrice.toFixed(2);
   }
 
@@ -55,4 +71,15 @@ export const getDCSpecificPrice = ({
   }
 
   return basePrice.toFixed(2);
+};
+
+export const renderMonthlyPriceToCorrectDecimalPlace = (
+  monthlyPrice: null | number | undefined
+) => {
+  if (!monthlyPrice) {
+    return UNKNOWN_PRICE;
+  }
+  return Number.isInteger(monthlyPrice)
+    ? monthlyPrice
+    : monthlyPrice.toFixed(2);
 };

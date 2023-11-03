@@ -15,7 +15,7 @@ import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import StackScriptBase, {
   StateProps,
 } from '../StackScriptBase/StackScriptBase';
-import StackScriptsSection from './StackScriptsSection';
+import { StackScriptsSection } from './StackScriptsSection';
 
 interface DialogVariantProps {
   error?: string;
@@ -51,7 +51,7 @@ const defaultDialogState = {
   stackScriptLabel: '',
 };
 
-export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
+export const StackScriptPanelContent = (props: CombinedProps) => {
   const { currentFilter } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);

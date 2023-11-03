@@ -1,10 +1,12 @@
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { linodeTypeFactory } from 'src/factories/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import { rest, server } from 'src/mocks/testServer';
 
 import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
+import { imageFactory, linodeTypeFactory } from 'src/factories';
 
 const type = linodeTypeFactory.build({
   addons: {
@@ -166,7 +168,19 @@ const props: AddonsPanelProps = {
   vlanLabel: 'abc',
 };
 
+const privateIPContextualCopyTestId = 'private-ip-contextual-copy';
+const vlanAccordionTestId = 'vlan-accordion';
+const attachVLANTestId = 'attach-vlan';
+
 describe('AddonsPanel', () => {
+  beforeEach(() => {
+    server.use(
+      rest.get('*/images/*', (req, res, ctx) => {
+        return res(ctx.json(imageFactory.build()));
+      })
+    );
+  });
+
   it('should render AddonsPanel', () => {
     renderWithTheme(<AddonsPanel {...props} />);
   });
@@ -244,5 +258,57 @@ describe('AddonsPanel', () => {
     backupsCheckbox.click();
 
     expect(getByText(/\$3.57/)).toBeInTheDocument();
+  });
+
+  it('should display the VLANAccordion component instead of the AttachVLAN component when VPCs are viewable in the flow', async () => {
+    const _props: AddonsPanelProps = { ...props, createType: 'fromImage' };
+
+    const wrapper = renderWithTheme(<AddonsPanel {..._props} />, {
+      flags: { vpc: true },
+    });
+
+    await waitFor(() => {
+      expect(wrapper.getByTestId(vlanAccordionTestId)).toBeInTheDocument();
+      expect(wrapper.queryByTestId(attachVLANTestId)).not.toBeInTheDocument();
+    });
+  });
+
+  it('should display the AttachVLAN component instead of the VLANAccordion component when VPCs are not viewable in the flow', async () => {
+    const _props: AddonsPanelProps = { ...props, createType: 'fromImage' };
+
+    const wrapper = renderWithTheme(<AddonsPanel {..._props} />, {
+      flags: { vpc: false },
+    });
+
+    await waitFor(() => {
+      expect(wrapper.getByTestId(attachVLANTestId)).toBeInTheDocument();
+      expect(
+        wrapper.queryByTestId(vlanAccordionTestId)
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('should have contextual copy for the Private IP add-on when VPC is enabled', async () => {
+    const wrapper = renderWithTheme(<AddonsPanel {...props} />, {
+      flags: { vpc: true },
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.getByTestId(privateIPContextualCopyTestId)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('should not have contextual copy for the Private IP add-on if VPC is not enabled', async () => {
+    const wrapper = renderWithTheme(<AddonsPanel {...props} />, {
+      flags: { vpc: false },
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.queryByTestId(privateIPContextualCopyTestId)
+      ).not.toBeInTheDocument();
+    });
   });
 });

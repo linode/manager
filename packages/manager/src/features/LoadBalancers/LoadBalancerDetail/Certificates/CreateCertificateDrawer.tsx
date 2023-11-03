@@ -1,27 +1,49 @@
-import { CreateCertificatePayload } from '@linode/api-v4';
-import { Stack } from '@mui/material';
 import { useFormik } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { labelMap } from './EditCertificateDrawer';
+
+import type { Certificate, CreateCertificatePayload } from '@linode/api-v4';
+
 interface Props {
   loadbalancerId: number;
   onClose: () => void;
   open: boolean;
+  type: Certificate['type'];
 }
 
+const titleMap: Record<Certificate['type'], string> = {
+  ca: 'Upload Service Target Certificate',
+  downstream: 'Upload TLS Certificate',
+};
+
+const descriptionMap: Record<Certificate['type'], string> = {
+  ca:
+    'For HTTPS, used by the load balancer to accept responses from your endpoints in your Service Target. This is the certificate installed on your endpoints.',
+  downstream:
+    'Used by your load balancer to terminate the connection and decrypt request from client prior to sending the request to the endpoints in your Service Targets. You can specify a Host Header. Also referred to as ‘SSL Certificate’.',
+};
+
+const exampleCert = `-----BEGIN CERTIFICATE-----
+Paste .pem format
+-----END CERTIFICATE-----
+`;
+
+const exampleKey = `-----BEGIN PRIVATE KEY-----
+Paste .pem format
+-----END PRIVATE KEY-----
+`;
+
 export const CreateCertificateDrawer = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open } = props;
+  const { loadbalancerId, onClose: _onClose, open, type } = props;
 
   const onClose = () => {
     formik.resetForm();
@@ -36,11 +58,12 @@ export const CreateCertificateDrawer = (props: Props) => {
   } = useLoadBalancerCertificateCreateMutation(loadbalancerId);
 
   const formik = useFormik<CreateCertificatePayload>({
+    enableReinitialize: true,
     initialValues: {
       certificate: '',
       key: '',
       label: '',
-      type: 'downstream',
+      type,
     },
     async onSubmit(values) {
       await createCertificate(values);
@@ -48,52 +71,19 @@ export const CreateCertificateDrawer = (props: Props) => {
     },
   });
 
-  const errorMap = getErrorMap(['label', 'key', 'certificate'], error);
+  const errorFields = ['label', 'certificate'];
+
+  if (type === 'downstream') {
+    errorFields.push('key');
+  }
+
+  const errorMap = getErrorMap(errorFields, error);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Upload Certificate">
+    <Drawer onClose={onClose} open={open} title={titleMap[type] ?? ''}>
       <form onSubmit={formik.handleSubmit}>
         {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-        <Typography mb={2}>
-          Upload the certificates for Load Balancer authentication.
-        </Typography>
-        <RadioGroup
-          name="type"
-          onChange={formik.handleChange}
-          value={formik.values.type}
-        >
-          <FormControlLabel
-            label={
-              <Stack mt={1.5} spacing={1}>
-                <Typography>TLS Certificate</Typography>
-                <Typography>
-                  Used by your load balancer to terminate the connection and
-                  decrypt request from client prior to sending the request to
-                  the endpoints in your Service Targets. You can specify a Host
-                  Header. Also referred to as SSL Certificate.
-                </Typography>
-              </Stack>
-            }
-            control={<Radio data-qa-cert-tls />}
-            sx={{ alignItems: 'flex-start' }}
-            value="downstream"
-          />
-          <FormControlLabel
-            label={
-              <Stack mt={1.5} spacing={1}>
-                <Typography>Service Target Certificate</Typography>
-                <Typography>
-                  Used by the load balancer to accept responses from your
-                  endpoints in your Service Target. This is the certificate
-                  installed on your Endpoints.
-                </Typography>
-              </Stack>
-            }
-            control={<Radio data-qa-cert-service-target />}
-            sx={{ alignItems: 'flex-start', mt: 2 }}
-            value="ca"
-          />
-        </RadioGroup>
+        <Typography>{descriptionMap[type]}</Typography>
         <TextField
           errorText={errorMap.label}
           label="Label"
@@ -103,24 +93,28 @@ export const CreateCertificateDrawer = (props: Props) => {
         />
         <TextField
           errorText={errorMap.certificate}
-          label="TLS Certificate"
+          label={labelMap[type]}
           labelTooltipText="TODO"
           multiline
           name="certificate"
           onChange={formik.handleChange}
+          placeholder={exampleCert}
           trimmed
           value={formik.values.certificate}
         />
-        <TextField
-          errorText={errorMap.key}
-          label="Private Key"
-          labelTooltipText="TODO"
-          multiline
-          name="key"
-          onChange={formik.handleChange}
-          trimmed
-          value={formik.values.key}
-        />
+        {type === 'downstream' && (
+          <TextField
+            errorText={errorMap.key}
+            label="Private Key"
+            labelTooltipText="TODO"
+            multiline
+            name="key"
+            onChange={formik.handleChange}
+            placeholder={exampleKey}
+            trimmed
+            value={formik.values.key}
+          />
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',

@@ -7,6 +7,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
@@ -18,12 +19,14 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
+import { OveragePricing } from './OveragePricing';
 
 interface Props {
   isOpen: boolean;
@@ -34,6 +37,7 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
+  const { data: regions } = useRegionsQuery();
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets(clusters);
   const {
@@ -48,6 +52,8 @@ export const CreateBucketDrawer = (props: Props) => {
   const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
     false
   );
+
+  const flags = useFlags();
 
   const formik = useFormik({
     initialValues: {
@@ -96,6 +102,12 @@ export const CreateBucketDrawer = (props: Props) => {
       isEURegion(formik.values.cluster)
   );
 
+  const clusterRegion =
+    regions &&
+    regions.filter((region) => {
+      return formik.values.cluster.includes(region.id);
+    });
+
   const errorMap = getErrorMap(['label', 'cluster'], error);
 
   return (
@@ -121,6 +133,7 @@ export const CreateBucketDrawer = (props: Props) => {
           name="label"
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
+          required
           value={formik.values.label}
         />
         <ClusterSelect
@@ -129,8 +142,12 @@ export const CreateBucketDrawer = (props: Props) => {
           error={errorMap.cluster}
           onBlur={formik.handleBlur}
           onChange={(value) => formik.setFieldValue('cluster', value)}
+          required
           selectedCluster={formik.values.cluster}
         />
+        {flags.objDcSpecificPricing && clusterRegion?.[0]?.id && (
+          <OveragePricing regionId={clusterRegion?.[0]?.id} />
+        )}
         {showAgreement ? (
           <StyledEUAgreementCheckbox
             onChange={(e) =>
@@ -142,6 +159,7 @@ export const CreateBucketDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
+            disabled: !formik.values.cluster,
             label: 'Create Bucket',
             loading: isLoading,
             type: 'submit',
@@ -153,6 +171,7 @@ export const CreateBucketDrawer = (props: Props) => {
           handleSubmit={formik.handleSubmit}
           onClose={() => setIsEnableObjDialogOpen(false)}
           open={isEnableObjDialogOpen}
+          regionId={clusterRegion?.[0]?.id}
         />
       </form>
     </Drawer>

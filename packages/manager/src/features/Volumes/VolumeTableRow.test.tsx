@@ -1,10 +1,11 @@
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { volumeFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { VolumeTableRow } from './VolumeTableRow';
-import userEvent from '@testing-library/user-event';
+import { ActionHandlers } from './VolumesActionMenu';
 
 const attachedVolume = volumeFactory.build({
   linode_id: 0,
@@ -17,20 +18,22 @@ const unattachedVolume = volumeFactory.build({
   linode_label: null,
 });
 
-const handlers = {
+const handlers: ActionHandlers = {
   handleAttach: jest.fn(),
+  handleClone: jest.fn(),
   handleDelete: jest.fn(),
   handleDetach: jest.fn(),
-  openForClone: jest.fn(),
-  openForConfig: jest.fn(),
-  openForEdit: jest.fn(),
-  openForResize: jest.fn(),
+  handleDetails: jest.fn(),
+  handleEdit: jest.fn(),
+  handleResize: jest.fn(),
 };
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByTestId, getByText, getByLabelText } = renderWithTheme(
-      wrapWithTableBody(<VolumeTableRow {...handlers} {...attachedVolume} />)
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <VolumeTableRow handlers={handlers} volume={attachedVolume} />
+      )
     );
 
     // Check row for basic values
@@ -46,8 +49,10 @@ describe('Volume table row', () => {
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', () => {
-    const { getByText, getByLabelText } = renderWithTheme(
-      wrapWithTableBody(<VolumeTableRow {...handlers} {...unattachedVolume} />)
+    const { getByLabelText, getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <VolumeTableRow handlers={handlers} volume={unattachedVolume} />
+      )
     );
     expect(getByText('Unattached'));
 
@@ -67,7 +72,11 @@ describe('Volume table row - for linodes detail page', () => {
       queryByText,
     } = renderWithTheme(
       wrapWithTableBody(
-        <VolumeTableRow {...handlers} {...attachedVolume} isDetailsPageRow />
+        <VolumeTableRow
+          handlers={handlers}
+          isDetailsPageRow
+          volume={attachedVolume}
+        />
       )
     );
 

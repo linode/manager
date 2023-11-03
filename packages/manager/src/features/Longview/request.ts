@@ -151,5 +151,3 @@ export const getLatestValue = curry((token: string, options: Options) => {
 export const getTopProcesses = curry((token: string, options?: Options) => {
   return get(token, 'getTopProcesses', options);
 });
-
-export default get;

@@ -5,6 +5,7 @@
 import type { InvoiceItem, TaxSummary } from '@linode/api-v4';
 import { invoiceFactory, invoiceItemFactory } from '@src/factories';
 import { DateTime } from 'luxon';
+import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'support/constants/dc-specific-pricing';
 import {
   mockGetInvoice,
   mockGetInvoiceItems,
@@ -19,6 +20,18 @@ import { formatUsd } from 'support/util/currency';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+
+/**
+ * Returns a string representation of a region, as shown on the invoice details page.
+ *
+ * @param regionId - ID of region for which to get label.
+ *
+ * @returns Region label in `<label> (<id>)` format.
+ */
+const getRegionLabel = (regionId: string) => {
+  const region = getRegionById(regionId);
+  return `${region.label} (${region.id})`;
+};
 
 describe('Account invoices', () => {
   /*
@@ -106,7 +119,6 @@ describe('Account invoices', () => {
       '@getInvoiceItems',
     ]);
 
-    // TODO: DC Pricing - M3-7073: Remove this and replace with positive assertions when DC pricing goes live.
     // Confirm that "Region" table column is not present.
     cy.findByLabelText('Invoice Details').within(() => {
       cy.get('thead').findByText('Region').should('not.exist');
@@ -135,15 +147,8 @@ describe('Account invoices', () => {
         cy.findByText(`Invoice #${mockInvoice.id}`).should('be.visible');
         cy.findByText(formatUsd(sumSubtotal + sumTax)).should('be.visible');
 
-        ui.button
-          .findByTitle('Download CSV')
-          .should('be.visible')
-          .should('be.enabled');
-
-        ui.button
-          .findByTitle('Download PDF')
-          .should('be.visible')
-          .should('be.enabled');
+        cy.findByText('Download CSV').should('be.visible');
+        cy.findByText('Download PDF').should('be.visible');
       });
 
     // Confirm that invoice summary displays subtotal, tax subtotal, tax summary entries, and grand total.
@@ -178,15 +183,18 @@ describe('Account invoices', () => {
 
   /*
    * - Confirms that invoice item region info is shown when DC-specific pricing is enabled.
-   * - Confirms that table "Region" column is shown when DC-specific pricing is enabled.
+   * - Confirms that table "Region" column is shown when DC-specific pricing is enabled on new invoices.
    * - Confirms that invoice items that do not have a region are displayed as expected.
    * - Confirms that outbound transfer overage items display the associated region when applicable.
    * - Confirms that outbound transfer overage items display "Global" when no region is applicable.
    */
   it('lists invoice item region when DC-specific pricing flag is enabled', () => {
-    // TODO: DC Pricing - M3-7073: Delete this test when DC-specific pricing launches and move assertions to above test.
-    // We don't have to be fancy with the mocks here since we are only concerned with the region.
-    const mockInvoice = invoiceFactory.build({ id: randomNumber() });
+    // TODO: DC Pricing - M3-7073: Delete most of this test when DC-specific pricing launches and move assertions to above test. Use this test for the region invoice column.
+    // We don't have to be fancy with the mocks here since we are only concerned with the region and invoice date.
+    const mockInvoice = invoiceFactory.build({
+      id: randomNumber(),
+      date: MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED,
+    });
 
     // Regular invoice items.
     const mockInvoiceItemsRegular = [
@@ -215,18 +223,6 @@ describe('Account invoices', () => {
       ...mockInvoiceItemsRegular,
       ...mockInvoiceItemsOverages,
     ];
-
-    /**
-     * Returns a string representation of a region, as shown on the invoice details page.
-     *
-     * @param regionId - ID of region for which to get label.
-     *
-     * @returns Region label in `<label> (<id>)` format.
-     */
-    const getRegionLabel = (regionId: string) => {
-      const region = getRegionById(regionId);
-      return `${region.label} (${region.id})`;
-    };
 
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(true),
@@ -295,6 +291,49 @@ describe('Account invoices', () => {
           }
         );
       });
+    });
+  });
+
+  it('does not list the region on past invoices when DC-specific pricing flag is enabled', () => {
+    const mockInvoice = invoiceFactory.build({
+      id: randomNumber(),
+      date: '2023-09-30 00:00:00Z',
+    });
+
+    // Regular invoice items.
+    const mockInvoiceItems = [
+      ...buildArray(10, () => invoiceItemFactory.build({ region: null })),
+    ];
+
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientstream');
+    mockGetInvoice(mockInvoice).as('getInvoice');
+    mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
+
+    // Visit invoice details page, wait for relevant requests to resolve.
+    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientstream',
+      '@getInvoice',
+      '@getInvoiceItems',
+    ]);
+
+    cy.findByLabelText('Invoice Details').within(() => {
+      // Confirm that "Region" table column is not present in an invoice created before DC-specific pricing was released.
+      cy.get('thead').findByText('Region').should('not.exist');
+    });
+
+    // Confirm that each regular invoice item is shown, and that the region cell is not displayed for each item.
+    mockInvoiceItems.forEach((invoiceItem: InvoiceItem) => {
+      cy.findByText(invoiceItem.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[data-qa-region]').should('not.exist');
+        });
     });
   });
 

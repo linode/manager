@@ -1,13 +1,15 @@
-import { paginateResponse } from 'support/util/paginate';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
-import type {
-  ServiceTarget,
-  Loadbalancer,
-  Configuration,
-  Certificate,
-} from '@linode/api-v4';
+import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+
+import type {
+  Certificate,
+  Configuration,
+  Loadbalancer,
+  Route,
+  ServiceTarget,
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch an AGLB load balancer and mocks response.
@@ -102,10 +104,14 @@ export const mockUploadLoadBalancerCertificate = (
  *
  * @returns Cypress chainable.
  */
-export const mockGetServiceTargets = (serviceTargets: ServiceTarget[]) => {
+// TODO: AGLB - We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
+export const mockGetServiceTargets = (
+  loadBalancer: Loadbalancer,
+  serviceTargets: ServiceTarget[]
+) => {
   return cy.intercept(
     'GET',
-    apiMatcher('/aglb/service-targets*'),
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets*`),
     paginateResponse(serviceTargets)
   );
 };
@@ -123,5 +129,176 @@ export const mockGetServiceTargetsError = (message?: string) => {
     'GET',
     apiMatcher('/aglb/service-targets*'),
     makeErrorResponse(message ?? defaultMessage, 500)
+  );
+};
+
+/**
+ * Intercepts POST request to create a service target and mocks response.
+ *
+ * @param loadBalancer - Load balancer for mocked service target.
+ * @param serviceTarget - Service target with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateServiceTarget = (
+  loadBalancer: Loadbalancer,
+  serviceTarget: ServiceTarget
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
+    makeResponse(serviceTarget)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a service target and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param serviceTarget - Service target with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateServiceTarget = (
+  loadBalancer: Loadbalancer,
+  serviceTarget: ServiceTarget
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
+    makeResponse(serviceTarget)
+  );
+};
+
+/**
+ * Intercepts POST request to create a route and mocks response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param route - Route with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateRoute = (loadBalancer: Loadbalancer, route: Route) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes`),
+    makeResponse(route)
+  );
+};
+
+/**
+ * Intercepts GET requests to retrieve AGLB load balancer routes and mocks response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to mock certificates.
+ * @param routes - Load balancer routes with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLoadBalancerRoutes = (
+  loadBalancerId: number,
+  routes: Route[]
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/aglb/${loadBalancerId}/routes*`),
+    paginateResponse(routes)
+  );
+};
+
+/**
+ * Intercepts GET requests to retrieve AGLB load balancer service targets and mocks response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to mock certificates.
+ * @param serviceTargets - Load balancer service targets with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLoadBalancerServiceTargets = (
+  loadBalancerId: number,
+  serviceTargets: ServiceTarget[]
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/aglb/${loadBalancerId}/service-targets*`),
+    paginateResponse(serviceTargets)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a route and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param route - Route with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateRoute = (loadBalancer: Loadbalancer, route: Route) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    makeResponse(route)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a route and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param route - Route with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateRouteError = (
+  loadBalancer: Loadbalancer,
+  route: Route
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    makeResponse(
+      {
+        errors: [
+          {
+            field: 'rules[3].match_condition.match_value',
+            reason: 'Bad Match Value',
+          },
+          {
+            field: 'rules[3].match_condition.match_field',
+            reason: 'Bad Match Type',
+          },
+          {
+            field: 'rules[3].service_targets[0].id',
+            reason: 'Service Target does not exist',
+          },
+          {
+            field: 'rules[3].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+          {
+            field: 'rules[3].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+          {
+            field: 'rules[3].match_condition.session_stickiness_ttl',
+            reason: 'Invalid TTL',
+          },
+          {
+            field: 'rules[3].match_condition.session_stickiness_cookie',
+            reason: 'Invalid Cookie',
+          },
+          {
+            field: 'rules[3].match_condition.hostname',
+            reason: 'Hostname is not valid',
+          },
+          {
+            reason: 'A backend service is down',
+          },
+          {
+            reason: 'You reached a rate limit',
+          },
+        ],
+      },
+      400
+    )
   );
 };

@@ -9,13 +9,13 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { ImageOption } from 'src/components/ImageSelect/ImageOption';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 import { distroIcons } from './icons';
 

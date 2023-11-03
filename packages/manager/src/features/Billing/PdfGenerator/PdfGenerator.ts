@@ -23,6 +23,7 @@ import {
   createPaymentsTable,
   createPaymentsTotalsTable,
   dateConversion,
+  invoiceCreatedAfterDCPricingLaunch,
   pageMargin,
 } from './utils';
 
@@ -162,11 +163,13 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || pageMargin, y, {
       charSpace: 0.75,
-      maxWidth: 100,
     });
+    y += 12;
   });
   // reset text format
   doc.setFont(baseFont, 'normal');
+
+  return y;
 };
 
 // M3-6177 only make one request to get the logo
@@ -273,15 +276,21 @@ export const printInvoice = async (
       );
       const rightHeaderYPosition = addRightHeader(doc, account);
 
-      addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
-        text: `Invoice: #${invoiceId}`,
-      });
+      const titlePosition = addTitle(
+        doc,
+        Math.max(leftHeaderYPosition, rightHeaderYPosition) + 12,
+        {
+          text: `Invoice: #${invoiceId}`,
+        }
+      );
 
       createInvoiceItemsTable({
         doc,
         flags,
         items: itemsChunk,
         regions,
+        shouldShowRegions: invoiceCreatedAfterDCPricingLaunch(invoice.date),
+        startY: titlePosition,
         timezone,
       });
 
@@ -336,11 +345,16 @@ export const printPayment = (
       countryTax
     );
     const rightHeaderYPosition = addRightHeader(doc, account);
-    addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 12, {
-      text: `Receipt for Payment #${payment.id}`,
-    });
 
-    createPaymentsTable(doc, payment, timezone);
+    const titleYPosition = addTitle(
+      doc,
+      Math.max(leftHeaderYPosition, rightHeaderYPosition) + 12,
+      {
+        text: `Receipt for Payment #${payment.id}`,
+      }
+    );
+
+    createPaymentsTable(doc, payment, titleYPosition, timezone);
     createFooter(doc, baseFont, account.country, payment.date);
     createPaymentsTotalsTable(doc, payment);
 

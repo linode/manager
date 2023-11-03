@@ -8,6 +8,27 @@ export interface User {
   ssh_keys: string[];
   tfa_enabled: boolean;
   verified_phone_number: string | null;
+  /**
+   * The date of when a password was set on a user.
+   * `null` if this user has not created a password yet
+   * @example 2022-02-09T16:19:26
+   * @example null
+   */
+  password_created: string | null;
+  /**
+   * Information for the most recent login attempt for this User.
+   * `null` if no login attempts have been made since creation of this User.
+   */
+  last_login: {
+    /**
+     * @example 2022-02-09T16:19:26
+     */
+    login_datetime: string;
+    /**
+     * @example successful
+     */
+    status: AccountLoginStatus;
+  } | null;
 }
 
 export interface Account {
@@ -36,16 +57,16 @@ export interface Account {
 export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
-  | 'Linodes'
-  | 'NodeBalancers'
   | 'Block Storage'
-  | 'Object Storage'
-  | 'Kubernetes'
   | 'Cloud Firewall'
-  | 'Vlans'
-  | 'Machine Images'
+  | 'Kubernetes'
+  | 'Linodes'
   | 'LKE HA Control Planes'
+  | 'Machine Images'
   | 'Managed Databases'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'Vlans'
   | 'VPCs';
 
 export interface AccountSettings {
@@ -302,6 +323,7 @@ export type EventAction =
   | 'linode_reboot'
   | 'linode_rebuild'
   | 'linode_resize_create'
+  | 'linode_resize_warm_create'
   | 'linode_resize'
   | 'linode_shutdown'
   | 'linode_snapshot'

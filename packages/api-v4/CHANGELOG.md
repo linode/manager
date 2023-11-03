@@ -1,3 +1,25 @@
+## [2023-10-30] - v0.104.0
+
+### Upcoming Features:
+
+- Update AGLB `updateLoadbalancerServiceTarget` endpoint with method and schema ([#9800](https://github.com/linode/manager/pull/9800))
+- Update AGLB `createLoadbalancerRoute` endpoint with payload/schema ([#9806](https://github.com/linode/manager/pull/9806))
+- Update the `Subnet` and `Interface` interfaces to match new API spec ([#9824](https://github.com/linode/manager/pull/9824))
+
+## [2023-10-16] - v0.103.0
+
+### Upcoming Features:
+
+- Added `UpdateCertificatePayload` payload and updated `Certificate` interface ([#9723](https://github.com/linode/manager/pull/9723))
+- New payload option `migration_type` in `ResizeLinodePayload` and new event type `linode_resize_warm_create` ([#9677](https://github.com/linode/manager/pull/9677))
+
+## [2023-10-02] - v0.102.0
+
+### Upcoming Features:
+
+- VPCs added to region Capabilities type ([#9635](https://github.com/linode/manager/pull/9635))
+- Add type `DeleteLinodeConfigInterfacePayload` for deleting Linode config interfaces ([#9687](https://github.com/linode/manager/pull/9687))
+
 ## [2023-09-18] - v0.101.0
 
 ### Changed:
@@ -12,7 +34,6 @@
 
 - DBaaS disk size and used size ([#9638](https://github.com/linode/manager/pull/9638))
 
-
 ## [2023-09-05] - v0.100.0
 
 ### Changed:
@@ -25,14 +46,11 @@
 - Update account and linode types for DC-specific pricing ([#9586](https://github.com/linode/manager/pull/9586))
 - VPC and Subnet related event types ([#9530](https://github.com/linode/manager/pull/9530))
 
-
 ## [2023-08-21] - v0.99.0
-
 
 ### Changed:
 
 - Include `vpc_id` and rename `subnet` to `subnet_id` in Linode config interface return object ([#9485](https://github.com/linode/manager/pull/9485))
-
 
 ## [2023-08-07] - v0.98.0
 
@@ -53,7 +71,6 @@
 
 ## [2023-07-11] - v0.96.0
 
-
 ### Added:
 
 - Endpoints for VPC ([#9361](https://github.com/linode/manager/pull/9361))
@@ -63,9 +80,7 @@
 
 - Use 'canceled' instead of 'cancelled' for EntityTransferStatus ([#9335](https://github.com/linode/manager/pull/9335))
 
-
 ## [2023-06-27] - v0.95.1
-
 
 ### Fixed:
 

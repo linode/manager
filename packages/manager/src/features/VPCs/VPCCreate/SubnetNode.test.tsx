@@ -23,7 +23,7 @@ describe('SubnetNode', () => {
     await userEvent.type(subnetAddress[1], '192.0.0.0/24', { delay: 1 });
 
     expect(subnetAddress[1]).toHaveValue('192.0.0.0/24');
-    const availIps = screen.getByText('Available IP Addresses: 252');
+    const availIps = screen.getByText('Number of Available IP Addresses: 252');
     expect(availIps).toBeInTheDocument();
   });
 
@@ -41,7 +41,7 @@ describe('SubnetNode', () => {
     await userEvent.type(subnetAddress[1], '192.0.0.0', { delay: 1 });
 
     expect(subnetAddress[1]).toHaveValue('192.0.0.0');
-    const availIps = screen.queryByText('Available IP Addresses:');
+    const availIps = screen.queryByText('Number of Available IP Addresses:');
     expect(availIps).not.toBeInTheDocument();
   });
 
@@ -54,13 +54,13 @@ describe('SubnetNode', () => {
       />
     );
 
-    const label = screen.getByText('Subnet label');
+    const label = screen.getByText('Subnet Label');
     expect(label).toBeInTheDocument();
     const ipAddress = screen.getByText('Subnet IP Address Range');
     expect(ipAddress).toBeInTheDocument();
   });
 
-  it('should show a removable button if isRemovable is true and subnet idx exists and is > 0', () => {
+  it('should show a removable button if isRemovable is true', () => {
     renderWithTheme(
       <SubnetNode
         disabled={false}
@@ -73,20 +73,5 @@ describe('SubnetNode', () => {
 
     const removableButton = screen.getByTestId('delete-subnet-1');
     expect(removableButton).toBeInTheDocument();
-  });
-
-  it('should not show a removable button for a subnet with idx 0', () => {
-    renderWithTheme(
-      <SubnetNode
-        disabled={false}
-        idx={0}
-        isRemovable={true}
-        onChange={() => {}}
-        subnet={{ ip: { ipv4: '' }, label: '' }}
-      />
-    );
-
-    const removableButton = screen.queryByTestId('delete-subnet-0');
-    expect(removableButton).not.toBeInTheDocument();
   });
 });

@@ -15,8 +15,11 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'metadata', label: 'Metadata' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
+  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
+  { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
+  { flag: 'soldOutTokyo', label: 'Sold Out Tokyo' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {

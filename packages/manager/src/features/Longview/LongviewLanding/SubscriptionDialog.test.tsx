@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import SubscriptionDialog from './SubscriptionDialog';
+import { SubscriptionDialog } from './SubscriptionDialog';
 
 const props = {
   clientLimit: 5,

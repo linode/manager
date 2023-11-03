@@ -13,7 +13,7 @@ interface Props {
   value: number;
 }
 
-const VolumeSelect = (props: Props) => {
+export const VolumeSelect = (props: Props) => {
   const { disabled, error, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
@@ -60,8 +60,16 @@ const VolumeSelect = (props: Props) => {
           }
         },
       }}
-      onInputChange={(event, value) => {
-        setInputValue(value);
+      onChange={(event, value) => {
+        onChange(value?.id ?? -1);
+        setInputValue('');
+      }}
+      onInputChange={(event, value, reason) => {
+        if (reason === 'input') {
+          setInputValue(value);
+        } else {
+          setInputValue('');
+        }
       }}
       renderInput={(params) => (
         <TextField
@@ -70,21 +78,17 @@ const VolumeSelect = (props: Props) => {
           }
           errorText={error}
           label="Volume"
-          loading={isLoading}
           onBlur={onBlur}
           placeholder="Select a Volume"
           {...params}
         />
       )}
       disabled={disabled}
-      inputValue={inputValue}
+      inputValue={selectedVolume ? selectedVolume.label : inputValue}
       isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
       loading={isLoading}
-      onChange={(event, value) => onChange(value?.id ?? -1)}
       options={options ?? []}
       value={selectedVolume}
     />
   );
 };
-
-export default VolumeSelect;

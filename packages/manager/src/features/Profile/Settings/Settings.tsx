@@ -1,8 +1,7 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { isOSMac } from 'src/App';
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -15,6 +14,7 @@ import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { ThemeChoice } from 'src/utilities/theme';
+import { isOSMac } from 'src/utilities/userAgent';
 
 import { PreferenceEditor } from './PreferenceEditor';
 

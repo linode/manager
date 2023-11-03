@@ -7,8 +7,10 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 const AccountLanding = React.lazy(
   () => import('src/features/Account/AccountLanding')
 );
-const InvoiceDetail = React.lazy(
-  () => import('src/features/Billing/InvoiceDetail')
+const InvoiceDetail = React.lazy(() =>
+  import('src/features/Billing/InvoiceDetail/InvoiceDetail').then((module) => ({
+    default: module.InvoiceDetail,
+  }))
 );
 const EntityTransfersCreate = React.lazy(() =>
   import(
@@ -17,11 +19,16 @@ const EntityTransfersCreate = React.lazy(() =>
     default: module.EntityTransfersCreate,
   }))
 );
-const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
+
+const UserDetail = React.lazy(() =>
+  import('../Users/UserDetail').then((module) => ({
+    default: module.UserDetail,
+  }))
+);
 
 type Props = RouteComponentProps<{}>;
 
-class Account extends React.Component<Props> {
+export class Account extends React.Component<Props> {
   render() {
     const {
       match: { path },
@@ -53,4 +60,3 @@ class Account extends React.Component<Props> {
     );
   }
 }
-export default Account;
