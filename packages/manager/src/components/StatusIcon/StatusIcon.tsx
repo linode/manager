@@ -8,12 +8,22 @@ import { Box, BoxProps } from '../Box';
 export type Status = 'active' | 'error' | 'inactive' | 'other';
 
 export interface StatusProps extends BoxProps {
+  /**
+   * Optional property can override the value of the default aria label for status, useful when the status is not descriptive enough.
+   */
+  ariaLabel?: string;
+  /**
+   * When true, displays the icon with a pulsing animation.
+   */
   pulse?: boolean;
+  /**
+   * Status of the icon.
+   */
   status: Status;
 }
 
-const StatusIcon = React.memo((props: StatusProps) => {
-  const { pulse, status, ...rest } = props;
+export const StatusIcon = React.memo((props: StatusProps) => {
+  const { ariaLabel, pulse, status, ...rest } = props;
 
   const shouldPulse =
     pulse === undefined
@@ -21,10 +31,15 @@ const StatusIcon = React.memo((props: StatusProps) => {
         !['active', 'error', 'inactive'].includes(status)
       : pulse;
 
-  return <StyledDiv pulse={shouldPulse} status={status} {...rest} />;
+  return (
+    <StyledDiv
+      aria-label={ariaLabel ?? `Status is ${status}`}
+      pulse={shouldPulse}
+      status={status}
+      {...rest}
+    />
+  );
 });
-
-export { StatusIcon };
 
 const StyledDiv = styled(Box, {
   shouldForwardProp: omittedProps(['pulse', 'status']),

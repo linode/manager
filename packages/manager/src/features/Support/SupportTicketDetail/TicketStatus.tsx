@@ -58,6 +58,7 @@ export const TicketStatus = (props: Props) => {
         }}
       >
         <StyledStatusIcon
+          ariaLabel={`Ticket status is ${status}`}
           status={status === 'closed' ? 'inactive' : 'active'}
         />
         {capitalize(status)}
