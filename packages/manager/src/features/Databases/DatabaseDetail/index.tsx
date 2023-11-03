@@ -22,6 +22,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
+const DatabaseScaleUp = React.lazy(() => import('./DatabaseScaleUp'));
 
 export const DatabaseDetail = () => {
   const history = useHistory();
@@ -74,6 +75,10 @@ export const DatabaseDetail = () => {
     {
       routeName: `/databases/${engine}/${id}/settings`,
       title: 'Settings',
+    },
+    {
+      routeName: `/databases/${engine}/${id}/scale-up`,
+      title: 'Scale Up',
     },
   ];
 
@@ -149,6 +154,9 @@ export const DatabaseDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={2}>
             <DatabaseSettings database={database} />
+          </SafeTabPanel>
+          <SafeTabPanel index={3}>
+            <DatabaseScaleUp database={database} />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
