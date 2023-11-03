@@ -188,7 +188,7 @@ export const CreateConfigurationSchema = object({
 // Endpoint Schema
 const CreateLoadBalancerEndpointSchema = object({
   ip: string().required(),
-  host: string().required(),
+  host: string(),
   port: number().integer().required(),
   rate_capacity: number().integer().required(),
 });
