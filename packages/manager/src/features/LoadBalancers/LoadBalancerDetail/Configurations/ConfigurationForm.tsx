@@ -1,4 +1,3 @@
-import { Configuration, ConfigurationPayload } from '@linode/api-v4';
 import { UpdateConfigurationSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React, { useMemo, useState } from 'react';
@@ -9,11 +8,15 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { InputLabel } from 'src/components/InputLabel';
+import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configurations';
+import {
+  useLoadBalancerConfigurationCreateMutation,
+  useLoadBalancerConfigurationMutation,
+} from 'src/queries/aglb/configurations';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
@@ -25,22 +28,25 @@ import {
   getConfigurationPayloadFromConfiguration,
   initialValues,
 } from './utils';
-import { Notice } from 'src/components/Notice/Notice';
+
+import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
 
 interface EditProps {
   configuration: Configuration;
   mode: 'edit';
   onCancel?: never;
+  onSuccess?: never;
 }
 
 interface CreateProps {
   configuration?: never;
   mode: 'create';
   onCancel: () => void;
+  onSuccess: () => void;
 }
 
 export const ConfigurationForm = (props: CreateProps | EditProps) => {
-  const { configuration, mode, onCancel } = props;
+  const { configuration, mode, onCancel, onSuccess } = props;
 
   const { loadbalancerId: _loadbalancerId } = useParams<{
     loadbalancerId: string;
@@ -58,11 +64,12 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     ? { label: { '+contains': routesTableQuery } }
     : {};
 
-  const {
-    error,
-    isLoading,
-    mutateAsync,
-  } = useLoadBalancerConfigurationMutation(
+  const useMutation =
+    mode === 'edit'
+      ? useLoadBalancerConfigurationMutation
+      : useLoadBalancerConfigurationCreateMutation;
+
+  const { error, isLoading, mutateAsync } = useMutation(
     loadbalancerId,
     configuration?.id ?? -1
   );
@@ -80,6 +87,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     async onSubmit(values, helpers) {
       try {
         await mutateAsync(values);
+        if (onSuccess) {
+          onSuccess();
+        }
       } catch (error) {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
       }

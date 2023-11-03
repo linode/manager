@@ -68,7 +68,7 @@ export const createLoadbalancerConfiguration = (
         loadbalancerId
       )}/configurations`
     ),
-    setData(data),
+    setData(data, UpdateConfigurationSchema),
     setMethod('POST')
   );
 

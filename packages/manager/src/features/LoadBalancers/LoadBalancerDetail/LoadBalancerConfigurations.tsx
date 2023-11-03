@@ -58,6 +58,7 @@ export const LoadBalancerConfigurations = () => {
             <ConfigurationForm
               mode="create"
               onCancel={() => setIsCreating(false)}
+              onSuccess={() => setIsCreating(false)}
             />
           </Paper>
         )}
