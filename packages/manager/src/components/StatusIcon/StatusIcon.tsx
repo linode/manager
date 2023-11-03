@@ -9,7 +9,8 @@ export type Status = 'active' | 'error' | 'inactive' | 'other';
 
 export interface StatusProps extends BoxProps {
   /**
-   * Optional property can override the value of the default aria label for status, useful when the status is not descriptive enough.
+   * Optional property can override the value of the default aria label for status.
+   * This is useful when the status is not descriptive enough.
    */
   ariaLabel?: string;
   /**
