@@ -70,6 +70,7 @@ export const VPCEditDrawer = (props: Props) => {
     }
   }, [open]);
 
+  // If there's an error, sync it with formik
   React.useEffect(() => {
     if (error) {
       const errorMap = getErrorMap(['label', 'description'], error);
