@@ -134,7 +134,7 @@ const LinodeConfigs = () => {
                         <TableCell
                           sx={{
                             borderRight: `1px solid ${theme.palette.divider}`,
-                            fontWeight: 'bold',
+                            fontFamily: theme.font.bold,
                             width: '25%',
                           }}
                         >
@@ -143,7 +143,7 @@ const LinodeConfigs = () => {
                         <TableCell
                           sx={{
                             borderRight: `1px solid ${theme.palette.divider}`,
-                            fontWeight: 'bold',
+                            fontFamily: theme.font.bold,
                             width: '30%',
                           }}
                         >

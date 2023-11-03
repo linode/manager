@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { useRegionsQuery } from 'src/queries/regions';
@@ -13,6 +14,7 @@ interface Props extends NoticeProps {
 export const DynamicPriceNotice = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const { region, ...rest } = props;
+  const theme = useTheme();
 
   const regionLabel = regions?.find((r) => r.id === region)?.label ?? region;
 
@@ -24,7 +26,7 @@ export const DynamicPriceNotice = (props: Props) => {
       variant="warning"
       {...rest}
     >
-      <Typography fontWeight="bold">
+      <Typography fontFamily={theme.font.bold}>
         Prices for plans, products, and services in {regionLabel} may vary from
         other regions.{' '}
         <Link to="https://www.linode.com/pricing">Learn more.</Link>

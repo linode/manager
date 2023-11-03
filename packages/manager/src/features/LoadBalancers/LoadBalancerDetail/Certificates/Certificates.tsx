@@ -142,6 +142,14 @@ export const Certificates = () => {
             >
               Label
             </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'id'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="id"
+            >
+              ID
+            </TableSortCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -151,6 +159,7 @@ export const Certificates = () => {
           {data?.data.map((certificate) => (
             <TableRow key={`${certificate.label}-${certificate.type}`}>
               <TableCell>{certificate.label}</TableCell>
+              <TableCell>{certificate.id}</TableCell>
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
