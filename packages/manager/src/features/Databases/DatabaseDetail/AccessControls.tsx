@@ -21,7 +21,7 @@ import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
-    minWidth: 214,
+    minWidth: 225,
     [theme.breakpoints.down('md')]: {
       alignSelf: 'flex-start',
       marginBottom: '1rem',

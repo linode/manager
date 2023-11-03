@@ -6,7 +6,6 @@
   font-size: 1rem;
   box-sizing: content-box;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color .2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 400;
   font-family: "LatoWeb", sans-serif;
   line-height: 1.2em;
   white-space: initial;

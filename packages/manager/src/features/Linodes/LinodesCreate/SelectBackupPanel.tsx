@@ -6,22 +6,14 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
+import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import type { StyledTypographyProps } from './SelectLinodePanel';
 
 export const aggregateBackups = (
   backups: LinodeBackupsResponse
@@ -55,15 +47,13 @@ interface Props {
   selectedLinodeWithBackups?: LinodeWithBackups;
 }
 
-type CombinedProps = Props & WithProfileProps;
-
-const SelectBackupPanel = (props: CombinedProps) => {
+export const SelectBackupPanel = (props: Props) => {
+  const { data: profile } = useProfile();
   const {
     error,
     handleChangeBackup,
     handleChangeBackupInfo,
     loading,
-    profile,
     selectedBackupID,
     selectedLinodeID,
     selectedLinodeWithBackups,
@@ -80,12 +70,13 @@ const SelectBackupPanel = (props: CombinedProps) => {
       ? 'Automatic'
       : 'Snapshot';
     const subheading = formatDate(backup.created, {
-      timezone: profile.data?.timezone,
+      timezone: profile?.timezone,
     });
     const infoName =
       heading === 'Automatic'
         ? 'From automatic backup'
         : `From backup ${heading}`;
+
     return {
       heading,
       infoName,
@@ -126,7 +117,7 @@ const SelectBackupPanel = (props: CombinedProps) => {
           <React.Fragment>
             {aggregatedBackups.length !== 0 ? (
               <StyledTypography component="div">
-                <Grid container>
+                <Grid container spacing={2}>
                   {aggregatedBackups.map((backup) => {
                     return renderCard(backup);
                   })}
@@ -146,8 +137,7 @@ const SelectBackupPanel = (props: CombinedProps) => {
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: omittedProps(['component']),
-})<StyledTypographyProps>(({ theme }) => ({
+})<{ component: string }>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
   width: '100%',
 }));
@@ -167,8 +157,3 @@ const StyledWrapperGrid = styled(Grid, { label: 'StyledWrapperGrid' })(
     padding: theme.spacing(1),
   })
 );
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withProfile
-)(SelectBackupPanel);
