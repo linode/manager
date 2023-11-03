@@ -104,7 +104,7 @@ export const useLoadBalancerRoutesInfiniteQuery = (
   filter: Filter = {}
 ) => {
   return useInfiniteQuery<ResourcePage<Route>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'certificates', 'infinite', filter],
+    [QUERY_KEY, 'loadbalancer', id, 'routes', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerRoutes(id, { page: pageParam, page_size: 25 }, filter),
     {
