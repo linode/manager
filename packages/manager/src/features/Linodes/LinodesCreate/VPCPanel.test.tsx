@@ -163,4 +163,33 @@ describe('VPCPanel', () => {
       expect(vpcIPv4Input).toHaveValue('10.0.4.3');
     });
   });
+
+  it('should check the Assign a public IPv4 address checkbox if assignPublicIPv4Address is true', async () => {
+    const _props = {
+      ...props,
+      assignPublicIPv4Address: true,
+      region: 'us-east',
+      selectedVPCId: 5,
+    };
+
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: ['VPCs'],
+          id: 'us-east',
+        });
+        const regions = regionFactory.buildList(5);
+        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+      })
+    );
+
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      expect(wrapper.getAllByRole('checkbox')[1]).toBeChecked();
+    });
+  });
 });
