@@ -9,12 +9,14 @@ import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
+import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionItem } from './RegionOption';
 import { listOfDisabledRegions } from './disabledRegions';
 
+import type { FakeRegion } from './disabledRegions';
 import type { Country } from './utils';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 import type { FlagSet } from 'src/featureFlags';
@@ -54,38 +56,29 @@ export const getRegionOptions = (
   const allRegions = [
     ...regions,
     ...listOfDisabledRegions
-      .filter(
-        (disabledRegion) =>
-          // Only display a fake region if the feature flag for it is enabled
-          // We may want to consider modifying this logic if we end up with disabled regions that don't rely on feature flags
-          flags[disabledRegion.featureFlag] &&
-          // Don't display a fake region if it's included in the real /regions response
-          !regions.some(
-            (region) => region.id === disabledRegion.fakeRegion.id
-          ) &&
-          // Don't display a fake region if it's excluded by the current path
-          !disabledRegion.excludePaths?.some((pathToExclude) =>
-            path.includes(pathToExclude)
-          )
-      )
+      .filter((disabledRegion) => {
+        /**
+         * Only display a fake region if the feature flag for it is enabled
+         */
+        const isFlagEnabled = flags[disabledRegion.featureFlag];
+        /**
+         * Don't display a fake region if it's included in the real /regions response
+         */
+        const isAlreadyIncluded = regions.some(
+          (region) => region.id === disabledRegion.fakeRegion.id
+        );
+        /**
+         * Don't display a fake region if it's excluded by the current path
+         */
+        const isExcludedByPath = disabledRegion.excludePaths?.some(
+          (pathToExclude) => path.includes(pathToExclude)
+        );
+
+        return isFlagEnabled && !isAlreadyIncluded && !isExcludedByPath;
+      })
       .map((disabledRegion) => disabledRegion.fakeRegion),
   ];
 
-  // for (const region of allRegions) {
-  //   const group = getRegionCountryGroup(region);
-
-  //   groups[group].push({
-  //     country: region.country,
-  //     disabledMessage: hasUserAccessToDisabledRegions
-  //       ? undefined
-  //       : listOfDisabledRegions.find(
-  //           (disabledRegion) => disabledRegion.fakeRegion.id === region.id
-  //         )?.disabledMessage,
-  //     flag: <Flag country={region.country as Lowercase<Country>} />,
-  //     label: `${region.label} (${region.id})`,
-  //     value: region.id,
-  //   });
-  // }
   return allRegions
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
@@ -93,6 +86,7 @@ export const getRegionOptions = (
       return {
         data: {
           country: region.country,
+          disabledMessage: (region as FakeRegion).disabledMessage || null,
           region: group,
         },
         label: `${region.label} (${region.id})`,
@@ -164,6 +158,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const [selectedRegion, setSelectedRegion] = React.useState<OptionType | null>(
     getSelectedRegionById(selectedID ?? '') ?? null
   );
+  const [open, setOpen] = React.useState(true);
   const flags = useFlags();
   const location = useLocation();
   const path = location.pathname;
@@ -181,8 +176,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   return (
     <Box sx={{ width }}>
       <Autocomplete
-        getOptionDisabled={(option: RegionItem) =>
-          Boolean(option.disabledMessage)
+        getOptionDisabled={(option: OptionType) =>
+          Boolean(option.data.disabledMessage)
         }
         isOptionEqualToValue={(option: RegionItem, value: RegionItem) =>
           option.value === value.value
@@ -197,15 +192,32 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           </li>
         )}
         renderOption={(props, option, { selected }) => (
-          <ListItem {...props}>
-            <Box alignItems="center" display="flex" flexGrow={1}>
-              <StyledFlagContainer>
-                <Flag country={option.data.country} />
-              </StyledFlagContainer>
-              {option.label}
-            </Box>
-            <SelectedIcon visible={selected} />
-          </ListItem>
+          <Tooltip
+            enterDelay={500}
+            enterTouchDelay={500}
+            title={option.data.disabledMessage ?? ''}
+          >
+            <StyledListItem {...props}>
+              {Boolean(option.data.disabledMessage) ? (
+                <Box alignItems="center" display="flex" flexGrow={1}>
+                  <StyledFlagContainer>
+                    <Flag country={option.data.country} />
+                  </StyledFlagContainer>
+                  {option.label} (Not available)
+                </Box>
+              ) : (
+                <>
+                  <Box alignItems="center" display="flex" flexGrow={1}>
+                    <StyledFlagContainer>
+                      <Flag country={option.data.country} />
+                    </StyledFlagContainer>
+                    {option.label}
+                  </Box>
+                  <SelectedIcon visible={selected} />
+                </>
+              )}
+            </StyledListItem>
+          </Tooltip>
         )}
         textFieldProps={{
           InputProps: {
@@ -225,6 +237,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disabled={disabled}
         groupBy={(option: RegionItem) => option.data.region}
         label={label ?? 'Region'}
+        onOpen={() => setOpen(true)}
+        open={open}
         options={options}
         placeholder="Select a Region"
         value={getSelectedRegionById(selectedID || '') ?? null}
@@ -243,6 +257,18 @@ const GroupHeader = styled('div')(({ theme }) => ({
 
 const StyledFlagContainer = styled('div')(({ theme }) => ({
   marginRight: theme.spacing(1),
+}));
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  '&.MuiListItem-root[aria-disabled="true"]': {
+    background: 'transparent !important',
+    color: theme.palette.text.primary,
+    cursor: 'not-allowed !important',
+    pointerEvents: 'inherit !important',
+  },
+  '&.MuiListItem-root[aria-disabled="true"].Mui-focused > div': {
+    pointerEvents: 'inherit !important',
+  },
 }));
 
 const SelectedIcon = styled(DoneIcon, {
