@@ -155,7 +155,7 @@ export const UpdateRouteSchema = object({
 });
 
 export const UpdateConfigurationSchema = object({
-  label: string().min(1),
+  label: string().min(1, 'Label must not be empty.'),
   port: number(),
   protocol: string().oneOf(['tcp', 'http', 'https']),
   certificates: array().of(
@@ -164,7 +164,7 @@ export const UpdateConfigurationSchema = object({
       id: number().required(),
     })
   ),
-  routes: array().of(number()),
+  route_ids: array().of(number()),
 });
 
 // Endpoint Schema

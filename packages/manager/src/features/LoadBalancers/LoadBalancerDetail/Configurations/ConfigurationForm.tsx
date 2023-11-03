@@ -1,4 +1,5 @@
 import { Configuration, ConfigurationPayload } from '@linode/api-v4';
+import { UpdateConfigurationSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -13,7 +14,7 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configurations';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 import { RoutesTable } from '../Routes/RoutesTable';
@@ -24,6 +25,7 @@ import {
   getConfigurationPayloadFromConfiguration,
   initialValues,
 } from './utils';
+import { Notice } from 'src/components/Notice/Notice';
 
 interface EditProps {
   configuration: Configuration;
@@ -75,9 +77,14 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   const formik = useFormik<ConfigurationPayload>({
     enableReinitialize: true,
     initialValues: formValues,
-    onSubmit(values) {
-      mutateAsync(values);
+    async onSubmit(values, helpers) {
+      try {
+        await mutateAsync(values);
+      } catch (error) {
+        helpers.setErrors(getFormikErrorsFromAPIErrors(error));
+      }
     },
+    validationSchema: UpdateConfigurationSchema,
   });
 
   const protocolOptions = [
@@ -106,12 +113,27 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     ]);
   };
 
-  const errorMap = getErrorMap(['protocol', 'port', 'label'], error);
+  const generalErrors = error
+    ?.filter(
+      (error) =>
+        !error.field || !['label', 'port', 'protocol'].includes(error.field)
+    )
+    .map((e) => e.reason)
+    .join(', ');
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Typography variant="h2">Details</Typography>
+      {generalErrors && (
+        <Notice
+          spacingBottom={0}
+          spacingTop={8}
+          text={generalErrors}
+          variant="error"
+        />
+      )}
       <TextField
+        errorText={formik.errors.label}
         label="Configuration Label"
         name="label"
         onChange={formik.handleChange}
@@ -127,13 +149,13 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
               (option) => option.value === formik.values.protocol
             )}
             disableClearable
-            errorText={errorMap.protocol}
+            errorText={formik.errors.protocol}
             label="Protocol"
             onChange={(e, { value }) => formik.setFieldValue('protocol', value)}
             options={protocolOptions}
           />
           <TextField
-            errorText={errorMap.port}
+            errorText={formik.errors.port}
             label="Port"
             labelTooltipText="TODO: AGLB"
             name="port"
