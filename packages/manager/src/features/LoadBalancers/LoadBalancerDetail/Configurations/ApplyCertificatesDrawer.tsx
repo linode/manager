@@ -1,5 +1,5 @@
 import { Configuration } from '@linode/api-v4';
-import { certificateConfigSchema } from '@linode/validation';
+import { CertificateConfigSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
@@ -39,7 +39,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
       onClose();
     },
     validateOnChange: false,
-    validationSchema: certificateConfigSchema,
+    validationSchema: CertificateConfigSchema,
   });
 
   useEffect(() => {

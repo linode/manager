@@ -58,6 +58,10 @@ export const LoadBalancerSummary = () => {
         </Typography>
       ),
     },
+    {
+      title: 'Load Balancer ID',
+      value: <Typography>{loadbalancer?.id}</Typography>,
+    },
   ];
 
   return (

@@ -11,6 +11,7 @@ import cachedRegions from 'src/cachedData/regions.json';
 import {
   VLANFactory,
   abuseTicketNotificationFactory,
+  accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
@@ -375,14 +376,7 @@ const aglb = [
   }),
   // Service Targets
   rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
-    const service_target = serviceTargetFactory.build({
-      ca_certificate: 'certificate-1',
-      load_balancing_policy: 'random',
-    });
-    const service_targets = serviceTargetFactory.buildList(3);
-    return res(
-      ctx.json(makeResourcePage([service_target, ...service_targets]))
-    );
+    return res(ctx.json(makeResourcePage(serviceTargetFactory.buildList(5))));
   }),
   rest.post('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));
@@ -1005,6 +999,24 @@ export const handlers = [
       balance: 50,
     });
     return res(ctx.json(account));
+  }),
+  rest.get('*/account/availability', (req, res, ctx) => {
+    const florida = accountAvailabilityFactory.build({
+      id: 'us-mia',
+      unavailable: ['Block Storage'],
+    });
+    const singapore = accountAvailabilityFactory.build({
+      id: 'ap-south',
+      unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
+    });
+    const tokyo = accountAvailabilityFactory.build({
+      id: 'ap-northeast',
+      unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
+    });
+    return res(ctx.json(makeResourcePage([florida, singapore, tokyo])));
+  }),
+  rest.get('*/account/availability/:regionId', (req, res, ctx) => {
+    return res(ctx.json(accountAvailabilityFactory.build()));
   }),
   rest.put('*/account', (req, res, ctx) => {
     return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));

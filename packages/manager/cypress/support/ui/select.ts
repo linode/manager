@@ -5,6 +5,19 @@ import { getRegionById, getRegionByLabel } from 'support/util/regions';
  */
 export const select = {
   /**
+   * Finds an Enhanced Select by its text value.
+   *
+   * @param selectText - Select component inner text.
+   *
+   * @returns Cypress chainable.
+   */
+  findByText: (selectText: string) => {
+    return cy
+      .get(`[data-qa-enhanced-select="${selectText}"]`)
+      .findByText(selectText);
+  },
+
+  /**
    * Finds a Select menu item by its `data-qa-option` ID.
    *
    * This assumes that the Enhanced Select menu is already open.
