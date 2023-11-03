@@ -173,26 +173,28 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             value={formik.values.port}
           />
         </Stack>
-        <Stack maxWidth="600px">
-          <Stack alignItems="center" direction="row">
-            <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-            <TooltipIcon status="help" text="TODO: AGLB" />
+        {formik.values.protocol === 'https' && (
+          <Stack maxWidth="600px">
+            <Stack alignItems="center" direction="row">
+              <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
+              <TooltipIcon status="help" text="TODO: AGLB" />
+            </Stack>
+            <CertificateTable
+              certificates={formik.values.certificates}
+              loadbalancerId={loadbalancerId}
+              onRemove={handleRemoveCert}
+            />
+            <Box mt={2}>
+              <Button
+                buttonType="outlined"
+                onClick={() => setIsApplyCertDialogOpen(true)}
+              >
+                Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
+                Certificates
+              </Button>
+            </Box>
           </Stack>
-          <CertificateTable
-            certificates={formik.values.certificates}
-            loadbalancerId={loadbalancerId}
-            onRemove={handleRemoveCert}
-          />
-          <Box mt={2}>
-            <Button
-              buttonType="outlined"
-              onClick={() => setIsApplyCertDialogOpen(true)}
-            >
-              Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
-              Certificates
-            </Button>
-          </Box>
-        </Stack>
+        )}
       </Stack>
       <Divider spacingBottom={16} spacingTop={16} />
       <Stack spacing={2}>
