@@ -195,12 +195,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         >
           {mode === 'edit' ? 'Delete' : 'Cancel'}
         </Button>
-        <Button
-          buttonType="primary"
-          disabled={!formik.dirty}
-          loading={isLoading}
-          type="submit"
-        >
+        <Button buttonType="primary" loading={isLoading} type="submit">
           {mode == 'edit' ? 'Save' : 'Create'} Configuration
         </Button>
       </Stack>
