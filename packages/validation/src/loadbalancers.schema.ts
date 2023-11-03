@@ -156,7 +156,10 @@ export const UpdateRouteSchema = object({
 
 export const UpdateConfigurationSchema = object({
   label: string().min(1, 'Label must not be empty.'),
-  port: number().min(0).max(65_535).typeError('Port must be a number.'),
+  port: number()
+    .min(0, 'Port must be greater than 0.')
+    .max(65_535, 'Port must be less than 65535.')
+    .typeError('Port must be a number.'),
   protocol: string().oneOf(['tcp', 'http', 'https']),
   certificates: array().when('protocol', {
     is: 'https',
@@ -169,8 +172,8 @@ export const UpdateConfigurationSchema = object({
 export const CreateConfigurationSchema = object({
   label: string().min(1, 'Label must not be empty.').required(),
   port: number()
-    .min(0)
-    .max(65_535)
+    .min(0, 'Port must be greater than 0.')
+    .max(65_535, 'Port must be less than 65535.')
     .typeError('Port must be a number.')
     .required(),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
@@ -184,22 +187,8 @@ export const CreateConfigurationSchema = object({
 
 // Endpoint Schema
 const CreateLoadBalancerEndpointSchema = object({
-  ip: string().test(
-    'ip-or-host',
-    'Either IP or host must be provided.',
-    function (value) {
-      const { host } = this.parent;
-      return !!value || !!host;
-    }
-  ),
-  host: string().test(
-    'host-or-ip',
-    'Either host or IP must be provided.',
-    function (value) {
-      const { ip } = this.parent;
-      return !!value || !!ip;
-    }
-  ),
+  ip: string().required(),
+  host: string().required(),
   port: number().integer().required(),
   rate_capacity: number().integer().required(),
 });
@@ -236,8 +225,8 @@ export const ConfigurationSchema = object({
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: array().when('protocol', {
     is: (val: string) => val === 'https',
-    then: array().of(CertificateEntrySchema).required(),
-    otherwise: array().notRequired(),
+    then: (o) => o.of(CertificateEntrySchema).required(),
+    otherwise: (o) => o.notRequired(),
   }),
   routes: string().when('protocol', {
     is: 'tcp',
