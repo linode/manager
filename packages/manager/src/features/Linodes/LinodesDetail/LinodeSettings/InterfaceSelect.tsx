@@ -2,7 +2,6 @@ import {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,6 +9,7 @@ import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
 import { useFlags } from 'src/hooks/useFlags';
@@ -124,18 +124,22 @@ export const InterfaceSelect = (props: CombinedProps) => {
       purpose,
     });
 
-  const handleVPCLabelChange = (selectedVPCId: number) =>
-    handleChange({
-      ipam_address: null,
-      ipv4: {
-        nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
-        vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
-      },
-      label: null,
-      purpose,
-      subnet_id: undefined,
-      vpc_id: selectedVPCId,
-    });
+  const handleVPCLabelChange = (selectedVPCId: number) => {
+    // Only clear VPC related fields if VPC selection changes
+    if (selectedVPCId !== vpcId) {
+      handleChange({
+        ipam_address: null,
+        ipv4: {
+          nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
+          vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
+        },
+        label: null,
+        purpose,
+        subnet_id: undefined,
+        vpc_id: selectedVPCId,
+      });
+    }
+  };
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
