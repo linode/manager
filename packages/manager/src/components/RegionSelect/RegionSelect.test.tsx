@@ -41,8 +41,8 @@
 //         flags,
 //         '/linodes/create'
 //       );
-//       const selectedID = regions[1].id;
-//       expect(getSelectedRegionById(selectedID, groupedRegions)).toHaveProperty(
+//       const selectedId = regions[1].id;
+//       expect(getSelectedRegionById(selectedId, groupedRegions)).toHaveProperty(
 //         'value',
 //         regions[1].id
 //       );

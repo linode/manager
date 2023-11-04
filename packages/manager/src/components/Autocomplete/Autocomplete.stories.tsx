@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
 
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
+import { Country } from 'src/components/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';

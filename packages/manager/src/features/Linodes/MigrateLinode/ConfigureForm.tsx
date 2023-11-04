@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { Country } from 'src/components/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -134,7 +134,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"
-            selectedID={selectedRegion}
+            selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

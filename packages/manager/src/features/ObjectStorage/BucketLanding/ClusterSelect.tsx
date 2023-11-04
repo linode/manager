@@ -1,7 +1,7 @@
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 
@@ -54,7 +54,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}
-      selectedID={selectedCluster}
+      selectedId={selectedCluster}
     />
   );
 };

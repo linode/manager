@@ -26,8 +26,8 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { RegionOption } from 'src/components/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -509,7 +509,7 @@ const DatabaseCreate = () => {
             }
             errorText={errors.region}
             regions={regionsThatSupportDbaas}
-            selectedID={values.region}
+            selectedId={values.region}
           />
           <RegionHelperText mt={1} />
         </Grid>
@@ -524,7 +524,7 @@ const DatabaseCreate = () => {
             error={errors.type}
             header="Choose a Plan"
             isCreate
-            selectedID={values.type}
+            selectedId={values.type}
             types={displayTypes}
           />
         </Grid>

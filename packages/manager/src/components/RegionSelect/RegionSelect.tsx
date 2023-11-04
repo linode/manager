@@ -40,7 +40,7 @@ interface RegionSelectProps
   label?: string;
   regions: Region[];
   required?: boolean;
-  selectedID: null | string;
+  selectedId: null | string;
   width?: number;
 }
 
@@ -128,7 +128,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     label,
     regions,
     required,
-    selectedID,
+    selectedId,
     width,
   } = props;
 
@@ -156,7 +156,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   };
 
   const [selectedRegion, setSelectedRegion] = React.useState<OptionType | null>(
-    getSelectedRegionById(selectedID ?? '') ?? null
+    getSelectedRegionById(selectedId ?? '') ?? null
   );
   const flags = useFlags();
   const location = useLocation();
@@ -239,7 +239,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         label={label ?? 'Region'}
         options={options}
         placeholder="Select a Region"
-        value={getSelectedRegionById(selectedID || '') ?? null}
+        value={getSelectedRegionById(selectedId || '') ?? null}
       />
     </Box>
   );

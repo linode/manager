@@ -265,4 +265,3 @@ export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
   OC: 'Oceania',
   SA: 'South America',
 });
-
