@@ -1,3 +1,7 @@
+// ********** THIS FILE IS GOING AWAY WITH DC GET WELL ***********
+// Not reorganizing utils and types for this file for this reason.
+// ***************************************************************
+
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -57,6 +61,10 @@ export interface DisabledRegion {
   featureFlag: string;
 }
 
+/**
+ * A list of regions that should be displayed as disabled (if not already included in the /regions response).
+ * They are controlled by feature flags so they're safe to remain here.
+ */
 export const listOfDisabledRegions: DisabledRegion[] = [
   {
     excludePaths: ['/object-storage/buckets/create', '/vpcs/create'],

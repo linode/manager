@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { Country } from 'src/components/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -27,6 +26,7 @@ import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
 import type { Linode, PriceObject } from '@linode/api-v4';
+import type { Country } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface Props {
   backupEnabled: Linode['backups']['enabled'];
