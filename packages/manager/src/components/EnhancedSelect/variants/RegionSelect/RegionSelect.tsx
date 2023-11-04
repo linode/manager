@@ -158,7 +158,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const [selectedRegion, setSelectedRegion] = React.useState<OptionType | null>(
     getSelectedRegionById(selectedID ?? '') ?? null
   );
-  const [open, setOpen] = React.useState(true);
   const flags = useFlags();
   const location = useLocation();
   const path = location.pathname;
@@ -193,6 +192,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         )}
         renderOption={(props, option, { selected }) => (
           <Tooltip
+            disableFocusListener={Boolean(!option.data.disabledMessage)}
             enterDelay={500}
             enterTouchDelay={500}
             title={option.data.disabledMessage ?? ''}
@@ -237,8 +237,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disabled={disabled}
         groupBy={(option: RegionItem) => option.data.region}
         label={label ?? 'Region'}
-        onOpen={() => setOpen(true)}
-        open={open}
         options={options}
         placeholder="Select a Region"
         value={getSelectedRegionById(selectedID || '') ?? null}
@@ -266,8 +264,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     cursor: 'not-allowed !important',
     pointerEvents: 'inherit !important',
   },
-  '&.MuiListItem-root[aria-disabled="true"].Mui-focused > div': {
-    pointerEvents: 'inherit !important',
+  '&.MuiListItem-root[aria-disabled="true"]:active': {
+    pointerEvents: 'none !important',
   },
 }));
 
