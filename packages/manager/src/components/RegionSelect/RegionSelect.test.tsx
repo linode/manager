@@ -1,51 +1,91 @@
-// import { regions } from 'src/__data__/regionsData';
+import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils'; // Import your functions here
 
-// import { getRegionOptions, getSelectedRegionById } from './RegionSelect';
+import { regionFactory } from 'src/factories';
 
-// const fakeRegion = { ...regions[0], country: 'fake iso code' };
-// const flags = {};
+import type { RegionSelectOption } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 
-// describe('Region Select helper functions', () => {
-//   describe('getRegionOptions', () => {
-//     it('should return a list of items grouped by continent', () => {
-//       const groupedRegions = getRegionOptions(
-//         regions,
-//         flags,
-//         '/linodes/create'
-//       );
-//       const [r1, r2, r3, r4, r5] = groupedRegions;
-//       expect(groupedRegions).toHaveLength(8);
-//       expect(r1.options).toHaveLength(5);
-//       expect(r2.options).toHaveLength(2);
-//       expect(r3.options).toHaveLength(3);
-//       expect(r4.options).toHaveLength(0);
-//       expect(r5.options).toHaveLength(1);
-//     });
+const regions: Region[] = [
+  regionFactory.build({
+    country: 'US',
+    id: 'us-1',
+    label: 'US Location',
+  }),
+  regionFactory.build({
+    country: 'CA',
+    id: 'ca-1',
+    label: 'CA Location',
+  }),
+  regionFactory.build({
+    country: 'JP',
+    id: 'jp-1',
+    label: 'JP Location',
+  }),
+];
 
-//     it('should group unrecognized regions as Other', () => {
-//       const groupedRegions = getRegionOptions(
-//         [fakeRegion],
-//         flags,
-//         '/linodes/create'
-//       );
-//       expect(
-//         groupedRegions.find((group) => group.label === 'Other')
-//       ).toBeDefined();
-//     });
-//   });
+describe('getRegionOptions', () => {
+  it('should return an empty array if no regions are provided', () => {
+    const regions: Region[] = [];
+    const flags = {};
+    const path = '';
+    const result = getRegionOptions(regions, flags, path);
 
-//   describe('getSelectedRegionById', () => {
-//     it('should return the matching Item from a list of GroupedItems', () => {
-//       const groupedRegions = getRegionOptions(
-//         regions,
-//         flags,
-//         '/linodes/create'
-//       );
-//       const selectedId = regions[1].id;
-//       expect(getSelectedRegionById(selectedId, groupedRegions)).toHaveProperty(
-//         'value',
-//         regions[1].id
-//       );
-//     });
-//   });
-// });
+    expect(result).toEqual([]);
+  });
+
+  it('should return a sorted array of OptionType objects with North America first', () => {
+    const flags = {};
+    const path = '';
+    const result: RegionSelectOption[] = getRegionOptions(regions, flags, path);
+
+    // Expected result
+    const expected: RegionSelectOption[] = [
+      {
+        data: {
+          country: 'US',
+          disabledMessage: null,
+          region: 'North America',
+        },
+        label: 'US Location (us-1)',
+        value: 'us-1',
+      },
+      {
+        data: { country: 'CA', disabledMessage: null, region: 'North America' },
+        label: 'CA Location (ca-1)',
+        value: 'ca-1',
+      },
+      {
+        data: { country: 'JP', disabledMessage: null, region: 'Asia' },
+        label: 'JP Location (jp-1)',
+        value: 'jp-1',
+      },
+    ];
+
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('getSelectedRegionById', () => {
+  it('should return the correct OptionType for a selected region', () => {
+    const selectedRegionId = 'us-1';
+
+    const result = getSelectedRegionById(regions, selectedRegionId);
+
+    // Expected result
+    const expected = {
+      data: { country: 'US', region: 'North America' },
+      label: 'US Location (us-1)',
+      value: 'us-1',
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return undefined for an unknown region', () => {
+    const selectedRegionId = 'unknown';
+
+    const result = getSelectedRegionById(regions, selectedRegionId);
+
+    expect(result).toBeUndefined();
+  });
+});

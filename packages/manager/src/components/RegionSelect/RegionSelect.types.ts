@@ -5,7 +5,7 @@ export type Country = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
 import type { Region } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
-export interface OptionType {
+export interface RegionSelectOption {
   data?: any;
   label: string;
   value: string;
@@ -13,7 +13,7 @@ export interface OptionType {
 
 export interface RegionSelectProps
   extends Omit<
-    EnhancedAutocompleteProps<OptionType, false>,
+    EnhancedAutocompleteProps<RegionSelectOption, false>,
     'label' | 'onChange' | 'options'
   > {
   handleSelection: (id: string) => void;

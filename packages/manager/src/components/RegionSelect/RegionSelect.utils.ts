@@ -1,15 +1,24 @@
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { CONTINENT_CODE_TO_CONTINENT } from './RegionSelect.constants';
-import { listOfDisabledRegions } from './disabledRegions';
+import { listOfFakeRegions } from './disabledRegions';
 
-import type { OptionType } from './RegionSelect.types';
+import type { RegionSelectOption } from './RegionSelect.types';
 import type { FakeRegion } from './disabledRegions';
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
+/**
+ * Returns an array of OptionType objects for use in the RegionSelect component.
+ * Regions are sorted alphabetically by region, with North America first.
+ * Includes fake regions if they are enabled by a feature flag.
+ * Fake regions only appear in the list if they are not already included in the
+ * /regions response, and if they are not excluded by the current path.
+ *
+ * @returns {OptionType[]} An array of OptionType objects
+ */
 export const getRegionOptions = (
   regions: Region[],
   flags: FlagSet,
@@ -17,7 +26,7 @@ export const getRegionOptions = (
 ) => {
   const allRegions = [
     ...regions,
-    ...listOfDisabledRegions
+    ...listOfFakeRegions
       .filter((disabledRegion) => {
         /**
          * Only display a fake region if the feature flag for it is enabled
@@ -81,10 +90,15 @@ export const getRegionOptions = (
     });
 };
 
+/**
+ * Util to map a region ID to an OptionType object.
+ *
+ * @returns an OptionType object for the currently selected region.
+ */
 export const getSelectedRegionById = (
   regions: Region[],
   selectedRegionId: string
-): OptionType | undefined => {
+): RegionSelectOption | undefined => {
   const selectedRegion: Region | undefined = regions.find(
     (thisRegion) => selectedRegionId === thisRegion.id
   );

@@ -8,7 +8,6 @@ import { List } from 'src/components/List';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { RegionItem } from './RegionOption';
 import {
   GroupHeader,
   SelectedIcon,
@@ -19,7 +18,7 @@ import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Country } from './RegionSelect.types';
-import type { OptionType } from './RegionSelect.types';
+import type { RegionSelectOption } from './RegionSelect.types';
 
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
@@ -34,14 +33,17 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     width,
   } = props;
 
-  const [selectedRegion, setSelectedRegion] = React.useState<OptionType | null>(
+  const [
+    selectedRegion,
+    setSelectedRegion,
+  ] = React.useState<RegionSelectOption | null>(
     getSelectedRegionById(regions, selectedId ?? '') ?? null
   );
   const flags = useFlags();
   const location = useLocation();
   const path = location.pathname;
 
-  const handleRegionChange = (selection: OptionType) => {
+  const handleRegionChange = (selection: RegionSelectOption) => {
     setSelectedRegion(selection);
     handleSelection(selection?.value);
   };
@@ -54,13 +56,14 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   return (
     <Box sx={{ width }}>
       <Autocomplete
-        getOptionDisabled={(option: OptionType) =>
+        getOptionDisabled={(option: RegionSelectOption) =>
           Boolean(option.data.disabledMessage)
         }
-        isOptionEqualToValue={(option: RegionItem, { value }: RegionItem) =>
-          option.value === value
-        }
-        onChange={(_, selectedRegion: OptionType) => {
+        isOptionEqualToValue={(
+          option: RegionSelectOption,
+          { value }: RegionSelectOption
+        ) => option.value === value}
+        onChange={(_, selectedRegion: RegionSelectOption) => {
           handleRegionChange(selectedRegion);
         }}
         renderGroup={(params) => (
@@ -121,7 +124,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         data-testid="region-select"
         disableClearable={!isClearable}
         disabled={disabled}
-        groupBy={(option: RegionItem) => option.data.region}
+        groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
         options={options}
         placeholder="Select a Region"

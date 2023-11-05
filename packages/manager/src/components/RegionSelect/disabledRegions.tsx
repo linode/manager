@@ -65,7 +65,7 @@ export interface DisabledRegion {
  * A list of regions that should be displayed as disabled (if not already included in the /regions response).
  * They are controlled by feature flags so they're safe to remain here.
  */
-export const listOfDisabledRegions: DisabledRegion[] = [
+export const listOfFakeRegions: DisabledRegion[] = [
   {
     excludePaths: ['/object-storage/buckets/create', '/vpcs/create'],
     fakeRegion: {
