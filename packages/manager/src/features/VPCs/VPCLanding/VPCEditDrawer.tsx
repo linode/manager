@@ -1,4 +1,5 @@
 import { UpdateVPCPayload, VPC } from '@linode/api-v4/lib/vpcs/types';
+import { updateVPCSchema } from '@linode/validation/lib/vpcs.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -41,7 +42,7 @@ export const VPCEditDrawer = (props: Props) => {
     reset,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
 
-  const form = useFormik<UpdateVPCPayload>({
+  const form = useFormik<UpdateVPCPayload & { none?: string }>({
     enableReinitialize: true,
     initialValues: {
       description: vpc?.description,
@@ -51,7 +52,16 @@ export const VPCEditDrawer = (props: Props) => {
       await updateVPC(values);
       onClose();
     },
+    validateOnChange: false,
+    validationSchema: updateVPCSchema,
   });
+
+  const handleFieldChange = (field: string, value: string) => {
+    form.setFieldValue(field, value);
+    if (form.errors[field]) {
+      form.setFieldError(field, undefined);
+    }
+  };
 
   React.useEffect(() => {
     if (open) {
@@ -60,13 +70,22 @@ export const VPCEditDrawer = (props: Props) => {
     }
   }, [open]);
 
-  const { data: regionsData, error: regionsError } = useRegionsQuery();
+  // If there's an error, sync it with formik
+  React.useEffect(() => {
+    if (error) {
+      const errorMap = getErrorMap(['label', 'description'], error);
+      for (const [field, reason] of Object.entries(errorMap)) {
+        form.setFieldError(field, reason);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
-  const errorMap = getErrorMap(['label', 'description'], error);
+  const { data: regionsData, error: regionsError } = useRegionsQuery();
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">
-      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+      {form.errors.none && <Notice text={form.errors.none} variant="error" />}
       {readOnly && (
         <Notice
           important
@@ -77,18 +96,18 @@ export const VPCEditDrawer = (props: Props) => {
       <form onSubmit={form.handleSubmit}>
         <TextField
           disabled={readOnly}
-          errorText={errorMap.label}
+          errorText={form.errors.label}
           label="Label"
           name="label"
-          onChange={form.handleChange}
+          onChange={(e) => handleFieldChange('label', e.target.value)}
           value={form.values.label}
         />
         <TextField
           disabled={readOnly}
-          errorText={errorMap.description}
+          errorText={form.errors.description}
           label="Description"
           multiline
-          onChange={form.handleChange}
+          onChange={(e) => handleFieldChange('description', e.target.value)}
           rows={1}
           value={form.values.description}
         />

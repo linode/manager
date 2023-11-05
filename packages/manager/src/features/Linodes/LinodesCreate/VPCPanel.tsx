@@ -194,16 +194,18 @@ export const VPCPanel = (props: VPCPanelProps) => {
           isClearable={false}
           isLoading={isLoading}
           label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
-          noOptionsMessage={() => 'Create a VPC to assign to this Linode.'}
+          noOptionsMessage={() => `No VPCs exist in this Linode's region.`}
           options={vpcDropdownOptions}
           placeholder={'Select a VPC'}
         />
-        {vpcDropdownOptions.length <= 1 && regionSupportsVPCs && (
-          <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
-            No VPCs exist in the selected region. Click Create VPC to create
-            one.
-          </Typography>
-        )}
+        {from === 'linodeCreate' &&
+          vpcDropdownOptions.length <= 1 &&
+          regionSupportsVPCs && (
+            <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
+              No VPCs exist in the selected region. Click Create VPC to create
+              one.
+            </Typography>
+          )}
 
         {from === 'linodeCreate' && (
           <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
