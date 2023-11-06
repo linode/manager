@@ -20,6 +20,10 @@ import {
   useLoadBalancerConfigurationCreateMutation,
   useLoadBalancerConfigurationMutation,
 } from 'src/queries/aglb/configurations';
+import {
+  useLoadBalancerMutation,
+  useLoadBalancerQuery,
+} from 'src/queries/aglb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
@@ -33,10 +37,6 @@ import {
 } from './utils';
 
 import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
-import {
-  useLoadBalancerMutation,
-  useLoadBalancerQuery,
-} from 'src/queries/aglb/loadbalancers';
 
 interface EditProps {
   configuration: Configuration;

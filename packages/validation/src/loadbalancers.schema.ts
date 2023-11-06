@@ -170,12 +170,14 @@ export const UpdateConfigurationSchema = object({
 });
 
 export const CreateConfigurationSchema = object({
-  label: string().min(1, 'Label must not be empty.').required(),
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required.'),
   port: number()
     .min(0, 'Port must be greater than 0.')
     .max(65_535, 'Port must be less than 65535.')
     .typeError('Port must be a number.')
-    .required(),
+    .required('Port is required.'),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: array().when('protocol', {
     is: 'https',
