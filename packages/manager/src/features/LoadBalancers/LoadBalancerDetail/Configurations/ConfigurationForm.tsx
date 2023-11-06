@@ -33,6 +33,10 @@ import {
 } from './utils';
 
 import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
+import {
+  useLoadBalancerMutation,
+  useLoadBalancerQuery,
+} from 'src/queries/aglb/loadbalancers';
 
 interface EditProps {
   configuration: Configuration;
@@ -77,6 +81,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     configuration?.id ?? -1
   );
 
+  const { data: loadbalancer } = useLoadBalancerQuery(loadbalancerId);
+  const { mutateAsync: updateLoadbalancer } = useLoadBalancerMutation(
+    loadbalancerId
+  );
+
   const formValues = useMemo(() => {
     if (mode === 'edit') {
       return getConfigurationPayloadFromConfiguration(configuration);
@@ -92,9 +101,20 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     initialValues: formValues,
     async onSubmit(values, helpers) {
       try {
-        await mutateAsync(values);
+        const configuration = await mutateAsync(values);
         if (onSuccess) {
           onSuccess();
+        }
+        if (mode === 'create') {
+          if (!loadbalancer) {
+            return;
+          }
+          const existingConfigs = loadbalancer?.configurations.map(
+            (config) => config.id
+          );
+          updateLoadbalancer({
+            configuration_ids: [...existingConfigs, configuration.id],
+          });
         }
       } catch (error) {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
