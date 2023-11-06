@@ -185,4 +185,46 @@ describe('VPCPanel', () => {
       ).not.toBeInTheDocument();
     });
   });
+  it('shows helper text for when "from" = "linodeCreate" if the selected region does not support VPCs', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: [],
+          id: 'us-east',
+        });
+        return res(ctx.json(makeResourcePage([usEast])));
+      })
+    );
+
+    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.queryByText('VPC is not available in the selected region.')
+      ).toBeInTheDocument();
+    });
+  });
+  it('should show the "Create VPC" drawer link when from = "linodeCreate" and a region that supports VPCs is chosen', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: ['VPCs'],
+          id: 'us-east',
+        });
+        return res(ctx.json(makeResourcePage([usEast])));
+      })
+    );
+
+    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      expect(wrapper.queryByText('Create VPC')).toBeInTheDocument();
+    });
+  });
 });
