@@ -251,7 +251,6 @@ describe('Akamai Global Load Balancer certificates page', () => {
    * - Confirms that TLS and Service Target certificates can be edited.
    * - Confirms that certificates table updates to reflect edited certificates.
    */
-
   it('can update a TLS certificate', () => {
     const mockLoadBalancer = loadbalancerFactory.build();
     const mockLoadBalancerCertTls = certificateFactory.build({
@@ -425,8 +424,8 @@ describe('Akamai Global Load Balancer certificates page', () => {
 
         cy.findByLabelText('Private Key').should('not.exist');
 
-        // Confirm that validation errors appear when drawer is not filled out correctly.
-        // cy.findByLabelText('Certificate Label').clear();
+        // Attempt to submit an incorrect form without a label.
+        cy.findByLabelText('Certificate Label').clear();
 
         ui.buttonGroup
           .findButtonByTitle('Update Certificate')
@@ -435,22 +434,23 @@ describe('Akamai Global Load Balancer certificates page', () => {
           .should('be.enabled')
           .click();
 
-        // TODO: label error
-        //cy.findAllByText('Label is required').should('be.visible');
+        // Confirm that validation error appears when drawer is not filled out correctly.
+        cy.findAllByText('Label must not be empty.').should('be.visible');
 
-        // Fix errors.
-        // cy.findByLabelText('Certificate Label')
-        //   .click()
-        //   .type(mockNewLoadBalancerCertServiceTarget.label);
+        // Fix error.
+        cy.findByLabelText('Certificate Label')
+          .click()
+          .type(mockNewLoadBalancerCertServiceTarget.label);
 
-        // cy.findByLabelText('TLS Certificate')
-        //   .click()
-        //   .type(mockNewLoadBalancerCertServiceTarget.certificate);
+        // Update certificate.
+        cy.findByLabelText('Server Certificate')
+          .click()
+          .type(mockNewLoadBalancerCertServiceTarget.certificate);
 
-        // ui.buttonGroup
-        //   .findButtonByTitle('Update Certificate')
-        //   .scrollIntoView()
-        //   .click();
+        ui.buttonGroup
+          .findButtonByTitle('Update Certificate')
+          .scrollIntoView()
+          .click();
       });
 
     cy.wait(['@updateCertificate', '@getCertificates']);
@@ -461,13 +461,13 @@ describe('Akamai Global Load Balancer certificates page', () => {
     );
   });
 
-   /*
+  /*
    * - Confirms Load Balancer certificate delete UI flow using mocked API requests.
    * - Confirms that TLS and Service Target certificates can be deleted.
    * - Confirms that certificates table update to reflects deleted certificates.
    * - Confirms that the last certificate can be deleted.
    */
-   it('can delete a TLS certificate', () => {
+  it('can delete a TLS certificate', () => {
     const mockLoadBalancerCertsTls = certificateFactory.buildList(5, {
       type: 'downstream',
     });
