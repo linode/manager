@@ -59,6 +59,6 @@ describe('ScheduleSettings', () => {
     // W10 indicates that your backups should be taken between 10:00 and 12:00
     await findByText('10:00 - 12:00');
 
-    await findByText('UTC', { exact: false });
+    await findByText('Time displayed in utc');
   });
 });
