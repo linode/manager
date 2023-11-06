@@ -40,6 +40,7 @@ interface VPCStateErrors {
 
 interface VPCState {
   errors: VPCStateErrors;
+  nattedIPv4Address?: string;
   subnetId?: null | number;
   vpcIPv4?: string;
   vpcId?: null | number;
@@ -61,6 +62,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     handleChange,
     ipamAddress,
     label,
+    nattedIPv4Address,
     purpose,
     readOnly,
     region,
@@ -102,8 +104,12 @@ export const InterfaceSelect = (props: CombinedProps) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const [autoAssignVPCIPv4, setAutoAssignVPCIPv4] = React.useState(true);
-  const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(false);
+  const [autoAssignVPCIPv4, setAutoAssignVPCIPv4] = React.useState(
+    !Boolean(vpcIPv4)
+  );
+  const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(
+    Boolean(nattedIPv4Address)
+  );
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
