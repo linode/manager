@@ -134,7 +134,11 @@ const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile/Profile'));
-const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
+const LoadBalancers = React.lazy(() =>
+  import('src/features/LoadBalancers').then((module) => ({
+    default: module.LoadBalancers,
+  }))
+);
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );

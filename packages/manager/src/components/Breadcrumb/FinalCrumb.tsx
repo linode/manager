@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
-
 import { EditableProps, LabelProps } from './types';
 
 import {
@@ -14,7 +12,6 @@ interface Props {
   crumb: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
-  subtitle?: string;
 }
 
 export const FinalCrumb = React.memo((props: Props) => {
@@ -43,11 +40,6 @@ export const FinalCrumb = React.memo((props: Props) => {
         dataQaEl={crumb}
         title={crumb}
       />
-      {labelOptions && labelOptions.subtitle && (
-        <Typography data-qa-label-subtitle variant="body1">
-          {labelOptions.subtitle}
-        </Typography>
-      )}
     </StyledDiv>
   );
 });
