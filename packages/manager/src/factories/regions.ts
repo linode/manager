@@ -43,7 +43,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
 
 export const regionAvailabilityFactory = Factory.Sync.makeFactory<RegionAvailability>(
   {
-    available: pickRandom([true, false]),
+    available: false,
     plan: Factory.each((id) =>
       pickRandom([`g7-premium-${id}`, `g1-gpu-rtx6000-${id}`])
     ),
