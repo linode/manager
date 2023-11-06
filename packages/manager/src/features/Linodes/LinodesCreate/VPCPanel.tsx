@@ -99,7 +99,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
   const { data: vpcData, error, isLoading } = useVPCsQuery(
     {},
     {},
-    displayVPCPanel,
     displayVPCPanel
   );
 
@@ -205,8 +204,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
             placeholder={'Select a VPC'}
           />
           {from === 'linodeCreate' &&
-          vpcDropdownOptions.length <= 1 &&
-          regionSupportsVPCs && (
+            vpcDropdownOptions.length <= 1 &&
+            regionSupportsVPCs && (
               <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
                 No VPCs exist in the selected region. Click Create VPC to create
                 one.
