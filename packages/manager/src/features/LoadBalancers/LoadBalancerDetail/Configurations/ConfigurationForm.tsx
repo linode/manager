@@ -112,6 +112,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
           const existingConfigs = loadbalancer?.configurations.map(
             (config) => config.id
           );
+          // Silently associate the new configuration with the Load Balancer
           updateLoadbalancer({
             configuration_ids: [...existingConfigs, configuration.id],
           });
