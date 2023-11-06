@@ -1,3 +1,4 @@
+import { AccountAvailability } from '@linode/api-v4';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -83,6 +84,8 @@ type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
+  // See M3-7378 - eventually this data will be moved to the RegionSelect once its refactor is complete
+  accountAvailabilityData?: AccountAvailability[];
   linodesData: LinodeWithMaintenance[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
