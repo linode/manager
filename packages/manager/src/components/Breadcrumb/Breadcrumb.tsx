@@ -1,19 +1,15 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CrumbOverridesProps, Crumbs } from './Crumbs';
 import { EditableProps, LabelProps } from './types';
+
+import { StyledPreContainerDiv, StyledRootDiv } from './Breadcrumb.styles';
 
 export interface BreadcrumbProps {
   /**
    * Data attributes passed to the root div for testing.
    */
   breadcrumbDataAttrs?: { [key: string]: boolean };
-  /**
-   * Optional className passed to the root div.
-   */
-  className?: string;
   /**
    * An array of objects that can be used to customize any crumb.
    */
@@ -44,42 +40,14 @@ export interface BreadcrumbProps {
   removeCrumbX?: number;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  editablePreContainer: {
-    alignItems: 'center',
-  },
-  hasError: {
-    marginBottom: theme.spacing(5),
-  },
-  preContainer: {
-    alignItems: 'center',
-    display: 'flex',
-    flexWrap: 'wrap',
-    minHeight: 48,
-  },
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    [theme.breakpoints.only('sm')]: {
-      marginLeft: theme.spacing(),
-    },
-    [theme.breakpoints.only('xs')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
-
 /**
  * ## Usage
  * - Include the current page as the last item in the breadcrumb trail.
  * - In the breadcrumb trail, the breadcrumb corresponding the the current page should not be a link.
  */
 export const Breadcrumb = (props: BreadcrumbProps) => {
-  const { classes, cx } = useStyles();
-
   const {
     breadcrumbDataAttrs,
-    className,
     crumbOverrides,
     firstAndLastOnly,
     labelOptions,
@@ -99,21 +67,12 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
   const hasError = Boolean(onEditHandlers?.errorText);
 
   return (
-    <div
-      className={cx(
-        {
-          [classes.hasError]: hasError,
-          [classes.root]: true,
-        },
-        className
-      )}
+    <StyledRootDiv
+      sx={{ ...(hasError && { marginBottom: (theme) => theme.spacing(5) }) }}
       {...breadcrumbDataAttrs}
     >
-      <div
-        className={cx({
-          [classes.editablePreContainer]: onEditHandlers !== undefined,
-          [classes.preContainer]: true,
-        })}
+      <StyledPreContainerDiv
+        sx={{ ...(onEditHandlers !== undefined && { alignItems: 'center' }) }}
       >
         <Crumbs
           crumbOverrides={crumbOverrides}
@@ -123,8 +82,8 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
           onEditHandlers={onEditHandlers}
           pathMap={pathMap}
         />
-      </div>
-    </div>
+      </StyledPreContainerDiv>
+    </StyledRootDiv>
   );
 };
 
