@@ -1,13 +1,23 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { ApplicationStore } from 'src/store';
 
+import { isMSWEnabled } from './ServiceWorkerTool';
+
 /**
  * Use this to dynamicly import our custom dev-tools ONLY when they
  * are needed.
  * @param store Redux store to control
  */
 export async function loadDevTools(store: ApplicationStore) {
-  await import('./dev-tools').then((devTools) => devTools.install(store));
+  const devTools = await import('./dev-tools');
+
+  if (isMSWEnabled) {
+    const { worker } = await import('../mocks/testBrowser');
+
+    await worker.start({ onUnhandledRequest: 'bypass' });
+  }
+
+  devTools.install(store);
 }
 
 /**
