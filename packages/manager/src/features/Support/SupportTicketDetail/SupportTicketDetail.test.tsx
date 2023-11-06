@@ -7,13 +7,13 @@ import {
 } from 'src/factories/support';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { SupportTicketDetail } from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
   it('should display a loading spinner', () => {
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
   });
 
@@ -36,7 +36,7 @@ describe('Support Ticket Detail', () => {
     expect(await findByText(/TEST Support Ticket body/i)).toBeInTheDocument();
   });
 
-  it("should display a 'new' icon and 'updated by' messaging", async () => {
+  it("should display a 'new' status and 'updated by' messaging", async () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
@@ -47,8 +47,26 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
-    expect(await screen.findByText(/new/)).toBeInTheDocument();
+    renderWithTheme(<SupportTicketDetail />);
+    expect(await screen.findByText(/New/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/updated by test-account/i)
+    ).toBeInTheDocument();
+  });
+
+  it("should display an 'open' status and 'updated by' messaging", async () => {
+    server.use(
+      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+        const ticket = supportTicketFactory.build({
+          id: Number(req.params.ticketId),
+          status: 'open',
+          updated_by: 'test-account',
+        });
+        return res(ctx.json(ticket));
+      })
+    );
+    renderWithTheme(<SupportTicketDetail />);
+    expect(await screen.findByText(/Open/)).toBeInTheDocument();
     expect(
       await screen.findByText(/updated by test-account/i)
     ).toBeInTheDocument();
@@ -64,11 +82,38 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
-    expect(await screen.findByText(/closed/)).toBeInTheDocument();
+    renderWithTheme(<SupportTicketDetail />);
+    expect(await screen.findByText('Closed')).toBeInTheDocument();
     expect(
       await screen.findByText(/closed by test-account/i)
     ).toBeInTheDocument();
+  });
+
+  it('should display an entity in the status details if the ticket has one', async () => {
+    const mockEntity = {
+      id: 1,
+      label: 'my-linode-entity',
+      type: 'linode',
+      url: '/',
+    };
+    server.use(
+      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+        const ticket = supportTicketFactory.build({
+          entity: mockEntity,
+          id: Number(req.params.ticketId),
+        });
+        return res(ctx.json(ticket));
+      })
+    );
+    renderWithTheme(<SupportTicketDetail />);
+    const entity = await screen.findByText(mockEntity.label, { exact: false });
+    const entityTextLink = entity.closest('a');
+
+    expect(entity).toBeInTheDocument();
+    expect(entityTextLink).toBeInTheDocument();
+    expect(entityTextLink?.getAttribute('aria-label')).toContain(
+      mockEntity.label
+    );
   });
 
   it('should display replies', async () => {
@@ -90,7 +135,7 @@ describe('Support Ticket Detail', () => {
         return res(ctx.json(ticket));
       })
     );
-    render(wrapWithTheme(<SupportTicketDetail />));
+    renderWithTheme(<SupportTicketDetail />);
     expect(
       await screen.findByText(
         'Hi, this is lindoe support! OMG, sorry your Linode is broken!'
