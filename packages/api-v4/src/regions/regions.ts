@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
-import Request, { setMethod, setParams, setURL } from '../request';
-import { Params, ResourcePage as Page } from '../types';
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Region, RegionAvailability } from './types';
 
 /**
@@ -39,22 +39,27 @@ export const getRegion = (regionId: string) =>
 export { Region };
 
 /**
+ * getRegionAvailabilities
  *
- *
+ * Returns the availability status for all Linode plans for all regions.
  */
-export const getRegionAvailabilities = (params?: Params) =>
+export const getRegionAvailabilities = (params?: Params, filter?: Filter) =>
   Request<Page<RegionAvailability>>(
     setURL(`${API_ROOT}/regions/availability`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**
+ * getRegionAvailability
  *
+ * Return the availability status of Linode plans for the given region.
  *
+ * @param regionId { string } The region to get the availabilities for
  */
 export const getRegionAvailability = (regionId: string) =>
-  Request<RegionAvailability>(
+  Request<RegionAvailability[]>(
     setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}/availability`),
     setMethod('GET')
   );

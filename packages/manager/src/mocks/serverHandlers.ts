@@ -78,6 +78,7 @@ import {
   proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
+  regionAvailabilityFactory,
   routeFactory,
   securityQuestionsFactory,
   serviceTargetFactory,
@@ -1060,7 +1061,6 @@ export const handlers = [
     });
     return res(ctx.json(linodeInvoice));
   }),
-
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
@@ -1610,6 +1610,16 @@ export const handlers = [
   }),
   rest.get('*/betas', (_req, res, ctx) => {
     return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
+  }),
+  rest.get('*regions/availability', (_req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(regionAvailabilityFactory.buildList(10)))
+    );
+  }),
+  rest.get('*regions/:regionId/availability', (_req, res, ctx) => {
+    return res(
+      ctx.json(regionAvailabilityFactory.buildList(5, { region: 'us-east' }))
+    );
   }),
   ...entityTransfers,
   ...statusPage,
