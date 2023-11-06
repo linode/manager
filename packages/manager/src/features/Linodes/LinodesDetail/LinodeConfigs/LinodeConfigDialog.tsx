@@ -1008,6 +1008,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
+                      nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
                       purpose={thisInterface.purpose}
                       readOnly={isReadOnly}
                       region={linode?.region}
