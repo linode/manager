@@ -1,7 +1,7 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL } from '../request';
 import { Params, ResourcePage as Page } from '../types';
-import { Region } from './types';
+import { Region, RegionAvailability } from './types';
 
 /**
  * getRegions
@@ -27,13 +27,34 @@ export const getRegions = (params?: Params) =>
  *
  * Return detailed information about a particular region.
  *
- * @param regionID { string } The region to be retrieved.
+ * @param regionId { string } The region to be retrieved.
  *
  */
-export const getRegion = (regionID: string) =>
+export const getRegion = (regionId: string) =>
   Request<Region>(
-    setURL(`${API_ROOT}/regions/${encodeURIComponent(regionID)}`),
+    setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}`),
     setMethod('GET')
   );
 
 export { Region };
+
+/**
+ *
+ *
+ */
+export const getRegionAvailabilities = (params?: Params) =>
+  Request<Page<RegionAvailability>>(
+    setURL(`${API_ROOT}/regions/availability`),
+    setMethod('GET'),
+    setParams(params)
+  );
+
+/**
+ *
+ *
+ */
+export const getRegionAvailability = (regionId: string) =>
+  Request<RegionAvailability>(
+    setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}/availability`),
+    setMethod('GET')
+  );

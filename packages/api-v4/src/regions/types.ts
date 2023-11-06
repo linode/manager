@@ -28,3 +28,9 @@ export interface Region {
   status: RegionStatus;
   resolvers: DNSResolvers;
 }
+
+export interface RegionAvailability {
+  available: boolean;
+  plan: string;
+  region: string;
+}
