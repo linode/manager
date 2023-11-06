@@ -19,6 +19,7 @@ import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Country } from './RegionSelect.types';
 import type { RegionSelectOption } from './RegionSelect.types';
+import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
@@ -69,7 +70,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         }}
         renderGroup={(params) => (
           <li key={params.key}>
-            <GroupHeader>{params.group}</GroupHeader>
+            <GroupHeader data-qa-region-select-group={params.group}>
+              {params.group}
+            </GroupHeader>
             <List>{params.children}</List>
           </li>
         )}
@@ -87,7 +90,15 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             key={option.value}
             title={option.data.disabledMessage ?? ''}
           >
-            <StyledListItem {...props}>
+            <StyledListItem
+              {...props}
+              componentsProps={{
+                root: {
+                  'data-qa-option': option.value,
+                  'data-testid': option.value,
+                } as ListItemComponentsPropsOverrides,
+              }}
+            >
               {Boolean(option.data.disabledMessage) ? (
                 <Box alignItems="center" display="flex" flexGrow={1}>
                   <StyledFlagContainer>
@@ -122,6 +133,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           },
           tooltipText: helperText,
         }}
+        autoHighlight
         data-testid="region-select"
         disableClearable={!isClearable}
         disabled={disabled}
