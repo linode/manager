@@ -129,6 +129,65 @@ describe('VPCPanel', () => {
     });
   });
 
+  it('should display helper text if there are no vpcs in the selected region and "from" is "linodeCreate"', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: ['VPCs'],
+          id: 'us-east',
+        });
+        return res(ctx.json(makeResourcePage([usEast])));
+      }),
+      rest.get('*/vpcs', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([])));
+      })
+    );
+
+    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.queryByText(
+          'No VPCs exist in the selected region. Click Create VPC to create one.'
+        )
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('should not display helper text if there are no vpcs in the selected region and "from" is "linodeConfig"', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: ['VPCs'],
+          id: 'us-east',
+        });
+        return res(ctx.json(makeResourcePage([usEast])));
+      }),
+      rest.get('*/vpcs', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([])));
+      })
+    );
+
+    const wrapper = renderWithTheme(
+      <VPCPanel {...props} from="linodeConfig" />,
+      {
+        flags: { vpc: true },
+        queryClient,
+      }
+    );
+
+    await waitFor(() => {
+      expect(
+        wrapper.queryByText(
+          'No VPCs exist in the selected region. Click Create VPC to create one.'
+        )
+      ).not.toBeInTheDocument();
+    });
+  });
+
   it('should display an unchecked VPC IPv4 auto-assign checkbox and display the VPC IPv4 input field if there is already a value', async () => {
     const _props = {
       ...props,

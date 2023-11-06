@@ -63,6 +63,19 @@ export const mockGetUserPreferences = (
 };
 
 /**
+ * Intercepts PUT request to update user preferences and mocks response.
+ *
+ * @param preferences - Updated user preferences with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateUserPreferences = (
+  preferences: UserPreferences
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher('profile/preferences'), preferences);
+};
+
+/**
  * Intercepts POST request to opt out of SMS verification and mocks response.
  *
  * @returns Cypress chainable.
