@@ -7,6 +7,7 @@ import {
   fbtVisible,
   getClick,
   getVisible,
+  containsPlaceholderClick,
 } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
@@ -42,7 +43,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     });
 
     // Confirms that the price will show up when the region is selected
-    containsClick(selectRegionString).type(`${regionName}{enter}`);
+    containsPlaceholderClick(selectRegionString).type(`${regionName}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$10/month`).should('be.visible');
     });
@@ -65,7 +66,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     cy.get(`[value="${newRegion.label}"]`).click().type(`${regionName}{enter}`);
   } else {
     // this will create the NB in newark, where the default Linode was created
-    containsClick(selectRegionString).type(`${regionName}{enter}`);
+    containsPlaceholderClick(selectRegionString).type(`${regionName}{enter}`);
   }
 
   // node backend config

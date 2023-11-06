@@ -3,8 +3,15 @@ import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
+import {
+  containsClick,
+  fbtVisible,
+  fbtClick,
+  getClick,
+  containsPlaceholderClick,
+} from 'support/helpers';
 import { interceptCreateVolume } from 'support/intercepts/volumes';
+import { selectRegionString } from 'support/ui/constants';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
@@ -56,7 +63,9 @@ describe('volume create flow', () => {
     // Fill out and submit volume create form.
     containsClick('Label').type(volume.label);
     containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-    containsClick('Select a Region').type(`${volume.region}{enter}`);
+    containsPlaceholderClick(selectRegionString).type(
+      `${volume.region}{enter}`
+    );
 
     cy.findByText('Region')
       .should('be.visible')
@@ -120,7 +129,9 @@ describe('volume create flow', () => {
       // Fill out and submit volume create form.
       containsClick('Label').type(volume.label);
       containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-      containsClick('Select a Region').type(`${volume.regionLabel}{enter}`);
+      containsPlaceholderClick(selectRegionString).type(
+        `${volume.regionLabel}{enter}`
+      );
 
       cy.findByLabelText('Linode')
         .should('be.visible')

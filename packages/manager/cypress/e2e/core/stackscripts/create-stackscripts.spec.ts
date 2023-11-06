@@ -1,3 +1,5 @@
+import { containsPlaceholderClick } from 'support/helpers';
+import { selectRegionString } from 'support/ui/constants';
 import { authenticate } from 'support/api/authentication';
 import {
   pollLinodeStatus,
@@ -87,7 +89,7 @@ const fillOutStackscriptForm = (
 const fillOutLinodeForm = (label: string, regionName: string) => {
   const password = randomString(32);
 
-  cy.findByText('Select a Region').should('be.visible').click();
+  containsPlaceholderClick(selectRegionString);
 
   ui.regionSelect.findItemByRegionLabel(regionName).click();
 

@@ -5,7 +5,8 @@ import {
   mockGetStackScripts,
   mockGetStackScript,
 } from 'support/intercepts/stackscripts';
-import { containsClick } from 'support/helpers';
+import { containsClick, containsPlaceholderClick } from 'support/helpers';
+import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -332,8 +333,8 @@ describe('Community Stackscripts integration tests', () => {
       .click();
     // An error message shows up when no region is selected
     cy.contains('Region is required.').should('be.visible');
-    cy.get('[data-qa-enhanced-select="Select a Region"]').within(() => {
-      containsClick('Select a Region').type(`${region.id}{enter}`);
+    cy.findByTestId('region-select').within(() => {
+      containsPlaceholderClick(selectRegionString).type(`${region.id}{enter}`);
     });
 
     // Choose a plan

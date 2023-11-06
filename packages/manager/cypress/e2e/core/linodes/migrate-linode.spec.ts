@@ -13,7 +13,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { apiMatcher } from 'support/util/intercepts';
 import { linodeFactory } from '@src/factories';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-import { getClick, fbtClick, containsClick } from 'support/helpers';
+import { getClick, fbtClick, containsPlaceholderClick } from 'support/helpers';
 import { selectRegionString } from 'support/ui/constants';
 import { getRegionById } from 'support/util/regions';
 import {
@@ -70,7 +70,7 @@ describe('Migrate linodes', () => {
     cy.findByText(`${initialRegion.label}`).should('be.visible');
     getClick('[data-qa-checked="false"]');
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
-    containsClick(selectRegionString);
+    containsPlaceholderClick(selectRegionString);
 
     ui.regionSelect.findItemByRegionLabel(newRegion.label).click();
 
@@ -153,7 +153,7 @@ describe('Migrate linodes', () => {
     cy.findByText(`${initialRegion.label}`).should('be.visible');
     getClick('[data-qa-checked="false"]');
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
-    containsClick(selectRegionString);
+    containsPlaceholderClick(selectRegionString);
 
     ui.regionSelect.findItemByRegionLabel(newRegion.label).click();
 

@@ -1,8 +1,8 @@
 import {
-  containsClick,
   containsVisible,
   fbtClick,
   fbtVisible,
+  containsPlaceholderClick,
   getClick,
 } from 'support/helpers';
 import { selectRegionString } from 'support/ui/constants';
@@ -82,9 +82,7 @@ describe('create linode', () => {
 
     // Confirm that region select dropdown is visible and interactive.
     const autocomplete = cy.findByTestId('region-select');
-    autocomplete.within(() => {
-      cy.findByTestId('textfield-input').should('be.visible').focus().type(' ');
-    });
+    containsPlaceholderClick(selectRegionString).type(' ');
 
     cy.get('[data-qa-autocomplete-popper="true"]').should('be.visible');
 
@@ -130,9 +128,9 @@ describe('create linode', () => {
     cy.get('[data-qa-deploy-linode]');
     cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    cy.get(`input[placeholder="${selectRegionString}"]`)
-      .click()
-      .type(`${chooseRegion().label} {enter}`);
+    containsPlaceholderClick(selectRegionString).type(
+      `${chooseRegion().label} {enter}`
+    );
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
@@ -230,6 +228,8 @@ describe('create linode', () => {
     const initialRegion = getRegionById('us-west');
     const newRegion = getRegionById('us-east');
 
+    console.log(initialRegion);
+
     const mockLinode = linodeFactory.build({
       label: linodeLabel,
       region: initialRegion.id,
@@ -280,9 +280,9 @@ describe('create linode', () => {
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
 
-    cy.get(`input[placeholder="${selectRegionString}"]`)
-      .click()
-      .type(`${initialRegion.label} {enter}`);
+    containsPlaceholderClick(selectRegionString).type(
+      `${initialRegion.label} {enter}`
+    );
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     // Confirm that the backup prices are displayed as expected.
@@ -311,7 +311,9 @@ describe('create linode', () => {
     //   .should('be.visible')
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
-    containsClick(initialRegion.label).type(`${newRegion.label} {enter}`);
+    containsPlaceholderClick(selectRegionString)
+      .should('have.value', `${initialRegion.label} (${initialRegion.id})`)
+      .type(`${newRegion.label} {enter}`);
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     // Confirm that the backup prices are displayed as expected.

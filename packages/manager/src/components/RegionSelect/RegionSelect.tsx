@@ -24,6 +24,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     disabled,
+    errorText,
     handleSelection,
     helperText,
     isClearable,
@@ -137,6 +138,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         data-testid="region-select"
         disableClearable={!isClearable}
         disabled={disabled}
+        errorText={errorText}
         groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
         options={options}
