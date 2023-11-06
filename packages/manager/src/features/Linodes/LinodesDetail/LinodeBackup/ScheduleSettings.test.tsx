@@ -37,7 +37,7 @@ describe('ScheduleSettings', () => {
                 enabled: true,
                 schedule: {
                   day: 'Monday',
-                  window: 'W4',
+                  window: 'W10',
                 },
               },
               id: 1,
@@ -46,9 +46,7 @@ describe('ScheduleSettings', () => {
         );
       }),
       rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(profileFactory.build({ timezone: 'America/New_York' }))
-        );
+        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
       })
     );
 
@@ -57,8 +55,10 @@ describe('ScheduleSettings', () => {
     );
 
     await findByText('Monday');
-    await findByText('00:00 - 02:00');
 
-    await findByText('America/New York', { exact: false });
+    // W10 indicates that your backups should be taken between 10:00 and 12:00
+    await findByText('10:00 - 12:00');
+
+    await findByText('UTC', { exact: false });
   });
 });
