@@ -321,9 +321,8 @@ describe('Akamai Global Load Balancer certificates page', () => {
           .invoke('attr', 'placeholder')
           .should('contain', 'Private key is redacted for security.');
 
-        // Confirm that validation errors appear when drawer is not filled out correctly.
+        // Attempt to submit an incorrect form without a label or a new cert key.
         cy.findByLabelText('Certificate Label').clear();
-
         cy.findByLabelText('TLS Certificate').clear().type('my-new-cert');
 
         ui.buttonGroup
@@ -333,6 +332,8 @@ describe('Akamai Global Load Balancer certificates page', () => {
           .should('be.enabled')
           .click();
 
+        // Confirm that validation errors appear when drawer is not filled out correctly.
+        cy.findAllByText('Label must not be empty.').should('be.visible');
         cy.findAllByText('Private Key is required').should('be.visible');
 
         // Fix errors.
@@ -391,7 +392,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
       '@getCertificates',
     ]);
 
-    // Edit a TLS certificate.
+    // Edit a CA certificate.
     ui.actionMenu
       .findByTitle(
         `Action Menu for certificate ${mockLoadBalancerCertServiceTarget.label}`
@@ -425,7 +426,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
         cy.findByLabelText('Private Key').should('not.exist');
 
         // Confirm that validation errors appear when drawer is not filled out correctly.
-        cy.findByLabelText('Certificate Label').clear();
+        // cy.findByLabelText('Certificate Label').clear();
 
         ui.buttonGroup
           .findButtonByTitle('Update Certificate')
