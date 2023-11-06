@@ -1,5 +1,12 @@
-import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
+import {
+  containsClick,
+  fbtClick,
+  fbtVisible,
+  getClick,
+  containsPlaceholderClick,
+} from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
+import { selectRegionString } from 'support/ui/constants';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { imageFactory, linodeFactory } from '@src/factories';
@@ -42,10 +49,7 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
     });
   }
 
-  getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
-    containsClick('Select a Region');
-  });
-
+  containsPlaceholderClick(selectRegionString);
   ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
 
   fbtClick('Shared CPU');

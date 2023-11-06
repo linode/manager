@@ -5,7 +5,13 @@ import 'cypress-file-upload';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
-import { fbtClick, fbtVisible, getClick } from 'support/helpers';
+import {
+  fbtClick,
+  fbtVisible,
+  getClick,
+  containsPlaceholderClick,
+} from 'support/helpers';
+import { selectRegionString } from 'support/ui/constants';
 import {
   mockDeleteImage,
   mockGetCustomImages,
@@ -120,7 +126,7 @@ const uploadImage = (label: string) => {
   cy.visitWithLogin('/images/create/upload');
   getClick('[id="label"][data-testid="textfield-input"]').type(label);
   getClick('[id="description"]').type('This is a machine image upload test');
-  fbtClick('Select a Region');
+  containsPlaceholderClick(selectRegionString);
 
   ui.regionSelect.findItemByRegionId(region.id).click();
 

@@ -11,6 +11,8 @@ import {
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
+import { containsPlaceholderClick } from 'support/helpers';
+import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
@@ -87,10 +89,9 @@ describe('clone linode', () => {
       cy.url().should('endWith', getLinodeCloneUrl(linode, false));
 
       // Select clone region and Linode type.
-      cy.findByText('Select a Region')
-        .should('be.visible')
-        .click()
-        .type(`${linodeRegion.label}{enter}`);
+      containsPlaceholderClick(selectRegionString).type(
+        `${linodeRegion.label}{enter}`
+      );
 
       cy.findByText('Shared CPU').should('be.visible').click();
 
