@@ -17,3 +17,6 @@ export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
 
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'A VPC IPv4 is the private IP address for this Linode in the VPC.';
+
+export const VPC_FEEDBACK_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
