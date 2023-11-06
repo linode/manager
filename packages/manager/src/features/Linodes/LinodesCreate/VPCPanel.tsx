@@ -93,9 +93,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     account?.capabilities ?? []
   );
 
-  /* To prevent unnecessary API calls, pass the displayVPCPanel boolean to determine
-     whether the query is enabled and whether it should refetchOnWindowFocus
-  */
+  // To prevent unnecessary API calls, pass the displayVPCPanel boolean to determine whether the query is enabled
   const { data: vpcData, error, isLoading } = useVPCsQuery(
     {},
     {},
