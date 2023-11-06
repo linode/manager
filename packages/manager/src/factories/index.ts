@@ -1,4 +1,5 @@
 export * from './account';
+export * from './accountAvailability';
 export * from './accountSettings';
 export * from './accountMaintenance';
 export * from './accountOAuth';

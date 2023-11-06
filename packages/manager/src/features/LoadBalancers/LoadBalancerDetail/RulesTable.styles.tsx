@@ -30,8 +30,8 @@ export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
   ({ theme }) => ({
     backgroundColor: theme.bg.tableHeader,
     color: theme.textColors.tableHeader,
+    fontFamily: theme.font.bold,
     fontSize: '.875rem',
-    fontWeight: 'bold',
     height: '46px',
   })
 );

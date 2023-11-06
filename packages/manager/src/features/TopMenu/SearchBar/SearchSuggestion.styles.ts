@@ -47,8 +47,8 @@ export const StyledSuggestionTitle = styled('div', {
   label: 'StyledSuggestionTitle',
 })(({ theme }) => ({
   color: theme.palette.text.primary,
+  fontFamily: theme.font.bold,
   fontSize: '1rem',
-  fontWeight: 600,
   wordBreak: 'break-all',
 }));
 

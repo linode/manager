@@ -1,12 +1,14 @@
 import { number, object, string, array } from 'yup';
 
+const LABEL_REQUIRED = 'Label is required.';
+
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
   key: string().when('type', {
     is: 'downstream',
     then: string().required('Private Key is required.'),
   }),
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   type: string().oneOf(['downstream', 'ca']).required('Type is required.'),
 });
 
@@ -24,7 +26,7 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
-export const certificateConfigSchema = object({
+export const CertificateConfigSchema = object({
   certificates: array(
     object({
       id: number()
@@ -54,7 +56,7 @@ const HealthCheckSchema = object({
 });
 
 export const CreateServiceTargetSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   endpoints: array(EndpointSchema).required(),
   ca_certificate: string().nullable(),
   load_balancing_policy: string()
@@ -78,7 +80,7 @@ export const UpdateServiceTargetSchema = object({
 });
 
 export const CreateRouteSchema = object({
-  label: string().required('Label is required.'),
+  label: string().required(LABEL_REQUIRED),
   protocol: string().oneOf(['http', 'tcp']),
 });
 
@@ -150,4 +152,118 @@ export const UpdateRouteSchema = object({
     then: (o) => o.of(TCPRuleSchema),
     otherwise: (o) => o.of(HTTPRuleSchema),
   }),
+});
+
+export const UpdateConfigurationSchema = object({
+  label: string().min(1),
+  port: number(),
+  protocol: string().oneOf(['tcp', 'http', 'https']),
+  certificates: array().of(
+    object({
+      hostname: string().required(),
+      id: number().required(),
+    })
+  ),
+  routes: array().of(number()),
+});
+
+// Endpoint Schema
+const CreateLoadBalancerEndpointSchema = object({
+  ip: string().test(
+    'ip-or-host',
+    'Either IP or host must be provided.',
+    function (value) {
+      const { host } = this.parent;
+      return !!value || !!host;
+    }
+  ),
+  host: string().test(
+    'host-or-ip',
+    'Either host or IP must be provided.',
+    function (value) {
+      const { ip } = this.parent;
+      return !!value || !!ip;
+    }
+  ),
+  port: number().integer().required(),
+  rate_capacity: number().integer().required(),
+});
+
+// Service Target Schema
+const CreateLoadBalancerServiceTargetSchema = object({
+  percentage: number().integer().required(),
+  label: string().required(),
+  endpoints: array().of(CreateLoadBalancerEndpointSchema).required(),
+  certificate_id: number().integer(),
+  load_balancing_policy: string()
+    .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
+    .required(),
+  healthcheck: HealthCheckSchema.required(),
+});
+
+// Rule Schema
+const CreateLoadBalancerRuleSchema = object({
+  match_condition: object().shape({
+    hostname: string().required(),
+    match_field: string()
+      .oneOf(['path_prefix', 'host', 'query', 'hostname', 'header', 'method'])
+      .required(),
+    match_value: string().required(),
+    session_stickiness_cookie: string(),
+    session_stickiness_ttl: number().integer(),
+  }),
+  service_targets: array().of(CreateLoadBalancerServiceTargetSchema).required(),
+});
+
+export const ConfigurationSchema = object({
+  label: string().required(LABEL_REQUIRED),
+  port: number().required('Port is required.').min(0).max(65_535),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
+  certificates: string().when('protocol', {
+    is: (val: string) => val !== 'http' && val !== 'tcp',
+    then: array().of(CertificateConfigSchema).required(),
+    otherwise: array().strip(),
+  }),
+  routes: string().when('protocol', {
+    is: 'tcp',
+    then: array()
+      .of(
+        object({
+          label: string().required(),
+          protocol: string().oneOf(['tcp']).required(),
+          rules: array().of(CreateLoadBalancerRuleSchema).required(),
+        })
+      )
+      .required(),
+    otherwise: array()
+      .of(
+        object().shape({
+          label: string().required(),
+          protocol: string().oneOf(['http']).required(),
+          rules: array().of(CreateLoadBalancerRuleSchema).required(),
+        })
+      )
+      .required(),
+  }),
+});
+
+export const CreateLoadBalancerSchema = object({
+  label: string()
+    .matches(
+      /^[a-zA-Z0-9.\-_]+$/,
+      'Label may only contain letters, numbers, periods, dashes, and underscores.'
+    )
+    .required(LABEL_REQUIRED),
+  tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
+  regions: array().of(string()).required(),
+  configurations: array().of(ConfigurationSchema),
+});
+
+/**
+ * TODO: AGLB - remove this create schema
+ */
+export const CreateBasicLoadbalancerSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required'),
 });
