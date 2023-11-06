@@ -91,9 +91,8 @@ export const SelectFirewallPanel = (props: Props) => {
 
 export const StyledLinkButtonBox = styled(Box, {
   label: 'StyledLinkButtonBox',
-})(({ theme }) => ({
+})({
   display: 'flex',
   justifyContent: 'flex-start',
-  marginBottom: theme.spacing(2),
   marginTop: '12px',
-}));
+});
