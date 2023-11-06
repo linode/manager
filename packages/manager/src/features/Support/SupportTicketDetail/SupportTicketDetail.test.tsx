@@ -22,7 +22,7 @@ describe('Support Ticket Detail', () => {
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
           description: 'TEST Support Ticket body',
-          id: req.params.ticketId,
+          id: Number(req.params.ticketId),
           status: 'open',
           summary: '#0: TEST Support Ticket',
         });
@@ -40,7 +40,7 @@ describe('Support Ticket Detail', () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
-          id: req.params.ticketId,
+          id: Number(req.params.ticketId),
           status: 'new',
           updated_by: 'test-account',
         });
@@ -58,7 +58,7 @@ describe('Support Ticket Detail', () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
-          id: req.params.ticketId,
+          id: Number(req.params.ticketId),
           status: 'open',
           updated_by: 'test-account',
         });
@@ -76,7 +76,7 @@ describe('Support Ticket Detail', () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
-          id: req.params.ticketId,
+          id: Number(req.params.ticketId),
           status: 'closed',
         });
         return res(ctx.json(ticket));
@@ -100,7 +100,7 @@ describe('Support Ticket Detail', () => {
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
           entity: mockEntity,
-          id: req.params.ticketId,
+          id: Number(req.params.ticketId),
         });
         return res(ctx.json(ticket));
       })
@@ -128,7 +128,7 @@ describe('Support Ticket Detail', () => {
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
           description: 'this ticket should have a reply on it',
-          id: req.params.ticketId,
+          id: Number(req.params.ticketId),
           status: 'open',
           summary: 'My Linode is broken :(',
         });

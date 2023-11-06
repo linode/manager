@@ -24,7 +24,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'soldOutTokyo', label: 'Sold Out Tokyo' },
 ];
 
-const FeatureFlagTool: React.FC<{}> = () => {
+export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
 
@@ -78,6 +78,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
       </Grid>
     </Grid>
   );
-};
-
-export default withFeatureFlagProvider(FeatureFlagTool);
+});
