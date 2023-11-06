@@ -1,6 +1,10 @@
-// ********** THIS FILE IS GOING AWAY WITH DC GET WELL ***********
-// Not reorganizing utils and types for this file for this reason.
-// ***************************************************************
+/* THIS FILE and the CONCEPT OF FAKE REGIONS IS GOING AWAY WITH DC GET WELL
+/* Not reorganizing utils and types for this file for this reason.
+/*
+/* Those fake regions are a way to display a region that is not available for selection, and removed from the API response.
+/* They are a visual indicator that the region is not available, and a link to learn more about why, as to not confuse the user when they don't see the region in the list.
+/* The whole concept is going away with DC Get Well (which is great news cause this isn't a sustainable feature), since the API will provide a new endpoint to evaluate the DC's availability.
+*/
 
 import * as React from 'react';
 
