@@ -98,7 +98,7 @@ describe('ScheduleSettings', () => {
     const offset = DateTime.now().setZone('America/New_York').offset / 60;
 
     // W10 indicates that your backups should be taken between 10:00 and 12:00 UTC.
-    // W10 in America/New_York will be 06:00 - 08:00 EDT (UTC-5) or 05:00 - 07:00 EST (UTC-4).
+    // W10 in America/New_York will be 06:00 - 08:00 EDT (UTC-4) or 05:00 - 07:00 EST (UTC-5).
     await findByText(`0${10 + offset}:00 - 0${10 + 2 + offset}:00`);
 
     await findByText('Time displayed in America/New York');
