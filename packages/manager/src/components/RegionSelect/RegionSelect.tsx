@@ -33,12 +33,13 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     width,
   } = props;
 
+  const regionFromSelectedId =
+    getSelectedRegionById(regions, selectedId ?? '') ?? null;
+
   const [
     selectedRegion,
     setSelectedRegion,
-  ] = React.useState<RegionSelectOption | null>(
-    getSelectedRegionById(regions, selectedId ?? '') ?? null
-  );
+  ] = React.useState<RegionSelectOption | null>(regionFromSelectedId);
   const flags = useFlags();
   const location = useLocation();
   const path = location.pathname;
@@ -63,8 +64,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           option: RegionSelectOption,
           { value }: RegionSelectOption
         ) => option.value === value}
-        onChange={(_, selectedRegion: RegionSelectOption) => {
-          handleRegionChange(selectedRegion);
+        onChange={(_, selectedOption: RegionSelectOption) => {
+          handleRegionChange(selectedOption);
         }}
         renderGroup={(params) => (
           <li key={params.key}>
@@ -74,16 +75,16 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         )}
         renderOption={(props, option, { selected }) => (
           // The tooltip is likely to be removed for DC Get Well
-          // Because the the way Autocomplete is implemented, we need to wrap the
-          // entire list item in the tooltip, otherwise the tooltip will not show
-          // This is the reason for disabling event listeners on the tooltip
-          // when there is no disabled message.
+          // Because the the way Autocomplete is implemented, we need to wrap the entire list item in the tooltip, otherwise the tooltip will not show.
+          // This is the reason for disabling event listeners on the tooltip when there is no disabled message.
+          // It's probably superfluous, but won't hurt either.
           <Tooltip
             disableFocusListener={Boolean(!option.data.disabledMessage)}
             disableHoverListener={Boolean(!option.data.disabledMessage)}
             disableTouchListener={Boolean(!option.data.disabledMessage)}
             enterDelay={500}
             enterTouchDelay={500}
+            key={option.value}
             title={option.data.disabledMessage ?? ''}
           >
             <StyledListItem {...props}>
@@ -128,7 +129,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         label={label ?? 'Region'}
         options={options}
         placeholder="Select a Region"
-        value={getSelectedRegionById(regions, selectedId || '') ?? null}
+        value={regionFromSelectedId}
       />
     </Box>
   );

@@ -79,12 +79,17 @@ export const getRegionOptions = (
         return 1;
       }
 
-      // Everything else is sorted alphabetically by region
+      // Rest of the regions are sorted alphabetically
       if (region1.data.region < region2.data.region) {
         return -1;
       }
       if (region1.data.region > region2.data.region) {
         return 1;
+      }
+
+      // If regions are in the same group, sort alphabetically by label
+      if (region1.label < region2.label) {
+        return -1;
       }
       return 0;
     });
