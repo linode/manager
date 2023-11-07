@@ -7,7 +7,11 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { loadbalancerFactory, certificateFactory } from '@src/factories';
+import {
+  loadbalancerFactory,
+  certificateFactory,
+  mockCertificate,
+} from '@src/factories';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel, randomString } from 'support/util/random';
 import {
@@ -15,6 +19,7 @@ import {
   mockDeleteLoadBalancerCertificateError,
   mockGetLoadBalancer,
   mockGetLoadBalancerCertificates,
+  mockUpdateLoadBalancerCertificate,
   mockUploadLoadBalancerCertificate,
 } from 'support/intercepts/load-balancers';
 import { Loadbalancer, Certificate } from '@linode/api-v4/types';
@@ -239,6 +244,221 @@ describe('Akamai Global Load Balancer certificates page', () => {
 
     // Confirm that both new certificates are listed in the table with expected info.
     cy.findByText(mockLoadBalancerCertServiceTarget.label).should('be.visible');
+  });
+
+  /*
+   * - Confirms Load Balancer certificate edit UI flow using mocked API requests.
+   * - Confirms that TLS and Service Target certificates can be edited.
+   * - Confirms that certificates table updates to reflect edited certificates.
+   */
+  it('can update a TLS certificate', () => {
+    const mockLoadBalancer = loadbalancerFactory.build();
+    const mockLoadBalancerCertTls = certificateFactory.build({
+      label: randomLabel(),
+      type: 'downstream',
+      certificate: mockCertificate.trim(),
+    });
+    const mockNewLoadBalancerCertTls = certificateFactory.build({
+      label: 'my-updated-tls-cert',
+      certificate: 'mock-new-cert',
+      key: 'mock-new-key',
+      type: 'downstream',
+    });
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
+    mockGetLoadBalancerCertificates(
+      mockLoadBalancer.id,
+      mockLoadBalancerCertTls
+    ).as('getCertificates');
+
+    cy.visitWithLogin(`/loadbalancers/${mockLoadBalancer.id}/certificates`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getCertificates',
+    ]);
+
+    // Edit a TLS certificate.
+    ui.actionMenu
+      .findByTitle(
+        `Action Menu for certificate ${mockLoadBalancerCertTls.label}`
+      )
+      .should('be.visible')
+      .click();
+    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+
+    mockUpdateLoadBalancerCertificate(
+      mockLoadBalancer.id,
+      mockLoadBalancerCertTls
+    ).as('updateCertificate');
+
+    mockGetLoadBalancerCertificates(mockLoadBalancer.id, [
+      mockNewLoadBalancerCertTls,
+    ]).as('getCertificates');
+
+    ui.drawer
+      .findByTitle(`Edit ${mockLoadBalancerCertTls.label}`)
+      .should('be.visible')
+      .within(() => {
+        // Confirm that drawer displays certificate data or indicates where data is redacted for security.
+        cy.findByLabelText('Certificate Label')
+          .should('be.visible')
+          .should('have.value', mockLoadBalancerCertTls.label);
+
+        cy.findByLabelText('TLS Certificate')
+          .should('be.visible')
+          .should('have.value', mockLoadBalancerCertTls.certificate);
+
+        cy.findByLabelText('Private Key')
+          .should('be.visible')
+          .should('have.value', '')
+          .invoke('attr', 'placeholder')
+          .should('contain', 'Private key is redacted for security.');
+
+        // Attempt to submit an incorrect form without a label or a new cert key.
+        cy.findByLabelText('Certificate Label').clear();
+        cy.findByLabelText('TLS Certificate').clear().type('my-new-cert');
+
+        ui.buttonGroup
+          .findButtonByTitle('Update Certificate')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm that validation errors appear when drawer is not filled out correctly.
+        cy.findAllByText('Label must not be empty.').should('be.visible');
+        cy.findAllByText('Private Key is required').should('be.visible');
+
+        // Fix errors.
+        cy.findByLabelText('Certificate Label')
+          .click()
+          .type(mockNewLoadBalancerCertTls.label);
+
+        cy.findByLabelText('TLS Certificate')
+          .click()
+          .type(mockNewLoadBalancerCertTls.certificate);
+
+        cy.findByLabelText('Private Key')
+          .click()
+          .type(mockNewLoadBalancerCertTls.key);
+
+        ui.buttonGroup
+          .findButtonByTitle('Update Certificate')
+          .scrollIntoView()
+          .click();
+      });
+
+    cy.wait(['@updateCertificate', '@getCertificates']);
+
+    // Confirm that new certificate is listed in the table with expected info.
+    cy.findByText(mockNewLoadBalancerCertTls.label).should('be.visible');
+  });
+
+  it('can update a service target certificate', () => {
+    const mockLoadBalancer = loadbalancerFactory.build();
+    const mockLoadBalancerCertServiceTarget = certificateFactory.build({
+      label: randomLabel(),
+      type: 'ca',
+      certificate: mockCertificate.trim(),
+    });
+    const mockNewLoadBalancerCertServiceTarget = certificateFactory.build({
+      label: 'my-updated-ca-cert',
+      certificate: 'mock-new-cert',
+      type: 'ca',
+    });
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
+    mockGetLoadBalancerCertificates(
+      mockLoadBalancer.id,
+      mockLoadBalancerCertServiceTarget
+    ).as('getCertificates');
+
+    cy.visitWithLogin(`/loadbalancers/${mockLoadBalancer.id}/certificates`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getCertificates',
+    ]);
+
+    // Edit a CA certificate.
+    ui.actionMenu
+      .findByTitle(
+        `Action Menu for certificate ${mockLoadBalancerCertServiceTarget.label}`
+      )
+      .should('be.visible')
+      .click();
+    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+
+    mockUpdateLoadBalancerCertificate(
+      mockLoadBalancer.id,
+      mockLoadBalancerCertServiceTarget
+    ).as('updateCertificate');
+
+    mockGetLoadBalancerCertificates(mockLoadBalancer.id, [
+      mockNewLoadBalancerCertServiceTarget,
+    ]).as('getCertificates');
+
+    ui.drawer
+      .findByTitle(`Edit ${mockLoadBalancerCertServiceTarget.label}`)
+      .should('be.visible')
+      .within(() => {
+        // Confirm that drawer displays certificate data or indicates where data is redacted for security.
+        cy.findByLabelText('Certificate Label')
+          .should('be.visible')
+          .should('have.value', mockLoadBalancerCertServiceTarget.label);
+
+        cy.findByLabelText('Server Certificate')
+          .should('be.visible')
+          .should('have.value', mockLoadBalancerCertServiceTarget.certificate);
+
+        cy.findByLabelText('Private Key').should('not.exist');
+
+        // Attempt to submit an incorrect form without a label.
+        cy.findByLabelText('Certificate Label').clear();
+
+        ui.buttonGroup
+          .findButtonByTitle('Update Certificate')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm that validation error appears when drawer is not filled out correctly.
+        cy.findAllByText('Label must not be empty.').should('be.visible');
+
+        // Fix error.
+        cy.findByLabelText('Certificate Label')
+          .click()
+          .type(mockNewLoadBalancerCertServiceTarget.label);
+
+        // Update certificate.
+        cy.findByLabelText('Server Certificate')
+          .click()
+          .type(mockNewLoadBalancerCertServiceTarget.certificate);
+
+        ui.buttonGroup
+          .findButtonByTitle('Update Certificate')
+          .scrollIntoView()
+          .click();
+      });
+
+    cy.wait(['@updateCertificate', '@getCertificates']);
+
+    // Confirm that new certificate is listed in the table with expected info.
+    cy.findByText(mockNewLoadBalancerCertServiceTarget.label).should(
+      'be.visible'
+    );
   });
 
   /*
