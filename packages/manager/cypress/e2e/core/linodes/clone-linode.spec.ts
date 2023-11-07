@@ -11,7 +11,6 @@ import {
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
-import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {

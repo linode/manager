@@ -141,6 +141,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         errorText={errorText}
         groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
+        noOptionsText="No results"
         options={options}
         placeholder="Select a Region"
         value={regionFromSelectedId}

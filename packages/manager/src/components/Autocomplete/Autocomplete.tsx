@@ -31,6 +31,8 @@ export interface EnhancedAutocompleteProps<
   label: string;
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
+  /** Text to show when the Autocomplete search yields no results. */
+  noOptionsText?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
   textFieldProps?: Partial<TextFieldProps>;

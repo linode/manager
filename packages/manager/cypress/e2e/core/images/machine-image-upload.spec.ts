@@ -6,7 +6,6 @@ import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
 import { fbtVisible, getClick } from 'support/helpers';
-import { selectRegionString } from 'support/ui/constants';
 import {
   mockDeleteImage,
   mockGetCustomImages,

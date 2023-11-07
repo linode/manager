@@ -1,13 +1,11 @@
 import { entityTag } from 'support/constants/cypress';
 import { createLinode } from 'support/api/linodes';
-import { selectRegionString } from 'support/ui/constants';
 import {
   containsClick,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-  containsPlaceholderClick,
 } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
@@ -28,6 +26,7 @@ const deployNodeBalancer = () => {
 
 const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   const regionName = getRegionById(nodeBal.region).label;
+
   cy.visitWithLogin('/nodebalancers/create');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(entityTag);
@@ -43,7 +42,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     });
 
     // Confirms that the price will show up when the region is selected
-    containsPlaceholderClick(selectRegionString).type(`${regionName}{enter}`);
+    ui.regionSelect.open().type(`${regionName}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$10/month`).should('be.visible');
     });
@@ -54,20 +53,16 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
     // Confirms that the summary updates to reflect price changes if the user changes their region.
-    cy.get(`[value="${regionName}"]`).click().type(`${newRegion.label}{enter}`);
+    ui.regionSelect.open().clear().type(`${newRegion.label}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$14/month`).should('be.visible');
     });
 
     // Confirms that a notice is shown in the "Region" section of the NodeBalancer Create form informing the user of DC-specific pricing
     cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
-
-    // Change back to the initial region to create the Node Balancer
-    cy.get(`[value="${newRegion.label}"]`).click().type(`${regionName}{enter}`);
-  } else {
-    // this will create the NB in newark, where the default Linode was created
-    containsPlaceholderClick(selectRegionString).type(`${regionName}{enter}`);
   }
+  // this will create the NB in newark, where the default Linode was created
+  ui.regionSelect.open().clear().type(`${regionName}{enter}`);
 
   // node backend config
   fbtClick('Label').type(randomLabel());

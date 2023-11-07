@@ -3,12 +3,10 @@ import 'cypress-file-upload';
 import { authenticate } from 'support/api/authentication';
 import { imageUploadProcessingTimeout } from 'support/constants/images';
 import { interceptUploadImage } from 'support/intercepts/images';
-import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { testRegions } from 'support/util/regions';
-import { containsPlaceholderClick } from 'support/helpers';
 
 authenticate();
 describe('Upload Machine Images', () => {
@@ -36,8 +34,7 @@ describe('Upload Machine Images', () => {
       .click()
       .type(imageDescription);
 
-    containsPlaceholderClick(selectRegionString);
-
+    ui.regionSelect.open();
     ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
 
     // Pass `null` to `cy.fixture()` to encode file as a Cypress buffer object.

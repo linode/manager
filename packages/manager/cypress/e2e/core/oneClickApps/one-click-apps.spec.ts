@@ -1,8 +1,4 @@
-import {
-  containsClick,
-  containsVisible,
-  containsPlaceholderClick,
-} from 'support/helpers';
+import { containsClick, containsVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
@@ -10,7 +6,6 @@ import {
   interceptGetStackScripts,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
-import { selectRegionString } from 'support/ui/constants';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import {
   filterOneClickApps,
@@ -219,9 +214,7 @@ describe('OneClick Apps (OCA)', () => {
     });
 
     // Choose a region
-    cy.findByTestId('region-select').within(() => {
-      containsPlaceholderClick(selectRegionString).type(`${region.id}{enter}`);
-    });
+    ui.regionSelect.open().type(`${region.id}{enter}`);
 
     // Choose a Linode plan
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')

@@ -3,15 +3,8 @@ import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import {
-  containsClick,
-  fbtVisible,
-  fbtClick,
-  getClick,
-  containsPlaceholderClick,
-} from 'support/helpers';
+import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import { interceptCreateVolume } from 'support/intercepts/volumes';
-import { selectRegionString } from 'support/ui/constants';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
@@ -31,7 +24,7 @@ const pageSizeOverride = {
 authenticate();
 describe('volume create flow', () => {
   before(() => {
-    cleanUp('volumes');
+    cleanUp(['volumes', 'linodes']);
   });
 
   /*
@@ -63,14 +56,7 @@ describe('volume create flow', () => {
     // Fill out and submit volume create form.
     containsClick('Label').type(volume.label);
     containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-    containsPlaceholderClick(selectRegionString).type(
-      `${volume.region}{enter}`
-    );
-
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
-      .type(`${volume.regionLabel}{enter}`);
+    ui.regionSelect.open().type(`${volume.region}{enter}`);
 
     fbtClick('Create Volume');
     cy.wait('@createVolume');
@@ -129,9 +115,7 @@ describe('volume create flow', () => {
       // Fill out and submit volume create form.
       containsClick('Label').type(volume.label);
       containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-      containsPlaceholderClick(selectRegionString).type(
-        `${volume.regionLabel}{enter}`
-      );
+      ui.regionSelect.open().type(`${volume.region}{enter}`);
 
       cy.findByLabelText('Linode')
         .should('be.visible')
