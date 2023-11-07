@@ -143,9 +143,6 @@ export const CreateFirewallDrawer = React.memo(
             if (onFirewallCreated) {
               onFirewallCreated(response);
             }
-            enqueueSnackbar('Firewall created successfully.', {
-              variant: 'success',
-            });
             onClose();
           })
           .catch((err) => {

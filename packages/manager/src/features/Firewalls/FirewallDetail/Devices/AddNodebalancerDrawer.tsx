@@ -1,4 +1,5 @@
 import { NodeBalancer } from '@linode/api-v4';
+import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -41,6 +42,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
+  const theme = useTheme();
+
   const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
     Number(id)
   );
@@ -67,7 +70,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       const label = selectedNodebalancers[index].label;
       const id = selectedNodebalancers[index].id;
       if (result.status === 'fulfilled') {
-        enqueueSnackbar(`NodeBalancer ${label} added successfully`, {
+        enqueueSnackbar(`NodeBalancer ${label} successfully added`, {
           variant: 'success',
         });
         queryClient.invalidateQueries([
@@ -123,8 +126,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
+            fontFamily: theme.font.bold,
             fontSize: '1rem',
-            fontWeight: 'bold',
             lineHeight: '20px',
           }}
           variant="error"
