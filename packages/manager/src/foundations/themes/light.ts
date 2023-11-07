@@ -277,6 +277,11 @@ export const lightTheme: ThemeOptions = {
             },
           },
         },
+        input: {
+          '&::placeholder': {
+            opacity: 1,
+          },
+        },
         inputRoot: {
           paddingLeft: 8,
         },
@@ -864,8 +869,8 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.down('xs')]: {
               minWidth: 200,
             },
-            maxWidth: 200,
             maxHeight: 250,
+            maxWidth: 200,
             overflowX: 'hidden',
             overflowY: 'auto',
             padding: 4,
