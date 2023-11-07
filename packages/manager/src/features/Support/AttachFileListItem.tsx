@@ -2,7 +2,7 @@ import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -11,7 +11,7 @@ import { TextField } from 'src/components/TextField';
 
 import { FileAttachment } from './index';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   attachmentField: {
     '& > div ': {
       backgroundColor: 'transparent',
@@ -43,7 +43,7 @@ interface Props {
 }
 
 export const AttachFileListItem = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { file, fileIdx, removeFile } = props;
 

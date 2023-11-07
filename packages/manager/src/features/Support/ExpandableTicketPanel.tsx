@@ -2,7 +2,7 @@ import { SupportReply, SupportTicket } from '@linode/api-v4';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
@@ -13,7 +13,7 @@ import { Hively, shouldRenderHively } from './Hively';
 import { TicketDetailText } from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -101,7 +101,7 @@ interface Data {
 }
 
 export const ExpandableTicketPanel = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { open, parentTicket, reply, ticket, ticketUpdated } = props;
 

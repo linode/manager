@@ -4,7 +4,7 @@ import {
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -47,7 +47,7 @@ import SupportTicketSMTPFields, {
   smtpHelperText,
 } from './SupportTicketSMTPFields';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
@@ -207,7 +207,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   React.useEffect(() => {
     if (!open) {

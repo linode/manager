@@ -2,7 +2,7 @@ import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -19,7 +19,7 @@ import { MarkdownReference } from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
 import { TabbedReply } from './TabbedReply';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
@@ -58,7 +58,7 @@ interface Props {
 }
 
 export const ReplyContainer = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { lastReply, onSuccess, reloadAttachments, ...rest } = props;
 

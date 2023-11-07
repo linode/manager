@@ -1,14 +1,14 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { IconButton } from 'src/components/IconButton';
 import { truncate } from 'src/utilities/truncate';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   expButton: {
     '& svg': {
       stroke: theme.textColors.tableHeader,
@@ -40,7 +40,7 @@ interface Props {
 }
 
 export const TicketDetailText = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
   const { text } = props;

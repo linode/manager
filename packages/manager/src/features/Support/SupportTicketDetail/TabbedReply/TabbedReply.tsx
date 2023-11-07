@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Tab, TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
@@ -14,7 +14,7 @@ interface Props extends ReplyProps {
   rootClass?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     '& div[role="tablist"]': {
       marginBottom: theme.spacing(),
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const TabbedReply = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { error, innerClass, rootClass, value, ...rest } = props;
 
   const title = props.isReply ? 'Reply' : 'Description';
