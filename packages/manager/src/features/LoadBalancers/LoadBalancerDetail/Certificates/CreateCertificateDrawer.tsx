@@ -7,7 +7,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
