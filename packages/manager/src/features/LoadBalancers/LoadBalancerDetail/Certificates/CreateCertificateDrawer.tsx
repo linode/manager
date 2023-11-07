@@ -8,6 +8,8 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { labelMap } from './EditCertificateDrawer';
 
@@ -66,33 +68,38 @@ export const CreateCertificateDrawer = (props: Props) => {
       type,
     },
     async onSubmit(values) {
-      await createCertificate(values);
-      onClose();
+      try {
+        await createCertificate(values);
+        onClose();
+      } catch (errors) {
+        formik.setErrors(getFormikErrorsFromAPIErrors(errors));
+        scrollErrorIntoView();
+      }
     },
+    // Disabling validateOnBlur and validateOnChange when an API error is shown prevents
+    // all API errors from disappearing when one field is changed.
+    validateOnBlur: !error,
+    validateOnChange: !error,
   });
 
-  const errorFields = ['label', 'certificate'];
-
-  if (type === 'downstream') {
-    errorFields.push('key');
-  }
-
-  const errorMap = getErrorMap(errorFields, error);
+  const generalError = error?.find((e) => !e.field)?.reason;
 
   return (
-    <Drawer onClose={onClose} open={open} title={titleMap[type] ?? ''}>
+    <Drawer onClose={onClose} open={open} title={titleMap[type] ?? ''} wide>
       <form onSubmit={formik.handleSubmit}>
-        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <Typography>{descriptionMap[type]}</Typography>
         <TextField
-          errorText={errorMap.label}
+          errorText={formik.errors.label}
+          expand
           label="Label"
           name="label"
           onChange={formik.handleChange}
           value={formik.values.label}
         />
         <TextField
-          errorText={errorMap.certificate}
+          errorText={formik.errors.certificate}
+          expand
           label={labelMap[type]}
           labelTooltipText="TODO"
           multiline
@@ -104,7 +111,8 @@ export const CreateCertificateDrawer = (props: Props) => {
         />
         {type === 'downstream' && (
           <TextField
-            errorText={errorMap.key}
+            errorText={formik.errors.key}
+            expand
             label="Private Key"
             labelTooltipText="TODO"
             multiline
