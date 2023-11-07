@@ -104,7 +104,6 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
           ? `For this region, pricing for the HA control plane is $${getDCSpecificPrice(
               {
                 basePrice: LKE_HA_PRICE,
-                flags,
                 regionId: regionID,
               }
             )}`

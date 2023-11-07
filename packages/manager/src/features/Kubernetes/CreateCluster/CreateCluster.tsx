@@ -180,7 +180,7 @@ export const CreateCluster = () => {
    */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
     const dcSpecificPrice = regionId
-      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, flags, regionId })
+      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, regionId })
       : undefined;
     return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };

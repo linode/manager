@@ -72,7 +72,6 @@ export const KubeClusterSpecs = (props: Props) => {
   const dcSpecificPrice = cluster.control_plane.high_availability
     ? getDCSpecificPrice({
         basePrice: LKE_HA_PRICE,
-        flags,
         regionId: region?.id,
       })
     : undefined;
