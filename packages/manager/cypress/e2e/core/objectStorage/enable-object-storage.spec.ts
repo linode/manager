@@ -57,253 +57,10 @@ describe('Object Storage enrollment', () => {
    * - Confirms that Object Storage can be enabled using mock API data.
    * - Confirms that pricing information link is present in enrollment dialog.
    * - Confirms that cancellation explanation is present in enrollment dialog.
-   * - Confirms that free beta pricing is explained for regions with special price structures.
-   * - Confirms that regular pricing information is shown for regions with regular price structures.
-   * - Confirms that generic pricing information is shown when no region is selected.
-   */
-  // TODO: DC Pricing - M3-7073: Delete test when cleaning up feature flag.
-  it('can enroll in Object Storage with free beta DC-specific pricing', () => {
-    const mockAccountSettings = accountSettingsFactory.build({
-      managed: false,
-      object_storage: 'disabled',
-    });
-
-    const mockAccountSettingsEnabled = {
-      ...mockAccountSettings,
-      object_storage: 'active',
-    };
-
-    const mockRegions: Region[] = [
-      regionFactory.build({ label: 'Newark, NJ', id: 'us-east' }),
-      regionFactory.build({ label: 'Sao Paulo, BR', id: 'br-gru' }),
-      regionFactory.build({ label: 'Jakarta, ID', id: 'id-cgk' }),
-    ];
-
-    // Clusters with special pricing are currently hardcoded rather than
-    // retrieved via API, so we have to mock the cluster API request to correspond
-    // with that hardcoded data.
-    const mockClusters = [
-      // Regions with special pricing.
-      objectStorageClusterFactory.build({
-        id: 'br-gru-0',
-        region: 'br-gru',
-      }),
-      objectStorageClusterFactory.build({
-        id: 'id-cgk-1',
-        region: 'id-cgk',
-      }),
-      // A region that does not have special pricing.
-      objectStorageClusterFactory.build({
-        id: 'us-east-1',
-        region: 'us-east',
-      }),
-    ];
-
-    const mockAccessKey = objectStorageKeyFactory.build({
-      label: randomLabel(),
-    });
-    mockAppendFeatureFlags({
-      objDcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-    mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
-    mockGetClusters(mockClusters).as('getClusters');
-    mockGetBuckets([]).as('getBuckets');
-    mockGetRegions(mockRegions).as('getRegions');
-    mockGetAccessKeys([]);
-
-    cy.visitWithLogin('/object-storage/buckets');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccountSettings',
-      '@getClusters',
-      '@getBuckets',
-      '@getRegions',
-    ]);
-
-    // Confirm that empty-state message is shown before proceeding.
-    cy.findByText('S3-compatible storage solution').should('be.visible');
-
-    // Click create button, select a region with special pricing, and submit.
-    ui.button
-      .findByTitle('Create Bucket')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle('Create Bucket')
-      .should('be.visible')
-      .within(() => {
-        // Select a region with special pricing structure.
-        cy.findByText('Region').click().type('Jakarta, ID{enter}');
-
-        ui.buttonGroup
-          .findButtonByTitle('Create Bucket')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Confirm dialog contents shows the expected information for regions
-    // with special pricing during beta period, then cancel.
-    ui.dialog
-      .findByTitle('Enable Object Storage')
-      .should('be.visible')
-      .within(() => {
-        // Confirm that DC-specific beta pricing notes are shown, as well as
-        // additional pricing explanation link and cancellation information.
-        cy.contains(objNotes.dcSpecificBetaPricing).should('be.visible');
-        cy.contains(objNotes.dcPricingLearnMoreNote).should('be.visible');
-        cy.contains(objNotes.cancellationExplanation).should('be.visible');
-
-        // Confirm that regular pricing information is not shown.
-        cy.contains(objNotes.regularPricing).should('not.exist');
-
-        ui.button
-          .findByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Initiate bucket create flow again, and this time select a region with
-    // regular pricing structure.
-    ui.drawer.findByTitle('Create Bucket').within(() => {
-      // Select a region with special pricing structure.
-      cy.findByText('Region').click().type('Newark, NJ{enter}');
-
-      ui.buttonGroup
-        .findButtonByTitle('Create Bucket')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-    });
-
-    ui.dialog
-      .findByTitle('Enable Object Storage')
-      .should('be.visible')
-      .within(() => {
-        // Confirm that regular pricing information is shown, as well as
-        // additional pricing explanation link and cancellation information.
-        cy.contains(objNotes.regularPricing).should('be.visible');
-        cy.contains(objNotes.dcPricingLearnMoreNote).should('be.visible');
-        cy.contains(objNotes.cancellationExplanation).should('be.visible');
-
-        // Confirm that DC-specific beta pricing information is not shown.
-        cy.contains(objNotes.dcSpecificBetaPricing).should('not.exist');
-
-        ui.button
-          .findByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Close the "Create Bucket" drawer, and navigate to the "Access Keys" tab.
-    ui.drawer.findByTitle('Create Bucket').within(() => {
-      ui.drawerCloseButton.find().should('be.visible').click();
-    });
-
-    ui.tabList.findTabByTitle('Access Keys').should('be.visible').click();
-
-    ui.button
-      .findByTitle('Create Access Key')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Fill out "Create Access Key" form, then submit.
-    ui.drawer
-      .findByTitle('Create Access Key')
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .type(mockAccessKey.label);
-
-        ui.buttonGroup
-          .findButtonByTitle('Create Access Key')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Confirm dialog contents shows the expected information.
-    mockCreateAccessKey(mockAccessKey).as('createAccessKey');
-    mockGetAccessKeys([mockAccessKey]).as('getAccessKey');
-    mockGetAccountSettings(mockAccountSettingsEnabled).as('getAccountSettings');
-    ui.dialog
-      .findByTitle('Enable Object Storage')
-      .should('be.visible')
-      .within(() => {
-        // Confirm that DC-specific generic pricing notes are shown, as well as
-        // additional pricing explanation link and cancellation information.
-        cy.contains(objNotes.dcPricingGenericExplanation).should('be.visible');
-        cy.contains(objNotes.dcPricingLearnMoreNote).should('be.visible');
-        cy.contains(objNotes.cancellationExplanation).should('be.visible');
-
-        // Confirm that regular pricing information and DC-specific beta pricing
-        // information is not shown.
-        cy.contains(objNotes.regularPricing).should('not.exist');
-        cy.contains(objNotes.dcSpecificBetaPricing).should('not.exist');
-
-        // Click "Enable Object Storage".
-        ui.button
-          .findByAttribute('data-qa-enable-obj', 'true')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait(['@createAccessKey', '@getAccessKey', '@getAccountSettings']);
-    cy.findByText(mockAccessKey.label).should('be.visible');
-
-    // Click through the "Access Keys" dialog which displays the new access key.
-    ui.dialog
-      .findByTitle('Access Keys')
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('I Have Saved My Secret Key')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    ui.button
-      .findByTitle('Create Access Key')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Fill out "Create Access Key" form, then submit.
-    ui.drawer
-      .findByTitle('Create Access Key')
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('Label').should('be.visible').type(randomLabel());
-
-        ui.buttonGroup
-          .findButtonByTitle('Create Access Key')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.findByText('Enable Object Storage').should('not.exist');
-  });
-
-  /*
-   * - Confirms that Object Storage can be enabled using mock API data.
-   * - Confirms that pricing information link is present in enrollment dialog.
-   * - Confirms that cancellation explanation is present in enrollment dialog.
    * - Confirms that DC-specific overage pricing is explained for regions in the Create Bucket drawer.
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
-  // TODO: DC Pricing - M3-7073: Remove feature flag mocks once feature flags are cleaned up.
-  it('can enroll in Object Storage with OBJ DC-specific pricing', () => {
+  it('can enroll in Object Storage', () => {
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
       object_storage: 'disabled',
@@ -344,10 +101,6 @@ describe('Object Storage enrollment', () => {
       label: randomLabel(),
     });
 
-    mockAppendFeatureFlags({
-      objDcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
     mockGetClusters(mockClusters).as('getClusters');
     mockGetBuckets([]).as('getBuckets');
@@ -356,8 +109,6 @@ describe('Object Storage enrollment', () => {
 
     cy.visitWithLogin('/object-storage/buckets');
     cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
       '@getAccountSettings',
       '@getClusters',
       '@getBuckets',
@@ -410,9 +161,6 @@ describe('Object Storage enrollment', () => {
         cy.contains(objNotes.dcPricingLearnMoreNote).should('be.visible');
         cy.contains(objNotes.cancellationExplanation).should('be.visible');
 
-        // Confirm that DC-specific beta pricing information is not shown.
-        cy.contains(objNotes.dcSpecificBetaPricing).should('not.exist');
-
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -450,10 +198,6 @@ describe('Object Storage enrollment', () => {
         cy.contains(objNotes.objDCPricing).should('be.visible');
         cy.contains(objNotes.dcPricingLearnMoreNote).should('be.visible');
         cy.contains(objNotes.cancellationExplanation).should('be.visible');
-
-        // Confirm that DC-specific beta pricing information is not shown.
-        // TODO: DC Pricing - M3-7073: Delete next line once feature flags are cleaned up.
-        cy.contains(objNotes.dcSpecificBetaPricing).should('not.exist');
 
         ui.button
           .findByTitle('Cancel')
@@ -507,10 +251,6 @@ describe('Object Storage enrollment', () => {
         cy.contains(objNotes.objDCPricing).should('be.visible');
         cy.contains(objNotes.dcPricingLearnMoreNote).should('be.visible');
         cy.contains(objNotes.cancellationExplanation).should('be.visible');
-
-        // Confirm that DC-specific beta pricing information is not shown.
-        // TODO: DC Pricing - M3-7073: Delete next line once feature flags are cleaned up.
-        cy.contains(objNotes.dcSpecificBetaPricing).should('not.exist');
 
         // Click "Enable Object Storage".
         ui.button
