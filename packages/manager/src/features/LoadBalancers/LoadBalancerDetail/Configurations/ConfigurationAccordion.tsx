@@ -1,14 +1,13 @@
-import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 
 import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import Select from 'src/components/EnhancedSelect/Select';
 import { InputLabel } from 'src/components/InputLabel';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -17,21 +16,44 @@ import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configura
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
+import { RoutesTable } from '../Routes/RoutesTable';
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   configuration: Configuration;
   loadbalancerId: number;
 }
 
+function getConfigurationPayloadFromConfiguration(
+  configuration: Configuration
+) {
+  return {
+    certificates: configuration.certificates,
+    label: configuration.label,
+    port: configuration.port,
+    protocol: configuration.protocol,
+    routes: configuration.routes.map((r) => r.id),
+  };
+}
+
 export const ConfigurationAccordion = (props: Props) => {
   const { configuration, loadbalancerId } = props;
+  const { configurationId } = useParams<{ configurationId: string }>();
   const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
+  const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const [routesTableQuery, setRoutesTableQuery] = useState('');
+
+  const routesTableFilter = routesTableQuery
+    ? { label: { '+contains': routesTableQuery } }
+    : {};
 
   const {
     error,
@@ -41,7 +63,7 @@ export const ConfigurationAccordion = (props: Props) => {
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: configuration,
+    initialValues: getConfigurationPayloadFromConfiguration(configuration),
     onSubmit(values) {
       mutateAsync(values);
     },
@@ -86,7 +108,7 @@ export const ConfigurationAccordion = (props: Props) => {
               {pluralize('Route', 'Routes', configuration.routes.length)}
             </Typography>
           </Stack>
-          {/* @TODO Hook up endpoint status */}
+          {/* TODO: AGLB - Hook up endpoint status */}
           <Stack direction="row" spacing={2}>
             <Stack alignItems="center" direction="row" spacing={1}>
               <Typography>Endpoints:</Typography>
@@ -102,6 +124,7 @@ export const ConfigurationAccordion = (props: Props) => {
           </Stack>
         </Stack>
       }
+      defaultExpanded={configuration.id === Number(configurationId)}
       headingProps={{ sx: { width: '100%' } }}
     >
       <form onSubmit={formik.handleSubmit}>
@@ -114,26 +137,25 @@ export const ConfigurationAccordion = (props: Props) => {
         />
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
-            <Select
-              textFieldProps={{
-                labelTooltipText: 'TODO',
-              }}
-              value={
-                protocolOptions.find(
-                  (option) => option.value === formik.values.protocol
-                ) ?? null
+            <Autocomplete
+              onChange={(e, { value }) =>
+                formik.setFieldValue('protocol', value)
               }
+              textFieldProps={{
+                labelTooltipText: 'TODO: AGLB',
+              }}
+              value={protocolOptions.find(
+                (option) => option.value === formik.values.protocol
+              )}
+              disableClearable
               errorText={errorMap.protocol}
-              isClearable={false}
               label="Protocol"
-              onChange={({ value }) => formik.setFieldValue('protocol', value)}
               options={protocolOptions}
-              styles={{ container: () => ({ width: 'unset' }) }}
             />
             <TextField
               errorText={errorMap.port}
               label="Port"
-              labelTooltipText="TODO"
+              labelTooltipText="TODO: AGLB"
               name="port"
               onChange={formik.handleChange}
               value={formik.values.port}
@@ -142,9 +164,7 @@ export const ConfigurationAccordion = (props: Props) => {
           <Stack maxWidth="600px">
             <Stack alignItems="center" direction="row">
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="OMG!" />
-              <Box flexGrow={1} />
-              <Button>Upload Certificate</Button>
+              <TooltipIcon status="help" text="TODO: AGLB" />
             </Stack>
             <CertificateTable
               certificates={formik.values.certificates}
@@ -165,20 +185,55 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
-          {/* @TODO Add AGLB routes table */}
-          <Typography>Routes Table will go here ⚠️🔜</Typography>
+          <Stack direction="row" flexWrap="wrap" gap={2}>
+            <Button
+              buttonType="outlined"
+              onClick={() => setIsAddRouteDrawerOpen(true)}
+            >
+              Add Route
+            </Button>
+            <TextField
+              hideLabel
+              label={`Filter ${configuration.label}'s Routes`}
+              onChange={(e) => setRoutesTableQuery(e.target.value)}
+              placeholder="Filter"
+            />
+          </Stack>
+          <RoutesTable
+            configuredRoutes={configuration.routes}
+            filter={routesTableFilter}
+          />
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />
-        <ActionsPanel
-          primaryButtonProps={{
-            label: 'Save Configuration',
-            loading: isLoading,
-            type: 'submit',
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          gap={2}
+          justifyContent="flex-end"
+        >
+          <Button
+            buttonType="secondary"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
+            Delete
+          </Button>
+          <Button
+            buttonType="primary"
+            disabled={!formik.dirty}
+            loading={isLoading}
+            type="submit"
+          >
+            Save Configuration
+          </Button>
+        </Stack>
+        <AddRouteDrawer
+          onAdd={(route) => {
+            formik.setFieldValue('routes', [...formik.values.routes, route]);
           }}
-          secondaryButtonProps={{
-            label: 'Delete Configuration',
-            onClick: () => setIsDeleteDialogOpen(true),
-          }}
+          configuration={configuration}
+          loadbalancerId={loadbalancerId}
+          onClose={() => setIsAddRouteDrawerOpen(false)}
+          open={isAddRouteDrawerOpen}
         />
         <ApplyCertificatesDrawer
           loadbalancerId={loadbalancerId}

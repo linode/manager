@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';

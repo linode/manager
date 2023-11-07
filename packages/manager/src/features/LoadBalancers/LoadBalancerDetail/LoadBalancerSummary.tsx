@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -57,6 +57,10 @@ export const LoadBalancerSummary = () => {
             .join(', ')}
         </Typography>
       ),
+    },
+    {
+      title: 'Load Balancer ID',
+      value: <Typography>{loadbalancer?.id}</Typography>,
     },
   ];
 

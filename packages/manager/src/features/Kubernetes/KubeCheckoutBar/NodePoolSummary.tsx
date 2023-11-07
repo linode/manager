@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   typeHeader: {
+    fontFamily: theme.font.bold,
     fontSize: '16px',
-    fontWeight: 600,
     paddingBottom: theme.spacing(0.5),
   },
   typeSubheader: {

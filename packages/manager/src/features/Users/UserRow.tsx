@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import React from 'react';
 
 import { Box } from 'src/components/Box';

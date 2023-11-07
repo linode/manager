@@ -1,7 +1,7 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 

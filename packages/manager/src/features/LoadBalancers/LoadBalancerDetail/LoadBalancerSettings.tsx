@@ -1,6 +1,7 @@
-import Stack from '@mui/material/Stack';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+
+import { Stack } from 'src/components/Stack';
 
 import { Delete } from './Settings/Delete';
 import { Label } from './Settings/Label';

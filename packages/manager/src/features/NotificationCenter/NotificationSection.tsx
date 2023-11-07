@@ -11,6 +11,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     transform: 'rotate(180deg)',
   },
   notificationSpacing: {
-    '& > div:not(:first-child)': {
+    '& > div:not(:first-of-type)': {
       margin: `${theme.spacing()} 0`,
       padding: '0 20px',
     },
@@ -31,8 +32,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     display: 'flex',
+    fontFamily: theme.font.bold,
     fontSize: 14,
-    fontWeight: 'bold',
     paddingTop: theme.spacing(),
   },
 }));
@@ -169,11 +170,11 @@ const ContentBody = React.memo((props: BodyProps) => {
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
           <StyledLinkButton
-            sx={{
+            sx={(theme) => ({
               color: 'primary.main',
-              fontWeight: 'bold',
+              fontFamily: theme.font.bold,
               textDecoration: 'none !important',
-            }}
+            })}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
             onClick={() => setShowAll(!showAll)}
@@ -231,7 +232,13 @@ const StyledLToggleContainer = styled(Box, {
 
 const StyledNotificationItem = styled(Box, {
   label: 'StyledNotificationItem',
-  shouldForwardProp: (prop) => prop !== 'content',
+  shouldForwardProp: omittedProps([
+    'count',
+    'emptyMessage',
+    'header',
+    'loading',
+    'content',
+  ]),
 })<NotificationSectionProps>(({ theme, ...props }) => ({
   '& p': {
     color: theme.textColors.headlineStatic,

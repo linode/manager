@@ -4,8 +4,66 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2023-10-16] - v1.105.0
+## [2023-10-30] - v1.106.0
 
+### Added:
+
+- October Marketplace apps ([#9771](https://github.com/linode/manager/pull/9771))
+- Last log in and TFA status to Users & Grants page ([#9810](https://github.com/linode/manager/pull/9810))
+- Dynamic price error handling for DC-specific pricing ([#9660](https://github.com/linode/manager/pull/9660))
+
+### Changed:
+
+- Linode Create error placement ([#9788](https://github.com/linode/manager/pull/9788))
+- Firewall Create Drawer opens in the same tab in the Linode Create Flow ([#9785](https://github.com/linode/manager/pull/9785))
+
+### Fixed:
+
+- Quote variable in changeset shell command ([#9791](https://github.com/linode/manager/pull/9791))
+- Primary nav DBaaS menu item flicker on page load ([#9808](https://github.com/linode/manager/pull/9808))
+- Excess spacing above and below Linode CLI help text in Upload Image form ([#9812](https://github.com/linode/manager/pull/9812))
+- Only show regions that support Databases on the Database Create page ([#9815](https://github.com/linode/manager/pull/9815))
+- Footer styles on small viewports ([#9823](https://github.com/linode/manager/pull/9823))
+- Rendering of unsanitized titles in event notification popup and support tickets ([#9826](https://github.com/linode/manager/pull/9826))
+- CreateCluster form label styles and layout ([#9835](https://github.com/linode/manager/pull/9835))
+
+### Tech Stories:
+
+- Rename isPropValid utility ([#9790](https://github.com/linode/manager/pull/9790))
+- Migrate NodeBalancer Node Mode Select TextField to Autocomplete ([#9754](https://github.com/linode/manager/pull/9754))
+- Migrate UserDefinedSelect from a TextField Select to an Autocomplete ([#9756](https://github.com/linode/manager/pull/9756))
+- Create Stack component ([#9830](https://github.com/linode/manager/pull/9830))
+- MUI v5 Migration - `SRC > Features > StackScripts` pt1 ([#9773](https://github.com/linode/manager/pull/9773))
+- Clean up `src/utilities` exports ([#9783](https://github.com/linode/manager/pull/9783))
+- MUI v5 Migration - `SRC > Features > StackScripts` pt 2 ([#9786](https://github.com/linode/manager/pull/9786))
+- MUI v5 Migration - `SRC > Features > Users` ([#9748](https://github.com/linode/manager/pull/9748))
+
+### Tests:
+
+- Improve error message display when Linode API error occurs in Cypress test ([#9777](https://github.com/linode/manager/pull/9777))
+- Improve Linode config edit test stability ([#9781](https://github.com/linode/manager/pull/9781))
+- Improve LKE create test reattempt stability ([#9782](https://github.com/linode/manager/pull/9782))
+- Clean up Jest warnings and errors ([#9784](https://github.com/linode/manager/pull/9784))
+- Fix DBaaS UI test failures stemming from API update ([#9801](https://github.com/linode/manager/pull/9801))
+- Refactor Cypress Firewall migration tests ([#9807](https://github.com/linode/manager/pull/9807))
+- Skip affected tests when Managed is enabled on test accounts ([#9809](https://github.com/linode/manager/pull/9809))
+- Make `ConfigureForm.test.tsx` Vitest compatible ([#9816](https://github.com/linode/manager/pull/9816))
+
+### Upcoming Features:
+
+- Helper text for DC-specific pricing Object Storage overages ([#9813](https://github.com/linode/manager/pull/9813))
+- Support VPCs in Add/Edit Linode Config dialog ([#9709](https://github.com/linode/manager/pull/9709))
+- Properly support new shapes of `Subnet` and `Interface` return objects ([#9824](https://github.com/linode/manager/pull/9824))
+- Only show regions that support VPCs in VPC Create page ([#9787](https://github.com/linode/manager/pull/9787))
+- Invalidate VPC-related queries when deleting a Linode ([#9814](https://github.com/linode/manager/pull/9814))
+- Add AGLB Routes - Rule Edit Drawer ([#9778](https://github.com/linode/manager/pull/9778))
+- Add AGLB Edit Service Target drawer ([#9800](https://github.com/linode/manager/pull/9800))
+- Add AGLB Rule Delete Dialog ([#9804](https://github.com/linode/manager/pull/9804))
+- Add AGLB Create Route Drawer ([#9806](https://github.com/linode/manager/pull/9806))
+- Add AGLB Edit Route Drawer ([#9822](https://github.com/linode/manager/pull/9822))
+- Add Rule Index to AGLB Rule Table ([#9838](https://github.com/linode/manager/pull/9838))
+
+## [2023-10-16] - v1.105.0
 
 ### Added:
 

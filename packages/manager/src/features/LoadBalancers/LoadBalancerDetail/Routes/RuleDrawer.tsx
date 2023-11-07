@@ -1,7 +1,7 @@
 import { HTTPRuleSchema, TCPRuleSchema } from '@linode/validation';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Stack } from 'src/components/Stack';
 import { getIn, useFormik } from 'formik';
 import React, { useState } from 'react';
 

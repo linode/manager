@@ -5,7 +5,6 @@ import * as React from 'react';
 
 import { EditableText } from 'src/components/EditableText/EditableText';
 import { H1Header } from 'src/components/H1Header/H1Header';
-import { Typography } from 'src/components/Typography';
 
 import { EditableProps, LabelProps } from './types';
 
@@ -34,7 +33,6 @@ interface Props {
   crumb: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
-  subtitle?: string;
 }
 
 export const FinalCrumb = React.memo((props: Props) => {
@@ -65,11 +63,6 @@ export const FinalCrumb = React.memo((props: Props) => {
         dataQaEl={crumb}
         title={crumb}
       />
-      {labelOptions && labelOptions.subtitle && (
-        <Typography data-qa-label-subtitle variant="body1">
-          {labelOptions.subtitle}
-        </Typography>
-      )}
     </div>
   );
 });

@@ -98,6 +98,48 @@ export const mockUploadLoadBalancerCertificate = (
 };
 
 /**
+ * Intercepts DELETE request to delete an AGLB load balancer certificate and mocks a success response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete certificates.
+ * @param certificateId - ID of certificate for which to remove.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerCertificate = (
+  loadBalancerId: number,
+  certificateId: number
+) => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    makeResponse()
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve AGLB service targets and mocks HTTP 500 error response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete certificates.
+ * @param certificateId - ID of certificate for which to remove.
+ * @param message - Optional error message with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerCertificateError = (
+  loadBalancerId: number,
+  certificateId: number,
+  message?: string
+) => {
+  const defaultMessage =
+    'An error occurred while deleting Load Balancer certificate.';
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    makeErrorResponse(message ?? defaultMessage, 500)
+  );
+};
+
+/**
  * Intercepts GET request to retrieve AGLB service targets and mocks response.
  *
  * @param serviceTargets - Service targets with which to mock response.
@@ -147,6 +189,25 @@ export const mockCreateServiceTarget = (
   return cy.intercept(
     'POST',
     apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
+    makeResponse(serviceTarget)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a service target and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param serviceTarget - Service target with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateServiceTarget = (
+  loadBalancer: Loadbalancer,
+  serviceTarget: ServiceTarget
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
     makeResponse(serviceTarget)
   );
 };

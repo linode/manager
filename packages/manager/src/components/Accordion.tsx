@@ -16,15 +16,17 @@ import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography, TypographyProps } from 'src/components/Typography';
 
-const useStyles = makeStyles()({
+import type { Theme } from '@mui/material';
+
+const useStyles = makeStyles()((theme: Theme) => ({
   itemCount: {
     alignItems: 'center',
     backgroundColor: '#2575d0',
     borderRadius: '50%',
     color: '#fff',
     display: 'flex',
+    fontFamily: theme.font.bold,
     fontSize: '0.875rem',
-    fontWeight: 600,
     height: 30,
     justifyContent: 'center',
     lineHeight: 0,
@@ -32,7 +34,7 @@ const useStyles = makeStyles()({
     right: 50,
     width: 30,
   },
-});
+}));
 
 export interface AccordionProps extends _AccordionProps {
   /**
