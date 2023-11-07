@@ -23,16 +23,11 @@ export interface Props {
 
 export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { dcSpecificPricing } = useFlags();
   const { data: generalPoolUsage, isError, isLoading } = useAccountTransfer();
   const { data: regions } = useRegionsQuery();
 
   const generalPoolUsagePct = calculatePoolUsagePct(generalPoolUsage);
   const regionTransferPools = getRegionTransferPools(generalPoolUsage, regions);
-
-  if (!dcSpecificPricing) {
-    return <LegacyTransferDisplay spacingTop={spacingTop} />;
-  }
 
   if (isError) {
     // We may want to add an error state for this but I think that would clutter
