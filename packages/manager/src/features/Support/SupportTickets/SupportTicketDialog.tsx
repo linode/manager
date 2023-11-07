@@ -661,6 +661,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               label: 'Cancel',
               onClick: onCancel,
             }}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
         </React.Fragment>
       )}
