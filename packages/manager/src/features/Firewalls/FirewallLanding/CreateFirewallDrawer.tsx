@@ -3,7 +3,7 @@ import { Linode } from '@linode/api-v4';
 import {
   CreateFirewallPayload,
   Firewall,
-  FirewallDeviceEntityType,
+  // FirewallDeviceEntityType,
 } from '@linode/api-v4/lib/firewalls';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
@@ -19,12 +19,13 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
+// import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -177,12 +178,6 @@ export const CreateFirewallDrawer = React.memo(
       isLoading: nodebalancerIsLoading,
     } = useAllNodeBalancersQuery();
 
-    const {
-      data: linodeData,
-      error: linodeError,
-      isLoading: linodeIsLoading,
-    } = useAllLinodesQuery();
-
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
 
@@ -199,30 +194,24 @@ export const CreateFirewallDrawer = React.memo(
     const deviceSelectGuidance =
       readOnlyLinodeIds.length > 0 || readOnlyNodebalancerIds.length > 0
         ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
-        : null;
+        : undefined;
 
-    const optionsFilter = (
-      id: number,
-      serviceType: FirewallDeviceEntityType
-    ) => {
-      const readOnlyIds =
-        serviceType === 'linode' ? readOnlyLinodeIds : readOnlyNodebalancerIds;
+    const linodeOptionsFilter = (linode: Linode) => {
+      return !readOnlyLinodeIds.includes(linode.id);
+    };
 
-      return !readOnlyIds.includes(id);
+    const nodebalancerOptionsFilter = (id: number) => {
+      return !readOnlyNodebalancerIds.includes(id);
     };
 
     const nodebalancers = nodebalancerData?.filter((nb) =>
-      optionsFilter(nb.id, 'nodebalancer')
+      nodebalancerOptionsFilter(nb.id)
     );
 
-    const linodes = linodeData?.filter((linode) =>
-      optionsFilter(linode.id, 'linode')
-    );
-
-    const selectedLinodes: Linode[] =
-      linodes?.filter((linode) =>
-        values.devices?.linodes?.includes(linode.id)
-      ) || [];
+    // const selectedLinodes: Linode[] =
+    //   linodes?.filter((linode) =>
+    //     values.devices?.linodes?.includes(linode.id)
+    //   ) || [];
 
     const selectedNodeBalancers: NodeBalancer[] =
       nodebalancers?.filter((nodebalancer) =>
@@ -291,25 +280,18 @@ export const CreateFirewallDrawer = React.memo(
               {learnMoreLink}
             </Typography>
           </Box>
-          <Autocomplete
-            onChange={(_, linodes) => {
+          <LinodeSelect
+            onSelectionChange={(linodes) => {
               setFieldValue(
                 'devices.linodes',
                 linodes.map((linode) => linode.id)
               );
             }}
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-            disabled={userCannotAddFirewall || !!linodeError}
             errorText={errors['devices.linodes']}
-            label={inCreateFlow ? 'Additional Linodes (Optional)' : 'Linodes'}
-            loading={linodeIsLoading}
+            helperText={deviceSelectGuidance}
             multiple
-            noMarginTop={false}
-            noOptionsText="No Linodes available to add"
-            options={linodes || []}
-            value={selectedLinodes}
+            optionsFilter={linodeOptionsFilter}
+            value={values.devices?.linodes ?? null}
           />
           <Autocomplete
             label={

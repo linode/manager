@@ -1,16 +1,16 @@
 import { APIError, Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Autocomplete } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import {
   CustomPopper,
-  SelectedIcon,
+  // SelectedIcon,
 } from 'src/components/Autocomplete/Autocomplete.styles';
-import { Box } from 'src/components/Box';
-import { TextField } from 'src/components/TextField';
+// import { Box } from 'src/components/Box';
+// import { TextField } from 'src/components/TextField';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
@@ -94,7 +94,7 @@ export const LinodeSelect = (
     options,
     optionsFilter,
     placeholder,
-    renderOption,
+    // renderOption,
     renderOptionLabel,
     sx,
     value,
@@ -131,44 +131,13 @@ export const LinodeSelect = (
           ? onSelectionChange(value)
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
-      renderInput={(params) => (
-        <TextField
-          placeholder={
-            placeholder
-              ? placeholder
-              : multiple
-              ? 'Select Linodes'
-              : 'Select a Linode'
-          }
-          errorText={error?.[0].reason ?? errorText}
-          helperText={helperText}
-          inputId={params.id}
-          label={label ? label : multiple ? 'Linodes' : 'Linode'}
-          loading={isLoading}
-          noMarginTop={noMarginTop}
-          {...params}
-        />
-      )}
-      renderOption={(props, option, { selected }) => {
-        return (
-          <li {...props} data-qa-linode-option>
-            {renderOption ? (
-              renderOption(option, selected)
-            ) : (
-              <>
-                <Box
-                  sx={{
-                    flexGrow: 1,
-                  }}
-                >
-                  {option.label}
-                </Box>
-                <SelectedIcon visible={selected} />
-              </>
-            )}
-          </li>
-        );
-      }}
+      placeholder={
+        placeholder
+          ? placeholder
+          : multiple
+          ? 'Select Linodes'
+          : 'Select a Linode'
+      }
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
@@ -183,10 +152,14 @@ export const LinodeSelect = (
       disableCloseOnSelect={multiple}
       disablePortal={true}
       disabled={disabled}
+      errorText={error?.[0].reason ?? errorText}
+      helperText={helperText}
       id={id}
       inputValue={inputValue}
+      label={label ? label : multiple ? 'Linodes' : 'Linode'}
       loading={isLoading || loading}
       multiple={multiple}
+      noMarginTop={noMarginTop}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
