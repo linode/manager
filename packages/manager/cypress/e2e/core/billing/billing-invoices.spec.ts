@@ -10,14 +10,9 @@ import {
   mockGetInvoice,
   mockGetInvoiceItems,
 } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { formatUsd } from 'support/util/currency';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 
@@ -41,10 +36,13 @@ describe('Account invoices', () => {
    * - Confirms that subtotals and tax breakdowns are shown in summary.
    * - Confirms that download buttons are present and enabled.
    * - Confirms that clicking the "Back to Billing" button redirects to billing page.
-   * - Confirms that the "Region" column is not present when DC-specific pricing is disabled.
+   * - Confirms that the "Region" column is present after the MAGIC_DATE_THAT_DC_PRICING_WAS_IMPLEMENTED.
+   * - Confirms that invoice items that do not have a region are displayed as expected.
+   * - Confirms that outbound transfer overage items display the associated region when applicable.
+   * - Confirms that outbound transfer overage items display "Global" when no region is applicable.
    */
   it('lists invoice items on invoice details page', () => {
-    const mockInvoiceItems = buildArray(20, (i) => {
+    const mockInvoiceItemsWithRegions = buildArray(20, (i) => {
       const subtotal = randomNumber(101, 999);
       const tax = randomNumber(1, 100);
       const hours = randomNumber(1, 24);
@@ -72,12 +70,35 @@ describe('Account invoices', () => {
       });
     });
 
-    // Calculate the sum of each item's tax and subtotal.
-    const sumTax = mockInvoiceItems.reduce((acc: number, cur: InvoiceItem) => {
-      return acc + cur.tax;
-    }, 0);
+    // Regular invoice items.
+    const mockInvoiceItemsRegular = [
+      ...mockInvoiceItemsWithRegions,
+      invoiceItemFactory.build({
+        region: null,
+      }),
+    ];
 
-    const sumSubtotal = mockInvoiceItems.reduce(
+    // Outbound transfer overage items.
+    const mockInvoiceItemsOverages = [
+      invoiceItemFactory.build({
+        label: 'Outbound Transfer Overage',
+        region: null,
+      }),
+      invoiceItemFactory.build({
+        label: 'Outbound Transfer Overage',
+        region: chooseRegion().id,
+      }),
+    ];
+
+    // Calculate the sum of each item's tax and subtotal.
+    const sumTax = mockInvoiceItemsRegular.reduce(
+      (acc: number, cur: InvoiceItem) => {
+        return acc + cur.tax;
+      },
+      0
+    );
+
+    const sumSubtotal = mockInvoiceItemsRegular.reduce(
       (acc: number, cur: InvoiceItem) => {
         return acc + cur.amount;
       },
@@ -101,122 +122,8 @@ describe('Account invoices', () => {
           tax: Math.ceil(sumTax / 2),
         },
       ],
-    });
-
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-    mockGetInvoice(mockInvoice).as('getInvoice');
-    mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
-
-    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientstream',
-      '@getInvoice',
-      '@getInvoiceItems',
-    ]);
-
-    // Confirm that "Region" table column is not present.
-    cy.findByLabelText('Invoice Details').within(() => {
-      cy.get('thead').findByText('Region').should('not.exist');
-    });
-
-    // Confirm that each invoice item is listed on the page with expected data.
-    mockInvoiceItems.forEach((invoiceItem: InvoiceItem) => {
-      cy.findByText(invoiceItem.label)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByText(`${invoiceItem.quantity}`).should('be.visible');
-          cy.findByText(`$${invoiceItem.unit_price}`).should('be.visible');
-          cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
-            'be.visible'
-          );
-          cy.findByText(`${formatUsd(invoiceItem.tax)}`).should('be.visible');
-          cy.findByText(`${formatUsd(invoiceItem.total)}`).should('be.visible');
-        });
-    });
-
-    // Confirm that invoice header contains invoice label, total, and download buttons.
-    cy.get('[data-qa-invoice-header]')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(`Invoice #${mockInvoice.id}`).should('be.visible');
-        cy.findByText(formatUsd(sumSubtotal + sumTax)).should('be.visible');
-
-        cy.findByText('Download CSV').should('be.visible');
-        cy.findByText('Download PDF').should('be.visible');
-      });
-
-    // Confirm that invoice summary displays subtotal, tax subtotal, tax summary entries, and grand total.
-    cy.get('[data-qa-invoice-summary]')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Subtotal:')
-          .findByText(formatUsd(sumSubtotal))
-          .should('be.visible');
-
-        cy.findByText('Tax Subtotal:')
-          .findByText(formatUsd(sumTax))
-          .should('be.visible');
-
-        cy.findByText('Total:')
-          .findByText(formatUsd(sumSubtotal + sumTax))
-          .should('be.visible');
-
-        // Confirm each tax summary entry is shown.
-        mockInvoice.tax_summary.forEach((taxSummary: TaxSummary) => {
-          cy.findByText(`${taxSummary.name}:`)
-            .findByText(formatUsd(taxSummary.tax))
-            .should('be.visible');
-        });
-      });
-
-    // Confirm that clicking the "Back to Billing" button redirects the user to
-    // the account billing page.
-    cy.get('[data-qa-back-to-billing]').should('be.visible').click();
-    cy.url().should('endWith', '/account/billing');
-  });
-
-  /*
-   * - Confirms that invoice item region info is shown when DC-specific pricing is enabled.
-   * - Confirms that table "Region" column is shown when DC-specific pricing is enabled on new invoices.
-   * - Confirms that invoice items that do not have a region are displayed as expected.
-   * - Confirms that outbound transfer overage items display the associated region when applicable.
-   * - Confirms that outbound transfer overage items display "Global" when no region is applicable.
-   */
-  it('lists invoice item region when DC-specific pricing flag is enabled', () => {
-    // TODO: DC Pricing - M3-7073: Delete most of this test when DC-specific pricing launches and move assertions to above test. Use this test for the region invoice column.
-    // We don't have to be fancy with the mocks here since we are only concerned with the region and invoice date.
-    const mockInvoice = invoiceFactory.build({
-      id: randomNumber(),
       date: MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED,
     });
-
-    // Regular invoice items.
-    const mockInvoiceItemsRegular = [
-      ...buildArray(10, () =>
-        invoiceItemFactory.build({ region: chooseRegion().id })
-      ),
-      invoiceItemFactory.build({
-        region: null,
-      }),
-    ];
-
-    // Outbound transfer overage items.
-    const mockInvoiceItemsOverages = [
-      invoiceItemFactory.build({
-        label: 'Outbound Transfer Overage',
-        region: null,
-      }),
-      invoiceItemFactory.build({
-        label: 'Outbound Transfer Overage',
-        region: chooseRegion().id,
-      }),
-    ];
 
     // All mocked invoice items.
     const mockInvoiceItems = [
@@ -224,22 +131,13 @@ describe('Account invoices', () => {
       ...mockInvoiceItemsOverages,
     ];
 
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
     mockGetInvoice(mockInvoice).as('getInvoice');
     mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
 
-    // Visit invoice details page, wait for relevant requests to resolve.
     cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientstream',
-      '@getInvoice',
-      '@getInvoiceItems',
-    ]);
+    cy.wait(['@getInvoice', '@getInvoiceItems']);
 
+    // Confirm that "Region" table column is not present; old invoices will not be backfilled and we don't want to display a blank column.
     cy.findByLabelText('Invoice Details').within(() => {
       // Confirm that 'Region' table column is present.
       cy.get('thead').findByText('Region').should('be.visible');
@@ -251,6 +149,15 @@ describe('Account invoices', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
+            cy.findByText(`${invoiceItem.quantity}`).should('be.visible');
+            cy.findByText(`$${invoiceItem.unit_price}`).should('be.visible');
+            cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
+              'be.visible'
+            );
+            cy.findByText(`${formatUsd(invoiceItem.tax)}`).should('be.visible');
+            cy.findByText(`${formatUsd(invoiceItem.total)}`).should(
+              'be.visible'
+            );
             // If the invoice item has a region, confirm that it is displayed
             // in the table row. Otherwise, confirm that the table cell which
             // would normally show the region is empty.
@@ -263,38 +170,78 @@ describe('Account invoices', () => {
                   .should('be.visible')
                   .should('be.empty');
           });
-
-        // Confirm that outbound transfer overages are listed as expected.
-        mockInvoiceItemsOverages.forEach(
-          (invoiceItem: InvoiceItem, i: number) => {
-            // There will be multiple instances of the label "Outbound Transfer Overage".
-            // Select them all, then select the individual item that corresponds to the
-            // item being iterated upon in the array.
-            //
-            // This relies on the items being shown in the same order on-screen as
-            // they are defined in the array. This may be fragile to breakage if
-            // we ever change the way invoice items are sorted on this page.
-            cy.findAllByText(invoiceItem.label)
-              .should('have.length', 2)
-              .eq(i)
-              .closest('tr')
-              .within(() => {
-                // If the invoice item has a region, confirm that it is displayed
-                // in the table row. Otherwise, confirm that "Global" is displayed
-                // in the region column.
-                !!invoiceItem.region
-                  ? cy
-                      .findByText(getRegionLabel(invoiceItem.region))
-                      .should('be.visible')
-                  : cy.findByText('Global').should('be.visible');
-              });
-          }
-        );
       });
+
+      // Confirm that outbound transfer overages are listed as expected.
+      mockInvoiceItemsOverages.forEach(
+        (invoiceItem: InvoiceItem, i: number) => {
+          // There will be multiple instances of the label "Outbound Transfer Overage".
+          // Select them all, then select the individual item that corresponds to the
+          // item being iterated upon in the array.
+          //
+          // This relies on the items being shown in the same order on-screen as
+          // they are defined in the array. This may be fragile to breakage if
+          // we ever change the way invoice items are sorted on this page.
+          cy.findAllByText(invoiceItem.label)
+            .should('have.length', 2)
+            .eq(i)
+            .closest('tr')
+            .within(() => {
+              // If the invoice item has a region, confirm that it is displayed
+              // in the table row. Otherwise, confirm that "Global" is displayed
+              // in the region column.
+              !!invoiceItem.region
+                ? cy
+                    .findByText(getRegionLabel(invoiceItem.region))
+                    .should('be.visible')
+                : cy.findByText('Global').should('be.visible');
+            });
+        }
+      );
+
+      // Confirm that invoice header contains invoice label, total, and download buttons.
+      cy.get('[data-qa-invoice-header]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(`Invoice #${mockInvoice.id}`).should('be.visible');
+          cy.findByText(formatUsd(sumSubtotal + sumTax)).should('be.visible');
+
+          cy.findByText('Download CSV').should('be.visible');
+          cy.findByText('Download PDF').should('be.visible');
+        });
+
+      // Confirm that invoice summary displays subtotal, tax subtotal, tax summary entries, and grand total.
+      cy.get('[data-qa-invoice-summary]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Subtotal:')
+            .findByText(formatUsd(sumSubtotal))
+            .should('be.visible');
+
+          cy.findByText('Tax Subtotal:')
+            .findByText(formatUsd(sumTax))
+            .should('be.visible');
+
+          cy.findByText('Total:')
+            .findByText(formatUsd(sumSubtotal + sumTax))
+            .should('be.visible');
+
+          // Confirm each tax summary entry is shown.
+          mockInvoice.tax_summary.forEach((taxSummary: TaxSummary) => {
+            cy.findByText(`${taxSummary.name}:`)
+              .findByText(formatUsd(taxSummary.tax))
+              .should('be.visible');
+          });
+        });
     });
+
+    // Confirm that clicking the "Back to Billing" button redirects the user to
+    // the account billing page.
+    cy.get('[data-qa-back-to-billing]').should('be.visible').click();
+    cy.url().should('endWith', '/account/billing');
   });
 
-  it('does not list the region on past invoices when DC-specific pricing flag is enabled', () => {
+  it('does not list the region on past invoices', () => {
     const mockInvoice = invoiceFactory.build({
       id: randomNumber(),
       date: '2023-09-30 00:00:00Z',
@@ -305,21 +252,12 @@ describe('Account invoices', () => {
       ...buildArray(10, () => invoiceItemFactory.build({ region: null })),
     ];
 
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
     mockGetInvoice(mockInvoice).as('getInvoice');
     mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
 
     // Visit invoice details page, wait for relevant requests to resolve.
     cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientstream',
-      '@getInvoice',
-      '@getInvoiceItems',
-    ]);
+    cy.wait(['@getInvoice', '@getInvoiceItems']);
 
     cy.findByLabelText('Invoice Details').within(() => {
       // Confirm that "Region" table column is not present in an invoice created before DC-specific pricing was released.
