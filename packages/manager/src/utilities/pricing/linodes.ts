@@ -36,30 +36,6 @@ export const getLinodeRegionPrice = (
   return type.price;
 };
 
-/**
-//  * Get the price based on provided conditions.
-//  * @param type - The Linode type.
-//  * @param selectedRegionId - The selected region ID.
-//  * @param dcSpecificPricing - The data center specific pricing.
-//  * @returns The price or undefined if not available.
-//  * TODO: DC Pricing - M3-7073: Remove this function and replace with getLinodeRegionPrice once dcSpecificPricing flag is removed.
-//  */
-
-// export const getPrice = (
-//   type: ExtendedType | LinodeType | PlanSelectionType | undefined,
-//   selectedRegionId: string | undefined,
-//   dcSpecificPricing: boolean | undefined
-// ) => {
-//   // Check if both dcSpecificPricing and selectedRegionId are available
-//   if (dcSpecificPricing && selectedRegionId) {
-//     // If available, return  price of a Linode type
-//     return getLinodeRegionPrice(type, selectedRegionId);
-//   } else {
-//     // If not available, fall back to type.price (may still be undefined)
-//     return type?.price;
-//   }
-// };
-
 interface IsPriceDifferentOptions {
   regionA: Region['id'] | undefined;
   regionB: Region['id'] | undefined;
