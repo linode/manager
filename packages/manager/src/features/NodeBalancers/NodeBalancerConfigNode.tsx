@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Chip, ChipProps } from 'src/components/Chip';
+import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -42,14 +42,11 @@ const modeOptions: {
   { label: 'Drain', value: 'drain' },
 ];
 
-const statusToChipColor: Record<
-  'DOWN' | 'UP' | 'unknown',
-  ChipProps['color']
-> = {
+const statusToChipColor = {
   DOWN: 'error',
   UP: 'success',
   unknown: 'default',
-};
+} as const;
 
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
