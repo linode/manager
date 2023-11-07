@@ -10,6 +10,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerCertificateMutation } from 'src/queries/aglb/certificates';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 interface Props {
   certificate: Certificate | undefined;
@@ -68,6 +69,7 @@ export const EditCertificateDrawer = (props: Props) => {
         onClose();
       } catch (errors) {
         formik.setErrors(getFormikErrorsFromAPIErrors(errors));
+        scrollErrorIntoView();
       }
     },
     // Disabling validateOnBlur and validateOnChange when an API error is shown prevents
