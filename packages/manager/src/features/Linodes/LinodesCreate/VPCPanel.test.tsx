@@ -187,7 +187,48 @@ describe('VPCPanel', () => {
       ).not.toBeInTheDocument();
     });
   });
+  it('shows helper text for when "from" = "linodeCreate" if the selected region does not support VPCs', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: [],
+          id: 'us-east',
+        });
+        return res(ctx.json(makeResourcePage([usEast])));
+      })
+    );
 
+    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.queryByText('VPC is not available in the selected region.')
+      ).toBeInTheDocument();
+    });
+  });
+  it('should show the "Create VPC" drawer link when from = "linodeCreate" and a region that supports VPCs is selected', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const usEast = regionFactory.build({
+          capabilities: ['VPCs'],
+          id: 'us-east',
+        });
+        return res(ctx.json(makeResourcePage([usEast])));
+      })
+    );
+
+    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
+      flags: { vpc: true },
+      queryClient,
+    });
+
+    await waitFor(() => {
+      expect(wrapper.queryByText('Create VPC')).toBeInTheDocument();
+    });
+  });
   it('should display an unchecked VPC IPv4 auto-assign checkbox and display the VPC IPv4 input field if there is already a value', async () => {
     const _props = {
       ...props,
@@ -223,7 +264,6 @@ describe('VPCPanel', () => {
       expect(wrapper.getByLabelText(/^VPC IPv4.*/)).toHaveValue('10.0.4.3');
     });
   });
-
   it('should check the Assign a public IPv4 address checkbox if assignPublicIPv4Address is true', async () => {
     const _props = {
       ...props,

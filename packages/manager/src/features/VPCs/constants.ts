@@ -17,3 +17,10 @@ export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
 
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'A VPC IPv4 is the private IP address for this Linode in the VPC.';
+
+export const CANNOT_CREATE_VPC_MESSAGE = `You don't have permissions to create a new VPC. Please contact an account administrator for details`;
+
+export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT = `A subnet divides a VPC into multiple logically defined networks to allow for controlled access to VPC resources. Subnets within a VPC are routable regardless of the address spaces they are in.`;
+
+export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
+  'A virtual private cloud (VPC) is an isolated network which allows for control over how resources are networked and can communicate.';
