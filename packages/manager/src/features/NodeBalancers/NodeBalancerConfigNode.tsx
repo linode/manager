@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
+import { Chip, ChipProps } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -41,6 +41,15 @@ const modeOptions: {
   { label: 'Backup', value: 'backup' },
   { label: 'Drain', value: 'drain' },
 ];
+
+const statusToChipColor: Record<
+  'DOWN' | 'UP' | 'unknown',
+  ChipProps['color']
+> = {
+  DOWN: 'error',
+  UP: 'success',
+  unknown: 'default',
+};
 
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
@@ -114,10 +123,12 @@ export const NodeBalancerConfigNode = React.memo(
               <Grid lg={2} sm={4} xs={6}>
                 <StyledStatusHeader data-qa-active-checks-header variant="h3">
                   Status
-                  <div>
-                    <StyledStatusChip component="div" label={node.status} />
-                  </div>
                 </StyledStatusHeader>
+                <Chip
+                  color={statusToChipColor[node.status]}
+                  label={node.status}
+                  sx={{ marginTop: 1 }}
+                />
               </Grid>
             )}
           </Grid>
@@ -204,17 +215,4 @@ const StyledStatusHeader = styled(Typography, {
   color: theme.color.label,
   fontSize: '.9rem',
   marginTop: `calc(${theme.spacing(2)} - 4)`,
-}));
-
-const StyledStatusChip = styled(Chip, {
-  label: 'StyledStatusChip',
-})<Partial<NodeBalancerConfigNodeProps>>(({ theme, ...props }) => ({
-  backgroundColor:
-    props.label === 'UP'
-      ? theme.color.green
-      : props.label === 'DOWN'
-      ? theme.color.red
-      : theme.color.grey2,
-  color: props?.node?.status ? theme.palette.text.primary : 'white',
-  marginTop: theme.spacing(1),
 }));
