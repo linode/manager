@@ -19,8 +19,8 @@ import {
   useDatabaseQuery,
 } from 'src/queries/databases';
 
-import DatabaseBackupTableRow from './DatabaseBackupTableRow';
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
+import { BackupTableRow } from './DatabaseBackupTableRow';
 
 export const DatabaseBackups = () => {
   const { databaseId, engine } = useParams<{
@@ -85,7 +85,7 @@ export const DatabaseBackups = () => {
       return backups.data
         .sort(sorter)
         .map((backup) => (
-          <DatabaseBackupTableRow
+          <BackupTableRow
             backup={backup}
             key={backup.id}
             onRestore={onRestore}
