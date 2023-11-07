@@ -26,7 +26,6 @@ import {
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import {
   reportAgreementSigningError,
@@ -66,7 +65,6 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
-  const flags = useFlags();
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
@@ -185,9 +183,10 @@ export const CreateCluster = () => {
     return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
-  const showPricingNotice =
-    flags.dcSpecificPricing &&
-    doesRegionHaveUniquePricing(selectedRegionID, typesData);
+  const showPricingNotice = doesRegionHaveUniquePricing(
+    selectedRegionID,
+    typesData
+  );
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
@@ -266,9 +265,7 @@ export const CreateCluster = () => {
             <Box data-testid="ha-control-plane">
               <HAControlPlane
                 highAvailabilityPrice={
-                  flags.dcSpecificPricing
-                    ? getHighAvailabilityPrice(selectedID)
-                    : LKE_HA_PRICE
+                  getHighAvailabilityPrice(selectedID) ?? LKE_HA_PRICE
                 }
                 setHighAvailability={setHighAvailability}
               />
@@ -302,9 +299,7 @@ export const CreateCluster = () => {
       >
         <KubeCheckoutBar
           highAvailabilityPrice={
-            flags.dcSpecificPricing
-              ? getHighAvailabilityPrice(selectedID)
-              : LKE_HA_PRICE
+            getHighAvailabilityPrice(selectedID) ?? LKE_HA_PRICE
           }
           updateFor={[
             hasAgreed,
