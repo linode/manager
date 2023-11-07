@@ -375,7 +375,6 @@ export const Body = React.memo((props: BodyProps) => {
   });
 
   // Filter and retrieve subnets associated with a specific Linode ID
-
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
