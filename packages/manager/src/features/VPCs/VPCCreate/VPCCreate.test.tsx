@@ -20,6 +20,7 @@ describe('VPC create page', () => {
 
     getAllByText('Region');
     getAllByText('VPC Label');
+    getAllByText('Region');
     getAllByText('Description');
     getAllByText('Subnets');
     getAllByText('Subnet Label');
