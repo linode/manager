@@ -5,12 +5,7 @@ import {
   getRegionAvailability,
   getRegions,
 } from '@linode/api-v4/lib/regions';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 
 import data from 'src/cachedData/regions.json';
@@ -32,20 +27,16 @@ const getAllRegionsRequest = () =>
 
 // Region Availability queries
 
-export const useRegionsAvailabilitiesQuery = (
-  params: Params,
-  filter: Filter,
-  enabled: boolean = true
-) => {
-  return useQuery<ResourcePage<RegionAvailability>, APIError[]>(
-    [queryKey, 'paginated', params, filter],
-    () => getRegionAvailabilities(params, filter),
-    {
-      enabled,
-      keepPreviousData: true,
-    }
+export const useRegionsAvailabilitiesQuery = () =>
+  useQuery<RegionAvailability[], APIError[]>(
+    queryKey,
+    getAllRegionAvailabilitiesRequest
   );
-};
+
+const getAllRegionAvailabilitiesRequest = () =>
+  getAll<RegionAvailability>((params, filters) =>
+    getRegionAvailabilities(params, filters)
+  )().then((data) => data.data);
 
 export const useRegionsAvailabilityQuery = (
   id: string,
