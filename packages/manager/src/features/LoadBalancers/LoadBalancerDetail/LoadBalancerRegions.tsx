@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+
+import type { Country } from 'src/components/RegionSelect/RegionSelect.types';
 
 export const regions = [
   { country: 'us', id: 'us-iad', label: 'Washington, DC' },
