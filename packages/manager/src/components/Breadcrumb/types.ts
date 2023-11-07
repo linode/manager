@@ -5,7 +5,6 @@ export interface LabelProps {
   noCap?: boolean;
   prefixComponent?: JSX.Element | null;
   prefixStyle?: CSSProperties;
-  subtitle?: string;
   suffixComponent?: JSX.Element | null;
 }
 

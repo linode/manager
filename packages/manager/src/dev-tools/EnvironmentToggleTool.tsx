@@ -48,7 +48,7 @@ const options = getOptions(import.meta.env);
 
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.
-const EnvironmentToggleTool: React.FC<{}> = () => {
+export const EnvironmentToggleTool = () => {
   const [selectedOption, setSelectedOption] = React.useState(0);
 
   const localStorageEnv = storage.devToolsEnv.get();
@@ -97,5 +97,3 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
     </Grid>
   );
 };
-
-export default React.memo(EnvironmentToggleTool);
