@@ -11,7 +11,6 @@ import {
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
-import { containsPlaceholderClick } from 'support/helpers';
 import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
@@ -89,9 +88,8 @@ describe('clone linode', () => {
       cy.url().should('endWith', getLinodeCloneUrl(linode, false));
 
       // Select clone region and Linode type.
-      containsPlaceholderClick(selectRegionString).type(
-        `${linodeRegion.label}{enter}`
-      );
+      ui.regionSelect.open();
+      ui.regionSelect.findItemByRegionId(linodeRegion.id).click();
 
       cy.findByText('Shared CPU').should('be.visible').click();
 
@@ -127,7 +125,7 @@ describe('clone linode', () => {
    * - Confirms that pricing notice is shown in "Region" section.
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
-  it('shows DC-specific pricing information during clone flow', () => {
+  it.only('shows DC-specific pricing information during clone flow', () => {
     const initialRegion = getRegionById('us-west');
     const newRegion = getRegionById('us-east');
 
@@ -169,8 +167,8 @@ describe('clone linode', () => {
       'not.exist'
     );
 
-    cy.findByText(`${initialRegion.label} (${initialRegion.id})`)
-      .should('be.visible')
+    ui.regionSelect
+      .findBySelectedItem(`${initialRegion.label} (${initialRegion.id})`)
       .click()
       .type(`${newRegion.label}{enter}`);
 

@@ -1,22 +1,18 @@
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  containsPlaceholderClick,
-} from 'support/helpers';
+import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
-import { selectRegionString } from 'support/ui/constants';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 import { ui } from 'support/ui';
+import { authenticate } from 'support/api/authentication';
 
 const region = chooseRegion();
 
 const mockLinode = linodeFactory.build({
   region: region.id,
+  id: 123456,
 });
 
 const mockImage = imageFactory.build({
@@ -49,8 +45,8 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
     });
   }
 
-  containsPlaceholderClick(selectRegionString);
-  ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
+  ui.regionSelect.open();
+  ui.regionSelect.findItemByRegionId(region.id).click();
 
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
@@ -59,12 +55,19 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
 
   cy.wait('@mockLinodeRequest');
 
+  console.log('mockLinode', mockLinode);
+
   fbtVisible(mockLinode.label);
   fbtVisible(region.label);
   fbtVisible(mockLinode.id);
 };
 
+authenticate();
 describe('create linode from image, mocked data', () => {
+  before(() => {
+    cleanUp(['linodes']);
+  });
+
   /*
    * - Confirms UI flow when user attempts to create a Linode from images without having any images.
    */

@@ -136,6 +136,7 @@ export const Autocomplete = <
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
+      data-qa-autocomplete
       defaultValue={defaultValue}
       disableCloseOnSelect={multiple}
       disablePortal={disablePortal}
