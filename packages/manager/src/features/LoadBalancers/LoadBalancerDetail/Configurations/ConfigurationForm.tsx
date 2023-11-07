@@ -150,13 +150,12 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     ]);
   };
 
-  const generalErrors = error
-    ?.filter(
-      (error) =>
-        !error.field || !['label', 'port', 'protocol'].includes(error.field)
-    )
-    .map((e) => e.reason)
-    .join(', ');
+  const generalErrors = error?.reduce((acc, { field, reason }) => {
+    if (!field || !['label', 'port', 'protocol'].includes(field)) {
+      return acc ? `${acc}, ${reason}` : reason;
+    }
+    return acc;
+  }, '');
 
   return (
     <form onSubmit={formik.handleSubmit}>

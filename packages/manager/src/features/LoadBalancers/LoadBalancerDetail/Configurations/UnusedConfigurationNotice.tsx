@@ -39,22 +39,22 @@ export const UnusedConfigurationNotice = (props: Props) => {
       (config) => config.id
     );
 
-    updateLoadbalancer({
-      configuration_ids: [...existingConfigs, configurationId],
-    })
-      .then(() => {
-        enqueueSnackbar(
-          `Successfully enabled configuration ${configurationId}.`,
-          {
-            variant: 'success',
-          }
-        );
-      })
-      .catch((error: APIError[]) => {
-        enqueueSnackbar(error[0].reason, {
-          variant: 'error',
-        });
+    try {
+      await updateLoadbalancer({
+        configuration_ids: [...existingConfigs, configurationId],
       });
+
+      enqueueSnackbar(
+        `Successfully enabled configuration ${configurationId}.`,
+        {
+          variant: 'success',
+        }
+      );
+    } catch (error) {
+      enqueueSnackbar((error as APIError[])[0].reason, {
+        variant: 'error',
+      });
+    }
   };
 
   if (isConfigurationUsed) {
