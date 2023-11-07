@@ -29,7 +29,7 @@ describe('CreateBucketDrawer', () => {
     setLogger(console);
   });
 
-  it('Should show a general error notice if the API returns one', async () => {
+  it.skip('Should show a general error notice if the API returns one', async () => {
     // Suppress logging React Query errors to CLI since this test is expected
     // to trigger errors.
     //

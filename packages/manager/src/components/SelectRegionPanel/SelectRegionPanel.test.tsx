@@ -131,9 +131,10 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     expect(
       container.querySelector('[data-qa-textfield-label]')
     ).toHaveTextContent('Region');
-    expect(
-      container.querySelector('[data-qa-select-placeholder]')
-    ).toHaveTextContent('Select a Region');
+    expect(container.querySelector('[role="combobox"]')).toHaveAttribute(
+      'placeholder',
+      'Select a Region'
+    );
   });
 
   it('displays no notice when cloning to the same region', () => {
