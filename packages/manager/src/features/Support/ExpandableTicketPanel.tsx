@@ -10,7 +10,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Typography } from 'src/components/Typography';
 
 import { Hively, shouldRenderHively } from './Hively';
-import TicketDetailBody from './TicketDetailText';
+import { TicketDetailText } from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.shape.borderRadius,
     marginRight: theme.spacing(2),
     marginTop: theme.spacing(1),
-    padding: theme.spacing(1),
     width: '100%',
   },
   expert: {
@@ -164,7 +163,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
   return (
     <Grid container wrap="nowrap">
       <Grid>{renderAvatar(data.gravatar_id)}</Grid>
-      <Grid className={`${classes.content}`}>
+      <Grid className={classes.content}>
         <Grid className={classes.header} container>
           <Grid className={classes.headerInner}>
             <Typography className={classes.userName} component="span">
@@ -184,7 +183,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
             </Typography>
           </Grid>
         </Grid>
-        <TicketDetailBody open={open} text={data.description} />
+        <TicketDetailText open={open} text={data.description} />
         {shouldRenderHively(data.from_linode, data.updated, data.username) && (
           <Hively
             linodeUsername={data.username}

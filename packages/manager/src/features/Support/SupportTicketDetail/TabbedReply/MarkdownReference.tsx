@@ -22,9 +22,7 @@ interface Props {
   rootClass?: string;
 }
 
-type CombinedProps = Props;
-
-const MarkdownReference: React.FC<CombinedProps> = (props) => {
+export const MarkdownReference = (props: Props) => {
   const classes = useStyles();
 
   return (
@@ -65,5 +63,3 @@ const MarkdownReference: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default React.memo(MarkdownReference);

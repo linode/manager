@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     left: 'auto',
     position: 'absolute',
-    right: 0,
-    top: -43,
+    right: 4,
+    top: -35,
   },
   expand: {
     transform: 'rotate(180deg)',
@@ -25,8 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& pre': {
       backgroundColor: theme.bg.tableHeader,
     },
-    marginTop: theme.spacing(1),
-    padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
+    padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
     position: 'relative',
   },
   toggle: {
@@ -40,7 +39,7 @@ interface Props {
   text: string;
 }
 
-const TicketDetailText: React.FC<Props> = (props) => {
+export const TicketDetailText = (props: Props) => {
   const classes = useStyles();
 
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
@@ -73,5 +72,3 @@ const TicketDetailText: React.FC<Props> = (props) => {
     </Grid>
   );
 };
-
-export default React.memo(TicketDetailText);

@@ -13,11 +13,11 @@ import { useSupportTicketReplyMutation } from 'src/queries/support';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
-import AttachFileForm from '../../AttachFileForm';
+import { AttachFileForm } from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
-import Reference from './MarkdownReference';
+import { MarkdownReference } from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
-import TabbedReply from './TabbedReply';
+import { TabbedReply } from './TabbedReply';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   replyContainer: {
-    paddingLeft: theme.spacing(8),
+    paddingLeft: theme.spacing(6),
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(6),
     },
@@ -186,7 +186,7 @@ export const ReplyContainer = (props: Props) => {
           detailProps={{ className: classes.expPanelSummary }}
           heading="Formatting Tips"
         >
-          <Reference isReply rootClass={classes.referenceRoot} />
+          <MarkdownReference isReply rootClass={classes.referenceRoot} />
         </Accordion>
       </Grid>
       <Grid>

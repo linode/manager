@@ -36,10 +36,10 @@ import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
-import AttachFileForm from '../AttachFileForm';
+import { AttachFileForm } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
-import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
+import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
+import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import { FileAttachment } from '../index';
 import SupportTicketSMTPFields, {
   fieldNameToLabelMap,
@@ -643,7 +643,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 detailProps={{ className: classes.expPanelSummary }}
                 heading="Formatting Tips"
               >
-                <Reference />
+                <MarkdownReference />
               </Accordion>
               <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>

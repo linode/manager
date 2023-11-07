@@ -4,11 +4,10 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { compose, withHandlers } from 'recompose';
 
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { TextField } from 'src/components/TextField';
-import { InputAdornment } from 'src/components/InputAdornment';
 
 import { FileAttachment } from './index';
 
@@ -37,25 +36,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface HandlerProps {
-  onClick: () => void;
-}
-
 interface Props {
   file: FileAttachment;
   fileIdx: number;
   removeFile: (fileIdx: number) => void;
 }
 
-type CombinedProps = Props & HandlerProps;
-
-export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
+export const AttachFileListItem = (props: Props) => {
   const classes = useStyles();
 
-  const { file, onClick } = props;
+  const { file, fileIdx, removeFile } = props;
+
   if (file.uploaded) {
     return null;
   }
+
   const err =
     file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
@@ -69,7 +64,7 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
                 className={classes.closeIcon}
                 data-qa-inline-delete
                 data-testid="delete-button"
-                onClick={onClick}
+                onClick={() => removeFile(fileIdx)}
                 position="end"
               >
                 <Close />
@@ -101,12 +96,3 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(
-  withHandlers({
-    onClick: (props: Props) => () => {
-      props.removeFile(props.fileIdx);
-    },
-  })
-)(AttachFileListItem);
-export default enhanced;
