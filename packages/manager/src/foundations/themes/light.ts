@@ -3,6 +3,8 @@ import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
+const inputMaxWidth = 416;
+
 export const bg = {
   app: '#f4f5f6',
   bgAccessRow: '#fafafa',
@@ -322,6 +324,9 @@ export const lightTheme: ThemeOptions = {
               },
             },
           },
+        },
+        root: {
+          maxWidth: inputMaxWidth,
         },
         tag: {
           '&:not(.MuiChip-root)': {
@@ -751,7 +756,7 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
           lineHeight: 1,
-          maxWidth: 416,
+          maxWidth: inputMaxWidth,
           minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
         },

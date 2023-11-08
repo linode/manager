@@ -88,50 +88,45 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             <List>{params.children}</List>
           </StyledLParentListItem>
         )}
-        renderOption={(props, option, { selected }) => (
+        renderOption={(props, option, { selected }) => {
           // The tooltip is likely to be removed for DC Get Well
           // Because the the way Autocomplete is implemented, we need to wrap the entire list item in the tooltip, otherwise the tooltip will not show.
           // This is the reason for disabling event listeners on the tooltip when there is no disabled message.
           // It's probably superfluous, but won't hurt either.
-          <Tooltip
-            disableFocusListener={Boolean(!option.data.disabledMessage)}
-            disableHoverListener={Boolean(!option.data.disabledMessage)}
-            disableTouchListener={Boolean(!option.data.disabledMessage)}
-            enterDelay={500}
-            enterTouchDelay={500}
-            key={option.value}
-            title={option.data.disabledMessage ?? ''}
-          >
-            <StyledListItem
-              {...props}
-              componentsProps={{
-                root: {
-                  'data-qa-option': option.value,
-                  'data-testid': option.value,
-                } as ListItemComponentsPropsOverrides,
-              }}
+          const isDisabledMenuItem = Boolean(option.data.disabledMessage);
+          return (
+            <Tooltip
+              disableFocusListener={!isDisabledMenuItem}
+              disableHoverListener={!isDisabledMenuItem}
+              disableTouchListener={!isDisabledMenuItem}
+              enterDelay={500}
+              enterTouchDelay={500}
+              key={option.value}
+              title={option.data.disabledMessage ?? ''}
             >
-              {Boolean(option.data.disabledMessage) ? (
-                <Box alignItems="center" display="flex" flexGrow={1}>
-                  <StyledFlagContainer>
-                    <Flag country={option.data.country} />
-                  </StyledFlagContainer>
-                  {option.label} (Not available)
-                </Box>
-              ) : (
+              <StyledListItem
+                {...props}
+                componentsProps={{
+                  root: {
+                    'data-qa-option': option.value,
+                    'data-testid': option.value,
+                  } as ListItemComponentsPropsOverrides,
+                }}
+              >
                 <>
                   <Box alignItems="center" display="flex" flexGrow={1}>
                     <StyledFlagContainer>
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
-                    {option.label}
+                    {option.label}{' '}
+                    {Boolean(option.data.disabledMessage) && ' (Not available)'}
                   </Box>
-                  <SelectedIcon visible={selected} />
+                  {selected && <SelectedIcon visible={selected} />}
                 </>
-              )}
-            </StyledListItem>
-          </Tooltip>
-        )}
+              </StyledListItem>
+            </Tooltip>
+          );
+        }}
         textFieldProps={{
           InputProps: {
             required,

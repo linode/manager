@@ -24,7 +24,7 @@ export const getRegionOptions = (
   regions: Region[],
   flags: FlagSet,
   path: string
-) => {
+): RegionSelectOption[] => {
   const allRegions = [
     ...regions,
     ...listOfFakeRegions
