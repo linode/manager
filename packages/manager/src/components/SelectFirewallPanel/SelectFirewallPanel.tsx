@@ -1,8 +1,8 @@
-import { Firewall } from '@linode/api-v4';
-import { Stack } from 'src/components/Stack';
+import { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
@@ -14,12 +14,18 @@ interface Props {
   handleFirewallChange: (firewallID: number) => void;
   helperText: JSX.Element;
   selectedFirewallId: number;
+  serviceType?: FirewallDeviceEntityType;
 }
 
 export const createFirewallLabel = 'Additional Linodes (Optional)';
 
 export const SelectFirewallPanel = (props: Props) => {
-  const { handleFirewallChange, helperText, selectedFirewallId } = props;
+  const {
+    handleFirewallChange,
+    helperText,
+    selectedFirewallId,
+    serviceType,
+  } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
@@ -78,7 +84,7 @@ export const SelectFirewallPanel = (props: Props) => {
           Create Firewall
         </LinkButton>
         <CreateFirewallDrawer
-          inCreateFlow
+          createFlow={serviceType}
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}

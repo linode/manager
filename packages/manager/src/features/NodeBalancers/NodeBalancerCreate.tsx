@@ -1,6 +1,6 @@
+import { useTheme } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import {
   append,
   clone,
@@ -508,6 +508,7 @@ const NodeBalancerCreate = () => {
           </Typography>
         }
         selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
+        serviceType="nodebalancer"
       />
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
