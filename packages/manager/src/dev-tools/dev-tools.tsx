@@ -6,14 +6,12 @@ import { Provider } from 'react-redux';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { ApplicationStore } from 'src/store';
 
-import EnvironmentToggleTool from './EnvironmentToggleTool';
-import FeatureFlagTool from './FeatureFlagTool';
-import MockDataTool from './MockDataTool';
+import { EnvironmentToggleTool } from './EnvironmentToggleTool';
+import { FeatureFlagTool } from './FeatureFlagTool';
+import { MockDataTool } from './MockDataTool';
 import './dev-tools.css';
 
 function install(store: ApplicationStore) {
-  (window as any).devToolsEnabled = true;
-
   function DevTools() {
     return (
       <div id="dev-tools">
