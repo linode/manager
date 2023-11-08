@@ -288,7 +288,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.findByText(dcPricingRegionNotice).should('not.exist');
 
     ui.regionSelect
-      .open()
+      .find()
       .clear()
       .type(`${dcSpecificPricingRegion.label}{enter}`);
     cy.findByText(dcPricingRegionNotice).should('be.visible');
