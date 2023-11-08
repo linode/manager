@@ -7,7 +7,6 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
-import { TextField, TextFieldProps } from 'src/components/TextField';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
@@ -67,7 +66,7 @@ export interface NodeBalancerSingleSelectProps extends NodeBalancerSelectProps {
 }
 
 /**
- * A select input allowing selection between account Linodes.
+ * A select input allowing selection between account NodeBalancers.
  */
 export const NodeBalancerSelect = (
   props: NodeBalancerMultiSelectProps | NodeBalancerSingleSelectProps
