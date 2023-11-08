@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
 import {
   Breadcrumb,
   BreadcrumbProps,
@@ -11,6 +12,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;
+  betaFeedbackLink?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
   buttonDataAttrs?: { [key: string]: boolean | string };
@@ -35,6 +37,7 @@ export interface LandingHeaderProps {
  */
 export const LandingHeader = ({
   analyticsLabel,
+  betaFeedbackLink,
   breadcrumbDataAttrs,
   breadcrumbProps,
   buttonDataAttrs,
@@ -86,6 +89,19 @@ export const LandingHeader = ({
       {!shouldHideDocsAndCreateButtons && (
         <Grid>
           <Grid alignItems="center" container justifyContent="flex-end">
+            {betaFeedbackLink && (
+              <span
+                style={{
+                  marginRight: `${theme.spacing(2)}`,
+                }}
+              >
+                <DocsLink
+                  href={betaFeedbackLink}
+                  label="BETA Feedback"
+                  icon={<BetaFeedbackIcon />}
+                />
+              </span>
+            )}
             {docsLink ? (
               <DocsLink
                 analyticsLabel={docsAnalyticsLabel}
