@@ -4,7 +4,7 @@ import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Auto
 export interface RegionSelectOption {
   data: {
     country: Country;
-    disabledMessage: JSX.Element | null;
+    disabledMessage: JSX.Element;
     region: string;
   };
   label: string;

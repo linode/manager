@@ -76,7 +76,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         onChange={(_, selectedOption: RegionSelectOption) => {
           handleRegionChange(selectedOption);
         }}
-        onKeyDown={(e) => {
+        onKeyDown={() => {
           setSelectedRegion(null);
         }}
         renderGroup={(params) => (

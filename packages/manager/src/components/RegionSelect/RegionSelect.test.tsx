@@ -38,17 +38,20 @@ describe('getRegionOptions', () => {
     const path = '';
     const result: RegionSelectOption[] = getRegionOptions(regions, flags, path);
 
+    type _RegionSelectOption = Omit<RegionSelectOption, 'data'> & {
+      data: Omit<RegionSelectOption['data'], 'disabledMessage'>;
+    };
+
     // Expected result
-    const expected: RegionSelectOption[] = [
+    const expected: _RegionSelectOption[] = [
       {
-        data: { country: 'ca', disabledMessage: null, region: 'North America' },
+        data: { country: 'ca', region: 'North America' },
         label: 'CA Location (ca-1)',
         value: 'ca-1',
       },
       {
         data: {
           country: 'us',
-          disabledMessage: null,
           region: 'North America',
         },
         label: 'US Location (us-1)',
@@ -56,7 +59,7 @@ describe('getRegionOptions', () => {
       },
 
       {
-        data: { country: 'jp', disabledMessage: null, region: 'Asia' },
+        data: { country: 'jp', region: 'Asia' },
         label: 'JP Location (jp-1)',
         value: 'jp-1',
       },
