@@ -7,11 +7,11 @@ import { Typography } from 'src/components/Typography';
 import type { Country } from '@linode/api-v4';
 
 export const regions = [
-  { country: 'US', id: 'us-iad', label: 'Washington, DC' },
-  { country: 'US', id: 'us-lax', label: 'Los Angeles, CA' },
-  { country: 'FR', id: 'fr-par', label: 'Paris, FR' },
-  { country: 'JP', id: 'jp-osa', label: 'Osaka, JP' },
-  { country: 'AU', id: 'ap-southeast', label: 'Sydney, AU' },
+  { country: 'us', id: 'us-iad', label: 'Washington, DC' },
+  { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
+  { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
+  { country: 'jp', id: 'jp-osa', label: 'Osaka, JP' },
+  { country: 'au', id: 'ap-southeast', label: 'Sydney, AU' },
 ];
 
 export const LoadBalancerRegions = () => {
