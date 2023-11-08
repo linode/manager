@@ -62,12 +62,7 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   fbtVisible(mockLinode.id);
 };
 
-authenticate();
 describe('create linode from image, mocked data', () => {
-  before(() => {
-    cleanUp(['linodes']);
-  });
-
   /*
    * - Confirms UI flow when user attempts to create a Linode from images without having any images.
    */

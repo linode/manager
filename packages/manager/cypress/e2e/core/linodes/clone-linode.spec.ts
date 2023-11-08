@@ -124,7 +124,7 @@ describe('clone linode', () => {
    * - Confirms that pricing notice is shown in "Region" section.
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
-  it.only('shows DC-specific pricing information during clone flow', () => {
+  it('shows DC-specific pricing information during clone flow', () => {
     const initialRegion = getRegionById('us-west');
     const newRegion = getRegionById('us-east');
 

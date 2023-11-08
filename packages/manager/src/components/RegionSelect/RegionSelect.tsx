@@ -13,6 +13,7 @@ import {
   SelectedIcon,
   StyledFlagContainer,
   StyledListItem,
+  StyledLParentListItem,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
@@ -80,12 +81,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           setSelectedRegion(null);
         }}
         renderGroup={(params) => (
-          <li key={params.key}>
+          <StyledLParentListItem key={params.key}>
             <GroupHeader data-qa-region-select-group={params.group}>
               {params.group}
             </GroupHeader>
             <List>{params.children}</List>
-          </li>
+          </StyledLParentListItem>
         )}
         renderOption={(props, option, { selected }) => (
           // The tooltip is likely to be removed for DC Get Well
