@@ -80,7 +80,7 @@ describe('create linode', () => {
 
     // Confirm that region select dropdown is visible and interactive.
     const autocomplete = cy.findByTestId('region-select');
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
 
     cy.get('[data-qa-autocomplete-popper="true"]').should('be.visible');
 
@@ -126,7 +126,7 @@ describe('create linode', () => {
     cy.get('[data-qa-deploy-linode]');
     cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(chooseRegion().label).click();
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
@@ -147,7 +147,7 @@ describe('create linode', () => {
 
     cy.visitWithLogin('/linodes/create');
 
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.autocompletePopper
       .findByTitle(`${linodeRegion.label} (${linodeRegion.id})`)
       .should('exist')
@@ -271,7 +271,7 @@ describe('create linode', () => {
 
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(initialRegion.label).click();
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
@@ -301,7 +301,7 @@ describe('create linode', () => {
     //   .should('be.visible')
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect
       .findItemByRegionLabel(initialRegion.label)
       .click()

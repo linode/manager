@@ -32,6 +32,13 @@ export const autocompletePopper = {
  * UI helpers for region selection Autocomplete.
  */
 export const regionSelect = {
+  /**
+   * Finds and open the region select input.
+   */
+  find: (): Cypress.Chainable => {
+    return cy.get('[data-testid="region-select"] input');
+  },
+
   findBySelectedItem: (selectedRegion: string) => {
     return cy.get(`[value="${selectedRegion}"]`);
   },
@@ -62,12 +69,5 @@ export const regionSelect = {
   findItemByRegionLabel: (regionLabel: string) => {
     const region = getRegionByLabel(regionLabel);
     return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
-  },
-
-  /**
-   * Finds and open the region select input.
-   */
-  open: (): Cypress.Chainable => {
-    return cy.get('[data-testid="region-select"] input').click();
   },
 };

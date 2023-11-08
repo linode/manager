@@ -45,7 +45,7 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
     });
   }
 
-  ui.regionSelect.open();
+  ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
 
   fbtClick('Shared CPU');

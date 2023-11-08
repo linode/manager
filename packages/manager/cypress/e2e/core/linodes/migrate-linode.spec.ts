@@ -70,7 +70,7 @@ describe('Migrate linodes', () => {
     getClick('[data-qa-checked="false"]');
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
 
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(newRegion.label).click();
 
     cy.findByText(dcPricingCurrentPriceLabel).should('not.exist');
@@ -153,7 +153,7 @@ describe('Migrate linodes', () => {
     getClick('[data-qa-checked="false"]');
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
 
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(newRegion.label).click();
 
     cy.findByText(dcPricingCurrentPriceLabel).should('be.visible');
@@ -242,7 +242,7 @@ describe('Migrate linodes', () => {
     cy.findByText(dcPricingNewPriceLabel).should('not.exist');
     cy.get('[data-testid="new-price-panel"]').should('not.exist');
     // Change region selection to another region with the same price structure.
-    ui.regionSelect.open().clear().type(`${newRegion.label}{enter}`);
+    ui.regionSelect.find().click().clear().type(`${newRegion.label}{enter}`);
     // Confirm that DC pricing information still does not show up.
     cy.findByText(dcPricingCurrentPriceLabel).should('not.exist');
     cy.get('[data-testid="current-price-panel"]').should('not.exist');

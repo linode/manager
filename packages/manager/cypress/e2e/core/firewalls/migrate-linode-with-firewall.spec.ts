@@ -119,7 +119,7 @@ describe('Migrate Linode With Firewall', () => {
 
         // Select migration region.
         cy.findByText(`North America: Dallas, TX`).should('be.visible');
-        ui.regionSelect.open();
+        ui.regionSelect.find().click();
         ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
 
         ui.button
@@ -215,7 +215,7 @@ describe('Migrate Linode With Firewall', () => {
           cy.findByText('Accept').should('be.visible').click();
 
           // Select region for migration.
-          ui.regionSelect.open();
+          ui.regionSelect.find().click();
           ui.regionSelect
             .findItemByRegionLabel(migrationRegionEnd.label)
             .click();

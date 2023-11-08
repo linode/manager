@@ -121,7 +121,7 @@ const uploadImage = (label: string) => {
   getClick('[id="label"][data-testid="textfield-input"]').type(label);
   getClick('[id="description"]').type('This is a machine image upload test');
 
-  ui.regionSelect.open();
+  ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
 
   // Pass `null` to `cy.fixture()` to ensure file is encoded as a Cypress buffer object.

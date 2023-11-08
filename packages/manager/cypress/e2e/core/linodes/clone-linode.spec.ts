@@ -87,7 +87,7 @@ describe('clone linode', () => {
       cy.url().should('endWith', getLinodeCloneUrl(linode, false));
 
       // Select clone region and Linode type.
-      ui.regionSelect.open();
+      ui.regionSelect.find().click();
       ui.regionSelect.findItemByRegionId(linodeRegion.id).click();
 
       cy.findByText('Shared CPU').should('be.visible').click();

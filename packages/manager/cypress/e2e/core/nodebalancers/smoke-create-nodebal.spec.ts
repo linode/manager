@@ -42,7 +42,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     });
 
     // Confirms that the price will show up when the region is selected
-    ui.regionSelect.open().type(`${regionName}{enter}`);
+    ui.regionSelect.find().click().type(`${regionName}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$10/month`).should('be.visible');
     });
@@ -53,7 +53,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
     // Confirms that the summary updates to reflect price changes if the user changes their region.
-    ui.regionSelect.open().clear().type(`${newRegion.label}{enter}`);
+    ui.regionSelect.find().click().clear().type(`${newRegion.label}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$14/month`).should('be.visible');
     });
@@ -62,7 +62,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
   }
   // this will create the NB in newark, where the default Linode was created
-  ui.regionSelect.open().clear().type(`${regionName}{enter}`);
+  ui.regionSelect.find().click().clear().type(`${regionName}{enter}`);
 
   // node backend config
   fbtClick('Label').type(randomLabel());

@@ -332,7 +332,7 @@ describe('Community Stackscripts integration tests', () => {
       .click();
     // An error message shows up when no region is selected
     cy.contains('Region is required.').should('be.visible');
-    ui.regionSelect.open().type(`${region.id}{enter}`);
+    ui.regionSelect.find().click().type(`${region.id}{enter}`);
 
     // Choose a plan
     ui.button

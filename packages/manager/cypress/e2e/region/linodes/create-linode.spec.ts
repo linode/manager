@@ -18,7 +18,7 @@ describe('Create Linodes', () => {
     cy.visitWithLogin('linodes/create');
 
     // Select region and plan.
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
 
     cy.get('[data-qa-plan-row="Dedicated 4 GB"]')

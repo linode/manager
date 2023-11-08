@@ -34,7 +34,7 @@ describe('Upload Machine Images', () => {
       .click()
       .type(imageDescription);
 
-    ui.regionSelect.open();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
 
     // Pass `null` to `cy.fixture()` to encode file as a Cypress buffer object.
