@@ -17,6 +17,11 @@ export interface CopyTooltipProps {
    */
   copyableText?: boolean;
   /**
+   * If true, the copy button will be disabled and there will be no tooltip.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
    * Callback to be executed when the icon is clicked.
    */
   onClickCallback?: () => void;
@@ -28,11 +33,6 @@ export interface CopyTooltipProps {
    * The text to be copied to the clipboard.
    */
   text: string;
-  /**
-   * If true, the copy button will be disabled and there will be no tooltip.
-   * @default false
-   */
-  disabled?: boolean;
 }
 
 /**
@@ -46,10 +46,10 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   const {
     className,
     copyableText,
+    disabled,
     onClickCallback,
     placement,
     text,
-    disabled,
   } = props;
 
   const handleIconClick = () => {
@@ -123,7 +123,7 @@ const StyledCopyButton = styled('button', {
     padding: 0,
   }),
   ...(props.disabled && {
-    cursor: 'default',
     color: theme.color.disabledText,
+    cursor: 'default',
   }),
 }));

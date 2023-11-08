@@ -38,6 +38,9 @@ const sxTooltipIcon = {
   paddingLeft: '4px',
 };
 
+export const PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT = `The Public IP Addresses have been unassigned from the
+configuration profile.`;
+
 export const AccessTable = React.memo((props: AccessTableProps) => {
   return (
     <Grid
@@ -54,8 +57,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
           <TooltipIcon
             text={
               <Typography>
-                The Public IP Addresses have been unassigned from the
-                configuration profile.{' '}
+                {PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT}{' '}
                 <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/">
                   Learn more
                 </Link>
