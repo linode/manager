@@ -21,12 +21,17 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useAllIPsQuery,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
+import { useVPCsQuery } from 'src/queries/vpcs';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getPermissionsForLinode } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
@@ -47,6 +52,8 @@ import { ViewIPDrawer } from './ViewIPDrawer';
 import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { IPTypes } from './types';
+
+import type { Interface } from '@linode/api-v4/lib/linodes/types';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({
@@ -102,6 +109,51 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const [isViewRDNSDialogOpen, setIsViewRDNSDialogOpen] = React.useState(false);
   const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(false);
 
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const displayVPCSection = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
+  const vpcsList = vpcData?.data ?? [];
+
+  const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
+    const subnets = vpc.subnets;
+
+    return Boolean(
+      subnets.find((subnet) =>
+        subnet.linodes.some((linodeInfo) => linodeInfo.id === linodeID)
+      )
+    );
+  });
+
+  const { data: configs } = useAllLinodeConfigsQuery(linodeID);
+  let _configInterfaceWithVPC: Interface | undefined;
+
+  // eslint-disable-next-line no-unused-expressions
+  configs?.find((config) => {
+    const interfaces = config.interfaces;
+
+    const interfaceWithVPC = interfaces.find(
+      (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
+    );
+
+    if (interfaceWithVPC) {
+      _configInterfaceWithVPC = interfaceWithVPC;
+    }
+
+    return interfaceWithVPC;
+  });
+
+  // A VPC-only Linode is a Linode that has at least one config interface with primary set to true and purpose vpc and no ipv4.nat_1_1 value
+  const isVPCOnlyLinode = Boolean(
+    _configInterfaceWithVPC?.primary && !_configInterfaceWithVPC.ipv4?.nat_1_1
+  );
+
   const openRemoveIPDialog = (ip: IPAddress) => {
     setSelectedIP(ip);
     setIsDeleteIPDialogOpen(true);
@@ -134,19 +186,25 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     const isOnlyPublicIP =
       ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
 
+    const disabled = isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public';
+
     return (
       <TableRow
         className={classes.row}
         data-qa-ip={address}
+        disabled={disabled}
         key={`${address}-${type}`}
       >
         <TableCell
-          sx={{ whiteSpace: 'nowrap' }}
           data-qa-ip-address
           parentColumn="Address"
+          sx={{ whiteSpace: 'nowrap' }}
         >
-          <CopyTooltip copyableText text={address} />
-          <CopyTooltip className={classes.copy} text={address} />
+          <CopyTooltip copyableText disabled={disabled} text={address} />
+          {!isVPCOnlyLinode ||
+            (ipDisplay.type !== 'IPv4 – Public' && (
+              <CopyTooltip className={classes.copy} text={address} />
+            ))}
         </TableCell>
         <TableCell data-qa-ip-address parentColumn="Type">
           {type}
@@ -168,6 +226,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         <StyledActionTableCell data-qa-action>
           {_ip ? (
             <LinodeNetworkingActionMenu
+              disabled={disabled}
               ipAddress={_ip}
               ipType={type}
               isOnlyPublicIP={isOnlyPublicIP}
@@ -177,6 +236,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             />
           ) : _range ? (
             <LinodeNetworkingActionMenu
+              disabled={disabled}
               ipAddress={_range}
               ipType={type}
               isOnlyPublicIP={isOnlyPublicIP}

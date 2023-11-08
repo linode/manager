@@ -1,17 +1,19 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import { useTheme } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/AccessTable';
 
 import { IPTypes } from './types';
 
 interface Props {
+  disabled: boolean;
   ipAddress?: IPAddress | IPRange;
   ipType: IPTypes;
   isOnlyPublicIP: boolean;
@@ -25,6 +27,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const {
+    disabled,
     ipAddress,
     ipType,
     isOnlyPublicIP,
@@ -55,13 +58,15 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const actions = [
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
       ? {
-          disabled: readOnly || isOnlyPublicIP,
+          disabled: readOnly || isOnlyPublicIP || disabled,
           onClick: () => {
             onRemove(ipAddress);
           },
           title: 'Delete',
           tooltip: readOnly
             ? readOnlyTooltip
+            : disabled
+            ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
             : isOnlyPublicIP
             ? isOnlyPublicIPTooltip
             : undefined,
@@ -69,12 +74,16 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
       : null,
     onEdit && ipAddress && showEdit
       ? {
-          disabled: readOnly,
+          disabled: readOnly || disabled,
           onClick: () => {
             onEdit(ipAddress);
           },
           title: 'Edit RDNS',
-          tooltip: readOnly ? readOnlyTooltip : undefined,
+          tooltip: readOnly
+            ? readOnlyTooltip
+            : disabled
+            ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+            : undefined,
         }
       : null,
   ].filter(Boolean) as Action[];

@@ -75,7 +75,10 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
           <TableBody>
             {props.rows.map((thisRow) => {
               return thisRow.text ? (
-                <StyledTableRow key={thisRow.text}>
+                <StyledTableRow
+                  disabled={props.isVPCOnlyLinode}
+                  key={thisRow.text}
+                >
                   {thisRow.heading ? (
                     <TableCell component="th" scope="row">
                       {thisRow.heading}
