@@ -92,7 +92,7 @@ export const LandingHeader = ({
 
       <Grid alignItems="center" container justifyContent="flex-end">
         {feedbackLink && (
-          <Grid>
+          <Grid container>
             <Typography
               sx={(theme) => ({
                 marginRight: theme.spacing(2),
@@ -105,7 +105,7 @@ export const LandingHeader = ({
           </Grid>
         )}
         {!shouldHideDocsAndCreateButtons && (
-          <Grid>
+          <Grid container>
             {docsLink ? (
               <DocsLink
                 analyticsLabel={docsAnalyticsLabel}
