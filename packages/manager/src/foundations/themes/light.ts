@@ -281,6 +281,9 @@ export const lightTheme: ThemeOptions = {
           '&::placeholder': {
             opacity: 1,
           },
+          '&::selection': {
+            backgroundColor: color.grey7,
+          },
         },
         inputRoot: {
           paddingLeft: 8,

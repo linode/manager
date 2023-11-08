@@ -52,6 +52,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     handleSelection(selection?.value);
   };
 
+  React.useEffect(() => {
+    if (selectedId) {
+      setSelectedRegion(regionFromSelectedId);
+    }
+  }, [selectedId]);
+
   const options = React.useMemo(() => getRegionOptions(regions, flags, path), [
     flags,
     path,
@@ -70,6 +76,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         ) => option.value === value}
         onChange={(_, selectedOption: RegionSelectOption) => {
           handleRegionChange(selectedOption);
+        }}
+        onKeyDown={(e) => {
+          setSelectedRegion(null);
         }}
         renderGroup={(params) => (
           <li key={params.key}>
