@@ -41,14 +41,13 @@ describe('getRegionOptions', () => {
     // Expected result
     const expected: RegionSelectOption[] = [
       {
-        data: { country: 'CA', disabledMessage: null, region: 'North America' },
+        data: { country: 'CA', region: 'North America' },
         label: 'CA Location (ca-1)',
         value: 'ca-1',
       },
       {
         data: {
           country: 'US',
-          disabledMessage: null,
           region: 'North America',
         },
         label: 'US Location (us-1)',
@@ -56,7 +55,7 @@ describe('getRegionOptions', () => {
       },
 
       {
-        data: { country: 'JP', disabledMessage: null, region: 'Asia' },
+        data: { country: 'JP', region: 'Asia' },
         label: 'JP Location (jp-1)',
         value: 'jp-1',
       },

@@ -222,8 +222,6 @@ describe('create linode', () => {
     const initialRegion = getRegionById('us-west');
     const newRegion = getRegionById('us-east');
 
-    console.log(initialRegion);
-
     const mockLinode = linodeFactory.build({
       label: linodeLabel,
       region: initialRegion.id,

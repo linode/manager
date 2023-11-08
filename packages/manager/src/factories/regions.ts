@@ -1,7 +1,8 @@
 import {
+  RegionAvailability,
+  Country,
   DNSResolvers,
   Region,
-  RegionAvailability,
 } from '@linode/api-v4/lib/regions/types';
 import * as Factory from 'factory.ts';
 
@@ -33,7 +34,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
       'Vlans',
       'Premium Plans',
     ],
-    country: 'id',
+    country: 'id' as Country,
     id: 'id-cgk',
     label: 'Jakarta, ID',
     resolvers: resolverFactory.build(),

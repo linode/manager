@@ -2,14 +2,14 @@ import { styled } from '@mui/material/styles';
 import 'flag-icons/css/flag-icons.min.css';
 import React from 'react';
 
-import type { Country } from './RegionSelect/RegionSelect.types';
+import type { Country } from '@linode/api-v4';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
 };
 
 interface Props {
-  country: Lowercase<Country>;
+  country: Country;
 }
 
 /**

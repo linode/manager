@@ -1,6 +1,7 @@
+import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
+
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-import { CONTINENT_CODE_TO_CONTINENT } from './RegionSelect.constants';
 import { listOfFakeRegions } from './disabledRegions';
 
 import type { RegionSelectOption } from './RegionSelect.types';
@@ -57,7 +58,7 @@ export const getRegionOptions = (
       return {
         data: {
           country: region.country,
-          disabledMessage: (region as FakeRegion).disabledMessage || null,
+          disabledMessage: (region as FakeRegion).disabledMessage,
           region: group,
         },
         label: `${region.label} (${region.id})`,

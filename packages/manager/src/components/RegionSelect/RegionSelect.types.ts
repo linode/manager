@@ -1,12 +1,12 @@
-import { COUNTRY_CODE_TO_CONTINENT_CODE } from './RegionSelect.constants';
-
-export type Country = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
-
-import type { Region } from '@linode/api-v4';
+import type { Country, Region } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface RegionSelectOption {
-  data?: any;
+  data: {
+    country: Country;
+    disabledMessage?: JSX.Element;
+    region: string;
+  };
   label: string;
   value: string;
 }

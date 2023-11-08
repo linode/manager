@@ -16,9 +16,10 @@ import {
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
-import type { RegionSelectProps } from './RegionSelect.types';
-import type { Country } from './RegionSelect.types';
-import type { RegionSelectOption } from './RegionSelect.types';
+import type {
+  RegionSelectOption,
+  RegionSelectProps,
+} from './RegionSelect.types';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
@@ -51,10 +52,11 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     handleSelection(selection?.value);
   };
 
-  const options: any = React.useMemo(
-    () => getRegionOptions(regions, flags, path),
-    [flags, path, regions]
-  );
+  const options = React.useMemo(() => getRegionOptions(regions, flags, path), [
+    flags,
+    path,
+    regions,
+  ]);
 
   return (
     <Box sx={{ width }}>
@@ -126,9 +128,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
-                <Flag
-                  country={selectedRegion?.data.country as Lowercase<Country>}
-                />
+                <Flag country={selectedRegion?.data.country} />
               </StyledFlagContainer>
             ),
           },

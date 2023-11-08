@@ -1,11 +1,10 @@
-import { Region } from '@linode/api-v4';
-
 import {
   CONTINENT_CODE_TO_CONTINENT,
   COUNTRY_CODE_TO_CONTINENT_CODE,
-} from 'src/components/RegionSelect/RegionSelect.constants';
+} from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
 
-import type { Country } from 'src/components/RegionSelect/RegionSelect.types';
+import type { Country } from '@linode/api-v4';
 
 export const getRegionCountryGroup = (region: Region | undefined) => {
   if (!region) {

@@ -26,7 +26,7 @@ import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
 import type { Linode, PriceObject } from '@linode/api-v4';
-import type { Country } from 'src/components/RegionSelect/RegionSelect.types';
+import type { Country } from '@linode/api-v4';
 
 interface Props {
   backupEnabled: Linode['backups']['enabled'];
@@ -109,7 +109,7 @@ export const ConfigureForm = React.memo((props: Props) => {
         <StyledMigrationBox>
           <StyledSpan>Current Region</StyledSpan>
           <StyledDiv>
-            <Flag country={country as Lowercase<Country>} />
+            <Flag country={country as Country} />
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>

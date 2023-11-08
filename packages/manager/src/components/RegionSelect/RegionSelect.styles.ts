@@ -3,7 +3,9 @@ import { styled } from '@mui/material/styles';
 
 import { ListItem } from 'src/components/ListItem';
 
-export const GroupHeader = styled('div')(({ theme }) => ({
+export const GroupHeader = styled('div', {
+  label: 'RegionSelectGroupHeader',
+})(({ theme }) => ({
   color: theme.color.headline,
   fontFamily: theme.font.bold,
   fontSize: '1rem',
@@ -11,11 +13,15 @@ export const GroupHeader = styled('div')(({ theme }) => ({
   textTransform: 'initial',
 }));
 
-export const StyledFlagContainer = styled('div')(({ theme }) => ({
+export const StyledFlagContainer = styled('div', {
+  label: 'RegionSelectFlagContainer',
+})(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-export const StyledListItem = styled(ListItem)(({ theme }) => ({
+export const StyledListItem = styled(ListItem, {
+  label: 'RegionSelectListItem',
+})(({ theme }) => ({
   '&.MuiListItem-root[aria-disabled="true"]': {
     background: 'transparent !important',
     color: theme.palette.text.primary,
@@ -28,7 +34,7 @@ export const StyledListItem = styled(ListItem)(({ theme }) => ({
 }));
 
 export const SelectedIcon = styled(DoneIcon, {
-  label: 'SelectedIcon',
+  label: 'RegionSelectSelectedIcon',
   shouldForwardProp: (prop) => prop != 'visible',
 })<{ visible: boolean }>(({ visible }) => ({
   height: 17,
@@ -37,7 +43,3 @@ export const SelectedIcon = styled(DoneIcon, {
   visibility: visible ? 'visible' : 'hidden',
   width: 17,
 }));
-
-export const RegionSelectMenuStyles = {
-  menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
-};
