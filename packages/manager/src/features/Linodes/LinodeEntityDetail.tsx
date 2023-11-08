@@ -1,22 +1,19 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import EntityDetail from 'src/components/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
+import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -38,24 +35,17 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import {
   StyledBodyGrid,
   StyledBox,
   StyledChip,
   StyledColumnLabelGrid,
-  StyledCopyTooltip,
-  StyledGradientDiv,
   StyledLabelBox,
   StyledLink,
   StyledListItem,
   StyledRightColumnGrid,
   StyledSummaryGrid,
-  StyledTable,
-  StyledTableCell,
-  StyledTableGrid,
-  StyledTableRow,
   StyledVPCBox,
   sxLastListItem,
   sxListItemFirstChild,
@@ -469,11 +459,10 @@ export const Body = React.memo((props: BodyProps) => {
               },
             }}
             gridProps={{ md: 5 }}
+            isVPCOnlyLinode={isVPCOnlyLinode}
             rows={[{ text: firstAddress }, { text: secondAddress }]}
             title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
-            isVPCOnlyLinode={isVPCOnlyLinode}
           />
-
           <AccessTable
             rows={[
               { heading: 'SSH Access', text: sshLink(ipv4[0]) },
@@ -488,8 +477,8 @@ export const Body = React.memo((props: BodyProps) => {
               },
             }}
             gridProps={{ md: 7 }}
-            title="Access"
             isVPCOnlyLinode={isVPCOnlyLinode}
+            title="Access"
           />
         </StyledRightColumnGrid>
       </StyledBodyGrid>
@@ -551,96 +540,6 @@ export const Body = React.memo((props: BodyProps) => {
         </Grid>
       )}
     </>
-  );
-});
-
-// =============================================================================
-// AccessTable
-// =============================================================================
-// @todo: Maybe move this component somewhere to its own file? Could potentially
-// be used elsewhere.
-
-interface AccessTableRow {
-  heading?: string;
-  text: null | string;
-}
-
-interface AccessTableProps {
-  footer?: JSX.Element;
-  gridProps?: Grid2Props;
-  rows: AccessTableRow[];
-  sx?: SxProps;
-  title: string;
-  isVPCOnlyLinode: boolean;
-}
-
-const sxTooltipIcon = {
-  padding: '0',
-  paddingLeft: '4px',
-};
-
-export const AccessTable = React.memo((props: AccessTableProps) => {
-  return (
-    <Grid
-      container
-      direction="column"
-      md={6}
-      spacing={1}
-      sx={props.sx}
-      {...props.gridProps}
-    >
-      <StyledColumnLabelGrid>
-        {props.title}{' '}
-        {props.isVPCOnlyLinode && props.title.includes('Public IP Address') && (
-          <TooltipIcon
-            status="help"
-            sxTooltipIcon={sxTooltipIcon}
-            text={
-              <Typography>
-                The Public IP Addresses have been unassigned from the
-                configuration profile.{' '}
-                <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/">
-                  Learn more
-                </Link>
-                .
-              </Typography>
-            }
-            interactive
-          />
-        )}
-      </StyledColumnLabelGrid>
-      <StyledTableGrid>
-        <StyledTable>
-          <TableBody>
-            {props.rows.map((thisRow) => {
-              return thisRow.text ? (
-                <StyledTableRow key={thisRow.text}>
-                  {thisRow.heading ? (
-                    <TableCell component="th" scope="row">
-                      {thisRow.heading}
-                    </TableCell>
-                  ) : null}
-                  <StyledTableCell>
-                    <StyledGradientDiv>
-                      <CopyTooltip
-                        copyableText
-                        text={thisRow.text}
-                        disabled={props.isVPCOnlyLinode}
-                      />
-                    </StyledGradientDiv>
-                    <StyledCopyTooltip
-                      text={thisRow.text}
-                      disabled={props.isVPCOnlyLinode}
-                    />
-                  </StyledTableCell>
-                </StyledTableRow>
-              ) : null;
-            })}
-          </TableBody>
-        </StyledTable>
-        {props.footer ? <Grid sx={{ padding: 0 }}>{props.footer}</Grid> : null}
-      </StyledTableGrid>
-    </Grid>
   );
 });
 
