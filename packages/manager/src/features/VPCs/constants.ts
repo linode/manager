@@ -24,3 +24,6 @@ export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT = `A subnet divides a VPC into m
 
 export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
   'A virtual private cloud (VPC) is an isolated network which allows for control over how resources are networked and can communicate.';
+
+export const VPC_FEEDBACK_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
