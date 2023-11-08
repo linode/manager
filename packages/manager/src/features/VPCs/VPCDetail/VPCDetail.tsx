@@ -161,7 +161,9 @@ const VPCDetail = () => {
                 Description
               </span>{' '}
             </Typography>
-            <Typography sx={{ wordBreak: 'break-word' }}>
+            <Typography
+              sx={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
+            >
               {description}{' '}
               {description.length > 150 && (
                 <StyledLinkButton
