@@ -259,6 +259,7 @@ export const VPCSubnetsTable = (props: Props) => {
     <>
       <Box
         display="flex"
+        flexWrap="wrap"
         justifyContent="space-between"
         paddingBottom={theme.spacing(2)}
       >
@@ -267,6 +268,7 @@ export const VPCSubnetsTable = (props: Props) => {
             [theme.breakpoints.up('sm')]: {
               width: '416px',
             },
+            width: '250px',
           }}
           debounceTime={250}
           hideLabel
