@@ -42,6 +42,7 @@ export const buildQueryStringForLinodeClone = (
 ): string => {
   const params: Record<string, string> = {
     linodeID: String(linodeId),
+    regionID: linodeRegion,
     type: 'Clone Linode',
   };
 
