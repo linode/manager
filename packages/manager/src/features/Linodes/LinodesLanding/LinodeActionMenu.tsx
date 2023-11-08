@@ -40,9 +40,11 @@ export const buildQueryStringForLinodeClone = (
   types: ExtendedType[] | null | undefined,
   regions: Region[]
 ): string => {
+  const linodeRegionId =
+    regions.find((region) => region.label === linodeRegion)?.id ?? '';
   const params: Record<string, string> = {
     linodeID: String(linodeId),
-    regionID: linodeRegion,
+    regionID: linodeRegionId,
     type: 'Clone Linode',
   };
 
