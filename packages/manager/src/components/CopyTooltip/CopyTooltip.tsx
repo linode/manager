@@ -28,6 +28,11 @@ export interface CopyTooltipProps {
    * The text to be copied to the clipboard.
    */
   text: string;
+  /**
+   * If true, the copy button will be disabled and there will be no tooltip.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 /**
@@ -38,7 +43,14 @@ export interface CopyTooltipProps {
 
 export const CopyTooltip = (props: CopyTooltipProps) => {
   const [copied, setCopied] = React.useState<boolean>(false);
-  const { className, copyableText, onClickCallback, placement, text } = props;
+  const {
+    className,
+    copyableText,
+    onClickCallback,
+    placement,
+    text,
+    disabled,
+  } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -49,6 +61,24 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     }
   };
 
+  const CopyButton = (
+    <StyledCopyButton
+      aria-label={`Copy ${text} to clipboard`}
+      className={className}
+      data-qa-copy-btn
+      name={text}
+      onClick={handleIconClick}
+      type="button"
+      {...props}
+    >
+      {copyableText ? text : <FileCopy />}
+    </StyledCopyButton>
+  );
+
+  if (disabled) {
+    return CopyButton;
+  }
+
   return (
     <Tooltip
       className="copy-tooltip"
@@ -56,23 +86,13 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       placement={placement ?? 'top'}
       title={copied ? 'Copied!' : 'Copy'}
     >
-      <StyledCopyTooltipButton
-        aria-label={`Copy ${text} to clipboard`}
-        className={className}
-        data-qa-copy-btn
-        name={text}
-        onClick={handleIconClick}
-        type="button"
-        {...props}
-      >
-        {copyableText ? text : <FileCopy />}
-      </StyledCopyTooltipButton>
+      {CopyButton}
     </Tooltip>
   );
 };
 
-const StyledCopyTooltipButton = styled('button', {
-  label: 'StyledCopyTooltipButton',
+const StyledCopyButton = styled('button', {
+  label: 'StyledCopyButton',
   shouldForwardProp: omittedProps(['copyableText', 'text']),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {
@@ -101,5 +121,9 @@ const StyledCopyTooltipButton = styled('button', {
     cursor: 'pointer',
     font: 'inherit',
     padding: 0,
+  }),
+  ...(props.disabled && {
+    cursor: 'default',
+    color: theme.color.disabledText,
   }),
 }));

@@ -38,6 +38,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import {
   StyledBodyGrid,
@@ -400,6 +401,10 @@ export const Body = React.memo((props: BodyProps) => {
     return interfaceWithVPC;
   });
 
+  // A VPC-only Linode is a Linode that has at least one config interface with primary set to true and purpose vpc and no ipv4.nat_1_1 value
+  const isVPCOnlyLinode = Boolean(
+    _configInterfaceWithVPC?.primary && !_configInterfaceWithVPC.ipv4?.nat_1_1
+  );
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -465,7 +470,8 @@ export const Body = React.memo((props: BodyProps) => {
             }}
             gridProps={{ md: 5 }}
             rows={[{ text: firstAddress }, { text: secondAddress }]}
-            title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+            title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+            isVPCOnlyLinode={isVPCOnlyLinode}
           />
 
           <AccessTable
@@ -483,6 +489,7 @@ export const Body = React.memo((props: BodyProps) => {
             }}
             gridProps={{ md: 7 }}
             title="Access"
+            isVPCOnlyLinode={isVPCOnlyLinode}
           />
         </StyledRightColumnGrid>
       </StyledBodyGrid>
@@ -564,7 +571,13 @@ interface AccessTableProps {
   rows: AccessTableRow[];
   sx?: SxProps;
   title: string;
+  isVPCOnlyLinode: boolean;
 }
+
+const sxTooltipIcon = {
+  padding: '0',
+  paddingLeft: '4px',
+};
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
   return (
@@ -576,7 +589,26 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
       sx={props.sx}
       {...props.gridProps}
     >
-      <StyledColumnLabelGrid>{props.title}</StyledColumnLabelGrid>
+      <StyledColumnLabelGrid>
+        {props.title}{' '}
+        {props.isVPCOnlyLinode && props.title.includes('Public IP Address') && (
+          <TooltipIcon
+            status="help"
+            sxTooltipIcon={sxTooltipIcon}
+            text={
+              <Typography>
+                The Public IP Addresses have been unassigned from the
+                configuration profile.{' '}
+                <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/">
+                  Learn more
+                </Link>
+                .
+              </Typography>
+            }
+            interactive
+          />
+        )}
+      </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
           <TableBody>
@@ -590,9 +622,16 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                   ) : null}
                   <StyledTableCell>
                     <StyledGradientDiv>
-                      <CopyTooltip copyableText text={thisRow.text} />
+                      <CopyTooltip
+                        copyableText
+                        text={thisRow.text}
+                        disabled={props.isVPCOnlyLinode}
+                      />
                     </StyledGradientDiv>
-                    <StyledCopyTooltip text={thisRow.text} />
+                    <StyledCopyTooltip
+                      text={thisRow.text}
+                      disabled={props.isVPCOnlyLinode}
+                    />
                   </StyledTableCell>
                 </StyledTableRow>
               ) : null;
