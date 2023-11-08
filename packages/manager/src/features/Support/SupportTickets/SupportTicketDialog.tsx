@@ -4,7 +4,7 @@ import {
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -36,10 +36,10 @@ import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
-import AttachFileForm from '../AttachFileForm';
+import { AttachFileForm } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
-import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
+import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
+import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import { FileAttachment } from '../index';
 import SupportTicketSMTPFields, {
   fieldNameToLabelMap,
@@ -47,7 +47,7 @@ import SupportTicketSMTPFields, {
   smtpHelperText,
 } from './SupportTicketSMTPFields';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
@@ -207,7 +207,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   React.useEffect(() => {
     if (!open) {
@@ -643,7 +643,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 detailProps={{ className: classes.expPanelSummary }}
                 heading="Formatting Tips"
               >
-                <Reference />
+                <MarkdownReference />
               </Accordion>
               <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
@@ -661,6 +661,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               label: 'Cancel',
               onClick: onCancel,
             }}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
         </React.Fragment>
       )}

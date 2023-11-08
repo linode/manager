@@ -34,7 +34,7 @@ describe('AttachFileListItem component', () => {
     );
 
     fireEvent.click(getByTestId('delete-button'));
-    expect(props.onClick).toHaveBeenCalled();
+    expect(props.removeFile).toHaveBeenCalled();
     expect(queryAllByTestId('delete-button')).toHaveLength(1);
   });
   it('should render a progress bar when a file is uploading', () => {
