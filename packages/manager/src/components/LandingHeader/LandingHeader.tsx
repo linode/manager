@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import {
   Breadcrumb,
   BreadcrumbProps,
@@ -90,15 +91,17 @@ export const LandingHeader = ({
         />
       </Grid>
 
-      <Grid alignItems="center" container justifyContent="flex-end">
+      <Grid
+        alignItems="center"
+        columnGap={1}
+        container
+        justifyContent="flex-end"
+      >
         {feedbackLink && (
           <Grid container>
-            <Typography
-              sx={(theme) => ({
-                marginRight: theme.spacing(2),
-              })}
-            >
-              <Link external to={feedbackLink}>
+            <Typography>
+              <Link external hideIcon={true} to={feedbackLink}>
+                <ExternalLinkIcon style={{ verticalAlign: 'text-top' }} />{' '}
                 {feedbackLinkLabel}
               </Link>
             </Typography>

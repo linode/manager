@@ -107,7 +107,6 @@ export const LoadBalancerDetail = () => {
         docsLink="" // TODO: AGLB - Add docs link
         feedbackLink="https://docs.google.com/forms/d/e/1FAIpQLSdfetx9VvwjUAC_gdGQai_FpZN4xZ1GZGW54abezS2aV5rCcQ/viewform"
         feedbackLinkLabel="BETA Feedback"
-        shouldHideDocsAndCreateButtons={true} // TODO: AGLB - should be removed when docs link is provided.
       />
       <Tabs index={tabIndex === -1 ? 0 : tabIndex}>
         <TabLinkList
