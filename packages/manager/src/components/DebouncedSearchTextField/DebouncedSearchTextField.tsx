@@ -76,6 +76,14 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
         ),
         ...InputProps,
       }}
+      sx={{
+        '& input::placeholder': {
+          color: 'green',
+        },
+        '& input': {
+          color: 'green',
+        },
+      }}
       className={className}
       data-qa-debounced-search
       defaultValue={defaultValue}

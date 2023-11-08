@@ -257,14 +257,10 @@ export const VPCSubnetsTable = (props: Props) => {
 
   return (
     <>
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="space-between"
-        paddingBottom={theme.spacing(2)}
-      >
+      <Box display="flex" flexWrap="wrap" justifyContent="space-between">
         <DebouncedSearchTextField
           sx={{
+            marginBottom: theme.spacing(2),
             [theme.breakpoints.up('sm')]: {
               width: '416px',
             },
@@ -278,6 +274,9 @@ export const VPCSubnetsTable = (props: Props) => {
           placeholder="Filter Subnets by label or id"
         />
         <Button
+          sx={{
+            marginBottom: theme.spacing(2),
+          }}
           buttonType="primary"
           onClick={() => setSubnetCreateDrawerOpen(true)}
         >
