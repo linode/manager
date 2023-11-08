@@ -94,7 +94,6 @@ export const LinodeSelect = (
     options,
     optionsFilter,
     placeholder,
-    // renderOption,
     renderOptionLabel,
     sx,
     value,
