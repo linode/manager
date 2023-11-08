@@ -49,9 +49,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   description: {
-    overflowWrap: 'break-word',
+    overflowWrap: 'anywhere',
     whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
+    wordBreak: 'normal',
   },
   descriptionText: {
     marginBottom: theme.spacing(2),
