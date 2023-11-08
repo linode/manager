@@ -77,7 +77,11 @@ describe('getSelectedRegionById', () => {
 
     // Expected result
     const expected = {
-      data: { country: 'US', region: 'North America' },
+      data: {
+        country: 'us',
+        disabledMessage: undefined,
+        region: 'North America',
+      },
       label: 'US Location (us-1)',
       value: 'us-1',
     };
