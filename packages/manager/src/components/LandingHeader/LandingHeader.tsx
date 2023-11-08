@@ -71,6 +71,10 @@ export const LandingHeader = ({
     marginLeft: theme.spacing(1),
   };
 
+  const sxFeedbackLink = {
+    marginRight: theme.spacing(2),
+  };
+
   return (
     <Grid
       alignItems="center"
@@ -91,14 +95,9 @@ export const LandingHeader = ({
         />
       </Grid>
 
-      <Grid
-        alignItems="center"
-        columnGap={1}
-        container
-        justifyContent="flex-end"
-      >
+      <Grid alignItems="center" container justifyContent="flex-end">
         {feedbackLink && (
-          <Grid container>
+          <Grid container sx={docsLink ? sxFeedbackLink : null}>
             <Typography>
               <Link external hideIcon={true} to={feedbackLink}>
                 <ExternalLinkIcon style={{ verticalAlign: 'text-top' }} />{' '}
