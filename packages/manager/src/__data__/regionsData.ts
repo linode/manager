@@ -8,7 +8,7 @@ const resolvers = {
 export const regions: Region[] = [
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'IN',
+    country: 'in',
     id: 'ap-west',
     label: 'Mumbai, IN',
     resolvers,
@@ -16,7 +16,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'AU',
+    country: 'au',
     id: 'ap-southeast',
     label: 'Sydney, AU',
     resolvers,
@@ -24,7 +24,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'CA',
+    country: 'ca',
     id: 'ca-central',
     label: 'Toronto, CA',
     resolvers,
@@ -32,7 +32,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'US',
+    country: 'us',
     id: 'us-central',
     label: 'Dallas, TX',
     resolvers,
@@ -40,7 +40,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'US',
+    country: 'us',
     id: 'us-west',
     label: 'Fremont, CA',
     resolvers,
@@ -48,7 +48,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers'],
-    country: 'US',
+    country: 'us',
     id: 'us-southeast',
     label: 'Atlanta, GA',
     resolvers,
@@ -61,7 +61,7 @@ export const regions: Region[] = [
       'Block Storage',
       'Object Storage',
     ],
-    country: 'US',
+    country: 'us',
     id: 'us-east',
     label: 'Newark, NJ',
     resolvers,
@@ -69,7 +69,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'UK',
+    country: 'uk',
     id: 'eu-west',
     label: 'London, UK',
     resolvers,
@@ -77,7 +77,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'SG',
+    country: 'sg',
     id: 'ap-south',
     label: 'Singapore, SG',
     resolvers,
@@ -85,7 +85,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'DE',
+    country: 'de',
     id: 'eu-central',
     label: 'Frankfurt, DE',
     resolvers,
@@ -93,7 +93,7 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-    country: 'JP',
+    country: 'jp',
     id: 'ap-northeast',
     label: 'Tokyo, JP',
     resolvers,

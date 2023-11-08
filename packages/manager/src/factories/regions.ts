@@ -1,8 +1,8 @@
 import {
-  RegionAvailability,
   Country,
   DNSResolvers,
   Region,
+  RegionAvailability,
 } from '@linode/api-v4/lib/regions/types';
 import * as Factory from 'factory.ts';
 
@@ -15,7 +15,7 @@ export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
   capabilities: ['Block Storage'],
-  country: 'US',
+  country: 'us',
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
   resolvers: resolverFactory.build(),

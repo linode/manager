@@ -78,7 +78,7 @@ export const listOfFakeRegions: DisabledRegion[] = [
         disabledMessage: TOKYO_DISABLED_MESSAGE,
       }),
       ...regionFactory.build({
-        country: 'JP',
+        country: 'jp',
         id: 'ap-northeast',
         label: 'Tokyo, JP',
       }),
@@ -93,7 +93,7 @@ export const listOfFakeRegions: DisabledRegion[] = [
         disabledMessage: SINGAPORE_DISABLED_MESSAGE,
       }),
       ...regionFactory.build({
-        country: 'SG',
+        country: 'sg',
         id: 'ap-south',
         label: 'Singapore, SG',
       }),

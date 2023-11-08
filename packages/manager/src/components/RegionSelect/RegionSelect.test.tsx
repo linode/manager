@@ -7,17 +7,17 @@ import type { Region } from '@linode/api-v4';
 
 const regions: Region[] = [
   regionFactory.build({
-    country: 'US',
+    country: 'us',
     id: 'us-1',
     label: 'US Location',
   }),
   regionFactory.build({
-    country: 'CA',
+    country: 'ca',
     id: 'ca-1',
     label: 'CA Location',
   }),
   regionFactory.build({
-    country: 'JP',
+    country: 'jp',
     id: 'jp-1',
     label: 'JP Location',
   }),
@@ -41,13 +41,14 @@ describe('getRegionOptions', () => {
     // Expected result
     const expected: RegionSelectOption[] = [
       {
-        data: { country: 'CA', region: 'North America' },
+        data: { country: 'ca', disabledMessage: null, region: 'North America' },
         label: 'CA Location (ca-1)',
         value: 'ca-1',
       },
       {
         data: {
-          country: 'US',
+          country: 'us',
+          disabledMessage: null,
           region: 'North America',
         },
         label: 'US Location (us-1)',
@@ -55,7 +56,7 @@ describe('getRegionOptions', () => {
       },
 
       {
-        data: { country: 'JP', region: 'Asia' },
+        data: { country: 'jp', disabledMessage: null, region: 'Asia' },
         label: 'JP Location (jp-1)',
         value: 'jp-1',
       },

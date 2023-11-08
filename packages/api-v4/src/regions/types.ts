@@ -37,4 +37,6 @@ export interface RegionAvailability {
   region: string;
 }
 
-export type Country = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
+type ContinentCode = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
+
+export type Country = Lowercase<ContinentCode>;

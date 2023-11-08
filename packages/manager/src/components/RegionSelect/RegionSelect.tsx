@@ -36,13 +36,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     width,
   } = props;
 
-  const regionFromSelectedId =
+  const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById(regions, selectedId ?? '') ?? null;
 
-  const [
-    selectedRegion,
-    setSelectedRegion,
-  ] = React.useState<RegionSelectOption | null>(regionFromSelectedId);
+  const [selectedRegion, setSelectedRegion] = React.useState<
+    RegionSelectOption | null | undefined
+  >(regionFromSelectedId);
   const flags = useFlags();
   const location = useLocation();
   const path = location.pathname;
@@ -144,6 +143,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           tooltipText: helperText,
         }}
         autoHighlight
+        clearOnBlur
         data-testid="region-select"
         disableClearable={!isClearable}
         disabled={disabled}
@@ -153,7 +153,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         noOptionsText="No results"
         options={options}
         placeholder="Select a Region"
-        value={regionFromSelectedId}
+        value={selectedRegion}
       />
     </Box>
   );

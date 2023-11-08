@@ -118,6 +118,7 @@ export const getSelectedRegionById = (
   return {
     data: {
       country: selectedRegion?.country,
+      disabledMessage: null,
       region: group,
     },
     label: `${selectedRegion.label} (${selectedRegion.id})`,
