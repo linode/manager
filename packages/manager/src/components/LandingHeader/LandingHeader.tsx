@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -8,6 +9,7 @@ import {
 } from 'src/components/Breadcrumb/Breadcrumb';
 import { Button } from 'src/components/Button/Button';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { Link } from 'src/components/Link';
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;
@@ -20,6 +22,8 @@ export interface LandingHeaderProps {
   docsLink?: string;
   entity?: string;
   extraActions?: JSX.Element;
+  feedbackLink?: string;
+  feedbackLinkLabel?: string;
   loading?: boolean;
   onButtonClick?: () => void;
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
@@ -44,6 +48,8 @@ export const LandingHeader = ({
   docsLink,
   entity,
   extraActions,
+  feedbackLink,
+  feedbackLinkLabel,
   loading,
   onButtonClick,
   onButtonKeyPress,
@@ -83,9 +89,23 @@ export const LandingHeader = ({
           {...breadcrumbProps}
         />
       </Grid>
-      {!shouldHideDocsAndCreateButtons && (
-        <Grid>
-          <Grid alignItems="center" container justifyContent="flex-end">
+
+      <Grid alignItems="center" container justifyContent="flex-end">
+        {feedbackLink && (
+          <Grid>
+            <Typography
+              sx={(theme) => ({
+                marginRight: theme.spacing(2),
+              })}
+            >
+              <Link external to={feedbackLink}>
+                {feedbackLinkLabel}
+              </Link>
+            </Typography>
+          </Grid>
+        )}
+        {!shouldHideDocsAndCreateButtons && (
+          <Grid>
             {docsLink ? (
               <DocsLink
                 analyticsLabel={docsAnalyticsLabel}
@@ -113,8 +133,8 @@ export const LandingHeader = ({
               </Actions>
             )}
           </Grid>
-        </Grid>
-      )}
+        )}
+      </Grid>
     </Grid>
   );
 };

@@ -100,6 +100,8 @@ export const LoadBalancerLanding = () => {
             docsLabel="Docs"
             docsLink="" // TODO: AGLB -  Add docs link
             entity="Global Load Balancers"
+            feedbackLink="https://docs.google.com/forms/d/e/1FAIpQLSdfetx9VvwjUAC_gdGQai_FpZN4xZ1GZGW54abezS2aV5rCcQ/viewform"
+            feedbackLinkLabel="BETA Feedback"
             onButtonClick={createLoadBalancer}
             removeCrumbX={1}
             title="Global Load Balancers"

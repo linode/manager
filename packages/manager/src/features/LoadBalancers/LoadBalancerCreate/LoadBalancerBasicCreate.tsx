@@ -1,3 +1,4 @@
+import { CreateBasicLoadbalancerSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -15,7 +16,6 @@ import { useLoadBalancerBasicCreateMutation } from 'src/queries/aglb/loadbalance
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LoadBalancerRegions } from './LoadBalancerRegions';
-import { CreateBasicLoadbalancerSchema } from '@linode/validation';
 
 export const LoadBalancerBasicCreate = () => {
   const {
@@ -63,6 +63,9 @@ export const LoadBalancerBasicCreate = () => {
           ],
           pathname: location.pathname,
         }}
+        feedbackLink="https://docs.google.com/forms/d/e/1FAIpQLSdfetx9VvwjUAC_gdGQai_FpZN4xZ1GZGW54abezS2aV5rCcQ/viewform"
+        feedbackLinkLabel="BETA Feedback"
+        shouldHideDocsAndCreateButtons={true}
         title="Create"
       />
       <Stack spacing={3}>
