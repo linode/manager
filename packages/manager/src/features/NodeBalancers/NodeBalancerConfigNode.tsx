@@ -42,6 +42,12 @@ const modeOptions: {
   { label: 'Drain', value: 'drain' },
 ];
 
+const statusToChipColor = {
+  DOWN: 'error',
+  UP: 'success',
+  unknown: 'default',
+} as const;
+
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
@@ -114,10 +120,12 @@ export const NodeBalancerConfigNode = React.memo(
               <Grid lg={2} sm={4} xs={6}>
                 <StyledStatusHeader data-qa-active-checks-header variant="h3">
                   Status
-                  <div>
-                    <StyledStatusChip component="div" label={node.status} />
-                  </div>
                 </StyledStatusHeader>
+                <Chip
+                  color={statusToChipColor[node.status]}
+                  label={node.status}
+                  sx={{ marginTop: 1 }}
+                />
               </Grid>
             )}
           </Grid>
@@ -204,17 +212,4 @@ const StyledStatusHeader = styled(Typography, {
   color: theme.color.label,
   fontSize: '.9rem',
   marginTop: `calc(${theme.spacing(2)} - 4)`,
-}));
-
-const StyledStatusChip = styled(Chip, {
-  label: 'StyledStatusChip',
-})<Partial<NodeBalancerConfigNodeProps>>(({ theme, ...props }) => ({
-  backgroundColor:
-    props.label === 'UP'
-      ? theme.color.green
-      : props.label === 'DOWN'
-      ? theme.color.red
-      : theme.color.grey2,
-  color: props?.node?.status ? theme.palette.text.primary : 'white',
-  marginTop: theme.spacing(1),
 }));

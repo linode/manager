@@ -1,7 +1,9 @@
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
-import { shallow } from 'enzyme';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   TicketAttachmentList,
@@ -18,49 +20,29 @@ const props = {
     'file6.txt',
     'file7.pdf',
   ],
-  classes: { attachmentPaperWrapper: '', root: '' },
-  showMoreAttachments: false,
-  toggle: vi.fn(),
 };
 
-const component = shallow(<TicketAttachmentList {...props} />);
-
 describe('TicketAttachmentList component', () => {
-  it('should render', () => {
-    expect(component).toBeDefined();
-  });
-  it('should render its props', () => {
-    expect(component.find('WithStyles(TicketAttachmentRow)')).toHaveLength(2);
-  });
-  it('should only pass 5 attachments to the main attachments list', () => {
-    const first = component
-      .find('WithStyles(TicketAttachmentRow)')
-      .first() as any;
-    expect(first.props().attachments).toHaveLength(5);
-  });
-  it('should pass the remaining attachments to the ShowMoreExpansion attachment row', () => {
-    const last = component
-      .find('WithStyles(TicketAttachmentRow)')
-      .last() as any;
-    expect(last.props().attachments).toHaveLength(2);
-  });
-  it('should call its toggle prop when the ShowMoreExpansion button is clicked', () => {
-    const button = component.find('[data-qa-attachment-toggle]');
-    button.simulate('click');
-    expect(props.toggle).toHaveBeenCalled();
-  });
-  it('should use Show More Files when showMoreAttachments is false', () => {
-    expect(component.find('ShowMoreExpansion').first().props()).toHaveProperty(
-      'name',
-      'Show More Files'
+  it('should render 5 attachments by default', () => {
+    const { getByText, queryByText } = renderWithTheme(
+      <TicketAttachmentList {...props} />
     );
+
+    for (let i = 0; i < props.attachments.length; i++) {
+      if (i < 5) {
+        expect(getByText(props.attachments[i])).toBeVisible();
+      } else {
+        expect(queryByText(props.attachments[i])).not.toBeInTheDocument();
+      }
+    }
   });
-  it('should use Show Less Files when showMoreFiles is true', () => {
-    component.setProps({ showMoreAttachments: true });
-    expect(component.find('ShowMoreExpansion').first().props()).toHaveProperty(
-      'name',
-      'Show Less Files'
-    );
+  it('should render all attachment when show more is clicked', () => {
+    const { getByText } = renderWithTheme(<TicketAttachmentList {...props} />);
+    const showMoreButton = getByText('Show More Files').closest('button');
+    userEvent.click(showMoreButton!);
+    for (const attachment of props.attachments) {
+      expect(getByText(attachment)).toBeVisible();
+    }
   });
   describe('addIconsToAttachments helper method', () => {
     const icons = addIconsToAttachments(props.attachments);
