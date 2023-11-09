@@ -10,10 +10,10 @@ import { useHistory } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -317,9 +317,8 @@ export const VolumeCreate = () => {
                 errorText={touched.region ? errors.region : undefined}
                 isClearable
                 label="Region"
-                name="region"
                 onBlur={handleBlur}
-                selectedID={values.region}
+                selectedId={values.region}
                 width={400}
               />
               {renderSelectTooltip(

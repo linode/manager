@@ -77,6 +77,7 @@ import {
   proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
+  regionAvailabilityFactory,
   routeFactory,
   securityQuestionsFactory,
   serviceTargetFactory,
@@ -779,11 +780,11 @@ export const handlers = [
     });
     return res(ctx.json(newFirewall));
   }),
-  rest.get('*/nodebalancers', (req, res, ctx) => {
-    const nodeBalancers = nodeBalancerFactory.buildList(0);
+  rest.get('*/v4/nodebalancers', (req, res, ctx) => {
+    const nodeBalancers = nodeBalancerFactory.buildList(1);
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
-  rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
+  rest.get('*/v4/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(req.params.nodeBalancerID),
     });
@@ -798,9 +799,11 @@ export const handlers = [
   rest.get(
     '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
     (req, res, ctx) => {
-      const configs = nodeBalancerConfigNodeFactory.buildList(2, {
-        nodebalancer_id: Number(req.params.nodeBalancerID),
-      });
+      const configs = [
+        nodeBalancerConfigNodeFactory.build({ status: 'UP' }),
+        nodeBalancerConfigNodeFactory.build({ status: 'DOWN' }),
+        nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
+      ];
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
@@ -1059,7 +1062,6 @@ export const handlers = [
     });
     return res(ctx.json(linodeInvoice));
   }),
-
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
@@ -1613,6 +1615,16 @@ export const handlers = [
   }),
   rest.get('*/betas', (_req, res, ctx) => {
     return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
+  }),
+  rest.get('*regions/availability', (_req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(regionAvailabilityFactory.buildList(10)))
+    );
+  }),
+  rest.get('*regions/:regionId/availability', (_req, res, ctx) => {
+    return res(
+      ctx.json(regionAvailabilityFactory.buildList(5, { region: 'us-east' }))
+    );
   }),
   ...entityTransfers,
   ...statusPage,

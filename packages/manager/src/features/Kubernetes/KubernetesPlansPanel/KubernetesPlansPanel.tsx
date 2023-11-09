@@ -30,7 +30,7 @@ interface Props {
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionID?: Region['id'] | string;
   types: ExtendedType[];
   updatePlanCount: (planId: string, newCount: number) => void;
@@ -51,7 +51,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     onSelect,
     regionsData,
     resetValues,
-    selectedID,
+    selectedId,
     selectedRegionID,
     types,
     updatePlanCount,
@@ -78,7 +78,7 @@ export const KubernetesPlansPanel = (props: Props) => {
               onAdd={onAdd}
               onSelect={onSelect}
               plans={plans[plan]}
-              selectedID={selectedID}
+              selectedId={selectedId}
               selectedRegionID={selectedRegionID}
               updatePlanCount={updatePlanCount}
             />
@@ -91,7 +91,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const initialTab = determineInitialPlanCategoryTab(
     types,
-    selectedID,
+    selectedId,
     currentPlanHeading
   );
 
