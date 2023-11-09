@@ -314,6 +314,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     >
       <Box sx={sxBoxFlex}>
         <StyledChip
+          aria-label={`Linode status ${linodeStatus}`}
           component="span"
           data-qa-linode-status
           hasSecondaryStatus={hasSecondaryStatus}

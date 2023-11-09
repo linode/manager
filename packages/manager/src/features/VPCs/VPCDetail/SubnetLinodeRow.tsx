@@ -75,7 +75,7 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId);
 
-  // If the Linode's status changes, want to check whether or not its interfaces
+  // If the Linode's status changes, we want to check whether or not its interfaces
   // associated with this subnet have become active. So, we need to invalidate the
   // subnets query to get th most up to date information.
   React.useEffect(() => {
@@ -121,7 +121,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const rebootNeeded =
-    linode.status !== 'rebooting' &&
+    iconStatus !== 'other' &&
     interfaces.some(
       // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
       (linodeInterface) => !linodeInterface.active
@@ -133,7 +133,10 @@ export const SubnetLinodeRow = (props: Props) => {
         <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
       </StyledTableCell>
       <StyledTableCell statusCell>
-        <StatusIcon status={iconStatus} />
+        <StatusIcon
+          aria-label={`Linode status ${linode?.status ?? iconStatus}`}
+          status={iconStatus}
+        />
         {rebootNeeded ? (
           <>
             {'Reboot Needed'}
