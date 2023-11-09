@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { Theme, styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
@@ -59,6 +60,8 @@ export const LandingHeader = ({
   const renderActions = Boolean(onButtonClick || extraActions);
   const labelTitle = title?.toString();
 
+  const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
   const docsAnalyticsLabel = analyticsLabel
     ? analyticsLabel
     : `${title} Landing`;
@@ -92,6 +95,7 @@ export const LandingHeader = ({
             {betaFeedbackLink && (
               <span
                 style={{
+                  marginLeft: xsDown ? `${theme.spacing(2)}` : undefined,
                   marginRight: `${theme.spacing(2)}`,
                 }}
               >
