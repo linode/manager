@@ -2,10 +2,13 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
+import {
+  LINODE_CREATE_FLOW_TEXT,
+  NODEBALANCER_CREATE_FLOW_TEXT,
+} from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectFirewallPanel } from './SelectFirewallPanel';
-import { createFirewallLabel } from './SelectFirewallPanel';
 
 const queryClient = new QueryClient();
 
@@ -34,12 +37,13 @@ describe('SelectFirewallPanel', () => {
     });
   });
 
-  it('should open a Create Firewall drawer when the link is clicked', async () => {
+  it('should open a Create Firewall drawer when the link is clicked in Linode Create', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
         handleFirewallChange={jest.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
+        serviceType="linode"
       />,
       {
         queryClient,
@@ -51,7 +55,33 @@ describe('SelectFirewallPanel', () => {
     fireEvent.click(createFirewallLink);
 
     await waitFor(() => {
-      expect(wrapper.getByLabelText(createFirewallLabel)).toBeInTheDocument();
+      expect(
+        wrapper.getByLabelText(LINODE_CREATE_FLOW_TEXT)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('should open a Create Firewall drawer when the link is clicked in NodeBalancer Create', async () => {
+    const wrapper = renderWithTheme(
+      <SelectFirewallPanel
+        handleFirewallChange={jest.fn()}
+        helperText={<span>Testing</span>}
+        selectedFirewallId={-1}
+        serviceType="nodebalancer"
+      />,
+      {
+        queryClient,
+      }
+    );
+
+    const createFirewallLink = wrapper.getByText('Create Firewall');
+
+    fireEvent.click(createFirewallLink);
+
+    await waitFor(() => {
+      expect(
+        wrapper.getByLabelText(NODEBALANCER_CREATE_FLOW_TEXT)
+      ).toBeInTheDocument();
     });
   });
 });

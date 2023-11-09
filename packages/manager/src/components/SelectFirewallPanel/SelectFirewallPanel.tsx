@@ -17,8 +17,6 @@ interface Props {
   serviceType?: FirewallDeviceEntityType;
 }
 
-export const createFirewallLabel = 'Additional Linodes (Optional)';
-
 export const SelectFirewallPanel = (props: Props) => {
   const {
     handleFirewallChange,

@@ -38,6 +38,10 @@ const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to Nod
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
 
+export const LINODE_CREATE_FLOW_TEXT = 'Additional Linodes (Optional)';
+export const NODEBALANCER_CREATE_FLOW_TEXT =
+  'Additional NodeBalancers (Optional)';
+
 export interface CreateFirewallDrawerProps {
   createFlow?: FirewallDeviceEntityType;
   onClose: () => void;
@@ -257,9 +261,7 @@ export const CreateFirewallDrawer = React.memo(
           </Box>
           <LinodeSelect
             label={
-              createFlow === 'linode'
-                ? 'Additional Linodes (Optional)'
-                : 'Linodes'
+              createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
             }
             onSelectionChange={(linodes) => {
               setFieldValue(
@@ -276,7 +278,7 @@ export const CreateFirewallDrawer = React.memo(
           <NodeBalancerSelect
             label={
               createFlow === 'nodebalancer'
-                ? 'Additional NodeBalancers (Optional)'
+                ? NODEBALANCER_CREATE_FLOW_TEXT
                 : 'NodeBalancers'
             }
             onSelectionChange={(nodebalancers) => {
