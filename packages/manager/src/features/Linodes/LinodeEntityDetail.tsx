@@ -251,12 +251,14 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     lishLaunch(id);
   };
 
-  const rebootNeeded = configs?.some((config) =>
-    config.interfaces.some(
-      (linodeInterface) =>
-        !linodeInterface.active && linodeInterface.purpose === 'vpc'
-    )
-  );
+  const rebootNeeded =
+    linodeStatus !== 'rebooting' &&
+    configs?.some((config) =>
+      config.interfaces.some(
+        (linodeInterface) =>
+          !linodeInterface.active && linodeInterface.purpose === 'vpc'
+      )
+    );
 
   const formattedStatus = rebootNeeded
     ? 'REBOOT NEEDED'

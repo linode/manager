@@ -97,9 +97,11 @@ export const PowerActionsDialog = (props: Props) => {
 
   const error = errorMap[action];
   const isLoading = loadingMap[action];
+  const isRebootAction = props.action === 'Reboot';
+  const isPowerOnAction = props.action === 'Power On';
 
   const onSubmit = async () => {
-    if (props.action === 'Power On' || props.action === 'Reboot') {
+    if (isPowerOnAction || isRebootAction) {
       const mutateAsync = mutationMap[action as 'Power On' | 'Reboot'];
       await mutateAsync({
         config_id: selectedConfigID ?? selectDefaultConfig(configs),
@@ -115,7 +117,7 @@ export const PowerActionsDialog = (props: Props) => {
   const showConfigSelect =
     configs !== undefined &&
     configs?.length > 1 &&
-    (props.action === 'Power On' || props.action === 'Reboot');
+    (isPowerOnAction || isRebootAction);
 
   const configOptions =
     configs?.map((config) => ({
@@ -146,7 +148,7 @@ export const PowerActionsDialog = (props: Props) => {
       open={isOpen}
       title={`${action} Linode ${linode?.label ?? ''}?`}
     >
-      {props.action === 'Power On' ? (
+      {isPowerOnAction ? (
         <Typography
           sx={{
             alignItems: 'center',

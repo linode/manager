@@ -136,7 +136,7 @@ export const VPCSubnetsTable = (props: Props) => {
     setSubnetUnassignLinodesDrawerOpen(true);
   };
 
-  const handleSubnetUnassignLinode = (subnet: Subnet, linode: Linode) => {
+  const handleSubnetUnassignLinode = (linode: Linode, subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setSelectedLinode(linode);
     setSubnetUnassignLinodesDrawerOpen(true);
@@ -147,8 +147,9 @@ export const VPCSubnetsTable = (props: Props) => {
     setSubnetAssignLinodesDrawerOpen(true);
   };
 
-  const handleRebootLinode = (linode: Linode) => {
+  const handleRebootLinode = (linode: Linode, subnet: Subnet) => {
     setSelectedLinode(linode);
+    setSelectedSubnet(subnet);
     setRebootLinodeDialogOpen(true);
   };
 
@@ -247,6 +248,7 @@ export const VPCSubnetsTable = (props: Props) => {
                   linodeInterfaceData={linodeInfo}
                   subnet={subnet}
                   subnetId={subnet.id}
+                  vpcId={vpcId}
                 />
               ))
             ) : (
@@ -350,11 +352,11 @@ export const VPCSubnetsTable = (props: Props) => {
           vpcId={vpcId}
         />
       )}
-      {rebootLinodeDialogOpen && selectedLinode && (
+      {rebootLinodeDialogOpen && (
         <PowerActionsDialog
           action="Reboot"
           isOpen={rebootLinodeDialogOpen}
-          linodeId={selectedLinode.id}
+          linodeId={selectedLinode?.id}
           onClose={() => setRebootLinodeDialogOpen(false)}
         />
       )}

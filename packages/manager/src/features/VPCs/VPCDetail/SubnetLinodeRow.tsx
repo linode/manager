@@ -7,6 +7,7 @@ import {
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -22,6 +23,7 @@ import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import { getSubnetInterfaceFromConfigs } from '../utils';
@@ -35,20 +37,23 @@ import {
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
-  handleRebootLinode: (linode: Linode) => void;
-  handleUnassignLinode: (subnet?: Subnet, linode?: Linode) => void;
+  handleRebootLinode: (linode: Linode, subnet?: Subnet) => void;
+  handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   linodeInterfaceData: SubnetAssignedLinodeData;
   subnet?: Subnet;
   subnetId: number;
+  vpcId?: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
+  const queryClient = useQueryClient();
   const {
     handleRebootLinode,
     handleUnassignLinode,
     linodeInterfaceData,
     subnet,
     subnetId,
+    vpcId,
   } = props;
   const { id: linodeId, interfaces } = linodeInterfaceData;
 
@@ -69,6 +74,21 @@ export const SubnetLinodeRow = (props: Props) => {
     error: configsError,
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId);
+
+  // If the Linode's status changes, want to check whether or not its interfaces
+  // associated with this subnet have become active. So, we need to invalidate the
+  // subnets query to get th most up to date information.
+  React.useEffect(() => {
+    if (linode?.status !== 'rebooting') {
+      queryClient.invalidateQueries([
+        vpcQueryKey,
+        'vpc',
+        vpcId,
+        subnetQueryKey,
+        'paginated',
+      ]);
+    }
+  }, [linode?.status, queryClient, vpcId]);
 
   if (linodeLoading || !linode) {
     return (
@@ -100,10 +120,12 @@ export const SubnetLinodeRow = (props: Props) => {
   }
 
   const iconStatus = getLinodeIconStatus(linode.status);
-  const rebootNeeded = interfaces.some(
-    // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
-    (linodeInterface) => !linodeInterface.active
-  );
+  const rebootNeeded =
+    linode.status !== 'rebooting' &&
+    interfaces.some(
+      // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
+      (linodeInterface) => !linodeInterface.active
+    );
 
   return (
     <StyledTableRow>
@@ -147,14 +169,14 @@ export const SubnetLinodeRow = (props: Props) => {
         {rebootNeeded && (
           <InlineMenuAction
             onClick={() => {
-              handleRebootLinode(linode);
+              handleRebootLinode(linode, subnet);
             }}
             actionText="Reboot Linode"
           />
         )}
         <InlineMenuAction
           actionText="Unassign Linode"
-          onClick={() => handleUnassignLinode(subnet, linode)}
+          onClick={() => handleUnassignLinode(linode, subnet)}
         />
       </StyledActionTableCell>
     </StyledTableRow>
