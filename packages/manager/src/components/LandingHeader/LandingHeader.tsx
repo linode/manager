@@ -1,19 +1,18 @@
-import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
 import {
   Breadcrumb,
   BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
 import { Button } from 'src/components/Button/Button';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { Link } from 'src/components/Link';
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;
+  betaFeedbackLink?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
   buttonDataAttrs?: { [key: string]: boolean | string };
@@ -23,8 +22,6 @@ export interface LandingHeaderProps {
   docsLink?: string;
   entity?: string;
   extraActions?: JSX.Element;
-  feedbackLink?: string;
-  feedbackLinkLabel?: string;
   loading?: boolean;
   onButtonClick?: () => void;
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
@@ -40,6 +37,7 @@ export interface LandingHeaderProps {
  */
 export const LandingHeader = ({
   analyticsLabel,
+  betaFeedbackLink,
   breadcrumbDataAttrs,
   breadcrumbProps,
   buttonDataAttrs,
@@ -49,8 +47,6 @@ export const LandingHeader = ({
   docsLink,
   entity,
   extraActions,
-  feedbackLink,
-  feedbackLinkLabel,
   loading,
   onButtonClick,
   onButtonKeyPress,
@@ -69,10 +65,6 @@ export const LandingHeader = ({
 
   const sxButton = {
     marginLeft: theme.spacing(1),
-  };
-
-  const sxFeedbackLink = {
-    marginRight: theme.spacing(2),
   };
 
   return (
@@ -94,20 +86,22 @@ export const LandingHeader = ({
           {...breadcrumbProps}
         />
       </Grid>
-
-      <Grid alignItems="center" container justifyContent="flex-end">
-        {feedbackLink && (
-          <Grid container sx={docsLink ? sxFeedbackLink : null}>
-            <Typography>
-              <Link external hideIcon={true} to={feedbackLink}>
-                <ExternalLinkIcon style={{ verticalAlign: 'text-top' }} />{' '}
-                {feedbackLinkLabel}
-              </Link>
-            </Typography>
-          </Grid>
-        )}
-        {!shouldHideDocsAndCreateButtons && (
-          <Grid container>
+      {!shouldHideDocsAndCreateButtons && (
+        <Grid>
+          <Grid alignItems="center" container justifyContent="flex-end">
+            {betaFeedbackLink && (
+              <span
+                style={{
+                  marginRight: `${theme.spacing(2)}`,
+                }}
+              >
+                <DocsLink
+                  href={betaFeedbackLink}
+                  label="BETA Feedback"
+                  icon={<BetaFeedbackIcon />}
+                />
+              </span>
+            )}
             {docsLink ? (
               <DocsLink
                 analyticsLabel={docsAnalyticsLabel}
@@ -135,8 +129,8 @@ export const LandingHeader = ({
               </Actions>
             )}
           </Grid>
-        )}
-      </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 };
