@@ -1,4 +1,5 @@
 import Close from '@mui/icons-material/Close';
+import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -17,6 +18,7 @@ interface Props {
   // extra props enable SubnetNode to be an independent component or be part of MultipleSubnetInput
   // potential refactor - isRemoveable, and subnetIdx & remove in onChange prop
   idx?: number;
+  isCreateVPCDrawer?: boolean;
   isRemovable?: boolean;
   onChange: (
     subnet: SubnetFieldState,
@@ -28,7 +30,14 @@ interface Props {
 
 // @TODO VPC: currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
-  const { disabled, idx, isRemovable, onChange, subnet } = props;
+  const {
+    disabled,
+    idx,
+    isCreateVPCDrawer,
+    isRemovable,
+    onChange,
+    subnet,
+  } = props;
 
   const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSubnet = {
@@ -52,47 +61,53 @@ export const SubnetNode = (props: Props) => {
     onChange(subnet, idx, isRemovable);
   };
 
+  const showRemoveButton = isCreateVPCDrawer
+    ? idx !== 0 && isRemovable
+    : isRemovable;
+
   return (
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
-          sx={{ ...(!isRemovable && { width: '100%' }) }}
-          xs={isRemovable ? 11 : 12}
+          sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
+          xs={showRemoveButton ? 11 : 12}
         >
-          <TextField
-            disabled={disabled}
-            errorText={subnet.labelError}
-            inputId={`subnet-label-${idx}`}
-            label="Subnet Label"
-            onChange={onLabelChange}
-            placeholder="Enter a subnet label"
-            value={subnet.label}
-          />
+          <Stack>
+            <TextField
+              aria-label="Enter a subnet label"
+              disabled={disabled}
+              errorText={subnet.labelError}
+              inputId={`subnet-label-${idx}`}
+              label="Subnet Label"
+              onChange={onLabelChange}
+              placeholder="Enter a subnet label"
+              value={subnet.label}
+            />
+            <TextField
+              aria-label="Enter an IPv4"
+              disabled={disabled}
+              errorText={subnet.ip.ipv4Error}
+              inputId={`subnet-ipv4-${idx}`}
+              label="Subnet IP Address Range"
+              onChange={onIpv4Change}
+              value={subnet.ip.ipv4}
+            />
+            {subnet.ip.availIPv4s && (
+              <FormHelperText>
+                Number of Available IP Addresses:{' '}
+                {subnet.ip.availIPv4s > 4
+                  ? (subnet.ip.availIPv4s - RESERVED_IP_NUMBER).toLocaleString()
+                  : 0}
+              </FormHelperText>
+            )}
+          </Stack>
         </Grid>
-        {isRemovable && (
+        {showRemoveButton && (
           <Grid xs={1}>
-            <StyledButton onClick={removeSubnet} aria-label="Remove Subnet">
+            <StyledButton aria-label="Remove Subnet" onClick={removeSubnet}>
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
-        )}
-      </Grid>
-      <Grid xs={isRemovable ? 11 : 12}>
-        <TextField
-          disabled={disabled}
-          errorText={subnet.ip.ipv4Error}
-          inputId={`subnet-ipv4-${idx}`}
-          label="Subnet IP Address Range"
-          onChange={onIpv4Change}
-          value={subnet.ip.ipv4}
-        />
-        {subnet.ip.availIPv4s && (
-          <FormHelperText>
-            Number of Available IP Addresses:{' '}
-            {subnet.ip.availIPv4s > 4
-              ? (subnet.ip.availIPv4s - RESERVED_IP_NUMBER).toLocaleString()
-              : 0}
-          </FormHelperText>
         )}
       </Grid>
     </Grid>

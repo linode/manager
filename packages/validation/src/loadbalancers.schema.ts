@@ -20,7 +20,7 @@ export const UpdateCertificateSchema = object().shape(
         type === 'downstream' && certificate,
       then: string().required('Private Key is required'),
     }),
-    label: string(),
+    label: string().min(1, 'Label must not be empty.'),
     type: string().oneOf(['downstream', 'ca']),
   },
   [['certificate', 'key']]

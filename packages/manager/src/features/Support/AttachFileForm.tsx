@@ -1,83 +1,29 @@
 import AttachFile from '@mui/icons-material/AttachFile';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
-import { equals, remove } from 'ramda';
+import { remove } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Button } from 'src/components/Button/Button';
 
-import AttachFileListItem from './AttachFileListItem';
+import { AttachFileListItem } from './AttachFileListItem';
 import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';
 
-type ClassNames = 'attachFileButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    attachFileButton: {
-      marginBottom: 4,
-      marginTop: theme.spacing(2),
-    },
-  });
-
 interface Props {
   files: FileAttachment[];
-  updateFiles: any;
+  updateFiles: (newFiles: FileAttachment[]) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const AttachFileForm = (props: Props) => {
+  const { files, updateFiles } = props;
 
-export class AttachFileForm extends React.Component<CombinedProps, {}> {
-  render() {
-    const { classes, files } = this.props;
-    return (
-      <React.Fragment>
-        <input
-          id="attach-file"
-          multiple
-          onChange={this.selectFile}
-          ref={this.inputRef}
-          style={{ display: 'none' }}
-          type="file"
-        />
-        <Button
-          buttonType="secondary"
-          className={classes.attachFileButton}
-          compactX
-          onClick={this.clickAttachButton}
-        >
-          <AttachFile />
-          Attach a file
-        </Button>
-        {files.map((file, idx) => (
-          <AttachFileListItem
-            file={file}
-            fileIdx={idx}
-            key={idx}
-            removeFile={this.removeFile}
-          />
-        ))}
-      </React.Fragment>
-    );
-  }
-
-  shouldComponentUpdate(nextProps: CombinedProps) {
-    return (
-      !equals(this.props.files, nextProps.files) ||
-      !equals(this.props.classes, nextProps.classes)
-    );
-  }
-
-  clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (this.inputRef.current) {
-      this.inputRef.current.click();
+  const clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (inputRef.current) {
+      inputRef.current.click();
     }
   };
 
-  handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files: selectedFiles } = e.target;
-    const { files, updateFiles } = this.props;
 
     if (selectedFiles && selectedFiles.length) {
       const reshapedFiles = reshapeFiles(selectedFiles);
@@ -85,26 +31,53 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
     }
   };
 
-  inputRef = React.createRef<HTMLInputElement>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  removeFile = (fileIdx: number) => {
-    const { files, updateFiles } = this.props;
+  const removeFile = (fileIdx: number) => {
     const newFiles = remove(fileIdx, 1, files);
-    if (this.inputRef.current) {
-      this.inputRef.current.value = '';
+    if (inputRef.current) {
+      inputRef.current.value = '';
     }
     // Send the updated file list to the parent component's state
     updateFiles(newFiles);
   };
 
-  selectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.handleFileSelected(e);
-    if (this.inputRef.current) {
-      this.inputRef.current.value = '';
+  const selectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileSelected(e);
+    if (inputRef.current) {
+      inputRef.current.value = '';
     }
   };
-}
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(styled)(AttachFileForm);
+  return (
+    <React.Fragment>
+      <input
+        id="attach-file"
+        multiple
+        onChange={selectFile}
+        ref={inputRef}
+        style={{ display: 'none' }}
+        type="file"
+      />
+      <Button
+        sx={(theme) => ({
+          marginTop: theme.spacing(1),
+        })}
+        buttonType="secondary"
+        compactX
+        onClick={clickAttachButton}
+      >
+        <AttachFile />
+        Attach a file
+      </Button>
+      {files.map((file, idx) => (
+        <AttachFileListItem
+          file={file}
+          fileIdx={idx}
+          key={idx}
+          removeFile={removeFile}
+        />
+      ))}
+    </React.Fragment>
+  );
+};

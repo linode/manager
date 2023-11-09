@@ -281,8 +281,6 @@ export const LinodeConfigDialog = (props: Props) => {
       thisRegion.capabilities.includes('VPCs')
   );
 
-  const showVlans = regionHasVLANS;
-
   // @TODO VPC: remove once VPC is fully rolled out
   const vpcEnabled = isFeatureEnabled(
     'VPCs',
@@ -941,85 +939,85 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            {showVlans ? (
-              <Grid xs={12}>
-                <Box alignItems="center" display="flex">
-                  <Typography variant="h3">
-                    {vpcEnabled ? 'Networking' : 'Network Interfaces'}
-                  </Typography>
-                  <TooltipIcon
-                    sxTooltipIcon={{
-                      paddingBottom: 0,
-                      paddingTop: 0,
+            <Grid xs={12}>
+              <Box alignItems="center" display="flex">
+                <Typography variant="h3">
+                  {vpcEnabled ? 'Networking' : 'Network Interfaces'}
+                </Typography>
+                <TooltipIcon
+                  sxTooltipIcon={{
+                    paddingBottom: 0,
+                    paddingTop: 0,
+                  }}
+                  interactive
+                  status="help"
+                  sx={{ tooltip: { maxWidth: 350 } }}
+                  text={networkInterfacesHelperText}
+                />
+              </Box>
+              {formik.errors.interfaces && (
+                <Notice
+                  text={formik.errors.interfaces as string}
+                  variant="error"
+                />
+              )}
+              {vpcEnabled && (
+                <>
+                  <Select
+                    defaultValue={
+                      primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
+                    }
+                    data-testid="primary-interface-dropdown"
+                    disabled={isReadOnly}
+                    isClearable={false}
+                    label="Primary Interface (Default Route)"
+                    onChange={handlePrimaryInterfaceChange}
+                    options={getPrimaryInterfaceOptions(values.interfaces)}
+                  />
+                  <Divider
+                    sx={{
+                      margin: `${theme.spacing(
+                        4.5
+                      )} ${theme.spacing()} ${theme.spacing(1.5)} `,
+                      width: `calc(100% - ${theme.spacing(2)})`,
                     }}
-                    interactive
-                    status="help"
-                    sx={{ tooltip: { maxWidth: 350 } }}
-                    text={networkInterfacesHelperText}
                   />
-                </Box>
-                {formik.errors.interfaces && (
-                  <Notice
-                    text={formik.errors.interfaces as string}
-                    variant="error"
+                </>
+              )}
+              {values.interfaces.map((thisInterface, idx) => {
+                return (
+                  <InterfaceSelect
+                    errors={{
+                      ipamError:
+                        formik.errors[`interfaces[${idx}].ipam_address`],
+                      labelError: formik.errors[`interfaces[${idx}].label`],
+                      publicIPv4Error:
+                        formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
+                      subnetError:
+                        formik.errors[`interfaces[${idx}].subnet_id`],
+                      vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
+                      vpcIPv4Error:
+                        formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                    }}
+                    handleChange={(newInterface: Interface) =>
+                      handleInterfaceChange(idx, newInterface)
+                    }
+                    ipamAddress={thisInterface.ipam_address}
+                    key={`eth${idx}-interface`}
+                    label={thisInterface.label}
+                    purpose={thisInterface.purpose}
+                    readOnly={isReadOnly}
+                    region={linode?.region}
+                    slotNumber={idx}
+                    subnetId={thisInterface.subnet_id}
+                    vpcIPv4={thisInterface.ipv4?.vpc}
+                    vpcId={thisInterface.vpc_id}
+                    regionHasVLANs={regionHasVLANS}
+                    regionHasVPCs={regionHasVPCs}
                   />
-                )}
-                {vpcEnabled && (
-                  <>
-                    <Select
-                      defaultValue={
-                        primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
-                      }
-                      data-testid="primary-interface-dropdown"
-                      disabled={isReadOnly}
-                      isClearable={false}
-                      label="Primary Interface (Default Route)"
-                      onChange={handlePrimaryInterfaceChange}
-                      options={getPrimaryInterfaceOptions(values.interfaces)}
-                    />
-                    <Divider
-                      sx={{
-                        margin: `${theme.spacing(
-                          4.5
-                        )} ${theme.spacing()} ${theme.spacing(1.5)} `,
-                        width: `calc(100% - ${theme.spacing(2)})`,
-                      }}
-                    />
-                  </>
-                )}
-                {values.interfaces.map((thisInterface, idx) => {
-                  return (
-                    <InterfaceSelect
-                      errors={{
-                        ipamError:
-                          formik.errors[`interfaces[${idx}].ipam_address`],
-                        labelError: formik.errors[`interfaces[${idx}].label`],
-                        publicIPv4Error:
-                          formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
-                        subnetError:
-                          formik.errors[`interfaces[${idx}].subnet_id`],
-                        vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
-                        vpcIPv4Error:
-                          formik.errors[`interfaces[${idx}].ipv4.vpc`],
-                      }}
-                      handleChange={(newInterface: Interface) =>
-                        handleInterfaceChange(idx, newInterface)
-                      }
-                      ipamAddress={thisInterface.ipam_address}
-                      key={`eth${idx}-interface`}
-                      label={thisInterface.label}
-                      purpose={thisInterface.purpose}
-                      readOnly={isReadOnly}
-                      region={linode?.region}
-                      slotNumber={idx}
-                      subnetId={thisInterface.subnet_id}
-                      vpcIPv4={thisInterface.ipv4?.vpc}
-                      vpcId={thisInterface.vpc_id}
-                    />
-                  );
-                })}
-              </Grid>
-            ) : null}
+                );
+              })}
+            </Grid>
 
             <Grid xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>

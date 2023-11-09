@@ -19,6 +19,8 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { VPC_FEEDBACK_FORM_URL } from 'src/features/VPCs/constants';
+
 import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
@@ -96,6 +98,7 @@ const VPCLanding = () => {
         docsLink="#" // @TODO VPC: Add docs link
         onButtonClick={createVPC}
         title={VPC_LABEL}
+        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
       />
       <Table>
         <TableHead>

@@ -1,10 +1,9 @@
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Chip, ChipProps } from 'src/components/Chip';
 
-interface BetaChipProps
+export interface BetaChipProps
   extends Omit<
     ChipProps,
     | 'avatar'
@@ -15,38 +14,45 @@ interface BetaChipProps
     | 'label'
     | 'onDelete'
     | 'outlineColor'
+    | 'size'
     | 'variant'
   > {
-  className?: string;
+  /**
+   * The color of the chip.
+   * default renders a gray chip, primary renders a blue chip.
+   */
   color?: 'default' | 'primary';
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.625rem',
-    height: 16,
-    letterSpacing: '.25px',
-    marginLeft: theme.spacing(),
-    textTransform: 'uppercase',
-  },
-}));
-
-const BetaChip = (props: BetaChipProps) => {
-  const { classes, cx } = useStyles();
-
-  const { className, color } = props;
+/**
+ * ## Usage
+ *
+ * Beta chips label features that are not yet part of Cloud Manager's core supported functionality.<br>
+ * **Example:** A beta chip may appear in the [primary navigation](https://github.com/linode/manager/pull/8104#issuecomment-1309334374),
+ * breadcrumbs, [banners](/docs/components-notifications-dismissible-banners--beta-banners), tabs, and/or plain text to designate beta functionality.<br>
+ * **Visual style:** bold, capitalized text; reduced height, letter spacing, and font size; solid color background.
+ *
+ */
+export const BetaChip = (props: BetaChipProps) => {
+  const { color } = props;
 
   return (
-    <Chip
+    <StyledBetaChip
       {...props}
-      className={cx(className, {
-        [classes.root]: true,
-      })}
       color={color}
+      data-testid="betaChip"
       label="beta"
     />
   );
 };
 
-export { BetaChip };
+const StyledBetaChip = styled(Chip, {
+  label: 'StyledBetaChip',
+})<BetaChipProps>(({ theme }) => ({
+  fontFamily: theme.font.bold,
+  fontSize: '0.625rem',
+  height: 16,
+  letterSpacing: '.25px',
+  marginLeft: theme.spacing(),
+  textTransform: 'uppercase',
+}));
