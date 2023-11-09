@@ -25,6 +25,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     fontSize: '0.875rem',
     lineHeight: '22px',
     marginLeft: theme.spacing(2),
+    whiteSpace: 'nowrap',
   },
   header: {
     marginBottom: theme.spacing(3),
@@ -49,10 +50,8 @@ export const getDatabaseVersionNumber = (
   version: DatabaseInstance['version']
 ) => version.split('/')[1];
 
-export const DatabaseScaleUpCurrentConfiguration = (props: Props) => {
+export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
   const { classes } = useStyles();
-
-  const { database } = props;
 
   const {
     data: types,
@@ -95,75 +94,76 @@ export const DatabaseScaleUpCurrentConfiguration = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Current Configuration
       </Typography>
-      <div className={classes.configs} data-qa-cluster-config>
-        <Grid container>
-          <Grid md={3} sm={6} xs={12}>
-            <Box display="flex" style={{ marginBottom: 12 }}>
-              <Typography className={classes.label}>Status</Typography>
-              <span className={classes.status}>
-                <StatusIcon status={databaseStatusMap[database.status]} />
-                {database.status}
-              </span>
-            </Box>
-            <Box display="flex" style={{ marginBottom: 12 }}>
-              <Typography className={classes.label}>Version</Typography>
-              {databaseEngineMap[database.engine]} v{database.version}
-            </Box>
-            <Box display="flex">
-              <Typography className={classes.label}>Nodes</Typography>
-              {configuration}
-            </Box>
-          </Grid>
-          <Grid md={3} sm={6} xs={12}>
-            <Box display="flex" style={{ marginBottom: 12 }}>
-              <Typography className={classes.label}>Region</Typography>
-              {region?.label ?? database.region}
-            </Box>
-            <Box display="flex">
-              <Typography className={classes.label}>Plan</Typography>
-              {formatStorageUnits(type.label)}
-            </Box>
-          </Grid>
-          <Grid md={3} sm={6} xs={12}>
-            <Box display="flex" style={{ marginBottom: 12 }}>
-              <Typography className={classes.label}>RAM</Typography>
-              {type.memory / 1024} GB
-            </Box>
-            <Box display="flex">
-              <Typography className={classes.label}>CPUs</Typography>
-              {type.vcpus}
-            </Box>
-          </Grid>
-          <Grid md={3} sm={6} xs={12}>
-            {database.total_disk_size_gb ? (
-              <>
-                <Box display="flex" style={{ marginBottom: 12 }}>
-                  <Typography className={classes.label}>
-                    Total Disk Size
-                  </Typography>
-                  {database.total_disk_size_gb} GB
-                  <TooltipIcon
-                    status="help"
-                    sxTooltipIcon={sxTooltipIcon}
-                    text={STORAGE_COPY}
-                  />
-                </Box>
-                <Box display="flex">
-                  <Typography className={classes.label}>Used</Typography>
-                  {database.used_disk_size_gb} GB
-                </Box>
-              </>
-            ) : (
-              <Box display="flex">
-                <Typography className={classes.label}>Storage</Typography>
-                {convertMegabytesTo(type.disk, true)}
-              </Box>
-            )}
-          </Grid>
+      <Grid
+        className={classes.configs}
+        container
+        data-qa-cluster-config
+        spacing={5}
+      >
+        <Grid item md={3} sm={6} xs={12}>
+          <Box display="flex" sx={{ marginBottom: '12px' }}>
+            <Typography className={classes.label}>Status</Typography>
+            <span className={classes.status}>
+              <StatusIcon status={databaseStatusMap[database.status]} />
+              {database.status}
+            </span>
+          </Box>
+          <Box display="flex" sx={{ marginBottom: '12px' }}>
+            <Typography className={classes.label}>Version</Typography>
+            {databaseEngineMap[database.engine]} v{database.version}
+          </Box>
+          <Box display="flex">
+            <Typography className={classes.label}>Nodes</Typography>
+            {configuration}
+          </Box>
         </Grid>
-      </div>
+        <Grid item md={3} sm={6} xs={12}>
+          <Box display="flex" sx={{ marginBottom: '12px' }}>
+            <Typography className={classes.label}>Region</Typography>
+            {region?.label ?? database.region}
+          </Box>
+          <Box display="flex">
+            <Typography className={classes.label}>Plan</Typography>
+            {formatStorageUnits(type.label)}
+          </Box>
+        </Grid>
+        <Grid item md={3} sm={6} xs={12}>
+          <Box display="flex" sx={{ marginBottom: '12px' }}>
+            <Typography className={classes.label}>RAM</Typography>
+            {type.memory / 1024} GB
+          </Box>
+          <Box display="flex">
+            <Typography className={classes.label}>CPUs</Typography>
+            {type.vcpus}
+          </Box>
+        </Grid>
+        <Grid item md={3} sm={6} xs={12}>
+          {database.total_disk_size_gb ? (
+            <>
+              <Box display="flex" sx={{ marginBottom: '12px' }}>
+                <Typography className={classes.label}>
+                  Total Disk Size
+                </Typography>
+                {database.total_disk_size_gb} GB
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={sxTooltipIcon}
+                  text={STORAGE_COPY}
+                />
+              </Box>
+              <Box display="flex">
+                <Typography className={classes.label}>Used</Typography>
+                {database.used_disk_size_gb} GB
+              </Box>
+            </>
+          ) : (
+            <Box display="flex">
+              <Typography className={classes.label}>Storage</Typography>
+              {convertMegabytesTo(type.disk, true)}
+            </Box>
+          )}
+        </Grid>
+      </Grid>
     </>
   );
 };
-
-export default DatabaseScaleUpCurrentConfiguration;

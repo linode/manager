@@ -11,7 +11,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import DatabaseScaleUp from './DatabaseScaleUp';
+import { DatabaseScaleUp } from './DatabaseScaleUp';
 
 const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
