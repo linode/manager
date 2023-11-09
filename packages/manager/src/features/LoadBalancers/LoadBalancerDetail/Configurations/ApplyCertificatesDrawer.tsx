@@ -38,6 +38,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
       onAdd(values.certificates);
       onClose();
     },
+    validateOnChange: false,
     validationSchema: CertificateConfigSchema,
   });
 
