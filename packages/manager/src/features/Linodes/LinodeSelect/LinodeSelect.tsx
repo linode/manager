@@ -89,6 +89,7 @@ export const LinodeSelect = (
     options,
     optionsFilter,
     placeholder,
+    renderOption,
     renderOptionLabel,
     sx,
     value,
@@ -131,6 +132,17 @@ export const LinodeSelect = (
           : multiple
           ? 'Select Linodes'
           : 'Select a Linode'
+      }
+      renderOption={
+        renderOption
+          ? (props, option, { selected }) => {
+              return (
+                <li {...props} data-qa-linode-option>
+                  {renderOption(option, selected)}
+                </li>
+              );
+            }
+          : undefined
       }
       value={
         typeof value === 'function'
