@@ -113,6 +113,9 @@ export const RoutesTable = (props: Props) => {
   }
 
   const getTableItems = (): TableItem[] => {
+    if (configuredRouteIds && configuredRouteIds.length === 0) {
+      return [];
+    }
     if (!routes?.data) {
       return [];
     }
@@ -209,7 +212,9 @@ export const RoutesTable = (props: Props) => {
         TableRowHead={RoutesTableRowHead}
       />
       <PaginationFooter
-        count={routes?.results ?? 0}
+        count={
+          configuredRouteIds ? configuredRouteIds.length : routes?.results ?? 0
+        }
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
