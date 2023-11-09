@@ -115,9 +115,7 @@ export const NodeBalancerSelect = (
         renderOptionLabel ? renderOptionLabel(nodebalancer) : nodebalancer.label
       }
       noOptionsText={
-        noOptionsMessage ?? (
-          <i>{getDefaultNoOptionsMessage(error, isLoading)}</i>
-        )
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)

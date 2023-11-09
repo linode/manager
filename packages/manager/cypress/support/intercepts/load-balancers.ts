@@ -140,6 +140,24 @@ export const mockDeleteLoadBalancerCertificateError = (
 };
 
 /**
+ * Intercepts PUT request to update an AGLB load balancer certificate and mocks a success response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to mock certificates.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLoadBalancerCertificate = (
+  loadBalancerId: number,
+  certificate: Certificate
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificate.id}`),
+    makeResponse(certificate)
+  );
+};
+
+/**
  * Intercepts GET request to retrieve AGLB service targets and mocks response.
  *
  * @param serviceTargets - Service targets with which to mock response.

@@ -110,32 +110,32 @@ describe('determineInitialPlanCategoryTab', () => {
   });
 
   it('should return the correct initial tab when dedicated plan is selected', () => {
-    const selectedID = 'g6-standard-6';
+    const selectedId = 'g6-standard-6';
 
-    const initialTab = determineInitialPlanCategoryTab(types, selectedID);
+    const initialTab = determineInitialPlanCategoryTab(types, selectedId);
 
     expect(initialTab).toBe(1);
   });
 
   it('should return the correct initial tab when nanode plan is selected', () => {
-    const selectedID = 'g6-nanode-1';
+    const selectedId = 'g6-nanode-1';
 
-    const initialTab = determineInitialPlanCategoryTab(types, selectedID);
+    const initialTab = determineInitialPlanCategoryTab(types, selectedId);
 
     expect(initialTab).toBe(1);
   });
 
   it('should return the correct initial tab when highmem plan is selected', () => {
-    const selectedID = 'g7-highmem-8';
+    const selectedId = 'g7-highmem-8';
 
-    const initialTab = determineInitialPlanCategoryTab(types, selectedID);
+    const initialTab = determineInitialPlanCategoryTab(types, selectedId);
 
     expect(initialTab).toBe(2);
   });
   it('should return the correct initial tab when gpu plan is selected', () => {
-    const selectedID = 'g1-gpu-rtx6000-2';
+    const selectedId = 'g1-gpu-rtx6000-2';
 
-    const initialTab = determineInitialPlanCategoryTab(types, selectedID);
+    const initialTab = determineInitialPlanCategoryTab(types, selectedId);
 
     expect(initialTab).toBe(3);
   });

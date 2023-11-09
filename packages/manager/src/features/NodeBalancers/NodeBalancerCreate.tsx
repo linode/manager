@@ -489,7 +489,7 @@ const NodeBalancerCreate = () => {
         error={hasErrorFor('region')}
         handleSelection={regionChange}
         regions={regions ?? []}
-        selectedID={nodeBalancerFields.region}
+        selectedId={nodeBalancerFields.region}
       />
       <SelectFirewallPanel
         handleFirewallChange={(firewallId: number) => {

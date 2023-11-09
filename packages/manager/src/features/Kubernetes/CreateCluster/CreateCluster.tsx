@@ -15,11 +15,11 @@ import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import {
@@ -194,7 +194,7 @@ export const CreateCluster = () => {
     errors
   );
 
-  const selectedID = selectedRegionID || null;
+  const selectedId = selectedRegionID || null;
 
   const {
     hasSelectedRegion,
@@ -243,7 +243,7 @@ export const CreateCluster = () => {
             className={classes.regionSubtitle}
             errorText={errorMap.region}
             regions={filteredRegions}
-            selectedID={selectedID}
+            selectedId={selectedId}
           />
           {showPricingNotice && (
             <DynamicPriceNotice region={selectedRegionID} spacingBottom={16} />
@@ -267,7 +267,7 @@ export const CreateCluster = () => {
               <HAControlPlane
                 highAvailabilityPrice={
                   flags.dcSpecificPricing
-                    ? getHighAvailabilityPrice(selectedID)
+                    ? getHighAvailabilityPrice(selectedId)
                     : LKE_HA_PRICE
                 }
                 setHighAvailability={setHighAvailability}
@@ -303,7 +303,7 @@ export const CreateCluster = () => {
         <KubeCheckoutBar
           highAvailabilityPrice={
             flags.dcSpecificPricing
-              ? getHighAvailabilityPrice(selectedID)
+              ? getHighAvailabilityPrice(selectedId)
               : LKE_HA_PRICE
           }
           updateFor={[

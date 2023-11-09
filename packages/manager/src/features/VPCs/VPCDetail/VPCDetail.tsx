@@ -15,6 +15,8 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
+import { VPC_FEEDBACK_FORM_URL } from 'src/features/VPCs/constants';
+
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
@@ -97,6 +99,7 @@ const VPCDetail = () => {
     <>
       <DocumentTitleSegment segment={vpc.label} />
       <LandingHeader
+        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
         breadcrumbProps={{
           crumbOverrides: [
             {
