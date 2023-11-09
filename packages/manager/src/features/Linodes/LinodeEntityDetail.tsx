@@ -18,18 +18,14 @@ import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActi
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
+import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { useVPCsQuery } from 'src/queries/vpcs';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
@@ -59,11 +55,7 @@ import {
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
 
-import type {
-  Interface,
-  Linode,
-  LinodeType,
-} from '@linode/api-v4/lib/linodes/types';
+import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 
 interface LinodeEntityDetailProps {
@@ -343,58 +335,19 @@ export const Body = React.memo((props: BodyProps) => {
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
-  const flags = useFlags();
-  const { account } = useAccountManagement();
 
-  const displayVPCSection = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
-  const vpcsList = vpcData?.data ?? [];
-
-  const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
-    const subnets = vpc.subnets;
-
-    return Boolean(
-      subnets.find((subnet) =>
-        subnet.linodes.some((linodeInfo) => linodeInfo.id === linodeId)
-      )
-    );
-  });
+  const {
+    configInterfaceWithVPC,
+    displayVPCSection,
+    isVPCOnlyLinode,
+    vpcLinodeIsAssignedTo,
+  } = useVPCConfigInterface(linodeId);
 
   // Filter and retrieve subnets associated with a specific Linode ID
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
 
-  const { data: configs } = useAllLinodeConfigsQuery(
-    linodeId,
-    Boolean(vpcLinodeIsAssignedTo) // only grab configs if necessary
-  );
-  let _configInterfaceWithVPC: Interface | undefined;
-
-  // eslint-disable-next-line no-unused-expressions
-  configs?.find((config) => {
-    const interfaces = config.interfaces;
-
-    const interfaceWithVPC = interfaces.find(
-      (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
-    );
-
-    if (interfaceWithVPC) {
-      _configInterfaceWithVPC = interfaceWithVPC;
-    }
-
-    return interfaceWithVPC;
-  });
-
-  // A VPC-only Linode is a Linode that has at least one config interface with primary set to true and purpose vpc and no ipv4.nat_1_1 value
-  const isVPCOnlyLinode = Boolean(
-    _configInterfaceWithVPC?.primary && !_configInterfaceWithVPC.ipv4?.nat_1_1
-  );
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -533,7 +486,7 @@ export const Body = React.memo((props: BodyProps) => {
                 <StyledLabelBox component="span" data-testid="vpc-ipv4">
                   VPC IPv4:
                 </StyledLabelBox>{' '}
-                {_configInterfaceWithVPC?.ipv4?.vpc}
+                {configInterfaceWithVPC?.ipv4?.vpc}
               </StyledListItem>
             </StyledVPCBox>
           </Grid>
