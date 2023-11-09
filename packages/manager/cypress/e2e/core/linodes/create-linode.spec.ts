@@ -1,19 +1,18 @@
 import {
-  containsClick,
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
 } from 'support/helpers';
-import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
-import { linodeFactory } from '@src/factories';
+import { linodeFactory, regionFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   dcPricingRegionNotice,
   dcPricingPlanPlaceholder,
@@ -30,10 +29,87 @@ import {
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 
+import type { Region } from '@linode/api-v4';
+
+const mockRegions: Region[] = [
+  regionFactory.build({
+    country: 'uk',
+    id: 'eu-west',
+    label: 'London, UK',
+  }),
+  regionFactory.build({
+    country: 'sg',
+    id: 'ap-south',
+    label: 'Singapore, SG',
+  }),
+  regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+  }),
+  regionFactory.build({
+    id: 'us-central',
+    label: 'Dallas, TX',
+  }),
+];
+
 authenticate();
 describe('create linode', () => {
   before(() => {
     cleanUp('linodes');
+  });
+
+  /*
+   * Region select test.
+   * - Confirms that region select dropdown is visible and interactive.
+   * - Confirms that region select dropdown is populated with expected regions.
+   * - Confirms that region select dropdown is sorted alphabetically by region, with North America first.
+   * - Confirms that region select dropdown is populated with expected DCs, sorted alphabetically.
+   * - Confirms that region select dropdown is populated with expected fake DC.
+   */
+  it('region select', () => {
+    mockGetRegions(mockRegions).as('getRegions');
+
+    mockAppendFeatureFlags({
+      soldOutTokyo: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    cy.visitWithLogin('linodes/create');
+
+    cy.wait(['@getFeatureFlags', '@getRegions']);
+
+    // Confirm that region select dropdown is visible and interactive.
+    ui.regionSelect.find().click();
+    cy.get('[data-qa-autocomplete-popper="true"]').should('be.visible');
+
+    // Confirm that region select dropdown are grouped by region,
+    // sorted alphabetically, with North America first.
+    cy.get('[data-qa-region-select-group]')
+      .should('have.length', 3)
+      .should((group) => {
+        expect(group[0]).to.contain('North America');
+        expect(group[1]).to.contain('Asia');
+        expect(group[2]).to.contain('Europe');
+      });
+
+    // Confirm that region select dropdown is populated with expected regions, sorted alphabetically.
+    cy.get('[data-qa-option]').should('exist').should('have.length', 5);
+    mockRegions.forEach((region) => {
+      cy.get('[data-qa-option]').contains(region.label);
+    });
+
+    // Select an option
+    cy.findByTestId('eu-west').click();
+    // Confirm the popper is closed
+    cy.get('[data-qa-autocomplete-popper="true"]').should('not.exist');
+    // Confirm that the selected region is displayed in the input field.
+    cy.get('[data-testid="textfield-input"]').should(
+      'have.value',
+      'London, UK (eu-west)'
+    );
+
+    // Confirm that selecting a valid region updates the Plan Selection panel.
+    expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
   });
 
   it('creates a nanode', () => {
@@ -44,7 +120,8 @@ describe('create linode', () => {
     cy.get('[data-qa-deploy-linode]');
     cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    containsClick(selectRegionString).type(`${chooseRegion().label} {enter}`);
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionLabel(chooseRegion().label).click();
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
@@ -64,13 +141,10 @@ describe('create linode', () => {
 
     cy.visitWithLogin('/linodes/create');
 
-    cy.contains('Select a Region').click();
-
-    ui.regionSelect.findItemByRegionLabel(linodeRegion.label);
-
+    ui.regionSelect.find().click();
     ui.autocompletePopper
       .findByTitle(`${linodeRegion.label} (${linodeRegion.id})`)
-      .should('be.visible')
+      .should('exist')
       .click();
 
     cy.get('[id="g6-dedicated-2"]').click();
@@ -191,8 +265,8 @@ describe('create linode', () => {
 
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
-
-    containsClick(selectRegionString).type(`${initialRegion.label} {enter}`);
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionLabel(initialRegion.label).click();
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     // Confirm that the backup prices are displayed as expected.
@@ -221,7 +295,7 @@ describe('create linode', () => {
     //   .should('be.visible')
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
-    containsClick(initialRegion.label).type(`${newRegion.label} {enter}`);
+    ui.regionSelect.find().click().type(`${newRegion.label} {enter}`);
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     // Confirm that the backup prices are displayed as expected.

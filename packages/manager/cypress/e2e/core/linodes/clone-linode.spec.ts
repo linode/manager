@@ -87,10 +87,8 @@ describe('clone linode', () => {
       cy.url().should('endWith', getLinodeCloneUrl(linode, false));
 
       // Select clone region and Linode type.
-      cy.findByText('Select a Region')
-        .should('be.visible')
-        .click()
-        .type(`${linodeRegion.label}{enter}`);
+      ui.regionSelect.find().click();
+      ui.regionSelect.findItemByRegionId(linodeRegion.id).click();
 
       cy.findByText('Shared CPU').should('be.visible').click();
 
@@ -168,8 +166,8 @@ describe('clone linode', () => {
       'not.exist'
     );
 
-    cy.findByText(`${initialRegion.label} (${initialRegion.id})`)
-      .should('be.visible')
+    ui.regionSelect
+      .findBySelectedItem(`${initialRegion.label} (${initialRegion.id})`)
       .click()
       .type(`${newRegion.label}{enter}`);
 

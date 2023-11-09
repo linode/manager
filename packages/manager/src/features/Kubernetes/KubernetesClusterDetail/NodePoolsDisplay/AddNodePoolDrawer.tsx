@@ -197,7 +197,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           isSubmitting={isLoading}
           regionsData={regionsData}
           resetValues={resetDrawer}
-          selectedID={selectedTypeInfo?.planId}
+          selectedId={selectedTypeInfo?.planId}
           selectedRegionID={clusterRegionId}
           updatePlanCount={updatePlanCount}
         />

@@ -6,18 +6,18 @@ import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
 
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-import { linodeFactory } from 'src/factories';
+import { linodeFactory, regionFactory } from 'src/factories';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
 import type { EnhancedAutocompleteProps } from './Autocomplete';
+import type { Country } from '@linode/api-v4';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 const LABEL = 'Select a Linode';
@@ -51,33 +51,7 @@ const linodes: OptionType[] = [
   },
 ];
 
-const fakeRegionsData = [
-  {
-    country: 'us',
-    id: 'us-east',
-    label: 'Newark, NJ',
-  },
-  {
-    country: 'us',
-    id: 'us-central',
-    label: 'Texas, TX',
-  },
-  {
-    country: 'fr',
-    id: 'fr-par',
-    label: 'Paris, FR',
-  },
-  {
-    country: 'br',
-    id: 'br-sao',
-    label: 'Sao Paulo, BR',
-  },
-  {
-    country: 'jp',
-    id: 'jp-tyo',
-    label: 'Tokyo, JP',
-  },
-];
+const fakeRegionsData: Region[] = regionFactory.buildList(5);
 
 const getRegionsOptions = (
   fakeRegionsData: Pick<Region, 'country' | 'id' | 'label'>[]
@@ -87,7 +61,7 @@ const getRegionsOptions = (
     return {
       data: {
         country: region.country,
-        flag: <Flag country={region.country as Lowercase<Country>} />,
+        flag: <Flag country={region.country as Country} />,
         region: group,
       },
       label: `${region.label} (${region.id})`,

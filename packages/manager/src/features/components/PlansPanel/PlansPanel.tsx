@@ -28,7 +28,7 @@ interface Props {
   onSelect: (key: string) => void;
   regionsData?: Region[];
   selectedDiskSize?: number;
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionID?: string;
   showTransfer?: boolean;
   tabbedPanelInnerClass?: string;
@@ -48,7 +48,7 @@ export const PlansPanel = (props: Props) => {
     linodeID,
     onSelect,
     regionsData,
-    selectedID,
+    selectedId,
     selectedRegionID,
     showTransfer,
     types,
@@ -89,7 +89,7 @@ export const PlansPanel = (props: Props) => {
               onSelect={onSelect}
               plans={plans[plan]}
               selectedDiskSize={props.selectedDiskSize}
-              selectedID={selectedID}
+              selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
             />
@@ -102,7 +102,7 @@ export const PlansPanel = (props: Props) => {
 
   const initialTab = determineInitialPlanCategoryTab(
     types,
-    selectedID,
+    selectedId,
     currentPlanHeading
   );
 
