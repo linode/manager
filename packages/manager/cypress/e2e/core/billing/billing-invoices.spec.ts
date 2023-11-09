@@ -18,7 +18,7 @@ import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { readDownload, cleanUpDownloadFiles } from 'support/util/downloads';
 import {
-  maximumInvoiceSize,
+  maximumInvoiceItems,
   invoicePdfName,
   invoiceCsvName,
 } from 'support/constants/accounts';
@@ -367,8 +367,7 @@ describe('Account invoices', () => {
    */
   it('can download an invoice with maximum size correctly from billing landing page', () => {
     const mockInvoice = invoiceFactory.build();
-    const mockInvoiceItems = invoiceItemFactory.buildList(maximumInvoiceSize);
-    // mockInvoice.date = "2022-08-01T03:00:12";
+    const mockInvoiceItems = invoiceItemFactory.buildList(maximumInvoiceItems);
 
     cy.defer(getProfile()).then((profile: Profile) => {
       const timezone = profile.timezone;
@@ -396,9 +395,9 @@ describe('Account invoices', () => {
     });
   });
 
-  it('can download an invoice with maximum size correctly invoice details page', () => {
+  it('can download an invoice with maximum size correctly from invoice details page', () => {
     const mockInvoice = invoiceFactory.build();
-    const mockInvoiceItems = invoiceItemFactory.buildList(maximumInvoiceSize);
+    const mockInvoiceItems = invoiceItemFactory.buildList(maximumInvoiceItems);
     const pages = [1, 2, 3, 4];
 
     cy.defer(getProfile()).then((profile: Profile) => {

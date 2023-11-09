@@ -1,7 +1,7 @@
 /**
- * API request maximum invoice size.
+ * API request maximum invoice size in number of invoice items.
  */
-export const maximumInvoiceSize = 40000;
+export const maximumInvoiceItems = 40000;
 
 /**
  * Downloaded invoice PDF name.
