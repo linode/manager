@@ -1,9 +1,8 @@
 import * as React from 'react';
 
+import { StyledPreContainerDiv, StyledRootDiv } from './Breadcrumb.styles';
 import { CrumbOverridesProps, Crumbs } from './Crumbs';
 import { EditableProps, LabelProps } from './types';
-
-import { StyledPreContainerDiv, StyledRootDiv } from './Breadcrumb.styles';
 
 export interface BreadcrumbProps {
   /**
@@ -68,7 +67,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
 
   return (
     <StyledRootDiv
-      sx={{ ...(hasError && { marginBottom: (theme) => theme.spacing(5) }) }}
+      sx={{ ...(hasError && { marginBottom: (theme) => theme.spacing(3) }) }}
       {...breadcrumbDataAttrs}
     >
       <StyledPreContainerDiv

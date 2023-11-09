@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { styled } from '@mui/material';
+import * as React from 'react';
 
 interface Props {
   prefixComponent: JSX.Element | null;

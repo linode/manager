@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { EditableProps, LabelProps } from './types';
-
 import {
   StyledDiv,
   StyledEditableText,
   StyledH1Header,
-} from './FinalCrumbs.styles';
+} from './FinalCrumb.styles';
+import { EditableProps, LabelProps } from './types';
 
 interface Props {
   crumb: string;
