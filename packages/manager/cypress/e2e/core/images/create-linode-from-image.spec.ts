@@ -4,12 +4,15 @@ import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 import { ui } from 'support/ui';
+import { authenticate } from 'support/api/authentication';
 
 const region = chooseRegion();
 
 const mockLinode = linodeFactory.build({
   region: region.id,
+  id: 123456,
 });
 
 const mockImage = imageFactory.build({
@@ -42,11 +45,8 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
     });
   }
 
-  getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
-    containsClick('Select a Region');
-  });
-
-  ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
+  ui.regionSelect.find().click();
+  ui.regionSelect.findItemByRegionId(region.id).click();
 
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
@@ -54,6 +54,8 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   getClick('[data-qa-deploy-linode="true"]');
 
   cy.wait('@mockLinodeRequest');
+
+  console.log('mockLinode', mockLinode);
 
   fbtVisible(mockLinode.label);
   fbtVisible(region.label);

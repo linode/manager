@@ -30,7 +30,7 @@ export interface KubernetesPlanContainerProps {
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: ExtendedType[];
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionID?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -44,7 +44,7 @@ export const KubernetesPlanContainer = (
     onAdd,
     onSelect,
     plans,
-    selectedID,
+    selectedId,
     selectedRegionID,
     updatePlanCount,
   } = props;
@@ -60,7 +60,7 @@ export const KubernetesPlanContainer = (
         key={id}
         onAdd={onAdd}
         onSelect={onSelect}
-        selectedID={selectedID}
+        selectedId={selectedId}
         selectedRegionID={selectedRegionID}
         type={plan}
         updatePlanCount={updatePlanCount}
@@ -72,7 +72,7 @@ export const KubernetesPlanContainer = (
     onAdd,
     onSelect,
     plans,
-    selectedID,
+    selectedId,
     selectedRegionID,
     updatePlanCount,
   ]);

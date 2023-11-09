@@ -471,7 +471,7 @@ const NodeBalancerCreate = () => {
         error={hasErrorFor('region')}
         handleSelection={regionChange}
         regions={regions ?? []}
-        selectedID={nodeBalancerFields.region}
+        selectedId={nodeBalancerFields.region}
       />
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {

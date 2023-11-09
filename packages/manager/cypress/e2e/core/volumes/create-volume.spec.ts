@@ -19,7 +19,7 @@ const pageSizeOverride = {
 authenticate();
 describe('volume create flow', () => {
   before(() => {
-    cleanUp('volumes');
+    cleanUp(['volumes', 'linodes']);
   });
 
   /*
@@ -44,12 +44,7 @@ describe('volume create flow', () => {
     // Fill out and submit volume create form.
     containsClick('Label').type(volume.label);
     containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-    containsClick('Select a Region').type(`${volume.region}{enter}`);
-
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
-      .type(`${volume.regionLabel}{enter}`);
+    ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
     fbtClick('Create Volume');
     cy.wait('@createVolume');
@@ -100,7 +95,7 @@ describe('volume create flow', () => {
       // Fill out and submit volume create form.
       containsClick('Label').type(volume.label);
       containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-      containsClick('Select a Region').type(`${volume.regionLabel}{enter}`);
+      ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
       cy.findByLabelText('Linode')
         .should('be.visible')

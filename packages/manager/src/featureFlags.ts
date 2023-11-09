@@ -59,6 +59,7 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
   selfServeBetas: boolean;
+  soldOutSingapore: boolean;
   soldOutTokyo: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;

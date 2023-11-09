@@ -34,7 +34,7 @@ interface Props {
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   selectedDiskSize?: number;
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
   type: PlanSelectionType;
@@ -57,7 +57,7 @@ export const PlanSelection = (props: Props) => {
     linodeID,
     onSelect,
     selectedDiskSize,
-    selectedID,
+    selectedId,
     selectedRegionId,
     showTransfer,
     type,
@@ -119,7 +119,7 @@ export const PlanSelection = (props: Props) => {
                     checked={
                       !disabled &&
                       !planTooSmall &&
-                      type.id === String(selectedID)
+                      type.id === String(selectedId)
                     }
                     disabled={planTooSmall || disabled || isDisabledClass}
                     id={type.id}
@@ -199,7 +199,7 @@ export const PlanSelection = (props: Props) => {
       {/* Displays SelectionCard for small screens */}
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
-          checked={type.id === String(selectedID)}
+          checked={type.id === String(selectedId)}
           disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
           heading={type.heading}
           key={type.id}

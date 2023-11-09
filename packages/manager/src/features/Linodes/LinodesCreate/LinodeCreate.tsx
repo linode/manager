@@ -551,7 +551,7 @@ export class LinodeCreate extends React.PureComponent<
               handleSelection={this.props.updateRegionID}
               helperText={this.props.regionHelperText}
               regions={regionsData!}
-              selectedID={this.props.selectedRegionID}
+              selectedId={this.props.selectedRegionID}
               selectedLinodeTypeId={this.props.selectedTypeID}
             />
           )}
@@ -574,7 +574,7 @@ export class LinodeCreate extends React.PureComponent<
             linodeID={this.props.selectedLinodeID}
             onSelect={this.props.updateTypeID}
             regionsData={regionsData!}
-            selectedID={this.props.selectedTypeID}
+            selectedId={this.props.selectedTypeID}
             selectedRegionID={selectedRegionID}
             showTransfer
             types={this.filterTypes()}

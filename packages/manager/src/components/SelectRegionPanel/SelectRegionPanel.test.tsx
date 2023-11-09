@@ -53,7 +53,7 @@ describe('SelectRegionPanel in Create Flow', () => {
       <SelectRegionPanel
         handleSelection={jest.fn()}
         regions={regions}
-        selectedID="id-cgk"
+        selectedId="id-cgk"
       />,
 
       {
@@ -125,9 +125,10 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     expect(
       container.querySelector('[data-qa-textfield-label]')
     ).toHaveTextContent('Region');
-    expect(
-      container.querySelector('[data-qa-select-placeholder]')
-    ).toHaveTextContent('Select a Region');
+    expect(container.querySelector('[role="combobox"]')).toHaveAttribute(
+      'placeholder',
+      'Select a Region'
+    );
   });
 
   it('displays no notice when cloning to the same region', () => {
@@ -139,7 +140,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(false);
 
     const { queryAllByRole } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="us-east" />,
+      <SelectRegionPanel {...mockedProps} selectedId="us-east" />,
       {
         MemoryRouter: {
           initialEntries: [createPath],
@@ -160,7 +161,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(false);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="us-west" />,
+      <SelectRegionPanel {...mockedProps} selectedId="us-west" />,
       {
         MemoryRouter: {
           initialEntries: [createPath],
@@ -188,7 +189,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(true);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />,
+      <SelectRegionPanel {...mockedProps} selectedId="br-gru" />,
       {
         MemoryRouter: {
           initialEntries: [createPath],

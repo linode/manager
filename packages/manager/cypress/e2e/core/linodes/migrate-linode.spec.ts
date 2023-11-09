@@ -8,8 +8,7 @@ import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { linodeFactory, linodeTypeFactory } from '@src/factories';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-import { getClick, fbtClick, containsClick } from 'support/helpers';
-import { selectRegionString } from 'support/ui/constants';
+import { getClick, fbtClick } from 'support/helpers';
 import { getRegionById } from 'support/util/regions';
 import {
   dcPricingMockLinodeTypes,
@@ -47,8 +46,8 @@ describe('Migrate linodes', () => {
     cy.findByText(`${initialRegion.label}`).should('be.visible');
     getClick('[data-qa-checked="false"]');
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
-    containsClick(selectRegionString);
 
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(newRegion.label).click();
 
     // intercept migration request and stub it, respond with 200
@@ -96,8 +95,8 @@ describe('Migrate linodes', () => {
     cy.findByText(`${initialRegion.label}`).should('be.visible');
     getClick('[data-qa-checked="false"]');
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
-    containsClick(selectRegionString);
 
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(newRegion.label).click();
 
     cy.findByText(dcPricingCurrentPriceLabel).should('be.visible');
@@ -174,7 +173,7 @@ describe('Migrate linodes', () => {
     cy.findByText(dcPricingNewPriceLabel).should('not.exist');
     cy.get('[data-testid="new-price-panel"]').should('not.exist');
     // Change region selection to another region with the same price structure.
-    cy.findByText('New Region').click().type(`${newRegion.label}{enter}`);
+    ui.regionSelect.find().click().clear().type(`${newRegion.label}{enter}`);
     // Confirm that DC pricing information still does not show up.
     cy.findByText(dcPricingCurrentPriceLabel).should('not.exist');
     cy.get('[data-testid="current-price-panel"]').should('not.exist');

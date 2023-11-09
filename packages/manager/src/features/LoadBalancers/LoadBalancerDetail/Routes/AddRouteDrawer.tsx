@@ -14,12 +14,12 @@ import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { RouteSelect } from './RouteSelect';
-import { getRouteProtocolFromConfiguration } from './utils';
+import { getRouteProtocolFromConfigurationProtocol } from './utils';
 
 import type { Configuration, CreateRoutePayload } from '@linode/api-v4';
 
 export interface Props {
-  configuration: Configuration;
+  configuration: Pick<Configuration, 'protocol'>;
   loadbalancerId: number;
   onAdd: (routeId: number) => void;
   onClose: () => void;
@@ -33,8 +33,8 @@ export const AddRouteDrawer = (props: Props) => {
 
   const [mode, setMode] = useState<Mode>('existing');
 
-  const routeProtocol = getRouteProtocolFromConfiguration(
-    configuration
+  const routeProtocol = getRouteProtocolFromConfigurationProtocol(
+    configuration.protocol
   ).toLocaleUpperCase();
 
   return (
@@ -114,7 +114,7 @@ const AddExistingRouteForm = (props: AddExistingRouteFormProps) => {
 };
 
 interface AddNewRouteFormProps {
-  configuration: Configuration;
+  configuration: Pick<Configuration, 'protocol'>;
   loadbalancerId: number;
   onAdd: (routeId: number) => void;
   onClose: () => void;
@@ -132,7 +132,9 @@ const AddNewRouteForm = (props: AddNewRouteFormProps) => {
   const formik = useFormik<CreateRoutePayload>({
     initialValues: {
       label: '',
-      protocol: getRouteProtocolFromConfiguration(configuration),
+      protocol: getRouteProtocolFromConfigurationProtocol(
+        configuration.protocol
+      ),
       rules: [],
     },
     async onSubmit(values, helpers) {

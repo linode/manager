@@ -1,6 +1,6 @@
 import * as accordion from './accordion';
 import * as actionMenu from './action-menu';
-import * as autocompletePopper from './autocomplete-popper';
+import * as autocomplete from './autocomplete';
 import * as breadcrumb from './breadcrumb';
 import * as buttons from './buttons';
 import * as dialog from './dialog';
@@ -20,7 +20,7 @@ import * as userMenu from './user-menu';
 export const ui = {
   ...accordion,
   ...actionMenu,
-  ...autocompletePopper,
+  ...autocomplete,
   ...breadcrumb,
   ...buttons,
   ...dialog,

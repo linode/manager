@@ -104,10 +104,7 @@ describe('LKE Cluster Creation', () => {
       .click()
       .type(`${clusterLabel}{enter}`);
 
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
-      .type(`${clusterRegion.label}{enter}`);
+    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
     cy.findByText('Kubernetes Version')
       .should('be.visible')
@@ -262,15 +259,12 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
       .type(`${clusterLabel}{enter}`);
 
     // Confirm pricing warning notice is visible for a region with DC-specific pricing and not visible otherwise.
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
-      .type(`${clusterRegion.label}{enter}`);
+    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
     cy.findByText(dcPricingRegionNotice).should('not.exist');
 
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
+    ui.regionSelect
+      .find()
+      .clear()
       .type(`${dcSpecificPricingRegion.label}{enter}`);
     cy.findByText(dcPricingRegionNotice).should('be.visible');
 

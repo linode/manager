@@ -19,7 +19,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'dcGetWell', label: 'DC Get Well' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'soldOutTokyo', label: 'Sold Out Tokyo' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
