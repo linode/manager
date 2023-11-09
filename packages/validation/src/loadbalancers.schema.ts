@@ -41,7 +41,10 @@ export const CertificateConfigSchema = object({
 export const EndpointSchema = object({
   ip: string().required('IP is required.'),
   host: string(),
-  port: number().required('Port is required.').min(1).max(65535),
+  port: number()
+    .required('Port is required.')
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.'),
   rate_capacity: number().required('Rate Capacity is required.'),
 });
 
@@ -158,7 +161,7 @@ export const UpdateConfigurationSchema = object({
   label: string().min(1, 'Label must not be empty.'),
   port: number()
     .min(1, 'Port must be greater than 0.')
-    .max(65535, 'Port must be less than 65535.')
+    .max(65535, 'Port must be less than or equal to 65535.')
     .typeError('Port must be a number.'),
   protocol: string().oneOf(['tcp', 'http', 'https']),
   certificates: array().when('protocol', {
@@ -175,7 +178,7 @@ export const CreateConfigurationSchema = object({
     .required('Label is required.'),
   port: number()
     .min(1, 'Port must be greater than 0.')
-    .max(65535, 'Port must be less than 65535.')
+    .max(65535, 'Port must be less than or equal to 65535.')
     .typeError('Port must be a number.')
     .required('Port is required.'),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
