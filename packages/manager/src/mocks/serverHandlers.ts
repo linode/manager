@@ -780,11 +780,11 @@ export const handlers = [
     });
     return res(ctx.json(newFirewall));
   }),
-  rest.get('*/nodebalancers', (req, res, ctx) => {
-    const nodeBalancers = nodeBalancerFactory.buildList(0);
+  rest.get('*/v4/nodebalancers', (req, res, ctx) => {
+    const nodeBalancers = nodeBalancerFactory.buildList(1);
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
-  rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
+  rest.get('*/v4/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(req.params.nodeBalancerID),
     });
@@ -799,9 +799,11 @@ export const handlers = [
   rest.get(
     '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
     (req, res, ctx) => {
-      const configs = nodeBalancerConfigNodeFactory.buildList(2, {
-        nodebalancer_id: Number(req.params.nodeBalancerID),
-      });
+      const configs = [
+        nodeBalancerConfigNodeFactory.build({ status: 'UP' }),
+        nodeBalancerConfigNodeFactory.build({ status: 'DOWN' }),
+        nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
+      ];
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
