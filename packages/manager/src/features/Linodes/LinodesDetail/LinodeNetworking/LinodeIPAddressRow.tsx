@@ -1,14 +1,14 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -19,25 +19,6 @@ import {
 
 import { StyledActionTableCell } from './LinodeIPAddresses.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
-
-const useStyles = makeStyles<void, 'copy'>()(
-  (theme: Theme, _params, classes) => ({
-    copy: {
-      '& svg': {
-        height: `12px`,
-        opacity: 0,
-        width: `12px`,
-      },
-      marginLeft: 4,
-      top: 1,
-    },
-    row: {
-      [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
-        opacity: 1,
-      },
-    },
-  })
-);
 
 export interface IPAddressRowHandlers {
   handleOpenEditRDNS: (ip: IPAddress) => void;
@@ -72,7 +53,6 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
     type,
   } = props;
 
-  const { classes } = useStyles();
   const { isVPCOnlyLinode } = useVPCConfigInterface(linodeId);
   const { data: ips } = useLinodeIPsQuery(linodeId);
 
@@ -84,8 +64,7 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
   const disabled = isVPCOnlyLinode && type === 'IPv4 – Public';
 
   return (
-    <TableRow
-      className={classes.row}
+    <StyledTableRow
       data-qa-ip={address}
       disabled={disabled}
       key={`${address}-${type}`}
@@ -97,9 +76,7 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
       >
         <CopyTooltip copyableText disabled={disabled} text={address} />
         {!isVPCOnlyLinode ||
-          (type !== 'IPv4 – Public' && (
-            <CopyTooltip className={classes.copy} text={address} />
-          ))}
+          (type !== 'IPv4 – Public' && <StyledCopyToolTip text={address} />)}
       </TableCell>
       <TableCell data-qa-ip-address parentColumn="Type">
         {type}
@@ -141,9 +118,21 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
           />
         ) : null}
       </StyledActionTableCell>
-    </TableRow>
+    </StyledTableRow>
   );
 };
+
+const StyledCopyToolTip = styled(CopyTooltip, {
+  label: 'StyledCopyToolTip',
+})(() => ({
+  '& svg': {
+    height: `12px`,
+    opacity: 0,
+    width: `12px`,
+  },
+  marginLeft: 4,
+  top: 1,
+}));
 
 const RangeRDNSCell = (props: {
   linodeId: number;
