@@ -87,7 +87,7 @@ interface StackScriptImages {
   deprecated: JSX.Element[];
 }
 
-export const StackScript = (props: StackScriptProps) => {
+export const StackScript = React.memo((props: StackScriptProps) => {
   const {
     data: {
       deployments_active,
@@ -277,6 +277,4 @@ export const StackScript = (props: StackScriptProps) => {
       <ScriptCode script={script} />
     </div>
   );
-};
-
-export default React.memo(StackScript);
+});
