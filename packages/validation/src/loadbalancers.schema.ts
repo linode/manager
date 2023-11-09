@@ -68,7 +68,7 @@ export const CreateServiceTargetSchema = object({
 
 export const UpdateServiceTargetSchema = object({
   label: string().min(1, 'Label must not be empty.'),
-  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
+  protocol: string().oneOf(['tcp', 'http', 'https']),
   endpoints: array(EndpointSchema),
   certificate_id: number().nullable(),
   load_balancing_policy: string().oneOf([
