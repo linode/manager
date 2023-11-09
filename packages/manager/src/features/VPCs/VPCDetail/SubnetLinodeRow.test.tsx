@@ -50,6 +50,7 @@ describe('SubnetLinodeRow', () => {
     const handleUnassignLinode = jest.fn();
     const linodeInterfaceData = {
       id: linodeFactory1.id,
+      // todo connie update this test
       interfaces: [],
     };
 
@@ -61,6 +62,7 @@ describe('SubnetLinodeRow', () => {
     } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
+          handleRebootLinode={jest.fn()}
           handleUnassignLinode={handleUnassignLinode}
           linodeInterfaceData={linodeInterfaceData}
           subnetId={0}
@@ -82,7 +84,6 @@ describe('SubnetLinodeRow', () => {
       `/linodes/${linodeFactory1.id}`
     );
 
-    getAllByText(linodeFactory1.id);
     getAllByText('10.0.0.0');
     getByText('mock-firewall-0');
 

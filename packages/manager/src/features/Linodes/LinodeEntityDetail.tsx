@@ -1,3 +1,4 @@
+import { Config, VPC } from '@linode/api-v4/lib';
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -16,6 +17,7 @@ import { Link } from 'src/components/Link';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
@@ -104,6 +106,33 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const displayVPCSection = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
+  const vpcsList = vpcData?.data ?? [];
+
+  const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
+    const subnets = vpc.subnets;
+
+    return Boolean(
+      subnets.find((subnet) =>
+        subnet.linodes.some((linodeInfo) => linodeInfo.id === linode.id)
+      )
+    );
+  });
+
+  const { data: configs } = useAllLinodeConfigsQuery(
+    linode.id,
+    Boolean(vpcLinodeIsAssignedTo) // only grab configs if necessary
+  );
+
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
@@ -126,6 +155,9 @@ export const LinodeEntityDetail = (props: Props) => {
     <EntityDetail
       body={
         <Body
+          assignedVPC={vpcLinodeIsAssignedTo}
+          configs={configs}
+          displayVPCSection={displayVPCSection}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
           ipv4={linode.ipv4}
@@ -151,6 +183,7 @@ export const LinodeEntityDetail = (props: Props) => {
       header={
         <Header
           backups={linode.backups}
+          configs={configs}
           handlers={handlers}
           image={linode.image ?? 'Unknown Image'}
           imageVendor={imageVendor}
@@ -175,6 +208,7 @@ export const LinodeEntityDetail = (props: Props) => {
 // =============================================================================
 export interface HeaderProps {
   backups: LinodeBackups;
+  configs?: Config[];
   image: string;
   imageVendor: null | string;
   isSummaryView?: boolean;
@@ -194,6 +228,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 
   const {
     backups,
+    configs,
     handlers,
     isSummaryView,
     linodeId,
@@ -216,7 +251,16 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     lishLaunch(id);
   };
 
-  const formattedStatus = linodeStatus.replace('_', ' ').toUpperCase();
+  const rebootNeeded = configs?.some((config) =>
+    config.interfaces.some(
+      (linodeInterface) =>
+        !linodeInterface.active && linodeInterface.purpose === 'vpc'
+    )
+  );
+
+  const formattedStatus = rebootNeeded
+    ? 'REBOOT NEEDED'
+    : linodeStatus.replace('_', ' ').toUpperCase();
   const formattedTransitionText = (transitionText ?? '').toUpperCase();
 
   const hasSecondaryStatus =
@@ -261,6 +305,13 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
           label={formattedStatus}
           pill={true}
         />
+        {rebootNeeded && (
+          <TooltipIcon
+            status="help"
+            sxTooltipIcon={{ padding: 0 }}
+            text="The VPC configuration has been updated and the Linode needs to be rebooted."
+          />
+        )}
         {hasSecondaryStatus ? (
           <Button
             buttonType="secondary"
@@ -324,6 +375,9 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 // Body
 // =============================================================================
 export interface BodyProps {
+  assignedVPC?: VPC;
+  configs?: Config[];
+  displayVPCSection: boolean;
   gbRAM: number;
   gbStorage: number;
   ipv4: Linode['ipv4'];
@@ -337,6 +391,9 @@ export interface BodyProps {
 
 export const Body = React.memo((props: BodyProps) => {
   const {
+    assignedVPC,
+    configs,
+    displayVPCSection,
     gbRAM,
     gbStorage,
     ipv4,
@@ -352,37 +409,12 @@ export const Body = React.memo((props: BodyProps) => {
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const displayVPCSection = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
-  const vpcsList = vpcData?.data ?? [];
-
-  const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
-    const subnets = vpc.subnets;
-
-    return Boolean(
-      subnets.find((subnet) =>
-        subnet.linodes.some((linodeInfo) => linodeInfo.id === linodeId)
-      )
-    );
-  });
 
   // Filter and retrieve subnets associated with a specific Linode ID
-  const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
-    (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
+  const linodeAssociatedSubnets = assignedVPC?.subnets.filter((subnet) =>
+    subnet.linodes.some((linode) => linode.id === linodeId)
   );
 
-  const { data: configs } = useAllLinodeConfigsQuery(
-    linodeId,
-    Boolean(vpcLinodeIsAssignedTo) // only grab configs if necessary
-  );
   let _configInterfaceWithVPC: Interface | undefined;
 
   // eslint-disable-next-line no-unused-expressions
@@ -390,7 +422,7 @@ export const Body = React.memo((props: BodyProps) => {
     const interfaces = config.interfaces;
 
     const interfaceWithVPC = interfaces.find(
-      (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
+      (_interface) => _interface.vpc_id === assignedVPC?.id
     );
 
     if (interfaceWithVPC) {
@@ -486,7 +518,7 @@ export const Body = React.memo((props: BodyProps) => {
           />
         </StyledRightColumnGrid>
       </StyledBodyGrid>
-      {displayVPCSection && vpcLinodeIsAssignedTo && (
+      {displayVPCSection && assignedVPC && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
@@ -518,9 +550,9 @@ export const Body = React.memo((props: BodyProps) => {
                 <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
                 <Link
                   data-testid="assigned-vpc-label"
-                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+                  to={`/vpcs/${assignedVPC.id}`}
                 >
-                  {vpcLinodeIsAssignedTo.label}
+                  {assignedVPC.label}
                 </Link>
               </StyledListItem>
             </StyledVPCBox>

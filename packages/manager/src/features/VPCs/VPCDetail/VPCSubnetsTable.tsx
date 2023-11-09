@@ -19,6 +19,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -64,6 +65,9 @@ export const VPCSubnetsTable = (props: Props) => {
     subnetAssignLinodesDrawerOpen,
     setSubnetAssignLinodesDrawerOpen,
   ] = React.useState(false);
+  const [rebootLinodeDialogOpen, setRebootLinodeDialogOpen] = React.useState(
+    false
+  );
 
   const [
     subnetUnassignLinodesDrawerOpen,
@@ -141,6 +145,11 @@ export const VPCSubnetsTable = (props: Props) => {
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setSubnetAssignLinodesDrawerOpen(true);
+  };
+
+  const handleRebootLinode = (linode: Linode) => {
+    setSelectedLinode(linode);
+    setRebootLinodeDialogOpen(true);
   };
 
   // Ensure that the selected subnet passed to the drawer is up to date
@@ -232,6 +241,7 @@ export const VPCSubnetsTable = (props: Props) => {
             {subnet.linodes.length > 0 ? (
               subnet.linodes.map((linodeInfo) => (
                 <SubnetLinodeRow
+                  handleRebootLinode={handleRebootLinode}
                   handleUnassignLinode={handleSubnetUnassignLinode}
                   key={linodeInfo.id}
                   linodeInterfaceData={linodeInfo}
@@ -282,11 +292,13 @@ export const VPCSubnetsTable = (props: Props) => {
           Create Subnet
         </Button>
       </Box>
-      <SubnetCreateDrawer
-        onClose={() => setSubnetCreateDrawerOpen(false)}
-        open={subnetCreateDrawerOpen}
-        vpcId={vpcId}
-      />
+      {subnetCreateDrawerOpen && (
+        <SubnetCreateDrawer
+          onClose={() => setSubnetCreateDrawerOpen(false)}
+          open={subnetCreateDrawerOpen}
+          vpcId={vpcId}
+        />
+      )}
       <CollapsibleTable
         TableRowEmpty={
           <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
@@ -322,18 +334,30 @@ export const VPCSubnetsTable = (props: Props) => {
           vpcRegion={vpcRegion}
         />
       )}
-      <SubnetDeleteDialog
-        onClose={() => setDeleteSubnetDialogOpen(false)}
-        open={deleteSubnetDialogOpen}
-        subnet={selectedSubnet}
-        vpcId={vpcId}
-      />
-      <SubnetEditDrawer
-        onClose={() => setEditSubnetsDrawerOpen(false)}
-        open={editSubnetsDrawerOpen}
-        subnet={selectedSubnet}
-        vpcId={vpcId}
-      />
+      {deleteSubnetDialogOpen && (
+        <SubnetDeleteDialog
+          onClose={() => setDeleteSubnetDialogOpen(false)}
+          open={deleteSubnetDialogOpen}
+          subnet={selectedSubnet}
+          vpcId={vpcId}
+        />
+      )}
+      {editSubnetsDrawerOpen && (
+        <SubnetEditDrawer
+          onClose={() => setEditSubnetsDrawerOpen(false)}
+          open={editSubnetsDrawerOpen}
+          subnet={selectedSubnet}
+          vpcId={vpcId}
+        />
+      )}
+      {rebootLinodeDialogOpen && selectedLinode && (
+        <PowerActionsDialog
+          action="Reboot"
+          isOpen={rebootLinodeDialogOpen}
+          linodeId={selectedLinode.id}
+          onClose={() => setRebootLinodeDialogOpen(false)}
+        />
+      )}
     </>
   );
 };

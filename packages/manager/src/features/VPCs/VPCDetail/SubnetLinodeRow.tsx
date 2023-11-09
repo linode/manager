@@ -1,4 +1,9 @@
-import { APIError, Firewall, SubnetAssignedLinodeData } from '@linode/api-v4';
+import {
+  APIError,
+  Firewall,
+  Linode,
+  SubnetAssignedLinodeData,
+} from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
@@ -30,14 +35,21 @@ import {
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
-  handleUnassignLinode: any;
+  handleRebootLinode: (linode: Linode) => void;
+  handleUnassignLinode: (subnet?: Subnet, linode?: Linode) => void;
   linodeInterfaceData: SubnetAssignedLinodeData;
   subnet?: Subnet;
   subnetId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
-  const { handleUnassignLinode, linodeInterfaceData, subnet, subnetId } = props;
+  const {
+    handleRebootLinode,
+    handleUnassignLinode,
+    linodeInterfaceData,
+    subnet,
+    subnetId,
+  } = props;
   const { id: linodeId, interfaces } = linodeInterfaceData;
 
   const {
@@ -112,9 +124,6 @@ export const SubnetLinodeRow = (props: Props) => {
           capitalizeAllWords(linode.status.replace('_', ' '))
         )}
       </StyledTableCell>
-      <Hidden lgDown>
-        <StyledTableCell>{linode.id}</StyledTableCell>
-      </Hidden>
       <Hidden smDown>
         <StyledTableCell>
           {getSubnetLinodeIPv4CellString(
@@ -138,7 +147,7 @@ export const SubnetLinodeRow = (props: Props) => {
         {rebootNeeded && (
           <InlineMenuAction
             onClick={() => {
-              return true;
+              handleRebootLinode(linode);
             }}
             actionText="Reboot Linode"
           />
@@ -232,15 +241,12 @@ export const SubnetLinodeTableRowHead = (
   <TableRow>
     <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
-    <Hidden lgDown>
-      <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
-    </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>VPC IPv4</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
     </Hidden>
-    <StyledTableHeadCell></StyledTableHeadCell>
+    <StyledTableHeadCell />
   </TableRow>
 );
