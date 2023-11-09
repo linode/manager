@@ -10,7 +10,6 @@ import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useAllIPsQuery,
@@ -29,6 +28,7 @@ export interface IPAddressRowHandlers {
 }
 
 interface Props {
+  disabled: boolean;
   linodeId: number;
   readOnly: boolean;
 }
@@ -40,6 +40,7 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
     _ip,
     _range,
     address,
+    disabled,
     gateway,
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
@@ -53,15 +54,12 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
     type,
   } = props;
 
-  const { isVPCOnlyLinode } = useVPCConfigInterface(linodeId);
   const { data: ips } = useLinodeIPsQuery(linodeId);
 
   // TODO: in order to fully get rid of makeStyles for this file, may need to convert this to a functional component
   // rather than function inside this component >> will look into during part 2 of this ticket
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
-
-  const disabled = isVPCOnlyLinode && type === 'IPv4 – Public';
 
   return (
     <StyledTableRow
@@ -75,8 +73,7 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
         sx={{ whiteSpace: 'nowrap' }}
       >
         <CopyTooltip copyableText disabled={disabled} text={address} />
-        {!isVPCOnlyLinode ||
-          (type !== 'IPv4 – Public' && <StyledCopyToolTip text={address} />)}
+        {!disabled && <StyledCopyToolTip text={address} />}
       </TableCell>
       <TableCell data-qa-ip-address parentColumn="Type">
         {type}

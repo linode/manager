@@ -1,0 +1,100 @@
+import { fireEvent } from '@testing-library/react';
+import * as React from 'react';
+
+import { linodeIPFactory } from 'src/factories/linodes';
+import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/AccessTable';
+import { ipResponseToDisplayRows } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+
+import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
+
+const ips = linodeIPFactory.build();
+const ipDisplay = ipResponseToDisplayRows(ips)[0];
+
+const handlers: IPAddressRowHandlers = {
+  handleOpenEditRDNS: jest.fn(),
+  handleOpenEditRDNSForRange: jest.fn(),
+  handleOpenIPV6Details: jest.fn(),
+  openRemoveIPDialog: jest.fn(),
+  openRemoveIPRangeDialog: jest.fn(),
+};
+
+describe('LinodeIPAddressRow', () => {
+  it('should render a Linode IP Address row', () => {
+    const { getAllByText } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          disabled={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplay}
+        />
+      )
+    );
+
+    getAllByText(ipDisplay.address);
+    getAllByText(ipDisplay.type);
+    getAllByText(ipDisplay.gateway);
+    getAllByText(ipDisplay.subnetMask);
+    getAllByText(ipDisplay.rdns);
+    // Check if actions were rendered
+    getAllByText('Delete');
+    getAllByText('Edit RDNS');
+  });
+
+  it('should disable the row if disabled is true and display a tooltip', async () => {
+    const { findByRole, getAllByRole } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          disabled={true}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplay}
+        />
+      )
+    );
+
+    const buttons = getAllByRole('button');
+
+    const deleteBtn = buttons[1];
+    expect(deleteBtn).toBeDisabled();
+    const deleteBtnTooltip = buttons[2];
+    fireEvent.mouseEnter(deleteBtnTooltip);
+    const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
+    expect(publicIpsUnassignedTooltip).toContainHTML(
+      PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+    );
+
+    const editRDNSBtn = buttons[3];
+    expect(editRDNSBtn).toBeDisabled();
+    const editRDNSBtnTooltip = buttons[4];
+    fireEvent.mouseEnter(editRDNSBtnTooltip);
+    const publicIpsUnassignedTooltip2 = await findByRole(/tooltip/);
+    expect(publicIpsUnassignedTooltip2).toContainHTML(
+      PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+    );
+  });
+
+  it('should not disable the row if disabled is false', () => {
+    const { getAllByRole } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          disabled={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplay}
+        />
+      )
+    );
+
+    const buttons = getAllByRole('button');
+
+    const deleteBtn = buttons[1];
+    expect(deleteBtn).not.toBeDisabled();
+    const editRDNSBtn = buttons[3];
+    expect(editRDNSBtn).not.toBeDisabled();
+  });
+});

@@ -16,6 +16,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
 import { getPermissionsForLinode } from 'src/utilities/linodes';
@@ -51,6 +52,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
 
   const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
+  const { isVPCOnlyLinode } = useVPCConfigInterface(linodeID);
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -187,6 +189,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                       <LinodeIPAddressRow
                         {...ipDisplay}
                         {...handlers}
+                        disabled={
+                          isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
+                        }
                         key={ipDisplay.address}
                         linodeId={linodeID}
                         readOnly={readOnly}
