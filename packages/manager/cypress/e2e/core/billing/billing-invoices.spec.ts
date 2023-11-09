@@ -74,7 +74,10 @@ describe('Account invoices', () => {
     const mockInvoiceItemsRegular = [
       ...mockInvoiceItemsWithRegions,
       invoiceItemFactory.build({
+        amount: 5,
+        total: 6,
         region: null,
+        tax: 1,
       }),
     ];
 
@@ -198,42 +201,42 @@ describe('Account invoices', () => {
             });
         }
       );
-
-      // Confirm that invoice header contains invoice label, total, and download buttons.
-      cy.get('[data-qa-invoice-header]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText(`Invoice #${mockInvoice.id}`).should('be.visible');
-          cy.findByText(formatUsd(sumSubtotal + sumTax)).should('be.visible');
-
-          cy.findByText('Download CSV').should('be.visible');
-          cy.findByText('Download PDF').should('be.visible');
-        });
-
-      // Confirm that invoice summary displays subtotal, tax subtotal, tax summary entries, and grand total.
-      cy.get('[data-qa-invoice-summary]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Subtotal:')
-            .findByText(formatUsd(sumSubtotal))
-            .should('be.visible');
-
-          cy.findByText('Tax Subtotal:')
-            .findByText(formatUsd(sumTax))
-            .should('be.visible');
-
-          cy.findByText('Total:')
-            .findByText(formatUsd(sumSubtotal + sumTax))
-            .should('be.visible');
-
-          // Confirm each tax summary entry is shown.
-          mockInvoice.tax_summary.forEach((taxSummary: TaxSummary) => {
-            cy.findByText(`${taxSummary.name}:`)
-              .findByText(formatUsd(taxSummary.tax))
-              .should('be.visible');
-          });
-        });
     });
+
+    // Confirm that invoice header contains invoice label, total, and download buttons.
+    cy.get('[data-qa-invoice-header]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(`Invoice #${mockInvoice.id}`).should('be.visible');
+        cy.findByText(formatUsd(sumSubtotal + sumTax)).should('be.visible');
+
+        cy.findByText('Download CSV').should('be.visible');
+        cy.findByText('Download PDF').should('be.visible');
+      });
+
+    // Confirm that invoice summary displays subtotal, tax subtotal, tax summary entries, and grand total.
+    cy.get('[data-qa-invoice-summary]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Subtotal:')
+          .findByText(formatUsd(sumSubtotal))
+          .should('be.visible');
+
+        cy.findByText('Tax Subtotal:')
+          .findByText(formatUsd(sumTax))
+          .should('be.visible');
+
+        cy.findByText('Total:')
+          .findByText(formatUsd(sumSubtotal + sumTax))
+          .should('be.visible');
+
+        // Confirm each tax summary entry is shown.
+        mockInvoice.tax_summary.forEach((taxSummary: TaxSummary) => {
+          cy.findByText(`${taxSummary.name}:`)
+            .findByText(formatUsd(taxSummary.tax))
+            .should('be.visible');
+        });
+      });
 
     // Confirm that clicking the "Back to Billing" button redirects the user to
     // the account billing page.
