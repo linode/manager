@@ -57,6 +57,7 @@ const HealthCheckSchema = object({
 
 export const CreateServiceTargetSchema = object({
   label: string().required(LABEL_REQUIRED),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   endpoints: array(EndpointSchema).required(),
   certificate_id: string().nullable(),
   load_balancing_policy: string()
@@ -67,6 +68,7 @@ export const CreateServiceTargetSchema = object({
 
 export const UpdateServiceTargetSchema = object({
   label: string().min(1, 'Label must not be empty.'),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   endpoints: array(EndpointSchema),
   certificate_id: number().nullable(),
   load_balancing_policy: string().oneOf([
