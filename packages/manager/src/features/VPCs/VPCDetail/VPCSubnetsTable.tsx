@@ -234,7 +234,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 <SubnetLinodeRow
                   handleUnassignLinode={handleSubnetUnassignLinode}
                   key={linodeInfo.id}
-                  linodeId={linodeInfo.id}
+                  linodeInterfaceData={linodeInfo}
                   subnet={subnet}
                   subnetId={subnet.id}
                 />

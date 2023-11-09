@@ -1,4 +1,4 @@
-import { APIError, Firewall } from '@linode/api-v4';
+import { APIError, Firewall, SubnetAssignedLinodeData } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
@@ -11,6 +11,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
@@ -30,13 +31,14 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
   handleUnassignLinode: any;
-  linodeId: number;
+  linodeInterfaceData: SubnetAssignedLinodeData;
   subnet?: Subnet;
   subnetId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
-  const { handleUnassignLinode, linodeId, subnet, subnetId } = props;
+  const { handleUnassignLinode, linodeInterfaceData, subnet, subnetId } = props;
+  const { id: linodeId, interfaces } = linodeInterfaceData;
 
   const {
     data: linode,
@@ -86,6 +88,10 @@ export const SubnetLinodeRow = (props: Props) => {
   }
 
   const iconStatus = getLinodeIconStatus(linode.status);
+  const rebootNeeded = interfaces.some(
+    // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
+    (linodeInterface) => !linodeInterface.active
+  );
 
   return (
     <StyledTableRow>
@@ -94,7 +100,17 @@ export const SubnetLinodeRow = (props: Props) => {
       </StyledTableCell>
       <StyledTableCell statusCell>
         <StatusIcon status={iconStatus} />
-        {capitalizeAllWords(linode.status.replace('_', ' '))}
+        {rebootNeeded ? (
+          <>
+            {'Reboot Needed'}
+            <TooltipIcon
+              status="help"
+              text="The VPC configuration has been updated and the Linode needs to be rebooted."
+            />
+          </>
+        ) : (
+          capitalizeAllWords(linode.status.replace('_', ' '))
+        )}
       </StyledTableCell>
       <Hidden lgDown>
         <StyledTableCell>{linode.id}</StyledTableCell>

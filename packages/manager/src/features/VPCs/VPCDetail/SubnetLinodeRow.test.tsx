@@ -1,8 +1,9 @@
-import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
+import { firewallFactory } from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -14,7 +15,6 @@ import {
 } from 'src/utilities/testHelpers';
 
 import { SubnetLinodeRow } from './SubnetLinodeRow';
-import { firewallFactory } from 'src/factories';
 
 const queryClient = new QueryClient();
 
@@ -48,6 +48,10 @@ describe('SubnetLinodeRow', () => {
     );
 
     const handleUnassignLinode = jest.fn();
+    const linodeInterfaceData = {
+      id: linodeFactory1.id,
+      interfaces: [],
+    };
 
     const {
       getAllByRole,
@@ -58,7 +62,7 @@ describe('SubnetLinodeRow', () => {
       wrapWithTableBody(
         <SubnetLinodeRow
           handleUnassignLinode={handleUnassignLinode}
-          linodeId={linodeFactory1.id}
+          linodeInterfaceData={linodeInterfaceData}
           subnetId={0}
         />
       ),
