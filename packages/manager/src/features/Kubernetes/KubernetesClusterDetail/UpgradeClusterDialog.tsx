@@ -97,13 +97,12 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
     >
       <HACopy />
       <Typography style={{ marginBottom: 8, marginTop: 12 }} variant="body1">
-        {`For this region, pricing for the HA control plane is $${getDCSpecificPrice(
-          {
-            basePrice: LKE_HA_PRICE,
-            regionId: regionID,
-          }
-        )}`}
-        &nbsp;per month per cluster.
+        For this region, pricing for the HA control plane is $
+        {getDCSpecificPrice({
+          basePrice: LKE_HA_PRICE,
+          regionId: regionID,
+        })}{' '}
+        per month per cluster.
       </Typography>
       <Notice spacingBottom={16} spacingTop={16} variant="warning">
         <Typography className={classes.noticeHeader} variant="h3">
