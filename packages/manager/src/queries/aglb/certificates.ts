@@ -1,6 +1,7 @@
 import {
   createLoadbalancerCertificate,
   deleteLoadbalancerCertificate,
+  getLoadbalancerCertificate,
   getLoadbalancerCertificates,
   updateLoadbalancerCertificate,
 } from '@linode/api-v4';
@@ -43,6 +44,25 @@ export const useLoadBalancerCertificatesQuery = (
   );
 };
 
+export const useLoadbalancerCertificateQuery = (
+  loadbalancerId: number,
+  certificateId: number,
+  enabled = true
+) => {
+  return useQuery<Certificate, APIError[]>(
+    [
+      QUERY_KEY,
+      'loadbalancer',
+      loadbalancerId,
+      'certificates',
+      'certificate',
+      certificateId,
+    ],
+    () => getLoadbalancerCertificate(loadbalancerId, certificateId),
+    { enabled }
+  );
+};
+
 export const useLoadBalancerCertificateCreateMutation = (
   loadbalancerId: number
 ) => {
@@ -50,7 +70,18 @@ export const useLoadBalancerCertificateCreateMutation = (
   return useMutation<Certificate, APIError[], CreateCertificatePayload>(
     (data) => createLoadbalancerCertificate(loadbalancerId, data),
     {
-      onSuccess() {
+      onSuccess(certificate) {
+        queryClient.setQueryData(
+          [
+            QUERY_KEY,
+            'loadbalancer',
+            loadbalancerId,
+            'certificates',
+            'certificate',
+            certificate.id,
+          ],
+          certificate
+        );
         queryClient.invalidateQueries([
           QUERY_KEY,
           'loadbalancer',
@@ -71,7 +102,18 @@ export const useLoadBalancerCertificateMutation = (
     (data) =>
       updateLoadbalancerCertificate(loadbalancerId, certificateId, data),
     {
-      onSuccess() {
+      onSuccess(certificate) {
+        queryClient.setQueryData(
+          [
+            QUERY_KEY,
+            'loadbalancer',
+            loadbalancerId,
+            'certificates',
+            'certificate',
+            certificate.id,
+          ],
+          certificate
+        );
         queryClient.invalidateQueries([
           QUERY_KEY,
           'loadbalancer',
@@ -92,6 +134,14 @@ export const useLoadBalancerCertificateDeleteMutation = (
     () => deleteLoadbalancerCertificate(loadbalancerId, certificateId),
     {
       onSuccess() {
+        queryClient.removeQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'certificates',
+          'certificate',
+          certificateId,
+        ]);
         queryClient.invalidateQueries([
           QUERY_KEY,
           'loadbalancer',
