@@ -86,10 +86,11 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  const price: PriceObject | undefined = getLinodeRegionPrice(
-    type,
-    selectedRegionId
-  );
+  // DC Dynamic price logic - DB creation flow is out of scope
+  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
+  const price: PriceObject | undefined = !isDatabaseCreateFlow
+    ? getLinodeRegionPrice(type, selectedRegionId)
+    : type.price;
   type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
     price?.monthly
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
