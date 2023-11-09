@@ -27,17 +27,13 @@ import { cleanUp } from 'support/util/cleanup';
  * Returns the Cloud Manager URL to clone a given Linode.
  *
  * @param linode - Linode for which to retrieve clone URL.
- * @param withRegion - Whether to append a region query to the URL.
  *
  * @returns Cloud Manager Clone URL for Linode.
  */
-const getLinodeCloneUrl = (
-  linode: Linode,
-  withRegion: boolean = true
-): string => {
-  const regionQuery = withRegion ? `&regionID=${linode.region}` : '';
+const getLinodeCloneUrl = (linode: Linode): string => {
+  const regionQuery = `&regionID=${linode.region}`;
   const typeQuery = `&typeID=${linode.type}`;
-  return `/linodes/create?linodeID=${linode.id}&type=Clone+Linode${typeQuery}${regionQuery}`;
+  return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
 
 authenticate();
@@ -69,6 +65,9 @@ describe('clone linode', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+      const linodeRegion = getRegionById(linodePayload.region);
+      const linodeRegionLabel = `${linodeRegion.label} (${linodeRegion.id})`;
+
       interceptCloneLinode(linode.id).as('cloneLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
@@ -84,10 +83,10 @@ describe('clone linode', () => {
 
       // Cloning from Linode Details page does not pre-select a region.
       // (Cloning from the Linodes landing does pre-select a region, however.)
-      cy.url().should('endWith', getLinodeCloneUrl(linode, false));
+      cy.url().should('endWith', getLinodeCloneUrl(linode));
 
       // Select clone region and Linode type.
-      cy.findByText('Select a Region')
+      cy.findByText(linodeRegionLabel)
         .should('be.visible')
         .click()
         .type(`${linodeRegion.label}{enter}`);
