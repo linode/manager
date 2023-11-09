@@ -97,8 +97,8 @@ export const LandingHeader = ({
               >
                 <DocsLink
                   href={betaFeedbackLink}
-                  label="BETA Feedback"
                   icon={<BetaFeedbackIcon />}
+                  label="BETA Feedback"
                 />
               </span>
             )}

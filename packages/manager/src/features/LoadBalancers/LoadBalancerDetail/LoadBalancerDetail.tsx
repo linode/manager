@@ -12,6 +12,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Tabs } from 'src/components/ReachTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
 const LoadBalancerSummary = React.lazy(() =>
@@ -103,10 +104,9 @@ export const LoadBalancerDetail = () => {
           labelOptions: { noCap: true },
           pathname: `/loadbalancers/${loadbalancer?.label}`,
         }}
+        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link
-        feedbackLink="https://docs.google.com/forms/d/e/1FAIpQLSdfetx9VvwjUAC_gdGQai_FpZN4xZ1GZGW54abezS2aV5rCcQ/viewform"
-        feedbackLinkLabel="BETA Feedback"
       />
       <Tabs index={tabIndex === -1 ? 0 : tabIndex}>
         <TabLinkList

@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 
 import { LoadBalancerActionPanel } from './LoadBalancerActionPanel';
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
@@ -32,8 +33,7 @@ export const LoadBalancerCreate = () => {
           ],
           pathname: location.pathname,
         }}
-        feedbackLink="https://docs.google.com/forms/d/e/1FAIpQLSdfetx9VvwjUAC_gdGQai_FpZN4xZ1GZGW54abezS2aV5rCcQ/viewform"
-        feedbackLinkLabel="BETA Feedback"
+        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         title="Create"
       />
       <Formik<CreateLoadbalancerPayload>
