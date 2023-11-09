@@ -85,11 +85,11 @@ jobs:
             exit 1 # Fail the check
           fi
 
-      # - name: Post Comment
-      #   uses: mshick/add-pr-comment@v2
-      #   with:
-      #     proxy-url: ""
-      #     message: |
-      #       $(cat updated_comment.txt)
-      #     update-only: true
+      - name: Post Comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          proxy-url: http://bos-lhvl70.bos01.corp.akamai.com
+          message: |
+            $(cat updated_comment.txt)
+          update-only: true
 
