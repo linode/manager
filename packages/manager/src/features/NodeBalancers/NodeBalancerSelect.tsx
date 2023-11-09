@@ -87,6 +87,7 @@ export const NodeBalancerSelect = (
     options,
     optionsFilter,
     placeholder,
+    renderOption,
     renderOptionLabel,
     sx,
     value,
@@ -115,7 +116,7 @@ export const NodeBalancerSelect = (
       }
       noOptionsText={
         noOptionsMessage ?? (
-          <i>{getDefaultNoOptionsMessage(error, isLoading, nodebalancers)}</i>
+          <i>{getDefaultNoOptionsMessage(error, isLoading)}</i>
         )
       }
       onChange={(_, value) =>
@@ -129,6 +130,17 @@ export const NodeBalancerSelect = (
           : multiple
           ? 'Select NodeBalancers'
           : 'Select a NodeBalancer'
+      }
+      renderOption={
+        renderOption
+          ? (props, option, { selected }) => {
+              return (
+                <li {...props} data-qa-linode-option>
+                  {renderOption(option, selected)}
+                </li>
+              );
+            }
+          : undefined
       }
       value={
         typeof value === 'function'
@@ -163,15 +175,12 @@ export const NodeBalancerSelect = (
 
 const getDefaultNoOptionsMessage = (
   error: APIError[] | null,
-  loading: boolean,
-  filteredNodeBalancers: NodeBalancer[] | undefined
+  loading: boolean
 ) => {
   if (error) {
     return 'An error occured while fetching your NodeBalancers';
   } else if (loading) {
     return 'Loading your NodeBalancers...';
-  } else if (!filteredNodeBalancers?.length) {
-    return 'You have no NodeBalancers to choose from';
   } else {
     return 'No options';
   }

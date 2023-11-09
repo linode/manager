@@ -118,7 +118,7 @@ export const LinodeSelect = (
       }
       noOptionsText={
         noOptionsMessage ?? (
-          <i>{getDefaultNoOptionsMessage(error, isLoading, linodes)}</i>
+          <i>{getDefaultNoOptionsMessage(error, isLoading)}</i>
         )
       }
       onChange={(_, value) =>
@@ -177,15 +177,12 @@ export const LinodeSelect = (
 
 const getDefaultNoOptionsMessage = (
   error: APIError[] | null,
-  loading: boolean,
-  filteredLinodes: Linode[] | undefined
+  loading: boolean
 ) => {
   if (error) {
     return 'An error occured while fetching your Linodes';
   } else if (loading) {
     return 'Loading your Linodes...';
-  } else if (!filteredLinodes?.length) {
-    return 'You have no Linodes to choose from';
   } else {
     return 'No options';
   }
