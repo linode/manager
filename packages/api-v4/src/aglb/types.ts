@@ -116,7 +116,7 @@ export type UpdateConfigurationPayload = Partial<{
   port: number;
   protocol: Protocol;
   certificates: CertificateConfig[];
-  routes: number[];
+  route_ids: number[];
 }>;
 
 export interface CertificateConfig {

@@ -26,22 +26,25 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
+const CertificateEntrySchema = object({
+  id: number()
+    .typeError('Certificate ID must be a number.')
+    .required('Certificate ID is required.')
+    .min(0, 'Certificate ID is required.'),
+  hostname: string().required('A Host Header is required.'),
+});
+
 export const CertificateConfigSchema = object({
-  certificates: array(
-    object({
-      id: number()
-        .typeError('Certificate ID must be a number.')
-        .required('Certificate ID is required.')
-        .min(0, 'Certificate ID is required.'),
-      hostname: string().required('A Host Header is required.'),
-    })
-  ),
+  certificates: array(CertificateEntrySchema),
 });
 
 export const EndpointSchema = object({
   ip: string().required('IP is required.'),
   host: string(),
-  port: number().required('Port is required.').min(0).max(65_535),
+  port: number()
+    .required('Port is required.')
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.'),
   rate_capacity: number().required('Rate Capacity is required.'),
 });
 
@@ -155,36 +158,42 @@ export const UpdateRouteSchema = object({
 });
 
 export const UpdateConfigurationSchema = object({
-  label: string().min(1),
-  port: number(),
+  label: string().min(1, 'Label must not be empty.'),
+  port: number()
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.')
+    .typeError('Port must be a number.'),
   protocol: string().oneOf(['tcp', 'http', 'https']),
-  certificates: array().of(
-    object({
-      hostname: string().required(),
-      id: number().required(),
-    })
-  ),
-  routes: array().of(number()),
+  certificates: array().when('protocol', {
+    is: 'https',
+    then: (o) => o.of(CertificateEntrySchema),
+    otherwise: (o) => o.notRequired(),
+  }),
+  route_ids: array().of(number()),
+});
+
+export const CreateConfigurationSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required.'),
+  port: number()
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.')
+    .typeError('Port must be a number.')
+    .required('Port is required.'),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
+  certificates: array().when('protocol', {
+    is: 'https',
+    then: (o) => o.of(CertificateEntrySchema),
+    otherwise: (o) => o.notRequired(),
+  }),
+  route_ids: array().of(number()),
 });
 
 // Endpoint Schema
 const CreateLoadBalancerEndpointSchema = object({
-  ip: string().test(
-    'ip-or-host',
-    'Either IP or host must be provided.',
-    function (value) {
-      const { host } = this.parent;
-      return !!value || !!host;
-    }
-  ),
-  host: string().test(
-    'host-or-ip',
-    'Either host or IP must be provided.',
-    function (value) {
-      const { ip } = this.parent;
-      return !!value || !!ip;
-    }
-  ),
+  ip: string().required(),
+  host: string(),
   port: number().integer().required(),
   rate_capacity: number().integer().required(),
 });
@@ -217,12 +226,12 @@ const CreateLoadBalancerRuleSchema = object({
 
 export const ConfigurationSchema = object({
   label: string().required(LABEL_REQUIRED),
-  port: number().required('Port is required.').min(0).max(65_535),
+  port: number().required('Port is required.').min(1).max(65535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
-  certificates: string().when('protocol', {
-    is: (val: string) => val !== 'http' && val !== 'tcp',
-    then: array().of(CertificateConfigSchema).required(),
-    otherwise: array().strip(),
+  certificates: array().when('protocol', {
+    is: (val: string) => val === 'https',
+    then: (o) => o.of(CertificateEntrySchema).required(),
+    otherwise: (o) => o.notRequired(),
   }),
   routes: string().when('protocol', {
     is: 'tcp',

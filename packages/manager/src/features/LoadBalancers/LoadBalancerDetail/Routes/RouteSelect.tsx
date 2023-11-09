@@ -50,7 +50,7 @@ export const RouteSelect = (props: Props) => {
 
   const routes = data?.pages.flatMap((page) => page.data);
 
-  const selectedRoute = routes?.find((cert) => cert.id === value) ?? null;
+  const selectedRoute = routes?.find((route) => route.id === value) ?? null;
 
   const onScroll = (event: React.SyntheticEvent) => {
     const listboxNode = event.currentTarget;
