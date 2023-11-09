@@ -12,8 +12,8 @@ import {
   GroupHeader,
   SelectedIcon,
   StyledFlagContainer,
-  StyledListItem,
   StyledLParentListItem,
+  StyledListItem,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 

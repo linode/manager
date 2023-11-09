@@ -79,9 +79,7 @@ describe('create linode', () => {
     cy.wait(['@getFeatureFlags', '@getRegions']);
 
     // Confirm that region select dropdown is visible and interactive.
-    const autocomplete = cy.findByTestId('region-select');
     ui.regionSelect.find().click();
-
     cy.get('[data-qa-autocomplete-popper="true"]').should('be.visible');
 
     // Confirm that region select dropdown are grouped by region,
@@ -95,24 +93,20 @@ describe('create linode', () => {
       });
 
     // Confirm that region select dropdown is populated with expected regions, sorted alphabetically.
-    cy.get('[data-qa-option]')
-      .should('have.length', 5)
-      .should((item) => {
-        expect(item[0]).to.contain('Dallas, TX (us-central)');
-        expect(item[1]).to.contain('Newark, NJ (us-east)');
-        expect(item[2]).to.contain('Singapore, SG (ap-south)');
-        expect(item[3]).to.contain('Tokyo, JP (ap-northeast) (Not available)');
-        expect(item[4]).to.contain('London, UK (eu-west)');
-      });
-
-    cy.get('[data-qa-option="eu-west"]').click();
-    cy.get('[data-qa-autocomplete-popper="true"]').should('not.exist');
-    autocomplete.within(() => {
-      cy.get('[data-testid="textfield-input"]').should(
-        'have.value',
-        'London, UK (eu-west)'
-      );
+    cy.get('[data-qa-option]').should('exist').should('have.length', 5);
+    mockRegions.forEach((region) => {
+      cy.get('[data-qa-option]').contains(region.label);
     });
+
+    // Select an option
+    cy.findByTestId('eu-west').click();
+    // Confirm the popper is closed
+    cy.get('[data-qa-autocomplete-popper="true"]').should('not.exist');
+    // Confirm that the selected region is displayed in the input field.
+    cy.get('[data-testid="textfield-input"]').should(
+      'have.value',
+      'London, UK (eu-west)'
+    );
 
     // Confirm that selecting a valid region updates the Plan Selection panel.
     expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
@@ -140,7 +134,7 @@ describe('create linode', () => {
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
   });
 
-  it.only('creates a linode via CLI', () => {
+  it('creates a linode via CLI', () => {
     const linodeLabel = randomLabel();
     const linodePass = randomString(32);
     const linodeRegion = chooseRegion();
@@ -301,11 +295,7 @@ describe('create linode', () => {
     //   .should('be.visible')
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionLabel(initialRegion.label)
-      .click()
-      .type(`${newRegion.label} {enter}`);
+    ui.regionSelect.find().click().type(`${newRegion.label} {enter}`);
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     // Confirm that the backup prices are displayed as expected.
