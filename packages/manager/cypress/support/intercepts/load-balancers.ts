@@ -98,6 +98,66 @@ export const mockUploadLoadBalancerCertificate = (
 };
 
 /**
+ * Intercepts DELETE request to delete an AGLB load balancer certificate and mocks a success response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete certificates.
+ * @param certificateId - ID of certificate for which to remove.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerCertificate = (
+  loadBalancerId: number,
+  certificateId: number
+) => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    makeResponse()
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve AGLB service targets and mocks HTTP 500 error response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete certificates.
+ * @param certificateId - ID of certificate for which to remove.
+ * @param message - Optional error message with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerCertificateError = (
+  loadBalancerId: number,
+  certificateId: number,
+  message?: string
+) => {
+  const defaultMessage =
+    'An error occurred while deleting Load Balancer certificate.';
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    makeErrorResponse(message ?? defaultMessage, 500)
+  );
+};
+
+/**
+ * Intercepts PUT request to update an AGLB load balancer certificate and mocks a success response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to mock certificates.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLoadBalancerCertificate = (
+  loadBalancerId: number,
+  certificate: Certificate
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificate.id}`),
+    makeResponse(certificate)
+  );
+};
+
+/**
  * Intercepts GET request to retrieve AGLB service targets and mocks response.
  *
  * @param serviceTargets - Service targets with which to mock response.

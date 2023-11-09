@@ -374,6 +374,11 @@ export const Body = React.memo((props: BodyProps) => {
     );
   });
 
+  // Filter and retrieve subnets associated with a specific Linode ID
+  const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
+    (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
+  );
+
   const { data: configs } = useAllLinodeConfigsQuery(
     linodeId,
     Boolean(vpcLinodeIsAssignedTo) // only grab configs if necessary
@@ -524,7 +529,7 @@ export const Body = React.memo((props: BodyProps) => {
                 <StyledLabelBox component="span" data-testid="subnets-string">
                   Subnets:
                 </StyledLabelBox>{' '}
-                {getSubnetsString(vpcLinodeIsAssignedTo.subnets)}
+                {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
             <StyledVPCBox>
