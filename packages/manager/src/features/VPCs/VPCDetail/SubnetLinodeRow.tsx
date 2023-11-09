@@ -135,6 +135,14 @@ export const SubnetLinodeRow = (props: Props) => {
         </StyledTableCell>
       </Hidden>
       <StyledActionTableCell actionCell>
+        {rebootNeeded && (
+          <InlineMenuAction
+            onClick={() => {
+              return true;
+            }}
+            actionText="Reboot Linode"
+          />
+        )}
         <InlineMenuAction
           actionText="Unassign Linode"
           onClick={() => handleUnassignLinode(subnet, linode)}
