@@ -7,7 +7,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import DatabaseScaleUpCurrentConfiguration from './DatabaseScaleUpCurrentConfiguration';
+import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
 
 const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';

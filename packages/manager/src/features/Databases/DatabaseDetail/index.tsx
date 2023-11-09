@@ -22,7 +22,11 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
-const DatabaseScaleUp = React.lazy(() => import('./DatabaseScaleUp'));
+const DatabaseScaleUp = React.lazy(() =>
+  import('./DatabaseScaleUp/DatabaseScaleUp').then(({ DatabaseScaleUp }) => ({
+    default: DatabaseScaleUp,
+  }))
+);
 
 export const DatabaseDetail = () => {
   const history = useHistory();

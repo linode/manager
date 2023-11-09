@@ -27,7 +27,7 @@ import { useDatabaseMutation } from 'src/queries/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertStorageUnit } from 'src/utilities/unitConversions';
 
-import CurrentConfiguration from './DatabaseScaleUpCurrentConfiguration';
+import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   selectedPlanTitle: {
-    fontWeight: 'bold',
+    fontFamily: theme.font.bold,
   },
 }));
 
@@ -60,11 +60,9 @@ interface Props {
   database: Database;
 }
 
-const DatabaseScaleUp: React.FC<Props> = (props: Props) => {
+export const DatabaseScaleUp = ({ database }: Props) => {
   const { classes } = useStyles();
   const history = useHistory();
-
-  const { database } = props;
 
   const [planSelected, setPlanSelected] = React.useState<string>();
   const [summaryText, setSummaryText] = React.useState<{
@@ -106,13 +104,16 @@ const DatabaseScaleUp: React.FC<Props> = (props: Props) => {
     setSubmitInProgress(true);
 
     updateDatabase({
-      type: database.type,
+      type: planSelected,
     })
       .then(() => {
         setSubmitInProgress(false);
-        enqueueSnackbar('Database scaled up successfully.', {
-          variant: 'success',
-        });
+        enqueueSnackbar(
+          `Your database cluster ${database.label} is being scaled up.`,
+          {
+            variant: 'info',
+          }
+        );
         history.push(`/databases/${database.engine}/${database.id}`);
       })
       .catch((errors: APIError[]) => {
@@ -244,7 +245,7 @@ const DatabaseScaleUp: React.FC<Props> = (props: Props) => {
       <Paper style={{ marginTop: 16 }}>
         {scaleUpDescription}
         <div style={{ marginTop: 16 }}>
-          <CurrentConfiguration database={database} />
+          <DatabaseScaleUpCurrentConfiguration database={database} />
         </div>
       </Paper>
       <Paper style={{ marginTop: 16 }}>
@@ -296,5 +297,3 @@ const DatabaseScaleUp: React.FC<Props> = (props: Props) => {
     </>
   );
 };
-
-export default DatabaseScaleUp;
