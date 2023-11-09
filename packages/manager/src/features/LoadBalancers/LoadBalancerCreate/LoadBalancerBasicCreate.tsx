@@ -12,6 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 import { useLoadBalancerBasicCreateMutation } from 'src/queries/aglb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -63,6 +64,7 @@ export const LoadBalancerBasicCreate = () => {
           ],
           pathname: location.pathname,
         }}
+        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         title="Create"
       />
       <Stack spacing={3}>
