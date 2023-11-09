@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
@@ -28,6 +29,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -225,6 +227,7 @@ export interface HeaderProps {
 
 const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const {
     backups,
@@ -251,16 +254,30 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     lishLaunch(id);
   };
 
-  const rebootNeeded =
-    linodeStatus !== 'rebooting' &&
+  const isRebootNeeded =
+    !isOther &&
     configs?.some((config) =>
       config.interfaces.some(
         (linodeInterface) =>
-          !linodeInterface.active && linodeInterface.purpose === 'vpc'
+          linodeInterface.purpose === 'vpc' && !linodeInterface.active
       )
     );
 
-  const formattedStatus = rebootNeeded
+  // If the Linode's status changes, we want to check the active status of its interfaces
+  // to determine whether it needs to be rebooted or not. So, we need to invalidate the
+  // linode configs query to get the most up to date information.
+  React.useEffect(() => {
+    if (linodeStatus !== 'rebooting') {
+      queryClient.invalidateQueries([
+        linodesQueryKey,
+        'linode',
+        linodeId,
+        'configs',
+      ]);
+    }
+  }, [linodeId, linodeStatus, queryClient]);
+
+  const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
     : linodeStatus.replace('_', ' ').toUpperCase();
   const formattedTransitionText = (transitionText ?? '').toUpperCase();
@@ -307,7 +324,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
           label={formattedStatus}
           pill={true}
         />
-        {rebootNeeded && (
+        {isRebootNeeded && (
           <TooltipIcon
             status="help"
             sxTooltipIcon={{ padding: 0 }}

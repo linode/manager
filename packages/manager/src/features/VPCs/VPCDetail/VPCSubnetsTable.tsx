@@ -147,9 +147,8 @@ export const VPCSubnetsTable = (props: Props) => {
     setSubnetAssignLinodesDrawerOpen(true);
   };
 
-  const handleRebootLinode = (linode: Linode, subnet: Subnet) => {
+  const handleRebootLinode = (linode: Linode) => {
     setSelectedLinode(linode);
-    setSelectedSubnet(subnet);
     setRebootLinodeDialogOpen(true);
   };
 

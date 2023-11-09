@@ -37,7 +37,7 @@ import {
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
-  handleRebootLinode: (linode: Linode, subnet?: Subnet) => void;
+  handleRebootLinode: (linode: Linode) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   linodeInterfaceData: SubnetAssignedLinodeData;
   subnet?: Subnet;
@@ -169,7 +169,7 @@ export const SubnetLinodeRow = (props: Props) => {
         {rebootNeeded && (
           <InlineMenuAction
             onClick={() => {
-              handleRebootLinode(linode, subnet);
+              handleRebootLinode(linode);
             }}
             actionText="Reboot Linode"
           />
