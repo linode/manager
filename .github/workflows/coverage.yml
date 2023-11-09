@@ -91,5 +91,4 @@ jobs:
           proxy-url: http://bos-lhvl70.bos01.corp.akamai.com
           message: |
             $(cat updated_comment.txt)
-          update-only: true
 
