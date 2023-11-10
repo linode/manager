@@ -122,7 +122,7 @@ export const SubnetLinodeRow = (props: Props) => {
     );
   }
 
-  const rebootNeeded =
+  const isRebootNeeded =
     iconStatus !== 'other' &&
     interfaces.some(
       // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
@@ -139,7 +139,7 @@ export const SubnetLinodeRow = (props: Props) => {
           aria-label={`Linode status ${linode?.status ?? iconStatus}`}
           status={iconStatus}
         />
-        {rebootNeeded ? (
+        {isRebootNeeded ? (
           <>
             {'Reboot Needed'}
             <TooltipIcon
@@ -171,7 +171,7 @@ export const SubnetLinodeRow = (props: Props) => {
         </StyledTableCell>
       </Hidden>
       <StyledActionTableCell actionCell>
-        {rebootNeeded && (
+        {isRebootNeeded && (
           <InlineMenuAction
             onClick={() => {
               handleRebootLinode(linode);

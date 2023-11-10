@@ -186,6 +186,7 @@ export const LinodeEntityDetail = (props: Props) => {
         <Header
           backups={linode.backups}
           configs={configs}
+          enableVPCLogic={displayVPCSection}
           handlers={handlers}
           image={linode.image ?? 'Unknown Image'}
           imageVendor={imageVendor}
@@ -211,6 +212,7 @@ export const LinodeEntityDetail = (props: Props) => {
 export interface HeaderProps {
   backups: LinodeBackups;
   configs?: Config[];
+  enableVPCLogic?: boolean;
   image: string;
   imageVendor: null | string;
   isSummaryView?: boolean;
@@ -232,6 +234,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   const {
     backups,
     configs,
+    enableVPCLogic,
     handlers,
     isSummaryView,
     linodeId,
@@ -267,7 +270,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   // we want to check the active status of its interfaces to determine whether it needs to be rebooted
   // or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
-    if (!isOther) {
+    if (!isOther && enableVPCLogic) {
       queryClient.invalidateQueries([
         linodesQueryKey,
         'linode',
@@ -275,7 +278,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
         'configs',
       ]);
     }
-  }, [linodeId, isOther, queryClient]);
+  }, [linodeId, enableVPCLogic, isOther, queryClient]);
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
