@@ -263,11 +263,11 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
       )
     );
 
-  // If the Linode's status changes, we want to check the active status of its interfaces
-  // to determine whether it needs to be rebooted or not. So, we need to invalidate the
-  // linode configs query to get the most up to date information.
+  // If the Linode is running or offline (not going through an action like rebooting or migrating)
+  // we want to check the active status of its interfaces to determine whether it needs to be rebooted
+  // or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
-    if (linodeStatus !== 'rebooting') {
+    if (!isOther) {
       queryClient.invalidateQueries([
         linodesQueryKey,
         'linode',
@@ -275,7 +275,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
         'configs',
       ]);
     }
-  }, [linodeId, linodeStatus, queryClient]);
+  }, [linodeId, isOther, queryClient]);
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
