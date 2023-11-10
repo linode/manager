@@ -167,6 +167,17 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     />
   );
 
+  const confirmationPopUpMessage =
+    database.cluster_size === 1 ? (
+      <Notice variant="warning">
+        <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node clusters.`}</Typography>
+      </Notice>
+    ) : (
+      <Notice variant="info">
+        <Typography variant="h3">{`Operation can take up to 2 hours and will incur a failover.`}</Typography>
+      </Notice>
+    );
+
   React.useEffect(() => {
     if (!planSelected || !dbtypes) {
       return;
@@ -290,9 +301,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
         open={isScaleUpConfirmationDialogOpen}
         title={`Scale up ${database.label}?`}
       >
-        <Notice variant="warning">
-          <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node clusters. `}</Typography>
-        </Notice>
+        {confirmationPopUpMessage}
       </ConfirmationDialog>
     </>
   );
