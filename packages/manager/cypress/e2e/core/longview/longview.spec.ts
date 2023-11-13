@@ -1,14 +1,20 @@
 import type { Linode, LongviewClient } from '@linode/api-v4';
 import { createLongviewClient } from '@linode/api-v4';
-import { randomLabel, randomString } from 'support/util/random';
-import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
-import { longviewInstallTimeout } from 'support/constants/longview';
-import { createAndBootLinode } from 'support/util/linodes';
 import {
-  interceptGetLongviewClients,
+  longviewInstallTimeout,
+  longviewStatusTimeout,
+} from 'support/constants/longview';
+import {
   interceptFetchLongviewStatus,
+  interceptGetLongviewClients,
 } from 'support/intercepts/longview';
+import { cleanUp } from 'support/util/cleanup';
+import { createAndBootLinode } from 'support/util/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+
+// Timeout if Linode creation and boot takes longer than 1 and a half minutes.
+const linodeCreateTimeout = 90000;
 
 /**
  * Returns the command used to install Longview which is shown in Cloud's UI.
@@ -47,48 +53,57 @@ const installLongview = (
 };
 
 /**
- * Cloud Manager makes several requests to the Longview endpoint when loading
- * the landing page. This function waits for a request related to a specific
- * Longview clients.
+ * Waits for Cloud Manager to fetch Longview data and receive updates.
  *
- * @param alias - Alias assigned to the original request intercept.
- * @param apiKey - API key for desired Longview client.
+ * Cloud Manager makes repeated requests to the `/fetch` endpoint, and this
+ * function waits until one of these requests receives a response for the
+ * desired Longview client indicating that its data has been updated.
+ *
+ * @param alias - Alias assigned to the initial HTTP intercept.
+ * @param apiKey - API key for Longview client.
  */
-const waitForLongviewFetch = (alias: string, apiKey: string) => {
-  cy.wait(`@${alias}`).then((interceptedRequest) => {
-    const requestBody = (interceptedRequest.request?.body || '') as string;
-    if (!requestBody.includes(apiKey)) {
-      interceptFetchLongviewStatus().as(alias);
-      waitForLongviewFetch(alias, apiKey);
-    }
-  });
-};
-
-const waitForLongviewData = (alias: string, apiKey: string) => {
-  cy.wait(`@${alias}`, { timeout: 120000 }).then((interceptedRequest) => {
-    const responseBody = interceptedRequest.response?.body?.[0];
-    const apiKeyMatches = (interceptedRequest?.request?.body ?? '').includes(
-      apiKey
+const waitForLongviewData = (
+  alias: string,
+  apiKey: string,
+  attempt: number = 0
+) => {
+  const maxAttempts = 50;
+  // Escape route in case expected response is never received.
+  if (attempt > maxAttempts) {
+    throw new Error(
+      `Timed out waiting for Longview client update after ${maxAttempts} attempts`
     );
-    const containsUpdate =
-      responseBody?.ACTION === 'lastUpdated' &&
-      responseBody?.DATA?.updated !== 0;
+  }
+  cy.wait(`@${alias}`, { timeout: longviewStatusTimeout }).then(
+    (interceptedRequest) => {
+      const responseBody = interceptedRequest.response?.body?.[0];
+      const apiKeyMatches = (interceptedRequest?.request?.body ?? '').includes(
+        apiKey
+      );
+      const containsUpdate =
+        responseBody?.ACTION === 'lastUpdated' &&
+        responseBody?.DATA?.updated !== 0;
 
-    if (!(apiKeyMatches && containsUpdate)) {
-      interceptFetchLongviewStatus().as(alias);
-      waitForLongviewData(alias, apiKey);
+      if (!(apiKeyMatches && containsUpdate)) {
+        interceptFetchLongviewStatus().as(alias);
+        waitForLongviewData(alias, apiKey, attempt + 1);
+      }
     }
-  });
+  );
 };
 
-/* eslint-disable sonarjs/no-duplicate-string */
 authenticate();
 describe('longview', () => {
   before(() => {
     cleanUp(['linodes', 'longview-clients']);
   });
 
-  it('tests longview - rd', () => {
+  /*
+   * - Tests Longview installation end-to-end using real API data.
+   * - Creates a Linode, connects to it via SSH, and installs Longview using the given cURL command.
+   * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
+   */
+  it('can install Longview client on a Linode', () => {
     const linodePassword = randomString(32, {
       symbols: false,
       lowercase: true,
@@ -108,10 +123,10 @@ describe('longview', () => {
     };
 
     // Create Linode and Longview Client before loading Longview landing page.
-    cy.defer(
-      createLinodeAndClient(),
-      'Creating Linode and Longview Client...'
-    ).then(([linode, client]: [Linode, LongviewClient]) => {
+    cy.defer(createLinodeAndClient(), {
+      label: 'Creating Linode and Longview Client...',
+      timeout: linodeCreateTimeout,
+    }).then(([linode, client]: [Linode, LongviewClient]) => {
       const linodeIp = linode.ipv4[0];
       const installCommand = getInstallCommand(client.install_code);
 
@@ -120,11 +135,8 @@ describe('longview', () => {
       cy.visitWithLogin('/longview');
       cy.wait('@getLongviewClients');
 
-      // Wait for Longview clients to be fetched and UI to update.
-      cy.findByText('Hostname not available').should('not.exist');
-      cy.findByText('Loading...').should('not.exist');
-
-      // Find the
+      // Find the table row for the new Longview client, assert expected information
+      // is displayed inside of it.
       cy.get(`[data-qa-longview-client="${client.id}"]`)
         .should('be.visible')
         .within(() => {
@@ -137,14 +149,20 @@ describe('longview', () => {
       // Install Longview on Linode by SSHing into machine and executing cURL command.
       installLongview(linodeIp, linodePassword, installCommand).then(
         (output) => {
+          // TODO Output this to a log file.
           console.log(output.stdout);
           console.log(output.stderr);
         }
       );
 
-      // Sometimes Cloud Manager does not automatically update and
-      // requires a page refresh to show stats, etc.
+      // Wait for Longview to begin serving data and confirm that Cloud Manager
+      // UI updates accordingly.
       waitForLongviewData('fetchLongviewStatus', client.api_key);
+
+      // Sometimes Cloud Manager UI does not updated automatically upon receiving
+      // Longivew status data. Performing a page reload mitigates this issue.
+      // TODO Remove call to `cy.reload()`.
+      cy.reload();
       cy.get(`[data-qa-longview-client="${client.id}"]`)
         .should('be.visible')
         .within(() => {

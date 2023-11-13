@@ -1,15 +1,23 @@
 #!/usr/bin/expect -f
-# this script is used in the longview test
+# Connects to a Linode via SSH and installs Longview using a given command.
+
 set timeout 120
 
-spawn ssh root@$env(LINODEIP)
+# Wait 15 seconds before attempting to connect to Linode.
+# This mitigates a rare issue where connecting too quickly after provisioning and
+# booting yields a connection refused error.
+sleep 15
 
-# Proceed through unknown host warning, enter password.
-expect "yes/no" {
-    send "yes\r"
-    expect "*?assword" {
-        send "$env(LINODEPASSWORD)\r"
-    }
+# SSH into the Linode.
+# Disable strict host key checking and pass a null path for the host file so that
+# developers do not have their `known_hosts` file modified when running this test,
+# preventing rare cases where recycled IPs can trigger a warning that causes the
+# test to fail.
+spawn ssh root@$env(LINODEIP) -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+
+# Answer SSH password prompt.
+expect "*?assword" {
+    send "$env(LINODEPASSWORD)\r"
 }
 
 # Execute the Longview installation command shown in the Cloud Manager UI.
