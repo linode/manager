@@ -126,7 +126,7 @@ describe('object storage end-to-end tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click().type(bucketLabel);
-        cy.findByText('Region').click().type(`${bucketRegion}{enter}`);
+        ui.regionSelect.find().click().type(`${bucketRegion}{enter}`);
 
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')

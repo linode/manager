@@ -80,16 +80,11 @@ describe('clone linode', () => {
         .click();
 
       ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
-
-      // Cloning from Linode Details page does not pre-select a region.
-      // (Cloning from the Linodes landing does pre-select a region, however.)
       cy.url().should('endWith', getLinodeCloneUrl(linode));
 
       // Select clone region and Linode type.
-      cy.findByText(linodeRegionLabel)
-        .should('be.visible')
-        .click()
-        .type(`${linodeRegion.label}{enter}`);
+      ui.regionSelect.find().click();
+      ui.regionSelect.findItemByRegionId(linodeRegion.id).click();
 
       cy.findByText('Shared CPU').should('be.visible').click();
 
@@ -167,8 +162,8 @@ describe('clone linode', () => {
       'not.exist'
     );
 
-    cy.findByText(`${initialRegion.label} (${initialRegion.id})`)
-      .should('be.visible')
+    ui.regionSelect
+      .findBySelectedItem(`${initialRegion.label} (${initialRegion.id})`)
       .click()
       .type(`${newRegion.label}{enter}`);
 

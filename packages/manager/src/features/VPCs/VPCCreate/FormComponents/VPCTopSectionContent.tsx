@@ -2,8 +2,8 @@ import { Region } from '@linode/api-v4';
 import { FormikErrors } from 'formik';
 import * as React from 'react';
 
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Link } from 'src/components/Link';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
@@ -34,7 +34,7 @@ export const VPCTopSectionContent = (props: Props) => {
         handleSelection={(region: string) => onChangeField('region', region)}
         isClearable
         regions={regions}
-        selectedID={values.region}
+        selectedId={values.region}
       />
       <TextField
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

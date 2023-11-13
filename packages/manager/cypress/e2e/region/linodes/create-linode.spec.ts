@@ -2,6 +2,7 @@ import { testRegions } from 'support/util/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
+
 import type { Region } from '@linode/api-v4';
 
 describe('Create Linodes', () => {
@@ -17,7 +18,7 @@ describe('Create Linodes', () => {
     cy.visitWithLogin('linodes/create');
 
     // Select region and plan.
-    cy.contains('Select a Region').should('be.visible').click();
+    ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
 
     cy.get('[data-qa-plan-row="Dedicated 4 GB"]')
