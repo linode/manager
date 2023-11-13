@@ -48,7 +48,7 @@ describe('SubnetLinodeRow', () => {
     );
 
     const handleUnassignLinode = jest.fn();
-    const handleRebootLinode = jest.fn();
+    const handlePowerActionsLinode = jest.fn();
     const linodeInterfaceData = {
       id: linodeFactory1.id,
       interfaces: [{ active: false, id: 1 }],
@@ -62,7 +62,7 @@ describe('SubnetLinodeRow', () => {
     } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
-          handleRebootLinode={handleRebootLinode}
+          handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           linodeInterfaceData={linodeInterfaceData}
           subnetId={0}
@@ -89,15 +89,15 @@ describe('SubnetLinodeRow', () => {
     getByText('mock-firewall-0');
 
     const rebootLinodeButton = getAllByRole('button')[1];
-    expect(rebootLinodeButton).toHaveTextContent('Reboot Linode');
+    expect(rebootLinodeButton).toHaveTextContent('Reboot');
     fireEvent.click(rebootLinodeButton);
-    expect(handleRebootLinode).toHaveBeenCalled();
+    expect(handlePowerActionsLinode).toHaveBeenCalled();
     const unassignLinodeButton = getAllByRole('button')[2];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     fireEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
-  it('should not display reboot linode button', async () => {
+  it('should not display reboot linode button if the linode has all active interfaces', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
@@ -110,7 +110,7 @@ describe('SubnetLinodeRow', () => {
     );
 
     const handleUnassignLinode = jest.fn();
-    const handleRebootLinode = jest.fn();
+    const handlePowerActionsLinode = jest.fn();
     const linodeInterfaceData = {
       id: linodeFactory1.id,
       interfaces: [{ active: true, id: 1 }],
@@ -119,7 +119,7 @@ describe('SubnetLinodeRow', () => {
     const { getAllByRole, getAllByText, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
-          handleRebootLinode={handleRebootLinode}
+          handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           linodeInterfaceData={linodeInterfaceData}
           subnetId={0}

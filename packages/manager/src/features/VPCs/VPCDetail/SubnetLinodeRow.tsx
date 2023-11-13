@@ -36,9 +36,10 @@ import {
 } from './SubnetLinodeRow.styles';
 
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handleRebootLinode: (linode: Linode) => void;
+  handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   linodeInterfaceData: SubnetAssignedLinodeData;
   subnet?: Subnet;
@@ -49,7 +50,7 @@ interface Props {
 export const SubnetLinodeRow = (props: Props) => {
   const queryClient = useQueryClient();
   const {
-    handleRebootLinode,
+    handlePowerActionsLinode,
     handleUnassignLinode,
     linodeInterfaceData,
     subnet,
@@ -80,10 +81,10 @@ export const SubnetLinodeRow = (props: Props) => {
   // (not sure how much I like this, might go back to the previous commit, though this enables the useEffect check to potentially trigger less)
   const iconStatus = getLinodeIconStatus(linode?.status ?? 'rebooting');
 
-  // If the Linode's status active or inactive, we want to check whether or not its interfaces associated with
-  // this subnet have become active. So, we need to invalidate the subnets query to get th most up to date information.
+  // If the Linode's status is active, we want to check whether or not its interfaces associated with this subnet have become active so
+  // that we can determine if it needs a reboot or not. So, we need to invalidate the subnets query to get the most up to date information.
   React.useEffect(() => {
-    if (iconStatus !== 'other') {
+    if (iconStatus === 'active') {
       queryClient.invalidateQueries([
         vpcQueryKey,
         'vpc',
@@ -124,7 +125,7 @@ export const SubnetLinodeRow = (props: Props) => {
   }
 
   const isRebootNeeded =
-    iconStatus !== 'other' &&
+    iconStatus === 'active' &&
     interfaces.some(
       // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
       (linodeInterface) => !linodeInterface.active
@@ -176,9 +177,17 @@ export const SubnetLinodeRow = (props: Props) => {
         {isRebootNeeded && (
           <InlineMenuAction
             onClick={() => {
-              handleRebootLinode(linode);
+              handlePowerActionsLinode(linode, 'Reboot');
             }}
-            actionText="Reboot Linode"
+            actionText="Reboot"
+          />
+        )}
+        {iconStatus === 'inactive' && (
+          <InlineMenuAction
+            onClick={() => {
+              handlePowerActionsLinode(linode, 'Power On');
+            }}
+            actionText="Power On"
           />
         )}
         <InlineMenuAction

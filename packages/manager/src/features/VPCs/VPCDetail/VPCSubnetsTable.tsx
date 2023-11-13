@@ -34,6 +34,7 @@ import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
   vpcId: number;
@@ -65,9 +66,12 @@ export const VPCSubnetsTable = (props: Props) => {
     subnetAssignLinodesDrawerOpen,
     setSubnetAssignLinodesDrawerOpen,
   ] = React.useState(false);
-  const [rebootLinodeDialogOpen, setRebootLinodeDialogOpen] = React.useState(
+  const [powerActionDialogOpen, setPowerActionDialogOpen] = React.useState(
     false
   );
+  const [linodePowerAction, setLinodePowerAction] = React.useState<
+    Action | undefined
+  >();
 
   const [
     subnetUnassignLinodesDrawerOpen,
@@ -147,9 +151,10 @@ export const VPCSubnetsTable = (props: Props) => {
     setSubnetAssignLinodesDrawerOpen(true);
   };
 
-  const handleRebootLinode = (linode: Linode) => {
+  const handlePowerActionsLinode = (linode: Linode, action: Action) => {
     setSelectedLinode(linode);
-    setRebootLinodeDialogOpen(true);
+    setPowerActionDialogOpen(true);
+    setLinodePowerAction(action);
   };
 
   // Ensure that the selected subnet passed to the drawer is up to date
@@ -241,7 +246,7 @@ export const VPCSubnetsTable = (props: Props) => {
             {subnet.linodes.length > 0 ? (
               subnet.linodes.map((linodeInfo) => (
                 <SubnetLinodeRow
-                  handleRebootLinode={handleRebootLinode}
+                  handlePowerActionsLinode={handlePowerActionsLinode}
                   handleUnassignLinode={handleSubnetUnassignLinode}
                   key={linodeInfo.id}
                   linodeInterfaceData={linodeInfo}
@@ -351,12 +356,12 @@ export const VPCSubnetsTable = (props: Props) => {
           vpcId={vpcId}
         />
       )}
-      {rebootLinodeDialogOpen && (
+      {powerActionDialogOpen && (
         <PowerActionsDialog
-          action="Reboot"
-          isOpen={rebootLinodeDialogOpen}
+          action={linodePowerAction ?? 'Reboot'}
+          isOpen={powerActionDialogOpen}
           linodeId={selectedLinode?.id}
-          onClose={() => setRebootLinodeDialogOpen(false)}
+          onClose={() => setPowerActionDialogOpen(false)}
         />
       )}
     </>
