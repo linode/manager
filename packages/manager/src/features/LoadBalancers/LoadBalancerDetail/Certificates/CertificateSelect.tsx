@@ -11,6 +11,10 @@ interface Props {
    */
   errorText?: string;
   /**
+   * An optional API filter to apply to the API request
+   */
+  filter?: Filter;
+  /**
    * The TextField label
    * @default Certificate
    */
@@ -24,10 +28,9 @@ interface Props {
    */
   onChange: (certificate: Certificate | null) => void;
   /**
-   * The id of the selected certificate OR a function that should return `true`
-   * if the certificate should be selected.
+   * The id of the selected certificate
    */
-  value: ((certificate: Certificate) => boolean) | number;
+  value: null | number;
 }
 
 export const CertificateSelect = (props: Props) => {
@@ -35,7 +38,7 @@ export const CertificateSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
-  const filter: Filter = {};
+  const filter: Filter = props.filter ?? {};
 
   if (inputValue) {
     filter['label'] = { '+contains': inputValue };
@@ -52,9 +55,7 @@ export const CertificateSelect = (props: Props) => {
   const certificates = data?.pages.flatMap((page) => page.data);
 
   const selectedCertificate =
-    typeof value === 'function'
-      ? certificates?.find(value) ?? null
-      : certificates?.find((cert) => cert.id === value) ?? null;
+    certificates?.find((cert) => cert.id === value) ?? null;
 
   const onScroll = (event: React.SyntheticEvent) => {
     const listboxNode = event.currentTarget;
