@@ -1,42 +1,15 @@
-import { Theme } from '@mui/material/styles';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
-
+import {
+  StyledDiv,
+  StyledSlashTypography,
+  StyledTypography,
+} from './Crumbs.styles';
 import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  crumb: {
-    fontSize: '1.125rem',
-    lineHeight: 'normal',
-    textTransform: 'capitalize',
-    whiteSpace: 'nowrap',
-  },
-  crumbLink: {
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-    color: theme.textColors.tableHeader,
-  },
-  crumbsWrapper: {
-    alignItems: 'center',
-    display: 'flex',
-  },
-  noCap: {
-    textTransform: 'initial',
-  },
-  slash: {
-    color: theme.textColors.tableHeader,
-    fontSize: 20,
-    marginLeft: 2,
-    marginRight: 2,
-  },
-}));
 
 export interface CrumbOverridesProps {
   label?: string;
@@ -55,8 +28,6 @@ interface Props {
 }
 
 export const Crumbs = React.memo((props: Props) => {
-  const { classes, cx } = useStyles();
-
   const {
     crumbOverrides,
     firstAndLastOnly,
@@ -81,7 +52,7 @@ export const Crumbs = React.memo((props: Props) => {
           crumbOverrides && crumbOverrides.find((e) => e.position === key + 1);
 
         return (
-          <div className={classes.crumbsWrapper} key={key}>
+          <StyledDiv key={key}>
             <Link
               to={
                 crumbOverrides && override
@@ -92,10 +63,11 @@ export const Crumbs = React.memo((props: Props) => {
               }
               data-qa-link
             >
-              <Typography
-                className={cx(classes.crumb, classes.crumbLink, {
-                  [classes.noCap]: override && override.noCap,
-                })}
+              <StyledTypography
+                sx={{
+                  ...(override &&
+                    override.noCap && { textTransform: 'initial' }),
+                }}
                 data-qa-link-text
                 data-testid={'link-text'}
               >
@@ -104,12 +76,10 @@ export const Crumbs = React.memo((props: Props) => {
                     ? override.label
                     : crumb
                   : crumb}
-              </Typography>
+              </StyledTypography>
             </Link>
-            <Typography className={classes.slash} component="span">
-              /
-            </Typography>
-          </div>
+            <StyledSlashTypography>/</StyledSlashTypography>
+          </StyledDiv>
         );
       })}
       {/* for prepending some SVG or other element before the final crumb. */}
