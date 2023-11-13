@@ -7,6 +7,7 @@ import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
+import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import { Community } from './Community';
@@ -18,20 +19,15 @@ import { UserMenu } from './UserMenu';
 
 interface TopMenuProps {
   desktopMenuToggle: () => void;
-  isLoggedInAsCustomer: boolean;
   isSideMenuOpen: boolean;
   openSideMenu: () => void;
   username: string;
 }
 
 export const TopMenu = React.memo((props: TopMenuProps) => {
-  const {
-    desktopMenuToggle,
-    isLoggedInAsCustomer,
-    isSideMenuOpen,
-    openSideMenu,
-    username,
-  } = props;
+  const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
+
+  const { loggedInAsCustomer } = useAuthentication();
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -39,7 +35,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
 
   return (
     <React.Fragment>
-      {isLoggedInAsCustomer && (
+      {loggedInAsCustomer && (
         <Box bgcolor="pink" padding="1em" textAlign="center">
           <Typography color="black" fontSize="1.2em">
             You are logged in as customer: <strong>{username}</strong>

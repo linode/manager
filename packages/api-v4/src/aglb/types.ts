@@ -17,6 +17,13 @@ export interface CreateLoadbalancerPayload {
   configurations?: ConfigurationPayload[];
 }
 
+/**
+ * TODO: AGLB - remove when we move to full creation flow
+ */
+export interface CreateBasicLoadbalancerPayload {
+  label: string;
+}
+
 export interface UpdateLoadbalancerPayload {
   label?: string;
   regions?: string[];
@@ -103,6 +110,14 @@ export interface Configuration {
   certificates: CertificateConfig[];
   routes: { id: number; label: string }[];
 }
+
+export type UpdateConfigurationPayload = Partial<{
+  label: string;
+  port: number;
+  protocol: Protocol;
+  certificates: CertificateConfig[];
+  routes: number[];
+}>;
 
 export interface CertificateConfig {
   hostname: string;

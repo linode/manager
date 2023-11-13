@@ -14,6 +14,7 @@ import {
 } from 'src/utilities/testHelpers';
 
 import { SubnetLinodeRow } from './SubnetLinodeRow';
+import { firewallFactory } from 'src/factories';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,15 @@ describe('SubnetLinodeRow', () => {
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
         return res(ctx.json(linodeFactory1));
+      }),
+      rest.get('*/linode/instances/:id/firewalls', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            makeResourcePage(
+              firewallFactory.buildList(1, { label: 'mock-firewall-0' })
+            )
+          )
+        );
       }),
       rest.get('*/instances/*/configs', async (req, res, ctx) => {
         const configs = linodeConfigFactory.buildList(3);
