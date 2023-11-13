@@ -114,13 +114,13 @@ export const LinodeEntityDetail = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const displayVPCSection = isFeatureEnabled(
+  const enableVPCLogic = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
 
-  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
+  const { data: vpcData } = useVPCsQuery({}, {}, enableVPCLogic);
   const vpcsList = vpcData?.data ?? [];
 
   const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
@@ -162,7 +162,7 @@ export const LinodeEntityDetail = (props: Props) => {
         <Body
           assignedVPC={vpcLinodeIsAssignedTo}
           configs={configs}
-          displayVPCSection={displayVPCSection}
+          displayVPCSection={enableVPCLogic}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
           ipv4={linode.ipv4}
@@ -189,7 +189,7 @@ export const LinodeEntityDetail = (props: Props) => {
         <Header
           backups={linode.backups}
           configs={configs}
-          enableVPCLogic={displayVPCSection}
+          enableVPCLogic={enableVPCLogic}
           handlers={handlers}
           image={linode.image ?? 'Unknown Image'}
           imageVendor={imageVendor}
