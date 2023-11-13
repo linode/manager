@@ -18,6 +18,7 @@ import { useEventHandlers } from './hooks/useEventHandlers';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
+import { useToastNotifications } from './hooks/useToastNotifications';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 // Ensure component's display name is 'App'
@@ -32,7 +33,12 @@ const BaseApp = withDocumentTitleProvider(
 
       const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
+      // Listen to incoming account events to keep our React Query stores up to date
       useEventHandlers();
+
+      // Listen to incoming accountevents and display toast notifications
+      useToastNotifications();
+
       useAdobeAnalytics();
       useNewRelic();
 
