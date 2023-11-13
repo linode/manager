@@ -35,7 +35,7 @@ describe('AccessTable', () => {
     });
   });
 
-  it('should not disable copy button if isVPCOnlyLinode is false', async () => {
+  it('should not disable copy button if isVPCOnlyLinode is false', () => {
     const { getAllByRole } = renderWithTheme(
       <AccessTable
         isVPCOnlyLinode={false}

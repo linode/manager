@@ -56,8 +56,6 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
 
   const { data: ips } = useLinodeIPsQuery(linodeId);
 
-  // TODO: in order to fully get rid of makeStyles for this file, may need to convert this to a functional component
-  // rather than function inside this component >> will look into during part 2 of this ticket
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
 
