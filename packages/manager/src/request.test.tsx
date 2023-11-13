@@ -1,26 +1,28 @@
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
 import { profileFactory } from './factories';
 import { queryClientFactory } from './queries/base';
-import { getURL, handleError, injectEuuidToProfile } from './request';
+import {
+  LinodeError,
+  getURL,
+  handleError,
+  injectEuuidToProfile,
+} from './request';
 import { storeFactory } from './store';
 
 const store = storeFactory(queryClientFactory());
 
-const baseErrorConfig: AxiosRequestConfig = {
-  headers: {},
-  method: 'POST',
-};
 const baseError = {
-  config: baseErrorConfig,
   isAxiosError: true,
   message: 'helloworld',
   name: 'requestName',
   response: {
-    config: {},
-    data: [],
+    config: {
+      headers: new AxiosHeaders({}),
+    },
+    data: { errors: [{ reason: 'This is a Linode error.' }] },
     headers: {},
     statusText: '',
   },
@@ -30,7 +32,7 @@ const baseErrorWithJson = {
   toJSON: () => baseError,
 };
 
-const error400: AxiosError = {
+const error400: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
   response: {
     ...baseError.response,
@@ -38,7 +40,7 @@ const error400: AxiosError = {
   },
 };
 
-const error401: AxiosError = {
+const error401: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
   response: {
     ...baseError.response,
@@ -116,7 +118,7 @@ describe('getURL', () => {
 describe('injectEuuidToProfile', () => {
   const profile = profileFactory.build();
   const response: Partial<AxiosResponse> = {
-    config: { method: 'get', url: '/profile' },
+    config: { headers: new AxiosHeaders(), method: 'get', url: '/profile' },
     data: profile,
     headers: { 'x-customer-uuid': '1234' },
     status: 200,

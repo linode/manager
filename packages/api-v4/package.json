@@ -41,7 +41,7 @@
   "unpkg": "./lib/index.global.js",
   "dependencies": {
     "@linode/validation": "*",
-    "axios": "~0.21.4",
+    "axios": "~1.6.1",
     "ipaddr.js": "^2.0.0",
     "yup": "^0.32.9"
   },
@@ -62,7 +62,7 @@
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "@types/yup": "^0.29.13",
-    "axios-mock-adapter": "^1.18.1",
+    "axios-mock-adapter": "^1.22.0",
     "concurrently": "^4.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
