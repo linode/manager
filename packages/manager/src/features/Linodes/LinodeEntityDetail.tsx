@@ -160,7 +160,6 @@ export const LinodeEntityDetail = (props: Props) => {
     <EntityDetail
       body={
         <Body
-          assignedVPC={vpcLinodeIsAssignedTo}
           configs={configs}
           displayVPCSection={enableVPCLogic}
           gbRAM={linode.specs.memory / 1024}
@@ -172,6 +171,7 @@ export const LinodeEntityDetail = (props: Props) => {
           numCPUs={linode.specs.vcpus}
           numVolumes={numberOfVolumes}
           region={linode.region}
+          vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
         />
       }
       footer={
@@ -400,7 +400,6 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 // Body
 // =============================================================================
 export interface BodyProps {
-  assignedVPC?: VPC;
   configs?: Config[];
   displayVPCSection: boolean;
   gbRAM: number;
@@ -412,11 +411,11 @@ export interface BodyProps {
   numCPUs: number;
   numVolumes: number;
   region: string;
+  vpcLinodeIsAssignedTo?: VPC;
 }
 
 export const Body = React.memo((props: BodyProps) => {
   const {
-    assignedVPC,
     configs,
     displayVPCSection,
     gbRAM,
@@ -428,6 +427,7 @@ export const Body = React.memo((props: BodyProps) => {
     numCPUs,
     numVolumes,
     region,
+    vpcLinodeIsAssignedTo,
   } = props;
 
   const { data: profile } = useProfile();
@@ -436,8 +436,8 @@ export const Body = React.memo((props: BodyProps) => {
   const theme = useTheme();
 
   // Filter and retrieve subnets associated with a specific Linode ID
-  const linodeAssociatedSubnets = assignedVPC?.subnets.filter((subnet) =>
-    subnet.linodes.some((linode) => linode.id === linodeId)
+  const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
+    (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
 
   let _configInterfaceWithVPC: Interface | undefined;
@@ -447,7 +447,7 @@ export const Body = React.memo((props: BodyProps) => {
     const interfaces = config.interfaces;
 
     const interfaceWithVPC = interfaces.find(
-      (_interface) => _interface.vpc_id === assignedVPC?.id
+      (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
     );
 
     if (interfaceWithVPC) {
@@ -543,7 +543,7 @@ export const Body = React.memo((props: BodyProps) => {
           />
         </StyledRightColumnGrid>
       </StyledBodyGrid>
-      {displayVPCSection && assignedVPC && (
+      {displayVPCSection && vpcLinodeIsAssignedTo && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
@@ -575,9 +575,9 @@ export const Body = React.memo((props: BodyProps) => {
                 <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
                 <Link
                   data-testid="assigned-vpc-label"
-                  to={`/vpcs/${assignedVPC.id}`}
+                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
                 >
-                  {assignedVPC.label}
+                  {vpcLinodeIsAssignedTo.label}
                 </Link>
               </StyledListItem>
             </StyledVPCBox>
