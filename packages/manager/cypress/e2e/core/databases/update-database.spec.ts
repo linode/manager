@@ -186,6 +186,12 @@ describe('Update database clusters', () => {
 
           cy.get('[data-qa-cluster-config]').within(() => {
             cy.findByText(configuration.region.label).should('be.visible');
+            cy.findByText(database.used_disk_size_gb + ' GB').should(
+              'be.visible'
+            );
+            cy.findByText(database.total_disk_size_gb + ' GB').should(
+              'be.visible'
+            );
           });
 
           cy.get('[data-qa-connection-details]').within(() => {

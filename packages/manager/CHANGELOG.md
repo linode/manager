@@ -4,6 +4,65 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-11-13] - v1.107.0
+
+
+### Changed:
+
+- Logic governing inclusion of public interfaces in Linode Create payload ([#9834](https://github.com/linode/manager/pull/9834))
+- Improve layout of breadcrumb for support tickets ([#9855](https://github.com/linode/manager/pull/9855))
+- Logic governing display of Network Interfaces/Networking section in Linode Config dialog ([#9868](https://github.com/linode/manager/pull/9868))
+- Temporarily remove region sorting on DBaaS landing page ([#9861](https://github.com/linode/manager/pull/9861))
+
+
+### Fixed:
+
+- Linodes Landing flickering ([#9836](https://github.com/linode/manager/pull/9836))
+- Faux-bold font rendering ([#9843](https://github.com/linode/manager/pull/9843))
+- Incorrect docs links for Main Concept and Simplex Marketplace apps ([#9854](https://github.com/linode/manager/pull/9854))
+- Select Backup grid layout ([#9862](https://github.com/linode/manager/pull/9862))
+
+### Tech Stories:
+
+- `Tag` Component v7 story migration ([#9840](https://github.com/linode/manager/pull/9840))
+- `BetaChip` Component v7 story migration ([#9864](https://github.com/linode/manager/pull/9864))
+- MUI Migration - `SRC > Components > Crumbs` ([#9841](https://github.com/linode/manager/pull/9841))
+- Clean up app entrypoint render logic ([#9844](https://github.com/linode/manager/pull/9844))
+- Fix Safari LaunchDarkly MSW Errors ([#9863](https://github.com/linode/manager/pull/9863))
+
+### Tests:
+
+- Add DBaaS test coverage for disk metrics ([#9833](https://github.com/linode/manager/pull/9833))
+- Improve Cypress rescue and rebuild test stability ([#9867](https://github.com/linode/manager/pull/9867))
+- Upgrade Cypress to v13.x ([#9874](https://github.com/linode/manager/pull/9874))
+- Add integration tests for AGLB certificate edit flow ([#9880](https://github.com/linode/manager/pull/9880))
+- Add integration tests for AGLB certificate delete flow ([#9846](https://github.com/linode/manager/pull/9846))
+
+
+### Upcoming Features:
+
+- Fix Unassign multiple Linodes from Subnet ([#9820](https://github.com/linode/manager/pull/9820))
+- `RemovableSelectionsList` default maximum height and overflow scroll ([#9827](https://github.com/linode/manager/pull/9827))
+- VPC UX feedback ([#9832](https://github.com/linode/manager/pull/9832))
+- Remove temporary code for surfacing VPC interface errors and fix formatting of error in Linode Config dialog ([#9839](https://github.com/linode/manager/pull/9839))
+- Refine payload in subnet "Assign Linodes" drawer ([#9845](https://github.com/linode/manager/pull/9845))
+- Add Create VPC drawer to Linode Create flow and update Create Firewall button width ([#9847](https://github.com/linode/manager/pull/9847))
+- Only unassign linodes in the 'Linodes to be Unassigned from Subnet' list for Subnet Unassign Drawer ([#9851](https://github.com/linode/manager/pull/9851))
+- Clear subnet errors in Linode Create flow and VPC label errors in VPC Edit flow upon input change ([#9857](https://github.com/linode/manager/pull/9857))
+- Fix IPv4 checkboxes for VPC interfaces in Linode Config dialog ([#9865](https://github.com/linode/manager/pull/9865))
+- Fix incorrectly displayed error text in Linode Edit/Add config flow and prevent subnet section from incorrectly clearing in Linode Edit/Add Config and Linode Create flow ([#9866](https://github.com/linode/manager/pull/9866))
+- Linode Details: VPC Subnets Not Associated with VPC IP Address Are Displayed ([#9872](https://github.com/linode/manager/pull/9872))
+- Add VPC BETA Feedback link to VPC landing and detail pages ([#9879](https://github.com/linode/manager/pull/9879))
+- Add `dcGetWell` feature flag ([#9859](https://github.com/linode/manager/pull/9859))
+- Add RQ queries and mock data for DC Get Well ([#9860](https://github.com/linode/manager/pull/9860))
+- Add RQ queries and mock data for Sold Out Plans ([#9878](https://github.com/linode/manager/pull/9878))
+- Add basic AGLB create page and feature flag ([#9856](https://github.com/linode/manager/pull/9856))
+- Add AGLB create page with Actions buttons ([#9825](https://github.com/linode/manager/pull/9825))
+- Manage state in Create Load Balancer flow ([#9848](https://github.com/linode/manager/pull/9848))
+- AGLB Configurations Add Route Drawer and other refinements ([#9853](https://github.com/linode/manager/pull/9853))
+- Add missing label field validation in AGLB Edit Certificate drawer ([#9880](https://github.com/linode/manager/pull/9880))
+
+
 ## [2023-10-30] - v1.106.0
 
 ### Added:

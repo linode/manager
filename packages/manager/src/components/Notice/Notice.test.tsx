@@ -89,11 +89,11 @@ describe('Notice Component', () => {
     const { container } = renderWithTheme(
       <Notice
         text="Styled Text"
-        typeProps={{ style: { fontWeight: 'bold' } }}
+        typeProps={{ style: { fontFamily: 'monospace' } }}
       />
     );
     const typography = container.querySelector('.noticeText');
 
-    expect(typography).toHaveStyle('font-weight: bold');
+    expect(typography).toHaveStyle('font-family: monospace');
   });
 });

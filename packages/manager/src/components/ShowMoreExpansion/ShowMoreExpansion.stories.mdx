@@ -9,7 +9,11 @@ import { ShowMoreExpansion } from './ShowMoreExpansion';
 
 # Show More Expansion
 
-export const Template = (args) => <ShowMoreExpansion {...args} />;
+export const Template = (args) => (
+  <ShowMoreExpansion {...args}>
+    <Typography>{args.children}</Typography>
+  </ShowMoreExpansion>
+);
 
 <Canvas>
   <Story

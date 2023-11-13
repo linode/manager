@@ -18,6 +18,7 @@ import type {
   Filter,
   Params,
   ResourcePage,
+  UpdateConfigurationPayload,
 } from '@linode/api-v4';
 
 export const useLoadBalancerConfigurationsQuery = (
@@ -59,7 +60,7 @@ export const useLoadBalancerConfigurationMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, APIError[], Partial<Configuration>>(
+  return useMutation<Configuration, APIError[], UpdateConfigurationPayload>(
     (data) =>
       updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
     {

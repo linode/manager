@@ -59,7 +59,7 @@ export const SubnetLinodeRow = (props: Props) => {
   if (linodeLoading || !linode) {
     return (
       <TableRow>
-        <TableCell sx={{ marginLeft: 6 }}>
+        <TableCell colSpan={6}>
           <CircleProgress mini />
         </TableCell>
       </TableRow>
@@ -69,7 +69,7 @@ export const SubnetLinodeRow = (props: Props) => {
   if (linodeError) {
     return (
       <TableRow data-testid="subnet-linode-row-error">
-        <TableCell colSpan={5} style={{ paddingLeft: 48 }}>
+        <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
               data-qa-error-icon
