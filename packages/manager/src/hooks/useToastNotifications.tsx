@@ -169,7 +169,6 @@ export const useToastNotifications = () => {
               : toastInfo.success;
 
           enqueueSnackbar(successMessage, {
-            persist: toastInfo.persistFailureMessage,
             variant: 'success',
           });
         }
