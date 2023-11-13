@@ -15,14 +15,16 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'metadata', label: 'Metadata' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
+  { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
+  { flag: 'dcGetWell', label: 'DC Get Well' },
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
   { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'soldOutTokyo', label: 'Sold Out Tokyo' },
 ];
 
-const FeatureFlagTool: React.FC<{}> = () => {
+export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
 
@@ -76,6 +78,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
       </Grid>
     </Grid>
   );
-};
-
-export default withFeatureFlagProvider(FeatureFlagTool);
+});

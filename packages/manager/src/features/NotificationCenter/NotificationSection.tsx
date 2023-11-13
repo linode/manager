@@ -32,8 +32,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     display: 'flex',
+    fontFamily: theme.font.bold,
     fontSize: 14,
-    fontWeight: 'bold',
     paddingTop: theme.spacing(),
   },
 }));
@@ -170,11 +170,11 @@ const ContentBody = React.memo((props: BodyProps) => {
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
           <StyledLinkButton
-            sx={{
+            sx={(theme) => ({
               color: 'primary.main',
-              fontWeight: 'bold',
+              fontFamily: theme.font.bold,
               textDecoration: 'none !important',
-            }}
+            })}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
             onClick={() => setShowAll(!showAll)}

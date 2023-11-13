@@ -182,7 +182,6 @@ class SelectAppPanel extends React.PureComponent<Props> {
 }
 
 const commonStyling = (theme: Theme) => ({
-  boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
   height: 450,
   marginBottom: theme.spacing(3),
   overflowY: 'auto' as const,

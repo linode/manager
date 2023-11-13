@@ -38,6 +38,10 @@ import {
   withLinodes,
 } from 'src/containers/withLinodes.container';
 import {
+  WithMarketplaceAppsProps,
+  withMarketplaceApps,
+} from 'src/containers/withMarketplaceApps';
+import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
@@ -60,6 +64,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -77,11 +82,6 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import {
-  WithMarketplaceAppsProps,
-  withMarketplaceApps,
-} from 'src/containers/withMarketplaceApps';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -477,7 +477,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleSubnetChange = (subnetID: number) => {
-    this.setState({ selectedSubnetId: subnetID });
+    this.setState((prevState) => ({
+      errors: prevState.errors?.filter(
+        (error) => error.field !== 'interfaces[0].subnet_id'
+      ),
+      selectedSubnetId: subnetID,
+    }));
   };
 
   handleVLANChange = (updatedInterface: Interface) => {
@@ -488,11 +493,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleVPCChange = (vpcId: number) => {
-    this.setState({
-      selectedSubnetId: undefined, // Ensure the selected subnet is cleared
-      selectedVPCId: vpcId,
-      vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
-    });
+    // Only clear VPC related fields if VPC selection changes
+    if (vpcId !== this.state.selectedVPCId) {
+      this.setState({
+        selectedSubnetId: undefined, // Ensure the selected subnet is cleared
+        selectedVPCId: vpcId,
+        vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
+      });
+    }
   };
 
   handleVPCIPv4Change = (IPv4: string) => {

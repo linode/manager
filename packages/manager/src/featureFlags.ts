@@ -41,9 +41,11 @@ type OneClickApp = Record<string, string>;
 
 export interface Flags {
   aglb: boolean;
+  aglbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databases: boolean;
+  dcGetWell: boolean;
   dcSpecificPricing: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
