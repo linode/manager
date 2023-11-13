@@ -30,7 +30,7 @@ export const useLoadBalancerRoutesQuery = (
   filter: Filter
 ) => {
   return useQuery<ResourcePage<Route>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'routes', params, filter],
+    [QUERY_KEY, 'loadbalancer', id, 'routes', 'paginated', params, filter],
     () => getLoadbalancerRoutes(id, params, filter),
     { keepPreviousData: true }
   );
@@ -71,7 +71,13 @@ export const useLoadBalancerRouteUpdateMutation = (
         ]);
       },
       onMutate(variables) {
-        const key = [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'];
+        const key = [
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+          'paginated',
+        ];
         // Optimistically update the route on mutate
         updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
       },
@@ -104,7 +110,7 @@ export const useLoadBalancerRoutesInfiniteQuery = (
   filter: Filter = {}
 ) => {
   return useInfiniteQuery<ResourcePage<Route>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'certificates', 'infinite', filter],
+    [QUERY_KEY, 'loadbalancer', id, 'routes', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerRoutes(id, { page: pageParam, page_size: 25 }, filter),
     {
