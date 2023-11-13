@@ -77,14 +77,10 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId);
 
-  // Passing in 'rebooting' to avoid a type error, but the Linode row should never render if the linode is still undefined.
-  // (not sure how much I like this, might go back to the previous commit, though this enables the useEffect check to potentially trigger less)
-  const iconStatus = getLinodeIconStatus(linode?.status ?? 'rebooting');
-
-  // If the Linode's status is active, we want to check whether or not its interfaces associated with this subnet have become active so
+  // If the Linode's status is running, we want to check whether or not its interfaces associated with this subnet have become active so
   // that we can determine if it needs a reboot or not. So, we need to invalidate the subnets query to get the most up to date information.
   React.useEffect(() => {
-    if (iconStatus === 'active') {
+    if (linode && linode.status === 'running') {
       queryClient.invalidateQueries([
         vpcQueryKey,
         'vpc',
@@ -93,7 +89,7 @@ export const SubnetLinodeRow = (props: Props) => {
         'paginated',
       ]);
     }
-  }, [iconStatus, queryClient, vpcId]);
+  }, [linode, queryClient, vpcId]);
 
   if (linodeLoading || !linode) {
     return (
@@ -124,6 +120,7 @@ export const SubnetLinodeRow = (props: Props) => {
     );
   }
 
+  const iconStatus = getLinodeIconStatus(linode.status);
   const isRebootNeeded =
     iconStatus === 'active' &&
     interfaces.some(
