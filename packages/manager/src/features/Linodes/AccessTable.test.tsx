@@ -2,9 +2,10 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
+import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AccessTable, PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from './AccessTable';
+import { AccessTable } from './AccessTable';
 
 const linode = linodeFactory.build();
 

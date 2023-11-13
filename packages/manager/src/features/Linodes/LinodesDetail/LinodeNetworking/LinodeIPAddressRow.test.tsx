@@ -2,8 +2,8 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { linodeIPFactory } from 'src/factories/linodes';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/AccessTable';
 import { ipResponseToDisplayRows } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';

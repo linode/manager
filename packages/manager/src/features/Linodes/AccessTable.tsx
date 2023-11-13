@@ -3,11 +3,9 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Link } from 'src/components/Link';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
+import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 
 import {
   StyledColumnLabelGrid,
@@ -33,14 +31,6 @@ interface AccessTableProps {
   title: string;
 }
 
-const sxTooltipIcon = {
-  padding: '0',
-  paddingLeft: '4px',
-};
-
-export const PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT = `The Public IP Addresses have been unassigned from the
-configuration profile.`;
-
 export const AccessTable = React.memo((props: AccessTableProps) => {
   return (
     <Grid
@@ -54,20 +44,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
       <StyledColumnLabelGrid>
         {props.title}{' '}
         {props.isVPCOnlyLinode && props.title.includes('Public IP Address') && (
-          <TooltipIcon
-            text={
-              <Typography>
-                {PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT}{' '}
-                <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/">
-                  Learn more
-                </Link>
-                .
-              </Typography>
-            }
-            interactive
-            status="help"
-            sxTooltipIcon={sxTooltipIcon}
-          />
+          <PublicIpsUnassignedTooltip />
         )}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
