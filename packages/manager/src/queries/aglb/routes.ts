@@ -5,7 +5,12 @@ import {
   getLoadbalancerRoutes,
   updateLoadbalancerRoute,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
@@ -89,6 +94,25 @@ export const useLoadBalancerRouteDeleteMutation = (
           loadbalancerId,
           'routes',
         ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerRoutesInfiniteQuery = (
+  id: number,
+  filter: Filter = {}
+) => {
+  return useInfiniteQuery<ResourcePage<Route>, APIError[]>(
+    [QUERY_KEY, 'loadbalancer', id, 'certificates', 'infinite', filter],
+    ({ pageParam }) =>
+      getLoadbalancerRoutes(id, { page: pageParam, page_size: 25 }, filter),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
       },
     }
   );

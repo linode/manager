@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Notice } from 'src/components/Notice/Notice';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -10,7 +11,6 @@ import { Paper } from 'src/components/Paper';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -78,13 +78,13 @@ const SelectLinodePanel = (props: Props) => {
               <Typography data-qa-select-linode-header variant="h2">
                 {!!header ? header : 'Select Linode'}
               </Typography>
-              <StyledTypography component="div">
+              <StyledBox>
                 <Grid container spacing={2}>
                   {linodesData.map((linode) => {
                     return renderCard(linode);
                   })}
                 </Grid>
-              </StyledTypography>
+              </StyledBox>
             </StyledPaper>
             <PaginationFooter
               count={count}
@@ -101,12 +101,9 @@ const SelectLinodePanel = (props: Props) => {
   );
 };
 
-export type StyledTypographyProps = { component: string };
-
-const StyledTypography = styled(Typography, {
-  label: 'StyledTypography',
-  shouldForwardProp: omittedProps(['component']),
-})<StyledTypographyProps>(({ theme }) => ({
+const StyledBox = styled(Box, {
+  label: 'StyledBox',
+})(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
 }));
 

@@ -1,6 +1,6 @@
 import { PriceObject } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -47,7 +47,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
         {backups !== 'disabled' && backups?.monthly && (
           <>
             &nbsp;
-            <Typography fontSize={priceFontSize} fontWeight="bold">
+            <Typography fontFamily={theme.font.bold} fontSize={priceFontSize}>
               | Backups&nbsp;
             </Typography>
             <DisplayPrice

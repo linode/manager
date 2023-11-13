@@ -3,15 +3,21 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
+import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
+import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -139,16 +145,34 @@ export const SubnetAssignLinodesDrawer = (
 
     const configId = getConfigId(linodeConfigs, selectedConfig);
 
+    const configToBeModified = linodeConfigs.find(
+      (config) => config.id === configId
+    );
+
     const interfacePayload: InterfacePayload = {
       ipam_address: null,
+      ipv4: {
+        nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
+        vpc: !autoAssignIPv4 ? chosenIP : undefined,
+      },
       label: null,
+      primary: true,
       purpose: 'vpc',
       subnet_id: subnet?.id,
       vpc_id: vpcId,
-      ...(!autoAssignIPv4 && { ipv4: { vpc: chosenIP } }),
     };
 
     try {
+      // If the config has only an implicit public interface, make it explicit and
+      // add it in eth0
+      if (configToBeModified?.interfaces.length === 0) {
+        appendConfigInterface(
+          selectedLinode?.id ?? -1,
+          configId,
+          defaultPublicInterface
+        );
+      }
+
       const newInterface = await appendConfigInterface(
         selectedLinode?.id ?? -1,
         configId,
@@ -371,16 +395,25 @@ export const SubnetAssignLinodesDrawer = (
           sx={{ marginBottom: '8px' }}
           value={values.selectedLinode || null}
         />
-        <Checkbox
-          toolTipText={
-            'A range of non-internet facing IP used in an internal network'
-          }
-          checked={autoAssignIPv4}
-          disabled={userCannotAssignLinodes}
-          onChange={handleAutoAssignIPv4Change}
-          sx={{ marginLeft: `2px`, marginTop: `8px` }}
-          text={'Auto-assign a VPC IPv4 address for this Linode'}
-        />
+        <Box alignItems="center" display="flex" flexDirection="row">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={autoAssignIPv4}
+                onChange={handleAutoAssignIPv4Change}
+              />
+            }
+            label={
+              <Typography>
+                Auto-assign a VPC IPv4 address for this Linode
+              </Typography>
+            }
+            data-testid="vpc-ipv4-checkbox"
+            disabled={userCannotAssignLinodes}
+            sx={{ marginRight: 0 }}
+          />
+          <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
+        </Box>
         {!autoAssignIPv4 && (
           <TextField
             onChange={(e) => {
@@ -450,22 +483,24 @@ export const SubnetAssignLinodesDrawer = (
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndConfigData}
       />
-      <DownloadCSV
-        sx={{
-          alignItems: 'flex-start',
-          display: 'flex',
-          gap: 1,
-          marginTop: 2,
-          textAlign: 'left',
-        }}
-        buttonType="styledLink"
-        csvRef={csvRef}
-        data={assignedLinodesAndConfigData}
-        filename={`linodes-assigned-${formattedDate}.csv`}
-        headers={SUBNET_LINODE_CSV_HEADERS}
-        onClick={downloadCSV}
-        text={'Download List of Assigned Linodes (.csv)'}
-      />
+      {assignedLinodesAndConfigData.length > 0 && (
+        <DownloadCSV
+          sx={{
+            alignItems: 'flex-start',
+            display: 'flex',
+            gap: 1,
+            marginTop: 2,
+            textAlign: 'left',
+          }}
+          buttonType="styledLink"
+          csvRef={csvRef}
+          data={assignedLinodesAndConfigData}
+          filename={`linodes-assigned-${formattedDate}.csv`}
+          headers={SUBNET_LINODE_CSV_HEADERS}
+          onClick={downloadCSV}
+          text={'Download List of Assigned Linodes (.csv)'}
+        />
+      )}
       <StyledButtonBox>
         <Button buttonType="outlined" onClick={handleOnClose}>
           Done

@@ -12,6 +12,7 @@ import { vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+import { VPC_LABEL } from 'src/features/VPCs/constants';
 
 // TODO Remove feature flag mocks when feature flag is removed from codebase.
 describe('VPC landing page', () => {
@@ -65,10 +66,8 @@ describe('VPC landing page', () => {
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Confirm that empty state is shown and that each section is present.
-    cy.findByText('VPCs').should('be.visible');
-    cy.findByText('Create a private and isolated network.').should(
-      'be.visible'
-    );
+    cy.findByText(VPC_LABEL).should('be.visible');
+    cy.findByText('Create a private and isolated network').should('be.visible');
     cy.findByText('Getting Started Guides').should('be.visible');
     cy.findByText('Video Playlist').should('be.visible');
 
@@ -268,9 +267,7 @@ describe('VPC landing page', () => {
     cy.wait(['@deleteVPC', '@getVPCs']);
     ui.toast.assertMessage('VPC deleted successfully.');
     cy.findByText(mockVPCs[1].label).should('not.exist');
-    cy.findByText('Create a private and isolated network.').should(
-      'be.visible'
-    );
+    cy.findByText('Create a private and isolated network').should('be.visible');
   });
 
   /*

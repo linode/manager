@@ -8,7 +8,6 @@ import { ActionMenu } from 'src/components/ActionMenu';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -106,7 +105,7 @@ export const LoadBalancerServiceTargets = () => {
       >
         <TextField
           InputProps={{
-            endAdornment: (
+            endAdornment: query && (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Clear"
@@ -114,10 +113,7 @@ export const LoadBalancerServiceTargets = () => {
                   size="small"
                   sx={{ padding: 'unset' }}
                 >
-                  <CloseIcon
-                    color="inherit"
-                    sx={{ color: '#aaa !important' }}
-                  />
+                  <CloseIcon sx={{ color: '#aaa !important' }} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -154,6 +150,16 @@ export const LoadBalancerServiceTargets = () => {
             <Hidden lgDown>
               <TableCell>Health Checks</TableCell>
             </Hidden>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'id'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="id"
+              >
+                ID
+              </TableSortCell>
+            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -162,9 +168,7 @@ export const LoadBalancerServiceTargets = () => {
           {data?.results === 0 && <TableRowEmpty colSpan={6} />}
           {data?.data.map((serviceTarget) => (
             <TableRow key={serviceTarget.label}>
-              <TableCell>
-                <Link to={String(serviceTarget.id)}>{serviceTarget.label}</Link>
-              </TableCell>
+              <TableCell>{serviceTarget.label}</TableCell>
               <TableCell>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <StatusIcon status="active" />
@@ -187,6 +191,9 @@ export const LoadBalancerServiceTargets = () => {
                   {serviceTarget.healthcheck.interval !== 0 ? 'Yes' : 'No'}
                 </TableCell>
               </Hidden>
+              <Hidden smDown>
+                <TableCell>{serviceTarget.id}</TableCell>
+              </Hidden>
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
@@ -194,7 +201,6 @@ export const LoadBalancerServiceTargets = () => {
                       onClick: () => handleEditServiceTarget(serviceTarget),
                       title: 'Edit',
                     },
-                    { onClick: () => null, title: 'Clone Service Target' },
                     {
                       onClick: () => handleDeleteServiceTarget(serviceTarget),
                       title: 'Delete',

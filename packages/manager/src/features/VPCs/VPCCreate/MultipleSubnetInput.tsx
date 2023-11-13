@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -13,13 +12,13 @@ import { SubnetNode } from './SubnetNode';
 
 interface Props {
   disabled?: boolean;
+  isDrawer?: boolean;
   onChange: (subnets: SubnetFieldState[]) => void;
   subnets: SubnetFieldState[];
 }
 
 export const MultipleSubnetInput = (props: Props) => {
-  const theme = useTheme();
-  const { disabled, onChange, subnets } = props;
+  const { disabled, isDrawer, onChange, subnets } = props;
 
   const addSubnet = () => {
     onChange([
@@ -49,24 +48,27 @@ export const MultipleSubnetInput = (props: Props) => {
   return (
     <Grid>
       {subnets.map((subnet, subnetIdx) => (
-        <Grid key={`subnet-${subnetIdx}`} data-qa-subnet-node={subnetIdx}>
+        <Grid data-qa-subnet-node={subnetIdx} key={`subnet-${subnetIdx}`}>
+          {subnetIdx !== 0 && (
+            <Divider sx={(theme) => ({ marginTop: theme.spacing(2.5) })} />
+          )}
           <SubnetNode
             onChange={(subnet, subnetIdx, removable) =>
               handleSubnetChange(subnet, subnetIdx ?? 0, !!removable)
             }
             disabled={disabled}
             idx={subnetIdx}
+            isCreateVPCDrawer={isDrawer}
             isRemovable={true}
             subnet={subnet}
           />
-          <Divider sx={{ marginTop: theme.spacing(3) }} />
         </Grid>
       ))}
       <Button
         buttonType="outlined"
         disabled={disabled}
         onClick={addSubnet}
-        sx={{ marginTop: theme.spacing(2) }}
+        sx={(theme) => ({ marginTop: theme.spacing(3) })}
       >
         Add {subnets.length > 0 ? 'another' : 'a'} Subnet
       </Button>

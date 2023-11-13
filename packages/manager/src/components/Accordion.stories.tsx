@@ -18,4 +18,13 @@ export const Default: Story = {
   render: (args) => <Accordion {...args} />,
 };
 
+export const WithHeadingNumberCount: Story = {
+  args: {
+    children: <p>Any children can go here!</p>,
+    heading: 'This is an Accordion',
+    headingNumberCount: 1,
+  },
+  render: (args) => <Accordion {...args} />,
+};
+
 export default meta;
