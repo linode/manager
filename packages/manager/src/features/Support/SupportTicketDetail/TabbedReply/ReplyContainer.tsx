@@ -2,7 +2,7 @@ import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -13,13 +13,13 @@ import { useSupportTicketReplyMutation } from 'src/queries/support';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
-import AttachFileForm from '../../AttachFileForm';
+import { AttachFileForm } from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
-import Reference from './MarkdownReference';
+import { MarkdownReference } from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
-import TabbedReply from './TabbedReply';
+import { TabbedReply } from './TabbedReply';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   replyContainer: {
-    paddingLeft: theme.spacing(8),
+    paddingLeft: theme.spacing(6),
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(6),
     },
@@ -58,7 +58,7 @@ interface Props {
 }
 
 export const ReplyContainer = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { lastReply, onSuccess, reloadAttachments, ...rest } = props;
 
@@ -186,7 +186,7 @@ export const ReplyContainer = (props: Props) => {
           detailProps={{ className: classes.expPanelSummary }}
           heading="Formatting Tips"
         >
-          <Reference isReply rootClass={classes.referenceRoot} />
+          <MarkdownReference isReply rootClass={classes.referenceRoot} />
         </Accordion>
       </Grid>
       <Grid>

@@ -357,7 +357,11 @@ const aglb = [
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     const headers = JSON.parse(req.headers.get('x-filter') || '{}');
     if (headers['+or']) {
-      return res(ctx.json(makeResourcePage(routeFactory.buildList(2))));
+      return res(
+        ctx.json(
+          makeResourcePage(routeFactory.buildList(headers['+or'].length))
+        )
+      );
     }
     return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
   }),
@@ -404,6 +408,11 @@ const aglb = [
     });
     const certificates = certificateFactory.buildList(3);
     return res(ctx.json(makeResourcePage([tlsCertificate, ...certificates])));
+  }),
+  rest.get('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    const id = Number(req.params.certId);
+    const body = req.body as any;
+    return res(ctx.json(certificateFactory.build({ id, ...body })));
   }),
   rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
     return res(ctx.json(certificateFactory.build()));
@@ -780,11 +789,11 @@ export const handlers = [
     });
     return res(ctx.json(newFirewall));
   }),
-  rest.get('*/nodebalancers', (req, res, ctx) => {
-    const nodeBalancers = nodeBalancerFactory.buildList(0);
+  rest.get('*/v4/nodebalancers', (req, res, ctx) => {
+    const nodeBalancers = nodeBalancerFactory.buildList(1);
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
-  rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
+  rest.get('*/v4/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(req.params.nodeBalancerID),
     });
@@ -799,9 +808,11 @@ export const handlers = [
   rest.get(
     '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
     (req, res, ctx) => {
-      const configs = nodeBalancerConfigNodeFactory.buildList(2, {
-        nodebalancer_id: Number(req.params.nodeBalancerID),
-      });
+      const configs = [
+        nodeBalancerConfigNodeFactory.build({ status: 'UP' }),
+        nodeBalancerConfigNodeFactory.build({ status: 'DOWN' }),
+        nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
+      ];
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
