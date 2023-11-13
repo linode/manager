@@ -33,10 +33,7 @@ const BaseApp = withDocumentTitleProvider(
 
       const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
-      // Listen to incoming account events to keep our React Query stores up to date
       useEventHandlers();
-
-      // Listen to incoming accountevents and display toast notifications
       useToastNotifications();
 
       useAdobeAnalytics();

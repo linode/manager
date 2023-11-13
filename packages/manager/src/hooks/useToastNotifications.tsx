@@ -142,6 +142,10 @@ const toasts: Toasts = {
   },
 };
 
+/**
+ * Subscribes to incoming events and displays a toast notification if
+ * one is defined in `toasts`.
+ */
 export const useToastNotifications = () => {
   const { enqueueSnackbar } = useSnackbar();
 

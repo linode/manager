@@ -81,6 +81,10 @@ const eventHandlers: {
   },
 ];
 
+/**
+ * Subscribes to events and passes an event to the corresponding
+ * event handler as it comes in.
+ */
 export const useEventHandlers = () => {
   React.useEffect(() => {
     const subscriptions = eventHandlers.map(({ filter, handler }) =>
