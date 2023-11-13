@@ -177,8 +177,8 @@ export const LoadBalancerServiceTargets = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {error && <TableRowError colSpan={6} message={error?.[0]?.reason} />}
-          {data?.results === 0 && <TableRowEmpty colSpan={6} />}
+          {error && <TableRowError colSpan={8} message={error?.[0]?.reason} />}
+          {data?.results === 0 && <TableRowEmpty colSpan={8} />}
           {data?.data.map((serviceTarget) => (
             <ServiceTargetRow
               key={serviceTarget.id}
