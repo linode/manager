@@ -32,7 +32,7 @@ type Toasts = {
 
 /**
  * This constant defines toast notifications that will be displayed
- * when our events polling system gets a new notification.
+ * when our events polling system gets a new event.
  *
  * Use this feature to notify users of *asynchronous tasks* such as migrating a Linode.
  *

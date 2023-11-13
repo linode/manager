@@ -6,6 +6,9 @@ import { reportException } from 'src/exceptionReporting';
 
 import { loadScript } from './useScript';
 
+/**
+ * Initializes our Adobe Analytics script on mount and subscribes to page view events.
+ */
 export const useAdobeAnalytics = () => {
   const history = useHistory();
 
