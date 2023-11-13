@@ -59,10 +59,10 @@ export const StyledChip = styled(Chip, {
         backgroundColor: theme.color.grey8,
       }),
       ...(isOther && {
-        backgroundColor: theme.color.orange,
+        backgroundColor: theme.palette.warning.dark,
       }),
       ...(isRunning && {
-        backgroundColor: theme.color.teal,
+        backgroundColor: theme.palette.success.dark,
       }),
     },
     borderRadius: 0,

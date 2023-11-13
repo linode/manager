@@ -10,7 +10,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         opacity: 1,
       },
       '& svg': {
-        color: theme.color.teal,
+        color: theme.palette.success.dark,
       },
       backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
       textDecoration: 'none',
@@ -75,8 +75,8 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           opacity: 1,
         },
         '& svg': {
-          color: theme.color.teal,
-          fill: theme.color.teal,
+          color: theme.palette.success.dark,
+          fill: theme.palette.success.dark,
         },
         [`& .${classes.linkItem}`]: {
           color: 'white',
