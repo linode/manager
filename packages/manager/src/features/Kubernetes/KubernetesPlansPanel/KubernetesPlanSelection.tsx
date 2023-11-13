@@ -26,7 +26,7 @@ export interface KubernetesPlanSelectionProps {
   idx: number;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionID?: Region['id'];
   type: ExtendedType;
   updatePlanCount: (planId: string, newCount: number) => void;
@@ -41,7 +41,7 @@ export const KubernetesPlanSelection = (
     idx,
     onAdd,
     onSelect,
-    selectedID,
+    selectedId,
     selectedRegionID,
     type,
     updatePlanCount,
@@ -126,7 +126,7 @@ export const KubernetesPlanSelection = (
                   // When on the add pool flow, we only want the current input to be active,
                   // unless we've just landed on the form, all the inputs are empty,
                   // or there was a pricing data error.
-                  (!onAdd && Boolean(selectedID) && type.id !== selectedID) ||
+                  (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
                   disabled ||
                   !price?.monthly
                 }
@@ -153,7 +153,7 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
-          checked={type.id === String(selectedID)}
+          checked={type.id === String(selectedId)}
           disabled={disabled}
           heading={type.heading}
           key={type.id}

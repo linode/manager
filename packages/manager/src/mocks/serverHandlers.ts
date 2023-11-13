@@ -357,7 +357,11 @@ const aglb = [
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     const headers = JSON.parse(req.headers.get('x-filter') || '{}');
     if (headers['+or']) {
-      return res(ctx.json(makeResourcePage(routeFactory.buildList(2))));
+      return res(
+        ctx.json(
+          makeResourcePage(routeFactory.buildList(headers['+or'].length))
+        )
+      );
     }
     return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
   }),
@@ -404,6 +408,11 @@ const aglb = [
     });
     const certificates = certificateFactory.buildList(3);
     return res(ctx.json(makeResourcePage([tlsCertificate, ...certificates])));
+  }),
+  rest.get('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    const id = Number(req.params.certId);
+    const body = req.body as any;
+    return res(ctx.json(certificateFactory.build({ id, ...body })));
   }),
   rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
     return res(ctx.json(certificateFactory.build()));

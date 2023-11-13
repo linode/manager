@@ -38,7 +38,7 @@ describe('TicketAttachmentList component', () => {
   });
   it('should render all attachment when show more is clicked', () => {
     const { getByText } = renderWithTheme(<TicketAttachmentList {...props} />);
-    const showMoreButton = getByText("Show More Files").closest('button');
+    const showMoreButton = getByText('Show More Files').closest('button');
     userEvent.click(showMoreButton!);
     for (const attachment of props.attachments) {
       expect(getByText(attachment)).toBeVisible();

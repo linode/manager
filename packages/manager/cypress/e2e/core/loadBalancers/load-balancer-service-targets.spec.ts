@@ -251,10 +251,11 @@ describe('Akamai Global Load Balancer service targets', () => {
       regions: [loadBalancerRegion.id],
     });
     const mockServiceTarget = serviceTargetFactory.build({
-      ca_certificate: 'my-certificate',
+      certificate_id: 0,
       load_balancing_policy: 'random',
     });
     const mockCertificate = certificateFactory.build({
+      id: 0,
       label: 'my-certificate',
     });
     const mockNewCertificate = certificateFactory.build({
@@ -351,7 +352,7 @@ describe('Akamai Global Load Balancer service targets', () => {
 
         // Select the certificate mocked for this load balancer.
         cy.findByLabelText('Certificate')
-          .should('have.value', mockServiceTarget.ca_certificate)
+          .should('have.value', mockCertificate.label)
           .clear()
           .type('my-new-certificate');
 

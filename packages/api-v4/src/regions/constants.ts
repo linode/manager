@@ -1,4 +1,12 @@
-// Thank you https://github.com/BRIXTOL/country-continent
+export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
+  AF: 'Africa',
+  AN: 'Antartica',
+  AS: 'Asia',
+  EU: 'Europe',
+  NA: 'North America',
+  OC: 'Oceania',
+  SA: 'South America',
+});
 
 export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
   AD: 'EU',
@@ -232,7 +240,7 @@ export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
   TZ: 'AF',
   UA: 'EU',
   UG: 'AF',
-  UK: 'EU', // for compatability with the Linode API
+  UK: 'EU', // for compatibility with the Linode API
   UM: 'OC',
   US: 'NA',
   UY: 'SA',
@@ -253,17 +261,3 @@ export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
   ZM: 'AF',
   ZW: 'AF',
 });
-
-export type Country = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
-
-export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
-  AF: 'Africa',
-  AN: 'Antartica',
-  AS: 'Asia',
-  EU: 'Europe',
-  NA: 'North America',
-  OC: 'Oceania',
-  SA: 'South America',
-});
-
-export type ContinentNames = typeof CONTINENT_CODE_TO_CONTINENT[keyof typeof CONTINENT_CODE_TO_CONTINENT];

@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { FileUploader } from 'src/components/FileUploader/FileUploader';
 import { Link } from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
@@ -273,7 +273,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             label="Region"
             regions={regions}
             required
-            selectedID={region}
+            selectedId={region}
           />
 
           {showAgreement ? (

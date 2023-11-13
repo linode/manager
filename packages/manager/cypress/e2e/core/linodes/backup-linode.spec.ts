@@ -351,7 +351,7 @@ describe('"Enable Linode Backups" banner', () => {
         cy.findByLabelText('List of Linodes without backups')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Region').should('not.exist');
+            ui.regionSelect.find().should('not.exist');
           });
 
         // Confirm backup changes.

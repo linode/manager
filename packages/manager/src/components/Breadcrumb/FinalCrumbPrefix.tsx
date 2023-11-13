@@ -1,16 +1,5 @@
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material';
 import * as React from 'react';
-
-const useStyles = makeStyles({
-  prefixComponentWrapper: {
-    '& svg, & img': {
-      marginLeft: 4,
-      marginRight: 8,
-      position: 'relative',
-      top: -2,
-    },
-  },
-});
 
 interface Props {
   prefixComponent: JSX.Element | null;
@@ -18,17 +7,20 @@ interface Props {
 }
 
 export const FinalCrumbPrefix = (props: Props) => {
-  const classes = useStyles();
-
   const { prefixComponent, prefixStyle } = props;
 
   return (
-    <div
-      className={classes.prefixComponentWrapper}
-      data-qa-prefixwrapper
-      style={prefixStyle}
-    >
+    <StyledDiv data-qa-prefixwrapper style={prefixStyle}>
       {prefixComponent}
-    </div>
+    </StyledDiv>
   );
 };
+
+const StyledDiv = styled('div')(({ theme }) => ({
+  '& svg, & img': {
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
+    position: 'relative',
+    top: -2,
+  },
+}));

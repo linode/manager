@@ -87,8 +87,7 @@ const fillOutStackscriptForm = (
 const fillOutLinodeForm = (label: string, regionName: string) => {
   const password = randomString(32);
 
-  cy.findByText('Select a Region').should('be.visible').click();
-
+  ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionLabel(regionName).click();
 
   cy.findByText('Linode Label')

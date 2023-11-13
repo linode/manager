@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -118,7 +118,7 @@ export const VPCEditDrawer = (props: Props) => {
             handleSelection={() => null}
             helperText={REGION_HELPER_TEXT}
             regions={regionsData}
-            selectedID={vpc?.region ?? null}
+            selectedId={vpc?.region ?? null}
           />
         )}
         <ActionsPanel

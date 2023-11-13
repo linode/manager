@@ -45,7 +45,7 @@ export interface Props {
   onSelect: (key: string) => void;
   plans: PlanSelectionType[];
   selectedDiskSize?: number;
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
 }
@@ -60,7 +60,7 @@ export const PlanContainer = (props: Props) => {
     onSelect,
     plans,
     selectedDiskSize,
-    selectedID,
+    selectedId,
     selectedRegionId,
     showTransfer,
   } = props;
@@ -99,7 +99,7 @@ export const PlanContainer = (props: Props) => {
         linodeID={linodeID}
         onSelect={onSelect}
         selectedDiskSize={selectedDiskSize}
-        selectedID={selectedID}
+        selectedId={selectedId}
         selectedRegionId={selectedRegionId}
         showTransfer={showTransfer}
         type={plan}
@@ -115,7 +115,7 @@ export const PlanContainer = (props: Props) => {
     onSelect,
     plans,
     selectedDiskSize,
-    selectedID,
+    selectedId,
     selectedRegionId,
     showTransfer,
   ]);

@@ -20,7 +20,7 @@ describe('VPC create page', () => {
 
     getAllByText('Region');
     getAllByText('VPC Label');
-    getAllByText('Select a Region');
+    getAllByText('Region');
     getAllByText('Description');
     getAllByText('Subnets');
     getAllByText('Subnet Label');
@@ -103,7 +103,7 @@ describe('VPC create page', () => {
   it('should have a default value for the subnet ip address', () => {
     const { getAllByTestId } = renderWithTheme(<VPCCreate />);
     const subnetIP = getAllByTestId('textfield-input');
-    expect(subnetIP[3]).toBeInTheDocument();
-    expect(subnetIP[3]).toHaveValue('10.0.4.0/24');
+    expect(subnetIP[4]).toBeInTheDocument();
+    expect(subnetIP[4]).toHaveValue('10.0.4.0/24');
   });
 });
