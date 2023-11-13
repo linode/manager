@@ -70,8 +70,8 @@ describe('Account invoices', () => {
       });
     });
 
-    // Regular invoice items.
-    const mockInvoiceItemsRegular = [
+    // Regular (non-overage) invoice items.
+    const mockInvoiceItemsWithAndWithoutRegions = [
       ...mockInvoiceItemsWithRegions,
       invoiceItemFactory.build({
         amount: 5,
@@ -94,14 +94,14 @@ describe('Account invoices', () => {
     ];
 
     // Calculate the sum of each item's tax and subtotal.
-    const sumTax = mockInvoiceItemsRegular.reduce(
+    const sumTax = mockInvoiceItemsWithAndWithoutRegions.reduce(
       (acc: number, cur: InvoiceItem) => {
         return acc + cur.tax;
       },
       0
     );
 
-    const sumSubtotal = mockInvoiceItemsRegular.reduce(
+    const sumSubtotal = mockInvoiceItemsWithAndWithoutRegions.reduce(
       (acc: number, cur: InvoiceItem) => {
         return acc + cur.amount;
       },
@@ -130,7 +130,7 @@ describe('Account invoices', () => {
 
     // All mocked invoice items.
     const mockInvoiceItems = [
-      ...mockInvoiceItemsRegular,
+      ...mockInvoiceItemsWithAndWithoutRegions,
       ...mockInvoiceItemsOverages,
     ];
 
@@ -147,33 +147,37 @@ describe('Account invoices', () => {
 
       // Confirm that each regular invoice item is shown, and that the region is
       // displayed as expected.
-      mockInvoiceItemsRegular.forEach((invoiceItem: InvoiceItem) => {
-        cy.findByText(invoiceItem.label)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText(`${invoiceItem.quantity}`).should('be.visible');
-            cy.findByText(`$${invoiceItem.unit_price}`).should('be.visible');
-            cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
-              'be.visible'
-            );
-            cy.findByText(`${formatUsd(invoiceItem.tax)}`).should('be.visible');
-            cy.findByText(`${formatUsd(invoiceItem.total)}`).should(
-              'be.visible'
-            );
-            // If the invoice item has a region, confirm that it is displayed
-            // in the table row. Otherwise, confirm that the table cell which
-            // would normally show the region is empty.
-            !!invoiceItem.region
-              ? cy
-                  .findByText(getRegionLabel(invoiceItem.region))
-                  .should('be.visible')
-              : cy
-                  .get('[data-qa-region]')
-                  .should('be.visible')
-                  .should('be.empty');
-          });
-      });
+      mockInvoiceItemsWithAndWithoutRegions.forEach(
+        (invoiceItem: InvoiceItem) => {
+          cy.findByText(invoiceItem.label)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText(`${invoiceItem.quantity}`).should('be.visible');
+              cy.findByText(`$${invoiceItem.unit_price}`).should('be.visible');
+              cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
+                'be.visible'
+              );
+              cy.findByText(`${formatUsd(invoiceItem.tax)}`).should(
+                'be.visible'
+              );
+              cy.findByText(`${formatUsd(invoiceItem.total)}`).should(
+                'be.visible'
+              );
+              // If the invoice item has a region, confirm that it is displayed
+              // in the table row. Otherwise, confirm that the table cell which
+              // would normally show the region is empty.
+              !!invoiceItem.region
+                ? cy
+                    .findByText(getRegionLabel(invoiceItem.region))
+                    .should('be.visible')
+                : cy
+                    .get('[data-qa-region]')
+                    .should('be.visible')
+                    .should('be.empty');
+            });
+        }
+      );
 
       // Confirm that outbound transfer overages are listed as expected.
       mockInvoiceItemsOverages.forEach(
