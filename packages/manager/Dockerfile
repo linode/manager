@@ -18,7 +18,7 @@ CMD yarn start:manager:ci
 # `e2e`
 #
 # Runs Cloud Manager Cypress tests.
-FROM cypress/included:12.17.3 as e2e
+FROM cypress/included:13.5.0 as e2e
 WORKDIR /home/node/app
 VOLUME /home/node/app
 USER node

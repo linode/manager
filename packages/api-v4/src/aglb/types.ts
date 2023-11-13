@@ -144,8 +144,9 @@ export interface RouteServiceTargetPayload {
 
 export interface ServiceTargetPayload {
   label: string;
+  protocol: Protocol;
   endpoints: Endpoint[];
-  ca_certificate: string;
+  certificate_id: number | null;
   load_balancing_policy: Policy;
   healthcheck: HealthCheck;
 }
