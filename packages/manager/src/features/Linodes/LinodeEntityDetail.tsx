@@ -28,8 +28,10 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import {
+  queryKey as linodesQueryKey,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -43,6 +45,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import {
   StyledBodyGrid,
   StyledBox,
@@ -258,6 +261,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   };
 
   const isRebootNeeded =
+    enableVPCLogic &&
     !isOther &&
     configs?.some((config) =>
       config.interfaces.some(
@@ -332,7 +336,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
           <TooltipIcon
             status="help"
             sxTooltipIcon={{ padding: 0 }}
-            text="The VPC configuration has been updated and the Linode needs to be rebooted."
+            text={VPC_REBOOT_MESSAGE}
           />
         )}
         {hasSecondaryStatus ? (
@@ -379,7 +383,6 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
             Launch LISH Console
           </Button>
         </Hidden>
-
         <LinodeActionMenu
           linodeBackups={backups}
           linodeId={linodeId}

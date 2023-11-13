@@ -26,6 +26,7 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
+import { VPC_REBOOT_MESSAGE } from '../constants';
 import { getSubnetInterfaceFromConfigs } from '../utils';
 import {
   StyledActionTableCell,
@@ -144,7 +145,8 @@ export const SubnetLinodeRow = (props: Props) => {
             {'Reboot Needed'}
             <TooltipIcon
               status="help"
-              text="The VPC configuration has been updated and the Linode needs to be rebooted."
+              sxTooltipIcon={{ paddingRight: 0 }}
+              text={VPC_REBOOT_MESSAGE}
             />
           </>
         ) : (
