@@ -67,22 +67,54 @@ export interface BaseSelectProps<
   Clearable extends boolean = false
 > extends Omit<SelectProps<I, IsMulti>, 'onChange'>,
     CreatableSelectProps<I, IsMulti> {
-  classes?: any;
-  creatable?: boolean;
-  /** the rest are props we've added ourselves */
-  disabled?: boolean;
-  errorGroup?: string;
-
   /**
-   * errorText and label both passed to textFieldProps
-   * @todo consider just putting this under textFieldProps
+   * Optional additional class names to apply to the root element.
+   */
+  classes?: any;
+  /**
+   * Allow options to be created while the isLoading prop is true.
+   * @default false
+   */
+  creatable?: boolean;
+
+  /** the rest are props we've added ourselves */
+  /**
+   * If true, the input will be blurred when a selection is made.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * To facilitate error handling in forms.
+   */
+  errorGroup?: string;
+  /**
+   * errorText and label both passed to textFieldProps.
+   * @todo consider just putting this under textFieldProps.
    */
   errorText?: string;
-
+  /**
+   * Returns helper text to display under the select popover.
+   */
   guidance?: React.ReactNode | string;
+  /**
+   * If true, the label will be hidden.
+   * @default false
+   */
   hideLabel?: boolean;
+  /**
+   * If true, the label will be displayed inline.
+   * @default false
+   */
   inline?: boolean;
+  /**
+   * To specify a custom input ID
+   * @default false
+   */
   inputId?: any;
+  /**
+   * If true, the input will be clearable
+   * @default false
+   */
   isClearable?: Clearable;
   /**
    * We require label for accessibility purpose
@@ -111,6 +143,12 @@ export interface BaseSelectProps<
   variant?: 'creatable';
 }
 
+/**
+ * Our legacy Select component, which wraps React-Select and provides a Material-UI based styling.<br />
+ * ⚠️ **deprecated** This component is deprecated and should not be used in new code. Instead, use the <a href="/docs/components-selects-autocomplete--documentation" target="_self">Autocomplete</a> component.
+ *
+ * @deprecated
+ */
 const Select = <
   I extends Item,
   IsMulti extends boolean = false,
