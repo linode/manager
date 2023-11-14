@@ -3,15 +3,14 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { Skeleton } from 'src/components/Skeleton';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurations';
 
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
+import { Ports } from './Ports';
 import { RegionsCell } from './RegionsCell';
 
 export interface LoadBalancerHandlers {
@@ -24,7 +23,7 @@ interface Props {
 }
 
 export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
-  const { id, label, regions } = loadBalancer;
+  const { hostname, id, label, regions } = loadBalancer;
 
   return (
     <TableRow
@@ -49,6 +48,9 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
           <Ports loadbalancerId={id} />
         </TableCell>
       </Hidden>
+      <Hidden smDown>
+        <TableCell>{hostname}</TableCell>
+      </Hidden>
       <Hidden mdDown>
         <TableCell>
           {regions.map((region) => (
@@ -64,29 +66,4 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-interface PortProps {
-  loadbalancerId: number;
-}
-
-const Ports = ({ loadbalancerId }: PortProps) => {
-  const {
-    data: configurations,
-    error,
-    isLoading,
-  } = useLoadBalancerConfigurationsQuery(loadbalancerId);
-
-  const ports = configurations?.data.map((config) => config.port);
-
-  if (isLoading) {
-    return <Skeleton />;
-  }
-
-  if (error) {
-    return <Typography>Unknown</Typography>;
-  }
-
-  // @TODO handle tons of ports
-  return <Typography>{ports!.join(', ')}</Typography>;
 };
