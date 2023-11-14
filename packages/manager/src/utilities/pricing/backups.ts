@@ -1,6 +1,5 @@
 import type { ExtendedType } from '../extendType';
 import type { Linode, LinodeType, PriceObject } from '@linode/api-v4';
-import type { FlagSet } from 'src/featureFlags';
 
 /**
  * Gets the backup price of a Linode type for a specific region.
@@ -31,7 +30,6 @@ export const getLinodeBackupPrice = (
 };
 
 interface BackupsPriceOptions {
-  flags: FlagSet;
   region: string | undefined;
   type: ExtendedType | LinodeType | undefined;
 }
@@ -41,7 +39,6 @@ interface BackupsPriceOptions {
  * if price cannot be calculated, returns undefined.
  */
 export const getMonthlyBackupsPrice = ({
-  flags,
   region,
   type,
 }: BackupsPriceOptions): PriceObject['monthly'] | undefined => {
@@ -49,17 +46,10 @@ export const getMonthlyBackupsPrice = ({
     return undefined;
   }
 
-  return flags.dcSpecificPricing
-    ? getLinodeBackupPrice(type, region)?.monthly
-    : type?.addons.backups.price.monthly;
+  return getLinodeBackupPrice(type, region)?.monthly;
 };
 
 export interface TotalBackupsPriceOptions {
-  /**
-   * Our feature flags so we can determined whether or not to add price increase.
-   * @example { dcSpecificPricing: true }
-   */
-  flags: FlagSet;
   /**
    * List of linodes without backups enabled
    */
@@ -75,7 +65,6 @@ export interface TotalBackupsPriceOptions {
  * if price cannot be calculated, returns undefined.
  */
 export const getTotalBackupsPrice = ({
-  flags,
   linodes,
   types,
 }: TotalBackupsPriceOptions) => {
@@ -88,7 +77,6 @@ export const getTotalBackupsPrice = ({
 
     const backupsMonthlyPrice: PriceObject['monthly'] | undefined =
       getMonthlyBackupsPrice({
-        flags,
         region: linode.region,
         type,
       }) || undefined;

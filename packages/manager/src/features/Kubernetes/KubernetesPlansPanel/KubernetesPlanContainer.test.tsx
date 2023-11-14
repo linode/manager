@@ -39,10 +39,9 @@ describe('KubernetesPlanContainer', () => {
     await findByText('Quantity');
   });
 
-  it('should display no region selection message without a region selection when the DC-specific pricing feature flag is on ', async () => {
+  it('should display no region selection message without a region selection', async () => {
     const { getByText } = renderWithTheme(
-      <KubernetesPlanContainer {...props} />,
-      { flags: { dcSpecificPricing: true } }
+      <KubernetesPlanContainer {...props} />
     );
 
     expect(getByText(PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE)).toBeVisible();

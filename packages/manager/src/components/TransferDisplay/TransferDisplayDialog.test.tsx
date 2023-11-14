@@ -21,12 +21,6 @@ import type { RegionalNetworkUtilization } from '@linode/api-v4';
 const mockTransferData: RegionalNetworkUtilization = accountTransferFactory.build();
 const mockTransferDataNoResource: RegionalNetworkUtilization = accountTransferNoResourceFactory.build();
 
-jest.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    dcSpecificPricing: true,
-  }),
-}));
-
 export const transferDisplayDialogProps = (
   mockData: RegionalNetworkUtilization
 ): TransferDisplayDialogProps => {

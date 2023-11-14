@@ -93,7 +93,6 @@ export const InvoiceDetail = () => {
 
     const result = await printInvoice({
       account,
-      flags,
       invoice,
       items,
       regions: shouldShowRegion && regions ? regions : [],
@@ -108,9 +107,7 @@ export const InvoiceDetail = () => {
     { key: 'from', label: 'From' },
     { key: 'to', label: 'To' },
     { key: 'quantity', label: 'Quantity' },
-    ...(flags.dcSpecificPricing && shouldShowRegion
-      ? [{ key: 'region', label: 'Region' }]
-      : []),
+    ...(shouldShowRegion ? [{ key: 'region', label: 'Region' }] : []),
     { key: 'unit_price', label: 'Unit Price' },
     { key: 'amount', label: 'Amount (USD)' },
     { key: 'tax', label: 'Tax (USD)' },
