@@ -76,7 +76,7 @@ export const getGDPRDetails = ({
   showGDPRCheckbox: boolean;
 } => {
   if (regions === undefined) {
-    return { showGDPRCheckbox: false };
+    return { selectedRegionGroup: undefined, showGDPRCheckbox: false };
   }
 
   const selectedRegionGroup = getSelectedRegionGroup(regions, selectedRegionId);
