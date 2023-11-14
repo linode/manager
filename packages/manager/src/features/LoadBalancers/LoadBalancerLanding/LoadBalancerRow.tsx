@@ -1,9 +1,10 @@
 import { Loadbalancer } from '@linode/api-v4';
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
+import { Skeleton } from 'src/components/Skeleton';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -18,14 +19,12 @@ export interface LoadBalancerHandlers {
 }
 
 interface Props {
-  loadBalancer: Loadbalancer;
   handlers: LoadBalancerHandlers;
+  loadBalancer: Loadbalancer;
 }
 
-export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
+export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
   const { id, label, regions } = loadBalancer;
-  const { data: configurations } = useLoadBalancerConfigurationsQuery(id);
-  const ports = configurations?.data.map((config) => config.port);
 
   return (
     <TableRow
@@ -46,7 +45,9 @@ export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
         </Stack>
       </TableCell>
       <Hidden smDown>
-        <TableCell>{ports?.join(', ')}</TableCell>
+        <TableCell>
+          <Ports loadbalancerId={id} />
+        </TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell>
@@ -63,4 +64,29 @@ export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
       </TableCell>
     </TableRow>
   );
+};
+
+interface PortProps {
+  loadbalancerId: number;
+}
+
+const Ports = ({ loadbalancerId }: PortProps) => {
+  const {
+    data: configurations,
+    error,
+    isLoading,
+  } = useLoadBalancerConfigurationsQuery(loadbalancerId);
+
+  const ports = configurations?.data.map((config) => config.port);
+
+  if (isLoading) {
+    return <Skeleton />;
+  }
+
+  if (error) {
+    return <Typography>Unknown</Typography>;
+  }
+
+  // @TODO handle tons of ports
+  return <Typography>{ports!.join(', ')}</Typography>;
 };
