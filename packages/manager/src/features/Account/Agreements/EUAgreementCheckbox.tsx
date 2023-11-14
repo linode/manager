@@ -28,6 +28,7 @@ const EUAgreementCheckbox = (props: Props) => {
       className={className}
       display="flex"
       flexDirection="row"
+      data-testid="eu-agreement-checkbox"
     >
       <Checkbox checked={checked} onChange={onChange} style={checkboxStyle} />
       <Typography style={{ marginLeft: 4 }}>
