@@ -18,9 +18,7 @@ export const Default: StoryObj<BaseSelectProps<Item, boolean, boolean>> = {
     const SelectWrapper = () => {
       const { isMulti } = args;
       const [selectedItem, setSelectedItem] = React.useState<Item | null>(null);
-      const [selectedItems, setSelectedItems] = React.useState<Item[] | null>(
-        []
-      );
+      const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
 
       const handleSelect = (item: Item) => {
         setSelectedItem(item);
@@ -32,7 +30,7 @@ export const Default: StoryObj<BaseSelectProps<Item, boolean, boolean>> = {
 
       React.useEffect(() => {
         setSelectedItem(null);
-        setSelectedItems(null);
+        setSelectedItems([]);
       }, [isMulti]);
 
       return (
