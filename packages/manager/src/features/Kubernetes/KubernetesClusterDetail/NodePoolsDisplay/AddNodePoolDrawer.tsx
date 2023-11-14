@@ -7,7 +7,6 @@ import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -16,7 +15,7 @@ import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
@@ -93,8 +92,6 @@ export const AddNodePoolDrawer = (props: Props) => {
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
-  const flags = useFlags();
-
   // Only want to use current types here.
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
@@ -112,11 +109,8 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getPrice(
-    selectedType,
-    clusterRegionId,
-    flags.dcSpecificPricing
-  )?.monthly;
+  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
+    ?.monthly;
 
   const totalPrice =
     selectedTypeInfo && pricePerNode
