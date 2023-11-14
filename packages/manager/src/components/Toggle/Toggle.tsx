@@ -5,11 +5,30 @@ import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
+/**
+ * The **Toggle** component extends the [Material UI Switch props](https://v4.mui.com/api/switch/#props).
+ */
 export interface ToggleProps extends SwitchProps {
+  /**
+   * Makes a tooltip interactive (meaning the tooltip will not close when the user hovers over the tooltip before the `leaveDelay` is expired.)
+   */
   interactive?: boolean;
+  /**
+   * Content to display inside an optional tooltip.
+   */
   tooltipText?: JSX.Element | string;
 }
 
+/**
+ * ## Usage
+ *
+ * Toggles are best used for changing the state of system functionalities and preferences. Toggles may replace two radio buttons or a single checkbox to allow users to choose between two opposing states.
+ * - Toggles should take immediate effect and should not require the user to click Save or Submit.
+ * - Keep labels for toggles short and direct.
+ * - Toggle switches should be used instead of radio buttons if each item in a set can be independently controlled.
+ *
+ * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
+ */
 export const Toggle = (props: ToggleProps) => {
   const { interactive, tooltipText, ...rest } = props;
 
