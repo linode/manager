@@ -41,7 +41,7 @@ const installLongview = (
   linodePass: string,
   installCommand: string
 ) => {
-  return cy.exec('./cypress/support/longview.sh', {
+  return cy.exec('./cypress/support/scripts/longview/install-longview.sh', {
     failOnNonZeroExit: true,
     timeout: longviewInstallTimeout,
     env: {

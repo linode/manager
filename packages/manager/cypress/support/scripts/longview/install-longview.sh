@@ -3,7 +3,7 @@
 
 set timeout 120
 
-# Wait 15 seconds before attempting to connect to Linode.
+# Wait 15 seconds before attempting to connect to the Linode.
 # This mitigates a rare issue where connecting too quickly after provisioning and
 # booting yields a connection refused error.
 sleep 15
