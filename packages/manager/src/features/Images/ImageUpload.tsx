@@ -8,13 +8,13 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { FileUploader } from 'src/components/FileUploader/FileUploader';
 import { Link } from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { Dispatch } from 'src/hooks/types';
@@ -31,7 +31,7 @@ import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
 
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
@@ -124,9 +124,12 @@ export const ImageUpload: React.FC<Props> = (props) => {
     false
   );
 
-  const showAgreement = Boolean(
-    !profile?.restricted && agreements?.eu_model === false && isEURegion(region)
-  );
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements,
+    profile,
+    regions,
+    selectedRegionId: region,
+  });
 
   //  This holds a "cancel function" from the Axios instance that handles image
   // uploads. Calling this function will cancel the HTTP request.
@@ -180,7 +183,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
     !label ||
     !region ||
     !canCreateImage ||
-    (showAgreement && !hasSignedAgreement);
+    (showGDPRCheckbox && !hasSignedAgreement);
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
@@ -276,7 +279,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             selectedId={region}
           />
 
-          {showAgreement ? (
+          {showGDPRCheckbox ? (
             <EUAgreementCheckbox
               centerCheckbox
               checked={hasSignedAgreement}

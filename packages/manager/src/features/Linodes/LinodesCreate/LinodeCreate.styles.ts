@@ -9,7 +9,7 @@ import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { LinodeCreateProps } from './LinodeCreate';
 
-type StyledLinodeCreateProps = Pick<LinodeCreateProps, 'showAgreement'>;
+type StyledLinodeCreateProps = Pick<LinodeCreateProps, 'showGDPRCheckbox'>;
 
 export const StyledButtonGroupBox = styled(Box, { label: 'StyledButtonGroup' })(
   ({ theme }) => ({
@@ -35,8 +35,8 @@ export const StyledForm = styled('form', { label: 'StyledForm' })({
 
 export const StyledMessageDiv = styled('div', {
   label: 'StyledMessageDiv',
-  shouldForwardProp: omittedProps(['showAgreement']),
-})<StyledLinodeCreateProps>(({ showAgreement, theme }) => ({
+  shouldForwardProp: omittedProps(['showGDPRCheckbox']),
+})<StyledLinodeCreateProps>(({ showGDPRCheckbox, theme }) => ({
   display: 'flex',
   flexDirection: 'column' as const,
   flexGrow: 1,
@@ -46,7 +46,7 @@ export const StyledMessageDiv = styled('div', {
   },
 
   // conditional styling
-  ...(showAgreement
+  ...(showGDPRCheckbox
     ? {
         maxWidth: '70%',
         [theme.breakpoints.down('sm')]: {

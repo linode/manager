@@ -123,8 +123,8 @@ export interface LinodeCreateProps {
   setAuthorizedUsers: (usernames: string[]) => void;
   setBackupID: (id: number) => void;
   setSelectedVPC: (vpcID: number) => void;
-  showAgreement: boolean;
   showApiAwarenessModal: boolean;
+  showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
   toggleAssignPublicIPv4Address: () => void;
@@ -261,8 +261,8 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       regionsLoading,
       selectedRegionID,
-      showAgreement,
       showApiAwarenessModal,
+      showGDPRCheckbox,
       showGeneralError,
       signedAgreement,
       tags,
@@ -681,13 +681,13 @@ export class LinodeCreate extends React.PureComponent<
             alignItems="center"
             display="flex"
             flexWrap="wrap"
-            justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+            justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
           >
-            <StyledMessageDiv showAgreement={!!showAgreement}>
+            <StyledMessageDiv showGDPRCheckbox={!!showGDPRCheckbox}>
               <SMTPRestrictionText>
                 {({ text }) => <Grid xs={12}>{text}</Grid>}
               </SMTPRestrictionText>
-              {showAgreement ? (
+              {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
                   centerCheckbox
                   checked={signedAgreement}
@@ -705,7 +705,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement)
               }
               buttonType="outlined"
               data-qa-api-cli-linode
@@ -717,7 +717,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement)
               }
               buttonType="primary"
               data-qa-deploy-linode

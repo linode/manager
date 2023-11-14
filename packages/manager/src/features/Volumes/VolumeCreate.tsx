@@ -30,7 +30,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -211,13 +211,15 @@ export const VolumeCreate = () => {
 
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
-  const showAgreement =
-    isEURegion(values.region) &&
-    !profile?.restricted &&
-    accountAgreements?.eu_model === false;
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements: accountAgreements,
+    profile,
+    regions,
+    selectedRegionId: values.region,
+  });
 
   const disabled = Boolean(
-    doesNotHavePermission || (showAgreement && !hasSignedAgreement)
+    doesNotHavePermission || (showGDPRCheckbox && !hasSignedAgreement)
   );
 
   const handleLinodeChange = (linode: Linode | null) => {
@@ -396,9 +398,9 @@ export const VolumeCreate = () => {
               className={classes.buttonGroup}
               display="flex"
               flexWrap="wrap"
-              justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+              justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
             >
-              {showAgreement ? (
+              {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
                   centerCheckbox
                   checked={hasSignedAgreement}

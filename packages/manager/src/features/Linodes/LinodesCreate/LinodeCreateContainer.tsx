@@ -63,7 +63,10 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { getSelectedRegionGroup } from 'src/utilities/formatRegion';
+import {
+  getGDPRDetails,
+  getSelectedRegionGroup,
+} from 'src/utilities/formatRegion';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getPrice } from 'src/utilities/pricing/linodes';
@@ -113,8 +116,8 @@ interface State {
   selectedTypeID?: string;
   selectedVPCId?: number;
   selectedfirewallId?: number;
-  showAgreement: boolean;
   showApiAwarenessModal: boolean;
+  showGDPRCheckbox: boolean;
   signedAgreement: boolean;
   tags?: Tag[];
   udfs?: any;
@@ -162,8 +165,8 @@ const defaultState: State = {
   selectedTypeID: undefined,
   selectedVPCId: undefined,
   selectedfirewallId: undefined,
-  showAgreement: false,
   showApiAwarenessModal: false,
+  showGDPRCheckbox: false,
   signedAgreement: false,
   tags: [],
   udfs: undefined,
@@ -225,21 +228,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     // Update search params for Linode Clone
     if (prevProps.location.search !== this.props.history.location.search) {
+      const { showGDPRCheckbox } = getGDPRDetails({
+        agreements: this.props.agreements?.data,
+        profile: this.props.profile.data,
+        regions: this.props.regionsData,
+        selectedRegionId: this.params.regionID,
+      });
+
       this.params = getQueryParamsFromQueryString(
         this.props.location.search
       ) as Record<string, string>;
 
-      const selectedRegionGroup = getSelectedRegionGroup(
-        this.props.regionsData,
-        this.params.regionID
-      );
-
       this.setState({
-        showAgreement: Boolean(
-          !this.props.profile.data?.restricted &&
-            isEURegion(selectedRegionGroup) &&
-            this.props.agreements?.data?.eu_model
-        ),
+        showGDPRCheckbox,
       });
     }
   }
@@ -601,10 +602,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setPassword = (password: string) => this.setState({ password });
 
   setRegionID = (selectedRegionId: string) => {
-    const selectedRegionGroup = getSelectedRegionGroup(
-      this.props.regionsData,
-      selectedRegionId
-    );
+    const { showGDPRCheckbox } = getGDPRDetails({
+      agreements: this.props.agreements?.data,
+      profile: this.props.profile.data,
+      regions: this.props.regionsData,
+      selectedRegionId,
+    });
 
     const disabledClasses = getDisabledClasses(
       selectedRegionId,
@@ -616,11 +619,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       // When the region gets changed, ensure the VPC-related selections are cleared
       selectedSubnetId: undefined,
       selectedVPCId: -1,
-      showAgreement: Boolean(
-        !this.props.profile.data?.restricted &&
-          isEURegion(selectedRegionGroup) &&
-          this.props.agreements?.data?.eu_model
-      ),
+      showGDPRCheckbox,
       vpcIPv4AddressOfLinode: '',
     });
   };
@@ -694,7 +693,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedRegionID: this.params.regionID,
     // These can be passed in as query params
     selectedTypeID: this.params.typeID,
-    showAgreement: Boolean(
+    showGDPRCheckbox: Boolean(
       !this.props.profile.data?.restricted &&
         isEURegion(
           getSelectedRegionGroup(this.props.regionsData, this.params.regionID)

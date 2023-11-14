@@ -1,6 +1,7 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
+import { regionFactory } from 'src/factories';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import {
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
@@ -19,6 +20,7 @@ const props: Props = {
   highAvailabilityPrice: LKE_HA_PRICE,
   pools,
   region: 'us-east',
+  regionsData: regionFactory.buildList(1),
   removePool: jest.fn(),
   showHighAvailability: true,
   submitting: false,
