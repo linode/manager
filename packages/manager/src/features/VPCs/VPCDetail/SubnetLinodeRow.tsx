@@ -1,9 +1,4 @@
-import {
-  APIError,
-  Firewall,
-  Linode,
-  SubnetAssignedLinodeData,
-} from '@linode/api-v4';
+import { APIError, Firewall, Linode } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
@@ -22,8 +17,10 @@ import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
+import {
+  queryKey as linodesQueryKey,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import { VPC_REBOOT_MESSAGE } from '../constants';
@@ -41,7 +38,7 @@ import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
-  linodeInterfaceData: SubnetAssignedLinodeData;
+  linodeId: number;
   subnet?: Subnet;
   subnetId: number;
   vpcId?: number;
@@ -52,12 +49,11 @@ export const SubnetLinodeRow = (props: Props) => {
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
-    linodeInterfaceData,
+    linodeId,
     subnet,
     subnetId,
     vpcId,
   } = props;
-  const { id: linodeId, interfaces } = linodeInterfaceData;
 
   const {
     data: linode,
@@ -77,19 +73,18 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId);
 
-  // If the Linode's status is running, we want to check whether or not its interfaces associated with this subnet have become active so
-  // that we can determine if it needs a reboot or not. So, we need to invalidate the subnets query to get the most up to date information.
+  // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
+  // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
     if (linode && linode.status === 'running') {
       queryClient.invalidateQueries([
-        vpcQueryKey,
-        'vpc',
-        vpcId,
-        subnetQueryKey,
-        'paginated',
+        linodesQueryKey,
+        'linode',
+        linodeId,
+        'configs',
       ]);
     }
-  }, [linode, queryClient, vpcId]);
+  }, [linode, linodeId, queryClient, vpcId]);
 
   if (linodeLoading || !linode) {
     return (
@@ -121,12 +116,18 @@ export const SubnetLinodeRow = (props: Props) => {
   }
 
   const iconStatus = getLinodeIconStatus(linode.status);
+  const isRunning = linode.status === 'running';
+  const isOffline = linode.status === 'stopped' || linode.status === 'offline';
   const isRebootNeeded =
-    iconStatus === 'active' &&
-    interfaces.some(
-      // if one of this Linode's interfaces associated with this subnet is inactive, we show the reboot needed status
-      (linodeInterface) => !linodeInterface.active
+    isRunning &&
+    configs?.some((config) =>
+      config.interfaces.some(
+        (linodeInterface) =>
+          linodeInterface.purpose === 'vpc' && !linodeInterface.active
+      )
     );
+
+  const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
   return (
     <StyledTableRow>
@@ -179,12 +180,15 @@ export const SubnetLinodeRow = (props: Props) => {
             actionText="Reboot"
           />
         )}
-        {iconStatus === 'inactive' && (
+        {showPowerButton && (
           <InlineMenuAction
             onClick={() => {
-              handlePowerActionsLinode(linode, 'Power On');
+              handlePowerActionsLinode(
+                linode,
+                isOffline ? 'Power On' : 'Power Off'
+              );
             }}
-            actionText="Power On"
+            actionText={isOffline ? 'Power On' : 'Power Off'}
           />
         )}
         <InlineMenuAction

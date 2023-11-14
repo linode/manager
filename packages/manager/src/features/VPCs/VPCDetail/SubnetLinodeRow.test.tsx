@@ -1,9 +1,10 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
 import { firewallFactory } from 'src/factories';
+import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -49,10 +50,6 @@ describe('SubnetLinodeRow', () => {
 
     const handleUnassignLinode = jest.fn();
     const handlePowerActionsLinode = jest.fn();
-    const linodeInterfaceData = {
-      id: linodeFactory1.id,
-      interfaces: [{ active: false, id: 1 }],
-    };
 
     const {
       getAllByRole,
@@ -64,7 +61,7 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
-          linodeInterfaceData={linodeInterfaceData}
+          linodeId={linodeFactory1.id}
           subnetId={0}
           vpcId={1}
         />
@@ -99,29 +96,39 @@ describe('SubnetLinodeRow', () => {
   });
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+      active: true,
+    });
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
         return res(ctx.json(linodeFactory1));
       }),
+      rest.get('*/linode/instances/:id/firewalls', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            makeResourcePage(
+              firewallFactory.buildList(1, { label: 'mock-firewall-0' })
+            )
+          )
+        );
+      }),
       rest.get('*/instances/*/configs', async (req, res, ctx) => {
-        const configs = linodeConfigFactory.buildList(3);
-        return res(ctx.json(makeResourcePage(configs)));
+        const configs = linodeConfigFactory.build({
+          interfaces: [vpcInterface],
+        });
+        return res(ctx.json(makeResourcePage([configs])));
       })
     );
 
     const handleUnassignLinode = jest.fn();
     const handlePowerActionsLinode = jest.fn();
-    const linodeInterfaceData = {
-      id: linodeFactory1.id,
-      interfaces: [{ active: true, id: 1 }],
-    };
 
-    const { getAllByRole, getAllByText, getByTestId } = renderWithTheme(
+    const { getAllByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
-          linodeInterfaceData={linodeInterfaceData}
+          linodeId={linodeFactory1.id}
           subnetId={0}
           vpcId={1}
         />
@@ -142,10 +149,13 @@ describe('SubnetLinodeRow', () => {
       `/linodes/${linodeFactory1.id}`
     );
 
-    getAllByText('10.0.0.0');
     const buttons = getAllByRole('button');
-    expect(buttons.length).toEqual(1);
-    const unassignLinodeButton = buttons[0];
+    expect(buttons.length).toEqual(2);
+    const powerOffButton = buttons[0];
+    expect(powerOffButton).toHaveTextContent('Power Off');
+    fireEvent.click(powerOffButton);
+    expect(handlePowerActionsLinode).toHaveBeenCalled();
+    const unassignLinodeButton = buttons[1];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     fireEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
