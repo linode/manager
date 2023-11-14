@@ -11,7 +11,15 @@ import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionType } from './types';
 
-const mockPlan: PlanSelectionType = planSelectionTypeFactory.build();
+const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
+  heading: 'Dedicated 20 GB',
+  subHeadings: [
+    '$10/mo ($0.015/hr)',
+    '1 CPU, 50 GB Storage, 2 GB RAM',
+    '2 TB Transfer',
+    '40 Gbps In / 2 Gbps Out',
+  ],
+});
 
 describe('PlanSelection (table, desktop)', () => {
   beforeAll(() => {
@@ -22,10 +30,10 @@ describe('PlanSelection (table, desktop)', () => {
     const { container } = renderWithTheme(
       wrapWithTableBody(
         <PlanSelection
-          flags={{ dcSpecificPricing: false }}
           idx={0}
           isCreate={true}
           onSelect={() => vi.fn()}
+          selectedRegionId={'us-east'}
           type={mockPlan}
         />
       )
@@ -33,7 +41,7 @@ describe('PlanSelection (table, desktop)', () => {
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
     expect(container.querySelector('[data-qa-plan-name]')).toHaveTextContent(
-      'Dedicated 20 GB'
+      mockPlan.heading
     );
     expect(container.querySelector('[data-qa-monthly]')).toHaveTextContent(
       '$10'
@@ -45,6 +53,30 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-cpu]')).toHaveTextContent('8');
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
+    );
+  });
+
+  it('renders the table row with unknown prices if a region is not selected', () => {
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          idx={0}
+          isCreate={true}
+          onSelect={() => jest.fn()}
+          type={mockPlan}
+        />
+      )
+    );
+
+    expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
+    expect(container.querySelector('[data-qa-plan-name]')).toHaveTextContent(
+      mockPlan.heading
+    );
+    expect(container.querySelector('[data-qa-monthly]')).toHaveTextContent(
+      '$--.--'
+    );
+    expect(container.querySelector('[data-qa-hourly]')).toHaveTextContent(
+      '$--.--'
     );
   });
 
@@ -63,11 +95,10 @@ describe('PlanSelection (table, desktop)', () => {
     expect(mockOnSelect).toHaveBeenCalled();
   });
 
-  it('shows the dynamic prices with dcSpecificPricing ON', () => {
+  it('shows the dynamic prices for a region with DC-specific pricing', () => {
     const { container } = renderWithTheme(
       wrapWithTableBody(
         <PlanSelection
-          flags={{ dcSpecificPricing: true }}
           idx={0}
           onSelect={() => {}}
           selectedRegionId={'br-gru'}
@@ -78,7 +109,7 @@ describe('PlanSelection (table, desktop)', () => {
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
     expect(container.querySelector('[data-qa-plan-name]')).toHaveTextContent(
-      'Dedicated 20 GB'
+      mockPlan.heading
     );
     expect(container.querySelector('[data-qa-monthly]')).toHaveTextContent(
       '$14'
@@ -102,9 +133,9 @@ describe('PlanSelection (card, mobile)', () => {
   it('renders the table row', () => {
     const { container } = renderWithTheme(
       <PlanSelection
-        flags={{ dcSpecificPricing: false }}
         idx={0}
         onSelect={() => {}}
+        selectedRegionId={'us-east'}
         type={mockPlan}
       />
     );
@@ -114,7 +145,7 @@ describe('PlanSelection (card, mobile)', () => {
     ).toBeInTheDocument();
     expect(
       container.querySelector('[data-qa-select-card-heading]')
-    ).toHaveTextContent('Dedicated 20 GB');
+    ).toHaveTextContent(mockPlan.heading);
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
     ).toHaveTextContent('$10/mo ($0.015/hr)');
@@ -129,6 +160,22 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
   });
 
+  it('renders the table row with unknown prices if a region is not selected', () => {
+    const { container } = renderWithTheme(
+      <PlanSelection idx={0} onSelect={() => {}} type={mockPlan} />
+    );
+
+    expect(
+      container.querySelector('[data-qa-selection-card]')
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-qa-select-card-heading]')
+    ).toHaveTextContent(mockPlan.heading);
+    expect(
+      container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
+    ).toHaveTextContent('$--.--/mo ($--.--/hr)');
+  });
+
   it('selects the plan when clicked', () => {
     const mockOnSelect = vi.fn();
 
@@ -141,10 +188,9 @@ describe('PlanSelection (card, mobile)', () => {
     expect(mockOnSelect).toHaveBeenCalled();
   });
 
-  it('shows the dynamic prices with dcSpecificPricing ON', () => {
+  it('shows the dynamic prices for a region with DC-specific pricing', () => {
     const { container } = renderWithTheme(
       <PlanSelection
-        flags={{ dcSpecificPricing: true }}
         idx={0}
         onSelect={() => {}}
         selectedRegionId={'br-gru'}
@@ -157,7 +203,7 @@ describe('PlanSelection (card, mobile)', () => {
     ).toBeInTheDocument();
     expect(
       container.querySelector('[data-qa-select-card-heading]')
-    ).toHaveTextContent('Dedicated 20 GB');
+    ).toHaveTextContent(mockPlan.heading);
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
     ).toHaveTextContent('$14.40/mo ($0.021/hr)');

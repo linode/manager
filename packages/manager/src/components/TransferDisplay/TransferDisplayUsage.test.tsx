@@ -22,12 +22,6 @@ const transferDisplayUsageProps: TransferDisplayUsageProps = {
   used: mockTransferData.used,
 };
 
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    dcSpecificPricing: true,
-  }),
-}));
-
 describe('TransferDisplayDialogUsage', () => {
   it('renders general transfer & region transfer progress bars', async () => {
     const { findByText, getAllByRole, getByTestId } = renderWithTheme(

@@ -74,7 +74,7 @@ export const getPlanSelectionsByPlanType = <
 
 export const determineInitialPlanCategoryTab = <T>(
   types: (ExtendedType | PlanSelectionType)[],
-  selectedID?: string,
+  selectedId?: string,
   currentPlanHeading?: string
 ) => {
   const plans = getPlanSelectionsByPlanType(types);
@@ -87,7 +87,7 @@ export const determineInitialPlanCategoryTab = <T>(
   // (if there is one).
   const _selectedTypeClass =
     types.find(
-      (type) => type.id === selectedID || type.heading === currentPlanHeading
+      (type) => type.id === selectedId || type.heading === currentPlanHeading
     )?.class ?? 'dedicated';
 
   // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").

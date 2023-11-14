@@ -1,10 +1,6 @@
 import React from 'react';
-
-import { linodeTypeFactory, regionFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { SelectRegionPanel } from './SelectRegionPanel';
 
 const pricingMocks = vi.hoisted(() => ({
@@ -26,12 +22,6 @@ vi.mock('src/utilities/queryParams', () => ({
   getQueryParamsFromQueryString: queryParamMocks.getQueryParamsFromQueryString,
 }));
 
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    dcSpecificPricing: true,
-  }),
-}));
-
 const createPath = '/linodes/create';
 
 describe('SelectRegionPanel in Create Flow', () => {
@@ -39,23 +29,7 @@ describe('SelectRegionPanel in Create Flow', () => {
     pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
   });
 
-  it('should render a notice when the selected region has unique pricing and the flag is on', async () => {
-    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
-    server.use(
-      rest.get('*/linode/types', (req, res, ctx) => {
-        const types = linodeTypeFactory.buildList(1, {
-          region_prices: [
-            {
-              hourly: 2,
-              id: 'id-cgk',
-              monthly: 2,
-            },
-          ],
-        });
-        return res(ctx.json(makeResourcePage(types)));
-      })
-    );
-
+  it('should render a notice when the selected region has unique pricing', async () => {
     const regions = regionFactory.buildList(1, {
       id: 'id-cgk',
       label: 'Jakarta, ID',
@@ -65,12 +39,11 @@ describe('SelectRegionPanel in Create Flow', () => {
       <SelectRegionPanel
         handleSelection={vi.fn()}
         regions={regions}
-        selectedID="id-cgk"
+        selectedId="id-cgk"
       />,
 
       {
         MemoryRouter: { initialEntries: [createPath] },
-        flags: { dcSpecificPricing: true },
       }
     );
 
@@ -127,9 +100,10 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     expect(
       container.querySelector('[data-qa-textfield-label]')
     ).toHaveTextContent('Region');
-    expect(
-      container.querySelector('[data-qa-select-placeholder]')
-    ).toHaveTextContent('Select a Region');
+    expect(container.querySelector('[role="combobox"]')).toHaveAttribute(
+      'placeholder',
+      'Select a Region'
+    );
   });
 
   it('displays no notice when cloning to the same region', () => {
@@ -137,7 +111,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       false
     );
     const { queryAllByRole } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="us-east" />,
+      <SelectRegionPanel {...mockedProps} selectedId="us-east" />,
       {
         MemoryRouter: {
           initialEntries: [createPath],
@@ -155,7 +129,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     );
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="us-west" />,
+      <SelectRegionPanel {...mockedProps} selectedId="us-west" />,
       {
         MemoryRouter: {
           initialEntries: [createPath],
@@ -175,7 +149,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />,
+      <SelectRegionPanel {...mockedProps} selectedId="br-gru" />,
       {
         MemoryRouter: {
           initialEntries: [createPath],

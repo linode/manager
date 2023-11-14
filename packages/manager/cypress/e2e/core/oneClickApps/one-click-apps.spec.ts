@@ -214,9 +214,7 @@ describe('OneClick Apps (OCA)', () => {
     });
 
     // Choose a region
-    cy.get(`[data-qa-enhanced-select="Select a Region"]`).within(() => {
-      containsClick('Select a Region').type(`${region.id}{enter}`);
-    });
+    ui.regionSelect.find().click().type(`${region.id}{enter}`);
 
     // Choose a Linode plan
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')

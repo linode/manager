@@ -17,7 +17,7 @@ describe('VPC Create Drawer', () => {
 
     getAllByText('Region');
     getAllByText('VPC Label');
-    getAllByText('Select a Region');
+    getAllByText('Region');
     getAllByText('Description');
     getAllByText('Subnets');
     getAllByText('Subnet Label');
