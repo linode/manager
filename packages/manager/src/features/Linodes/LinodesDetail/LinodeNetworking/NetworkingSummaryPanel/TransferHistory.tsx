@@ -1,12 +1,13 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { Theme, styled, useTheme } from '@mui/material/styles';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { IconButton } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { Box } from 'src/components/Box';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
@@ -200,40 +201,31 @@ export const TransferHistory = React.memo((props: Props) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <StyledButton
+          <IconButton
             aria-label={`Show Network Transfer History for ${decrementLabel}`}
+            color="primary"
+            disableRipple
             disabled={monthOffset === maxMonthOffset}
             onClick={decrementOffset}
+            sx={{ padding: 0 }}
           >
-            <ArrowBackIosIcon
-              sx={{
-                ...(monthOffset === minMonthOffset
-                  ? sxArrowIconDisabled(theme)
-                  : {}),
-                fontSize: '1rem',
-              }}
-            />
-          </StyledButton>
+            <ArrowBackIosIcon sx={{ fontSize: '1rem' }} />
+          </IconButton>
           {/* Give this a min-width so it doesn't change widths between displaying
           the month and "Last 30 Days" */}
           <span style={{ minWidth: 80, textAlign: 'center' }}>
             <Typography>{humanizedDate}</Typography>
           </span>
-          <StyledButton
+          <IconButton
             aria-label={`Show Network Transfer History for ${incrementLabel}`}
+            color="primary"
+            disableRipple
             disabled={monthOffset === minMonthOffset}
             onClick={incrementOffset}
+            sx={{ padding: 0 }}
           >
-            <ArrowBackIosIcon
-              sx={{
-                ...(monthOffset === minMonthOffset
-                  ? sxArrowIconDisabled(theme)
-                  : {}),
-                fontSize: '1rem',
-                transform: 'rotate(180deg)',
-              }}
-            />
-          </StyledButton>
+            <ArrowForwardIosIcon sx={{ fontSize: '1rem' }} />
+          </IconButton>
         </Box>
       </Box>
       {renderStatsGraph()}
@@ -241,20 +233,11 @@ export const TransferHistory = React.memo((props: Props) => {
   );
 });
 
-const sxArrowIconDisabled = (theme: Theme) => ({
-  cursor: 'not-allowed',
-  fill: theme.color.grey1,
-});
-
 const StyledDiv = styled('div', { label: 'StyledDiv' })({
   alignItems: 'center',
   display: 'flex',
   height: 100,
   justifyContent: 'center',
-});
-
-const StyledButton = styled(StyledLinkButton, { label: 'StyledButton' })({
-  display: 'flex',
 });
 
 // =============================================================================
