@@ -23,7 +23,7 @@ export const useAdobeAnalytics = () => {
           // Log an error; if the promise resolved, the _satellite object and 3 Adobe scripts should be present in the DOM.
           if (
             data.status !== 'ready' ||
-            !(window as any)._satellite ||
+            !window._satellite ||
             adobeScriptTags.length !== NUM_ADOBE_SCRIPTS
           ) {
             reportException(
@@ -43,11 +43,13 @@ export const useAdobeAnalytics = () => {
      */
     return history.listen(({ pathname }) => {
       // Send Adobe Analytics page view events
-      if ((window as any)._satellite) {
-        (window as any)._satellite.track('page view', {
+      if (window._satellite) {
+        window._satellite.track('page view', {
           url: pathname,
         });
       }
     });
   }, [history]);
+
+  return null;
 };

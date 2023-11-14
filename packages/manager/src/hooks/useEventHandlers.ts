@@ -95,4 +95,6 @@ export const useEventHandlers = () => {
       subscriptions.forEach((sub) => sub.unsubscribe());
     };
   }, []);
+
+  return null;
 };

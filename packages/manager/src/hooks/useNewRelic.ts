@@ -15,4 +15,6 @@ export const useNewRelic = () => {
       loadScript('/new-relic.js');
     }
   }, []);
+
+  return null;
 };

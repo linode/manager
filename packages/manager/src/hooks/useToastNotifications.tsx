@@ -11,7 +11,7 @@ import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
   event.secondary_entity?.label ?? '';
-const formatLink = (text: string, link: string, handleClick?: any) => {
+const formatLink = (text: string, link: string, handleClick?: () => void) => {
   return (
     <Link onClick={handleClick} to={link}>
       {text}
@@ -146,7 +146,7 @@ const toasts: Toasts = {
  * Subscribes to incoming events and displays a toast notification if
  * one is defined in `toasts`.
  */
-export const useToastNotifications = () => {
+export const useToastNotifications = (): null => {
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
