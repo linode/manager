@@ -5,15 +5,11 @@ import { Box } from 'src/components/Box';
 
 import Select from './Select';
 
+import type { Item } from './Select';
 import type { BaseSelectProps } from './Select';
 import type { Meta, StoryObj } from '@storybook/react';
 
-interface Item {
-  label: string;
-  value: string;
-}
-
-export const Default: StoryObj<BaseSelectProps<Item, boolean, boolean>> = {
+export const Default: StoryObj<BaseSelectProps<Item, boolean>> = {
   render: (args) => {
     const SelectWrapper = () => {
       const { isMulti } = args;
