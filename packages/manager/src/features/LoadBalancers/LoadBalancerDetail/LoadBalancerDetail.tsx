@@ -7,7 +7,9 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Tabs } from 'src/components/ReachTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -57,7 +59,7 @@ export const LoadBalancerDetail = () => {
 
   const id = Number(loadbalancerId);
 
-  const { data: loadbalancer } = useLoadBalancerQuery(id);
+  const { data: loadbalancer, isLoading, error } = useLoadBalancerQuery(id);
 
   const tabs = [
     {
@@ -89,6 +91,14 @@ export const LoadBalancerDetail = () => {
   const tabIndex = tabs.findIndex((tab) =>
     location.pathname.startsWith(`${url}/${tab.path}`)
   );
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
 
   return (
     <>
