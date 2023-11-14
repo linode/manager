@@ -213,9 +213,8 @@ describe('AddonsPanel', () => {
     ).toBe(true);
   });
 
-  it('Should display backups price when Backups checkbox is checked', () => {
+  it('Should display base backups price when Backups checkbox is checked', () => {
     const backupsMonthlyPrice = getMonthlyBackupsPrice({
-      flags: { dcSpecificPricing: false },
       region: 'us-east',
       type,
     });
@@ -235,9 +234,8 @@ describe('AddonsPanel', () => {
     expect(getByText(/\$2.50/)).toBeInTheDocument();
   });
 
-  it('Should display DC-specific backups price when Backups checkbox is checked with the dcSpecificPricing feature flag on', () => {
+  it('Should display DC-specific backups price for region with special pricing when Backups checkbox is checked', () => {
     const backupsMonthlyPrice = getMonthlyBackupsPrice({
-      flags: { dcSpecificPricing: true },
       region: 'id-cgk',
       type,
     });
@@ -248,10 +246,7 @@ describe('AddonsPanel', () => {
     };
 
     const { getByTestId, getByText } = renderWithTheme(
-      <AddonsPanel {...addOnProps} />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <AddonsPanel {...addOnProps} />
     );
 
     const backupsCheckbox = getByTestId('backups');

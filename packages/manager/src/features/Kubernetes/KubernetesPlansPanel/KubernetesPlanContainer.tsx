@@ -9,7 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -50,10 +49,7 @@ export const KubernetesPlanContainer = (
     updatePlanCount,
   } = props;
 
-  const flags = useFlags();
-
-  const shouldDisplayNoRegionSelectedMessage =
-    flags.dcSpecificPricing && !selectedRegionID;
+  const shouldDisplayNoRegionSelectedMessage = !selectedRegionID;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => (

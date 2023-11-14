@@ -349,7 +349,6 @@ export class LinodeCreate extends React.PureComponent<
     const backupsMonthlyPrice:
       | PriceObject['monthly']
       | undefined = getMonthlyBackupsPrice({
-      flags: this.props.flags,
       region: selectedRegionID,
       type,
     });

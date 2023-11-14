@@ -4,7 +4,6 @@ import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
@@ -55,14 +54,12 @@ export const ConfigureForm = React.memo((props: Props) => {
     linodeType || '',
     Boolean(linodeType)
   );
-  const flags = useFlags();
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
   const shouldDisplayPriceComparison = Boolean(
-    flags.dcSpecificPricing &&
-      selectedRegion &&
+    selectedRegion &&
       isLinodeTypeDifferentPriceInSelectedRegion({
         regionA: currentRegion,
         regionB: selectedRegion,

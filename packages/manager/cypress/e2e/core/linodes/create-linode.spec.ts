@@ -20,16 +20,16 @@ import {
 } from 'support/constants/dc-specific-pricing';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 
 import type { Region } from '@linode/api-v4';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -76,7 +76,7 @@ describe('create linode', () => {
 
     cy.visitWithLogin('linodes/create');
 
-    cy.wait(['@getFeatureFlags', '@getRegions']);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getRegions']);
 
     // Confirm that region select dropdown is visible and interactive.
     ui.regionSelect.find().click();
@@ -235,11 +235,6 @@ describe('create linode', () => {
       (regionPrice) => regionPrice.id === newRegion.id
     );
 
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Mock requests to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
@@ -247,7 +242,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getLinodeTypes']);
+    cy.wait(['@getLinodeTypes']);
 
     mockCreateLinode(mockLinode).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');

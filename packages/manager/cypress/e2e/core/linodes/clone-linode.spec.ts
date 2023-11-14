@@ -1,10 +1,6 @@
 import { Linode, createLinode } from '@linode/api-v4';
 import { linodeFactory, createLinodeRequestFactory } from '@src/factories';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import {
   interceptCloneLinode,
   mockGetLinodeDetails,
   mockGetLinodes,
@@ -12,7 +8,6 @@ import {
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   dcPricingRegionNotice,
   dcPricingMockLinodeTypes,
@@ -57,12 +52,6 @@ describe('clone linode', () => {
     });
 
     const newLinodeLabel = `${linodePayload.label}-clone`;
-
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks once DC pricing is live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
       const linodeRegion = getRegionById(linodePayload.region);
@@ -131,10 +120,6 @@ describe('clone linode', () => {
 
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock requests to get all Linode types, and to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
@@ -142,13 +127,7 @@ describe('clone linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
-    cy.wait([
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getLinode',
-      '@getLinodes',
-      '@getLinodeTypes',
-    ]);
+    cy.wait(['@getLinode', '@getLinodes', '@getLinodeTypes']);
 
     cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
 

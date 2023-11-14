@@ -182,7 +182,6 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
   describe('getDynamicDCNetworkTransferData', () => {
     it('should return quota and used network transfer data for a given data set', () => {
       const mockData = {
-        dcSpecificPricingFlag: true,
         networkTransferData: {
           billable: 0,
           quota: 1000,
@@ -202,7 +201,6 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
 
     it('should return quota and used network transfer data for a Linode with global data and valid data', () => {
       const mockData = {
-        dcSpecificPricingFlag: true,
         networkTransferData: {
           billable: 0,
           quota: 1000,
@@ -218,7 +216,6 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
 
     it('should return default values when data is missing', () => {
       const mockData = {
-        dcSpecificPricingFlag: true,
         regionId: null,
       };
 
@@ -229,7 +226,6 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
 
     it('should return default values when regionId is missing', () => {
       const mockData = {
-        dcSpecificPricingFlag: true,
         networkTransferData: {
           quota: 1000,
           region_transfers: [

@@ -15,7 +15,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -35,7 +34,6 @@ export const LinodeBackups = () => {
   const id = Number(linodeId);
 
   const history = useHistory();
-  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -85,7 +83,6 @@ export const LinodeBackups = () => {
   const backupsMonthlyPrice:
     | PriceObject['monthly']
     | undefined = getMonthlyBackupsPrice({
-    flags,
     region: linode?.region,
     type,
   });
