@@ -7,7 +7,6 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -53,12 +52,9 @@ export const CreateBucketDrawer = (props: Props) => {
   const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
     false
   );
-
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
   );
-
-  const flags = useFlags();
 
   const formik = useFormik({
     initialValues: {
@@ -156,7 +152,7 @@ export const CreateBucketDrawer = (props: Props) => {
           required
           selectedCluster={formik.values.cluster}
         />
-        {flags.objDcSpecificPricing && clusterRegion?.[0]?.id && (
+        {clusterRegion?.[0]?.id && (
           <OveragePricing regionId={clusterRegion?.[0]?.id} />
         )}
         {showGDPRCheckbox ? (

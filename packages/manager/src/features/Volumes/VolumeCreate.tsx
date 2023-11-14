@@ -20,7 +20,6 @@ import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -105,8 +104,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const VolumeCreate = () => {
   const theme = useTheme();
   const classes = useStyles();
-  const flags = useFlags();
-  const { dcSpecificPricing } = flags;
   const history = useHistory();
 
   const { data: profile } = useProfile();
@@ -255,19 +252,11 @@ export const VolumeCreate = () => {
               data-qa-volume-size-help
               variant="body1"
             >
-              {dcSpecificPricing ? (
-                <span>
-                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                  size. Up to to eight Volumes can be attached to a single
-                  Linode. Select a region to see cost per GB.
-                </span>
-              ) : (
-                <span>
-                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                  size and costs $0.10/GB per month. <br />
-                  Up to eight volumes can be attached to a single Linode.
-                </span>
-              )}
+              <span>
+                A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
+                size. Up to to eight Volumes can be attached to a single Linode.
+                Select a region to see cost per GB.
+              </span>
             </Typography>
             {error && (
               <Notice
