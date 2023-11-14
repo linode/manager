@@ -1,0 +1,58 @@
+name: Coverage Comment
+
+on:
+  workflow_run:
+    workflows: ["Code Coverage"]
+    types:
+      - completed
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download code coverage report from base branch
+        uses: actions/download-artifact@v3
+        with:
+          name: ref_code_coverage
+
+      - name: Download current branch coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: current_code_coverage
+
+      - name: Update Coverage Badge
+        run: yarn coverage:update
+  
+      - name: Generate Comment with Code Coverage
+        run: |
+          base_coverage=$(cat ref_code_coverage.txt)
+          current_coverage=$(cat current_code_coverage.txt)
+          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
+            icon="❌" # Error icon
+          else
+            icon="✅" # Check mark icon
+          fi
+          comment_message="$icon **Coverage Report**\nBase Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
+          echo "Coverage: $comment_message"
+          echo "$comment_message" > updated_comment.txt
+      
+      - name: Check Coverage
+        run: |
+          base_coverage=$(cat ref_code_coverage.txt)
+          current_coverage=$(cat current_code_coverage.txt)
+          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
+            echo "Error: Current coverage is lower than base coverage"
+            exit 1 # Fail the check
+          fi
+
+      - name: Post Comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          message: |
+            $(cat updated_comment.txt)
+          

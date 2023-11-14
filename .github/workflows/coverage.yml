@@ -75,20 +75,3 @@ jobs:
           echo "Coverage: $comment_message"
           echo "$comment_message" > updated_comment.txt
 
-      - name: Update Coverage Badge
-        run: yarn coverage:update
-
-      - name: Check Coverage
-        run: |
-          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
-            echo "Error: Current coverage is lower than base coverage"
-            exit 1 # Fail the check
-          fi
-
-      - name: Post Comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          proxy-url: https://bos-lhvl70.bos01.corp.akamai.com
-          message: |
-            $(cat updated_comment.txt)
-
