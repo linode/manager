@@ -207,7 +207,7 @@ export const TransferHistory = React.memo((props: Props) => {
           >
             <ArrowBackIosIcon
               sx={{
-                ...(monthOffset === minMonthOffset
+                ...(monthOffset === maxMonthOffset
                   ? sxArrowIconDisabled(theme)
                   : {}),
                 fontSize: '1rem',
