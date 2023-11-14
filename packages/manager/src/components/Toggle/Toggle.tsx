@@ -5,12 +5,9 @@ import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
-/**
- * The **Toggle** component extends the [Material UI Switch props](https://v4.mui.com/api/switch/#props).
- */
 export interface ToggleProps extends SwitchProps {
   /**
-   * Makes a tooltip interactive (meaning the tooltip will not close when the user hovers over the tooltip before the `leaveDelay` is expired.)
+   * Makes a tooltip interactive (meaning the tooltip will not close when the user hovers over the tooltip)
    */
   interactive?: boolean;
   /**
@@ -26,6 +23,7 @@ export interface ToggleProps extends SwitchProps {
  * - Toggles should take immediate effect and should not require the user to click Save or Submit.
  * - Keep labels for toggles short and direct.
  * - Toggle switches should be used instead of radio buttons if each item in a set can be independently controlled.
+ * - The Toggle component extends the [Material UI Switch props](https://v4.mui.com/api/switch/#props).
  *
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
