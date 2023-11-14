@@ -50,7 +50,7 @@ import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
 import {
-  queryKey as accountAgreementsQueryKey,
+  accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import { simpleMutationHandlers } from 'src/queries/base';
@@ -63,6 +63,7 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { getSelectedRegionGroup } from 'src/utilities/formatRegion';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getPrice } from 'src/utilities/pricing/linodes';
@@ -227,6 +228,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       this.params = getQueryParamsFromQueryString(
         this.props.location.search
       ) as Record<string, string>;
+
+      const selectedRegionGroup = getSelectedRegionGroup(
+        this.props.regionsData,
+        this.params.regionID
+      );
+
+      this.setState({
+        showAgreement: Boolean(
+          !this.props.profile.data?.restricted &&
+            isEURegion(selectedRegionGroup) &&
+            this.props.agreements?.data?.eu_model
+        ),
+      });
     }
   }
 
@@ -282,6 +296,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             regionDisplayInfo={this.getRegionInfo()}
             regionsData={regionsData}
             resetCreationState={this.clearCreationState}
+            selectedRegionID={this.state.selectedRegionID}
             selectedUDFs={selectedUDFs}
             selectedVPCId={this.state.selectedVPCId}
             setAuthorizedUsers={this.setAuthorizedUsers}
@@ -585,18 +600,26 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setPassword = (password: string) => this.setState({ password });
 
-  setRegionID = (id: string) => {
-    const disabledClasses = getDisabledClasses(id, this.props.regionsData);
+  setRegionID = (selectedRegionId: string) => {
+    const selectedRegionGroup = getSelectedRegionGroup(
+      this.props.regionsData,
+      selectedRegionId
+    );
+
+    const disabledClasses = getDisabledClasses(
+      selectedRegionId,
+      this.props.regionsData
+    );
     this.setState({
       disabledClasses,
-      selectedRegionID: id,
+      selectedRegionID: selectedRegionId,
       // When the region gets changed, ensure the VPC-related selections are cleared
       selectedSubnetId: undefined,
       selectedVPCId: -1,
       showAgreement: Boolean(
         !this.props.profile.data?.restricted &&
-          isEURegion(id) &&
-          !this.props.agreements?.data?.eu_model
+          isEURegion(selectedRegionGroup) &&
+          this.props.agreements?.data?.eu_model
       ),
       vpcIPv4AddressOfLinode: '',
     });
@@ -673,8 +696,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     showAgreement: Boolean(
       !this.props.profile.data?.restricted &&
-        isEURegion(this.params.regionID) &&
-        !this.props.agreements?.data?.eu_model
+        isEURegion(
+          getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
+        ) &&
+        this.props.agreements?.data?.eu_model
     ),
     signedAgreement: false,
   };

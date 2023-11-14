@@ -19,5 +19,26 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
     : 'Other';
 };
 
-export const isEURegion = (region: null | string | undefined) =>
-  region?.match('^eu');
+export const getSelectedRegion = (
+  regions: Region[],
+  selectedRegionId: string
+): Region | undefined => {
+  return regions.find((thisRegion) => selectedRegionId === thisRegion.id);
+};
+
+export const getSelectedRegionGroup = (
+  regions: Region[],
+  selectedRegionId: string
+): string | undefined => {
+  const selectedRegion = getSelectedRegion(regions, selectedRegionId);
+
+  if (!selectedRegion) {
+    return undefined;
+  }
+
+  return getRegionCountryGroup(selectedRegion);
+};
+
+export const isEURegion = (regionContinent: string | undefined): boolean => {
+  return regionContinent === CONTINENT_CODE_TO_CONTINENT.EU;
+};
