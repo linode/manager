@@ -46,4 +46,4 @@ ENV CI=1
 ENV NO_COLOR=1
 ENV HOME=/home/node/
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
-ENTRYPOINT yarn cy:e2e
+ENTRYPOINT yarn cy:ci
