@@ -112,7 +112,7 @@ export const CreateBucketDrawer = (props: Props) => {
     agreements,
     profile,
     regions,
-    selectedRegionId: clusterRegion?.[0].id ?? '',
+    selectedRegionId: clusterRegion?.[0]?.id ?? '',
   });
 
   const errorMap = getErrorMap(['label', 'cluster'], error);
