@@ -1,3 +1,12 @@
+## [2023-11-13] - v0.105.0
+
+
+### Upcoming Features:
+
+- Add `UpdateConfigurationPayload` ([#9853](https://github.com/linode/manager/pull/9853))
+- Add `getAccountAvailabilities` and `getAccountAvailability` methods for DC Get Well initiative ([#9860](https://github.com/linode/manager/pull/9860))
+- Add `getRegionAvailabilities` and `getRegionAvailability` endpoints and related types for Sold Out Plans initiative ([#9878](https://github.com/linode/manager/pull/9878))
+
 ## [2023-10-30] - v0.104.0
 
 ### Upcoming Features:

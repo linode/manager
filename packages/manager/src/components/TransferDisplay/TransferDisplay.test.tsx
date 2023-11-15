@@ -27,12 +27,6 @@ const mockServerQuery = (data: TransferDataOptions) => {
   );
 };
 
-jest.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    dcSpecificPricing: true,
-  }),
-}));
-
 describe('TransferDisplay', () => {
   it('display the loading state', async () => {
     mockServerQuery(undefined);

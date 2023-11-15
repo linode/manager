@@ -72,10 +72,7 @@ describe('ConfigureForm component with price comparison', () => {
 
   it('should render the initial ConfigureForm fields', () => {
     const { getByLabelText, getByText, queryByText } = renderWithTheme(
-      <ConfigureForm {...props} />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <ConfigureForm {...props} />
     );
 
     // Test whether the initial component renders the expected content
@@ -93,10 +90,7 @@ describe('ConfigureForm component with price comparison', () => {
 
   it("shouldn't render the MigrationPricing component when the current region is selected", async () => {
     const { queryByText } = renderWithTheme(
-      <ConfigureForm {...props} selectedRegion="us-east" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <ConfigureForm {...props} selectedRegion="us-east" />
     );
 
     await waitFor(() => {
@@ -107,10 +101,7 @@ describe('ConfigureForm component with price comparison', () => {
 
   it("shouldn't render the MigrationPricing component when a region without price increase is selected", async () => {
     const { queryByText } = renderWithTheme(
-      <ConfigureForm {...props} selectedRegion="us-west" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <ConfigureForm {...props} selectedRegion="us-west" />
     );
 
     await waitFor(() => {
@@ -121,10 +112,7 @@ describe('ConfigureForm component with price comparison', () => {
 
   it('should render the MigrationPricing component when a region with price increase is selected', async () => {
     const { getByTestId } = renderWithTheme(
-      <ConfigureForm {...props} selectedRegion="br-gru" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <ConfigureForm {...props} selectedRegion="br-gru" />
     );
 
     await waitFor(() => {
@@ -139,10 +127,7 @@ describe('ConfigureForm component with price comparison', () => {
         {...props}
         currentRegion="br-gru"
         selectedRegion="us-east"
-      />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      />
     );
 
     await waitFor(() => {
@@ -153,10 +138,7 @@ describe('ConfigureForm component with price comparison', () => {
 
   it('should provide a proper price comparison', async () => {
     const { getByTestId } = renderWithTheme(
-      <ConfigureForm {...props} selectedRegion="br-gru" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <ConfigureForm {...props} selectedRegion="br-gru" />
     );
 
     await waitFor(() => {
@@ -171,14 +153,7 @@ describe('ConfigureForm component with price comparison', () => {
 
   it("shouldn't render the Backup pricing comparison if backups are disabled", async () => {
     const { getByTestId } = renderWithTheme(
-      <ConfigureForm
-        {...props}
-        backupEnabled={false}
-        selectedRegion="br-gru"
-      />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <ConfigureForm {...props} backupEnabled={false} selectedRegion="br-gru" />
     );
 
     await waitFor(() => {
@@ -188,17 +163,6 @@ describe('ConfigureForm component with price comparison', () => {
       expect(getByTestId(newPricePanel)).toHaveTextContent(
         '$14.40/month, $0.021/hour'
       );
-    });
-  });
-
-  it("shouldn't render the MigrationPricingComponent if the flag is disabled", async () => {
-    const { queryByText } = renderWithTheme(<ConfigureForm {...props} />, {
-      flags: { dcSpecificPricing: false },
-    });
-
-    await waitFor(() => {
-      expect(queryByText('Current Price')).not.toBeInTheDocument();
-      expect(queryByText('New Price')).not.toBeInTheDocument();
     });
   });
 });

@@ -13,10 +13,6 @@ import {
   mockUpdateAccountSettings,
 } from 'support/intercepts/account';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import {
   mockGetLinodes,
   mockEnableLinodeBackups,
   mockGetLinodeType,
@@ -27,7 +23,6 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
@@ -265,13 +260,33 @@ describe('"Enable Linode Backups" banner', () => {
    * - Confirms that backup auto-enrollment settings are shown when auto-enrollment is disabled.
    * - Confirms that backups drawer lists each Linode which does not have backups enabled.
    * - Confirms that backups drawer does not list Linodes which already have backups enabled.
-   * - Confirms that "Region" column is not shown when DC specific pricing is disabled.
    * - Confirms toast notification appears upon updating Linode backup settings.
    */
   it('can enable Linode backups via "Enable Linode Backups" notice', () => {
-    const mockLinodesNoBackups = linodeFactory.buildList(3, {
-      backups: { enabled: false },
-    });
+    const mockLinodesNoBackups = [
+      // `us-central` has a normal pricing structure, whereas `us-east` and `us-west`
+      // are mocked to have special pricing structures.
+      //
+      // See `dcPricingMockLinodeTypes` exported from `support/constants/dc-specific-pricing.ts`.
+      linodeFactory.build({
+        label: randomLabel(),
+        region: 'us-east',
+        backups: { enabled: false },
+        type: dcPricingMockLinodeTypesForBackups[0].id,
+      }),
+      linodeFactory.build({
+        label: randomLabel(),
+        region: 'us-west',
+        backups: { enabled: false },
+        type: dcPricingMockLinodeTypesForBackups[1].id,
+      }),
+      linodeFactory.build({
+        label: randomLabel(),
+        region: 'us-central',
+        backups: { enabled: false },
+        type: 'g6-nanode-1',
+      }),
+    ];
 
     const mockLinodesBackups = linodeFactory.buildList(2, {
       backups: linodeBackupsFactory.build(),
@@ -300,11 +315,22 @@ describe('"Enable Linode Backups" banner', () => {
       }
     );
 
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC pricing goes live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
+    // The expected backup price for each Linode, as shown in backups drawer table.
+    const expectedPrices = [
+      '$3.57/mo', // us-east mocked price.
+      '$4.17/mo', // us-west mocked price.
+      '$2.00/mo', // regular price.
+    ];
+
+    // The expected total cost of enabling backups, as shown in backups drawer.
+    const expectedTotal = '$9.74/mo';
+
+    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[0]);
+    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[1]);
+    mockGetLinodeTypes(dcPricingMockLinodeTypesForBackups);
+
+    mockGetLinodes(mockLinodes).as('getLinodes');
+
     mockGetLinodes(mockLinodes).as('getLinodes');
     mockGetAccountSettings(mockInitialAccountSettings).as('getAccountSettings');
     mockUpdateAccountSettings(mockUpdatedAccountSettings).as(
@@ -317,12 +343,7 @@ describe('"Enable Linode Backups" banner', () => {
       },
     });
 
-    cy.wait([
-      '@getAccountSettings',
-      '@getClientstream',
-      '@getFeatureFlags',
-      '@getLinodes',
-    ]);
+    cy.wait(['@getAccountSettings', '@getLinodes']);
 
     // Click "Enable Linode Backups" link within backups notice.
     cy.findByText('Enable Linode Backups').should('be.visible').click();
@@ -336,23 +357,33 @@ describe('"Enable Linode Backups" banner', () => {
           'be.visible'
         );
 
-        // Confirm that Linodes without backups enabled are listed.
-        mockLinodesNoBackups.forEach((linode: Linode) => {
-          cy.findByText(linode.label).should('be.visible');
+        // Confirm that expected total cost is shown.
+        cy.contains(`Total for 3 Linodes: ${expectedTotal}`).should(
+          'be.visible'
+        );
+
+        // Confirm that "Region" column is shown.
+        cy.findByLabelText('List of Linodes without backups')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Region').should('be.visible');
+          });
+
+        // Confirm that each Linode without backups enabled is listed alongside its DC-specific price.
+        mockLinodesNoBackups.forEach((linode: Linode, i: number) => {
+          const expectedPrice = expectedPrices[i];
+          cy.findByText(linode.label)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText(expectedPrice).should('be.visible');
+            });
         });
 
         // Confirm that Linodes with backups already enabled are not listed.
         mockLinodesBackups.forEach((linode: Linode) => {
           cy.findByText(linode.label).should('not.exist');
         });
-
-        // Confirm that "Region" column is not shown.
-        // TODO: DC Pricing - M3-7073: Remove column assertions when DC pricing goes live.
-        cy.findByLabelText('List of Linodes without backups')
-          .should('be.visible')
-          .within(() => {
-            ui.regionSelect.find().should('not.exist');
-          });
 
         // Confirm backup changes.
         ui.button
@@ -369,108 +400,5 @@ describe('"Enable Linode Backups" banner', () => {
     ui.toast.assertMessage(
       '3 Linodes have been enrolled in automatic backups, and all new Linodes will automatically be backed up.'
     );
-  });
-
-  /*
-   * - Confirms that DC-specific pricing information is displayed in backups drawer when feature is enabled.
-   */
-  it('displays DC-specific pricing information when feature flag is enabled', () => {
-    const mockAccountSettings = accountSettingsFactory.build({
-      backups_enabled: false,
-      managed: false,
-    });
-
-    // TODO: DC Pricing - M3-7073: Move assertions involving pricing to above test when DC-specific pricing goes live.
-    // TODO: DC Pricing - M3-7073: Remove this test when DC-specific pricing goes live.
-    const mockLinodes = [
-      // `us-central` has a normal pricing structure, whereas `us-east` and `us-west`
-      // are mocked to have special pricing structures.
-      //
-      // See `dcPricingMockLinodeTypes` exported from `support/constants/dc-specific-pricing.ts`.
-      linodeFactory.build({
-        label: randomLabel(),
-        region: 'us-east',
-        backups: { enabled: false },
-        type: dcPricingMockLinodeTypesForBackups[0].id,
-      }),
-      linodeFactory.build({
-        label: randomLabel(),
-        region: 'us-west',
-        backups: { enabled: false },
-        type: dcPricingMockLinodeTypesForBackups[1].id,
-      }),
-      linodeFactory.build({
-        label: randomLabel(),
-        region: 'us-central',
-        backups: { enabled: false },
-        type: 'g6-nanode-1',
-      }),
-    ];
-
-    // The expected backup price for each Linode, as shown in backups drawer table.
-    const expectedPrices = [
-      '$3.57/mo', // us-east mocked price.
-      '$4.17/mo', // us-west mocked price.
-      '$2.00/mo', // regular price.
-    ];
-
-    // The expected total cost of enabling backups, as shown in backups drawer.
-    const expectedTotal = '$9.74/mo';
-
-    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[0]);
-    mockGetLinodeType(dcPricingMockLinodeTypesForBackups[1]);
-    mockGetLinodeTypes(dcPricingMockLinodeTypesForBackups);
-
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-    mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
-
-    cy.visitWithLogin('/linodes', {
-      preferenceOverrides: {
-        backups_cta_dismissed: false,
-      },
-    });
-
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientstream',
-      '@getLinodes',
-      '@getAccountSettings',
-    ]);
-
-    // Click "Enable Linode Backups" link within backups notice.
-    cy.findByText('Enable Linode Backups').should('be.visible').click();
-
-    // Confirm that DC-specific pricing content is shown in the backups drawer.
-    ui.drawer
-      .findByTitle('Enable All Backups')
-      .should('be.visible')
-      .within(() => {
-        // Confirm that expected total cost is shown.
-        cy.contains(`Total for 3 Linodes: ${expectedTotal}`).should(
-          'be.visible'
-        );
-
-        // Confirm that "Region" column is shown.
-        cy.findByLabelText('List of Linodes without backups')
-          .should('be.visible')
-          .within(() => {
-            cy.findByText('Region').should('be.visible');
-          });
-
-        // Confirm that each Linode is listed alongside its DC-specific price.
-        mockLinodes.forEach((linode: Linode, i: number) => {
-          const expectedPrice = expectedPrices[i];
-          cy.findByText(linode.label)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              cy.findByText(expectedPrice).should('be.visible');
-            });
-        });
-      });
   });
 });

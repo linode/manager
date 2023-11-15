@@ -8,7 +8,6 @@ import { Currency } from 'src/components/Currency';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
@@ -23,8 +22,6 @@ interface Props {
 
 export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
-
-  const flags = useFlags();
 
   const {
     error,
@@ -46,7 +43,6 @@ export const EnableBackupsDialog = (props: Props) => {
   const backupsMonthlyPrice:
     | PriceObject['monthly']
     | undefined = getMonthlyBackupsPrice({
-    flags,
     region: linode?.region,
     type,
   });

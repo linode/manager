@@ -17,7 +17,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { getInvoiceRegion } from '../PdfGenerator/utils';
@@ -44,7 +43,6 @@ interface Props {
 export const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
   const MIN_PAGE_SIZE = 25;
-  const flags = useFlags();
 
   const {
     data: regions,
@@ -53,7 +51,7 @@ export const InvoiceTable = (props: Props) => {
   } = useRegionsQuery();
 
   const { errors, items, loading, shouldShowRegion } = props;
-  const NUM_COLUMNS = flags.dcSpecificPricing && shouldShowRegion ? 9 : 8;
+  const NUM_COLUMNS = shouldShowRegion ? 9 : 8;
 
   const renderTableContent = () => {
     if (loading || regionsLoading) {
@@ -106,7 +104,7 @@ export const InvoiceTable = (props: Props) => {
                   <TableCell data-qa-quantity parentColumn="Quantity">
                     {renderQuantity(invoiceItem.quantity)}
                   </TableCell>
-                  {flags.dcSpecificPricing && shouldShowRegion && (
+                  {shouldShowRegion && (
                     <TableCell data-qa-region parentColumn="Region">
                       {getInvoiceRegion(invoiceItem, regions ?? [])}
                     </TableCell>
@@ -166,9 +164,7 @@ export const InvoiceTable = (props: Props) => {
           <TableCell sx={{ minWidth: '125px' }}>From</TableCell>
           <TableCell sx={{ minWidth: '125px' }}>To</TableCell>
           <TableCell>Quantity</TableCell>
-          {flags.dcSpecificPricing && shouldShowRegion && (
-            <TableCell>Region</TableCell>
-          )}
+          {shouldShowRegion && <TableCell>Region</TableCell>}
           <TableCell noWrap>Unit Price</TableCell>
           <TableCell>Amount (USD)</TableCell>
           <TableCell>Tax (USD)</TableCell>

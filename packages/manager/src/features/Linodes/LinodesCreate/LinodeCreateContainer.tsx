@@ -65,7 +65,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
-import { getPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -82,6 +81,7 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -94,7 +94,6 @@ interface State {
   availableUserDefinedFields?: UserDefinedField[];
   backupsEnabled: boolean;
   customLabel?: string;
-  dcSpecificPricing?: boolean;
   disabledClasses?: LinodeTypeClass[];
   errors?: APIError[];
   formIsSubmitting: boolean;
@@ -143,7 +142,6 @@ const defaultState: State = {
   autoassignIPv4WithinVPCEnabled: true,
   backupsEnabled: false,
   customLabel: undefined,
-  dcSpecificPricing: false,
   disabledClasses: [],
   errors: undefined,
   formIsSubmitting: false,
@@ -207,12 +205,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    /**
-     * The flag state gets lost when navigating between create types,
-     * so we need to keep it up to date here.
-     */
-    this.setState({ dcSpecificPricing: this.props.flags.dcSpecificPricing });
-
     /**
      * When switching to a creation flow where
      * having a pre-selected image is problematic,
@@ -513,12 +505,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   >;
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
-    const { dcSpecificPricing, selectedRegionID } = this.state;
+    const { selectedRegionID } = this.state;
 
-    const linodePrice: PriceObject | undefined = getPrice(
+    const linodePrice: PriceObject | undefined = getLinodeRegionPrice(
       type,
-      selectedRegionID,
-      dcSpecificPricing
+      selectedRegionID
     );
 
     return (

@@ -186,7 +186,6 @@ const getAkamaiLogo = () => {
 
 interface PrintInvoiceOptions {
   account: Account;
-  flags: FlagSet;
   invoice: Invoice;
   items: InvoiceItem[];
   /**
@@ -200,7 +199,7 @@ interface PrintInvoiceOptions {
 export const printInvoice = async (
   options: PrintInvoiceOptions
 ): Promise<PdfResult> => {
-  const { account, flags, invoice, items, taxes, timezone, regions } = options;
+  const { account, invoice, items, taxes, timezone, regions } = options;
 
   try {
     const itemsPerPage = 12;
@@ -286,7 +285,6 @@ export const printInvoice = async (
 
       createInvoiceItemsTable({
         doc,
-        flags,
         items: itemsChunk,
         regions,
         shouldShowRegions: invoiceCreatedAfterDCPricingLaunch(invoice.date),

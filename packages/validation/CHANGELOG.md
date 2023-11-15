@@ -1,3 +1,13 @@
+## [2023-11-13] - v0.35.0
+
+
+### Upcoming Features:
+
+- Add `CreateLoadBalancerEndpointSchema`, `CreateLoadBalancerServiceTargetSchema`, `CreateLoadBalancerRuleSchema`, `ConfigurationSchema`, and `CreateLoadBalancerSchema` for AGLB ([#9848](https://github.com/linode/manager/pull/9848))
+- Add `UpdateConfigurationSchema` for AGLB ([#9853](https://github.com/linode/manager/pull/9853))
+- Add missing label validation to `UpdateCertificateSchema` for AGLB ([#9880](https://github.com/linode/manager/pull/9880))
+
+
 ## [2023-10-30] - v0.34.0
 
 ### Changed:

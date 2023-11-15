@@ -19,7 +19,6 @@ import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -379,7 +378,6 @@ export const MainContent = () => {
           </>
         </NotificationProvider>
         <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-        <ToastNotifications />
       </ComplianceUpdateProvider>
     </div>
   );

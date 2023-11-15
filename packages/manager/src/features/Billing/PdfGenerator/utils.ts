@@ -9,7 +9,6 @@ import autoTable, { CellHookData } from 'jspdf-autotable';
 import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
-import { FlagSet } from 'src/featureFlags';
 import { formatDate } from 'src/utilities/formatDate';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
@@ -91,7 +90,6 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
 
 interface CreateInvoiceItemsTableOptions {
   doc: JSPDF;
-  flags: FlagSet;
   items: InvoiceItem[];
   /**
    * Used to add Region labels to the `Region` column
@@ -111,15 +109,7 @@ interface CreateInvoiceItemsTableOptions {
 export const createInvoiceItemsTable = (
   options: CreateInvoiceItemsTableOptions
 ) => {
-  const {
-    doc,
-    flags,
-    items,
-    regions,
-    timezone,
-    shouldShowRegions,
-    startY,
-  } = options;
+  const { doc, items, regions, timezone, shouldShowRegions, startY } = options;
 
   autoTable(doc, {
     body: items.map((item) => {
@@ -145,7 +135,7 @@ export const createInvoiceItemsTable = (
           content: item.quantity || '',
           styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
         },
-        ...(flags.dcSpecificPricing && shouldShowRegions
+        ...(shouldShowRegions
           ? [
               {
                 content: getInvoiceRegion(item, regions) ?? '',
@@ -187,7 +177,7 @@ export const createInvoiceItemsTable = (
         'From',
         'To',
         'Quantity',
-        ...(flags.dcSpecificPricing && shouldShowRegions ? ['Region'] : []),
+        ...(shouldShowRegions ? ['Region'] : []),
         'Unit Price',
         'Amount',
         'Tax',
