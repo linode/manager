@@ -1,4 +1,4 @@
-import { Buttons, Colors } from '@linode/design-language-system/cloudmanager';
+import { Button, Colors } from '@linode/design-language-system';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { breakpoints } from 'src/foundations/breakpoints';
@@ -376,17 +376,17 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: primaryColors.text,
           },
           '&:active': {
-            backgroundColor: Buttons.Primary.Hover.Background, // TODO: We need an active token
+            backgroundColor: Button.Primary.Pressed.Background,
           },
           '&:disabled': {
-            backgroundColor: Buttons.Primary.Disabled.Background,
-            color: Buttons.Primary.Disabled.Text,
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
           },
           '&:hover, &:focus': {
-            backgroundColor: Buttons.Primary.Hover.Background,
+            backgroundColor: Button.Primary.Hover.Background,
           },
-          backgroundColor: Buttons.Primary.Default.Background,
-          color: Buttons.Primary.Default.Text,
+          backgroundColor: Button.Primary.Default.Background,
+          color: Button.Primary.Default.Text,
           padding: '2px 20px',
         },
         containedSecondary: {
@@ -396,20 +396,20 @@ export const lightTheme: ThemeOptions = {
           },
           '&:active': {
             backgroundColor: 'transparent',
-            borderColor: Buttons.Secondary.Hover.Text, // TODO: We need an ACTIVE token
-            color: Buttons.Secondary.Hover.Text, // TODO: We need an ACTIVE token
+            borderColor: Button.Secondary.Pressed.Text,
+            color: Button.Secondary.Pressed.Text,
           },
           '&:disabled': {
             backgroundColor: 'transparent',
-            borderColor: Buttons.Secondary.Disabled.Text,
-            color: Buttons.Secondary.Disabled.Text,
+            borderColor: Button.Secondary.Disabled.Text,
+            color: Button.Secondary.Disabled.Text,
           },
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: Buttons.Secondary.Hover.Text,
+            color: Button.Secondary.Hover.Text,
           },
           backgroundColor: 'transparent',
-          color: Buttons.Secondary.Default.Text,
+          color: Button.Secondary.Default.Text,
         },
         outlined: {
           '&:hover, &:focus': {
