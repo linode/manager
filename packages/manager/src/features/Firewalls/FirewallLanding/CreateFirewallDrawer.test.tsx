@@ -41,7 +41,7 @@ describe('Create Firewall Drawer', () => {
       <CreateFirewallDrawer {...props} />
     );
 
-    act(() => {
+    await act(async () => {
       userEvent.type(screen.getByLabelText('Label (required)'), 'test label');
       userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
       userEvent.type(
