@@ -14,7 +14,7 @@ export const useAccountAvailabilitiesQuery = (enabled: boolean = true) =>
   useQuery<AccountAvailability[], APIError[]>(
     queryKey,
     getAllAccountAvailabilitiesRequest,
-    { enabled }
+    { enabled, keepPreviousData: true }
   );
 
 const getAllAccountAvailabilitiesRequest = () =>
