@@ -3,16 +3,38 @@ import {
   getAccountAvailabilities,
   getAccountAvailability,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
 const queryKey = 'account-availability';
 
-export const useAccountAvailabilitiesQuery = (enabled: boolean = true) =>
+export const useAccountAvailabilitiesQuery = (
+  params?: Params,
+  filter?: Filter,
+  enabled: boolean = true
+) => {
+  return useQuery<ResourcePage<AccountAvailability>, APIError[]>(
+    [queryKey, 'paginated', params, filter],
+    () => getAccountAvailabilities(params, filter),
+    {
+      enabled,
+      keepPreviousData: true,
+    }
+  );
+};
+
+export const useAccountAvailabilitiesQueryUnpaginated = (
+  enabled: boolean = true
+) =>
   useQuery<AccountAvailability[], APIError[]>(
-    queryKey,
+    [queryKey, 'unpaginated'],
     getAllAccountAvailabilitiesRequest,
     { enabled, keepPreviousData: true }
   );
