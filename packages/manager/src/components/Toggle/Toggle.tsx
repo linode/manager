@@ -7,7 +7,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 
 export interface ToggleProps extends SwitchProps {
   /**
-   * Makes a tooltip interactive (meaning the tooltip will not close when the user hovers over the tooltip).
+   * Makes a tooltip interactive (meaning the tooltip will not close when the user hovers over the tooltip). Note that in order for the tooltip to show up, tooltipText must be passed in as a prop.
    */
   interactive?: boolean;
   /**

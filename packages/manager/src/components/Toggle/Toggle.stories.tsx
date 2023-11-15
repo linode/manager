@@ -5,10 +5,10 @@ import { Toggle } from './Toggle';
 import type { ToggleProps } from './Toggle';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const EXAMPLE_TEXT = 'This is some example text for the toggle's tooltip';
+const EXAMPLE_TEXT = "This is some example text for the toggle's tooltip";
 
 export const Default: StoryObj<ToggleProps> = {
-  render: () => <Toggle />,
+  render: (args) => <Toggle {...args} />,
 };
 
 /**
@@ -26,6 +26,7 @@ export const InteractableTooltipToggle: StoryObj<ToggleProps> = {
 };
 
 const meta: Meta<ToggleProps> = {
+  args: { interactive: undefined, tooltipText: undefined },
   component: Toggle,
   title: 'Components/Toggle',
 };
