@@ -123,7 +123,10 @@ const StyledCopyButton = styled('button', {
     padding: 0,
   }),
   ...(props.disabled && {
-    color: theme.color.disabledText,
+    color:
+      theme.palette.mode === 'dark'
+        ? theme.color.grey6
+        : theme.color.disabledText,
     cursor: 'default',
   }),
 }));
