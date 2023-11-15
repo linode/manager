@@ -57,4 +57,4 @@ To report a bug or request a feature in Cloud Manager, please [open a GitHub Iss
 ## License
 
 All code located in this repository is distributed under the terms of the [APLv2
-lice
+license](LICENSE).
