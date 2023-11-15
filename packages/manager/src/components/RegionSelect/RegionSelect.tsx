@@ -41,7 +41,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated(Boolean(flags.dcGetWell));
+  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
@@ -83,7 +83,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     <Box sx={{ width }}>
       <Autocomplete
         getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(option.unavailable)
+          Boolean(flags.dcGetWell) && Boolean(option.unavailable)
         }
         isOptionEqualToValue={(
           option: RegionSelectOption,
@@ -108,7 +108,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           // Because the the way Autocomplete is implemented, we need to wrap the entire list item in the tooltip, otherwise the tooltip will not show.
           // This is the reason for disabling event listeners on the tooltip when there is no disabled message.
           // It's probably superfluous, but won't hurt either.
-          const isDisabledMenuItem = Boolean(option.unavailable);
+          const isDisabledMenuItem =
+            Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
             <Tooltip
               disableFocusListener={!isDisabledMenuItem}
@@ -117,7 +118,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               enterDelay={500}
               enterTouchDelay={500}
               key={option.value}
-              title={option.unavailable ? 'More info' : ''}
+              title={isDisabledMenuItem ? 'More info' : ''}
             >
               <StyledListItem
                 {...props}
@@ -133,8 +134,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                     <StyledFlagContainer>
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
-                    {option.label}{' '}
-                    {Boolean(option.unavailable) && ' (Not available)'}
+                    {option.label} {isDisabledMenuItem && ' (Not available)'}
                   </Box>
                   {selected && <SelectedIcon visible={selected} />}
                 </>
