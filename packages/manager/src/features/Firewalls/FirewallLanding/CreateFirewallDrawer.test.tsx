@@ -2,6 +2,7 @@ import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
@@ -38,6 +39,16 @@ describe('Create Firewall Drawer', () => {
   });
 
   it('should be able to submit when fields are filled out correctly', async () => {
+    server.use(
+      rest.post('*/networking/*', (req, res, ctx) => {
+        return res(
+          ctx.status(200), // Set the response status
+          ctx.json({
+            /* your mock response data here */
+          })
+        );
+      })
+    );
     const { getByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />
     );
