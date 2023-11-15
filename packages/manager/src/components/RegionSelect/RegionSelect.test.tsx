@@ -1,9 +1,11 @@
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils'; // Import your functions here
 
-import { regionFactory } from 'src/factories';
+import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 import type { RegionSelectOption } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
+
+const accountAvailabilityData = accountAvailabilityFactory.buildList(2);
 
 const regions: Region[] = [
   regionFactory.build({
@@ -26,17 +28,21 @@ const regions: Region[] = [
 describe('getRegionOptions', () => {
   it('should return an empty array if no regions are provided', () => {
     const regions: Region[] = [];
-    const flags = {};
-    const path = '';
-    const result = getRegionOptions(regions, flags, path);
+    const result = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions,
+    });
 
     expect(result).toEqual([]);
   });
 
   it('should return a sorted array of OptionType objects with North America first', () => {
-    const flags = {};
-    const path = '';
-    const result: RegionSelectOption[] = getRegionOptions(regions, flags, path);
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions,
+    });
 
     type _RegionSelectOption = Omit<RegionSelectOption, 'data'> & {
       data: Omit<RegionSelectOption['data'], 'disabledMessage'>;
@@ -47,6 +53,7 @@ describe('getRegionOptions', () => {
       {
         data: { country: 'ca', region: 'North America' },
         label: 'CA Location (ca-1)',
+        unavailable: false,
         value: 'ca-1',
       },
       {
@@ -55,12 +62,14 @@ describe('getRegionOptions', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
+        unavailable: false,
         value: 'us-1',
       },
 
       {
         data: { country: 'jp', region: 'Asia' },
         label: 'JP Location (jp-1)',
+        unavailable: false,
         value: 'jp-1',
       },
     ];
@@ -73,16 +82,21 @@ describe('getSelectedRegionById', () => {
   it('should return the correct OptionType for a selected region', () => {
     const selectedRegionId = 'us-1';
 
-    const result = getSelectedRegionById(regions, selectedRegionId);
+    const result = getSelectedRegionById({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions,
+      selectedRegionId,
+    });
 
     // Expected result
     const expected = {
       data: {
         country: 'us',
-        disabledMessage: undefined,
         region: 'North America',
       },
       label: 'US Location (us-1)',
+      unavailable: false,
       value: 'us-1',
     };
 
@@ -92,7 +106,12 @@ describe('getSelectedRegionById', () => {
   it('should return undefined for an unknown region', () => {
     const selectedRegionId = 'unknown';
 
-    const result = getSelectedRegionById(regions, selectedRegionId);
+    const result = getSelectedRegionById({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions,
+      selectedRegionId,
+    });
 
     expect(result).toBeUndefined();
   });

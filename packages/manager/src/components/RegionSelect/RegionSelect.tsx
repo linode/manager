@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
@@ -7,6 +6,7 @@ import { Flag } from 'src/components/Flag';
 import { List } from 'src/components/List';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccountAvailabilitiesQuery } from 'src/queries/accountAvailability';
 
 import {
   GroupHeader,
@@ -25,6 +25,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
+    currentCapability,
     disabled,
     errorText,
     handleSelection,
@@ -36,16 +37,23 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     selectedId,
     width,
   } = props;
+  const flags = useFlags();
+  const {
+    data: accountAvailability,
+    isLoading: accountAvailabilityLoading,
+  } = useAccountAvailabilitiesQuery({}, { enabled: Boolean(flags.dcGetWell) });
 
   const regionFromSelectedId: RegionSelectOption | null =
-    getSelectedRegionById(regions, selectedId ?? '') ?? null;
+    getSelectedRegionById({
+      accountAvailabilityData: accountAvailability?.data,
+      currentCapability: currentCapability || 'Linodes',
+      regions,
+      selectedRegionId: selectedId ?? '',
+    }) ?? null;
 
   const [selectedRegion, setSelectedRegion] = React.useState<
     RegionSelectOption | null | undefined
   >(regionFromSelectedId);
-  const flags = useFlags();
-  const location = useLocation();
-  const path = location.pathname;
 
   const handleRegionChange = (selection: RegionSelectOption) => {
     setSelectedRegion(selection);
@@ -61,17 +69,21 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     }
   }, [selectedId]);
 
-  const options = React.useMemo(() => getRegionOptions(regions, flags, path), [
-    flags,
-    path,
-    regions,
-  ]);
+  const options = React.useMemo(
+    () =>
+      getRegionOptions({
+        accountAvailabilityData: accountAvailability?.data,
+        currentCapability: currentCapability || 'Linodes',
+        regions,
+      }),
+    [regions]
+  );
 
   return (
     <Box sx={{ width }}>
       <Autocomplete
         getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(option.data.disabledMessage)
+          Boolean(option.unavailable)
         }
         isOptionEqualToValue={(
           option: RegionSelectOption,
@@ -96,7 +108,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           // Because the the way Autocomplete is implemented, we need to wrap the entire list item in the tooltip, otherwise the tooltip will not show.
           // This is the reason for disabling event listeners on the tooltip when there is no disabled message.
           // It's probably superfluous, but won't hurt either.
-          const isDisabledMenuItem = Boolean(option.data.disabledMessage);
+          const isDisabledMenuItem = Boolean(option.unavailable);
           return (
             <Tooltip
               disableFocusListener={!isDisabledMenuItem}
@@ -105,7 +117,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               enterDelay={500}
               enterTouchDelay={500}
               key={option.value}
-              title={option.data.disabledMessage ?? ''}
+              title={option.unavailable ? 'More info' : ''}
             >
               <StyledListItem
                 {...props}
@@ -122,7 +134,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
                     {option.label}{' '}
-                    {Boolean(option.data.disabledMessage) && ' (Not available)'}
+                    {Boolean(option.unavailable) && ' (Not available)'}
                   </Box>
                   {selected && <SelectedIcon visible={selected} />}
                 </>
@@ -149,6 +161,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         errorText={errorText}
         groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
+        loading={accountAvailabilityLoading}
+        loadingText="Loading regions..."
         noOptionsText="No results"
         options={options}
         placeholder="Select a Region"
