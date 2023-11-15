@@ -67,7 +67,7 @@ export const RuleDrawer = (props: Props) => {
   const {
     error,
     isLoading,
-    mutateAsync: updateRule,
+    mutateAsync: updateRoute,
     reset,
   } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
 
@@ -87,7 +87,7 @@ export const RuleDrawer = (props: Props) => {
           existingRules[ruleIndexToEdit] = rule;
         }
 
-        await updateRule({
+        await updateRoute({
           protocol: route?.protocol,
           // If we are editing, send the updated rules, otherwise
           // append a new rule to the end.
