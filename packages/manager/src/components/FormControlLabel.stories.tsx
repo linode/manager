@@ -4,7 +4,7 @@ import React from 'react';
 import { Checkbox } from './Checkbox';
 import { FormControlLabel } from './FormControlLabel';
 import { Radio } from './Radio/Radio';
-import { Toggle } from './Toggle';
+import { Toggle } from './Toggle/Toggle';
 
 const meta: Meta<typeof FormControlLabel> = {
   component: FormControlLabel,
