@@ -14,7 +14,7 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
@@ -23,13 +23,11 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 import type { PlanSelectionType } from './types';
 import type { PriceObject, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import type { FlagSet } from 'src/featureFlags';
 
 interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  flags?: FlagSet;
   header?: string;
   idx: number;
   isCreate?: boolean;
@@ -54,7 +52,6 @@ export const PlanSelection = (props: Props) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
-    flags,
     idx,
     isCreate,
     linodeID,
@@ -65,7 +62,6 @@ export const PlanSelection = (props: Props) => {
     showTransfer,
     type,
   } = props;
-  const dcSpecificPricing = flags?.dcSpecificPricing;
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const tooltip = planTooSmall
@@ -90,11 +86,11 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  const price: PriceObject | undefined = getPrice(
-    type,
-    selectedRegionId,
-    dcSpecificPricing
-  );
+  // DC Dynamic price logic - DB creation flow is out of scope
+  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
+  const price: PriceObject | undefined = !isDatabaseCreateFlow
+    ? getLinodeRegionPrice(type, selectedRegionId)
+    : type.price;
   type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
     price?.monthly
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
