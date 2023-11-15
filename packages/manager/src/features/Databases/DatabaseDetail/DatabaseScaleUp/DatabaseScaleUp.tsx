@@ -274,7 +274,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
           data-qa-select-plan
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
-          selectedID={planSelected}
+          selectedId={planSelected}
           types={displayTypes}
         />
       </Paper>
