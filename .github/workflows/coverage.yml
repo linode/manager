@@ -19,13 +19,10 @@ jobs:
         run: yarn
 
       - name: Run base branch coverage and write to a file
-        # Uncomment when ready to run
-        # run: |
-        #   raw_coverage_output=$(yarn coverage:get)
-        #   ref_coverage_value==$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
-        #   echo "$ref_coverage_value" > ref_code_coverage.txt
         run: |
-          echo "65" > ref_code_coverage.txt
+          raw_coverage_output=$(yarn coverage:get)
+          ref_coverage_value==$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
+          echo "$ref_coverage_value" > ref_code_coverage.txt
       
       - name: Upload code coverage for base branch
         uses: actions/upload-artifact@v3
@@ -61,17 +58,4 @@ jobs:
           raw_coverage_output=$(yarn coverage:get)
           current_coverage_value=$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
           echo "$current_coverage_value" > current_code_coverage.txt
-      
-      - name: Generate Comment with Code Coverage
-        run: |
-          base_coverage=$(cat ref_code_coverage.txt)
-          current_coverage=$(cat current_code_coverage.txt)
-          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
-            icon="❌" # Error icon
-          else
-            icon="✅" # Check mark icon
-          fi
-          comment_message="$icon **Coverage Report**\nBase Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
-          echo "Coverage: $comment_message"
-          echo "$comment_message" > updated_comment.txt
 
