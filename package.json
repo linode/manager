@@ -37,7 +37,6 @@
     "storybook": "yarn workspace linode-manager storybook",
     "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
-    "cy:ci": "yarn cypress install && yarn cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
     "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
     "changeset": "node scripts/changelog/changeset.mjs",

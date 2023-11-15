@@ -81,7 +81,7 @@ x-e2e-runners:
       condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
-  entrypoint: ['yarn', 'cy:ci']
+  entrypoint: ['yarn', 'cy:e2e']
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
