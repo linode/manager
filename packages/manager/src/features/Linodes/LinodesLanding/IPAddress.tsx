@@ -90,7 +90,7 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const renderCopyIcon = (ip: string) => {
     if (disabled) {
-      return <PublicIpsUnassignedTooltip />;
+      return PublicIpsUnassignedTooltip;
     }
 
     return (

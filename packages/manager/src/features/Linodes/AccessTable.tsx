@@ -32,30 +32,28 @@ interface AccessTableProps {
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
+  const { footer, gridProps, isVPCOnlyLinode, rows, sx, title } = props;
   return (
     <Grid
       container
       direction="column"
       md={6}
       spacing={1}
-      sx={props.sx}
-      {...props.gridProps}
+      sx={sx}
+      {...gridProps}
     >
       <StyledColumnLabelGrid>
-        {props.title}{' '}
-        {props.isVPCOnlyLinode && props.title.includes('Public IP Address') && (
-          <PublicIpsUnassignedTooltip />
-        )}
+        {title}{' '}
+        {isVPCOnlyLinode &&
+          title.includes('Public IP Address') &&
+          PublicIpsUnassignedTooltip}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
           <TableBody>
-            {props.rows.map((thisRow) => {
+            {rows.map((thisRow) => {
               return thisRow.text ? (
-                <StyledTableRow
-                  disabled={props.isVPCOnlyLinode}
-                  key={thisRow.text}
-                >
+                <StyledTableRow disabled={isVPCOnlyLinode} key={thisRow.text}>
                   {thisRow.heading ? (
                     <TableCell component="th" scope="row">
                       {thisRow.heading}
@@ -65,12 +63,12 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                     <StyledGradientDiv>
                       <CopyTooltip
                         copyableText
-                        disabled={props.isVPCOnlyLinode}
+                        disabled={isVPCOnlyLinode}
                         text={thisRow.text}
                       />
                     </StyledGradientDiv>
                     <StyledCopyTooltip
-                      disabled={props.isVPCOnlyLinode}
+                      disabled={isVPCOnlyLinode}
                       text={thisRow.text}
                     />
                   </StyledTableCell>
@@ -79,7 +77,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
             })}
           </TableBody>
         </StyledTable>
-        {props.footer ? <Grid sx={{ padding: 0 }}>{props.footer}</Grid> : null}
+        {footer ? <Grid sx={{ padding: 0 }}>{footer}</Grid> : null}
       </StyledTableGrid>
     </Grid>
   );
