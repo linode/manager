@@ -3,11 +3,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { Stack } from 'src/components/Stack';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { Ports } from './Ports';
@@ -32,16 +29,6 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
     >
       <TableCell>
         <Link to={`/loadbalancers/${id}`}>{label}</Link>
-      </TableCell>
-      <TableCell>
-        {/* TODO: AGLB - These are stub values for now*/}
-        <Stack alignItems="center" direction="row">
-          <StatusIcon status="active" />
-          <Typography>4 up</Typography>
-          <Typography mx={1}>&mdash;</Typography>
-          <StatusIcon status="error" />
-          <Typography>6 down</Typography>
-        </Stack>
       </TableCell>
       <Hidden smDown>
         <TableCell>
