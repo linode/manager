@@ -6,7 +6,7 @@ import { Flag } from 'src/components/Flag';
 import { List } from 'src/components/List';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountAvailabilitiesQuery } from 'src/queries/accountAvailability';
+import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import {
   GroupHeader,
@@ -41,11 +41,11 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQuery({}, { enabled: Boolean(flags.dcGetWell) });
+  } = useAccountAvailabilitiesQueryUnpaginated(Boolean(flags.dcGetWell));
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
-      accountAvailabilityData: accountAvailability?.data,
+      accountAvailabilityData: accountAvailability,
       currentCapability: currentCapability || 'Linodes',
       regions,
       selectedRegionId: selectedId ?? '',
@@ -72,7 +72,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const options = React.useMemo(
     () =>
       getRegionOptions({
-        accountAvailabilityData: accountAvailability?.data,
+        accountAvailabilityData: accountAvailability,
         currentCapability: currentCapability || 'Linodes',
         regions,
       }),
