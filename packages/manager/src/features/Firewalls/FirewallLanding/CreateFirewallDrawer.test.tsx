@@ -8,6 +8,7 @@ import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const props = {
   onClose: jest.fn(),
+  onFirewallCreated: jest.fn(),
   open: true,
 };
 
@@ -41,7 +42,7 @@ describe('Create Firewall Drawer', () => {
       <CreateFirewallDrawer {...props} />
     );
 
-    await act(async () => {
+    act(() => {
       userEvent.type(screen.getByLabelText('Label (required)'), 'test label');
       userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
       userEvent.type(
