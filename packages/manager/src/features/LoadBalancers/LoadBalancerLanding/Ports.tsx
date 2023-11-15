@@ -18,7 +18,7 @@ export const Ports = ({ loadbalancerId }: PortProps) => {
   const ports = configurations?.data.map((config) => config.port);
 
   if (isLoading) {
-    return <Skeleton />;
+    return <Skeleton sx={{ minWidth: '100px' }} />;
   }
 
   if (error || !ports) {
