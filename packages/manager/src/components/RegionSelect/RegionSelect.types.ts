@@ -1,4 +1,9 @@
-import type { Capabilities, Country, Region } from '@linode/api-v4';
+import type {
+  AccountAvailability,
+  Capabilities,
+  Country,
+  Region,
+} from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface RegionSelectOption {
@@ -27,4 +32,18 @@ export interface RegionSelectProps
   required?: boolean;
   selectedId: null | string;
   width?: number;
+}
+
+export interface RegionOptionAvailability {
+  accountAvailabilityData: AccountAvailability[] | undefined;
+  currentCapability: Capabilities;
+}
+
+export interface GetRegionOptions extends RegionOptionAvailability {
+  regions: Region[];
+}
+
+export interface GetSelectedRegionById extends RegionOptionAvailability {
+  regions: Region[];
+  selectedRegionId: string;
 }

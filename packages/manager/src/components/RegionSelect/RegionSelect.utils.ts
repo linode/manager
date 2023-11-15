@@ -5,24 +5,15 @@ import {
   getSelectedRegion,
 } from 'src/utilities/formatRegion';
 
-import type { RegionSelectOption } from './RegionSelect.types';
-import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
+import type {
+  GetRegionOptions,
+  GetSelectedRegionById,
+  RegionOptionAvailability,
+  RegionSelectOption,
+} from './RegionSelect.types';
+import type { AccountAvailability, Region } from '@linode/api-v4';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
-
-interface RegionOptionAvailability {
-  accountAvailabilityData: AccountAvailability[] | undefined;
-  currentCapability: Capabilities;
-}
-
-interface GetRegionOptions extends RegionOptionAvailability {
-  regions: Region[];
-}
-
-interface GetSelectedRegionById extends RegionOptionAvailability {
-  regions: Region[];
-  selectedRegionId: string;
-}
 
 /**
  * Returns an array of OptionType objects for use in the RegionSelect component.
