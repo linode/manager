@@ -185,6 +185,15 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
               <TooltipIcon status="help" text="TODO: AGLB" />
             </Stack>
+            {formik.touched.certificates &&
+              typeof formik.errors.certificates === 'string' && (
+                <Notice
+                  spacingBottom={16}
+                  spacingTop={0}
+                  text={formik.errors.certificates}
+                  variant="error"
+                />
+              )}
             <CertificateTable
               certificates={formik.values.certificates}
               loadbalancerId={loadbalancerId}
@@ -192,8 +201,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             />
             <Box mt={2}>
               <Button
+                onClick={() => {
+                  formik.setFieldTouched('certificates');
+                  setIsApplyCertDialogOpen(true);
+                }}
                 buttonType="outlined"
-                onClick={() => setIsApplyCertDialogOpen(true)}
               >
                 Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
                 Certificates
