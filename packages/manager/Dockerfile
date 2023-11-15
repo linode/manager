@@ -22,7 +22,11 @@ FROM cypress/included:13.5.0 as e2e
 WORKDIR /home/node/app
 VOLUME /home/node/app
 USER node
-RUN mkdir -p /home/node/.cache/Cypress
+RUN mkdir -p /home/node/.cache/Cypress \
+    && apt-get install -y expect openssh-client \
+    && rm -rf /var/cache/apt/* \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 ENV CI=1
 ENV NO_COLOR=1
 ENV HOME=/home/node/
