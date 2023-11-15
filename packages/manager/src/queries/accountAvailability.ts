@@ -16,8 +16,8 @@ import { getAll } from 'src/utilities/getAll';
 const queryKey = 'account-availability';
 
 export const useAccountAvailabilitiesQuery = (
-  params?: Params,
-  filter?: Filter,
+  params: Params,
+  filter: Filter,
   enabled: boolean = true
 ) => {
   return useQuery<ResourcePage<AccountAvailability>, APIError[]>(
