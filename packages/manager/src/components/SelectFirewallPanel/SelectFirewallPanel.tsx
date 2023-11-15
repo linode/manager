@@ -13,18 +13,18 @@ import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
 interface Props {
+  entityType?: FirewallDeviceEntityType;
   handleFirewallChange: (firewallID: number) => void;
   helperText: JSX.Element;
   selectedFirewallId: number;
-  serviceType?: FirewallDeviceEntityType;
 }
 
 export const SelectFirewallPanel = (props: Props) => {
   const {
+    entityType,
     handleFirewallChange,
     helperText,
     selectedFirewallId,
-    serviceType,
   } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -83,7 +83,7 @@ export const SelectFirewallPanel = (props: Props) => {
           </LinkButton>
         </StyledLinkButtonBox>
         <CreateFirewallDrawer
-          createFlow={serviceType}
+          createFlow={entityType}
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}

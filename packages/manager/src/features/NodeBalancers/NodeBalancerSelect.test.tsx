@@ -17,7 +17,7 @@ const fakeNodeBalancerData = nodeBalancerFactory.build({
 const TEXTFIELD_ID = 'textfield-input';
 
 describe('NodeBalancerSelect', () => {
-  test('renders custom options using renderOption', async () => {
+  it('should render custom options using renderOption', async () => {
     // Create a mock renderOption function
     const mockRenderOption = (
       nodebalancer: NodeBalancer,
@@ -53,7 +53,7 @@ describe('NodeBalancerSelect', () => {
       );
     });
   });
-  test('should display custom no options message', async () => {
+  it('should display custom no options message if one is passed in', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const options: NodeBalancer[] = []; // Assuming no options are available
     const onSelectionChange = jest.fn();
@@ -79,7 +79,7 @@ describe('NodeBalancerSelect', () => {
     });
   });
 
-  test('should display default no options message', async () => {
+  it('should display default no options message if no custom message is passed', async () => {
     // Mock the props
     const option: NodeBalancer[] = []; // Assuming no options are available
     const onSelectionChange = jest.fn();
@@ -103,7 +103,7 @@ describe('NodeBalancerSelect', () => {
     });
   });
 
-  test('should display no options message when user input does not match', async () => {
+  it('should display no options message when user input does not match', async () => {
     // Mock the props
     const customNoOptionsMessage = 'Custom No Options Message';
     const option: NodeBalancer[] = []; // Assuming no options are available
@@ -129,7 +129,7 @@ describe('NodeBalancerSelect', () => {
     });
   });
 
-  test('should display no options message when user input does not match an option', async () => {
+  it('should display no options message when user input does not match an option', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const option = nodeBalancerFactory.build({
       id: 1,
@@ -156,7 +156,7 @@ describe('NodeBalancerSelect', () => {
     });
   });
 
-  test('should not display no options message when user input matches an option', async () => {
+  it('should not display no options message when user input matches an option', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const option = nodeBalancerFactory.build({
       id: 1,

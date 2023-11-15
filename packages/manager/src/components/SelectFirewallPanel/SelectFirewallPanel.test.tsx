@@ -40,10 +40,10 @@ describe('SelectFirewallPanel', () => {
   it('should open a Create Firewall drawer when the link is clicked in Linode Create', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
+        entityType="linode"
         handleFirewallChange={jest.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
-        serviceType="linode"
       />,
       {
         queryClient,
@@ -64,10 +64,10 @@ describe('SelectFirewallPanel', () => {
   it('should open a Create Firewall drawer when the link is clicked in NodeBalancer Create', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
+        entityType="nodebalancer"
         handleFirewallChange={jest.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
-        serviceType="nodebalancer"
       />,
       {
         queryClient,

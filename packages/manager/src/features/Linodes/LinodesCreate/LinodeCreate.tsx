@@ -641,9 +641,9 @@ export class LinodeCreate extends React.PureComponent<
                 </Typography>
                 // @TODO VPC: Update "Learn More" link
               }
+              entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
               selectedFirewallId={this.props.firewallId || -1}
-              serviceType="linode"
             />
           )}
           <AddonsPanel

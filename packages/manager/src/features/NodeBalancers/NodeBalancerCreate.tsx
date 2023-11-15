@@ -507,8 +507,8 @@ const NodeBalancerCreate = () => {
             <Link to="">Learn more about creating Firewalls</Link>.
           </Typography>
         }
+        entityType="nodebalancer"
         selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
-        serviceType="nodebalancer"
       />
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
