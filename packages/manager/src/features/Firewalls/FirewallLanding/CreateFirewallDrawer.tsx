@@ -38,9 +38,8 @@ const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to Nod
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
 
-export const LINODE_CREATE_FLOW_TEXT = 'Additional Linodes (Optional)';
-export const NODEBALANCER_CREATE_FLOW_TEXT =
-  'Additional NodeBalancers (Optional)';
+export const LINODE_CREATE_FLOW_TEXT = 'Additional Linodes';
+export const NODEBALANCER_CREATE_FLOW_TEXT = 'Additional NodeBalancers';
 
 export interface CreateFirewallDrawerProps {
   createFlow?: FirewallDeviceEntityType;
@@ -234,6 +233,7 @@ export const CreateFirewallDrawer = React.memo(
             name="label"
             onBlur={handleBlur}
             onChange={handleChange}
+            required
             value={values.label}
           />
           <Box>
