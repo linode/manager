@@ -20,7 +20,8 @@ CMD yarn start:manager:ci
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
 FROM cypress/included:13.5.0 as e2e-build
-RUN apt-get install -y expect openssh-client \
+RUN apt-get update \
+    && apt-get install -y expect openssh-client \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
