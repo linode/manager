@@ -118,7 +118,7 @@ export const LoadBalancerDetail = () => {
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link
       />
-      <Tabs index={tabIndex === -1 ? 0 : tabIndex}>
+      <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={() => null}>
         <TabLinkList
           tabs={tabs.map((t) => ({ ...t, routeName: `${url}/${t.path}` }))}
         />
