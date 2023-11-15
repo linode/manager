@@ -5,7 +5,9 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 
-export const StyledTypography = styled(Typography)(({ theme, ...props }) => ({
+export const StyledTypography = styled(Typography, {
+  label: 'EditableInput__StyledTypography',
+})(({ theme, ...props }) => ({
   ...(!props.className && {
     display: 'inline-block',
     lineHeight: 1,
@@ -16,7 +18,9 @@ export const StyledTypography = styled(Typography)(({ theme, ...props }) => ({
   }),
 }));
 
-export const StyledTextContainer = styled(Box)(({ theme }) => ({
+export const StyledTextContainer = styled(Box, {
+  label: 'EditableInput__StyledTextContainer',
+})(({ theme }) => ({
   '& svg': {
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
@@ -37,7 +41,9 @@ export const StyledTextContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
 }));
 
-export const StyledButton = styled(Button)(() => ({
+export const StyledButton = styled(Button, {
+  label: 'EditableInput__StyledButton',
+})(() => ({
   height: 24,
   marginTop: 0,
   minHeight: 'auto',
@@ -48,7 +54,9 @@ export const StyledButton = styled(Button)(() => ({
   width: 24,
 }));
 
-export const StyledEdit = styled(Edit)(({ theme }) => ({
+export const StyledEdit = styled(Edit, {
+  label: 'EditableInput__StyledEdit',
+})(({ theme }) => ({
   '&:hover, &:focus': {
     color: theme.palette.primary.light,
   },
@@ -58,7 +66,9 @@ export const StyledEdit = styled(Edit)(({ theme }) => ({
   margin: '0 10px',
 }));
 
-export const StyledEditingContainer = styled(Box)(() => ({
+export const StyledEditingContainer = styled(Box, {
+  label: 'EditableInput__StyledEditingContainer',
+})(() => ({
   alignItems: 'center',
   border: '1px solid transparent',
   display: 'flex',
