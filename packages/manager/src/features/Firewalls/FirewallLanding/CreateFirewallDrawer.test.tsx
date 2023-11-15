@@ -40,11 +40,11 @@ describe('Create Firewall Drawer', () => {
 
   it('should be able to submit when fields are filled out correctly', async () => {
     server.use(
-      rest.post('*/networking/*', (req, res, ctx) => {
+      rest.post('*/networking/firewalls', (req, res, ctx) => {
         return res(
-          ctx.status(200), // Set the response status
+          ctx.status(200),
           ctx.json({
-            /* your mock response data here */
+            /* fake response */
           })
         );
       })
