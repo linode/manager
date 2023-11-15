@@ -28,7 +28,7 @@ describe('Create Firewall Drawer', () => {
 
   it('should validate the form on submit', async () => {
     renderWithTheme(<CreateFirewallDrawer {...props} />);
-    userEvent.type(screen.getByLabelText('Label'), 'a');
+    userEvent.type(screen.getByLabelText('Label (required)'), 'a');
     userEvent.click(screen.getByTestId('submit'));
     const error = await screen.findByText(
       /Label must be between 3 and 32 characters./i
@@ -42,7 +42,7 @@ describe('Create Firewall Drawer', () => {
     );
 
     act(() => {
-      userEvent.type(screen.getByLabelText('Label'), 'test label');
+      userEvent.type(screen.getByLabelText('Label (required)'), 'test label');
       userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
       userEvent.type(
         screen.getByLabelText('NodeBalancers'),
