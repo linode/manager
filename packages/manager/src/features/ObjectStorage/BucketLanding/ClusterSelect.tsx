@@ -45,6 +45,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
   return (
     <RegionSelect
       data-qa-select-cluster
+      currentCapability="Block Storage"
       disabled={disabled}
       errorText={errorText}
       handleSelection={(id) => onChange(id)}
