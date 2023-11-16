@@ -14,11 +14,6 @@ jest.mock('src/utilities/pricing/linodes', () => ({
 jest.mock('src/utilities/queryParams', () => ({
   getQueryParamsFromQueryString: jest.fn(() => ({})),
 }));
-jest.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    dcSpecificPricing: true,
-  }),
-}));
 
 const createPath = '/linodes/create';
 
@@ -33,7 +28,7 @@ describe('SelectRegionPanel in Create Flow', () => {
       .mockReturnValue(true);
   });
 
-  it('should render a notice when the selected region has unique pricing and the flag is on', async () => {
+  it('should render a notice when the selected region has unique pricing', async () => {
     server.use(
       rest.get('*/linode/types', (req, res, ctx) => {
         const types = linodeTypeFactory.buildList(1, {
@@ -63,7 +58,6 @@ describe('SelectRegionPanel in Create Flow', () => {
 
       {
         MemoryRouter: { initialEntries: [createPath] },
-        flags: { dcSpecificPricing: true },
       }
     );
 
