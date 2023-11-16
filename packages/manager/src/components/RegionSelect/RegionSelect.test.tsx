@@ -15,7 +15,7 @@ describe('RegionSelect', () => {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    handleSelection: jest.fn(),
+    handleSelection: vi.fn(),
     helperText: '',
     isClearable: false,
     label: '',
