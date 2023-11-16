@@ -4,7 +4,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useLoadBalancerCertificatesInfiniteQuery } from 'src/queries/aglb/certificates';
 
 import type { Certificate, Filter } from '@linode/api-v4';
-import { TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from 'src/components/TextField';
 
 interface Props {
   /**

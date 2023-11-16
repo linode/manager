@@ -34,7 +34,7 @@ import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 import {
   getConfigurationPayloadFromConfiguration,
   initialValues,
-} from './utils';
+} from './constants';
 
 import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
 
