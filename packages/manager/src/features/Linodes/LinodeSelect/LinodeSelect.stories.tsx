@@ -27,7 +27,7 @@ const meta: Meta<LinodeMultiSelectProps | LinodeSingleSelectProps> = {
     onSelectionChange: action('onSelectionChange'),
   },
   component: LinodeSelect,
-  title: 'Components/Linode Select',
+  title: 'Components/Selects/Linode Select',
 };
 
 export default meta;

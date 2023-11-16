@@ -127,7 +127,7 @@ export const NoDataExample: Story = {
 
 const meta: Meta<typeof RemovableSelectionsList> = {
   component: RemovableSelectionsList,
-  title: 'Components/RemovableSelectionsList',
+  title: 'Components/Selects/RemovableSelectionsList',
 };
 
 export default meta;
