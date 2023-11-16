@@ -293,6 +293,7 @@ export const VolumeCreate = () => {
             />
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
+                currentCapability="Block Storage"
                 handleSelection={(value) => {
                   setFieldValue('region', value);
                   setFieldValue('linode_id', null);

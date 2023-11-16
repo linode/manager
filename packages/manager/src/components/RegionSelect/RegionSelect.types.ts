@@ -22,8 +22,8 @@ export interface RegionSelectProps
     'label' | 'onChange' | 'options'
   > {
   // TODO DC_GET_WELL
-  // Make this prop required once all consumers are updated
-  currentCapability?: Capabilities;
+  // Make this prop required & remove the undefined union type once all consumers are updated
+  currentCapability?: Capabilities | undefined;
   handleSelection: (id: string) => void;
   helperText?: string;
   isClearable?: boolean;
@@ -36,7 +36,9 @@ export interface RegionSelectProps
 
 export interface RegionOptionAvailability {
   accountAvailabilityData: AccountAvailability[] | undefined;
-  currentCapability: Capabilities;
+  // TODO DC_GET_WELL
+  // remove the undefined union type once all consumers are updated
+  currentCapability: Capabilities | undefined;
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
@@ -46,4 +48,8 @@ export interface GetRegionOptions extends RegionOptionAvailability {
 export interface GetSelectedRegionById extends RegionOptionAvailability {
   regions: Region[];
   selectedRegionId: string;
+}
+
+export interface GetRegionOptionAvailability extends RegionOptionAvailability {
+  region: Region;
 }

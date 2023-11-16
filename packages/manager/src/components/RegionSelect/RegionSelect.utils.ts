@@ -6,9 +6,9 @@ import {
 } from 'src/utilities/formatRegion';
 
 import type {
+  GetRegionOptionAvailability,
   GetRegionOptions,
   GetSelectedRegionById,
-  RegionOptionAvailability,
   RegionSelectOption,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
@@ -18,10 +18,8 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 /**
  * Returns an array of OptionType objects for use in the RegionSelect component.
  * Regions are sorted alphabetically by region, with North America first.
- * We filter the regions through the account availability data to determine
- * which regions are available to the user.
  *
- * @returns {OptionType[]} An array of OptionType objects
+ * @returns An array of RegionSelectOption objects
  */
 export const getRegionOptions = ({
   accountAvailabilityData,
@@ -80,7 +78,7 @@ export const getRegionOptions = ({
 /**
  * Util to map a region ID to an OptionType object.
  *
- * @returns an OptionType object for the currently selected region.
+ * @returns an RegionSelectOption object for the currently selected region.
  */
 export const getSelectedRegionById = ({
   accountAvailabilityData,
@@ -111,16 +109,17 @@ export const getSelectedRegionById = ({
   };
 };
 
-interface GetRegionOptionAvailability extends RegionOptionAvailability {
-  region: Region;
-}
-
-const getRegionOptionAvailability = ({
+/**
+ * Util to determine if a region is available to the user for a given capability.
+ *
+ * @returns a boolean indicating whether the region is available to the user.
+ */
+export const getRegionOptionAvailability = ({
   accountAvailabilityData,
   currentCapability,
   region,
 }: GetRegionOptionAvailability): boolean => {
-  if (!accountAvailabilityData) {
+  if (!accountAvailabilityData || !currentCapability) {
     return false;
   }
 
