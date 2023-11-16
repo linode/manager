@@ -45,7 +45,7 @@ describe('VPC Subnets table', () => {
       getByText,
     } = renderWithTheme(
       <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={jest.fn()}
+        handleUnrecommendedConfigPresent={vi.fn()}
         vpcId={1}
         vpcRegion=""
       />,
@@ -87,7 +87,7 @@ describe('VPC Subnets table', () => {
 
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
       <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={jest.fn()}
+        handleUnrecommendedConfigPresent={vi.fn()}
         vpcId={2}
         vpcRegion=""
       />
@@ -111,7 +111,7 @@ describe('VPC Subnets table', () => {
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
       <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={jest.fn()}
+        handleUnrecommendedConfigPresent={vi.fn()}
         vpcId={3}
         vpcRegion=""
       />

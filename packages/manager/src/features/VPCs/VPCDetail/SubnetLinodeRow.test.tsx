@@ -45,7 +45,7 @@ describe('SubnetLinodeRow', () => {
 
   const linodeFactory2 = linodeFactory.build({ id: 2, label: 'linode-2' });
 
-  const handleUnassignLinode = jest.fn();
+  const handleUnassignLinode = vi.fn();
 
   it('should display linode label, status, id, vpc ipv4 address, associated firewalls and unassign button', async () => {
     server.use(
@@ -66,7 +66,7 @@ describe('SubnetLinodeRow', () => {
       wrapWithTableBody(
         <SubnetLinodeRow
           handleUnassignLinode={handleUnassignLinode}
-          handleUnrecommendedConfigPresent={jest.fn()}
+          handleUnrecommendedConfigPresent={vi.fn()}
           linodeId={linodeFactory1.id}
           subnetId={0}
         />
@@ -125,7 +125,7 @@ describe('SubnetLinodeRow', () => {
       wrapWithTableBody(
         <SubnetLinodeRow
           handleUnassignLinode={handleUnassignLinode}
-          handleUnrecommendedConfigPresent={jest.fn()}
+          handleUnrecommendedConfigPresent={vi.fn()}
           linodeId={linodeFactory2.id}
           subnetId={1}
         />
