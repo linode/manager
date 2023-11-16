@@ -37,12 +37,15 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 interface Props {
   vpcId: number;
   vpcRegion: string;
+  handleUnrecommendedConfigPresent: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { vpcId, vpcRegion } = props;
+  const { vpcId, vpcRegion, handleUnrecommendedConfigPresent } = props;
   const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
@@ -69,6 +72,8 @@ export const VPCSubnetsTable = (props: Props) => {
     subnetUnassignLinodesDrawerOpen,
     setSubnetUnassignLinodesDrawerOpen,
   ] = React.useState(false);
+
+  // const [linodesToUnrecommendedConfigsMapping, setLinodesToUnrecommendedConfigsMapping] = React.useState<Record<number, boolean>[]>([]);
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -153,6 +158,11 @@ export const VPCSubnetsTable = (props: Props) => {
     }
   }, [subnets, selectedSubnet]);
 
+  // React.useEffect(() => {
+  //   const subnetAssignedLinodeData = subnets?.data.map((subnet) => subnet.linodes);
+  //   const mapped = subnetAssignedLinodeData?.map((_subnetAssignedLinodeData) => _subnetAssignedLinodeData.id)
+  // }, [subnets]);
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -232,6 +242,9 @@ export const VPCSubnetsTable = (props: Props) => {
             {subnet.linodes.length > 0 ? (
               subnet.linodes.map((linodeInfo) => (
                 <SubnetLinodeRow
+                  handleUnrecommendedConfigPresent={
+                    handleUnrecommendedConfigPresent
+                  }
                   handleUnassignLinode={handleSubnetUnassignLinode}
                   key={linodeInfo.id}
                   linodeId={linodeInfo.id}

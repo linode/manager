@@ -5,10 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
-import {
-  DismissibleBanner,
-  useDismissibleBanner,
-} from 'src/components/DismissibleBanner/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -43,13 +40,14 @@ const VPCDetail = () => {
   const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
   const { data: regions } = useRegionsQuery();
 
-  const {
-    hasDismissedBanner: dismissedConfigurationNotice,
-  } = useDismissibleBanner(UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY);
-
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
   const [showFullDescription, setShowFullDescription] = React.useState(false);
+
+  const [
+    unrecommendedConfigurationPresent,
+    setUnrecommendedConfigurationPresent,
+  ] = React.useState(false);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -221,9 +219,12 @@ const VPCDetail = () => {
           </Typography>
         </DismissibleBanner>
       )}
-      {/* Conditional display logic for unrecommendedConfigurationNotice:  */}
-      {unrecommendedConfigurationNotice}
-      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
+      {unrecommendedConfigurationPresent && unrecommendedConfigurationNotice}
+      <VPCSubnetsTable
+        handleUnrecommendedConfigPresent={setUnrecommendedConfigurationPresent}
+        vpcId={vpc.id}
+        vpcRegion={vpc.region}
+      />
     </>
   );
 };
@@ -232,7 +233,6 @@ export default VPCDetail;
 
 const unrecommendedConfigurationNotice = (
   <DismissibleBanner
-    // data-testid="unrecommended-configuration-notice"
     important
     preferenceKey={UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY}
     variant="warning"

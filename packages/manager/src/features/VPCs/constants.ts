@@ -33,3 +33,6 @@ export const NETWORK_INTERFACES_GUIDE_URL =
 
 export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
   'not-recommended-configuration';
+
+export const WARNING_ICON_UNRECOMMENDED_CONFIG =
+  'warning-icon-for-unrecommended-config';

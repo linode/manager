@@ -18,9 +18,10 @@ import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
+import { WARNING_ICON_UNRECOMMENDED_CONFIG } from '../constants';
 import {
+  hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
   getSubnetInterfaceFromConfigs,
-  hasUnrecommendedConfiguration,
 } from '../utils';
 import {
   StyledActionTableCell,
@@ -34,13 +35,22 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
   handleUnassignLinode: any;
+  handleUnrecommendedConfigPresent: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
-  const { handleUnassignLinode, linodeId, subnet, subnetId } = props;
+  const {
+    handleUnassignLinode,
+    handleUnrecommendedConfigPresent,
+    linodeId,
+    subnet,
+    subnetId,
+  } = props;
 
   const {
     data: linode,
@@ -59,6 +69,20 @@ export const SubnetLinodeRow = (props: Props) => {
     error: configsError,
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId);
+
+  const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
+    configs ?? []
+  );
+
+  React.useEffect(() => {
+    if (hasUnrecommendedConfiguration) {
+      handleUnrecommendedConfigPresent(true);
+    }
+  }, [
+    configs,
+    handleUnrecommendedConfigPresent,
+    hasUnrecommendedConfiguration,
+  ]);
 
   if (linodeLoading || !linode) {
     return (
@@ -92,8 +116,12 @@ export const SubnetLinodeRow = (props: Props) => {
   const linkifiedLinodeLabel = (
     <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
   );
-  const labelCell = hasUnrecommendedConfiguration(configs ?? []) ? (
-    <Box sx={{ alignItems: 'center', display: 'flex' }}>
+
+  const labelCell = hasUnrecommendedConfiguration ? (
+    <Box
+      data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
+      sx={{ alignItems: 'center', display: 'flex' }}
+    >
       <StyledWarningIcon />
       {linkifiedLinodeLabel}
     </Box>
