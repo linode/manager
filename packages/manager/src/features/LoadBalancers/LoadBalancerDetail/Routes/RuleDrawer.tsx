@@ -1,7 +1,6 @@
 import { HTTPRuleSchema, TCPRuleSchema } from '@linode/validation';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
-import { Stack } from 'src/components/Stack';
 import { getIn, useFormik } from 'formik';
 import React, { useState } from 'react';
 
@@ -14,8 +13,9 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';

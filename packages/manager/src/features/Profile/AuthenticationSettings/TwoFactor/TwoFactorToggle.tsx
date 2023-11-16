@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { Toggle } from 'src/components/Toggle';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Toggle } from 'src/components/Toggle/Toggle';
 
 interface ToggleProps {
   disabled?: boolean;
