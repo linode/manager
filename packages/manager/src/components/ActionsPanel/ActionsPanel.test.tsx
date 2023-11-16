@@ -48,7 +48,7 @@ describe('ActionsPanel', () => {
   });
 
   it('should call primaryButtonHandler when primary button is clicked', () => {
-    const mockHandler = jest.fn();
+    const mockHandler = vi.fn();
     renderWithTheme(
       <ActionsPanel
         primaryButtonProps={{
@@ -63,7 +63,7 @@ describe('ActionsPanel', () => {
   });
 
   it('should call secondaryButtonHandler when secondary button is clicked', () => {
-    const mockHandler = jest.fn();
+    const mockHandler = vi.fn();
     renderWithTheme(
       <ActionsPanel
         secondaryButtonProps={{

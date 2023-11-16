@@ -9,7 +9,7 @@ import { basePerms } from './utils';
 const token = appTokenFactory.build({ label: 'my-token', scopes: '*' });
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   token,
 };

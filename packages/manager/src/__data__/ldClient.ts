@@ -1,20 +1,20 @@
 import { LDClient } from 'launchdarkly-js-client-sdk';
 
 const client: LDClient = {
-  allFlags: jest.fn(),
-  close: jest.fn(),
-  flush: jest.fn(),
-  getContext: jest.fn(),
-  identify: jest.fn(),
-  off: jest.fn(),
-  on: jest.fn(),
-  setStreaming: jest.fn(),
-  track: jest.fn(),
-  variation: jest.fn(),
-  variationDetail: jest.fn(),
-  waitForInitialization: jest.fn(),
-  waitUntilGoalsReady: jest.fn(),
-  waitUntilReady: jest.fn(),
+  allFlags: vi.fn(),
+  close: vi.fn(),
+  flush: vi.fn(),
+  getContext: vi.fn(),
+  identify: vi.fn(),
+  off: vi.fn(),
+  on: vi.fn(),
+  setStreaming: vi.fn(),
+  track: vi.fn(),
+  variation: vi.fn(),
+  variationDetail: vi.fn(),
+  waitForInitialization: vi.fn(),
+  waitUntilGoalsReady: vi.fn(),
+  waitUntilReady: vi.fn(),
 };
 
 export default client;

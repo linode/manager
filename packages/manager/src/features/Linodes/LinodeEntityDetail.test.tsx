@@ -63,7 +63,7 @@ describe('Linode Entity Detail', () => {
         handlers={handlers}
         id={5}
         linode={linode}
-        openTagDrawer={jest.fn()}
+        openTagDrawer={vi.fn()}
       />,
       {
         flags: { vpc: false },
@@ -104,7 +104,7 @@ describe('Linode Entity Detail', () => {
         handlers={handlers}
         id={5}
         linode={linode}
-        openTagDrawer={jest.fn()}
+        openTagDrawer={vi.fn()}
       />
     );
 
@@ -137,7 +137,7 @@ describe('Linode Entity Detail', () => {
         handlers={handlers}
         id={10}
         linode={linode}
-        openTagDrawer={jest.fn()}
+        openTagDrawer={vi.fn()}
       />,
       {
         flags: { vpc: true },

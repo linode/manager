@@ -6,7 +6,7 @@ import { VPCTopSectionContent } from './VPCTopSectionContent';
 
 const props = {
   errors: {},
-  onChangeField: jest.fn(),
+  onChangeField: vi.fn(),
   regions: [],
   values: { description: '', label: '', region: '', subnets: [] },
 };

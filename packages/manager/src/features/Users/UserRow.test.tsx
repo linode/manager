@@ -20,7 +20,7 @@ describe('UserRow', () => {
     const user = accountUserFactory.build();
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={jest.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     expect(getByText(user.username)).toBeVisible();
@@ -30,7 +30,7 @@ describe('UserRow', () => {
     const user = accountUserFactory.build({ restricted: false });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={jest.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     expect(getByText('Full')).toBeVisible();
@@ -39,7 +39,7 @@ describe('UserRow', () => {
     const user = accountUserFactory.build({ restricted: true });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={jest.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     expect(getByText('Limited')).toBeVisible();
@@ -48,7 +48,7 @@ describe('UserRow', () => {
     const user = accountUserFactory.build({ last_login: null });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={jest.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     expect(getByText('Never')).toBeVisible();
@@ -69,7 +69,7 @@ describe('UserRow', () => {
     });
 
     const { findByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={jest.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     const date = await findByText('2023-10-17 21:17');
@@ -92,7 +92,7 @@ describe('UserRow', () => {
     });
 
     const { findByText, getByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={jest.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     const date = await findByText('2023-10-17 21:17');

@@ -19,13 +19,13 @@ const unattachedVolume = volumeFactory.build({
 });
 
 const handlers: ActionHandlers = {
-  handleAttach: jest.fn(),
-  handleClone: jest.fn(),
-  handleDelete: jest.fn(),
-  handleDetach: jest.fn(),
-  handleDetails: jest.fn(),
-  handleEdit: jest.fn(),
-  handleResize: jest.fn(),
+  handleAttach: vi.fn(),
+  handleClone: vi.fn(),
+  handleDelete: vi.fn(),
+  handleDetach: vi.fn(),
+  handleDetails: vi.fn(),
+  handleEdit: vi.fn(),
+  handleResize: vi.fn(),
 };
 
 describe('Volume table row', () => {
