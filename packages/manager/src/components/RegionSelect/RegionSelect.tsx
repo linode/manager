@@ -37,6 +37,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     selectedId,
     width,
   } = props;
+
   const flags = useFlags();
   const {
     data: accountAvailability,
@@ -46,7 +47,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
       accountAvailabilityData: accountAvailability,
-      currentCapability: currentCapability || 'Linodes',
+      currentCapability,
       regions,
       selectedRegionId: selectedId ?? '',
     }) ?? null;
@@ -73,7 +74,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     () =>
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
-        currentCapability: currentCapability || 'Linodes',
+        currentCapability,
         regions,
       }),
     [regions]
@@ -104,10 +105,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           </StyledLParentListItem>
         )}
         renderOption={(props, option, { selected }) => {
-          // The tooltip is likely to be removed for DC Get Well
-          // Because the the way Autocomplete is implemented, we need to wrap the entire list item in the tooltip, otherwise the tooltip will not show.
-          // This is the reason for disabling event listeners on the tooltip when there is no disabled message.
-          // It's probably superfluous, but won't hurt either.
           const isDisabledMenuItem =
             Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (

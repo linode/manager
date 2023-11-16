@@ -1,118 +1,67 @@
-import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils'; // Import your functions here
+import * as React from 'react';
 
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
+import { regionFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import type { RegionSelectOption } from './RegionSelect.types';
+import { RegionSelect } from './RegionSelect';
+
+import type { RegionSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 
-const accountAvailabilityData = accountAvailabilityFactory.buildList(2);
+describe('RegionSelect', () => {
+  const regions: Region[] = regionFactory.buildList(3);
 
-const regions: Region[] = [
-  regionFactory.build({
-    country: 'us',
-    id: 'us-1',
-    label: 'US Location',
-  }),
-  regionFactory.build({
-    country: 'ca',
-    id: 'ca-1',
-    label: 'CA Location',
-  }),
-  regionFactory.build({
-    country: 'jp',
-    id: 'jp-1',
-    label: 'JP Location',
-  }),
-];
+  const props: RegionSelectProps = {
+    currentCapability: 'Linodes',
+    disabled: false,
+    errorText: '',
+    handleSelection: jest.fn(),
+    helperText: '',
+    isClearable: false,
+    label: '',
+    regions,
+    required: false,
+    selectedId: '',
+    width: 100,
+  };
 
-describe('getRegionOptions', () => {
-  it('should return an empty array if no regions are provided', () => {
-    const regions: Region[] = [];
-    const result = getRegionOptions({
-      accountAvailabilityData,
-      currentCapability: 'Linodes',
-      regions,
-    });
-
-    expect(result).toEqual([]);
+  it('should render a Select component', () => {
+    const { getByTestId } = renderWithTheme(<RegionSelect {...props} />);
+    expect(getByTestId('region-select')).toBeInTheDocument();
   });
 
-  it('should return a sorted array of OptionType objects with North America first', () => {
-    const result: RegionSelectOption[] = getRegionOptions({
-      accountAvailabilityData,
-      currentCapability: 'Linodes',
-      regions,
-    });
-
-    type _RegionSelectOption = Omit<RegionSelectOption, 'data'> & {
-      data: Omit<RegionSelectOption['data'], 'disabledMessage'>;
-    };
-
-    // Expected result
-    const expected: _RegionSelectOption[] = [
-      {
-        data: { country: 'ca', region: 'North America' },
-        label: 'CA Location (ca-1)',
-        unavailable: false,
-        value: 'ca-1',
-      },
-      {
-        data: {
-          country: 'us',
-          region: 'North America',
-        },
-        label: 'US Location (us-1)',
-        unavailable: false,
-        value: 'us-1',
-      },
-
-      {
-        data: { country: 'jp', region: 'Asia' },
-        label: 'JP Location (jp-1)',
-        unavailable: false,
-        value: 'jp-1',
-      },
-    ];
-
-    expect(result).toEqual(expected);
-  });
-});
-
-describe('getSelectedRegionById', () => {
-  it('should return the correct OptionType for a selected region', () => {
-    const selectedRegionId = 'us-1';
-
-    const result = getSelectedRegionById({
-      accountAvailabilityData,
-      currentCapability: 'Linodes',
-      regions,
-      selectedRegionId,
-    });
-
-    // Expected result
-    const expected = {
-      data: {
-        country: 'us',
-        region: 'North America',
-      },
-      label: 'US Location (us-1)',
-      unavailable: false,
-      value: 'us-1',
-    };
-
-    expect(result).toEqual(expected);
+  it('should render a Select component with the correct label', () => {
+    const { getByText } = renderWithTheme(
+      <RegionSelect {...props} label="Region" />
+    );
+    expect(getByText('Region')).toBeInTheDocument();
   });
 
-  it('should return undefined for an unknown region', () => {
-    const selectedRegionId = 'unknown';
+  it('should render a Select component with the correct helper text', () => {
+    const { getByLabelText } = renderWithTheme(
+      <RegionSelect {...props} helperText="helper text" />
+    );
+    expect(getByLabelText('helper text')).toBeInTheDocument();
+  });
 
-    const result = getSelectedRegionById({
-      accountAvailabilityData,
-      currentCapability: 'Linodes',
-      regions,
-      selectedRegionId,
-    });
+  it('should render a Select component with the correct error text', () => {
+    const { getByText } = renderWithTheme(
+      <RegionSelect {...props} errorText="error text" />
+    );
+    expect(getByText('error text')).toBeInTheDocument();
+  });
 
-    expect(result).toBeUndefined();
+  it('should render a Select component with the correct required text', () => {
+    const { getByTestId } = renderWithTheme(
+      <RegionSelect {...props} required={true} />
+    );
+    expect(getByTestId('textfield-input')).toHaveAttribute('required');
+  });
+
+  it('should render a Select component with the correct disabled state', () => {
+    const { getByTestId } = renderWithTheme(
+      <RegionSelect {...props} disabled={true} />
+    );
+    expect(getByTestId('textfield-input')).toBeDisabled();
   });
 });

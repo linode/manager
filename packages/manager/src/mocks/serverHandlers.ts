@@ -1028,7 +1028,7 @@ export const handlers = [
     });
     const singapore = accountAvailabilityFactory.build({
       id: 'ap-south',
-      unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
+      unavailable: ['Linodes', 'Kubernetes', 'NodeBalancers'],
     });
     const tokyo = accountAvailabilityFactory.build({
       id: 'ap-northeast',
