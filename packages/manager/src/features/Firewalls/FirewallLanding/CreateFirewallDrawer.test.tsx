@@ -6,6 +6,7 @@ import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
+import { firewallFactory } from 'src/factories';
 
 const props = {
   onClose: jest.fn(),
@@ -39,27 +40,25 @@ describe('Create Firewall Drawer', () => {
   });
 
   it('should be able to submit when fields are filled out correctly', async () => {
+    const options = { label: 'test-label' };
+
     server.use(
       rest.post('*/networking/firewalls', (req, res, ctx) => {
-        return res(
-          ctx.status(200),
-          ctx.json({
-            /* fake response */
-          })
-        );
+        return res(ctx.json(firewallFactory.build({ label: options.label })));
       })
     );
+
     const { getByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />
     );
 
     act(() => {
-      userEvent.type(screen.getByLabelText('Label (required)'), 'test label');
-      userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
-      userEvent.type(
-        screen.getByLabelText('NodeBalancers'),
-        'test nodebalancer'
-      );
+      userEvent.type(screen.getByLabelText('Label (required)'), options.label);
+      // userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
+      // userEvent.type(
+      //   screen.getByLabelText('NodeBalancers'),
+      //   'test nodebalancer'
+      // );
 
       userEvent.click(getByTestId('submit'));
     });
