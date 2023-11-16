@@ -47,7 +47,7 @@ describe('Longview RAM Gauge UI', () => {
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
-  it('should render error UI if an error comes back from Redux State', async (done) => {
+  it('should render error UI if an error comes back from Redux State', async () => {
     const { findByText } = renderWithTheme(<RAMGauge clientID={123} />, {
       customStore: errorStore,
     });
@@ -55,17 +55,15 @@ describe('Longview RAM Gauge UI', () => {
     const resolvedDiv = await findByText(/Error/);
 
     expect(resolvedDiv).toHaveTextContent(/Error/);
-    done();
   });
 
-  it('should render a data state UI if data comes back from Redux State', async (done) => {
+  it('should render a data state UI if data comes back from Redux State', async () => {
     const { findByTestId } = renderWithTheme(<RAMGauge clientID={123} />, {
       customStore: dataStore,
     });
 
     const innerText = await findByTestId('gauge-innertext');
     const subtext = await findByTestId('gauge-subtext');
-    done();
 
     expect(innerText).toHaveTextContent('4.69 MB');
     expect(subtext).toHaveTextContent('1.91 GB');
