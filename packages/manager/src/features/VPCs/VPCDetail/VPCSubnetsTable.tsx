@@ -73,8 +73,6 @@ export const VPCSubnetsTable = (props: Props) => {
     setSubnetUnassignLinodesDrawerOpen,
   ] = React.useState(false);
 
-  // const [linodesToUnrecommendedConfigsMapping, setLinodesToUnrecommendedConfigsMapping] = React.useState<Record<number, boolean>[]>([]);
-
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -157,11 +155,6 @@ export const VPCSubnetsTable = (props: Props) => {
       setSelectedSubnet(updatedSubnet);
     }
   }, [subnets, selectedSubnet]);
-
-  // React.useEffect(() => {
-  //   const subnetAssignedLinodeData = subnets?.data.map((subnet) => subnet.linodes);
-  //   const mapped = subnetAssignedLinodeData?.map((_subnetAssignedLinodeData) => _subnetAssignedLinodeData.id)
-  // }, [subnets]);
 
   if (isLoading) {
     return <CircleProgress />;
