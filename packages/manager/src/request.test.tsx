@@ -12,9 +12,11 @@ import {
 } from './request';
 import { storeFactory } from './store';
 
+import type { APIError } from '@linode/api-v4';
+
 const store = storeFactory(queryClientFactory());
 
-const baseError = {
+export const mockAxiosError = {
   isAxiosError: true,
   message: 'helloworld',
   name: 'requestName',
@@ -28,14 +30,14 @@ const baseError = {
   },
 };
 const baseErrorWithJson = {
-  ...baseError,
-  toJSON: () => baseError,
+  ...mockAxiosError,
+  toJSON: () => mockAxiosError,
 };
 
 const error400: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
   response: {
-    ...baseError.response,
+    ...mockAxiosError.response,
     status: 400,
   },
 };
@@ -43,7 +45,7 @@ const error400: AxiosError<LinodeError> = {
 const error401: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
   response: {
-    ...baseError.response,
+    ...mockAxiosError.response,
     status: 401,
   },
 };
@@ -69,8 +71,8 @@ describe('Expiring Tokens', () => {
       scopes: null,
       token: null,
     });
-    expireToken.catch((e: AxiosError) =>
-      expect(e[0].reason).toMatch(/unexpected error/)
+    expireToken.catch((e: APIError[]) =>
+      expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
     );
   });
 
@@ -94,8 +96,8 @@ describe('Expiring Tokens', () => {
       scopes: '*',
       token: 'helloworld',
     });
-    expireToken.catch((e: AxiosError) =>
-      expect(e[0].reason).toMatch(/unexpected error/)
+    expireToken.catch((e: APIError[]) =>
+      expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
     );
   });
 });
