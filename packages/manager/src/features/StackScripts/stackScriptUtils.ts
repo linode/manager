@@ -138,7 +138,7 @@ export const baseApps = {
   // uncomment after 10/30/23 release
   // '1243759': 'MainConcept FFmpeg Plugins',
   // '1243760': 'MainConcept Live Encoder',
-  // '1243762': 'MainConcept P2 AVC Ultra Transcoder',
+  // '1243762': 'MainConcept P2 AVC-ULTRA Transcoder',
   // '1243763': 'MainConcept XAVC Transcoder',
   // '1243764': 'MainConcept XDCAM Transcoder',
   // '1243780': 'SimpleX Chat',
