@@ -16,7 +16,7 @@ import type { APIError } from '@linode/api-v4';
 
 const store = storeFactory(queryClientFactory());
 
-export const mockAxiosError = {
+const mockAxiosError = {
   isAxiosError: true,
   message: 'helloworld',
   name: 'requestName',
