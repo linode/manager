@@ -5,21 +5,27 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import {
+  DismissibleBanner,
+  useDismissibleBanner,
+} from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { VPC_LABEL } from 'src/features/VPCs/constants';
+import { Link } from 'src/components/Link';
+import { VPC_FEEDBACK_FORM_URL, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
-import { VPC_FEEDBACK_FORM_URL } from 'src/features/VPCs/constants';
-
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
-import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
+import {
+  NETWORK_INTERFACES_GUIDE_URL,
+  REBOOT_LINODE_WARNING_VPCDETAILS,
+  UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY,
+} from '../constants';
 import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
@@ -36,6 +42,10 @@ const VPCDetail = () => {
 
   const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
   const { data: regions } = useRegionsQuery();
+
+  const {
+    hasDismissedBanner: dismissedConfigurationNotice,
+  } = useDismissibleBanner(UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY);
 
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
@@ -99,7 +109,6 @@ const VPCDetail = () => {
     <>
       <DocumentTitleSegment segment={vpc.label} />
       <LandingHeader
-        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
         breadcrumbProps={{
           crumbOverrides: [
             {
@@ -110,6 +119,7 @@ const VPCDetail = () => {
           labelOptions: { noCap: true },
           pathname: `/vpcs/${vpc.label}`,
         }}
+        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
         docsLabel="Docs"
         docsLink="#" // @TODO VPC: Add docs link
       />
@@ -211,9 +221,28 @@ const VPCDetail = () => {
           </Typography>
         </DismissibleBanner>
       )}
+      {/* Conditional display logic for unrecommendedConfigurationNotice:  */}
+      {unrecommendedConfigurationNotice}
       <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
     </>
   );
 };
 
 export default VPCDetail;
+
+const unrecommendedConfigurationNotice = (
+  <DismissibleBanner
+    // data-testid="unrecommended-configuration-notice"
+    important
+    preferenceKey={UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY}
+    variant="warning"
+  >
+    <Typography>
+      A warning icon is displayed for Linodes using unrecommended configuration
+      profiles. Update their configuration profiles to avoid connectivity
+      issues. Read our{' '}
+      <Link to={NETWORK_INTERFACES_GUIDE_URL}>Configuration Profiles</Link>{' '}
+      guide for more information.
+    </Typography>
+  </DismissibleBanner>
+);

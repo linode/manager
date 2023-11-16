@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 
+import Warning from 'src/assets/icons/warning.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -36,4 +37,11 @@ export const StyledTableHeadCell = styled(TableCell, {
   },
   borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
   borderTop: 'none !important',
+}));
+
+export const StyledWarningIcon = styled(Warning, {
+  label: 'StyledWarningIcon',
+})(({ theme }) => ({
+  fill: theme.color.yellow,
+  marginRight: theme.spacing(),
 }));

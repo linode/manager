@@ -26,3 +26,24 @@ export const getSubnetInterfaceFromConfigs = (
 
   return undefined;
 };
+
+export const hasUnrecommendedConfiguration = (configs: Config[]) => {
+  for (const config of configs) {
+    const configInterfaces = config.interfaces;
+
+    /*
+     If there is a VPC interface marked as active but not primary, we want to display a
+     message re: it not being a recommended configuration.
+
+     Rationale: when the VPC interface is not the primary interface, it can communicate
+     to other VMs within the same subnet, but not to VMs in a different subnet
+     within the same VPC.
+    */
+    return configInterfaces.some(
+      (_interface) =>
+        _interface.active && _interface.purpose === 'vpc' && !_interface.primary
+    );
+  }
+
+  return false;
+};

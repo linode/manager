@@ -18,12 +18,16 @@ import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
-import { getSubnetInterfaceFromConfigs } from '../utils';
+import {
+  getSubnetInterfaceFromConfigs,
+  hasUnrecommendedConfiguration,
+} from '../utils';
 import {
   StyledActionTableCell,
   StyledTableCell,
   StyledTableHeadCell,
   StyledTableRow,
+  StyledWarningIcon,
 } from './SubnetLinodeRow.styles';
 
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
@@ -85,12 +89,24 @@ export const SubnetLinodeRow = (props: Props) => {
     );
   }
 
+  const linkifiedLinodeLabel = (
+    <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+  );
+  const labelCell = hasUnrecommendedConfiguration(configs ?? []) ? (
+    <Box sx={{ alignItems: 'center', display: 'flex' }}>
+      <StyledWarningIcon />
+      {linkifiedLinodeLabel}
+    </Box>
+  ) : (
+    linkifiedLinodeLabel
+  );
+
   const iconStatus = getLinodeIconStatus(linode.status);
 
   return (
     <StyledTableRow>
       <StyledTableCell component="th" scope="row" sx={{ paddingLeft: 6 }}>
-        <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+        {labelCell}
       </StyledTableCell>
       <StyledTableCell statusCell>
         <StatusIcon status={iconStatus} />

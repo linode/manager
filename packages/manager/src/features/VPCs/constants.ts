@@ -27,3 +27,9 @@ export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
 
 export const VPC_FEEDBACK_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
+
+export const NETWORK_INTERFACES_GUIDE_URL =
+  'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
+
+export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
+  'not-recommended-configuration';
