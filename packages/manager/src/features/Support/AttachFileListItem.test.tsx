@@ -12,8 +12,8 @@ import { AttachFileListItem } from './AttachFileListItem';
 
 const props = {
   fileIdx: 1,
-  onClick: jest.fn(),
-  removeFile: jest.fn(),
+  onClick: vi.fn(),
+  removeFile: vi.fn(),
 };
 
 describe('AttachFileListItem component', () => {

@@ -4,7 +4,7 @@ import React from 'react';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-const mockRender = jest.fn();
+const mockRender = vi.fn();
 
 const props = {
   ariaItemType: 'items',

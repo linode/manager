@@ -7,7 +7,7 @@ import { MultipleIPInput } from './MultipleIPInput';
 
 const baseProps = {
   ips: [{ address: 'ip1' }, { address: 'ip2' }, { address: 'ip3' }],
-  onChange: jest.fn(),
+  onChange: vi.fn(),
   title: 'My Input',
 };
 

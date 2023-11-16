@@ -43,9 +43,9 @@ describe('FirewallRow', () => {
   describe('FirewallRow component', () => {
     const firewall = firewallFactory.build();
 
-    const mockTriggerDeleteFirewall = jest.fn();
-    const mockTriggerDisableFirewall = jest.fn();
-    const mockTriggerEnableFirewall = jest.fn();
+    const mockTriggerDeleteFirewall = vi.fn();
+    const mockTriggerDisableFirewall = vi.fn();
+    const mockTriggerEnableFirewall = vi.fn();
 
     const baseProps = {
       ...firewall,

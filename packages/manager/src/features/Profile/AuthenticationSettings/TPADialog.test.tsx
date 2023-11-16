@@ -9,9 +9,9 @@ import { TPADialog } from './TPADialog';
 
 import type { TPADialogProps } from './TPADialog';
 
-jest.mock('src/hooks/useFlags', () => ({
+vi.mock('src/hooks/useFlags', () => ({
   __esModule: true,
-  useFlags: jest.fn().mockReturnValue({
+  useFlags: vi.fn().mockReturnValue({
     tpaProviders: [
       {
         displayName: 'Google',
@@ -37,7 +37,7 @@ const props: TPADialogProps = {
     name: 'google',
   },
   newProvider: 'password',
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 
@@ -85,7 +85,7 @@ describe('TPADialog', () => {
   });
   it('Should redirect to disable TPA', async () => {
     const expectedUrl = `${LOGIN_ROOT}/tpa/disable`;
-    const mockWindow = jest.spyOn(window, 'open').mockReturnValue(null);
+    const mockWindow = vi.spyOn(window, 'open').mockReturnValue(null);
     renderWithTheme(<TPADialog {...props} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
@@ -110,7 +110,7 @@ describe('TPADialog', () => {
       newProvider: 'google',
     };
     const expectedUrl = `${LOGIN_ROOT}/tpa/enable/google`;
-    const mockWindow = jest.spyOn(window, 'open').mockReturnValue(null);
+    const mockWindow = vi.spyOn(window, 'open').mockReturnValue(null);
     renderWithTheme(<TPADialog {...newProps} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
@@ -135,7 +135,7 @@ describe('TPADialog', () => {
       newProvider: 'github',
     };
     const expectedUrl = `${LOGIN_ROOT}/tpa/enable/github`;
-    const mockWindow = jest.spyOn(window, 'open').mockReturnValue(null);
+    const mockWindow = vi.spyOn(window, 'open').mockReturnValue(null);
     renderWithTheme(<TPADialog {...newProps} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');

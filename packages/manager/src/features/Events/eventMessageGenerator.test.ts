@@ -10,8 +10,8 @@ import {
 } from './eventMessageGenerator';
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'log').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'log').mockImplementation(() => {});
 });
 
 describe('Event message generation', () => {
@@ -45,7 +45,7 @@ describe('Event message generation', () => {
       };
 
       /** Mock the message creator */
-      eventMessageCreators.linode_reboot.scheduled = jest.fn();
+      eventMessageCreators.linode_reboot.scheduled = vi.fn();
 
       /** Invoke the function. */
       generateEventMessage(mockEvent as Event);

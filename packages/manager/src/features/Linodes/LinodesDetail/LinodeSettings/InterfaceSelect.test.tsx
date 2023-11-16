@@ -19,7 +19,7 @@ const unavailableInRegionTextTestId = 'unavailable-in-region-text';
 describe('InterfaceSelect', () => {
   const props = {
     fromAddonsPanel: false,
-    handleChange: jest.fn(),
+    handleChange: vi.fn(),
     ipamAddress: null,
     label: null,
     readOnly: false,

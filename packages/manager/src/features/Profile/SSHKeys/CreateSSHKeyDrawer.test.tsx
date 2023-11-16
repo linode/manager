@@ -9,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

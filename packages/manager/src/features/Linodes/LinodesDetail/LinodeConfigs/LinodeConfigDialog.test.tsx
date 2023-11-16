@@ -53,7 +53,7 @@ describe('LinodeConfigDialog', () => {
           config={config}
           isReadOnly={false}
           linodeId={1}
-          onClose={jest.fn()}
+          onClose={vi.fn()}
           open={true}
         />,
         {

@@ -7,7 +7,7 @@ import { extendData } from './ProcessesLanding';
 import { ProcessesTable } from './ProcessesTable';
 import type { ProcessesTableProps } from './ProcessesTable';
 
-const mockSetSelectedRow = jest.fn();
+const mockSetSelectedRow = vi.fn();
 
 const props: ProcessesTableProps = {
   processesData: [],

@@ -15,9 +15,9 @@ const mockProps: CombinedProps = {
   imagesData: {},
   regionsData: [],
   typesData: [],
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  updateImageID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateTypeID: vi.fn(),
   userCannotCreateLinode: false,
 };
 

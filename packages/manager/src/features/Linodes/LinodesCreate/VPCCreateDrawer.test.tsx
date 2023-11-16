@@ -6,8 +6,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 const props = {
-  handleSelectVPC: jest.fn(),
-  onClose: jest.fn(),
+  handleSelectVPC: vi.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

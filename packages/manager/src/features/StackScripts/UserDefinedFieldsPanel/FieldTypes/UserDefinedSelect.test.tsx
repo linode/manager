@@ -33,7 +33,7 @@ describe('UserDefinedSelect', () => {
       name: 'radioField',
       oneof: 'option1,option2,option3,option4',
     };
-    const updateFormState = jest.fn();
+    const updateFormState = vi.fn();
     const { getAllByRole } = renderWithTheme(
       <UserDefinedSelect
         field={field}
@@ -54,7 +54,7 @@ describe('UserDefinedSelect', () => {
       name: 'selectField',
       oneof: 'option1,option2,option3,option4',
     };
-    const updateFormState = jest.fn();
+    const updateFormState = vi.fn();
     const { getAllByRole } = renderWithTheme(
       <UserDefinedSelect
         field={field}

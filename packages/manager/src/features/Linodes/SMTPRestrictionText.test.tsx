@@ -16,9 +16,9 @@ const defaultChildren = (props: { text: React.ReactNode }) => (
 
 let mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
-jest.mock('../../queries/account', () => {
+vi.mock('../../queries/account', () => {
   return {
-    useAccount: jest.fn(() => {
+    useAccount: vi.fn(() => {
       const account = accountFactory.build({
         active_since: mockActiveSince,
       });

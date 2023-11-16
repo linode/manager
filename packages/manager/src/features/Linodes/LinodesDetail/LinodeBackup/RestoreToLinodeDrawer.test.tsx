@@ -22,7 +22,7 @@ describe('RestoreToLinodeDrawer', () => {
       <RestoreToLinodeDrawer
         backup={backup}
         linodeId={1}
-        onClose={jest.fn()}
+        onClose={vi.fn()}
         open={true}
       />
     );

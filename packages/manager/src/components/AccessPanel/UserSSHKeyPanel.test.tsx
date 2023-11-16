@@ -27,7 +27,7 @@ describe('UserSSHKeyPanel', () => {
         })
       );
       const { queryByTestId } = renderWithTheme(
-        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={jest.fn()} />
+        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />
       );
       await waitFor(() => {
         expect(queryByTestId('table-row-empty')).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('UserSSHKeyPanel', () => {
         })
       );
       const { getByText } = renderWithTheme(
-        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={jest.fn()} />,
+        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />,
         { queryClient: new QueryClient() }
       );
       await waitFor(() => {
@@ -75,7 +75,7 @@ describe('UserSSHKeyPanel', () => {
         })
       );
       const { getByText } = renderWithTheme(
-        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={jest.fn()} />,
+        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />,
         { queryClient: new QueryClient() }
       );
       await waitFor(() => {
@@ -100,7 +100,7 @@ describe('UserSSHKeyPanel', () => {
 
       const props = {
         authorizedUsers: [],
-        setAuthorizedUsers: jest.fn(),
+        setAuthorizedUsers: vi.fn(),
       };
 
       const { getByRole, getByText } = renderWithTheme(

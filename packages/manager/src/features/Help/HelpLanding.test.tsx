@@ -5,7 +5,7 @@ import { HelpLanding } from './HelpLanding';
 
 describe('Help Landing', () => {
   const component = shallow(<HelpLanding />);
-  xit('should render search panel', () => {
+  it.skip('should render search panel', () => {
     expect(component.find('SearchPanel')).toHaveLength(1);
   });
 

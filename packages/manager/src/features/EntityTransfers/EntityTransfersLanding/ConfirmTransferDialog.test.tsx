@@ -14,7 +14,7 @@ import {
 import type { ConfirmTransferDialogProps } from './ConfirmTransferDialog';
 
 const props: ConfirmTransferDialogProps = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   token: 'blahblah',
 };

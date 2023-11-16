@@ -20,15 +20,15 @@ const mockImages = imageFactory.buildList(10);
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,
   category: 'community',
-  handleSelectUDFs: jest.fn(),
+  handleSelectUDFs: vi.fn(),
   header: '',
   imagesData: {},
   regionsData: [],
-  request: jest.fn(),
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateStackScript: jest.fn(),
-  updateTypeID: jest.fn(),
+  request: vi.fn(),
+  updateImageID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateStackScript: vi.fn(),
+  updateTypeID: vi.fn(),
   userCannotCreateLinode: false,
 };
 

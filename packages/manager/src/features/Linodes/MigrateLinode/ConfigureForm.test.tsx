@@ -47,13 +47,13 @@ const mockLinodeType = typeFactory.build({
   ],
 });
 
-describe('ConfigureForm component with price comparison', () => {
-  const handleSelectRegion = jest.fn();
-  const currentPriceLabel = 'Current Price';
-  const newPriceLabel = 'New Price';
-  const currentPricePanel = 'current-price-panel';
-  const newPricePanel = 'new-price-panel';
+const handleSelectRegion = vi.fn();
+const currentPriceLabel = 'Current Price';
+const newPriceLabel = 'New Price';
+const currentPricePanel = 'current-price-panel';
+const newPricePanel = 'new-price-panel';
 
+describe('ConfigureForm component with price comparison', () => {
   const props = {
     backupEnabled: true,
     currentRegion: 'us-east',

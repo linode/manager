@@ -32,7 +32,7 @@ export const transferDisplayDialogProps = (
     generalPoolUsage: mockData,
     generalPoolUsagePct: calculatePoolUsagePct(mockData),
     isOpen: true,
-    onClose: jest.fn(),
+    onClose: vi.fn(),
     regionTransferPools: getRegionTransferPools(
       mockData,
       regionFactory.buildList(3)
