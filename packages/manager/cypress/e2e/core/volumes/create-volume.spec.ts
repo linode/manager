@@ -8,11 +8,6 @@ import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -40,18 +35,11 @@ describe('volume create flow', () => {
       regionLabel: region.label,
     };
 
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     interceptCreateVolume().as('createVolume');
 
     cy.visitWithLogin('/volumes/create', {
       localStorageOverrides: pageSizeOverride,
     });
-
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
 
     // Fill out and submit volume create form.
     containsClick('Label').type(volume.label);
@@ -98,19 +86,11 @@ describe('volume create flow', () => {
     };
 
     cy.defer(createLinode(linodeRequest), 'creating Linode').then((linode) => {
-      mockAppendFeatureFlags({
-        dcSpecificPricing: makeFeatureFlagData(false),
-      }).as('getFeatureFlags');
-
-      mockGetFeatureFlagClientstream().as('getClientStream');
-
       interceptCreateVolume().as('createVolume');
 
       cy.visitWithLogin('/volumes/create', {
         localStorageOverrides: pageSizeOverride,
       });
-
-      cy.wait(['@getFeatureFlags', '@getClientStream']);
 
       // Fill out and submit volume create form.
       containsClick('Label').type(volume.label);

@@ -7,7 +7,7 @@ import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { BackupLinodeRow } from './BackupLinodeRow';
 
 describe('BackupLinodeRow', () => {
-  it('should render linode, plan label, and backups price', async () => {
+  it('should render linode, plan label, and base backups price', async () => {
     server.use(
       rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
         return res(
@@ -35,7 +35,7 @@ describe('BackupLinodeRow', () => {
     expect(await findByText('$12.99/mo')).toBeVisible();
   });
 
-  it('should render region and region-specific pricing if dcSpecificPricing feature flag is on', async () => {
+  it('should render linode, plan label, and DC-specific backups price', async () => {
     server.use(
       rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
         return res(
@@ -70,9 +70,7 @@ describe('BackupLinodeRow', () => {
     });
 
     const { findByText, getByText } = renderWithTheme(
-      wrapWithTableBody(<BackupLinodeRow linode={linode} />, {
-        flags: { dcSpecificPricing: true },
-      })
+      wrapWithTableBody(<BackupLinodeRow linode={linode} />)
     );
 
     expect(getByText('my-dc-pricing-linode-to-back-up')).toBeVisible();

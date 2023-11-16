@@ -55,6 +55,8 @@ describe('SubnetLinodeRow', () => {
       })
     );
 
+    const handleUnassignLinode = vi.fn();
+
     const {
       getAllByRole,
       getAllByText,

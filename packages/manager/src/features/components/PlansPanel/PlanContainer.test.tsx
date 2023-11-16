@@ -13,15 +13,8 @@ const mockPlans: PlanSelectionType[] = planSelectionTypeFactory.buildList(2);
 
 beforeAll(() => mockMatchMedia());
 
-// Mock the useFlags hook
-jest.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    dcSpecificPricing: true,
-  }),
-}));
-
 describe('PlanContainer', () => {
-  it('shows the no region selected message when no region is selected with the dcSpecificPricing off', () => {
+  it('shows the no region selected message when no region is selected', () => {
     const { getByText } = renderWithTheme(
       <PlanContainer
         onSelect={() => {}}

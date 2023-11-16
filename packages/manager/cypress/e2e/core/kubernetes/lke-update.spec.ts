@@ -28,11 +28,6 @@ import {
 import type { PoolNodeResponse, Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel } from 'support/util/random';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { getRegionById } from 'support/util/regions';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 
@@ -742,14 +737,6 @@ describe('LKE cluster updates', () => {
 });
 
 describe('LKE cluster updates for DC-specific prices', () => {
-  beforeEach(() => {
-    //TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-  });
-
   /*
    * - Confirms node pool resize UI flow using mocked API responses.
    * - Confirms that pool size can be increased and decreased.

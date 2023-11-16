@@ -6,9 +6,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TPAProviders } from './TPAProviders';
 
-jest.mock('src/hooks/useFlags', () => ({
+vi.mock('src/hooks/useFlags', () => ({
   __esModule: true,
-  useFlags: jest.fn().mockReturnValue({
+  useFlags: vi.fn().mockReturnValue({
     tpaProviders: [
       {
         displayName: 'Google',

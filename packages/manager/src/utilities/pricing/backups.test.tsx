@@ -62,7 +62,6 @@ describe('getTotalBackupsPrice', () => {
     });
     expect(
       getTotalBackupsPrice({
-        flags: { dcSpecificPricing: false },
         linodes,
         types,
       })
@@ -96,7 +95,6 @@ describe('getTotalBackupsPrice', () => {
     });
     expect(
       getTotalBackupsPrice({
-        flags: { dcSpecificPricing: true },
         linodes,
         types,
       })

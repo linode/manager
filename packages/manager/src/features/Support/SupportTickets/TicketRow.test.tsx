@@ -8,13 +8,13 @@ import { TicketRow } from './TicketRow';
 
 const supportTicket = supportTicketFactory.build();
 
-window.matchMedia = jest.fn().mockImplementation((query) => {
+window.matchMedia = vi.fn().mockImplementation((query) => {
   return {
-    addListener: jest.fn(),
+    addListener: vi.fn(),
     matches: false,
     media: query,
     onchange: null,
-    removeListener: jest.fn(),
+    removeListener: vi.fn(),
   };
 });
 

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
 
 interface Props {
@@ -13,10 +12,8 @@ interface Props {
 }
 
 export const PricePanel = ({ currentSize, regionId, value }: Props) => {
-  const flags = useFlags();
   const getPrice = (size: number) => {
     return getDynamicVolumePrice({
-      flags,
       regionId,
       size,
     });

@@ -8,10 +8,13 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { LinodeBackups } from './LinodeBackups';
 
 // I'm so sorry, but I don't know a better way to mock react-router-dom params.
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useParams: jest.fn(() => ({ linodeId: 1 })),
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<any>('react-router-dom');
+  return {
+    ...actual,
+    useParams: vi.fn(() => ({ linodeId: 1 })),
+  };
+});
 
 describe('LinodeBackups', () => {
   it('renders a list of different types of backups if backups are enabled', async () => {
