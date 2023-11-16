@@ -33,6 +33,8 @@ import {
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
+import { Theme } from '@mui/material/styles';
+
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
   const theme = useTheme();
@@ -235,6 +237,7 @@ const unrecommendedConfigurationNotice = (
   <DismissibleBanner
     important
     preferenceKey={UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY}
+    sx={(theme: Theme) => ({ marginBottom: theme.spacing(2) })}
     variant="warning"
   >
     <Typography>
