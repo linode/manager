@@ -2,11 +2,11 @@ import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { firewallFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
-import { firewallFactory } from 'src/factories';
 
 const props = {
   onClose: jest.fn(),
@@ -54,11 +54,11 @@ describe('Create Firewall Drawer', () => {
 
     act(() => {
       userEvent.type(screen.getByLabelText('Label (required)'), options.label);
-      // userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
-      // userEvent.type(
-      //   screen.getByLabelText('NodeBalancers'),
-      //   'test nodebalancer'
-      // );
+      userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
+      userEvent.type(
+        screen.getByLabelText('NodeBalancers'),
+        'test nodebalancer'
+      );
 
       userEvent.click(getByTestId('submit'));
     });
