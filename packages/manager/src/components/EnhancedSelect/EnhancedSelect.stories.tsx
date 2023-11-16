@@ -87,6 +87,6 @@ const meta: Meta<BaseSelectProps<Item, boolean, boolean>> = {
     options: fruits,
   },
   component: Select,
-  title: 'Components/Selects/Enhanced Select',
+  title: 'Components/Selects/Enhanced Select (deprecated)',
 };
 export default meta;
