@@ -108,9 +108,9 @@ export interface BaseSelectProps<
   inline?: boolean;
   /**
    * To specify a custom input ID
-   * @default false
+   * @default convertToKebabCase(label)
    */
-  inputId?: any;
+  inputId?: string | undefined;
   /**
    * If true, the input will be clearable
    * @default false
@@ -129,9 +129,19 @@ export interface BaseSelectProps<
         value: Exclude<ValueType<I, IsMulti>, null | undefined>,
         action: ActionMeta<I>
       ) => void;
-  // document body directly, so the overflow is visible over the edge of the modal.
+  /**
+   * document body directly, so the overflow is visible over the edge of the modal.
+   */
   overflowPortal?: boolean;
+  /**
+   * If true, the input will be required.
+   * @default false
+   */
   required?: boolean;
+  /**
+   * If true, the input's styles will minify the padding and font size.
+   * @default false
+   */
   small?: boolean;
   /*
    textFieldProps isn't native to react-select
@@ -251,7 +261,7 @@ const Select = <
           ? inputId
           : typeof label === 'string'
           ? convertToKebabCase(label)
-          : null
+          : undefined
       }
       /*
         textFieldProps isn't native to react-select
