@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -163,15 +164,15 @@ const VPCDetail = () => {
                 Description
               </span>{' '}
             </Typography>
-            <Typography>
+            <Typography sx={{ overflowWrap: 'anywhere', wordBreak: 'normal' }}>
               {description}{' '}
               {description.length > 150 && (
-                <button
+                <StyledLinkButton
                   onClick={() => setShowFullDescription((show) => !show)}
-                  style={{ ...theme.applyLinkStyles, fontSize: '0.875rem' }}
+                  sx={{ fontSize: '0.875rem' }}
                 >
                   Read {showFullDescription ? 'Less' : 'More'}
-                </button>
+                </StyledLinkButton>
               )}
             </Typography>
           </StyledDescriptionBox>
