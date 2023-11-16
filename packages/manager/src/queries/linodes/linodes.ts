@@ -1,4 +1,5 @@
 import {
+  Config,
   CreateLinodeRequest,
   Devices,
   Kernel,
@@ -35,10 +36,12 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
+
 import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
 import { queryPresets } from '../base';
-import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 import { queryKey as PROFILE_QUERY_KEY } from '../profile';
+import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
 export const queryKey = 'linodes';
 
@@ -180,7 +183,10 @@ export const useCloneLinodeMutation = () => {
   });
 };
 
-export const useBootLinodeMutation = (id: number) => {
+export const useBootLinodeMutation = (
+  id: number,
+  configsToUpdate?: Config[]
+) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { config_id?: number }>(
     ({ config_id }) => linodeBoot(id, config_id),
@@ -190,12 +196,24 @@ export const useBootLinodeMutation = (id: number) => {
         queryClient.invalidateQueries([queryKey, 'all']);
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+        if (configsToUpdate) {
+          const updatedConfigs: Config[] = manuallySetVPCConfigInterfacesToActive(
+            configsToUpdate
+          );
+          queryClient.setQueryData(
+            [queryKey, 'linode', id, 'configs'],
+            updatedConfigs
+          );
+        }
       },
     }
   );
 };
 
-export const useRebootLinodeMutation = (id: number) => {
+export const useRebootLinodeMutation = (
+  id: number,
+  configsToUpdate?: Config[]
+) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { config_id?: number }>(
     ({ config_id }) => linodeReboot(id, config_id),
@@ -205,6 +223,15 @@ export const useRebootLinodeMutation = (id: number) => {
         queryClient.invalidateQueries([queryKey, 'all']);
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+        if (configsToUpdate) {
+          const updatedConfigs: Config[] = manuallySetVPCConfigInterfacesToActive(
+            configsToUpdate
+          );
+          queryClient.setQueryData(
+            [queryKey, 'linode', id, 'configs'],
+            updatedConfigs
+          );
+        }
       },
     }
   );
