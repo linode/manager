@@ -102,7 +102,7 @@ describe('Expiring Tokens', () => {
 
 describe('getURL', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   it('replaces the API baseURL with the one from the environment', () => {

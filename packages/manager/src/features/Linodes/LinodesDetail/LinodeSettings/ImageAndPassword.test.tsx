@@ -17,10 +17,10 @@ const props = {
   imagesLastUpdated: 0,
   imagesLoading: false,
   linodeId: 0,
-  onImageChange: jest.fn(),
-  onPasswordChange: jest.fn(),
+  onImageChange: vi.fn(),
+  onPasswordChange: vi.fn(),
   password: '',
-  setAuthorizedUsers: jest.fn(),
+  setAuthorizedUsers: vi.fn(),
 };
 
 const component = shallow(wrapWithTheme(<ImageAndPassword {...props} />));

@@ -11,12 +11,12 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
 interface Props {

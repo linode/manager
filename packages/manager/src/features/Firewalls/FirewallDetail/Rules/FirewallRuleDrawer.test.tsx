@@ -24,12 +24,12 @@ import { FirewallRuleError, PORT_PRESETS } from './shared';
 
 import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 
-const mockOnClose = jest.fn();
-const mockOnSubmit = jest.fn();
+const mockOnClose = vi.fn();
+const mockOnSubmit = vi.fn();
 
 const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const props: FirewallRuleDrawerProps = {
   category: 'inbound',

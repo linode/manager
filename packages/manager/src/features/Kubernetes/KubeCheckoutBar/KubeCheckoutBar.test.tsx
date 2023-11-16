@@ -13,17 +13,17 @@ import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 
 const props: Props = {
-  createCluster: jest.fn(),
+  createCluster: vi.fn(),
   hasAgreed: false,
   highAvailability: false,
   highAvailabilityPrice: LKE_HA_PRICE,
   pools,
   region: 'us-east',
-  removePool: jest.fn(),
+  removePool: vi.fn(),
   showHighAvailability: true,
   submitting: false,
-  toggleHasAgreed: jest.fn(),
-  updatePool: jest.fn(),
+  toggleHasAgreed: vi.fn(),
+  updatePool: vi.fn(),
 };
 
 const renderComponent = (_props: Props) =>
@@ -79,24 +79,12 @@ describe('KubeCheckoutBar', () => {
     await findByText(/\$210\.00/);
   });
 
-  it('should display the DC-Specific total price of the cluster for a region with a price increase if the DC-Specific pricing feature flag is on', async () => {
-    const { findByText } = renderWithTheme(
-      <KubeCheckoutBar {...props} region="id-cgk" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
-    );
-
-    // 5 node pools * 3 linodes per pool * 10 per linode * 20% increase for Jakarta
-    await findByText(/\$180\.00/);
-  });
-
-  it('should display the base total price of the cluster for a region with a price increase if the DC-Specific pricing feature flag is off', async () => {
+  it('should display the DC-Specific total price of the cluster for a region with a price increase', async () => {
     const { findByText } = renderWithTheme(
       <KubeCheckoutBar {...props} region="id-cgk" />
     );
 
-    // 5 node pools * 3 linodes per pool * 10 per linode * no price increase for Jakarta
-    await findByText(/\$150\.00/);
+    // 5 node pools * 3 linodes per pool * 10 per linode * 20% increase for Jakarta
+    await findByText(/\$180\.00/);
   });
 });

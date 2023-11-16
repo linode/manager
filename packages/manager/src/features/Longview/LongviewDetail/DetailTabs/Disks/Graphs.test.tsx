@@ -5,10 +5,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { Graphs } from './Graphs';
 import type { GraphProps } from './Graphs';
 
-afterAll(async (done) => {
-  done();
-});
-
 const baseProps: GraphProps = {
   childOf: false,
   diskLabel: 'helloworld',

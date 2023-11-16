@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AuthenticationSettings } from './AuthenticationSettings';
 
-jest.mock('libphonenumber-js', () => ({
+vi.mock('libphonenumber-js', () => ({
   parsePhoneNumber: () => ({
     formatInternational: () => '',
   }),

@@ -409,6 +409,11 @@ const aglb = [
     const certificates = certificateFactory.buildList(3);
     return res(ctx.json(makeResourcePage([tlsCertificate, ...certificates])));
   }),
+  rest.get('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    const id = Number(req.params.certId);
+    const body = req.body as any;
+    return res(ctx.json(certificateFactory.build({ id, ...body })));
+  }),
   rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
     return res(ctx.json(certificateFactory.build()));
   }),
@@ -423,7 +428,7 @@ const aglb = [
 ];
 
 const vpc = [
-  rest.get('*/vpcs', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs', (req, res, ctx) => {
     const vpcsWithSubnet1 = vpcFactory.buildList(5, {
       subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
     });
@@ -442,7 +447,7 @@ const vpc = [
       )
     );
   }),
-  rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
     return res(
       ctx.json(
         vpcFactory.build({
@@ -452,27 +457,27 @@ const vpc = [
       )
     );
   }),
-  rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
-  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+  rest.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
+  rest.delete('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.put('*/vpcs/:vpcId', (req, res, ctx) => {
+  rest.put('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json(vpcFactory.build({ description: 'testing' })));
   }),
-  rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs/:vpcID', (req, res, ctx) => {
     const id = Number(req.params.id);
     return res(ctx.json(vpcFactory.build({ id })));
   }),
-  rest.post('*/vpcs', (req, res, ctx) => {
+  rest.post('*/v4beta/vpcs', (req, res, ctx) => {
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
   }),
-  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+  rest.post('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
     const subnet = subnetFactory.build({ ...(req.body as any) });
     return res(ctx.json(subnet));
   }),
@@ -673,6 +678,11 @@ export const handlers = [
       )
     );
   }),
+  rest.get('*/linode/instances/:id/firewalls', async (req, res, ctx) => {
+    const firewalls = firewallFactory.buildList(10);
+    firewallFactory.resetSequenceNumber();
+    return res(ctx.json(makeResourcePage(firewalls)));
+  }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -755,20 +765,20 @@ export const handlers = [
   rest.get('*/lke/clusters/*/recycle', async (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/firewalls/', (req, res, ctx) => {
+  rest.get('*/v4beta/networking/firewalls', (req, res, ctx) => {
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
     return res(ctx.json(makeResourcePage(firewalls)));
   }),
-  rest.get('*/firewalls/*/devices', (req, res, ctx) => {
+  rest.get('*/v4beta/networking/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
   }),
-  rest.get('*/firewalls/:firewallId', (req, res, ctx) => {
+  rest.get('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build();
     return res(ctx.json(firewall));
   }),
-  rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
+  rest.put('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build({
       status: req.body?.['status'] ?? 'disabled',
     });
@@ -777,7 +787,7 @@ export const handlers = [
   // rest.post('*/account/agreements', (req, res, ctx) => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
-  rest.post('*/firewalls', (req, res, ctx) => {
+  rest.post('*/v4beta/networking/firewalls', (req, res, ctx) => {
     const payload = req.body as any;
     const newFirewall = firewallFactory.build({
       label: payload.label ?? 'mock-firewall',

@@ -30,7 +30,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -1005,15 +1005,16 @@ export const LinodeConfigDialog = (props: Props) => {
                     ipamAddress={thisInterface.ipam_address}
                     key={`eth${idx}-interface`}
                     label={thisInterface.label}
+                    nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
                     purpose={thisInterface.purpose}
                     readOnly={isReadOnly}
                     region={linode?.region}
+                    regionHasVLANs={regionHasVLANS}
+                    regionHasVPCs={regionHasVPCs}
                     slotNumber={idx}
                     subnetId={thisInterface.subnet_id}
                     vpcIPv4={thisInterface.ipv4?.vpc}
                     vpcId={thisInterface.vpc_id}
-                    regionHasVLANs={regionHasVLANS}
-                    regionHasVPCs={regionHasVPCs}
                   />
                 );
               })}
