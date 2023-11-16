@@ -17,7 +17,7 @@ export const bg = {
   mainContentBanner: Colors.Neutrals[100],
   offWhite: Colors.Neutrals[5],
   primaryNavPaper: Colors.Neutrals[100],
-  tableHeader: Colors.Neutrals.White, // TODO: We need to ask CDS team about this 'Colors.Neutrals[5]' doesn't work...
+  tableHeader: Colors.Neutrals[10], // TODO: We need to ask CDS team about this 'Colors.Neutrals[5]' doesn't work...
   white: Colors.Neutrals.White,
 } as const;
 
