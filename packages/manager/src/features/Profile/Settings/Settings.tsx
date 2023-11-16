@@ -1,4 +1,3 @@
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -8,7 +7,8 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
-import { Toggle } from 'src/components/Toggle';
+import { Stack } from 'src/components/Stack';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';

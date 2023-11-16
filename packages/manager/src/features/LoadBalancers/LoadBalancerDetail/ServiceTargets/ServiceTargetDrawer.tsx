@@ -18,7 +18,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import {
