@@ -29,7 +29,6 @@ import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegion
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
@@ -118,8 +117,6 @@ const NodeBalancerCreate = () => {
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-
-  const flags = useFlags();
 
   const disabled =
     Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
@@ -401,7 +398,6 @@ const NodeBalancerCreate = () => {
 
   const price = getDCSpecificPrice({
     basePrice: NODEBALANCER_PRICE,
-    flags,
     regionId: nodeBalancerFields.region,
   });
 

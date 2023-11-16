@@ -116,7 +116,7 @@ export const getAccountAgreements = () =>
  */
 export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
   Request<Page<AccountAvailability>>(
-    setURL(`${API_ROOT}/account/availability`),
+    setURL(`${BETA_API_ROOT}/account/availability`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
@@ -131,7 +131,9 @@ export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
  */
 export const getAccountAvailability = (regionId: string) =>
   Request<AccountAvailability>(
-    setURL(`${API_ROOT}/account/availability/${encodeURIComponent(regionId)}`),
+    setURL(
+      `${BETA_API_ROOT}/account/availability/${encodeURIComponent(regionId)}`
+    ),
     setMethod('GET')
   );
 

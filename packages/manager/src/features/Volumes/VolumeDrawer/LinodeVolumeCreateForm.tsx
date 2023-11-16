@@ -11,7 +11,6 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { useFlags } from 'src/hooks/useFlags';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
@@ -53,8 +52,6 @@ const initialValues: FormState = {
 export const LinodeVolumeCreateForm = (props: Props) => {
   const { linode, onClose, openDetails } = props;
   const { enqueueSnackbar } = useSnackbar();
-
-  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -139,18 +136,10 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         data-qa-volume-size-help
         variant="body1"
       >
-        {flags.dcSpecificPricing ? (
-          <span>
-            A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in size.
-            Up to eight Volumes can be attached to a single Linode.
-          </span>
-        ) : (
-          <span>
-            A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in size
-            and costs $0.10/GB per month. <br />
-            Up to eight volumes can be attached to a single Linode.
-          </span>
-        )}
+        <span>
+          A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in size. Up
+          to eight Volumes can be attached to a single Linode.
+        </span>
       </Typography>
       <TextField
         data-qa-volume-label

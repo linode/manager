@@ -1,4 +1,5 @@
 import {
+  createLoadbalancerConfiguration,
   deleteLoadbalancerConfiguration,
   getLoadbalancerConfigurations,
   updateLoadbalancerConfiguration,
@@ -15,6 +16,7 @@ import { QUERY_KEY } from './loadbalancers';
 import type {
   APIError,
   Configuration,
+  ConfigurationPayload,
   Filter,
   Params,
   ResourcePage,
@@ -63,6 +65,26 @@ export const useLoadBalancerConfigurationMutation = (
   return useMutation<Configuration, APIError[], UpdateConfigurationPayload>(
     (data) =>
       updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'configurations',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerConfigurationCreateMutation = (
+  loadbalancerId: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Configuration, APIError[], ConfigurationPayload>(
+    (data) => createLoadbalancerConfiguration(loadbalancerId, data),
     {
       onSuccess() {
         queryClient.invalidateQueries([
