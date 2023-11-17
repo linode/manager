@@ -3,7 +3,7 @@
 This directory contains the GitHub Actions workflows that power continuous integration and end-to-end testing for Linode Cloud Manager.
 
 ## Continuous Integration
-The `ci` workflow handles testing, building, and publishing of packages in this repository. Tests are run via [Jest](https://jestjs.io/) for `api-v4` and `manager`.
+The `ci` workflow handles testing, building, and publishing of packages in this repository. Tests are run using [Vitest](https://vitest.dev/) for `api-v4` and `manager`.
 
 If the continuous integration workflow was triggered via a push to the `master` branch, the built packages are published:
 
@@ -54,4 +54,4 @@ Cypress tests are parallelized across four containers, and tests are automatical
 * [_Introduction to Cypress_](https://docs.cypress.io/guides/core-concepts/introduction-to-cypress) (`docs.cypress.io`)
 * [Cypress: _GitHub Actions_](https://docs.cypress.io/guides/continuous-integration/github-actions#Cypress-GitHub-Action) (`docs.cypress.io`)
 * [Cypress: _Parallelization_](https://docs.cypress.io/guides/guides/parallelization) (`docs.cypress.io`)
-* [Jest: _Getting Started_](https://jestjs.io/docs/getting-started) (`jestjs.io`)
+* [Vitest: _Getting Started_](https://vitest.dev/guide/) (`vitest.dev`)

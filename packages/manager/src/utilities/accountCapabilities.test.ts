@@ -4,7 +4,7 @@ const isObjectStorageEnabled = isFeatureEnabled('Object Storage');
 
 describe('isObjectStorageEnabled', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
   describe('when "Object Storage EAP" is NOT in beta_programs...', () => {
     it("returns `false` when OBJ isn't enabled for the environment", () => {

@@ -7,7 +7,7 @@ import { BucketTableRow } from './BucketTableRow';
 
 import type { BucketTableRowProps } from './BucketTableRow';
 
-const mockOnRemove = jest.fn();
+const mockOnRemove = vi.fn();
 const bucket = buckets[0];
 
 describe('BucketTableRow', () => {
@@ -17,7 +17,7 @@ describe('BucketTableRow', () => {
     hostname: bucket.hostname,
     label: bucket.label,
     objects: bucket.objects,
-    onDetails: jest.fn(),
+    onDetails: vi.fn(),
     onRemove: mockOnRemove,
     size: bucket.size,
   };

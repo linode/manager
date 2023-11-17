@@ -1,16 +1,13 @@
 import { Loadbalancer } from '@linode/api-v4';
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurations';
 
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
+import { Ports } from './Ports';
 import { RegionsCell } from './RegionsCell';
 
 export interface LoadBalancerHandlers {
@@ -18,14 +15,12 @@ export interface LoadBalancerHandlers {
 }
 
 interface Props {
-  loadBalancer: Loadbalancer;
   handlers: LoadBalancerHandlers;
+  loadBalancer: Loadbalancer;
 }
 
-export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
-  const { id, label, regions } = loadBalancer;
-  const { data: configurations } = useLoadBalancerConfigurationsQuery(id);
-  const ports = configurations?.data.map((config) => config.port);
+export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
+  const { hostname, id, label, regions } = loadBalancer;
 
   return (
     <TableRow
@@ -35,18 +30,13 @@ export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
       <TableCell>
         <Link to={`/loadbalancers/${id}`}>{label}</Link>
       </TableCell>
-      <TableCell>
-        {/* TODO: AGLB - These are stub values for now*/}
-        <Stack alignItems="center" direction="row">
-          <StatusIcon status="active" />
-          <Typography>4 up</Typography>
-          <Typography mx={1}>&mdash;</Typography>
-          <StatusIcon status="error" />
-          <Typography>6 down</Typography>
-        </Stack>
-      </TableCell>
       <Hidden smDown>
-        <TableCell>{ports?.join(', ')}</TableCell>
+        <TableCell>
+          <Ports loadbalancerId={id} />
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>{hostname}</TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell>
