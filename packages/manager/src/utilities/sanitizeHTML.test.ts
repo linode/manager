@@ -118,10 +118,12 @@ describe('sanitizeHTML', () => {
 });
 
 describe('getAllowedHTMLTags', () => {
-  expect(getAllowedHTMLTags('flexible')).toContain('span');
-  expect(getAllowedHTMLTags('strict')).not.toContain('span');
-  expect(getAllowedHTMLTags('none')).toEqual([]);
-  expect(getAllowedHTMLTags('none', ['code'])).toContain('code');
+  it('returns expected allowed tags', () => {
+    expect(getAllowedHTMLTags('flexible')).toContain('span');
+    expect(getAllowedHTMLTags('strict')).not.toContain('span');
+    expect(getAllowedHTMLTags('none')).toEqual([]);
+    expect(getAllowedHTMLTags('none', ['code'])).toContain('code');
+  });
 });
 
 describe('isURLValid', () => {

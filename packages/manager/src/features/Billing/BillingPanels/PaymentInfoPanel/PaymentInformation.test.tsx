@@ -8,9 +8,11 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
   return {
-    getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
+    ...actual,
+    getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
   };
 });
 

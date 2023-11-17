@@ -26,13 +26,13 @@ const storage = '1024 GB';
 const extendedType = extendedTypeFactory.build();
 
 const props: KubernetesPlanSelectionProps = {
-  getTypeCount: jest.fn(),
+  getTypeCount: vi.fn(),
   idx: 0,
-  onAdd: jest.fn(),
-  onSelect: jest.fn(),
+  onAdd: vi.fn(),
+  onSelect: vi.fn(),
   selectedRegionID: 'us-east',
   type: extendedType,
-  updatePlanCount: jest.fn(),
+  updatePlanCount: vi.fn(),
 };
 
 describe('KubernetesPlanSelection (table, desktop view)', () => {

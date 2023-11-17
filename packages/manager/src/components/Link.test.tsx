@@ -61,7 +61,7 @@ describe('Link component', () => {
   });
 
   it('calls the onClick handler when the link is clicked', () => {
-    const mockOnClick = jest.fn();
+    const mockOnClick = vi.fn();
     const mockProps: LinkProps = {
       children: 'External Link',
       external: true,

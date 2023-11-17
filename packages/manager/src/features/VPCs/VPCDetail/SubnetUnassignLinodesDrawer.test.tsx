@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   subnet: {
     id: 1,
