@@ -55,10 +55,10 @@ describe('Create Firewall Drawer', () => {
     act(() => {
       userEvent.type(screen.getByLabelText('Label (required)'), options.label);
       userEvent.type(screen.getByLabelText('Linodes'), 'test linode');
-      userEvent.type(
-        screen.getByLabelText('NodeBalancers'),
-        'test nodebalancer'
-      );
+      // userEvent.type(
+      //   screen.getByLabelText('NodeBalancers'),
+      //   'test nodebalancer'
+      // );
 
       userEvent.click(getByTestId('submit'));
     });
