@@ -36,6 +36,7 @@ import {
 } from './utils';
 
 import type { Route, RulePayload } from '@linode/api-v4';
+import { ROUTE_COPY } from './constants';
 
 interface Props {
   loadbalancerId: number;
@@ -197,27 +198,16 @@ export const RuleDrawer = (props: Props) => {
       wide
     >
       <form onSubmit={formik.handleSubmit}>
-        {/**
-         * @todo: AGLB update copy
-         */}
         <Typography sx={{ marginBottom: 2 }}>
-          This is how you create a rule and more about how it works.
+          {ROUTE_COPY.Rule.Description}
         </Typography>
         {generalErrors && <Notice text={generalErrors} variant="error" />}
         <Stack spacing={2}>
           <Stack bgcolor={(theme) => theme.bg.app} p={2.5} spacing={1.5}>
             <Typography variant="h3">Match Rule</Typography>
-            {route?.protocol === 'tcp' ? (
-              <Typography>
-                A TCP rule consists a percent allocation to a Service Target.
-              </Typography>
-            ) : (
-              <Typography>
-                A rule consists of a match type, and a pattern to match on
-                called a match value. Each rule can specify only one field or
-                pattern pair.
-              </Typography>
-            )}
+            <Typography>
+              {ROUTE_COPY.Rule.MatchRule[route?.protocol ?? 'tcp']}
+            </Typography>
             {route?.protocol !== 'tcp' && (
               <>
                 <TextField

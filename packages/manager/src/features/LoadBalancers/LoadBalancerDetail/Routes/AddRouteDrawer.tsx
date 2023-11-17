@@ -14,6 +14,7 @@ import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { RouteSelect } from './RouteSelect';
+import { ROUTE_COPY } from './constants';
 import { getRouteProtocolFromConfigurationProtocol } from './utils';
 
 import type { Configuration, CreateRoutePayload } from '@linode/api-v4';
@@ -35,14 +36,15 @@ export const AddRouteDrawer = (props: Props) => {
 
   const routeProtocol = getRouteProtocolFromConfigurationProtocol(
     configuration.protocol
-  ).toLocaleUpperCase();
+  );
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Route">
+      {ROUTE_COPY.Description[routeProtocol]}
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>
         <FormControlLabel
           control={<Radio />}
-          label={`Create New ${routeProtocol} Route`}
+          label={`Create New ${routeProtocol.toUpperCase()} Route`}
           value="new"
         />
         <FormControlLabel
