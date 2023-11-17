@@ -28,6 +28,7 @@ import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 import {
+  CONFIGURATION_COPY,
   getConfigurationPayloadFromConfiguration,
   initialValues,
 } from './constants';
@@ -158,7 +159,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         <Stack direction="row" spacing={2}>
           <Autocomplete
             textFieldProps={{
-              labelTooltipText: 'TODO: AGLB',
+              labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
             value={protocolOptions.find(
               (option) => option.value === formik.values.protocol
@@ -172,7 +173,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
           <TextField
             errorText={formik.errors.port}
             label="Port"
-            labelTooltipText="TODO: AGLB"
+            labelTooltipText={CONFIGURATION_COPY.Port}
             name="port"
             onChange={formik.handleChange}
             type="number"
@@ -183,7 +184,10 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
           <Stack maxWidth="600px">
             <Stack alignItems="center" direction="row">
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="TODO: AGLB" />
+              <TooltipIcon
+                status="help"
+                text={CONFIGURATION_COPY.Certificates}
+              />
             </Stack>
             {formik.touched.certificates &&
               typeof formik.errors.certificates === 'string' && (

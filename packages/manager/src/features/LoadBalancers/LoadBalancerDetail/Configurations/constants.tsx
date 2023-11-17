@@ -1,4 +1,9 @@
+import React from 'react';
+
+import { Typography } from 'src/components/Typography';
+
 import type { Configuration } from '@linode/api-v4';
+import { Link } from 'src/components/Link';
 
 export function getConfigurationPayloadFromConfiguration(
   configuration: Configuration
@@ -20,7 +25,21 @@ export const initialValues = {
   route_ids: [],
 };
 
+const DOCS_URL = 'https://deploy-preview-14--roaring-gelato-12dc9e.netlify.app';
+
 export const CONFIGURATION_COPY = {
   Certificates:
     'TLS termination certificates create an encrypted link between your clients and Global Load Balancer and terminate incoming traffic on the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over encrypted TLS connections. Responses from your service targets to your clients are also encrypted.',
+  Port: 'The inbound port that the load balancer listens on.',
+  Protocol: (
+    <Typography>
+      Set to either TCP, HTTP, or HTTPS. See{' '}
+      <Link
+        to={`${DOCS_URL}/docs/products/networking/global-loadbalancer/guides/protocols`}
+      >
+        Available Protocols
+      </Link>{' '}
+      for information.
+    </Typography>
+  ),
 };
