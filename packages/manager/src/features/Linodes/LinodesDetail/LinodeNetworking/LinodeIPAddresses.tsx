@@ -189,7 +189,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                       <LinodeIPAddressRow
                         {...ipDisplay}
                         {...handlers}
-                        disabled={
+                        isVPCOnlyLinode={
                           isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
                         }
                         key={ipDisplay.address}

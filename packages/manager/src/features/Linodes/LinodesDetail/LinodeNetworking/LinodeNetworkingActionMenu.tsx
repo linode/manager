@@ -13,10 +13,10 @@ import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicI
 import { IPTypes } from './types';
 
 interface Props {
-  disabled: boolean;
   ipAddress?: IPAddress | IPRange;
   ipType: IPTypes;
   isOnlyPublicIP: boolean;
+  isVPCOnlyLinode: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
   readOnly: boolean;
@@ -27,10 +27,10 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const {
-    disabled,
     ipAddress,
     ipType,
     isOnlyPublicIP,
+    isVPCOnlyLinode,
     onEdit,
     onRemove,
     readOnly,
@@ -58,14 +58,14 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const actions = [
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
       ? {
-          disabled: readOnly || isOnlyPublicIP || disabled,
+          disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
           onClick: () => {
             onRemove(ipAddress);
           },
           title: 'Delete',
           tooltip: readOnly
             ? readOnlyTooltip
-            : disabled
+            : isVPCOnlyLinode
             ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
             : isOnlyPublicIP
             ? isOnlyPublicIPTooltip
@@ -74,14 +74,14 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
       : null,
     onEdit && ipAddress && showEdit
       ? {
-          disabled: readOnly || disabled,
+          disabled: readOnly || isVPCOnlyLinode,
           onClick: () => {
             onEdit(ipAddress);
           },
           title: 'Edit RDNS',
           tooltip: readOnly
             ? readOnlyTooltip
-            : disabled
+            : isVPCOnlyLinode
             ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
             : undefined,
         }

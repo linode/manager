@@ -24,7 +24,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          disabled={false}
+          isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -47,7 +47,7 @@ describe('LinodeIPAddressRow', () => {
     const { findByRole, getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          disabled={true}
+          isVPCOnlyLinode={true}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -81,7 +81,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          disabled={false}
+          isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
           {...handlers}

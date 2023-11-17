@@ -1,9 +1,10 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
@@ -18,7 +19,6 @@ import {
 
 import { StyledActionTableCell } from './LinodeIPAddresses.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
-
 export interface IPAddressRowHandlers {
   handleOpenEditRDNS: (ip: IPAddress) => void;
   handleOpenEditRDNSForRange: (range: IPRange) => void;
@@ -28,7 +28,7 @@ export interface IPAddressRowHandlers {
 }
 
 interface Props {
-  disabled: boolean;
+  isVPCOnlyLinode: boolean;
   linodeId: number;
   readOnly: boolean;
 }
@@ -40,11 +40,11 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
     _ip,
     _range,
     address,
-    disabled,
     gateway,
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
+    isVPCOnlyLinode,
     linodeId,
     openRemoveIPDialog,
     openRemoveIPRangeDialog,
@@ -62,7 +62,7 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
   return (
     <StyledTableRow
       data-qa-ip={address}
-      disabled={disabled}
+      disabled={isVPCOnlyLinode}
       key={`${address}-${type}`}
     >
       <TableCell
@@ -70,8 +70,8 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
         parentColumn="Address"
         sx={{ whiteSpace: 'nowrap' }}
       >
-        <CopyTooltip copyableText disabled={disabled} text={address} />
-        {!disabled && <StyledCopyToolTip text={address} />}
+        <CopyTooltip copyableText disabled={isVPCOnlyLinode} text={address} />
+        {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
       <TableCell data-qa-ip-address parentColumn="Type">
         {type}
@@ -93,20 +93,20 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
       <StyledActionTableCell data-qa-action>
         {_ip ? (
           <LinodeNetworkingActionMenu
-            disabled={disabled}
             ipAddress={_ip}
             ipType={type}
             isOnlyPublicIP={isOnlyPublicIP}
+            isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={handleOpenEditRDNS}
             onRemove={openRemoveIPDialog}
             readOnly={readOnly}
           />
         ) : _range ? (
           <LinodeNetworkingActionMenu
-            disabled={disabled}
             ipAddress={_range}
             ipType={type}
             isOnlyPublicIP={isOnlyPublicIP}
+            isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={() => handleOpenEditRDNSForRange(_range)}
             onRemove={openRemoveIPRangeDialog}
             readOnly={readOnly}
@@ -168,10 +168,9 @@ const RangeRDNSCell = (props: {
   }
 
   return (
-    <button
+    <StyledLinkButton
       aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
       onClick={onViewDetails}
-      style={theme.applyLinkStyles}
     >
       <Typography
         sx={{
@@ -181,9 +180,9 @@ const RangeRDNSCell = (props: {
           color: theme.palette.primary.main,
         }}
       >
-        {ipsWithRDNS.length} Addresses
+        {ipsWithRDNS.length} Addresses2
       </Typography>
-    </button>
+    </StyledLinkButton>
   );
 };
 
