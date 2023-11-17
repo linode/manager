@@ -41,7 +41,6 @@ interface Props {
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
-  vpcId?: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
@@ -52,7 +51,6 @@ export const SubnetLinodeRow = (props: Props) => {
     linodeId,
     subnet,
     subnetId,
-    vpcId,
   } = props;
 
   const {
@@ -84,7 +82,7 @@ export const SubnetLinodeRow = (props: Props) => {
         'configs',
       ]);
     }
-  }, [linode, linodeId, queryClient, vpcId]);
+  }, [linode, linodeId, queryClient]);
 
   if (linodeLoading || !linode) {
     return (

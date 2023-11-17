@@ -63,7 +63,6 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           linodeId={linodeFactory1.id}
           subnetId={0}
-          vpcId={1}
         />
       ),
       {
@@ -130,7 +129,6 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           linodeId={linodeFactory1.id}
           subnetId={0}
-          vpcId={1}
         />
       ),
       {

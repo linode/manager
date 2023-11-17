@@ -252,7 +252,6 @@ export const VPCSubnetsTable = (props: Props) => {
                   linodeId={linodeInfo.id}
                   subnet={subnet}
                   subnetId={subnet.id}
-                  vpcId={vpcId}
                 />
               ))
             ) : (
