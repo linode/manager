@@ -6,7 +6,7 @@ import { PaginationControls } from './PaginationControls';
 
 const props = {
   count: 100,
-  onClickHandler: jest.fn(),
+  onClickHandler: vi.fn(),
   page: 1,
   pageSize: 25,
 };

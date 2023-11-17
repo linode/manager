@@ -15,7 +15,7 @@ describe('RenameDiskDrawer', () => {
       <RenameDiskDrawer
         disk={disk}
         linodeId={1}
-        onClose={jest.fn()}
+        onClose={vi.fn()}
         open={true}
       />
     );

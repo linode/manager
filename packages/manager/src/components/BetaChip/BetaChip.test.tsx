@@ -21,7 +21,7 @@ describe('BetaChip', () => {
   });
 
   it('triggers an onClick callback', () => {
-    const onClickMock = jest.fn();
+    const onClickMock = vi.fn();
     const { getByTestId } = renderWithTheme(
       <BetaChip color="default" onClick={onClickMock} />
     );

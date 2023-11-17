@@ -17,7 +17,7 @@ describe('EndpointTable', () => {
 
     const props = {
       endpoints,
-      onRemove: jest.fn(),
+      onRemove: vi.fn(),
     };
 
     const { getByText } = renderWithTheme(<EndpointTable {...props} />);
@@ -38,7 +38,7 @@ describe('EndpointTable', () => {
 
     const props = {
       endpoints,
-      onRemove: jest.fn(),
+      onRemove: vi.fn(),
     };
 
     const { getByLabelText } = renderWithTheme(<EndpointTable {...props} />);
@@ -74,7 +74,7 @@ describe('EndpointTable', () => {
     const props = {
       endpoints,
       errors,
-      onRemove: jest.fn(),
+      onRemove: vi.fn(),
     };
 
     const { getByText } = renderWithTheme(<EndpointTable {...props} />);
@@ -102,7 +102,7 @@ describe('EndpointTable', () => {
 
     const props = {
       endpoints,
-      onRemove: jest.fn(),
+      onRemove: vi.fn(),
     };
 
     const { findByText, getByText } = renderWithTheme(
