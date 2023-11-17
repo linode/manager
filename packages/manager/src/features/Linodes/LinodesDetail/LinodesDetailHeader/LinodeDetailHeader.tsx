@@ -13,11 +13,14 @@ import {
   Action,
   PowerActionsDialog,
 } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -56,6 +59,14 @@ const LinodeDetailHeader = () => {
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     matchedLinodeId
+  );
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+  const enableVPCLogic = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
   );
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
@@ -237,6 +248,7 @@ const LinodeDetailHeader = () => {
         action={powerAction ?? 'Reboot'}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
+        manuallyUpdateConfigs={enableVPCLogic}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog

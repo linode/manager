@@ -23,6 +23,7 @@ interface Props {
   action: Action;
   isOpen: boolean;
   linodeId: number | undefined;
+  manuallyUpdateConfigs?: boolean;
   onClose: () => void;
 }
 
@@ -38,7 +39,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, onClose } = props;
+  const { action, isOpen, linodeId, manuallyUpdateConfigs, onClose } = props;
   const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
@@ -59,13 +60,19 @@ export const PowerActionsDialog = (props: Props) => {
     error: bootError,
     isLoading: isBooting,
     mutateAsync: bootLinode,
-  } = useBootLinodeMutation(linodeId ?? -1);
+  } = useBootLinodeMutation(
+    linodeId ?? -1,
+    manuallyUpdateConfigs ? configs : undefined
+  );
 
   const {
     error: rebootError,
     isLoading: isRebooting,
     mutateAsync: rebootLinode,
-  } = useRebootLinodeMutation(linodeId ?? -1);
+  } = useRebootLinodeMutation(
+    linodeId ?? -1,
+    manuallyUpdateConfigs ? configs : undefined
+  );
 
   const {
     error: shutdownError,
