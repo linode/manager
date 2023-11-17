@@ -62,7 +62,7 @@ describe('PlanSelection (table, desktop)', () => {
         <PlanSelection
           idx={0}
           isCreate={true}
-          onSelect={() => jest.fn()}
+          onSelect={() => vi.fn()}
           type={mockPlan}
         />
       )

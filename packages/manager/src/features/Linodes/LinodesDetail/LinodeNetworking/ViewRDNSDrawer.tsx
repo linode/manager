@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useAllIPsQuery } from 'src/queries/linodes/networking';
 
-import { listIPv6InRange } from './LinodeIPAddresses';
+import { listIPv6InRange } from './LinodeIPAddressRow';
 
 interface Props {
   linodeId: number;
