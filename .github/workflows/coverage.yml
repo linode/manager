@@ -19,11 +19,9 @@ jobs:
         run: yarn
 
       - name: Run base branch coverage
-        run: yarn workspace linode-manager run coverage:summary
-
-      - name: Read base coverage
         id: read_base_coverage
         run: |
+          raw_coverage_output=$(yarn coverage:summary)
           coverage_json='./packages/manager/coverage/coverage-summary.json'
           echo "::set-output name=baseCoverage::$coverage_json"
 
