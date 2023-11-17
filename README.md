@@ -6,7 +6,7 @@
 </h2>
 
 <p align="center">
-  <img alt="Linode/Manager Coverage" src="https://img.shields.io/badge/%40linode%2Fmanager_coverage-N%2FA%25-yellow" />
+  <img alt="Linode/Manager Coverage" src="./packages/manager/coverage/badges.svg" />
 </p>
 
 

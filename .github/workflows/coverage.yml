@@ -18,11 +18,18 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Run base branch coverage and write to a file
+      - name: Run base branch coverage
+        run: yarn coverage:summary
+
+      - name: Read base coverage
+        id: read_base_coverage
         run: |
-          raw_coverage_output=$(yarn coverage:get)
-          ref_coverage_value==$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
-          echo "$ref_coverage_value" > ref_code_coverage.txt
+          coverage_json='./packages/manager/coverage/coverage-summary.json'
+          echo "::set-output name=baseCoverage::$coverage_json"
+
+      - name: Write base coverage to an artifact
+        run: |
+          echo "${{fromJson(steps.read_base_coverage.outputs.baseCoverage).total.lines.pct}}" > ref_code_coverage.txt
       
       - name: Upload code coverage for base branch
         uses: actions/upload-artifact@v3
@@ -50,12 +57,16 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Yarn test with coverage
-        run: yarn workspace linode-manager run test:coverage
+      - name: Run current branch coverage
+        run: yarn coverage:summary
 
-      - name: Run current branch coverage and write to a file
+      - name: Read current coverage
+        id: read_current_coverage
         run: |
-          raw_coverage_output=$(yarn coverage:get)
-          current_coverage_value=$(echo "$raw_coverage_output" | awk '/^[0-9]+\.[0-9]+$/{print; exit}')
-          echo "$current_coverage_value" > current_code_coverage.txt
+          coverage_json='./packages/manager/coverage/coverage-summary.json'
+          echo "::set-output name=currentCoverage::$coverage_json"
+
+      - name: Write base coverage to an artifact
+        run: |
+          echo "${{fromJson(steps.read_current_coverage.outputs.currentCoverage).total.lines.pct}}" > current_code_coverage.txt
 

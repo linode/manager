@@ -6,6 +6,9 @@ on:
     types:
       - completed
 
+permissions:
+  pull-requests: write
+
 jobs:
   comment:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
           name: current_code_coverage
 
       - name: Update Coverage Badge
-        run: yarn coverage:update
+        run: yarn coverage:badge
   
       - name: Generate Comment with Code Coverage
         run: |
@@ -50,7 +53,7 @@ jobs:
           fi
 
       - name: Post Comment
-        uses: mshick/add-pr-comment@v2
+        uses: mshick/add-pr-comment@7c0890544fb33b0bdd2e59467fbacb62e028a096 #v2.8.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           message: |
