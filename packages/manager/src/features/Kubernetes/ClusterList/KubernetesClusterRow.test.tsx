@@ -10,8 +10,8 @@ const cluster = kubernetesClusterFactory.build({ region: 'us-central' });
 
 const props: Props = {
   cluster,
-  openDeleteDialog: jest.fn(),
-  openUpgradeDialog: jest.fn(),
+  openDeleteDialog: vi.fn(),
+  openUpgradeDialog: vi.fn(),
 };
 
 describe('ClusterRow component', () => {

@@ -30,7 +30,7 @@ describe('Notice Component', () => {
   });
 
   it('handles click events', () => {
-    const handleClick = jest.fn();
+    const handleClick = vi.fn();
     const { getByText } = renderWithTheme(
       <Notice onClick={handleClick} text="Click me" />
     );
