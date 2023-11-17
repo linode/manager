@@ -28,7 +28,7 @@ jobs:
           name: current_code_coverage
 
       - name: Update Coverage Badge
-        run: yarn coverage-badge
+        run: yarn workspace linode-manager coverage:badge
   
       - name: Generate Comment with Code Coverage
         run: |
