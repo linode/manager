@@ -4,7 +4,6 @@ import { useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
@@ -168,7 +167,7 @@ const RangeRDNSCell = (props: {
   }
 
   return (
-    <StyledLinkButton
+    <button
       aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
       onClick={onViewDetails}
     >
@@ -182,7 +181,7 @@ const RangeRDNSCell = (props: {
       >
         {ipsWithRDNS.length} Addresses2
       </Typography>
-    </StyledLinkButton>
+    </button>
   );
 };
 
