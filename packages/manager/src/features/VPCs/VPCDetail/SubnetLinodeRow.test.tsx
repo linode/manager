@@ -111,7 +111,7 @@ describe('SubnetLinodeRow', () => {
           )
         );
       }),
-      rest.get('*/instances/*/configs', async (req, res, ctx) => {
+      rest.get('*/instances/*/configs', (req, res, ctx) => {
         const configs = linodeConfigFactory.build({
           interfaces: [vpcInterface],
         });

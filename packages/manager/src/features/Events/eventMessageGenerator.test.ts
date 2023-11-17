@@ -2,8 +2,9 @@ import { Event } from '@linode/api-v4/lib/account';
 
 import { entityFactory, eventFactory } from 'src/factories/events';
 
-import { applyLinking } from './eventMessageGenerator';
 import {
+  applyBolding,
+  applyLinking,
   eventMessageCreators,
   generateEventMessage,
   safeSecondaryEntityLabel,
@@ -167,6 +168,21 @@ describe('Event message generation', () => {
       const result = applyLinking(mockEvent, message);
 
       expect(result).toEqual('created entity Null label');
+    });
+  });
+
+  describe('apply bolding to messages', () => {
+    it('should return empty for null message', () => {
+      const message = applyBolding('');
+      expect(message).toEqual('');
+    });
+    it('should correctly apply bolding', () => {
+      const message1 = applyBolding('booted should be bolded, but not xbooted');
+      const message2 = applyBolding('reboot booted rebooted');
+      const message3 = applyBolding('no bolding here: reboots');
+      expect(message1).toEqual('**booted** should be bolded, but not xbooted');
+      expect(message2).toEqual('**reboot** **booted** **rebooted**');
+      expect(message3).toEqual('no bolding here: reboots');
     });
   });
 });
