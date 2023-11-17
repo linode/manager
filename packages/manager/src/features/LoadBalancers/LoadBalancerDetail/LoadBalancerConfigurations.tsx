@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { Box } from 'src/components/Box';
@@ -15,6 +15,7 @@ import { ConfigurationForm } from './Configurations/ConfigurationForm';
 
 export const LoadBalancerConfigurations = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
+  const history = useHistory();
 
   const [isCreating, setIsCreating] = useState(false);
 
@@ -56,9 +57,14 @@ export const LoadBalancerConfigurations = () => {
         {isCreating && (
           <Paper>
             <ConfigurationForm
+              onSuccess={(configuration) => {
+                history.push(
+                  `/loadbalancers/${loadbalancerId}/configurations/${configuration.id}`
+                );
+                setIsCreating(false);
+              }}
               mode="create"
               onCancel={() => setIsCreating(false)}
-              onSuccess={() => setIsCreating(false)}
             />
           </Paper>
         )}
