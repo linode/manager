@@ -12,11 +12,7 @@ describe('VPC Table Row', () => {
 
     const { getAllByText, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <VPCRow
-          handleDeleteVPC={jest.fn()}
-          handleEditVPC={jest.fn()}
-          vpc={vpc}
-        />
+        <VPCRow handleDeleteVPC={vi.fn()} handleEditVPC={vi.fn()} vpc={vpc} />
       )
     );
 
@@ -31,12 +27,12 @@ describe('VPC Table Row', () => {
 
   it('should have a delete button that calls the provided callback when clicked', () => {
     const vpc = vpcFactory.build();
-    const handleDelete = jest.fn();
+    const handleDelete = vi.fn();
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={handleDelete}
-          handleEditVPC={jest.fn()}
+          handleEditVPC={vi.fn()}
           vpc={vpc}
         />
       )
@@ -48,11 +44,11 @@ describe('VPC Table Row', () => {
 
   it('should have an edit button that calls the provided callback when clicked', () => {
     const vpc = vpcFactory.build();
-    const handleEdit = jest.fn();
+    const handleEdit = vi.fn();
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
-          handleDeleteVPC={jest.fn()}
+          handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           vpc={vpc}
         />

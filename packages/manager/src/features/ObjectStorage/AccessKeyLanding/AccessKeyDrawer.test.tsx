@@ -15,8 +15,8 @@ describe('AccessKeyDrawer', () => {
   const props: AccessKeyDrawerProps = {
     isRestrictedUser: false,
     mode: 'creating' as MODE,
-    onClose: jest.fn(),
-    onSubmit: jest.fn(),
+    onClose: vi.fn(),
+    onSubmit: vi.fn(),
     open: true,
   };
   renderWithTheme(<AccessKeyDrawer {...props} />);

@@ -248,7 +248,6 @@ export const BillingActivityPanel = (props: Props) => {
 
           const result = await printInvoice({
             account,
-            flags,
             invoice,
             items: invoiceItems,
             regions: regions ?? [],

@@ -3,12 +3,14 @@
  */
 
 import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
+import { Config } from '@linode/api-v4/types';
+import { makeResponse } from 'support/util/response';
 
 /**
  * Intercepts GET request to fetch all configs for a given linode.
  *
  * @param linodeId - ID of Linode for intercepted request.
- * @param configId - ID of Linode config for intercepted request.
  *
  * @returns Cypress chainable.
  */
@@ -17,7 +19,7 @@ export const interceptGetLinodeConfigs = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`linode/instances/${linodeId}/configs`)
+    apiMatcher(`linode/instances/${linodeId}/configs*`)
   );
 };
 
@@ -70,5 +72,66 @@ export const interceptDeleteLinodeConfig = (
   return cy.intercept(
     'DELETE',
     apiMatcher(`linode/instances/${linodeId}/configs/${configId}`)
+  );
+};
+
+/**
+ * Mocks DELETE request to delete an interface of linode config.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param configId - ID of Linode config for intercepted request.
+ * @param interfaceId - ID of Interface in the Linode config.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLinodeConfigInterface = (
+  linodeId: number,
+  configId: number,
+  interfaceId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(
+      `linode/instances/${linodeId}/configs/${configId}/interfaces/${interfaceId}`
+    ),
+    makeResponse()
+  );
+};
+
+/**
+ * Mocks GET request to retrieve Linode configs.
+ *
+ * @param linodeId - ID of Linode for mocked request.
+ * @param configs - a list of Linode configswith which to mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeConfigs = (
+  linodeId: number,
+  configs: Config[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/configs*`),
+    paginateResponse(configs)
+  );
+};
+
+/**
+ * Mocks POST request to retrieve interfaces from a given Linode config.
+ *
+ * @param linodeId - ID of Linode for mocked request.
+ * @param config - config data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeConfigInterfaces = (
+  linodeId: number,
+  config: Config
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/configs/${config.id}/interfaces`),
+    config.interfaces
   );
 };

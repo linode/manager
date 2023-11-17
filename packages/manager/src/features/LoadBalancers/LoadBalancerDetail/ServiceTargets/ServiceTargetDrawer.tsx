@@ -18,7 +18,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import {
@@ -31,6 +31,7 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { CertificateSelect } from '../Certificates/CertificateSelect';
 import { AddEndpointForm } from './AddEndpointForm';
 import { EndpointTable } from './EndpointTable';
+import { algorithmOptions, initialValues, protocolOptions } from './utils';
 
 interface Props {
   loadbalancerId: number;
@@ -38,52 +39,6 @@ interface Props {
   open: boolean;
   serviceTarget?: ServiceTarget;
 }
-
-const algorithmOptions = [
-  {
-    description: 'Sequential routing to each instance.',
-    label: 'Round Robin',
-    value: 'round_robin',
-  },
-  {
-    description:
-      'Sends requests to the target with the least amount of current connections.',
-    label: 'Least Request',
-    value: 'least_request',
-  },
-  {
-    description: 'Reads the request hash value and routes accordingly.',
-    label: 'Ring Hash',
-    value: 'ring_hash',
-  },
-  {
-    description: 'Requests are distributed randomly.',
-    label: 'Random',
-    value: 'random',
-  },
-  {
-    description:
-      'Reads the upstream hash to make content aware routing decisions.',
-    label: 'Maglev',
-    value: 'maglev',
-  },
-];
-
-const initialValues: ServiceTargetPayload = {
-  ca_certificate: '',
-  endpoints: [],
-  healthcheck: {
-    healthy_threshold: 3,
-    host: '',
-    interval: 10,
-    path: '',
-    protocol: 'http',
-    timeout: 5,
-    unhealthy_threshold: 3,
-  },
-  label: '',
-  load_balancing_policy: 'round_robin',
-};
 
 export const ServiceTargetDrawer = (props: Props) => {
   const { loadbalancerId, onClose: _onClose, open, serviceTarget } = props;
@@ -198,6 +153,16 @@ export const ServiceTargetDrawer = (props: Props) => {
           value={formik.values.label}
         />
         <Autocomplete
+          value={protocolOptions.find(
+            (option) => option.value === formik.values.protocol
+          )}
+          disableClearable
+          errorText={formik.errors.protocol}
+          label="Service Target Protocol"
+          onChange={(_, { value }) => formik.setFieldValue('protocol', value)}
+          options={protocolOptions}
+        />
+        <Autocomplete
           onChange={(e, selected) =>
             formik.setFieldValue('load_balancing_policy', selected.value)
           }
@@ -238,11 +203,12 @@ export const ServiceTargetDrawer = (props: Props) => {
         </Stack>
         <CertificateSelect
           onChange={(cert) =>
-            formik.setFieldValue('ca_certificate', cert?.label ?? null)
+            formik.setFieldValue('certificate_id', cert?.id ?? null)
           }
-          errorText={formik.errors.ca_certificate}
+          errorText={formik.errors.certificate_id}
+          filter={{ type: 'ca' }}
           loadbalancerId={loadbalancerId}
-          value={(cert) => cert.label === formik.values.ca_certificate}
+          value={formik.values.certificate_id}
         />
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">

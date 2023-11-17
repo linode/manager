@@ -3,13 +3,12 @@ import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { DIFFERENT_PRICE_STRUCTURE_WARNING } from 'src/utilities/pricing/constants';
@@ -31,7 +30,7 @@ interface SelectRegionPanelProps {
   handleSelection: (id: string) => void;
   helperText?: string;
   regions: Region[];
-  selectedID?: string;
+  selectedId?: string;
   /**
    * Include a `selectedLinodeTypeId` so we can tell if the region selection will have an affect on price
    */
@@ -45,12 +44,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     handleSelection,
     helperText,
     regions,
-    selectedID,
+    selectedId,
     selectedLinodeTypeId,
   } = props;
 
   const location = useLocation();
-  const flags = useFlags();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
 
@@ -66,35 +64,31 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const currentLinodeRegion = params.regionID;
 
   const showCrossDataCenterCloneWarning =
-    isCloning && selectedID && currentLinodeRegion !== selectedID;
+    isCloning && selectedId && currentLinodeRegion !== selectedId;
 
   const showClonePriceWarning =
-    flags.dcSpecificPricing &&
     isCloning &&
     isLinodeTypeDifferentPriceInSelectedRegion({
       regionA: currentLinodeRegion,
-      regionB: selectedID,
+      regionB: selectedId,
       type,
     });
 
   const selectedRegionHasUniquePricing = doesRegionHaveUniquePricing(
-    selectedID,
+    selectedId,
     types
   );
 
   const showUniquePricingNotice =
-    flags.dcSpecificPricing &&
     !showClonePriceWarning && // Don't show both notices at the same time.
     selectedRegionHasUniquePricing;
 
   // If this component is used in the context of Linodes,
   // use Linode types from the API to determine if the region
   // has specific pricing. Otherwise, check against our local pricing map.
-  const showRegionPriceNotice = flags.dcSpecificPricing
-    ? isLinode
-      ? showUniquePricingNotice
-      : selectedID && priceIncreaseMap[selectedID]
-    : false;
+  const showRegionPriceNotice = isLinode
+    ? showUniquePricingNotice
+    : selectedId && priceIncreaseMap[selectedId];
 
   if (props.regions.length === 0) {
     return null;
@@ -117,12 +111,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           Region
         </Typography>
         {/* TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed */}
-        {/* {flags.dcSpecificPricing && (
+        {/* 
           <DocsLink
             href="https://www.linode.com/pricing"
             label="How Data Center Pricing Works"
           />
-        )} */}
+        */}
       </Box>
       <RegionHelperText
         onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
@@ -145,7 +139,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         handleSelection={handleSelection}
         helperText={helperText}
         regions={regions}
-        selectedID={selectedID || null}
+        selectedId={selectedId || null}
       />
       {showClonePriceWarning && (
         <Notice
@@ -160,8 +154,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       )}
-      {selectedID && showRegionPriceNotice && (
-        <DynamicPriceNotice region={selectedID} />
+      {selectedId && showRegionPriceNotice && (
+        <DynamicPriceNotice region={selectedId} />
       )}
     </Paper>
   );

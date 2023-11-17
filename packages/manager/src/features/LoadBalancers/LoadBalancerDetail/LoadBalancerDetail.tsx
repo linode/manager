@@ -7,11 +7,14 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Tabs } from 'src/components/ReachTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
 const LoadBalancerSummary = React.lazy(() =>
@@ -56,7 +59,7 @@ export const LoadBalancerDetail = () => {
 
   const id = Number(loadbalancerId);
 
-  const { data: loadbalancer } = useLoadBalancerQuery(id);
+  const { data: loadbalancer, isLoading, error } = useLoadBalancerQuery(id);
 
   const tabs = [
     {
@@ -89,6 +92,14 @@ export const LoadBalancerDetail = () => {
     location.pathname.startsWith(`${url}/${tab.path}`)
   );
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
+
   return (
     <>
       <DocumentTitleSegment segment={loadbalancer?.label ?? ''} />
@@ -103,10 +114,11 @@ export const LoadBalancerDetail = () => {
           labelOptions: { noCap: true },
           pathname: `/loadbalancers/${loadbalancer?.label}`,
         }}
+        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link
       />
-      <Tabs index={tabIndex === -1 ? 0 : tabIndex}>
+      <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={() => null}>
         <TabLinkList
           tabs={tabs.map((t) => ({ ...t, routeName: `${url}/${t.path}` }))}
         />

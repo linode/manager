@@ -6,8 +6,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AttachFileForm } from './AttachFileForm';
 
 const props = {
+  classes: {
+    attachFileButton: '',
+  },
   files: [attachment3],
-  updateFiles: jest.fn(),
+  handleFileSelected: vi.fn(),
+  updateFiles: vi.fn(),
 };
 
 describe('AttachFileForm component', () => {

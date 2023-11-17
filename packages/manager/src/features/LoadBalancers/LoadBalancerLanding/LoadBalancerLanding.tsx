@@ -14,6 +14,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
@@ -95,6 +96,7 @@ export const LoadBalancerLanding = () => {
       ) : (
         <>
           <LandingHeader
+            betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
             breadcrumbProps={{ pathname: '/loadbalancers' }}
             createButtonText="Create Load Balancer"
             docsLabel="Docs"
@@ -116,9 +118,11 @@ export const LoadBalancerLanding = () => {
                 >
                   Label
                 </TableSortCell>
-                <TableCell>Endpoints</TableCell>
                 <Hidden smDown>
                   <TableCell>Ports</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Hostname</TableCell>
                 </Hidden>
                 <Hidden mdDown>
                   <TableCell>Regions</TableCell>

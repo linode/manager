@@ -48,8 +48,8 @@ describe('SubnetLinodeRow', () => {
       })
     );
 
-    const handleUnassignLinode = jest.fn();
-    const handlePowerActionsLinode = jest.fn();
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
 
     const {
       getAllByRole,
@@ -119,8 +119,8 @@ describe('SubnetLinodeRow', () => {
       })
     );
 
-    const handleUnassignLinode = jest.fn();
-    const handlePowerActionsLinode = jest.fn();
+    const handleUnassignLinode = vi.fn();
+    const handlePowerActionsLinode = vi.fn();
 
     const { getAllByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(

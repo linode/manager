@@ -26,8 +26,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -38,9 +36,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
@@ -494,7 +494,7 @@ const DatabaseCreate = () => {
               engineOptions
             )}
             className={classes.engineSelect}
-            components={{ Option: RegionOption, SingleValue: _SingleValue }}
+            components={{ Option: EngineOption, SingleValue: _SingleValue }}
             errorText={errors.engine}
             isClearable={false}
             label="Database Engine"
@@ -509,7 +509,7 @@ const DatabaseCreate = () => {
             }
             errorText={errors.region}
             regions={regionsThatSupportDbaas}
-            selectedID={values.region}
+            selectedId={values.region}
           />
           <RegionHelperText mt={1} />
         </Grid>
@@ -524,7 +524,7 @@ const DatabaseCreate = () => {
             error={errors.type}
             header="Choose a Plan"
             isCreate
-            selectedID={values.type}
+            selectedId={values.type}
             types={displayTypes}
           />
         </Grid>

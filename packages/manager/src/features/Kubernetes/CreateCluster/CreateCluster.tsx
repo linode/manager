@@ -15,18 +15,17 @@ import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import {
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import {
   reportAgreementSigningError,
@@ -66,7 +65,6 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
-  const flags = useFlags();
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
@@ -180,21 +178,22 @@ export const CreateCluster = () => {
    */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
     const dcSpecificPrice = regionId
-      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, flags, regionId })
+      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, regionId })
       : undefined;
     return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
-  const showPricingNotice =
-    flags.dcSpecificPricing &&
-    doesRegionHaveUniquePricing(selectedRegionID, typesData);
+  const showPricingNotice = doesRegionHaveUniquePricing(
+    selectedRegionID,
+    typesData
+  );
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
   );
 
-  const selectedID = selectedRegionID || null;
+  const selectedId = selectedRegionID || null;
 
   const {
     hasSelectedRegion,
@@ -243,7 +242,7 @@ export const CreateCluster = () => {
             className={classes.regionSubtitle}
             errorText={errorMap.region}
             regions={filteredRegions}
-            selectedID={selectedID}
+            selectedId={selectedId}
           />
           {showPricingNotice && (
             <DynamicPriceNotice region={selectedRegionID} spacingBottom={16} />
@@ -265,11 +264,7 @@ export const CreateCluster = () => {
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
-                highAvailabilityPrice={
-                  flags.dcSpecificPricing
-                    ? getHighAvailabilityPrice(selectedID)
-                    : LKE_HA_PRICE
-                }
+                highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
                 setHighAvailability={setHighAvailability}
               />
             </Box>
@@ -301,11 +296,6 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
-          highAvailabilityPrice={
-            flags.dcSpecificPricing
-              ? getHighAvailabilityPrice(selectedID)
-              : LKE_HA_PRICE
-          }
           updateFor={[
             hasAgreed,
             highAvailability,
@@ -321,6 +311,7 @@ export const CreateCluster = () => {
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
+          highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
           pools={nodePools}
           region={selectedRegionID}
           removePool={removePool}
