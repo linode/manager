@@ -20,10 +20,6 @@ import {
   useLoadBalancerConfigurationCreateMutation,
   useLoadBalancerConfigurationMutation,
 } from 'src/queries/aglb/configurations';
-import {
-  useLoadBalancerMutation,
-  useLoadBalancerQuery,
-} from 'src/queries/aglb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
@@ -49,7 +45,7 @@ interface CreateProps {
   configuration?: never;
   mode: 'create';
   onCancel: () => void;
-  onSuccess: () => void;
+  onSuccess: (configuration: Configuration) => void;
 }
 
 export const ConfigurationForm = (props: CreateProps | EditProps) => {
@@ -81,11 +77,6 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     configuration?.id ?? -1
   );
 
-  const { data: loadbalancer } = useLoadBalancerQuery(loadbalancerId);
-  const { mutateAsync: updateLoadbalancer } = useLoadBalancerMutation(
-    loadbalancerId
-  );
-
   const formValues = useMemo(() => {
     if (mode === 'edit') {
       return getConfigurationPayloadFromConfiguration(configuration);
@@ -103,19 +94,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       try {
         const configuration = await mutateAsync(values);
         if (onSuccess) {
-          onSuccess();
-        }
-        if (mode === 'create') {
-          if (!loadbalancer) {
-            return;
-          }
-          const existingConfigs = loadbalancer?.configurations.map(
-            (config) => config.id
-          );
-          // Silently associate the new configuration with the Load Balancer
-          updateLoadbalancer({
-            configuration_ids: [...existingConfigs, configuration.id],
-          });
+          onSuccess(configuration);
         }
       } catch (error) {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
@@ -196,6 +175,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             labelTooltipText="TODO: AGLB"
             name="port"
             onChange={formik.handleChange}
+            type="number"
             value={formik.values.port}
           />
         </Stack>
@@ -205,6 +185,15 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
               <TooltipIcon status="help" text="TODO: AGLB" />
             </Stack>
+            {formik.touched.certificates &&
+              typeof formik.errors.certificates === 'string' && (
+                <Notice
+                  spacingBottom={16}
+                  spacingTop={0}
+                  text={formik.errors.certificates}
+                  variant="error"
+                />
+              )}
             <CertificateTable
               certificates={formik.values.certificates}
               loadbalancerId={loadbalancerId}
@@ -212,8 +201,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             />
             <Box mt={2}>
               <Button
+                onClick={() => {
+                  formik.setFieldTouched('certificates');
+                  setIsApplyCertDialogOpen(true);
+                }}
                 buttonType="outlined"
-                onClick={() => setIsApplyCertDialogOpen(true)}
               >
                 Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
                 Certificates

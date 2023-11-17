@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 import { pluralize } from 'src/utilities/pluralize';
 
@@ -30,20 +28,7 @@ export const ConfigurationAccordionHeader = ({ configuration }: Props) => {
           {pluralize('Route', 'Routes', configuration.routes.length)}
         </Typography>
       </Stack>
-      {/* TODO: AGLB - Hook up endpoint status */}
-      <Stack direction="row" spacing={2}>
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <Typography>Endpoints:</Typography>
-          <StatusIcon status="active" />
-          <Typography>4 up</Typography>
-          <Typography>&mdash;</Typography>
-          <StatusIcon status="error" />
-          <Typography>6 down</Typography>
-        </Stack>
-        <Box>
-          <Typography>ID: {configuration.id}</Typography>
-        </Box>
-      </Stack>
+      <Typography>ID: {configuration.id}</Typography>
     </Stack>
   );
 };
