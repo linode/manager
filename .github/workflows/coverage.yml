@@ -19,7 +19,7 @@ jobs:
         run: yarn
 
       - name: Run base branch coverage
-        run: yarn coverage:summary
+        run: yarn coverage-summary
 
       - name: Read base coverage
         id: read_base_coverage
@@ -58,7 +58,7 @@ jobs:
         run: yarn
 
       - name: Run current branch coverage
-        run: yarn coverage:summary
+        run: yarn coverage-summary
 
       - name: Read current coverage
         id: read_current_coverage
