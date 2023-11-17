@@ -10,7 +10,6 @@ import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
@@ -57,8 +56,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
-  const flags = useFlags();
-
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
@@ -97,7 +94,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       calculatedPrice={
         region !== ''
           ? getTotalClusterPrice({
-              flags,
               highAvailabilityPrice: highAvailability
                 ? highAvailabilityPrice
                 : undefined,
@@ -125,7 +121,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
               region !== ''
                 ? getKubernetesMonthlyPrice({
                     count: thisPool.count,
-                    flags,
                     region,
                     type: thisPool.type,
                     types: types ?? [],

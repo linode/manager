@@ -16,10 +16,10 @@ const props = {
     labelCell: '',
     paper: '',
   },
-  closeAccessDrawer: jest.fn(),
+  closeAccessDrawer: vi.fn(),
   isRestrictedUser: false,
   mode: 'creating' as any,
-  openAccessDrawer: jest.fn(),
+  openAccessDrawer: vi.fn(),
   ...pageyProps,
 };
 

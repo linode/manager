@@ -5,7 +5,7 @@ import { Logout } from './Logout';
 
 describe('layouts/Logout', () => {
   const component = shallow<Logout>(
-    <Logout dispatchLogout={jest.fn()} token="" />
+    <Logout dispatchLogout={vi.fn()} token="" />
   );
 
   it('dispatches logout action on componentDidMount', () => {

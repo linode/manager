@@ -14,24 +14,24 @@ describe('reducer', () => {
   };
 
   const file1: File = {
-    arrayBuffer: jest.fn(),
+    arrayBuffer: vi.fn(),
     lastModified: 0,
     name: 'my-file1',
     size: 0,
-    slice: jest.fn(),
-    stream: jest.fn(),
-    text: jest.fn(),
+    slice: vi.fn(),
+    stream: vi.fn(),
+    text: vi.fn(),
     type: '',
     webkitRelativePath: '',
   };
   const file2: File = {
-    arrayBuffer: jest.fn(),
+    arrayBuffer: vi.fn(),
     lastModified: 0,
     name: 'my-file2',
     size: 0,
-    slice: jest.fn(),
-    stream: jest.fn(),
-    text: jest.fn(),
+    slice: vi.fn(),
+    stream: vi.fn(),
+    text: vi.fn(),
     type: '',
     webkitRelativePath: '',
   };

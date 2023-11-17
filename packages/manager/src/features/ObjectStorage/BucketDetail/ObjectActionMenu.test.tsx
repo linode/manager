@@ -5,10 +5,10 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ObjectActionMenu, Props } from './ObjectActionMenu';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
+vi.mock('src/components/ActionMenu/ActionMenu');
 
-const mockHandleClickDelete = jest.fn();
-const mockHandleClickDownload = jest.fn();
+const mockHandleClickDelete = vi.fn();
+const mockHandleClickDownload = vi.fn();
 
 const props: Props = {
   handleClickDelete: mockHandleClickDelete,

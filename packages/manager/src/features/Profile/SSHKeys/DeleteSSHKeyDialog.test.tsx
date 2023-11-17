@@ -9,7 +9,7 @@ import DeleteSSHKeyDialog from './DeleteSSHKeyDialog';
 
 const props = {
   id: 0,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 
