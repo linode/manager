@@ -12,11 +12,11 @@ const ips = linodeIPFactory.build();
 const ipDisplay = ipResponseToDisplayRows(ips)[0];
 
 const handlers: IPAddressRowHandlers = {
-  handleOpenEditRDNS: jest.fn(),
-  handleOpenEditRDNSForRange: jest.fn(),
-  handleOpenIPV6Details: jest.fn(),
-  openRemoveIPDialog: jest.fn(),
-  openRemoveIPRangeDialog: jest.fn(),
+  handleOpenEditRDNS: vi.fn(),
+  handleOpenEditRDNSForRange: vi.fn(),
+  handleOpenIPV6Details: vi.fn(),
+  openRemoveIPDialog: vi.fn(),
+  openRemoveIPRangeDialog: vi.fn(),
 };
 
 describe('LinodeIPAddressRow', () => {
