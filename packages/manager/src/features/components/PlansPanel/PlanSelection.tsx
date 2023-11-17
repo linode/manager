@@ -87,8 +87,8 @@ export const PlanSelection = (props: Props) => {
       : type.formattedLabel;
 
   // DC Dynamic price logic - DB creation flow is out of scope
-  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
-  const price: PriceObject | undefined = !isDatabaseCreateFlow
+  const isDatabaseFlow = location.pathname.includes('/databases');
+  const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(type, selectedRegionId)
     : type.price;
   type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
@@ -101,7 +101,7 @@ export const PlanSelection = (props: Props) => {
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
           onClick={() =>
-            !isSamePlan && !disabled && !isDisabledClass
+            !isSamePlan && !planTooSmall && !disabled && !isDisabledClass
               ? onSelect(type.id)
               : undefined
           }

@@ -170,7 +170,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   const confirmationPopUpMessage =
     database.cluster_size === 1 ? (
       <Notice variant="warning">
-        <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node clusters.`}</Typography>
+        <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node cluster.`}</Typography>
       </Notice>
     ) : (
       <Notice variant="info">
@@ -202,7 +202,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     setSummaryText({
       numberOfNodes: database.cluster_size,
       plan: selectedPlanType.label,
-      price: `${price.monthly}/month or $${price.hourly}/hour`,
+      price: `$${price.monthly}/month or $${price.hourly}/hour`,
     });
   }, [
     dbtypes,
