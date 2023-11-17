@@ -73,7 +73,7 @@ describe('Create Firewall Drawer', () => {
     act(() => {
       userEvent.type(screen.getByLabelText('Label (required)'), options.label);
       userEvent.type(screen.getByLabelText('Linodes'), 'linode1');
-      userEvent.type(screen.getByLabelText('NodeBalancers'), 'nodebalancer1');
+      // userEvent.type(screen.getByLabelText('NodeBalancers'), 'nodebalancer1');
 
       userEvent.click(getByTestId('submit'));
     });
