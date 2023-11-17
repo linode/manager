@@ -32,7 +32,7 @@ describe('NodeBalancerSelect', () => {
     renderWithTheme(
       <NodeBalancerSelect
         multiple={false}
-        onSelectionChange={jest.fn()} // Placeholder, as there's no callback
+        onSelectionChange={vi.fn()} // Placeholder, as there's no callback
         options={[fakeNodeBalancerData]}
         renderOption={mockRenderOption}
         value={null}
@@ -56,7 +56,7 @@ describe('NodeBalancerSelect', () => {
   it('should display custom no options message if one is passed in', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const options: NodeBalancer[] = []; // Assuming no options are available
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <NodeBalancerSelect
@@ -82,7 +82,7 @@ describe('NodeBalancerSelect', () => {
   it('should display default no options message if no custom message is passed', async () => {
     // Mock the props
     const option: NodeBalancer[] = []; // Assuming no options are available
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <NodeBalancerSelect
@@ -107,7 +107,7 @@ describe('NodeBalancerSelect', () => {
     // Mock the props
     const customNoOptionsMessage = 'Custom No Options Message';
     const option: NodeBalancer[] = []; // Assuming no options are available
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <NodeBalancerSelect
@@ -135,7 +135,7 @@ describe('NodeBalancerSelect', () => {
       id: 1,
       label: 'NodeBalancer 1',
     });
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <NodeBalancerSelect
@@ -162,7 +162,7 @@ describe('NodeBalancerSelect', () => {
       id: 1,
       label: 'NodeBalancer 1',
     });
-    const onSelectionChange = jest.fn();
+    const onSelectionChange = vi.fn();
 
     renderWithTheme(
       <NodeBalancerSelect

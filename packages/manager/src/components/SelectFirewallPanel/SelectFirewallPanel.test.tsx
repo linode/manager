@@ -23,7 +23,7 @@ describe('SelectFirewallPanel', () => {
   it('should render', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
-        handleFirewallChange={jest.fn()}
+        handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
       />,
@@ -41,7 +41,7 @@ describe('SelectFirewallPanel', () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
         entityType="linode"
-        handleFirewallChange={jest.fn()}
+        handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
       />,
@@ -65,7 +65,7 @@ describe('SelectFirewallPanel', () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
         entityType="nodebalancer"
-        handleFirewallChange={jest.fn()}
+        handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
       />,

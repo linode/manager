@@ -13,8 +13,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const props = {
-  onClose: jest.fn(),
-  onFirewallCreated: jest.fn(),
+  onClose: vi.fn(),
+  onFirewallCreated: vi.fn(),
   open: true,
 };
 
