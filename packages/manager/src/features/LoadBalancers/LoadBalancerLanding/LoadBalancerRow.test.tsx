@@ -18,7 +18,7 @@ describe('LoadBalancerRow', () => {
     const { getByText } = renderWithTheme(
       wrapWithTableBody(
         <LoadBalancerRow
-          handlers={{ onDelete: jest.fn() }}
+          handlers={{ onDelete: vi.fn() }}
           loadBalancer={loadbalancer}
         />
       )
