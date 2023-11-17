@@ -32,7 +32,7 @@ describe('PlanSelection (table, desktop)', () => {
         <PlanSelection
           idx={0}
           isCreate={true}
-          onSelect={() => jest.fn()}
+          onSelect={() => vi.fn()}
           selectedRegionId={'us-east'}
           type={mockPlan}
         />
@@ -81,7 +81,7 @@ describe('PlanSelection (table, desktop)', () => {
   });
 
   it('selects the plan when clicked', () => {
-    const mockOnSelect = jest.fn();
+    const mockOnSelect = vi.fn();
 
     const { getByRole } = renderWithTheme(
       wrapWithTableBody(
@@ -177,7 +177,7 @@ describe('PlanSelection (card, mobile)', () => {
   });
 
   it('selects the plan when clicked', () => {
-    const mockOnSelect = jest.fn();
+    const mockOnSelect = vi.fn();
 
     const { container } = renderWithTheme(
       <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />

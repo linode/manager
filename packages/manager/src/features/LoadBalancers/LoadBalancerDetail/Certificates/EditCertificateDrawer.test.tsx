@@ -23,7 +23,7 @@ const mockCACertificate: Certificate = {
 
 describe('EditCertificateDrawer', () => {
   it('should contain the name of the cert in the drawer title and label field', () => {
-    const onClose = jest.fn();
+    const onClose = vi.fn();
 
     const { getByLabelText, getByTestId } = renderWithTheme(
       <EditCertificateDrawer
@@ -43,7 +43,7 @@ describe('EditCertificateDrawer', () => {
   });
 
   it('should contain the cert in the cert field and placeholder text in the private key for a downstream cert', () => {
-    const onClose = jest.fn();
+    const onClose = vi.fn();
 
     const { getByLabelText } = renderWithTheme(
       <EditCertificateDrawer
@@ -65,7 +65,7 @@ describe('EditCertificateDrawer', () => {
   });
 
   it('should submit and close drawer when only the label of the certificate is edited', async () => {
-    const onClose = jest.fn();
+    const onClose = vi.fn();
 
     const { getByLabelText, getByTestId } = renderWithTheme(
       <EditCertificateDrawer
@@ -91,7 +91,7 @@ describe('EditCertificateDrawer', () => {
   });
 
   it('should submit and close drawer when both a certificate and key are included', async () => {
-    const onClose = jest.fn();
+    const onClose = vi.fn();
 
     const { getByLabelText, getByTestId } = renderWithTheme(
       <EditCertificateDrawer

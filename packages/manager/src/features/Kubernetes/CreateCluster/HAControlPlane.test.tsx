@@ -8,7 +8,7 @@ import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
   highAvailabilityPrice: LKE_HA_PRICE,
-  setHighAvailability: jest.fn(),
+  setHighAvailability: vi.fn(),
 };
 
 describe('HAControlPlane', () => {

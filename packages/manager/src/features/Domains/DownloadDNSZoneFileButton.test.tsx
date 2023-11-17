@@ -6,17 +6,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
 
-jest.mock('@linode/api-v4/lib/domains', () => ({
-  getDNSZoneFile: jest.fn().mockResolvedValue({
-    zone_file: [
-      'example.com. 86400 IN SOA ns1.linode.com. test.example.com. 2013072519 14400 14400 1209600 86400',
-    ],
-  }),
-}));
+vi.mock('@linode/api-v4/lib/domains', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/domains');
+  return {
+    ...actual,
+    getDNSZoneFile: vi.fn().mockResolvedValue({
+      zone_file: [
+        'example.com. 86400 IN SOA ns1.linode.com. test.example.com. 2013072519 14400 14400 1209600 86400',
+      ],
+    }),
+  };
+});
 
-jest.mock('src/utilities/downloadFile', () => ({
-  downloadFile: jest.fn(),
-}));
+vi.mock('src/utilities/downloadFile', async () => {
+  const actual = await vi.importActual<any>('src/utilities/downloadFile');
+  return {
+    ...actual,
+    downloadFile: vi.fn(),
+  };
+});
 
 describe('DownloadDNSZoneFileButton', () => {
   it('renders button text correctly', () => {

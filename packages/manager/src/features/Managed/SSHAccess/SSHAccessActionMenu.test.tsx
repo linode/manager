@@ -8,9 +8,9 @@ import {
   SSHAccessActionMenuProps,
 } from './SSHAccessActionMenu';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
+vi.mock('src/components/ActionMenu/ActionMenu');
 
-const mockOpenDrawer = jest.fn();
+const mockOpenDrawer = vi.fn();
 
 const props: SSHAccessActionMenuProps = {
   isEnabled: true,

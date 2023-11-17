@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { UserDataAccordion } from './UserDataAccordion';
 
 describe('UserDataAccordion', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const props = {
     createType: 'fromImage',
     onChange,
@@ -28,7 +28,7 @@ describe('UserDataAccordion', () => {
   });
 
   it('should display a warning message if the user data is not in an accepted format', () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const inputValue = '#test-string';
     const { getByLabelText, getByText } = renderWithTheme(
       <UserDataAccordion {...props} onChange={onChange} />

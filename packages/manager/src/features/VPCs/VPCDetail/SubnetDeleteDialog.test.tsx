@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   subnet: subnetFactory.build({ label: 'some subnet' }),
   vpcId: 1,

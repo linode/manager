@@ -29,8 +29,8 @@ describe('Breadcrumb component', () => {
           {...props}
           onEditHandlers={{
             editableTextTitle: 'Editable text',
-            onCancel: jest.fn(),
-            onEdit: jest.fn(),
+            onCancel: vi.fn(),
+            onEdit: vi.fn(),
           }}
         />
       )

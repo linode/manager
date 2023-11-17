@@ -18,10 +18,10 @@ const queryClient = new QueryClient();
 
 const props = {
   isOpen: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
 };
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('CreateBucketDrawer', () => {
   afterEach(() => {

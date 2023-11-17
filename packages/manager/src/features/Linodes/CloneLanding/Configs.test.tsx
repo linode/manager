@@ -7,7 +7,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { Configs } from './Configs';
 import type { ConfigsProps } from './Configs';
 
-const mockHandleSelect = jest.fn();
+const mockHandleSelect = vi.fn();
 
 const props: ConfigsProps = {
   configSelection: { 9859511: { associatedDiskIds: [], isSelected: false } },

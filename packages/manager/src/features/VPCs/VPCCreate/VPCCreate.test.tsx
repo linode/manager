@@ -9,10 +9,10 @@ import VPCCreate from './VPCCreate';
 
 beforeEach(() => {
   // ignores the console errors in these tests as they're supposed to happen
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
-jest.mock('src/utilities/scrollErrorIntoView');
+vi.mock('src/utilities/scrollErrorIntoView');
 
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {

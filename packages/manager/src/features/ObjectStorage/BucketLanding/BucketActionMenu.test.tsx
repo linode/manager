@@ -5,22 +5,22 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketActionMenu } from './BucketActionMenu';
 
-window.matchMedia = jest.fn().mockImplementation((query) => {
+window.matchMedia = vi.fn().mockImplementation((query) => {
   return {
-    addListener: jest.fn(),
+    addListener: vi.fn(),
     matches: true,
     media: query,
     onchange: null,
-    removeListener: jest.fn(),
+    removeListener: vi.fn(),
   };
 });
 
-const mockOnRemove = jest.fn();
+const mockOnRemove = vi.fn();
 
 const props = {
   cluster: '',
   label: '',
-  onDetails: jest.fn(),
+  onDetails: vi.fn(),
   onRemove: mockOnRemove,
 };
 

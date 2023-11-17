@@ -6,7 +6,7 @@ import { SubnetContent } from './SubnetContent';
 
 const props = {
   disabled: false,
-  onChangeField: jest.fn(),
+  onChangeField: vi.fn(),
   subnets: [
     {
       ip: { ipv4: '', ipv4Error: '' },

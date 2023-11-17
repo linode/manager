@@ -9,9 +9,9 @@ describe('BucketTable', () => {
   const wrapper = shallow(
     <BucketTable
       data={buckets}
-      handleClickDetails={jest.fn()}
-      handleClickRemove={jest.fn()}
-      handleOrderChange={jest.fn()}
+      handleClickDetails={vi.fn()}
+      handleClickRemove={vi.fn()}
+      handleOrderChange={vi.fn()}
       order="asc"
       orderBy="label"
     />

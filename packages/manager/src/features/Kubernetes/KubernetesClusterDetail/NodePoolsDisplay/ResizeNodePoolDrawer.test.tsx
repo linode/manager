@@ -15,7 +15,7 @@ const props: Props = {
   kubernetesClusterId: 1,
   kubernetesRegionId: 'us-east',
   nodePool: pool,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

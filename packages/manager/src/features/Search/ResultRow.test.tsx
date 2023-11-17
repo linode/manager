@@ -18,8 +18,8 @@ const classes = {
 
 const props = {
   classes,
-  openDomainDrawerForEditing: jest.fn(),
-  redirect: jest.fn(),
+  openDomainDrawerForEditing: vi.fn(),
+  redirect: vi.fn(),
   result: searchbarResult1,
 };
 

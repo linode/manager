@@ -20,8 +20,8 @@ const mockRegions = [
   regionWithDynamicPricingFactory.build(),
 ];
 
-jest.mock('src/queries/regions', () => ({
-  useRegionsQuery: jest.fn(() => mockRegions),
+vi.mock('src/queries/regions', () => ({
+  useRegionsQuery: vi.fn(() => mockRegions),
 }));
 
 describe('getDaysRemaining', () => {

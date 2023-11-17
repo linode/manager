@@ -6,7 +6,7 @@ import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { fireEvent } from '@testing-library/react';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   vpcId: 1,
 };

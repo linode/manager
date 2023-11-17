@@ -6,7 +6,7 @@ import {
 } from 'src/constants';
 
 import { formatDate, shouldHumanize } from './formatDate';
-jest.mock('./getUserTimezone');
+vi.mock('./getUserTimezone');
 
 describe('shouldHumanize', () => {
   it('should NOT humanize few days duration with day cutoff', () => {

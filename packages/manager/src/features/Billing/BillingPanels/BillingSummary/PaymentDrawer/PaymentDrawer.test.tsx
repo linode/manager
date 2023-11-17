@@ -13,7 +13,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   paymentMethods: [],
 };

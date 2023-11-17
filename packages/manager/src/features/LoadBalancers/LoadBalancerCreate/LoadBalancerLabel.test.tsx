@@ -24,7 +24,7 @@ const initialValues = {
 
 const renderWithFormikWrapper = (mockFormikContext: MockFormikContext) =>
   renderWithTheme(
-    <Formik {...mockFormikContext} onSubmit={jest.fn()}>
+    <Formik {...mockFormikContext} onSubmit={vi.fn()}>
       <LoadBalancerLabel />
     </Formik>
   );

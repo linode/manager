@@ -21,15 +21,13 @@ import withSearch, {
 
 const HITS_PER_PAGE = 10;
 
-const mockFn = jest.fn();
+const mockFn = vi.fn();
 
-jest.mock('algoliasearch', () =>
-  jest.fn((key: string, appId: string) => {
-    return {
-      search: mockFn,
-    };
-  })
-);
+vi.mock('algoliasearch', () => ({
+  default: vi.fn().mockImplementation(() => ({
+    search: mockFn,
+  })),
+}));
 
 const mockResults = {
   results: [{ hits: [docs_result] }, { hits: [community_question] }],
@@ -66,7 +64,7 @@ const component = shallow(<RawComponent />);
 
 describe('Algolia Search HOC', () => {
   describe('external API', () => {
-    afterEach(() => jest.resetAllMocks());
+    afterEach(() => vi.resetAllMocks());
     it('should initialize the index', () => {
       expect(algoliasearch).toHaveBeenCalled();
       expect(component.props().searchEnabled).toBe(true);

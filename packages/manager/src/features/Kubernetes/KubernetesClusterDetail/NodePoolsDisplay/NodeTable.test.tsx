@@ -12,7 +12,7 @@ const mockKubeNodes = kubeLinodeFactory.buildList(3);
 
 const props: Props = {
   nodes: mockKubeNodes,
-  openRecycleNodeDialog: jest.fn(),
+  openRecycleNodeDialog: vi.fn(),
   poolId: 1,
   typeLabel: 'Linode 2G',
 };

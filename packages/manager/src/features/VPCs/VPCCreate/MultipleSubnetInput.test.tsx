@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
 
 const props = {
-  onChange: jest.fn(),
+  onChange: vi.fn(),
   subnets: [
     {
       ip: { ipv4: '', ipv4Error: '' },

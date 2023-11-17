@@ -3,7 +3,7 @@ import * as React from 'react';
 import { imageFactory } from 'src/factories/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 import { ImageSelect, getImagesOptions, groupNameMap } from './ImageSelect';
 
@@ -11,7 +11,7 @@ const images = imageFactory.buildList(10);
 
 const props = {
   images,
-  onSelect: jest.fn(),
+  onSelect: vi.fn(),
 };
 
 const privateImage1 = imageFactory.build({

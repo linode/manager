@@ -1,6 +1,5 @@
 // RulesTable.test.tsx
 
-import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 
 import { routeFactory } from 'src/factories';
@@ -26,8 +25,8 @@ describe('RulesTable', () => {
     const { getByText } = renderWithTheme(
       <RulesTable
         loadbalancerId={1}
-        onDeleteRule={jest.fn()}
-        onEditRule={jest.fn()}
+        onDeleteRule={vi.fn()}
+        onEditRule={vi.fn()}
         route={mockRoute}
       />
     );
@@ -39,8 +38,8 @@ describe('RulesTable', () => {
     const { getByText } = renderWithTheme(
       <RulesTable
         loadbalancerId={1}
-        onDeleteRule={jest.fn()}
-        onEditRule={jest.fn()}
+        onDeleteRule={vi.fn()}
+        onEditRule={vi.fn()}
         route={{ id: 0, label: 'test', protocol: 'http', rules: [] }}
       />
     );
@@ -51,8 +50,8 @@ describe('RulesTable', () => {
     const { getByText } = renderWithTheme(
       <RulesTable
         loadbalancerId={1}
-        onDeleteRule={jest.fn()}
-        onEditRule={jest.fn()}
+        onDeleteRule={vi.fn()}
+        onEditRule={vi.fn()}
         route={mockRoute}
       />
     );

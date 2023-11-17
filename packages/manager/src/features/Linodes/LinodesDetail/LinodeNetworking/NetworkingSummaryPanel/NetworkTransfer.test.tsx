@@ -12,38 +12,38 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { NetworkTransfer } from './NetworkTransfer';
 import { calculatePercentageWithCeiling } from './utils';
 
-jest.mock('src/hooks/useAPIRequest', () => ({
-  useAPIRequest: jest.fn().mockReturnValue({
+vi.mock('src/hooks/useAPIRequest', () => ({
+  useAPIRequest: vi.fn().mockReturnValue({
     data: linodeTransferFactory.build(),
     error: undefined,
     isLoading: false,
   }),
 }));
 
-jest.mock('src/queries/accountTransfer', () => ({
-  useAccountTransfer: jest.fn().mockReturnValue({
+vi.mock('src/queries/accountTransfer', () => ({
+  useAccountTransfer: vi.fn().mockReturnValue({
     data: accountTransferFactory.build(),
     error: undefined,
     isLoading: false,
   }),
 }));
 
-jest.mock('src/queries/regions', () => {
+vi.mock('src/queries/regions', () => {
   const mockRegions = [
     ...regionFactory.buildList(5),
     regionWithDynamicPricingFactory.build(),
   ];
 
   return {
-    useRegionsQuery: jest.fn().mockReturnValue({
+    useRegionsQuery: vi.fn().mockReturnValue({
       data: mockRegions,
       error: undefined,
     }),
   };
 });
 
-jest.mock('src/queries/types', () => ({
-  useTypeQuery: jest
+vi.mock('src/queries/types', () => ({
+  useTypeQuery: vi
     .fn()
     .mockReturnValue({ data: typeFactory.build(), error: undefined }),
 }));

@@ -5,10 +5,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessSelect, Props } from './AccessSelect';
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
-const mockGetAccess = jest.fn();
-const mockUpdateAccess = jest.fn();
+const mockGetAccess = vi.fn();
+const mockUpdateAccess = vi.fn();
 
 const props: Props = {
   getAccess: mockGetAccess.mockResolvedValue({ acl: 'public-read' }),
@@ -19,7 +19,7 @@ const props: Props = {
 
 describe('AccessSelect', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('shows the access', async () => {

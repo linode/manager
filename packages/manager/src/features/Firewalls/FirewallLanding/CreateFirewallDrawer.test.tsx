@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

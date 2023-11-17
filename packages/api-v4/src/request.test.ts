@@ -18,7 +18,7 @@ mock.onAny().reply(200, { data: {} });
 
 beforeEach(() => {
   mock.resetHistory();
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('Linode JS SDK', () => {
@@ -124,7 +124,7 @@ describe('Linode JS SDK', () => {
       name: string().required('This is required!'),
     });
 
-    const spy = jest.spyOn(testSchema, 'validateSync');
+    const spy = vi.spyOn(testSchema, 'validateSync');
 
     it('should validate the schema before submitting a request', async () => {
       await request(setData({ name: 'valid-name' }, testSchema));

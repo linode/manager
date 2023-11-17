@@ -6,10 +6,10 @@ import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { DomainActionMenu } from './DomainActionMenu';
 
 const props = {
-  onClone: jest.fn(),
-  onDisableOrEnable: jest.fn(),
-  onEdit: jest.fn(),
-  onRemove: jest.fn(),
+  onClone: vi.fn(),
+  onDisableOrEnable: vi.fn(),
+  onEdit: vi.fn(),
+  onRemove: vi.fn(),
 };
 
 describe('Domain action menu', () => {

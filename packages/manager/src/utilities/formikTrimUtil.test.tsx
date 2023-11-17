@@ -1,7 +1,7 @@
 import { handleFormikBlur } from './formikTrimUtil';
 
-const setFieldValueMock = jest.fn();
-const handleBlurMock = jest.fn();
+const setFieldValueMock = vi.fn();
+const handleBlurMock = vi.fn();
 
 const textfieldMock = {
   target: { name: 'usernameField', type: 'text', value: '  test-user  ' },

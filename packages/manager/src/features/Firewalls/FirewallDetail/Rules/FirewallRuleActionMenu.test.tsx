@@ -7,14 +7,14 @@ import {
   FirewallRuleActionMenuProps,
 } from './FirewallRuleActionMenu';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
+vi.mock('src/components/ActionMenu/ActionMenu');
 
 const props: FirewallRuleActionMenuProps = {
   disabled: false,
   idx: 1,
-  triggerCloneFirewallRule: jest.fn(),
-  triggerDeleteFirewallRule: jest.fn(),
-  triggerOpenRuleDrawerForEditing: jest.fn(),
+  triggerCloneFirewallRule: vi.fn(),
+  triggerDeleteFirewallRule: vi.fn(),
+  triggerOpenRuleDrawerForEditing: vi.fn(),
 };
 
 describe('Firewall rule action menu', () => {
