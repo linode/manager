@@ -98,7 +98,10 @@
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "coverage": "vitest run --coverage && open coverage/index.html",
+    "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary",
+    "coverage:badge": "coverage-badges --output coverage/badges.svg --label '@linode/manager coverage'"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
@@ -161,9 +164,11 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "@vitejs/plugin-react-swc": "^3.4.0",
+    "@vitest/coverage-v8": "^0.34.6",
     "@vitest/ui": "^0.34.6",
     "chai-string": "^1.5.0",
     "chalk": "^5.2.0",
+    "coverage-badges-cli": "^1.1.1",
     "css-mediaquery": "^0.1.2",
     "cypress": "^13.5.0",
     "cypress-axe": "^1.0.0",
