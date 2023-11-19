@@ -591,12 +591,15 @@ const NodeBalancerCreate = () => {
           />
         ) : undefined}
         <Button
+          sx={{
+            flexShrink: 0,
+            mx: matchesSmDown ? theme.spacing(1) : null,
+          }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          disabled={!hasSignedAgreement}
+          disabled={showGDPRCheckbox && !hasSignedAgreement}
           loading={isLoading}
           onClick={onCreate}
-          sx={matchesSmDown ? { marginRight: theme.spacing(1) } : null}
         >
           Create NodeBalancer
         </Button>

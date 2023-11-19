@@ -7,9 +7,13 @@ import { Region } from '@linode/api-v4';
 import type { Agreements, Country, Profile } from '@linode/api-v4';
 
 interface GDPRConfiguration {
-  agreements?: Agreements;
-  profile?: Profile;
+  /** The user's agreements */
+  agreements: Agreements | undefined;
+  /** The user's profile */
+  profile: Profile | undefined;
+  /** The list of regions */
   regions: Region[] | undefined;
+  /** The ID of the selected region (e.g. 'eu-west') */
   selectedRegionId: string;
 }
 
@@ -52,18 +56,13 @@ export const isEURegion = (regionContinent: string | undefined): boolean => {
 
 /**
  *
- * @param opts.agreements The user's agreements
- * @param opts.profile The user's profile
- * @param opts.regions The list of regions
- * @param opts.selectedRegionId The ID of the selected region (e.g. 'eu-west')
- * @returns selectedRegionGroup: string | undefined - the group of the selected region, if it exists
- * @returns showGDPRCheckbox: boolean - whether or not to show the GDPR checkbox
- * @usage
- * const { selectedRegionGroup, showGDPRCheckbox } = getGDPRDetails({
- *  agreements,
- *  profile,
- *  regions,
- *  selectedRegionId,
+ * @returns The group of the selected region, if it exists
+ * @example
+ *  const { selectedRegionGroup, showGDPRCheckbox } = getGDPRDetails({
+ *    agreements,
+ *    profile,
+ *    regions,
+ *    selectedRegionId,
  * });
  */
 export const getGDPRDetails = ({
@@ -83,7 +82,7 @@ export const getGDPRDetails = ({
 
   const showGDPRCheckbox =
     Boolean(!profile?.restricted) &&
-    Boolean(agreements?.eu_model) &&
+    Boolean(!agreements?.eu_model) &&
     isEURegion(selectedRegionGroup);
 
   return { selectedRegionGroup, showGDPRCheckbox };
