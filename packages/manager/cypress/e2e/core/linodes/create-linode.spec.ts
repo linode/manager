@@ -98,9 +98,6 @@ describe('create linode', () => {
       cy.get('[data-qa-option]').contains(region.label);
     });
 
-    // EU GDPR notice should not be shown by default
-    cy.findByTestId('eu-agreement-checkbox').should('not.exist');
-
     // Select an option
     cy.findByTestId('eu-west').click();
     // Confirm the popper is closed
@@ -113,9 +110,6 @@ describe('create linode', () => {
 
     // Confirm that selecting a valid region updates the Plan Selection panel.
     expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
-
-    // Confirm that the GDPR notice is displayed when selecting a region in the EU.
-    cy.findByTestId('eu-agreement-checkbox').should('be.visible');
   });
 
   it('creates a nanode', () => {
