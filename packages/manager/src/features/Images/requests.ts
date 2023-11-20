@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
 
 const axiosInstance = Axios.create({});
 
@@ -8,7 +8,7 @@ const headerContentType = 'application/octet-stream';
 export const uploadImageFile = (
   signedUrl: string,
   file: File,
-  onUploadProgress: (e: ProgressEvent) => void
+  onUploadProgress: (e: AxiosProgressEvent) => void
 ) => {
   const CancelToken = Axios.CancelToken;
   const source = CancelToken.source();

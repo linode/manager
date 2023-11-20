@@ -12,7 +12,7 @@ import { Button } from './Button';
  */
 export const StyledActionButton = styled(Button, {
   label: 'StyledActionButton',
-})(({ theme }) => ({
+})(({ theme, ...props }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
     color: theme.name === 'dark' ? theme.color.black : theme.color.white,
@@ -22,4 +22,11 @@ export const StyledActionButton = styled(Button, {
   lineHeight: '16px',
   minWidth: 0,
   padding: '12px 10px',
+  ...(props.disabled && {
+    color:
+      theme.palette.mode === 'dark'
+        ? `${theme.color.grey6} !important`
+        : theme.color.disabledText,
+    cursor: 'default',
+  }),
 }));
