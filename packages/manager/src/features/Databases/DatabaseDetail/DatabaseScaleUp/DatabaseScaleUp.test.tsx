@@ -3,8 +3,10 @@ import {
   queryByAttribute,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+import { Router } from 'react-router-dom';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -116,8 +118,13 @@ describe('database scale up', () => {
 
     it('when a plan is selected, scale up button should be enabled and on click of it, it should show a confirmation dialog', async () => {
       const database = databaseFactory.build();
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB scale up flow.
+      const history = createMemoryHistory();
+      history.push(`databases/${database.engine}/${database.id}/scale-up`);
       const { container, getByTestId, getByText } = renderWithTheme(
-        <DatabaseScaleUp database={database} />,
+        <Router history={history}>
+          <DatabaseScaleUp database={database} />
+        </Router>,
         {
           queryClient,
         }
