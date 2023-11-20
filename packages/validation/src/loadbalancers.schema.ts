@@ -168,7 +168,11 @@ export const UpdateConfigurationSchema = object({
   protocol: string().oneOf(['tcp', 'http', 'https']),
   certificates: array().when('protocol', {
     is: 'https',
-    then: (o) => o.of(CertificateEntrySchema),
+    then: (o) =>
+      o
+        .of(CertificateEntrySchema)
+        .min(1, 'Certificates must not be empty for HTTPS configurations.')
+        .required(),
     otherwise: (o) => o.notRequired(),
   }),
   route_ids: array().of(number()),
@@ -186,7 +190,11 @@ export const CreateConfigurationSchema = object({
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: array().when('protocol', {
     is: 'https',
-    then: (o) => o.of(CertificateEntrySchema),
+    then: (o) =>
+      o
+        .of(CertificateEntrySchema)
+        .min(1, 'Certificates must not be empty for HTTPS configurations.')
+        .required(),
     otherwise: (o) => o.notRequired(),
   }),
   route_ids: array().of(number()),

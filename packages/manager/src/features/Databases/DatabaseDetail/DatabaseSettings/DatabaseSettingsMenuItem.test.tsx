@@ -15,7 +15,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        onClick={jest.fn()}
+        onClick={vi.fn()}
         sectionTitle={sectionTitle}
       />
     );
@@ -28,7 +28,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        onClick={jest.fn()}
+        onClick={vi.fn()}
         sectionTitle={sectionTitle}
       />
     );
@@ -40,7 +40,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        onClick={jest.fn()}
+        onClick={vi.fn()}
         sectionTitle={sectionTitle}
       />
     );
@@ -49,7 +49,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
   });
 
   it('Should have a primary button that calls the provided callback when clicked', () => {
-    const onClick = jest.fn();
+    const onClick = vi.fn();
     const { getByRole } = renderWithTheme(
       <DatabaseSettingsMenuItem
         buttonText={buttonText}

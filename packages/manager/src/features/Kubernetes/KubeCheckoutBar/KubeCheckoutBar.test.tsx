@@ -14,18 +14,18 @@ import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 
 const props: Props = {
-  createCluster: jest.fn(),
+  createCluster: vi.fn(),
   hasAgreed: false,
   highAvailability: false,
   highAvailabilityPrice: LKE_HA_PRICE,
   pools,
   region: 'us-east',
   regionsData: regionFactory.buildList(1),
-  removePool: jest.fn(),
+  removePool: vi.fn(),
   showHighAvailability: true,
   submitting: false,
-  toggleHasAgreed: jest.fn(),
-  updatePool: jest.fn(),
+  toggleHasAgreed: vi.fn(),
+  updatePool: vi.fn(),
 };
 
 const renderComponent = (_props: Props) =>

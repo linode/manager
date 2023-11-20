@@ -21,7 +21,7 @@ describe('CreateDiskDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <CreateDiskDrawer linodeId={1} onClose={jest.fn()} open={true} />
+      <CreateDiskDrawer linodeId={1} onClose={vi.fn()} open={true} />
     );
 
     // Title
@@ -58,7 +58,7 @@ describe('CreateDiskDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <CreateDiskDrawer linodeId={1} onClose={jest.fn()} open={true} />
+      <CreateDiskDrawer linodeId={1} onClose={vi.fn()} open={true} />
     );
 
     await findByText('Maximum size: 1000 MB');

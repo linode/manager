@@ -28,7 +28,7 @@ import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import withFlags, {
   FeatureFlagConsumerProps,

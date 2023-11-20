@@ -73,6 +73,9 @@ export const useLoadBalancerConfigurationMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );
@@ -93,6 +96,9 @@ export const useLoadBalancerConfigurationCreateMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );
@@ -114,6 +120,9 @@ export const useLoadBalancerConfigurationDeleteMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );
