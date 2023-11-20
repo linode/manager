@@ -3,7 +3,6 @@ import {
   DatabaseClusterSizeObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -70,26 +69,23 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     plan: string;
     price: string;
   }>();
-  const [scaleUpError, setScaleUpError] = React.useState<string>();
   // This will be set to `false` once one of the configuration is selected from available plan. This is used to disable the
   // "Scale up" button unless there have been changes to the form.
   const [
     shouldSubmitBeDisabled,
     setShouldSubmitBeDisabled,
   ] = React.useState<boolean>(true);
-  const [submitInProgress, setSubmitInProgress] = React.useState<boolean>(
-    false
-  );
 
   const [
     isScaleUpConfirmationDialogOpen,
     setIsScaleUpConfirmationDialogOpen,
   ] = React.useState(false);
 
-  const { mutateAsync: updateDatabase } = useDatabaseMutation(
-    database.engine,
-    database.id
-  );
+  const {
+    error: scaleUpError,
+    isLoading: submitInProgress,
+    mutateAsync: updateDatabase,
+  } = useDatabaseMutation(database.engine, database.id);
 
   const {
     data: dbtypes,
@@ -100,26 +96,17 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const onScaleUp = () => {
-    setScaleUpError(undefined);
-    setSubmitInProgress(true);
-
     updateDatabase({
       type: planSelected,
-    })
-      .then(() => {
-        setSubmitInProgress(false);
-        enqueueSnackbar(
-          `Your database cluster ${database.label} is being scaled up.`,
-          {
-            variant: 'info',
-          }
-        );
-        history.push(`/databases/${database.engine}/${database.id}`);
-      })
-      .catch((errors: APIError[]) => {
-        setScaleUpError(errors[0].reason);
-        setSubmitInProgress(false);
-      });
+    }).then(() => {
+      enqueueSnackbar(
+        `Your database cluster ${database.label} is being scaled up.`,
+        {
+          variant: 'info',
+        }
+      );
+      history.push(`/databases/${database.engine}/${database.id}`);
+    });
   };
 
   const scaleUpDescription = (
@@ -252,7 +239,6 @@ export const DatabaseScaleUp = ({ database }: Props) => {
 
   return (
     <>
-      {scaleUpError ? <Notice text={scaleUpError} variant="error" /> : null}
       <Paper style={{ marginTop: 16 }}>
         {scaleUpDescription}
         <div style={{ marginTop: 16 }}>
@@ -282,13 +268,11 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       <Grid className={classes.btnCtn}>
         <Button
           onClick={() => {
-            setScaleUpError(undefined);
             setIsScaleUpConfirmationDialogOpen(true);
           }}
           buttonType="primary"
           className={classes.scaleUpBtn}
           disabled={shouldSubmitBeDisabled}
-          loading={submitInProgress}
           type="submit"
         >
           Scale Up Database Cluster
@@ -296,7 +280,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       </Grid>
       <ConfirmationDialog
         actions={confirmationDialogActions}
-        error={scaleUpError}
+        error={scaleUpError?.[0].reason}
         onClose={() => setIsScaleUpConfirmationDialogOpen(false)}
         open={isScaleUpConfirmationDialogOpen}
         title={`Scale up ${database.label}?`}
