@@ -26,7 +26,6 @@ jobs:
         run: yarn coverage:summary
 
       - name: Read base coverage
-        id: read_base_coverage
         run: |
           coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
           coverage_json="${coverage_json//'%'/'%25'}"
@@ -38,16 +37,12 @@ jobs:
     
       - name: Debug read base coverage
         run: |
-          echo ${{ env.read_base_coverage }}
-        env:
-          read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
+          echo ${{ env.baseCoverage }}
 
       - name: Write base coverage to an artifact
         run: |
-          echo "${{ fromJson(env.read_base_coverage).total.lines.pct }}" > ref_code_coverage.txt
-        env:
-          read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
-      
+          echo "${{ fromJson(env.baseCoverage).total.lines.pct }}" > ref_code_coverage.txt
+
       - name: Upload code coverage for base branch
         uses: actions/upload-artifact@v3
         with:
