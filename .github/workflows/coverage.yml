@@ -36,13 +36,14 @@ jobs:
     
       - name: Debug read base coverage
         run: |
-          echo "${{fromJson(env.read_base_coverage).total.lines.pct}}"
+          echo ${{ env.read_base_coverage }}
+          echo "${{ fromJson(env.read_base_coverage) }}"
         env:
           read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
 
       - name: Write base coverage to an artifact
         run: |
-          echo "${{fromJson(env.read_base_coverage).total.lines.pct}}" > ref_code_coverage.txt
+          echo "${{ fromJson(env.read_base_coverage).total.lines.pct }}" > ref_code_coverage.txt
         env:
           read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
       
