@@ -7,8 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.base_ref }} # The base branch of the PR (develop)
+        # TODO: Remove this comment after merging to develop
+        # with:
+        #  ref: ${{ github.base_ref }} # The base branch of the PR (develop)
       
       - name: Use Node.js v18.14.0
         uses: actions/setup-node@v3
@@ -19,7 +20,7 @@ jobs:
         run: yarn
 
       - name: Run base branch coverage
-        run: yarn workspace linode-manager run vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary
+        run: yarn coverage:summary
 
       - name: Read base coverage
         id: read_base_coverage
@@ -58,7 +59,7 @@ jobs:
         run: yarn
 
       - name: Run current branch coverage
-        run: yarn workspace linode-manager run vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary
+        run: yarn coverage:summary
 
       - name: Read current coverage
         id: read_current_coverage
