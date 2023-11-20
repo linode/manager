@@ -6,6 +6,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   mockGetVPCs,
   mockDeleteVPC,
+  mockDeleteVPCError,
   mockUpdateVPC,
 } from 'support/intercepts/vpc';
 import { vpcFactory } from '@src/factories';
@@ -268,6 +269,61 @@ describe('VPC landing page', () => {
     ui.toast.assertMessage('VPC deleted successfully.');
     cy.findByText(mockVPCs[1].label).should('not.exist');
     cy.findByText('Create a private and isolated network').should('be.visible');
+  });
+
+  /**
+   * Confirms UI handles errors gracefully when attempting to delete a VPC
+   */
+  it('cannot delete a VPC with linodes assigned to it', () => {
+    const mockVPC = vpcFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+    });
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetVPCs([mockVPC]).as('getVPCs');
+    mockDeleteVPCError(mockVPC.id).as('deleteVPCError');
+
+    cy.visitWithLogin('/vpcs');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+
+    // Try to delete VPC
+    cy.findByText(mockVPC.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Complete type-to-confirm dialog.
+    ui.dialog
+      .findByTitle(`Delete VPC ${mockVPC.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('VPC Label')
+          .should('be.visible')
+          .click()
+          .type(mockVPC.label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that VPC doesn't get deleted and that an error appears
+    cy.wait(['@deleteVPCError']);
+    cy.findByText(
+      'Before deleting this VPC, you must remove all of its Linodes'
+    ).should('be.visible');
   });
 
   /*
