@@ -37,7 +37,7 @@ jobs:
       - name: Debug read base coverage
         run: |
           echo ${{ env.read_base_coverage }}
-          echo "${{ fromJson(env.read_base_coverage) }}"
+          # echo "${{ fromJson(env.read_base_coverage) }}"
         env:
           read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
 
