@@ -20,11 +20,9 @@ export default mergeConfig(
           'src/**/*.utils.{js,jsx,ts,tsx}',
         ],
       },
-      server: {
-        deps: {
-          inline: ['@linode/api-v4'],
-        },
-      },
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: './src/testSetup.ts',
     },
   })
 );
