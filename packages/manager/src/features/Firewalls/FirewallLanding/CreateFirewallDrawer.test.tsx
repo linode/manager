@@ -43,7 +43,7 @@ describe('Create Firewall Drawer', () => {
     expect(error).toBeInTheDocument();
   });
 
-  it('should be able to submit when fields are filled out correctly', async () => {
+  it('should submit when fields are filled out correctly', async () => {
     const options = { label: 'test-label' };
 
     server.use(
