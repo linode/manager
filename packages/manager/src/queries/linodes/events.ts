@@ -40,7 +40,6 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
     case 'linode_resize_create':
     case 'linode_resize_warm_create':
     case 'linode_reboot':
-    case 'linode_boot':
     case 'linode_shutdown':
     case 'linode_update':
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'details']);
@@ -48,6 +47,12 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
       return;
+    case 'linode_boot':
+      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'details']);
+      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'configs']); // Ensure configs are fresh when Linode is booted up (see https://github.com/linode/manager/pull/9914)
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
     case 'linode_snapshot':
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'backups']);
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'details']);
