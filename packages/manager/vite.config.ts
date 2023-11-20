@@ -16,4 +16,24 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  test: {
+    coverage: {
+      exclude: [
+        'src/**/*.constants.{js,jsx,ts,tsx}',
+        'src/**/*.hooks.{js,jsx,ts,tsx}',
+        'src/**/*.stories.{js,jsx,ts,tsx}',
+        'src/**/index.{js,jsx,ts,tsx}',
+        'src/**/*.styles.{js,jsx,ts,tsx}',
+      ],
+      include: [
+        'src/components/**/*.{js,jsx,ts,tsx}',
+        'src/utilities/**/*.{js,jsx,ts,tsx}',
+        'src/**/*.utils.{js,jsx,ts,tsx}',
+      ],
+      provider: 'istanbul',
+    },
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/testSetup.ts',
+  },
 });
