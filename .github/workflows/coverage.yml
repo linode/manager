@@ -28,14 +28,11 @@ jobs:
       - name: Read base coverage
         id: read_base_coverage
         run: |
-          coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
+          coverage_json=`cat ./packages/manager/coverage/coverage-summary.json`
+          coverage_json="${coverage_json//'%'/'%25'}"
+          coverage_json="${coverage_json//$'\n'/'%0A'}"
+          coverage_json="${coverage_json//$'\r'/'%0D'}"
           echo "baseCoverage=$coverage_json" >> $GITHUB_ENV
-
-      - name: Debug read_base_coverage
-        run: |
-          echo "read_base_coverage: ${{ env.read_base_coverage }}"
-        env:
-          read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
 
       - name: Write base coverage to an artifact
         run: |
@@ -78,7 +75,10 @@ jobs:
       - name: Read current coverage
         id: read_current_coverage
         run: |
-          coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
+          coverage_json=`cat ./packages/manager/coverage/coverage-summary.json`
+          coverage_json="${coverage_json//'%'/'%25'}"
+          coverage_json="${coverage_json//$'\n'/'%0A'}"
+          coverage_json="${coverage_json//$'\r'/'%0D'}"
           echo "currentCoverage=$coverage_json" >> $GITHUB_ENV
 
       - name: Write base coverage to an artifact
