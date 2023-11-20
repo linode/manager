@@ -100,7 +100,7 @@
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "typecheck": "tsc",
     "coverage": "vitest run --coverage && open coverage/index.html",
-    "coverage:summary": "vitest run --coverage.reporter=json-summary",
+    "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary",
     "coverage:badge": "coverage-badges --output coverage/badges.svg --label '@linode/manager coverage'"
   },
   "lint-staged": {
