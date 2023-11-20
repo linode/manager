@@ -20,8 +20,10 @@ export default mergeConfig(
           'src/**/*.utils.{js,jsx,ts,tsx}',
         ],
       },
-      deps: {
-        inline: ['@linode/api-v4'],
+      server: {
+        deps: {
+          inline: ['@linode/api-v4'],
+        },
       },
     },
   })
