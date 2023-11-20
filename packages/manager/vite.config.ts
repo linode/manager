@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react-swc';
+import { resolve } from 'node:path';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
 
@@ -9,9 +10,16 @@ export default defineConfig({
   envPrefix: 'REACT_APP_',
   plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
-    alias: {
-      src: `${__dirname}/src`,
-    },
+    alias: [
+      {
+        find: 'src',
+        replacement: `${__dirname}/src`,
+      },
+      {
+        find: '@',
+        replacement: resolve(__dirname, './src'),
+      },
+    ],
   },
   server: {
     port: 3000,
