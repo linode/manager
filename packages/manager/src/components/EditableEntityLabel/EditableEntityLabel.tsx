@@ -5,7 +5,7 @@ import * as React from 'react';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Typography } from 'src/components/Typography';
 
-import EditableInput from './EditableInput';
+import { EditableInput } from './EditableInput';
 
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
