@@ -75,4 +75,10 @@ describe('IPAddress', () => {
       ).toEqual([publicIP, publicIP2, privateIP, privateIP2]);
     });
   });
+
+  it('should disable copy functionality if disabled is true', () => {
+    component.setProps({ disabled: true });
+    const copyTooltip = component.find('[data-qa-copy-ip-text]');
+    expect(copyTooltip.prop('disabled')).toBe(true);
+  });
 });
