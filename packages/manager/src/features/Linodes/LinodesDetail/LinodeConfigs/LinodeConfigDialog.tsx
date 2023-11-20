@@ -84,7 +84,7 @@ interface Helpers {
 
 type RunLevel = 'binbash' | 'default' | 'single';
 type VirtMode = 'fullvirt' | 'paravirt';
-type MemoryLimit = 'no_limit' | 'set_limit';
+export type MemoryLimit = 'no_limit' | 'set_limit';
 
 interface EditableFields {
   comments?: string;
@@ -1196,10 +1196,22 @@ const isUsingCustomRoot = (value: string) =>
   ].includes(value) === false;
 
 const noticeForScenario = (scenarioText: string) => (
-  <Notice text={scenarioText} variant="warning" />
+  <Notice
+    data-testid={'notice-for-unrecommended-scenario'}
+    text={scenarioText}
+    variant="warning"
+  />
 );
 
-const unrecommendedConfigNoticeSelector = ({
+/**
+ *
+ * @param _interface the current config interface being passed in
+ * @param primaryInterfaceIndex the index of the primary interface
+ * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
+ * @param values the values held in Formik state, having a type of `EditableFields`
+ * @returns JSX.Element | null
+ */
+export const unrecommendedConfigNoticeSelector = ({
   _interface,
   primaryInterfaceIndex,
   thisIndex,
