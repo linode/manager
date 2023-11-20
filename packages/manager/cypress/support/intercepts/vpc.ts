@@ -90,7 +90,7 @@ export const mockDeleteVPC = (vpcId: number): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts DELETE request to delete a VPC and mocks response.
+ * Intercepts DELETE request to delete a VPC and mocks an HTTP error response.
  *
  * @param vpcId - ID of deleted VPC for which to mock response.
  * @param errorMessage - Optional error message with which to mock response.
