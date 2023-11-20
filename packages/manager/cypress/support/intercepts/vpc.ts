@@ -94,7 +94,7 @@ export const mockDeleteVPC = (vpcId: number): Cypress.Chainable<null> => {
  *
  * @param vpcId - ID of deleted VPC for which to mock response.
  * @param errorMessage - Optional error message with which to mock response.
- * @param errorCode - Optional error code with which to mock response. Default is `500`.
+ * @param errorCode - Optional error code with which to mock response. Default is `400`.
  *
  * @returns Cypress chainable.
  */

@@ -275,23 +275,29 @@ describe('VPC landing page', () => {
    * Confirms UI handles errors gracefully when attempting to delete a VPC
    */
   it('cannot delete a VPC with linodes assigned to it', () => {
-    const mockVPC = vpcFactory.build({
-      label: randomLabel(),
-      region: chooseRegion().id,
-    });
+    const mockVPCs = [
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+      }),
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+      }),
+    ];
 
     mockAppendFeatureFlags({
       vpc: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
-    mockGetVPCs([mockVPC]).as('getVPCs');
-    mockDeleteVPCError(mockVPC.id).as('deleteVPCError');
+    mockGetVPCs(mockVPCs).as('getVPCs');
+    mockDeleteVPCError(mockVPCs[0].id).as('deleteVPCError');
 
     cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Try to delete VPC
-    cy.findByText(mockVPC.label)
+    cy.findByText(mockVPCs[0].label)
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -304,13 +310,13 @@ describe('VPC landing page', () => {
 
     // Complete type-to-confirm dialog.
     ui.dialog
-      .findByTitle(`Delete VPC ${mockVPC.label}`)
+      .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('VPC Label')
           .should('be.visible')
           .click()
-          .type(mockVPC.label);
+          .type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')
@@ -324,6 +330,33 @@ describe('VPC landing page', () => {
     cy.findByText(
       'Before deleting this VPC, you must remove all of its Linodes'
     ).should('be.visible');
+
+    // close Delete dialog for this VPC and open it up for the second VPC to confirm that error message does not persist
+    ui.dialog
+      .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.findByText(mockVPCs[1].label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.findByText(
+      'Before deleting this VPC, you must remove all of its Linodes'
+    ).should('not.exist');
   });
 
   /*
