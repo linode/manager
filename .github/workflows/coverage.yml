@@ -32,7 +32,9 @@ jobs:
           coverage_json="${coverage_json//'%'/'%25'}"
           coverage_json="${coverage_json//$'\n'/'%0A'}"
           coverage_json="${coverage_json//$'\r'/'%0D'}"
-          echo "$coverage_json" >> $GITHUB_ENV
+          echo "baseCoverage<<EOF" >> $GITHUB_ENV
+          echo $coverage_json >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
     
       - name: Debug read base coverage
         run: |
