@@ -19,7 +19,7 @@ jobs:
         run: yarn
 
       - name: Run base branch coverage
-        run: yarn workspace linode-manager coverage:summary
+        run: yarn workspace linode-manager run vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary
 
       - name: Read base coverage
         id: read_base_coverage
@@ -58,7 +58,7 @@ jobs:
         run: yarn
 
       - name: Run current branch coverage
-        run: yarn workspace linode-manager coverage:summary
+        run: yarn workspace linode-manager run vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary
 
       - name: Read current coverage
         id: read_current_coverage
