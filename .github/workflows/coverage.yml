@@ -29,11 +29,13 @@ jobs:
         id: read_base_coverage
         run: |
           coverage_json='./packages/manager/coverage/coverage-summary.json'
-          echo "::set-output name=baseCoverage::$coverage_json"
+          echo "baseCoverage=$coverage_json" >> $GITHUB_ENV
 
       - name: Write base coverage to an artifact
         run: |
-          echo "${{fromJson(steps.read_base_coverage.outputs.baseCoverage).total.lines.pct}}" > ref_code_coverage.txt
+          echo "${{fromJson(env.read_base_coverage).total.lines.pct}}" > ref_code_coverage.txt
+        env:
+          read_base_coverage: ${{ steps.read_base_coverage.outputs.baseCoverage  }}
       
       - name: Upload code coverage for base branch
         uses: actions/upload-artifact@v3
@@ -71,9 +73,11 @@ jobs:
         id: read_current_coverage
         run: |
           coverage_json='./packages/manager/coverage/coverage-summary.json'
-          echo "::set-output name=currentCoverage::$coverage_json"
+          echo "currentCoverage=$coverage_json" >> $GITHUB_ENV
 
       - name: Write base coverage to an artifact
         run: |
-          echo "${{fromJson(steps.read_current_coverage.outputs.currentCoverage).total.lines.pct}}" > current_code_coverage.txt
+          echo "${{fromJson(env.read_current_coverage).total.lines.pct}}" > current_code_coverage.txt
+        env:
+          read_current_coverage: ${{ steps.read_current_coverage.outputs.baseCoverage  }}
 
