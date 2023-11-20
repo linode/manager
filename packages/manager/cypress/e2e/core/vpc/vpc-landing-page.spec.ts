@@ -9,7 +9,7 @@ import {
   mockDeleteVPCError,
   mockUpdateVPC,
 } from 'support/intercepts/vpc';
-import { vpcFactory } from '@src/factories';
+import { subnetFactory, vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
@@ -274,11 +274,13 @@ describe('VPC landing page', () => {
   /**
    * Confirms UI handles errors gracefully when attempting to delete a VPC
    */
-  it('cannot delete a VPC with linodes assigned to it', () => {
+  it.only('cannot delete a VPC with linodes assigned to it', () => {
+    const subnet = subnetFactory.build();
     const mockVPCs = [
       vpcFactory.build({
         label: randomLabel(),
         region: chooseRegion().id,
+        subnets: [subnet],
       }),
       vpcFactory.build({
         label: randomLabel(),
