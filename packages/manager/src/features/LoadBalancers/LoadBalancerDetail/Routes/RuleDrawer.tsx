@@ -217,7 +217,7 @@ export const RuleDrawer = (props: Props) => {
                       : undefined
                   }
                   label="Hostname"
-                  labelTooltipText="TODO: AGLB"
+                  labelTooltipText={ROUTE_COPY.Rule.Hostname}
                   name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -259,6 +259,11 @@ export const RuleDrawer = (props: Props) => {
                         ? formik.errors.match_condition?.match_value
                         : undefined
                     }
+                    labelTooltipText={
+                      ROUTE_COPY.Rule.MatchValue[
+                        formik.values.match_condition.match_field
+                      ]
+                    }
                     placeholder={
                       matchValuePlaceholder[
                         formik.values.match_condition.match_field
@@ -266,7 +271,6 @@ export const RuleDrawer = (props: Props) => {
                     }
                     containerProps={{ sx: { flexGrow: 1 } }}
                     label="Match Value"
-                    labelTooltipText="TODO: AGLB"
                     name="match_condition.match_value"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
