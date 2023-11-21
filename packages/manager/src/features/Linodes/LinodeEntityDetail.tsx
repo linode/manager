@@ -101,8 +101,8 @@ export const LinodeEntityDetail = (props: Props) => {
   const {
     configInterfaceWithVPC,
     configs,
-    enableVPCLogic,
     isVPCOnlyLinode,
+    showVPCs,
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
@@ -129,7 +129,7 @@ export const LinodeEntityDetail = (props: Props) => {
       body={
         <Body
           configInterfaceWithVPC={configInterfaceWithVPC}
-          displayVPCSection={enableVPCLogic}
+          displayVPCSection={showVPCs}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
           ipv4={linode.ipv4}
@@ -158,7 +158,7 @@ export const LinodeEntityDetail = (props: Props) => {
         <Header
           backups={linode.backups}
           configs={configs}
-          enableVPCLogic={enableVPCLogic}
+          enableVPCLogic={showVPCs}
           handlers={handlers}
           image={linode.image ?? 'Unknown Image'}
           imageVendor={imageVendor}

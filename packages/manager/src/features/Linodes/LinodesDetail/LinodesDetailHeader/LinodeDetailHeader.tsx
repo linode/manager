@@ -63,7 +63,7 @@ const LinodeDetailHeader = () => {
 
   const flags = useFlags();
   const { account } = useAccountManagement();
-  const enableVPCLogic = isFeatureEnabled(
+  const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
     account?.capabilities ?? []
@@ -248,7 +248,7 @@ const LinodeDetailHeader = () => {
         action={powerAction ?? 'Reboot'}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
-        manuallyUpdateConfigs={enableVPCLogic}
+        manuallyUpdateConfigs={showVPCs}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog

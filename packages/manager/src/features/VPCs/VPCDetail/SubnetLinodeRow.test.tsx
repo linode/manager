@@ -27,7 +27,7 @@ afterEach(() => {
 const loadingTestId = 'circle-progress';
 
 describe('SubnetLinodeRow', () => {
-  it('should display linode label, reboot status, vpc ipv4 address, associated firewalls and reboot and unassign button', async () => {
+  it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {

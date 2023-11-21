@@ -199,7 +199,7 @@ export const useBootLinodeMutation = (
         if (configsToUpdate) {
           /**
            * PR #9893: If booting is successful, we manually set the query config data to have its vpc interfaces as
-           * active in order to remove the flickering 'Reboot Needed' status issue.This makes sure the Linode's status
+           * active in order to remove the flickering 'Reboot Needed' status issue. This makes sure the Linode's status
            * shows up as 'Running' right after being booting. Note that the configs query eventually gets invalidated
            * and refetched after the Linode's status changes, ensuring that the actual data will be up to date.
            */
@@ -231,7 +231,7 @@ export const useRebootLinodeMutation = (
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
         /**
          * PR #9893: If rebooting is successful, we manually set the query config data to have its vpc interfaces as
-         * active in order to remove the flickering 'Reboot Needed' status issue.This makes sure the Linode's status
+         * active in order to remove the flickering 'Reboot Needed' status issue. This makes sure the Linode's status
          * shows up as 'Running' right after being rebooting. Note that the configs query eventually gets invalidated
          * and refetched after the Linode's status changes, ensuring that the actual data will be up to date.
          */
