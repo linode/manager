@@ -1,6 +1,10 @@
 export const AGLB_FEEDBACK_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSdfetx9VvwjUAC_gdGQai_FpZN4xZ1GZGW54abezS2aV5rCcQ/viewform';
 
+/**
+ * TODO: AGLB - This will eventually need to become https://linode.com
+ * We are using a preview link temporarily for alpha.
+ */
 export const AGLB_DOCS_URL =
   'https://deploy-preview-14--roaring-gelato-12dc9e.netlify.app';
 
