@@ -25,26 +25,13 @@ jobs:
       - name: Run base branch coverage
         run: yarn coverage:summary
 
-      - name: Read base coverage
-        run: |
-          coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
-          coverage_json="${coverage_json//'%'/'%25'}"
-          coverage_json="${coverage_json//$'\n'/'%0A'}"
-          coverage_json="${coverage_json//$'\r'/'%0D'}"
-          echo "baseCoverage<<EOF" >> $GITHUB_ENV
-          echo $coverage_json >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-    
-      - name: Debug read base coverage
-        run: |
-          echo ${{ env.baseCoverage }}
-
       - name: Write base coverage to an artifact
         run: |
-          pct=$(echo "${{ env.baseCoverage }}" | jq -r '.total.lines.pct')
+          coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
+          pct=$(echo "$coverage_json" | jq -r '.total.lines.pct')
           echo "$pct" > ref_code_coverage.txt
 
-      - name: Upload code coverage for base branch
+      - name: Upload base coverage artifact
         uses: actions/upload-artifact@v3
         with:
           name: ref_code_coverage
@@ -76,18 +63,15 @@ jobs:
       - name: Run current branch coverage
         run: yarn coverage:summary
 
-      - name: Read current coverage
-        id: read_current_coverage
+      - name: Write current coverage to an artifact
         run: |
           coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
-          coverage_json="${coverage_json//'%'/'%25'}"
-          coverage_json="${coverage_json//$'\n'/'%0A'}"
-          coverage_json="${coverage_json//$'\r'/'%0D'}"
-          echo "currentCoverage=$coverage_json" >> $GITHUB_ENV
+          pct=$(echo "$coverage_json" | jq -r '.total.lines.pct')
+          echo "$pct" > current_code_coverage.txt
 
-      - name: Write base coverage to an artifact
-        run: |
-          echo "${{fromJson(env.read_current_coverage).total.lines.pct}}" > current_code_coverage.txt
-        env:
-          read_current_coverage: ${{ steps.read_current_coverage.outputs.baseCoverage  }}
+      - name: Upload current coverage artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: current_code_coverage
+          path: current_code_coverage.txt
 

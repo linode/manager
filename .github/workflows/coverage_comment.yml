@@ -17,12 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download code coverage report from base branch
+      - name: Download base coverage artifact
         uses: actions/download-artifact@v3
         with:
           name: ref_code_coverage
 
-      - name: Download current branch coverage report
+      - name: Download current coverage artifact
         uses: actions/download-artifact@v3
         with:
           name: current_code_coverage
@@ -30,7 +30,7 @@ jobs:
       - name: Update Coverage Badge
         run: yarn coverage:badge
 
-      - name: Generate Comment with Code Coverage
+      - name: Generate Coverage Comment
         run: |
           base_coverage=$(cat ref_code_coverage.txt)
           current_coverage=$(cat current_code_coverage.txt)
@@ -43,7 +43,7 @@ jobs:
           echo "Coverage: $comment_message"
           echo "$comment_message" > updated_comment.txt
       
-      - name: Check Coverage
+      - name: Validate Coverage
         run: |
           base_coverage=$(cat ref_code_coverage.txt)
           current_coverage=$(cat current_code_coverage.txt)
