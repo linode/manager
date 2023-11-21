@@ -1222,7 +1222,6 @@ export const unrecommendedConfigNoticeSelector = ({
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {
-  const publicInterfaceInEth0 = values.interfaces[0].purpose === 'public';
   const vpcInterface = _interface.purpose === 'vpc';
   const nattedIPv4Address = Boolean(_interface.ipv4?.nat_1_1);
 
@@ -1230,9 +1229,14 @@ export const unrecommendedConfigNoticeSelector = ({
     (_interface) => _interface.purpose !== 'none'
   );
 
+  // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
+  const primaryInterfaceIsVPC =
+    primaryInterfaceIndex !== undefined
+      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
+      : false;
+
   /*
    Scenario 1:
-    - Public interface in eth0
     - the interface passed in to this function is a VPC interface
     - the index of the primary interface !== the index of the interface passed in to this function
     - nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" checked)
@@ -1246,9 +1250,9 @@ export const unrecommendedConfigNoticeSelector = ({
    If not one of the above scenarios, do not display a warning notice re: configuration
   */
   if (
-    publicInterfaceInEth0 &&
     vpcInterface &&
-    primaryInterfaceIndex !== thisIndex
+    primaryInterfaceIndex !== thisIndex &&
+    !primaryInterfaceIsVPC
   ) {
     return nattedIPv4Address
       ? noticeForScenario(NATTED_PUBLIC_IP_HELPER_TEXT)

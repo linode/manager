@@ -149,13 +149,18 @@ describe('LinodeConfigDialog', () => {
     });
 
     it('should return a <Notice /> with NOT_NATTED_HELPER_TEXT under the appropriate conditions', () => {
+      const vpcInterfacePrimaryWithoutNAT = {
+        ...vpcInterfaceWithoutNAT,
+        primary: true,
+      };
+
       const editableFieldsWithSingleInterface = {
         ...editableFields,
-        interfaces: [vpcInterfaceWithoutNAT],
+        interfaces: [vpcInterfacePrimaryWithoutNAT],
       };
 
       const valueReturned = unrecommendedConfigNoticeSelector({
-        _interface: vpcInterfaceWithoutNAT,
+        _interface: vpcInterfacePrimaryWithoutNAT,
         primaryInterfaceIndex: editableFieldsWithSingleInterface.interfaces.findIndex(
           (element) => element.primary === true
         ),
