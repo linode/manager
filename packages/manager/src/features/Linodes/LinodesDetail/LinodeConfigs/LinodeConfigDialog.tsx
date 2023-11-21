@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
@@ -22,13 +22,11 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormGroup } from 'src/components/FormGroup';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -68,6 +66,13 @@ import {
   InterfaceSelect,
 } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
+import {
+  StyledDivider,
+  StyledFormControl,
+  StyledFormControlLabel,
+  StyledFormGroup,
+  StyledRadioGroup,
+} from './LinodeConfigDialog.styles';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -1114,41 +1119,6 @@ export const LinodeConfigDialog = (props: Props) => {
     </Dialog>
   );
 };
-
-const formGroupStyling = () => ({
-  '&.MuiFormGroup-root[role="radiogroup"]': {
-    marginBottom: 0,
-  },
-  alignItems: 'flex-start',
-});
-
-const StyledRadioGroup = styled(RadioGroup, { label: 'StyledRadioGroup' })({
-  ...formGroupStyling(),
-});
-
-const StyledFormControl = styled(FormControl, { label: 'StyledFormControl' })({
-  ...formGroupStyling(),
-});
-
-const StyledFormGroup = styled(FormGroup, { label: 'StyledFormGroup' })({
-  ...formGroupStyling(),
-});
-
-const StyledDivider = styled(Divider, { label: 'StyledDivider' })(
-  ({ theme }) => ({
-    margin: '36px 8px 12px',
-    width: `calc(100% - ${theme.spacing(2)})`,
-  })
-);
-
-const StyledFormControlLabel = styled(FormControlLabel, {
-  label: 'StyledFormControlLabel',
-})(({ theme }) => ({
-  '& button': {
-    color: theme.textColors.tableHeader,
-    order: 3,
-  },
-}));
 
 interface ConfigFormProps {
   children: JSX.Element;
