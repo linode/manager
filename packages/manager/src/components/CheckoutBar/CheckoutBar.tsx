@@ -78,17 +78,15 @@ const CheckoutBar = (props: CheckoutBarProps) => {
         </StyledCheckoutSection>
       }
       {agreement ? agreement : null}
-      <StyledCheckoutSection>
-        <StyledButton
-          buttonType="primary"
-          data-qa-deploy-linode
-          disabled={disabled}
-          loading={isMakingRequest}
-          onClick={onDeploy}
-        >
-          {submitText ?? 'Create'}
-        </StyledButton>
-      </StyledCheckoutSection>
+      <StyledButton
+        buttonType="primary"
+        data-qa-deploy-linode
+        disabled={disabled}
+        loading={isMakingRequest}
+        onClick={onDeploy}
+      >
+        {submitText ?? 'Create'}
+      </StyledButton>
       {footer ? footer : null}
     </StyledRoot>
   );

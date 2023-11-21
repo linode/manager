@@ -1,6 +1,6 @@
+import { useTheme } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import {
   append,
   clone,
@@ -28,6 +28,7 @@ import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
+  reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
@@ -36,7 +37,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
 import {
@@ -45,7 +46,7 @@ import {
 } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -99,6 +100,10 @@ const NodeBalancerCreate = () => {
     nodeBalancerFields,
     setNodeBalancerFields,
   ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
 
   const [
     deleteConfigConfirmDialog,
@@ -268,6 +273,12 @@ const NodeBalancerCreate = () => {
     /* Clear node errors */
     clearNodeErrors();
 
+    if (hasSignedAgreement) {
+      updateAgreements({
+        eu_model: true,
+      }).catch(reportAgreementSigningError);
+    }
+
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
@@ -384,11 +395,12 @@ const NodeBalancerCreate = () => {
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
   const generalError = hasErrorFor('none');
 
-  const showAgreement = Boolean(
-    isEURegion(nodeBalancerFields.region) &&
-      !profile?.restricted &&
-      !agreements?.eu_model
-  );
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements,
+    profile,
+    regions,
+    selectedRegionId: nodeBalancerFields.region ?? '',
+  });
 
   const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
     ?.label;
@@ -568,22 +580,31 @@ const NodeBalancerCreate = () => {
         displaySections={summaryItems}
         heading={`Summary ${nodeBalancerFields.label ?? ''}`}
       />
-      <Box
-        display="flex"
-        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
-      >
-        {showAgreement ? (
+      {showGDPRCheckbox && (
+        <Box display="flex">
           <EUAgreementCheckbox
-            checked={Boolean(agreements?.eu_model)}
-            onChange={(e) => updateAgreements({ eu_model: e.target.checked })}
+            checked={hasSignedAgreement}
+            onChange={(e) => setHasSignedAgreement(e.target.checked)}
           />
-        ) : undefined}
+        </Box>
+      )}
+      <Box
+        sx={{
+          marginTop: theme.spacing(4),
+        }}
+        display="flex"
+        justifyContent={'flex-end'}
+      >
         <Button
+          sx={{
+            flexShrink: 0,
+            mx: matchesSmDown ? theme.spacing(1) : null,
+          }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
+          disabled={showGDPRCheckbox && !hasSignedAgreement}
           loading={isLoading}
           onClick={onCreate}
-          sx={matchesSmDown ? { marginRight: theme.spacing(1) } : null}
         >
           Create NodeBalancer
         </Button>

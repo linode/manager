@@ -289,7 +289,8 @@ export const onUploadProgressFactory = (
 ) => (progressEvent: AxiosProgressEvent) => {
   dispatch({
     data: {
-      percentComplete: (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+      percentComplete:
+        (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
     },
     filesToUpdate: [fileName],
     type: 'UPDATE_FILES',
