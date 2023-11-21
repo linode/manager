@@ -229,8 +229,11 @@ export const CreateFirewallDrawer = React.memo(
         values.devices?.nodebalancers?.includes(nodebalancer.id)
       ) || [];
 
-    // TODO: NBFW - Placeholder until real link is available
-    const learnMoreLink = <a href="#">Learn more</a>;
+    const learnMoreLink = (
+      <a href="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
+        Learn more
+      </a>
+    );
 
     const generalError =
       status?.generalError ||

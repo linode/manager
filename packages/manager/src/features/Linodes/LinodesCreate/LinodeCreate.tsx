@@ -636,9 +636,12 @@ export class LinodeCreate extends React.PureComponent<
               helperText={
                 <Typography>
                   Assign an existing Firewall to this Linode to control inbound
-                  and outbound network traffic. <Link to="">Learn more</Link>.
+                  and outbound network traffic.{' '}
+                  <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/get-started/">
+                    Learn more
+                  </Link>
+                  .
                 </Typography>
-                // @TODO VPC: Update "Learn More" link
               }
               handleFirewallChange={this.props.handleFirewallChange}
               selectedFirewallId={this.props.firewallId || -1}

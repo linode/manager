@@ -1,6 +1,6 @@
+import { useTheme } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import {
   append,
   clone,
@@ -499,8 +499,10 @@ const NodeBalancerCreate = () => {
             Assign an existing Firewall to this NodeBalancer to control inbound
             network traffic. If you want to assign a new Firewall to this
             NodeBalancer, go to <Link to="/firewalls">Firewalls</Link>.{' '}
-            {/* @TODO Firewall-NodeBalancer: Update link */}
-            <Link to="">Learn more about creating Firewalls</Link>.
+            <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/get-started/">
+              Learn more about creating Firewalls
+            </Link>
+            .
           </Typography>
         }
         selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}

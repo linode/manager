@@ -1,4 +1,5 @@
 import { NodeBalancer } from '@linode/api-v4';
+import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -40,6 +41,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
     data: currentDevices,
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
+
+  const theme = useTheme();
 
   const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
     Number(id)
@@ -123,8 +126,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
+            fontFamily: theme.font.bold,
             fontSize: '1rem',
-            fontWeight: 'bold',
             lineHeight: '20px',
           }}
           variant="error"
@@ -187,8 +190,10 @@ export const AddNodebalancerDrawer = (props: Props) => {
       <Notice variant={'warning'}>
         Only the Firewall's inbound rules apply to NodeBalancers. Any existing
         outbound rules won't be applied.
-        {/* @todo add documentation link */}
-        <Link to="#"> Learn more.</Link>
+        <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
+          {' '}
+          Learn more.
+        </Link>
       </Notice>
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
