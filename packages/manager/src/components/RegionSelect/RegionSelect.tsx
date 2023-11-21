@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
@@ -109,13 +110,24 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
             <Tooltip
+              title={
+                // TODO DC_GET_WELL: add proper link to status page when available
+                isDisabledMenuItem ? (
+                  <>
+                    For more information about regional availability, please see
+                    our new <Link to="https://linode.com">status page</Link>.
+                  </>
+                ) : (
+                  ''
+                )
+              }
               disableFocusListener={!isDisabledMenuItem}
               disableHoverListener={!isDisabledMenuItem}
               disableTouchListener={!isDisabledMenuItem}
-              enterDelay={500}
-              enterTouchDelay={500}
+              enterDelay={200}
+              enterNextDelay={200}
+              enterTouchDelay={200}
               key={option.value}
-              title={isDisabledMenuItem ? 'More info' : ''}
             >
               <StyledListItem
                 {...props}
