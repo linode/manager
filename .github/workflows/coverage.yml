@@ -41,7 +41,7 @@ jobs:
 
       - name: Write base coverage to an artifact
         run: |
-          pct=$(echo "${{ fromJson(env.baseCoverage) }}" | jq -r '.total.lines.pct')
+          pct=$(echo "${{ env.baseCoverage }}" | jq -r '.total.lines.pct')
           echo "$pct" > ref_code_coverage.txt
 
       - name: Upload code coverage for base branch
