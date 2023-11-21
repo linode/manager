@@ -28,6 +28,9 @@ export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
 export const VPC_FEEDBACK_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
 
+export const VPC_REBOOT_MESSAGE =
+  'The VPC configuration has been updated and the Linode needs to be rebooted.';
+
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or be able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
