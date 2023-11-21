@@ -2,13 +2,13 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { DateTime } from 'luxon';
 
   export const baseRequest: AxiosRequestConfig = {
-      baseURL: "http://api.linodetelemetry.obcolint.armada-dev.akam.ai/VM/51259986/metrics",
+      baseURL: "https://api.linodetelemetry.obcolint.armada-dev.akam.ai/VM/51259986/metrics",
       headers: {
         'Authorization': 'APIKey 2F3AF7AB-900E-43DE-8BFD775FFF5BF566'
       },
       method: 'GET'
   };
-
+  
   export const calculateGranularity = (startTime: number, 
     endTime: number) => {
       const timeDifference = endTime - startTime;
@@ -43,11 +43,11 @@ import { DateTime } from 'luxon';
         metricname: metricName,
         timespan: timespan,
         granularity: granularity,
-        filter: `state='buffered'`,
+        // filter: `state='buffered'`,
         // aggregation: `max`,
         // groupby: `stack_telemetry`,
         // limit: `5`,
-        // orderby: `5,desc`
+        // orderby: `5,desc` 
       }
       return axios
         .request(baseRequest)
