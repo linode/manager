@@ -89,7 +89,7 @@
     "start:ci": "yarn serve ./build -p 3000 -s --cors",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/prebuild.mjs && vite build",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "storybook dev -p 6006",
