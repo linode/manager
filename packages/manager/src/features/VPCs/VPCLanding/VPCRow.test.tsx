@@ -12,11 +12,7 @@ describe('VPC Table Row', () => {
 
     const { getAllByText, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <VPCRow
-          handleDeleteVPC={vi.fn()}
-          handleEditVPC={vi.fn()}
-          vpc={vpc}
-        />
+        <VPCRow handleDeleteVPC={vi.fn()} handleEditVPC={vi.fn()} vpc={vpc} />
       )
     );
 
