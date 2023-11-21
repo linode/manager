@@ -24,7 +24,6 @@ import { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
 
@@ -188,7 +187,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
 
     setSummaryText({
       numberOfNodes: database.cluster_size,
-      plan: selectedPlanType.label,
+      plan: formatStorageUnits(selectedPlanType.label),
       price: `$${price.monthly}/month or $${price.hourly}/hour`,
     });
   }, [
@@ -229,6 +228,8 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     });
   }, [database.cluster_size, dbtypes, selectedEngine]);
 
+  const currentPlan = displayTypes?.find((type) => type.id === database.type);
+
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -247,19 +248,12 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       </Paper>
       <Paper style={{ marginTop: 16 }}>
         <PlansPanel
-          currentPlanHeading={
-            displayTypes.find((type) => type.id === database.type)?.heading ||
-            undefined
-          }
-          selectedDiskSize={convertStorageUnit(
-            'GB',
-            database.total_disk_size_gb,
-            'MB'
-          )}
           className={classes.selectPlanPanel}
+          currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
+          selectedDiskSize={currentPlan?.disk}
           selectedId={planSelected}
           types={displayTypes}
         />
