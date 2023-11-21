@@ -8,6 +8,7 @@ import {
   mockDeleteVPC,
   mockDeleteVPCError,
   mockUpdateVPC,
+  MOCK_DELETE_VPC_ERROR,
 } from 'support/intercepts/vpc';
 import { subnetFactory, vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
@@ -274,7 +275,7 @@ describe('VPC landing page', () => {
   /**
    * Confirms UI handles errors gracefully when attempting to delete a VPC
    */
-  it.only('cannot delete a VPC with linodes assigned to it', () => {
+  it('cannot delete a VPC with linodes assigned to it', () => {
     const subnet = subnetFactory.build();
     const mockVPCs = [
       vpcFactory.build({
@@ -329,9 +330,7 @@ describe('VPC landing page', () => {
 
     // Confirm that VPC doesn't get deleted and that an error appears
     cy.wait(['@deleteVPCError']);
-    cy.findByText(
-      'Before deleting this VPC, you must remove all of its Linodes'
-    ).should('be.visible');
+    cy.findByText(MOCK_DELETE_VPC_ERROR).should('be.visible');
 
     // close Delete dialog for this VPC and open it up for the second VPC to confirm that error message does not persist
     ui.dialog
@@ -356,9 +355,7 @@ describe('VPC landing page', () => {
           .click();
       });
 
-    cy.findByText(
-      'Before deleting this VPC, you must remove all of its Linodes'
-    ).should('not.exist');
+    cy.findByText(MOCK_DELETE_VPC_ERROR).should('not.exist');
   });
 
   /*

@@ -9,6 +9,9 @@ import { makeResponse } from 'support/util/response';
 
 import type { Subnet, VPC } from '@linode/api-v4';
 
+export const MOCK_DELETE_VPC_ERROR =
+  'Before deleting this VPC, you must remove all of its Linodes';
+
 /**
  * Intercepts GET request to fetch a VPC and mocks response.
  *
@@ -100,7 +103,7 @@ export const mockDeleteVPC = (vpcId: number): Cypress.Chainable<null> => {
  */
 export const mockDeleteVPCError = (
   vpcId: number,
-  errorMessage: string = 'Before deleting this VPC, you must remove all of its Linodes',
+  errorMessage: string = MOCK_DELETE_VPC_ERROR,
   errorCode: number = 400
 ): Cypress.Chainable<null> => {
   return cy.intercept(
