@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeFactory } from 'src/factories/linodes';

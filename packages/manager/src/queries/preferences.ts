@@ -8,7 +8,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 

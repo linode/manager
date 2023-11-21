@@ -2,7 +2,7 @@ import { addPromotion } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';

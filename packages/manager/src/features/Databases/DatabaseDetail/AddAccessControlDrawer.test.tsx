@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { databaseFactory } from 'src/factories';
 import { IPv4List } from 'src/factories/databases';

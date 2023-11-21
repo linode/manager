@@ -5,7 +5,7 @@ import {
 import { APIWarning } from '@linode/api-v4/lib/types';
 import braintree, { GooglePayment } from 'braintree-web';
 import { VariantType } from 'notistack';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';

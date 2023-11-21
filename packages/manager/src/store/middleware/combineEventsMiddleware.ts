@@ -1,5 +1,5 @@
 import { compose, equals, uniqWith } from 'ramda';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { Middleware } from 'redux';
 import { isType } from 'typescript-fsa';
 

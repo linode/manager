@@ -1,7 +1,7 @@
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { getProfile, getUserPreferences } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useStore } from 'react-redux';
 
 import { startEventsInterval } from 'src/events';

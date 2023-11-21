@@ -1,7 +1,7 @@
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';

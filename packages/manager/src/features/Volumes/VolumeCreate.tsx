@@ -276,7 +276,7 @@ export const VolumeCreate = () => {
             )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,
-                  underscores, and dashes."
+                underscores, and dashes."
               className={classes.select}
               data-qa-volume-label
               disabled={doesNotHavePermission}

@@ -1,5 +1,5 @@
 import { APIError, startMutation } from '@linode/api-v4';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { queryKey } from './linodes';
 

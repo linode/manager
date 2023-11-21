@@ -33,7 +33,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
 import { queryPresets } from '../base';

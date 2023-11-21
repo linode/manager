@@ -10,7 +10,7 @@ import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/contex
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';

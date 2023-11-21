@@ -1,7 +1,7 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { databaseInstanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';

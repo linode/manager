@@ -10,7 +10,7 @@ import {
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { QueryClient, setLogger } from 'react-query';
+import { QueryClient, setLogger } from '@tanstack/react-query';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
 

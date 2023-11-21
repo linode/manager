@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { regionFactory } from 'src/factories/regions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';

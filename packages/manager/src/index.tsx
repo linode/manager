@@ -2,8 +2,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 

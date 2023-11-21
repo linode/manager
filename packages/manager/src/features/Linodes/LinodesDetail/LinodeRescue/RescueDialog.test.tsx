@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { linodeFactory } from 'src/factories/linodes';
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';

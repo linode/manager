@@ -1,6 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 

@@ -6,7 +6,7 @@ import {
   useQueries,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 

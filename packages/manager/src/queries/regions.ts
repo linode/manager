@@ -6,7 +6,7 @@ import {
   getRegions,
 } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import data from 'src/cachedData/regions.json';
 import { getAll } from 'src/utilities/getAll';

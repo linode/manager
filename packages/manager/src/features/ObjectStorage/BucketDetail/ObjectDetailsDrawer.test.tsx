@@ -1,6 +1,6 @@
 import { act, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { profileFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
