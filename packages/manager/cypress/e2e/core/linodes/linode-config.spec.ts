@@ -228,7 +228,7 @@ describe('Linode Config', () => {
             ui.button.findByTitle('Clone').should('be.disabled');
             cy.findByRole('combobox').should('be.visible').click();
             ui.select
-              .findLinodeItemByText('cy-test-clone-destination-linode')
+              .findItemByText('cy-test-clone-destination-linode')
               .click();
             ui.button.findByTitle('Clone').should('be.enabled').click();
           });
