@@ -1,4 +1,7 @@
-import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
+import {
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
+} from 'src/factories/linodeConfigInterfaceFactory';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import {
   subnetAssignedLinodeDataFactory,
@@ -8,6 +11,7 @@ import {
 import {
   getSubnetInterfaceFromConfigs,
   getUniqueLinodesFromSubnets,
+  hasUnrecommendedConfiguration,
 } from './utils';
 
 const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
@@ -73,5 +77,43 @@ describe('getSubnetInterfaceFromConfigs', () => {
 
     const subnetInterfaceUndefined = getSubnetInterfaceFromConfigs(configs, 5);
     expect(subnetInterfaceUndefined).toBeUndefined();
+  });
+});
+
+describe('hasUnrecommendedConfiguration function', () => {
+  it('returns true when a config has an active VPC interface and a non-VPC primary interface', () => {
+    const publicInterface = LinodeConfigInterfaceFactory.build({
+      primary: true,
+    });
+
+    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+      active: true,
+    });
+
+    const config1 = linodeConfigFactory.build({
+      interfaces: [publicInterface, vpcInterface],
+    });
+
+    const config2 = linodeConfigFactory.build();
+
+    expect(hasUnrecommendedConfiguration([config1, config2])).toBe(true);
+  });
+
+  it('returns false when a config has an VPC interface that is the primary interface', () => {
+    const publicInterface = LinodeConfigInterfaceFactory.build();
+    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+      active: true,
+      primary: true,
+    });
+
+    const config1 = linodeConfigFactory.build({
+      interfaces: [publicInterface],
+    });
+
+    const config2 = linodeConfigFactory.build({
+      interfaces: [publicInterface, vpcInterface],
+    });
+
+    expect(hasUnrecommendedConfiguration([config1, config2])).toBe(false);
   });
 });
