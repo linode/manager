@@ -1,4 +1,3 @@
-import { Stack } from 'src/components/Stack';
 import React, { useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -7,6 +6,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

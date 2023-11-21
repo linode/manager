@@ -55,5 +55,15 @@ export const ROUTE_COPY = {
       query:
         'The format for query string is: ?name=value. The query string name must be preceded by a question mark (?).',
     },
+    Stickiness: {
+      Cookie:
+        'The name that is used to obtain cookie value from downstream HTTP application.',
+      CookieType:
+        'Global Load Balancer supports session stickiness using load balancer generated cookies or origin generated cookies. Selecting `Load Balancer Generated` generates an affinity cookie named…The Load Balancer Generated cookie expiry is configurable using Stickiness TTL.  If you are using an `Origin Generated’ cookie, enter the `Cookie Key`.',
+      Description:
+        'Controls how subsequent requests from the same user are routed. When enabled, subsequent requests, by the same user to the same load balancer, are sent to the same service target for the duration of the cookie and as long as the target remains healthy. If the target is unhealthy, a different target is selected. When Session Stickiness is disabled, no session information is saved and requests are routed in accordance with the algorithm and rules.',
+      TTL:
+        'Entering an expiry time sets the duration for the HTTP/S load balancer generated cookie.',
+    },
   },
 };

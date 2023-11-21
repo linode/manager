@@ -364,11 +364,7 @@ export const RuleDrawer = (props: Props) => {
           {route?.protocol !== 'tcp' && (
             <Stack spacing={1.5}>
               <Typography variant="h3">Session Stickiness</Typography>
-              <Typography>
-                Controls how subsequent requests from the same client are routed
-                when selecting a backend target. When disabled, no session
-                information is saved.
-              </Typography>
+              <Typography>{ROUTE_COPY.Rule.Stickiness.Description}</Typography>
               <FormControlLabel
                 control={
                   <Toggle
@@ -394,10 +390,12 @@ export const RuleDrawer = (props: Props) => {
                         option?.label === 'Load Balancer Generated' ? null : ''
                       );
                     }}
+                    textFieldProps={{
+                      labelTooltipText: ROUTE_COPY.Rule.Stickiness.CookieType,
+                    }}
                     disableClearable
                     label="Cookie type"
                     options={stickyOptions}
-                    textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
                     value={cookieType}
                   />
                   <TextField
@@ -411,8 +409,8 @@ export const RuleDrawer = (props: Props) => {
                       formik.values.match_condition.session_stickiness_cookie ??
                       ''
                     }
-                    label="Cookie"
-                    labelTooltipText="TODO: AGLB"
+                    label="Cookie Key"
+                    labelTooltipText={ROUTE_COPY.Rule.Stickiness.Cookie}
                     name="match_condition.session_stickiness_cookie"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -440,7 +438,7 @@ export const RuleDrawer = (props: Props) => {
                           timeUnitFactorMap[ttlUnit]
                         }
                         label="Stickiness TTL"
-                        labelTooltipText="TODO: AGLB"
+                        labelTooltipText={ROUTE_COPY.Rule.Stickiness.TTL}
                         name="match_condition.session_stickiness_ttl"
                         onBlur={formik.handleBlur}
                         type="number"
