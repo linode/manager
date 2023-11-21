@@ -2560,10 +2560,10 @@
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@linode/design-language-system@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-0.0.12.tgz#d85029df89e294558b1dce46b8709baa3c012cc8"
-  integrity sha512-mBtoi2xc9OaiIFYJSjKJsROAoeUwI78P23BKaFy0vQ4T7OOr50Rz+IWY9QOskOEL/Y2OtGB5w8nlOEbUDB71Sg==
+"@linode/design-language-system@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-0.0.14.tgz#965c8adf95b1bcd248991f606cf9b68224e0226c"
+  integrity sha512-wSmICRUFKVStY6MCS0Sk3/TgYz4UJAswS54nwDjqv74v8DayuduR9g2cmTm8Cp0VNmC4lE+qC56+mUbeFGmUQQ==
   dependencies:
     style-dictionary "^3.7.2"
 
