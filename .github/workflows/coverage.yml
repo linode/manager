@@ -48,11 +48,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-    
-      - name: Download code coverage report from base branch
-        uses: actions/download-artifact@v3
-        with:
-          name: ref_code_coverage
 
       - name: Install dependencies
         run: yarn

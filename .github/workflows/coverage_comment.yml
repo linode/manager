@@ -39,7 +39,7 @@ jobs:
           else
             icon="✅" # Check mark icon
           fi
-          comment_message="$icon **Coverage Report**\nBase Coverage: $base_coverage\nCurrent Coverage: $current_coverage"
+          comment_message="**Coverage Report:** $icon<br>Base Coverage: $base_coverage%<br>Current Coverage: $current_coverage%"
           echo "Coverage: $comment_message"
           echo "$comment_message" > updated_comment.txt
       
