@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -282,13 +283,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 value={selectedLinodes}
               />
             )}
-            <RemovableSelectionsList
-              headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
-              isRemovable={!Boolean(singleLinodeToBeUnassigned)}
-              noDataText={'Select Linodes to be Unassigned from Subnet.'}
-              onRemove={handleRemoveLinode}
-              selectionData={selectedLinodes}
-            />
+            <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+              <RemovableSelectionsList
+                headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
+                isRemovable={!Boolean(singleLinodeToBeUnassigned)}
+                noDataText={'Select Linodes to be Unassigned from Subnet.'}
+                onRemove={handleRemoveLinode}
+                selectionData={selectedLinodes}
+              />
+            </Box>
             {selectedLinodes.length > 0 && (
               <DownloadCSV
                 sx={{

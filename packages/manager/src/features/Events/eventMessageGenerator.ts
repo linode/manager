@@ -916,7 +916,13 @@ export function applyBolding(message: string) {
   let newMessage = message;
 
   for (const word of wordsToBold) {
-    newMessage = newMessage.replace(word, `**${word}**`);
+    const regex = new RegExp(`\\b${word}\\b`);
+    newMessage = newMessage.replace(
+      // We use a RegExp with word boundary checks (\\b) to ensure we're replacing the exact word, not just a substring
+      // This avoids situations where we used to get back 're**booted**' instead of **rebooted**, etc
+      regex,
+      `**${word}**`
+    );
   }
 
   return newMessage;
