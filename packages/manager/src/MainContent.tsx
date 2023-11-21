@@ -97,11 +97,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   switchWrapper: {
-    '& .mlSidebar': {
-      [theme.breakpoints.up('lg')]: {
-        paddingRight: `0 !important`,
-      },
-    },
     '& > .MuiGrid-container': {
       maxWidth: theme.breakpoints.values.lg,
       width: '100%',

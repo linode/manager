@@ -314,6 +314,7 @@ export const CreateCluster = () => {
           highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
           pools={nodePools}
           region={selectedRegionID}
+          regionsData={regionsData}
           removePool={removePool}
           showHighAvailability={showHighAvailability}
           submitting={submitting}
