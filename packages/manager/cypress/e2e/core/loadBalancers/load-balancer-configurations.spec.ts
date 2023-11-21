@@ -197,10 +197,10 @@ describe('Akamai Global Load Balancer configurations page', () => {
     });
     it('creates a TCP configuration', () => {
       const loadbalancer = loadbalancerFactory.build();
-      const routes = routeFactory.buildList(1, { protocol: 'http' });
+      const routes = routeFactory.buildList(1, { protocol: 'tcp' });
       const configuration = configurationFactory.build({
-        port: 80,
-        protocol: 'http',
+        port: 22,
+        protocol: 'tcp',
       });
 
       mockAppendFeatureFlags({
@@ -265,7 +265,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
       cy.wait(['@createConfiguration', '@getConfigurations']);
     });
-    it.only('shows API errors when creating an HTTPS configuration', () => {
+    it('shows API errors when creating an HTTPS configuration', () => {
       const loadbalancer = loadbalancerFactory.build();
       const certificates = certificateFactory.buildList(1);
       const routes = routeFactory.buildList(1);
