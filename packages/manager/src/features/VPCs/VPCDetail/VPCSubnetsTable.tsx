@@ -37,9 +37,6 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handleUnrecommendedConfigPresent: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
   vpcId: number;
   vpcRegion: string;
 }
@@ -47,7 +44,7 @@ interface Props {
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { handleUnrecommendedConfigPresent, vpcId, vpcRegion } = props;
+  const { vpcId, vpcRegion } = props;
   const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
@@ -249,9 +246,6 @@ export const VPCSubnetsTable = (props: Props) => {
             {subnet.linodes.length > 0 ? (
               subnet.linodes.map((linodeInfo) => (
                 <SubnetLinodeRow
-                  handleUnrecommendedConfigPresent={
-                    handleUnrecommendedConfigPresent
-                  }
                   handlePowerActionsLinode={handlePowerActionsLinode}
                   handleUnassignLinode={handleSubnetUnassignLinode}
                   key={linodeInfo.id}

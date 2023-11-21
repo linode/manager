@@ -11,7 +11,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
 import { VPC_FEEDBACK_FORM_URL, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
@@ -19,11 +18,7 @@ import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
-import {
-  NETWORK_INTERFACES_GUIDE_URL,
-  REBOOT_LINODE_WARNING_VPCDETAILS,
-  UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY,
-} from '../constants';
+import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
 import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
@@ -33,8 +28,6 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
-
-import { Theme } from '@mui/material/styles';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -46,11 +39,6 @@ const VPCDetail = () => {
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
   const [showFullDescription, setShowFullDescription] = React.useState(false);
-
-  const [
-    unrecommendedConfigurationPresent,
-    setUnrecommendedConfigurationPresent,
-  ] = React.useState(false);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -222,31 +210,9 @@ const VPCDetail = () => {
           </Typography>
         </DismissibleBanner>
       )}
-      {unrecommendedConfigurationPresent && unrecommendedConfigurationNotice}
-      <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={setUnrecommendedConfigurationPresent}
-        vpcId={vpc.id}
-        vpcRegion={vpc.region}
-      />
+      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
     </>
   );
 };
 
 export default VPCDetail;
-
-const unrecommendedConfigurationNotice = (
-  <DismissibleBanner
-    important
-    preferenceKey={UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY}
-    sx={(theme: Theme) => ({ marginBottom: theme.spacing(2) })}
-    variant="warning"
-  >
-    <Typography>
-      A warning icon is displayed for Linodes using unrecommended configuration
-      profiles. Update their configuration profiles to avoid connectivity
-      issues. Read our{' '}
-      <Link to={NETWORK_INTERFACES_GUIDE_URL}>Configuration Profiles</Link>{' '}
-      guide for more information.
-    </Typography>
-  </DismissibleBanner>
-);

@@ -43,16 +43,9 @@ describe('VPC Subnets table', () => {
       getByPlaceholderText,
       getByTestId,
       getByText,
-    } = renderWithTheme(
-      <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={vi.fn()}
-        vpcId={1}
-        vpcRegion=""
-      />,
-      {
-        queryClient,
-      }
-    );
+    } = renderWithTheme(<VPCSubnetsTable vpcId={1} vpcRegion="" />, {
+      queryClient,
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -86,11 +79,7 @@ describe('VPC Subnets table', () => {
     );
 
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={vi.fn()}
-        vpcId={2}
-        vpcRegion=""
-      />
+      <VPCSubnetsTable vpcId={2} vpcRegion="" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -110,11 +99,7 @@ describe('VPC Subnets table', () => {
       })
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable
-        handleUnrecommendedConfigPresent={vi.fn()}
-        vpcId={3}
-        vpcRegion=""
-      />
+      <VPCSubnetsTable vpcId={3} vpcRegion="" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

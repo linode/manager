@@ -75,7 +75,6 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
-          handleUnrecommendedConfigPresent={vi.fn()}
           linodeId={linodeFactory1.id}
           subnetId={0}
         />
@@ -112,6 +111,7 @@ describe('SubnetLinodeRow', () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      primary: true,
     });
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
@@ -142,7 +142,6 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
-          handleUnrecommendedConfigPresent={vi.fn()}
           linodeId={linodeFactory1.id}
           subnetId={0}
         />
@@ -204,7 +203,6 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={vi.fn()}
           handleUnassignLinode={handleUnassignLinode}
-          handleUnrecommendedConfigPresent={vi.fn()}
           linodeId={linodeFactory2.id}
           subnetId={1}
         />

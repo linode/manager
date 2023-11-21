@@ -44,5 +44,4 @@ export const StyledWarningIcon = styled(Warning, {
   label: 'StyledWarningIcon',
 })(({ theme }) => ({
   fill: theme.color.yellow,
-  marginRight: theme.spacing(),
 }));

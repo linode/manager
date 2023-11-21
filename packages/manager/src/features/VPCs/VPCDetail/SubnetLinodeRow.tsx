@@ -24,6 +24,7 @@ import {
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import {
+  NETWORK_INTERFACES_GUIDE_URL,
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
@@ -45,9 +46,6 @@ import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
-  handleUnrecommendedConfigPresent: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -56,7 +54,6 @@ interface Props {
 export const SubnetLinodeRow = (props: Props) => {
   const queryClient = useQueryClient();
   const {
-    handleUnrecommendedConfigPresent,
     handlePowerActionsLinode,
     handleUnassignLinode,
     linodeId,
@@ -85,16 +82,6 @@ export const SubnetLinodeRow = (props: Props) => {
   const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
     configs ?? []
   );
-
-  React.useEffect(() => {
-    if (hasUnrecommendedConfiguration) {
-      handleUnrecommendedConfigPresent(true);
-    }
-  }, [
-    configs,
-    handleUnrecommendedConfigPresent,
-    hasUnrecommendedConfiguration,
-  ]);
 
   // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
@@ -147,7 +134,22 @@ export const SubnetLinodeRow = (props: Props) => {
       data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
       sx={{ alignItems: 'center', display: 'flex' }}
     >
-      <StyledWarningIcon />
+      <TooltipIcon
+        text={
+          <Typography>
+            This Linode is using an unrecommended configuration profile. Update
+            its configuration profile to avoid connectivity issues. Read our{' '}
+            <Link to={NETWORK_INTERFACES_GUIDE_URL}>
+              Configuration Profiles
+            </Link>{' '}
+            guide for more information.
+          </Typography>
+        }
+        icon={<StyledWarningIcon />}
+        interactive
+        status="other"
+        sxTooltipIcon={{ paddingLeft: 0 }}
+      />
       {linkifiedLinodeLabel}
     </Box>
   ) : (
