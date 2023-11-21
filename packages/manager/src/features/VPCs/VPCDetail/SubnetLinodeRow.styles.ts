@@ -27,6 +27,7 @@ export const StyledActionTableCell = styled(TableCell, {
   label: 'StyledActionTableCell',
 })(() => ({
   border: 'none',
+  height: 45,
 }));
 
 export const StyledTableHeadCell = styled(TableCell, {

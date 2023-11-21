@@ -1,7 +1,8 @@
-import { APIError, Firewall } from '@linode/api-v4';
+import { APIError, Firewall, Linode } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -11,14 +12,21 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  queryKey as linodesQueryKey,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
-import { WARNING_ICON_UNRECOMMENDED_CONFIG } from '../constants';
+import {
+  VPC_REBOOT_MESSAGE,
+  WARNING_ICON_UNRECOMMENDED_CONFIG,
+} from '../constants';
 import {
   hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
   getSubnetInterfaceFromConfigs,
@@ -32,9 +40,11 @@ import {
 } from './SubnetLinodeRow.styles';
 
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handleUnassignLinode: any;
+  handlePowerActionsLinode: (linode: Linode, action: Action) => void;
+  handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   handleUnrecommendedConfigPresent: React.Dispatch<
     React.SetStateAction<boolean>
   >;
@@ -44,9 +54,11 @@ interface Props {
 }
 
 export const SubnetLinodeRow = (props: Props) => {
+  const queryClient = useQueryClient();
   const {
-    handleUnassignLinode,
     handleUnrecommendedConfigPresent,
+    handlePowerActionsLinode,
+    handleUnassignLinode,
     linodeId,
     subnet,
     subnetId,
@@ -83,6 +95,19 @@ export const SubnetLinodeRow = (props: Props) => {
     handleUnrecommendedConfigPresent,
     hasUnrecommendedConfiguration,
   ]);
+
+  // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
+  // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
+  React.useEffect(() => {
+    if (linode && linode.status === 'running') {
+      queryClient.invalidateQueries([
+        linodesQueryKey,
+        'linode',
+        linodeId,
+        'configs',
+      ]);
+    }
+  }, [linode, linodeId, queryClient]);
 
   if (linodeLoading || !linode) {
     return (
@@ -130,6 +155,18 @@ export const SubnetLinodeRow = (props: Props) => {
   );
 
   const iconStatus = getLinodeIconStatus(linode.status);
+  const isRunning = linode.status === 'running';
+  const isOffline = linode.status === 'stopped' || linode.status === 'offline';
+  const isRebootNeeded =
+    isRunning &&
+    configs?.some((config) =>
+      config.interfaces.some(
+        (linodeInterface) =>
+          linodeInterface.purpose === 'vpc' && !linodeInterface.active
+      )
+    );
+
+  const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
   return (
     <StyledTableRow>
@@ -137,12 +174,23 @@ export const SubnetLinodeRow = (props: Props) => {
         {labelCell}
       </StyledTableCell>
       <StyledTableCell statusCell>
-        <StatusIcon status={iconStatus} />
-        {capitalizeAllWords(linode.status.replace('_', ' '))}
+        <StatusIcon
+          aria-label={`Linode status ${linode?.status ?? iconStatus}`}
+          status={iconStatus}
+        />
+        {isRebootNeeded ? (
+          <>
+            {'Reboot Needed'}
+            <TooltipIcon
+              status="help"
+              sxTooltipIcon={{ paddingRight: 0 }}
+              text={VPC_REBOOT_MESSAGE}
+            />
+          </>
+        ) : (
+          capitalizeAllWords(linode.status.replace('_', ' '))
+        )}
       </StyledTableCell>
-      <Hidden lgDown>
-        <StyledTableCell>{linode.id}</StyledTableCell>
-      </Hidden>
       <Hidden smDown>
         <StyledTableCell>
           {getSubnetLinodeIPv4CellString(
@@ -163,9 +211,28 @@ export const SubnetLinodeRow = (props: Props) => {
         </StyledTableCell>
       </Hidden>
       <StyledActionTableCell actionCell>
+        {isRebootNeeded && (
+          <InlineMenuAction
+            onClick={() => {
+              handlePowerActionsLinode(linode, 'Reboot');
+            }}
+            actionText="Reboot"
+          />
+        )}
+        {showPowerButton && (
+          <InlineMenuAction
+            onClick={() => {
+              handlePowerActionsLinode(
+                linode,
+                isOffline ? 'Power On' : 'Power Off'
+              );
+            }}
+            actionText={isOffline ? 'Power On' : 'Power Off'}
+          />
+        )}
         <InlineMenuAction
           actionText="Unassign Linode"
-          onClick={() => handleUnassignLinode(subnet, linode)}
+          onClick={() => handleUnassignLinode(linode, subnet)}
         />
       </StyledActionTableCell>
     </StyledTableRow>
@@ -252,15 +319,12 @@ export const SubnetLinodeTableRowHead = (
   <TableRow>
     <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
-    <Hidden lgDown>
-      <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
-    </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>VPC IPv4</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
     </Hidden>
-    <StyledTableHeadCell></StyledTableHeadCell>
+    <StyledTableHeadCell />
   </TableRow>
 );

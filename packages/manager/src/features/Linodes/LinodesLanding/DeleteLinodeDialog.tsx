@@ -5,15 +5,14 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useDeleteLinodeMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { vpcQueryKey, subnetQueryKey } from 'src/queries/vpcs';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { getVPCsFromLinodeConfigs } from './utils';

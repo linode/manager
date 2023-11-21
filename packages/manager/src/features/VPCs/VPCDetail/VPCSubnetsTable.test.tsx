@@ -124,7 +124,6 @@ describe('VPC Subnets table', () => {
 
     getByText('Linode Label');
     getByText('Status');
-    getByText('Linode ID');
     getByText('VPC IPv4');
     getByText('Firewalls');
   });

@@ -213,7 +213,7 @@ const VPCDetail = () => {
       </Box>
       {numLinodes > 0 && (
         <DismissibleBanner
-          preferenceKey={`reboot-linodes-warning-banner-${vpc.id}`}
+          preferenceKey={`reboot-linodes-warning-banner`}
           sx={{ marginBottom: theme.spacing(2) }}
           variant="warning"
         >
