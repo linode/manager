@@ -46,7 +46,7 @@ import {
 } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -580,16 +580,21 @@ const NodeBalancerCreate = () => {
         displaySections={summaryItems}
         heading={`Summary ${nodeBalancerFields.label ?? ''}`}
       />
-      <Box
-        display="flex"
-        justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
-      >
-        {showGDPRCheckbox ? (
+      {showGDPRCheckbox && (
+        <Box display="flex">
           <EUAgreementCheckbox
             checked={hasSignedAgreement}
             onChange={(e) => setHasSignedAgreement(e.target.checked)}
           />
-        ) : undefined}
+        </Box>
+      )}
+      <Box
+        sx={{
+          marginTop: theme.spacing(4),
+        }}
+        display="flex"
+        justifyContent={'flex-end'}
+      >
         <Button
           sx={{
             flexShrink: 0,

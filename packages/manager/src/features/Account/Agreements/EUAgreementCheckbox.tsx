@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -15,22 +16,38 @@ interface Props {
   ) => void;
 }
 
-const EUAgreementCheckbox = (props: Props) => {
+export const EUAgreementCheckbox = (props: Props) => {
   const { centerCheckbox, checked, className, onChange } = props;
+  const theme = useTheme();
+
+  const baseCheckboxStyle = {
+    [theme.breakpoints.up('md')]: {
+      marginLeft: '-8px',
+    },
+  };
 
   const checkboxStyle = centerCheckbox
-    ? { marginLeft: -8 }
-    : { marginLeft: -8, marginTop: -5 };
+    ? baseCheckboxStyle
+    : {
+        ...baseCheckboxStyle,
+        marginTop: '-5px',
+      };
 
   return (
     <Box
+      sx={{
+        [theme.breakpoints.down('md')]: {
+          marginLeft: theme.spacing(1),
+          marginRight: theme.spacing(1),
+        },
+      }}
       alignItems={centerCheckbox ? 'center' : 'flex-start'}
       className={className}
+      data-testid="eu-agreement-checkbox"
       display="flex"
       flexDirection="row"
-      data-testid="eu-agreement-checkbox"
     >
-      <Checkbox checked={checked} onChange={onChange} style={checkboxStyle} />
+      <Checkbox checked={checked} onChange={onChange} sx={checkboxStyle} />
       <Typography style={{ marginLeft: 4 }}>
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">
@@ -46,5 +63,3 @@ const EUAgreementCheckbox = (props: Props) => {
     </Box>
   );
 };
-
-export default EUAgreementCheckbox;

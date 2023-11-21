@@ -18,7 +18,7 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,

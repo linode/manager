@@ -48,7 +48,7 @@ export const StyledMessageDiv = styled('div', {
   // conditional styling
   ...(showGDPRCheckbox
     ? {
-        maxWidth: '70%',
+        maxWidth: '100%',
         [theme.breakpoints.down('sm')]: {
           maxWidth: 'unset',
         },

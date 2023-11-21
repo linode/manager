@@ -6,7 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   reportAgreementSigningError,
   useAccountAgreements,

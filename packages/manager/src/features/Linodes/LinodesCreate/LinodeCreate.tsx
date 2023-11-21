@@ -36,7 +36,7 @@ import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,

@@ -34,7 +34,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
 
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   browseFilesButton: {
