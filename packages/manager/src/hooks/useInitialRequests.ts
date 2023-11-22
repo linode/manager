@@ -1,13 +1,14 @@
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
-import { getProfile, getUserPreferences } from '@linode/api-v4/lib/profile';
-import * as React from 'react';
+import { getUserPreferences } from '@linode/api-v4/lib/profile';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 import { useStore } from 'react-redux';
 
 import { startEventsInterval } from 'src/events';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { queryKey as accountQueryKey } from 'src/queries/account';
+import { profileQueries } from 'src/queries/profile';
 import { redirectToLogin } from 'src/session';
 
 /**
@@ -69,10 +70,7 @@ export const useInitialRequests = () => {
       }),
 
       // Username and whether a user is restricted
-      queryClient.prefetchQuery({
-        queryFn: getProfile,
-        queryKey: 'profile',
-      }),
+      queryClient.prefetchQuery(profileQueries.info),
 
       // Is a user managed
       queryClient.prefetchQuery({

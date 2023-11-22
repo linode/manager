@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { queryKey } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -20,6 +19,7 @@ import {
   StyledRootContainer,
 } from './TwoFactor.styles';
 import { TwoFactorToggle } from './TwoFactorToggle';
+import { profileQueries } from 'src/queries/profile';
 
 export interface TwoFactorProps {
   disabled?: boolean;
@@ -61,7 +61,7 @@ export const TwoFactor = (props: TwoFactorProps) => {
    */
   const handleEnableSuccess = (scratchCode: string) => {
     // Refetch Profile with React Query so profile is up to date
-    queryClient.invalidateQueries(queryKey);
+    queryClient.invalidateQueries(profileQueries.info.queryKey);
     setSuccess('Two-factor authentication has been enabled.');
     setShowQRCode(false);
     setTwoFactorEnabled(true);
