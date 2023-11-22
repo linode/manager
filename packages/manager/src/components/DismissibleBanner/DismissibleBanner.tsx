@@ -15,15 +15,15 @@ import type { NoticeProps } from 'src/components/Notice/Notice';
 
 interface Props {
   /**
-   * Optional element to pass to the banner, good for triggering actions
+   * Optional element to pass to the banner to trigger actions
    */
   actionButton?: JSX.Element;
   /**
-   * Optional element to pass to the banner
+   * Child element to pass to the banner
    */
   children: JSX.Element;
   /**
-   * Used to pass additional styles to the banner
+   * Additional classes to the root element
    */
   className?: string;
   /**
@@ -31,11 +31,11 @@ interface Props {
    */
   options?: DismissibleNotificationOptions;
   /**
-   * Used for determining whether this banner has been dismissed or not
+   * Used to check if this banner has already been dismissed
    */
   preferenceKey: string;
   /**
-   * Additional styles to apply to the overall banner
+   * Additional styles to apply to the root element
    */
   sx?: SxProps;
 }
