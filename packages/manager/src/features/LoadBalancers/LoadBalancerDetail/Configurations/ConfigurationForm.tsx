@@ -130,7 +130,10 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   };
 
   const generalErrors = error?.reduce((acc, { field, reason }) => {
-    if (!field || !['label', 'port', 'protocol'].includes(field)) {
+    if (
+      !field ||
+      !['certificates', 'label', 'port', 'protocol'].includes(field)
+    ) {
       return acc ? `${acc}, ${reason}` : reason;
     }
     return acc;
