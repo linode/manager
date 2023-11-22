@@ -5,7 +5,7 @@ import * as React from 'react';
 import {
   Action,
   ActionMenu,
-  Props as ActionMenuProps,
+  ActionMenuProps,
 } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
