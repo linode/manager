@@ -27,6 +27,7 @@ import {
   defaultState,
   pathOrFileName,
 } from './reducer';
+import { AxiosProgressEvent } from 'axios';
 
 interface Props {
   bucketName: string;
@@ -285,10 +286,11 @@ export const ObjectUploader = React.memo((props: Props) => {
 export const onUploadProgressFactory = (
   dispatch: (value: ObjectUploaderAction) => void,
   fileName: string
-) => (progressEvent: ProgressEvent) => {
+) => (progressEvent: AxiosProgressEvent) => {
   dispatch({
     data: {
-      percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
+      percentComplete:
+        (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
     },
     filesToUpdate: [fileName],
     type: 'UPDATE_FILES',

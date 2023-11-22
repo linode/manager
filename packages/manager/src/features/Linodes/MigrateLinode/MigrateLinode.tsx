@@ -11,7 +11,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import useEvents from 'src/hooks/useEvents';
 import { useFlags } from 'src/hooks/useFlags';
@@ -32,7 +32,7 @@ import { useTypeQuery } from 'src/queries/types';
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -100,11 +100,12 @@ export const MigrateLinode = React.memo((props: Props) => {
     false
   );
 
-  const showAgreement = Boolean(
-    !profile?.restricted &&
-      agreements?.eu_model === false &&
-      isEURegion(selectedRegion)
-  );
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements,
+    profile,
+    regions: regionsData,
+    selectedRegionId: selectedRegion ?? '',
+  });
 
   React.useEffect(() => {
     if (error) {
@@ -242,9 +243,9 @@ export const MigrateLinode = React.memo((props: Props) => {
         }}
         alignItems="center"
         display="flex"
-        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+        justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
       >
-        {showAgreement ? (
+        {showGDPRCheckbox ? (
           <StyledAgreementCheckbox
             centerCheckbox
             checked={hasSignedAgreement}
@@ -256,7 +257,7 @@ export const MigrateLinode = React.memo((props: Props) => {
             !!disabledText ||
             !hasConfirmed ||
             !selectedRegion ||
-            (showAgreement && !hasSignedAgreement)
+            (showGDPRCheckbox && !hasSignedAgreement)
           }
           sx={{
             [theme.breakpoints.down('md')]: {
