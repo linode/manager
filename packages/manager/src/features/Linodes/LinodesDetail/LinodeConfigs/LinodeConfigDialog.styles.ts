@@ -6,12 +6,12 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormGroup } from 'src/components/FormGroup';
 import { RadioGroup } from 'src/components/RadioGroup';
 
-const formGroupStyling = () => ({
+const formGroupStyling = {
   '&.MuiFormGroup-root[role="radiogroup"]': {
     marginBottom: 0,
   },
   alignItems: 'flex-start',
-});
+};
 
 export const StyledRadioGroup = styled(RadioGroup, {
   label: 'StyledRadioGroup',
