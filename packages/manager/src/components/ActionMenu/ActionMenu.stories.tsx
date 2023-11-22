@@ -42,7 +42,7 @@ const meta: Meta<ActionMenuProps> = {
   },
   args: { actionsList: standardActions, ariaLabel: 'action menu' },
   component: ActionMenu,
-  title: 'Components/ActionMenu',
+  title: 'Components/Action Menu',
 };
 
 export default meta;
