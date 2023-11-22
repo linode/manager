@@ -1003,6 +1003,8 @@ export const LinodeConfigDialog = (props: Props) => {
                         ipamError:
                           formik.errors[`interfaces[${idx}].ipam_address`],
                         labelError: formik.errors[`interfaces[${idx}].label`],
+                        primaryError:
+                          formik.errors[`interfaces[${idx}].primary`],
                         publicIPv4Error:
                           formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
                         subnetError:
