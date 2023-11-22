@@ -7,6 +7,8 @@ import {
   LinodeConfigInterfaceFactory,
   LinodeConfigInterfaceFactoryWithVPC,
   firewallFactory,
+  subnetAssignedLinodeDataFactory,
+  subnetFactory,
 } from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeFactory } from 'src/factories/linodes';
@@ -177,6 +179,7 @@ describe('SubnetLinodeRow', () => {
   it('should display a warning icon for Linodes using unrecommended configuration profiles', async () => {
     const publicInterface = LinodeConfigInterfaceFactory.build({
       active: true,
+      id: 5,
       ipam_address: null,
       primary: true,
       purpose: 'public',
@@ -184,12 +187,32 @@ describe('SubnetLinodeRow', () => {
 
     const vpcInterface = LinodeConfigInterfaceFactory.build({
       active: true,
+      id: 10,
       ipam_address: null,
       purpose: 'vpc',
     });
 
     const configurationProfile = linodeConfigFactory.build({
       interfaces: [publicInterface, vpcInterface],
+    });
+
+    const subnet = subnetFactory.build({
+      id: 1,
+      linodes: [
+        subnetAssignedLinodeDataFactory.build({
+          id: 1,
+          interfaces: [
+            {
+              active: true,
+              id: 5,
+            },
+            {
+              active: true,
+              id: 10,
+            },
+          ],
+        }),
+      ],
     });
 
     server.use(
@@ -204,7 +227,8 @@ describe('SubnetLinodeRow', () => {
           handlePowerActionsLinode={vi.fn()}
           handleUnassignLinode={handleUnassignLinode}
           linodeId={linodeFactory2.id}
-          subnetId={1}
+          subnet={subnet}
+          subnetId={subnet.id}
         />
       ),
       {
