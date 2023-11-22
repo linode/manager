@@ -4,6 +4,7 @@ import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
 import type {
+  APIError,
   Certificate,
   Configuration,
   Loadbalancer,
@@ -57,6 +58,83 @@ export const mockGetLoadBalancerConfigurations = (
     'GET',
     apiMatcher(`/aglb/${loadBalancerId}/configurations*`),
     paginateResponse(configurations)
+  );
+};
+
+/**
+ * Intercepts DELETE requests to delete an AGLB load balancer configuration.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete the configuration.
+ * @param configId - ID of the configuration being deleted.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerConfiguration = (
+  loadBalancerId: number,
+  configId: number
+) => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configId}`),
+    {}
+  );
+};
+
+/**
+ * Intercepts DELETE requests to delete an AGLB load balancer configuration and returns an error.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete the configuration.
+ * @param configId - ID of the configuration being deleted.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerConfigurationError = (
+  loadBalancerId: number,
+  configId: number,
+  error: string
+) => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configId}`),
+    makeResponse({ errors: [{ reason: error }] }, 500)
+  );
+};
+
+/**
+ * Intercepts POST request to create an AGLB configuration.
+ *
+ * @param loadBalancerId - ID of load balancer for which to create the configuration.
+ * @param configuration - The AGLB configuration being created.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLoadBalancerConfiguration = (
+  loadBalancerId: number,
+  configuration: Configuration
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/aglb/${loadBalancerId}/configurations`),
+    makeResponse(configuration)
+  );
+};
+
+/**
+ * Intercepts POST request to create an AGLB configuration and returns an error.
+ *
+ * @param loadBalancerId - ID of load balancer for which to create the configuration.
+ * @param errors - Array of API errors to mock.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLoadBalancerConfigurationError = (
+  loadBalancerId: number,
+  errors: APIError[]
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/aglb/${loadBalancerId}/configurations`),
+    makeResponse({ errors }, 500)
   );
 };
 
