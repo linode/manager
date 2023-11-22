@@ -16,15 +16,16 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -230,9 +231,9 @@ export const CreateFirewallDrawer = React.memo(
       ) || [];
 
     const learnMoreLink = (
-      <a href="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
+      <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
         Learn more
-      </a>
+      </Link>
     );
 
     const generalError =
@@ -291,7 +292,7 @@ export const CreateFirewallDrawer = React.memo(
             >
               {NODEBALANCER_HELPER_TEXT}
               <br />
-              {learnMoreLink}
+              {learnMoreLink}.
             </Typography>
           </Box>
           <Autocomplete

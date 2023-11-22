@@ -189,11 +189,11 @@ export const AddNodebalancerDrawer = (props: Props) => {
     >
       <Notice variant={'warning'}>
         Only the Firewall's inbound rules apply to NodeBalancers. Any existing
-        outbound rules won't be applied.
+        outbound rules won't be applied.{' '}
         <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
-          {' '}
-          Learn more.
+          Learn more
         </Link>
+        .
       </Notice>
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
