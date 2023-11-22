@@ -16,7 +16,7 @@ const props = (type: FirewallDeviceEntityType): FirewallDeviceTableProps => ({
   disabled: false,
   error: undefined,
   loading: false,
-  triggerRemoveDevice: jest.fn(),
+  triggerRemoveDevice: vi.fn(),
 });
 
 devices.forEach((device: FirewallDeviceEntityType) => {
