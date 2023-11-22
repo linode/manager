@@ -112,7 +112,8 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
         ui.autocompletePopper.findByTitle(routes[0].label).click();
 
-        cy.get("[type='submit']")
+        ui.buttonGroup
+          .findButtonByTitle('Add Route')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -179,7 +180,8 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
         ui.autocompletePopper.findByTitle(routes[0].label).click();
 
-        cy.get("[type='submit']")
+        ui.buttonGroup
+          .findButtonByTitle('Add Route')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -246,7 +248,8 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
         ui.autocompletePopper.findByTitle(routes[0].label).click();
 
-        cy.get("[type='submit']")
+        ui.buttonGroup
+          .findButtonByTitle('Add Route')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -330,7 +333,8 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
         ui.autocompletePopper.findByTitle(routes[0].label).click();
 
-        cy.get("[type='submit']")
+        ui.buttonGroup
+          .findButtonByTitle('Add Route')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -370,16 +374,16 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
       const configuration = configurations[0];
 
-      const accordionHeader = cy.findByText(configuration.label);
-
+      cy.findByText(configuration.label).as('accordionHeader');
       // Click the accordion header to open the accordion
-      accordionHeader.click();
-
+      cy.get('@accordionHeader').click();
       // Get the Configuration's entire accordion area
-      accordionHeader.closest('[data-qa-panel]').within(() => {
-        // Click the Delete button to open the delete dialog
-        ui.button.findByTitle('Delete').click();
-      });
+      cy.get('@accordionHeader')
+        .closest('[data-qa-panel]')
+        .within(() => {
+          // Click the Delete button to open the delete dialog
+          ui.button.findByTitle('Delete').click();
+        });
 
       mockDeleteLoadBalancerConfiguration(loadbalancer.id, configuration.id).as(
         'deleteConfiguration'
@@ -421,16 +425,16 @@ describe('Akamai Global Load Balancer configurations page', () => {
 
       const configuration = configurations[0];
 
-      const accordionHeader = cy.findByText(configuration.label);
-
+      cy.findByText(configuration.label).as('accordionHeader');
       // Click the accordion header to open the accordion
-      accordionHeader.click();
-
+      cy.get('@accordionHeader').click();
       // Get the Configuration's entire accordion area
-      accordionHeader.closest('[data-qa-panel]').within(() => {
-        // Click the Delete button to open the delete dialog
-        ui.button.findByTitle('Delete').click();
-      });
+      cy.get('@accordionHeader')
+        .closest('[data-qa-panel]')
+        .within(() => {
+          // Click the Delete button to open the delete dialog
+          ui.button.findByTitle('Delete').click();
+        });
 
       mockDeleteLoadBalancerConfigurationError(
         loadbalancer.id,
