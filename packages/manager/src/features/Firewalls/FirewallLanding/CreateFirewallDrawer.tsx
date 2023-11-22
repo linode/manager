@@ -13,19 +13,18 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -40,8 +39,11 @@ const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to Nod
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
 
+export const LINODE_CREATE_FLOW_TEXT = 'Additional Linodes';
+export const NODEBALANCER_CREATE_FLOW_TEXT = 'Additional NodeBalancers';
+
 export interface CreateFirewallDrawerProps {
-  inCreateFlow?: boolean;
+  createFlow?: FirewallDeviceEntityType;
   onClose: () => void;
   onFirewallCreated?: (firewall: Firewall) => void;
   open: boolean;
@@ -62,7 +64,7 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
-    const { inCreateFlow, onClose, onFirewallCreated, open } = props;
+    const { createFlow, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
@@ -143,9 +145,6 @@ export const CreateFirewallDrawer = React.memo(
             if (onFirewallCreated) {
               onFirewallCreated(response);
             }
-            enqueueSnackbar('Firewall created successfully.', {
-              variant: 'success',
-            });
             onClose();
           })
           .catch((err) => {
@@ -172,18 +171,6 @@ export const CreateFirewallDrawer = React.memo(
       }
     }, [open, resetForm]);
 
-    const {
-      data: nodebalancerData,
-      error: nodebalancerError,
-      isLoading: nodebalancerIsLoading,
-    } = useAllNodeBalancersQuery();
-
-    const {
-      data: linodeData,
-      error: linodeError,
-      isLoading: linodeIsLoading,
-    } = useAllLinodesQuery();
-
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
 
@@ -200,35 +187,15 @@ export const CreateFirewallDrawer = React.memo(
     const deviceSelectGuidance =
       readOnlyLinodeIds.length > 0 || readOnlyNodebalancerIds.length > 0
         ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
-        : null;
+        : undefined;
 
-    const optionsFilter = (
-      id: number,
-      serviceType: FirewallDeviceEntityType
-    ) => {
-      const readOnlyIds =
-        serviceType === 'linode' ? readOnlyLinodeIds : readOnlyNodebalancerIds;
-
-      return !readOnlyIds.includes(id);
+    const linodeOptionsFilter = (linode: Linode) => {
+      return !readOnlyLinodeIds.includes(linode.id);
     };
 
-    const nodebalancers = nodebalancerData?.filter((nb) =>
-      optionsFilter(nb.id, 'nodebalancer')
-    );
-
-    const linodes = linodeData?.filter((linode) =>
-      optionsFilter(linode.id, 'linode')
-    );
-
-    const selectedLinodes: Linode[] =
-      linodes?.filter((linode) =>
-        values.devices?.linodes?.includes(linode.id)
-      ) || [];
-
-    const selectedNodeBalancers: NodeBalancer[] =
-      nodebalancers?.filter((nodebalancer) =>
-        values.devices?.nodebalancers?.includes(nodebalancer.id)
-      ) || [];
+    const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
+      return !readOnlyNodebalancerIds.includes(nodebalancer.id);
+    };
 
     const learnMoreLink = (
       <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
@@ -270,6 +237,7 @@ export const CreateFirewallDrawer = React.memo(
             name="label"
             onBlur={handleBlur}
             onChange={handleChange}
+            required
             value={values.label}
           />
           <Box>
@@ -295,49 +263,39 @@ export const CreateFirewallDrawer = React.memo(
               {learnMoreLink}.
             </Typography>
           </Box>
-          <Autocomplete
-            onChange={(_, linodes) => {
+          <LinodeSelect
+            label={
+              createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
+            }
+            onSelectionChange={(linodes) => {
               setFieldValue(
                 'devices.linodes',
                 linodes.map((linode) => linode.id)
               );
             }}
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-            disabled={userCannotAddFirewall || !!linodeError}
             errorText={errors['devices.linodes']}
-            label={inCreateFlow ? 'Additional Linodes (Optional)' : 'Linodes'}
-            loading={linodeIsLoading}
+            helperText={deviceSelectGuidance}
             multiple
-            noMarginTop={false}
-            noOptionsText="No Linodes available to add"
-            options={linodes || []}
-            value={selectedLinodes}
+            optionsFilter={linodeOptionsFilter}
+            value={values.devices?.linodes ?? null}
           />
-          <Autocomplete
+          <NodeBalancerSelect
             label={
-              inCreateFlow
-                ? 'Additional NodeBalancers (Optional)'
+              createFlow === 'nodebalancer'
+                ? NODEBALANCER_CREATE_FLOW_TEXT
                 : 'NodeBalancers'
             }
-            onChange={(_, nodebalancers) => {
+            onSelectionChange={(nodebalancers) => {
               setFieldValue(
                 'devices.nodebalancers',
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-            disabled={userCannotAddFirewall || !!nodebalancerError}
             errorText={errors['devices.nodebalancers']}
-            loading={nodebalancerIsLoading}
+            helperText={deviceSelectGuidance}
             multiple
-            noMarginTop={false}
-            noOptionsText="No NodeBalancers available to add"
-            options={nodebalancers || []}
-            value={selectedNodeBalancers}
+            optionsFilter={nodebalancerOptionsFilter}
+            value={values.devices?.nodebalancers ?? null}
           />
           <ActionsPanel
             primaryButtonProps={{

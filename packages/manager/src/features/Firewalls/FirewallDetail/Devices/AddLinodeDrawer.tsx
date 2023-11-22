@@ -1,4 +1,5 @@
 import { Linode } from '@linode/api-v4';
+import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -42,6 +43,8 @@ export const AddLinodeDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
+  const theme = useTheme();
+
   const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
     Number(id)
   );
@@ -66,7 +69,7 @@ export const AddLinodeDrawer = (props: Props) => {
       const label = selectedLinodes[index].label;
       const id = selectedLinodes[index].id;
       if (result.status === 'fulfilled') {
-        enqueueSnackbar(`Linode ${label} added successfully`, {
+        enqueueSnackbar(`Linode ${label} successfully added.`, {
           variant: 'success',
         });
       } else {
@@ -116,8 +119,8 @@ export const AddLinodeDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
+            fontFamily: theme.font.bold,
             fontSize: '1rem',
-            fontWeight: 'bold',
             lineHeight: '20px',
           }}
           variant="error"

@@ -643,6 +643,7 @@ export class LinodeCreate extends React.PureComponent<
                   .
                 </Typography>
               }
+              entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
               selectedFirewallId={this.props.firewallId || -1}
             />
