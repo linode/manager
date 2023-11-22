@@ -22,20 +22,24 @@ import {
 import { ui } from 'support/ui';
 
 describe('Akamai Global Load Balancer configurations page', () => {
-  it('renders configurations', () => {
-    const loadbalancer = loadbalancerFactory.build();
-    const configurations = configurationFactory.buildList(5);
-
+  beforeEach(() => {
     mockAppendFeatureFlags({
       aglb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
+  });
+
+  it('renders configurations', () => {
+    const loadbalancer = loadbalancerFactory.build();
+    const configurations = configurationFactory.buildList(5);
+
     mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
     mockGetLoadBalancerConfigurations(loadbalancer.id, configurations).as(
       'getConfigurations'
     );
 
     cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/configurations`);
+
     cy.wait([
       '@getFeatureFlags',
       '@getClientStream',
@@ -54,10 +58,6 @@ describe('Akamai Global Load Balancer configurations page', () => {
       const routes = routeFactory.buildList(1);
       const configuration = configurationFactory.build();
 
-      mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
       mockGetLoadBalancerConfigurations(loadbalancer.id, []).as(
         'getConfigurations'
@@ -69,6 +69,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
       );
 
       cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/configurations`);
+
       cy.wait([
         '@getFeatureFlags',
         '@getClientStream',
@@ -133,10 +134,6 @@ describe('Akamai Global Load Balancer configurations page', () => {
         protocol: 'http',
       });
 
-      mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
       mockGetLoadBalancerConfigurations(loadbalancer.id, []).as(
         'getConfigurations'
@@ -147,6 +144,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
       );
 
       cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/configurations`);
+
       cy.wait([
         '@getFeatureFlags',
         '@getClientStream',
@@ -203,10 +201,6 @@ describe('Akamai Global Load Balancer configurations page', () => {
         protocol: 'tcp',
       });
 
-      mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
       mockGetLoadBalancerConfigurations(loadbalancer.id, []).as(
         'getConfigurations'
@@ -217,6 +211,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
       );
 
       cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/configurations`);
+
       cy.wait([
         '@getFeatureFlags',
         '@getClientStream',
@@ -270,10 +265,6 @@ describe('Akamai Global Load Balancer configurations page', () => {
       const certificates = certificateFactory.buildList(1);
       const routes = routeFactory.buildList(1);
 
-      mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
       mockGetLoadBalancerConfigurations(loadbalancer.id, []).as(
         'getConfigurations'
@@ -363,16 +354,13 @@ describe('Akamai Global Load Balancer configurations page', () => {
       const loadbalancer = loadbalancerFactory.build();
       const configurations = configurationFactory.buildList(1);
 
-      mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
       mockGetLoadBalancerConfigurations(loadbalancer.id, configurations).as(
         'getConfigurations'
       );
 
       cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/configurations`);
+
       cy.wait([
         '@getFeatureFlags',
         '@getClientStream',
@@ -418,10 +406,6 @@ describe('Akamai Global Load Balancer configurations page', () => {
       const loadbalancer = loadbalancerFactory.build();
       const configurations = configurationFactory.buildList(1);
 
-      mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
       mockGetLoadBalancerConfigurations(loadbalancer.id, configurations).as(
         'getConfigurations'
