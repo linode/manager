@@ -497,10 +497,9 @@ const NodeBalancerCreate = () => {
         helperText={
           <Typography>
             Assign an existing Firewall to this NodeBalancer to control inbound
-            network traffic. If you want to assign a new Firewall to this
-            NodeBalancer, go to <Link to="/firewalls">Firewalls</Link>.{' '}
+            network traffic.{' '}
             <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/get-started/">
-              Learn more about creating Firewalls
+              Learn more
             </Link>
             .
           </Typography>
