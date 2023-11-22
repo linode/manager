@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -20,26 +19,20 @@ export const Default: Story = {
 };
 
 /**
- * Example of a Dismissible Banner with an action
+ * Example of a dismissible banner with an associated action
  */
 export const CallToActionBanner: Story = {
   render: () => (
-    <DismissibleBanner preferenceKey="cluster-v1" variant="info">
-      <Grid
-        alignItems="center"
-        container
-        direction="row"
-        justifyContent="space-between"
-      >
-        <Grid>
-          <Typography>A new version of Kubernetes is available.</Typography>
-        </Grid>
-        <Grid>
-          <Button buttonType="primary" onClick={() => null}>
-            Upgrade Version
-          </Button>
-        </Grid>
-      </Grid>
+    <DismissibleBanner
+      actionButton={
+        <Button buttonType="primary" onClick={() => null}>
+          Upgrade Version
+        </Button>
+      }
+      preferenceKey="cluster-v1"
+      variant="info"
+    >
+      <Typography>A new version of Kubernetes is available.</Typography>
     </DismissibleBanner>
   ),
 };

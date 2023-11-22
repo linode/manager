@@ -48,7 +48,7 @@ type CombinedProps = Props & Partial<NoticeProps>;
  * Banners appear between the top nav and page content and are a visual interruption of the normal page layout. Their use must be approved by all project stakeholders.
  *
  * ## Design
- * - Banners are dismissible using an &rsquo;X&rsquo; icon.
+ * - Banners are dismissible using an 'X' icon.
  * - Consider adding a link to a doc or a guide for users to learn more.
  * - Banners should be considered as one part of a larger communications plan; messaging should be developed with the marketing team.
  *
