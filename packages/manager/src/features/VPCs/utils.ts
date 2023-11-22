@@ -1,4 +1,4 @@
-import type { Config, Subnet } from '@linode/api-v4';
+import type { Config, Subnet, SubnetAssignedLinodeData } from '@linode/api-v4';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
@@ -27,7 +27,12 @@ export const getSubnetInterfaceFromConfigs = (
   return undefined;
 };
 
-export const hasUnrecommendedConfiguration = (configs: Config[]) => {
+export const hasUnrecommendedConfiguration = (
+  configs: Config[],
+  subnet: Subnet | undefined
+) => {
+  const subnetAssignedLinodeData = subnet?.linodes;
+
   for (const config of configs) {
     const configInterfaces = config.interfaces;
 
@@ -39,11 +44,28 @@ export const hasUnrecommendedConfiguration = (configs: Config[]) => {
      to other VMs within the same subnet, but not to VMs in a different subnet
      within the same VPC.
     */
+
     return configInterfaces.some(
       (_interface) =>
-        _interface.active && _interface.purpose === 'vpc' && !_interface.primary
+        _interface.active &&
+        _interface.purpose === 'vpc' &&
+        !_interface.primary &&
+        interfaceInSubnet(_interface.id, subnetAssignedLinodeData)
     );
   }
 
   return false;
+};
+
+export const interfaceInSubnet = (
+  interfaceId: number,
+  subnetAssignedLinodeData: SubnetAssignedLinodeData[] | undefined
+) => {
+  return subnetAssignedLinodeData?.some((subnetAssignedLinodeDatum) => {
+    const assignedInterfaces = subnetAssignedLinodeDatum.interfaces;
+    return assignedInterfaces.some(
+      (assignedInterface) =>
+        assignedInterface.id === interfaceId && assignedInterface.active
+    );
+  });
 };

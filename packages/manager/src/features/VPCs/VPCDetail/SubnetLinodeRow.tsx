@@ -80,7 +80,8 @@ export const SubnetLinodeRow = (props: Props) => {
   } = useAllLinodeConfigsQuery(linodeId);
 
   const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
-    configs ?? []
+    configs ?? [],
+    subnet
   );
 
   // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
