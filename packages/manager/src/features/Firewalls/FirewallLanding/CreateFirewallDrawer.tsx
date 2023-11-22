@@ -33,8 +33,8 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-const FIREWALL_LABEL_TEXT = `Assign services to the firewall.`;
-const FIREWALL_HELPER_TEXT = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
+// const FIREWALL_LABEL_TEXT = `Assign services to the firewall.`;
+// const FIREWALL_HELPER_TEXT = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
 const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to NodeBalancers.`;
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -166,6 +166,11 @@ export const CreateFirewallDrawer = React.memo(
       validationSchema: CreateFirewallSchema,
     });
 
+    const entityName = flags.firewallNodebalancer ? 'services' : 'Linodes';
+
+    const FirewallLabelText = `Assign ${entityName} to the firewall.`;
+    const FirewallHelperText = `Assign one or more ${entityName} to this firewall. You can add ${entityName} later if you want to customize your rules first.`;
+
     React.useEffect(() => {
       if (open) {
         resetForm();
@@ -245,10 +250,10 @@ export const CreateFirewallDrawer = React.memo(
               })}
               variant="h3"
             >
-              {FIREWALL_LABEL_TEXT}
+              {FirewallLabelText}
             </Typography>
             <Typography>
-              {FIREWALL_HELPER_TEXT}
+              {FirewallHelperText}
               {deviceSelectGuidance ? ` ${deviceSelectGuidance}` : null}
             </Typography>
             {flags.firewallNodebalancer && (
