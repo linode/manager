@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import Plus from 'src/assets/icons/plusSign.svg';

@@ -337,8 +337,7 @@ const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected &&
-                  // ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
                   intersection(
                     pathOr(
                       [],

@@ -5,7 +5,7 @@ import {
   QueryKey,
   UseMutationOptions,
   UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 // =============================================================================
 // Config

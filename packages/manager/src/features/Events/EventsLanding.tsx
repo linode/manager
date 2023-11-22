@@ -111,8 +111,7 @@ export const reducer: EventsReducer = (state, action) => {
                  * an entityID prop was passed, and if so, only show the events
                  * that pertain to that entity. This is useful because it helps
                  * us show only relevant events on the Linode Activity panel, for example
-                 */
-                (typeof entityId === 'undefined' ||
+                 */ (typeof entityId === 'undefined' ||
                   (eachEvent.entity && eachEvent.entity.id === entityId))
               );
             }),

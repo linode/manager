@@ -3,7 +3,7 @@ import {
   getNetworkUtilization,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { queryPresets } from './base';
 

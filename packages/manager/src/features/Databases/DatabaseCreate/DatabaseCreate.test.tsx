@@ -1,7 +1,7 @@
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { Router } from 'react-router-dom';
 
 import { databaseTypeFactory } from 'src/factories';

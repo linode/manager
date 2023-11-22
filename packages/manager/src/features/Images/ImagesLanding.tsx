@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 

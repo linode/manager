@@ -11,7 +11,7 @@
  * access Redux and control the start of the event loop.
  */
 import { EntityEvent, Event } from '@linode/api-v4/lib/account';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { Subject } from 'rxjs/Subject';
 
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';

@@ -6,7 +6,7 @@ import {
   getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
 

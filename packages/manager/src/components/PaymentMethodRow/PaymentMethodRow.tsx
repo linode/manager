@@ -4,7 +4,7 @@ import { Box } from 'src/components/Box';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu, Action } from 'src/components/ActionMenu';

@@ -1,6 +1,6 @@
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, Params } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { data as placeholderData } from 'src/cachedData/marketplace.json';
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';

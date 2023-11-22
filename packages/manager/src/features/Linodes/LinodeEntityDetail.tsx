@@ -2,9 +2,9 @@ import { Config, VPC } from '@linode/api-v4/lib';
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';

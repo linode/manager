@@ -11,7 +11,7 @@ import {
 } from '@paypal/react-paypal-js';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
-import { QueryClient, useQueryClient } from 'react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';

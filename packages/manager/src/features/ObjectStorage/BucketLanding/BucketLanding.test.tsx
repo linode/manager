@@ -1,6 +1,6 @@
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient, setLogger } from 'react-query';
+import { QueryClient, setLogger } from '@tanstack/react-query';
 
 import {
   objectStorageBucketFactory,

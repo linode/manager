@@ -1,6 +1,6 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';

@@ -1,6 +1,6 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';

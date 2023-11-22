@@ -1,8 +1,8 @@
 import { APIError, Firewall, Linode } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';

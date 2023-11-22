@@ -29,7 +29,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { EventWithStore } from 'src/events';
 

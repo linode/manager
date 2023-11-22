@@ -1,6 +1,6 @@
 import { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';

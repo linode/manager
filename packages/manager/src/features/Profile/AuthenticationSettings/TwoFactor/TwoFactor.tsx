@@ -1,7 +1,7 @@
 import { getTFAToken } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Notice } from 'src/components/Notice/Notice';

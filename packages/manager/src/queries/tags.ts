@@ -1,6 +1,6 @@
 import { Tag, getTags } from '@linode/api-v4';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
