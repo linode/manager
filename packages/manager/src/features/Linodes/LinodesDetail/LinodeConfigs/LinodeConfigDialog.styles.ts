@@ -16,17 +16,17 @@ const formGroupStyling = {
 export const StyledRadioGroup = styled(RadioGroup, {
   label: 'StyledRadioGroup',
 })({
-  ...formGroupStyling(),
+  ...formGroupStyling,
 });
 
 export const StyledFormControl = styled(FormControl, {
   label: 'StyledFormControl',
 })({
-  ...formGroupStyling(),
+  ...formGroupStyling,
 });
 
 export const StyledFormGroup = styled(FormGroup, { label: 'StyledFormGroup' })({
-  ...formGroupStyling(),
+  ...formGroupStyling,
 });
 
 export const StyledDivider = styled(Divider, { label: 'StyledDivider' })(
