@@ -10,7 +10,7 @@ import { useProfile } from 'src/queries/profile';
 
 import { queryPresets } from './base';
 
-export const queryKey = ['account'];
+export const queryKey = 'account';
 
 export const useAccount = () => {
   const { data: profile } = useProfile();
