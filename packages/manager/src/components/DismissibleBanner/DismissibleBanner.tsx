@@ -1,29 +1,63 @@
 import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { Notice } from 'src/components/Notice/Notice';
 import {
   DismissibleNotificationOptions,
   useDismissibleNotifications,
 } from 'src/hooks/useDismissibleNotifications';
 
+import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
+
 import type { NoticeProps } from 'src/components/Notice/Notice';
 
 interface Props {
+  /**
+   * Optional element to pass to the banner, good for triggering actions
+   */
   actionButton?: JSX.Element;
+  /**
+   * Optional element to pass to the banner
+   */
   children: JSX.Element;
+  /**
+   * Used to pass additional styles to the banner
+   */
   className?: string;
+  /**
+   * Additional controls to pass to the Dismissible Banner
+   */
   options?: DismissibleNotificationOptions;
+  /**
+   * Used for determining whether this banner has been dismissed or not
+   */
   preferenceKey: string;
+  /**
+   * Additional styles to apply to the overall banner
+   */
   sx?: SxProps;
 }
 
 type CombinedProps = Props & Partial<NoticeProps>;
 
+/**
+ * ## Usage
+ *
+ * Banners appear between the top nav and page content and are a visual interruption of the normal page layout. Their use must be approved by all project stakeholders.
+ *
+ * ## Design
+ * - Banners are dismissible using an &rsquo;X&rsquo; icon.
+ * - Consider adding a link to a doc or a guide for users to learn more.
+ * - Banners should be considered as one part of a larger communications plan; messaging should be developed with the marketing team.
+ *
+ * ## Variants
+ * Under the hood, banners use the [Notice](/docs/components-notifications-notices--success) component so they have the same variants such as:
+ * - Success: Informs users of a new feature or improved service.
+ * - Warning: Informs users of an impending change that will have an impact on their service(s).
+ * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
+ */
 export const DismissibleBanner = (props: CombinedProps) => {
   const {
     actionButton,
@@ -92,26 +126,3 @@ export const useDismissibleBanner = (
 
   return { handleDismiss, hasDismissedBanner };
 };
-
-const StyledNotice = styled(Notice)(({ theme }) => ({
-  '&&': {
-    p: {
-      lineHeight: '1.25rem',
-    },
-  },
-  alignItems: 'center',
-  background: theme.bg.bgPaper,
-  borderRadius: 1,
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  justifyContent: 'space-between',
-  marginBottom: theme.spacing(),
-  padding: theme.spacing(2),
-}));
-
-const StyledButton = styled('button')(({ theme }) => ({
-  ...theme.applyLinkStyles,
-  color: theme.textColors.tableStatic,
-  display: 'flex',
-  marginLeft: 20,
-}));
