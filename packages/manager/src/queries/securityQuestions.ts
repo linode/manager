@@ -9,8 +9,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryPresets } from './base';
 import { profileQueries } from './profile';
 
-export const queryKey = 'securityQuestions';
-
 export const useSecurityQuestions = () =>
   useQuery<SecurityQuestionsData, APIError[]>({
     ...profileQueries.securityQuestions,
@@ -19,20 +17,15 @@ export const useSecurityQuestions = () =>
 
 export const useMutateSecurityQuestions = () => {
   const queryClient = useQueryClient();
+
   return useMutation<
     SecurityQuestionsPayload,
     APIError[],
     SecurityQuestionsPayload
-  >(
-    (data) => {
-      return updateSecurityQuestions(data);
+  >({
+    mutationFn: updateSecurityQuestions,
+    onSuccess() {
+      queryClient.invalidateQueries(profileQueries.securityQuestions.queryKey);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          profileQueries.securityQuestions.queryKey
-        );
-      },
-    }
-  );
+  });
 };

@@ -35,11 +35,11 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
-import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+import { profileQueries } from 'src/queries/profile';
 
 interface State {
   apiResponse?: StackScript;
@@ -361,7 +361,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         if (profile.data?.restricted) {
-          queryClient.invalidateQueries([queryKey, 'grants']);
+          queryClient.invalidateQueries(profileQueries.grants.queryKey);
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
