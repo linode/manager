@@ -7,7 +7,7 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
 import { CloudViewTimeRangeSelect } from '../shared/CloudViewTimeRange';
-import { CloudViewChart } from './CloudViewChart';
+import { MemoryChart } from './MemoryChart';
 
 export const GuestMetrics = (props: any) => {
   const theme = useTheme();
@@ -66,8 +66,8 @@ export const GuestMetrics = (props: any) => {
             justifyContent="space-between"
             spacing={4}
           >
-            <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
-              {time.start && time.end && <CloudViewChart {...graphProps} />}
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+              {time.start && time.end && <MemoryChart {...graphProps} />}
             </Grid>
           </Grid>
         </Paper>

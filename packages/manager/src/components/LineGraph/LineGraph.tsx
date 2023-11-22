@@ -182,7 +182,7 @@ export const LineGraph = (props: LineGraphProps) => {
           {
             // Defines a fixed width for the Y-axis labels
             afterFit(axes) {
-              axes.width = 35;
+              axes.width = 45;
             },
             gridLines: {
               borderDash: [3, 6],

@@ -1416,6 +1416,16 @@ export const lightTheme: ThemeOptions = {
       writing: `rgba(32, 131, 75, ${graphTransparency})`,
     },
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
+    cloudView: {
+      memory: {
+        buffered: `rgba(143, 133, 218, ${graphTransparency})`,
+        cached: `rgba(152, 97, 189, ${graphTransparency})`,
+        free: `rgba(145, 124, 211, ${graphTransparency})`,
+        reclaimable: `rgba(149, 106, 196, ${graphTransparency})`,
+        unreclaimable: `rgba(141, 143, 225, ${graphTransparency})`,
+        used: `rgba(147, 115, 203, ${graphTransparency})`,
+      }
+    }
   },
   name: 'light', // @todo remove this because we leverage pallete.mode now
   palette: {

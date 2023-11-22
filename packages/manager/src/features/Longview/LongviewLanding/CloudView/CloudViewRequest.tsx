@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { DateTime } from 'luxon';
 
   export const baseRequest: AxiosRequestConfig = {
-      baseURL: "https://api.linodetelemetry.obcolint.armada-dev.akam.ai/VM/51259986/metrics",
+      baseURL: "https://api.linodetelemetry.obcolint.armada-dev.akam.ai/VM/51918298/metrics",
       headers: {
         'Authorization': 'APIKey 2F3AF7AB-900E-43DE-8BFD775FFF5BF566'
       },
