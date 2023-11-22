@@ -8,16 +8,18 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
+import { useFlags } from 'src/hooks/useFlags';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
+  const flags = useFlags();
   const theme = useTheme();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
@@ -90,12 +92,14 @@ export const NodeBalancerSettings = () => {
           Save
         </Button>
       </Accordion>
-      <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls
-          displayFirewallInfoText={displayFirewallInfoText}
-          nodeBalancerID={id}
-        />
-      </Accordion>
+      {flags.firewallNodebalancer && (
+        <Accordion defaultExpanded heading="Firewalls">
+          <NodeBalancerFirewalls
+            displayFirewallInfoText={displayFirewallInfoText}
+            nodeBalancerID={id}
+          />
+        </Accordion>
+      )}
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
           InputProps={{
