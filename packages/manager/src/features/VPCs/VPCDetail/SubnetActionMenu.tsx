@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Subnet } from '@linode/api-v4';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 interface SubnetActionHandlers {
   handleAssignLinodes: (subnet: Subnet) => void;
