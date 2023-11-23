@@ -66,7 +66,7 @@ export const GuestMetrics = (props: any) => {
             justifyContent="space-between"
             spacing={4}
           >
-            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
               {time.start && time.end && <MemoryChart {...graphProps} />}
             </Grid>
           </Grid>
