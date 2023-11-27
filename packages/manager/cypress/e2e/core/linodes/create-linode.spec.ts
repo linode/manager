@@ -3,13 +3,23 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
+  getVisible,
 } from 'support/helpers';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
-import { randomString, randomLabel } from 'support/util/random';
+import { randomString, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
-import { linodeFactory, regionFactory } from '@src/factories';
+import {
+  subnetFactory,
+  vpcFactory,
+  linodeFactory,
+  linodeConfigFactory,
+  regionFactory,
+  VLANFactory,
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -19,18 +29,23 @@ import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+import { mockGetVLANs } from 'support/intercepts/vlans';
+import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
+  mockCreateLinode,
   mockGetLinodeType,
   mockGetLinodeTypes,
+  mockGetLinodeDisks,
+  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
-
-import type { Region } from '@linode/api-v4';
+import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+
+import type { Config, VLAN, VPC, Disk, Region } from '@linode/api-v4';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -317,5 +332,182 @@ describe('create linode', () => {
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
+  });
+
+  it('assigns a VPC not enabled in the region to the linode during create flow', () => {
+    const region: Region = getRegionById('us-southeast');
+    const mockNoVPCRegion = regionFactory.build({
+      id: region.id,
+      label: region.label,
+      capabilities: ['Linodes'],
+    });
+
+    // Mock requests to get individual types.
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]);
+    mockGetLinodeType(dcPricingMockLinodeTypes[1]);
+    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetRegions([mockNoVPCRegion]).as('getRegions');
+
+    // intercept request
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getLinodeTypes', '@getClientStream', '@getFeatureFlags']);
+
+    cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
+
+    // Check the 'Backups' add on
+    cy.get('[data-testid="backups"]').should('be.visible').click();
+    ui.regionSelect.find().click().type(`${region.label} {enter}`);
+    fbtClick('Shared CPU');
+    getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
+
+    // the "VPC" section is present
+    getVisible('[data-testid="vpc-panel"]').within(() => {
+      containsVisible(
+        'Allow Linode to communicate in an isolated environment.'
+      );
+      // VPC in different region should not be available.
+      containsVisible('VPC is not available in the selected region.');
+    });
+  });
+
+  it('assigns a VPC to the linode during create flow', () => {
+    const rootpass = randomString(32);
+    const linodeLabel = randomLabel();
+    const region: Region = getRegionById('us-southeast');
+    const diskLabel: string = 'Debian 10 Disk';
+    const mockLinode = linodeFactory.build({
+      label: linodeLabel,
+      region: region.id,
+      type: dcPricingMockLinodeTypes[0].id,
+    });
+    const mockVLANs: VLAN[] = VLANFactory.buildList(2);
+    const mockSubnet = subnetFactory.build({
+      id: randomNumber(2),
+      label: randomLabel(),
+    });
+    const mockVPCs: VPC[] = vpcFactory.buildList(5, {
+      region: 'us-southeast',
+      subnets: [mockSubnet],
+    });
+    const mockVPC = mockVPCs[0];
+    const mockVPCRegion = regionFactory.build({
+      id: region.id,
+      label: region.label,
+      capabilities: ['Linodes', 'VPCs', 'Vlans'],
+    });
+    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+      ipam_address: null,
+      purpose: 'public',
+    });
+    const mockVlanConfigInterface = LinodeConfigInterfaceFactory.build();
+    const mockVpcConfigInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+      vpc_id: mockVPC.id,
+    });
+    const mockConfig: Config = linodeConfigFactory.build({
+      id: randomNumber(),
+      interfaces: [
+        // The order of this array is significant. Index 0 (eth0) should be public.
+        mockPublicConfigInterface,
+        mockVlanConfigInterface,
+        mockVpcConfigInterface,
+      ],
+    });
+    const mockDisks: Disk[] = [
+      {
+        id: 44311273,
+        status: 'ready',
+        label: diskLabel,
+        created: '2020-08-21T17:26:14',
+        updated: '2020-08-21T17:26:30',
+        filesystem: 'ext4',
+        size: 81408,
+      },
+      {
+        id: 44311274,
+        status: 'ready',
+        label: '512 MB Swap Image',
+        created: '2020-08-21T17:26:14',
+        updated: '2020-08-21T17:26:31',
+        filesystem: 'swap',
+        size: 512,
+      },
+    ];
+
+    // Mock requests to get individual types.
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]);
+    mockGetLinodeType(dcPricingMockLinodeTypes[1]);
+    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetRegions([mockVPCRegion]).as('getRegions');
+
+    mockGetVLANs(mockVLANs);
+    mockGetVPC(mockVPC).as('getVPC');
+    mockGetVPCs(mockVPCs).as('getVPCs');
+    mockCreateLinode(mockLinode).as('linodeCreated');
+    mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getLinodeConfigs');
+    mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
+    mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
+
+    // intercept request
+    cy.visitWithLogin('/linodes/create');
+    cy.wait([
+      '@getLinodeTypes',
+      '@getClientStream',
+      '@getFeatureFlags',
+      '@getVPCs',
+    ]);
+
+    cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
+
+    // Check the 'Backups' add on
+    cy.get('[data-testid="backups"]').should('be.visible').click();
+    ui.regionSelect.find().click().type(`${region.label} {enter}`);
+    fbtClick('Shared CPU');
+    getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
+
+    // the "VPC" section is present, and the VPC in the same region of
+    // the linode can be selected.
+    getVisible('[data-testid="vpc-panel"]').within(() => {
+      containsVisible('Assign this Linode to an existing VPC.');
+      // select VPC
+      cy.get('[data-qa-enhanced-select="None"]')
+        .should('be.visible')
+        .click()
+        .type(`${mockVPCs[0].label}{enter}`);
+      // select subnet
+      cy.findByText('Select Subnet')
+        .should('be.visible')
+        .click()
+        .type(`${mockSubnet.label}{enter}`);
+    });
+
+    getClick('#linode-label').clear().type(linodeLabel);
+    cy.get('#root-password').type(rootpass);
+    getClick('[data-qa-deploy-linode]');
+    cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
+    fbtVisible(linodeLabel);
+    cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
+
+    fbtClick('Configurations');
+    cy.wait(['@getLinodeConfigs', '@getVPC', '@getDisks', '@getVolumes']);
+
+    // Confirm that VLAN and VPC have been assigned.
+    cy.findByLabelText('List of Configurations').within(() => {
+      cy.get('tr').should('have.length', 2);
+      containsVisible(`${mockConfig.label} – GRUB 2`);
+      containsVisible('eth0 – Public Internet');
+      containsVisible(`eth2 – VPC: ${mockVPC.label}`);
+    });
   });
 });
