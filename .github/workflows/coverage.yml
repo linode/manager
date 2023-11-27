@@ -16,22 +16,22 @@ jobs:
         with:
           node-version: "18.14"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: yarn
 
       - name: Run build
         run: yarn build
 
-      - name: Run base branch coverage
+      - name: Run Base Branch Coverage
         run: yarn coverage:summary
 
-      - name: Write base coverage to an artifact
+      - name: Write Base Coverage to an Artifact
         run: |
           coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
           pct=$(echo "$coverage_json" | jq -r '.total.lines.pct')
           echo "$pct" > ref_code_coverage.txt
 
-      - name: Upload base coverage artifact
+      - name: Upload Base Coverage Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ref_code_coverage
@@ -49,24 +49,33 @@ jobs:
         with:
           node-version: "18.14"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: yarn
 
-      - name: Run build
+      - name: Run Build
         run: yarn build
 
-      - name: Run current branch coverage
+      - name: Run Current Branch Coverage
         run: yarn coverage:summary
 
-      - name: Write current coverage to an artifact
+      - name: Write PR Number to an Artifact
+        run: |
+          echo "${{ github.event.number }}" > pr_number.txt
+
+      - name: Write Current Coverage to an Artifact
         run: |
           coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
           pct=$(echo "$coverage_json" | jq -r '.total.lines.pct')
           echo "$pct" > current_code_coverage.txt
 
-      - name: Upload current coverage artifact
+      - name: Upload PR Number Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pr_number
+          path: pr_number.txt
+
+      - name: Upload Current Coverage Artifact
         uses: actions/upload-artifact@v3
         with:
           name: current_code_coverage
           path: current_code_coverage.txt
-
