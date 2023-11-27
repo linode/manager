@@ -53,6 +53,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
+      return;
     case 'linode_snapshot':
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'backups']);
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'details']);
