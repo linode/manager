@@ -2,7 +2,7 @@ import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
