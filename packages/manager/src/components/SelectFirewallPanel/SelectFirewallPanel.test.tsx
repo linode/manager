@@ -6,7 +6,6 @@ import {
   LINODE_CREATE_FLOW_TEXT,
   NODEBALANCER_CREATE_FLOW_TEXT,
 } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
-import { useFlags } from 'src/hooks/useFlags';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectFirewallPanel } from './SelectFirewallPanel';
@@ -21,7 +20,6 @@ afterEach(() => {
 const testId = 'select-firewall-panel';
 
 describe('SelectFirewallPanel', () => {
-  const flags = useFlags();
   it('should render', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
@@ -48,6 +46,7 @@ describe('SelectFirewallPanel', () => {
         selectedFirewallId={-1}
       />,
       {
+        flags: { firewallNodebalancer: true },
         queryClient,
       }
     );
@@ -63,29 +62,28 @@ describe('SelectFirewallPanel', () => {
     });
   });
 
-  if (flags.firewallNodebalancer) {
-    it('should open a Create Firewall drawer when the link is clicked in NodeBalancer Create', async () => {
-      const wrapper = renderWithTheme(
-        <SelectFirewallPanel
-          entityType="nodebalancer"
-          handleFirewallChange={vi.fn()}
-          helperText={<span>Testing</span>}
-          selectedFirewallId={-1}
-        />,
-        {
-          queryClient,
-        }
-      );
+  it('should open a Create Firewall drawer when the link is clicked in NodeBalancer Create', async () => {
+    const wrapper = renderWithTheme(
+      <SelectFirewallPanel
+        entityType="nodebalancer"
+        handleFirewallChange={vi.fn()}
+        helperText={<span>Testing</span>}
+        selectedFirewallId={-1}
+      />,
+      {
+        flags: { firewallNodebalancer: true },
+        queryClient,
+      }
+    );
 
-      const createFirewallLink = wrapper.getByText('Create Firewall');
+    const createFirewallLink = wrapper.getByText('Create Firewall');
 
-      fireEvent.click(createFirewallLink);
+    fireEvent.click(createFirewallLink);
 
-      await waitFor(() => {
-        expect(
-          wrapper.getByLabelText(NODEBALANCER_CREATE_FLOW_TEXT)
-        ).toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(
+        wrapper.getByLabelText(NODEBALANCER_CREATE_FLOW_TEXT)
+      ).toBeInTheDocument();
     });
-  }
+  });
 });
