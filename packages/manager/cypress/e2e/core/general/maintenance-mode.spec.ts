@@ -10,7 +10,7 @@ describe('API maintenance mode', () => {
    */
   it('shows maintenance screen when API is in maintenance mode', () => {
     mockApiMaintenanceMode();
-    cy.visitWithLogin('/linodes');
+    cy.visitWithLogin('/');
 
     // Confirm that maintenance message and link to status page are shown.
     cy.findByText('We are undergoing maintenance.').should('be.visible');
