@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Typography } from 'src/components/Typography';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 
