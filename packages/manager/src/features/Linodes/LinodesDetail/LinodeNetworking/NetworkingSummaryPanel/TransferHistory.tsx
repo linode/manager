@@ -10,11 +10,14 @@ import PendingIcon from 'src/assets/icons/pending.svg';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
+  formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
@@ -36,6 +39,7 @@ export const TransferHistory = React.memo((props: Props) => {
   const { linodeCreated, linodeID } = props;
 
   const theme = useTheme();
+  const flags = useFlags();
 
   // Needed to see the user's timezone.
   const { data: profile } = useProfile();
@@ -79,6 +83,16 @@ export const TransferHistory = React.memo((props: Props) => {
   const convertNetworkData = (value: number) => {
     return convertNetworkToUnit(value, unit);
   };
+
+  /**
+   * formatNetworkTooltip is a helper method from Longview, where
+   * data is expected in bytes. The method does the rounding, unit conversions, etc.
+   * that we want, but it first multiplies by 8 to convert to bits.
+   * APIv4 returns this data in bits to begin with,
+   * so we have to preemptively divide by 8 to counter the conversion inside the helper.
+   */
+  const formatTooltip = (valueInBytes: number) =>
+    formatNetworkTooltip(valueInBytes / 8);
 
   const maxMonthOffset = getOffsetFromDate(
     now,
@@ -151,12 +165,37 @@ export const TransferHistory = React.memo((props: Props) => {
       return acc;
     }, []);
 
+    // @TODO recharts: remove conditional code if charts are stable
+    if (flags?.recharts) {
+      return (
+        <NetworkTransferHistoryChart
+          aria-label={graphAriaLabel}
+          data={timeData}
+          timezone={profile?.timezone ?? 'UTC'}
+          unit={unit}
+        />
+      );
+    }
+
     return (
-      <NetworkTransferHistoryChart
-        aria-label={graphAriaLabel}
-        data={timeData}
+      <LineGraph
+        data={[
+          {
+            backgroundColor: '#1CB35C',
+            borderColor: 'transparent',
+            data: combinedData,
+            label: 'Public Outbound Traffic',
+          },
+        ]}
+        accessibleDataTable={{ unit: 'Kb/s' }}
+        ariaLabel={graphAriaLabel}
+        chartHeight={190}
+        formatData={convertNetworkData}
+        formatTooltip={formatTooltip}
+        showToday={true}
+        tabIndex={-1}
         timezone={profile?.timezone ?? 'UTC'}
-        unit={unit}
+        unit={`/s`}
       />
     );
   };
