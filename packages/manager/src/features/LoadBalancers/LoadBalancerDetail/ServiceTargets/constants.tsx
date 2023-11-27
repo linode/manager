@@ -31,7 +31,7 @@ export const algorithmOptions = [
   },
   {
     description:
-      'Reads the upstream hash to make content aware routing decisions.',
+      'Reads the upstream hash to make content-aware routing decisions.',
     label: 'Maglev',
     value: 'maglev',
   },
