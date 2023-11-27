@@ -185,7 +185,6 @@ export const AddLinodeDrawer = (props: Props) => {
         <LinodeSelect
           disabled={isLoading}
           helperText={helperText}
-          label="Linodes"
           multiple
           onSelectionChange={(linodes) => setSelectedLinodes(linodes)}
           optionsFilter={linodeOptionsFilter}

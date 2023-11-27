@@ -6,18 +6,16 @@ import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   useAddFirewallDeviceMutation,
-  useAllFirewallDevicesQuery,
-  useFirewallQuery,
+  useAllFirewallsQuery,
 } from 'src/queries/firewalls';
 import { queryKey } from 'src/queries/nodebalancers';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
@@ -36,17 +34,27 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
   const queryClient = useQueryClient();
-  const { data: firewall } = useFirewallQuery(Number(id));
-  const {
-    data: currentDevices,
-    isLoading: currentDevicesLoading,
-  } = useAllFirewallDevicesQuery(Number(id));
+
+  const { data, error, isLoading } = useAllFirewallsQuery();
+
+  const assignedServices = data
+    ?.map((firewall) => {
+      return firewall.entities;
+    })
+    .flat();
+
+  const assignedNodeBalancers = assignedServices?.filter((service) => {
+    return service.type === 'nodebalancer';
+  });
+
+  const firewall = data?.find((firewall) => firewall.id === Number(id));
 
   const theme = useTheme();
 
-  const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
-    Number(id)
-  );
+  const {
+    isLoading: addDeviceIsLoading,
+    mutateAsync: addDevice,
+  } = useAddFirewallDeviceMutation(Number(id));
 
   const [selectedNodebalancers, setSelectedNodebalancers] = React.useState<
     NodeBalancer[]
@@ -147,35 +155,25 @@ export const AddNodebalancerDrawer = (props: Props) => {
     }
   };
 
-  const currentNodebalancerIds =
-    currentDevices
-      ?.filter((device) => device.entity.type === 'nodebalancer')
-      .map((device) => device.entity.id) ?? [];
-
   // If a user is restricted, they can not add a read-only Nodebalancer to a firewall.
   const readOnlyNodebalancerIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
     : [];
 
-  const optionsFilter = (nodebalancer: NodeBalancer) => {
-    return ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
-      nodebalancer.id
+  const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
+    return (
+      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
+      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
     );
   };
 
-  const {
-    data,
-    error: nodebalancerError,
-    isLoading: nodebalancerIsLoading,
-  } = useAllNodeBalancersQuery();
-
   React.useEffect(() => {
-    if (nodebalancerError) {
-      setLocalError('Could not load NodeBalancer Data');
+    if (error) {
+      setLocalError('Could not load firewall data');
     }
-  }, [nodebalancerError]);
+  }, [error]);
 
-  const nodebalancers = data?.filter(optionsFilter);
+  // const nodebalancers = data?.filter(optionsFilter);
 
   return (
     <Drawer
@@ -200,24 +198,21 @@ export const AddNodebalancerDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
-        <Autocomplete
-          onChange={(_, nodebalancers) =>
+        <NodeBalancerSelect
+          onSelectionChange={(nodebalancers) =>
             setSelectedNodebalancers(nodebalancers)
           }
-          disabled={currentDevicesLoading || nodebalancerIsLoading}
+          disabled={isLoading}
           helperText={helperText}
-          label="NodeBalancers"
-          loading={currentDevicesLoading || nodebalancerIsLoading}
           multiple
-          noOptionsText="No NodeBalancers available to add"
-          options={nodebalancers || []}
-          value={selectedNodebalancers}
+          optionsFilter={nodebalancerOptionsFilter}
+          value={selectedNodebalancers.map((nodebalancer) => nodebalancer.id)}
         />
         <ActionsPanel
           primaryButtonProps={{
             disabled: selectedNodebalancers.length === 0,
             label: 'Add',
-            loading: isLoading,
+            loading: addDeviceIsLoading,
             onClick: handleSubmit,
           }}
           secondaryButtonProps={{
