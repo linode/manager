@@ -4,12 +4,12 @@ on: [pull_request]
 
 jobs:
   base_branch:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        # TODO: Remove this comment after merging to develop
-        # with:
-        #  ref: ${{ github.base_ref }} # The base branch of the PR (develop)
+        with:
+         ref: ${{ github.base_ref }} # The base branch of the PR (develop)
 
       - name: Use Node.js v18.14.0
         uses: actions/setup-node@v3
@@ -38,6 +38,7 @@ jobs:
           path: ref_code_coverage.txt
 
   current_branch:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: base_branch
 
