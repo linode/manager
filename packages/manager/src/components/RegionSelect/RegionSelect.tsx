@@ -4,16 +4,14 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import {
-  GroupHeader,
   SelectedIcon,
+  StyledAutocompleteContainer,
   StyledFlagContainer,
-  StyledLParentListItem,
   StyledListItem,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
@@ -82,7 +80,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   );
 
   return (
-    <Box sx={{ width }}>
+    <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
         getOptionDisabled={(option: RegionSelectOption) =>
           Boolean(flags.dcGetWell) && Boolean(option.unavailable)
@@ -97,14 +95,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         onKeyDown={() => {
           setSelectedRegion(null);
         }}
-        renderGroup={(params) => (
-          <StyledLParentListItem key={params.key}>
-            <GroupHeader data-qa-region-select-group={params.group}>
-              {params.group}
-            </GroupHeader>
-            <List>{params.children}</List>
-          </StyledLParentListItem>
-        )}
         renderOption={(props, option, { selected }) => {
           const isDisabledMenuItem =
             Boolean(flags.dcGetWell) && Boolean(option.unavailable);
@@ -177,6 +167,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         placeholder="Select a Region"
         value={selectedRegion}
       />
-    </Box>
+    </StyledAutocompleteContainer>
   );
 });
