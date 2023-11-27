@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Redirect, matchPath, useHistory, useLocation } from 'react-router-dom';
 
-import { TabPanel } from 'src/components/ReachTabPanel';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { TabPanel } from 'src/components/Tabs/TabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { TabLinkList } from '../TabLinkList/TabLinkList';
 

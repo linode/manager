@@ -1,4 +1,5 @@
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -9,9 +10,9 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import useEvents from 'src/hooks/useEvents';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import { generateCurlCommand } from 'src/utilities/generate-cURL';
@@ -92,11 +93,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
         values for each command have been populated with the selections made in
         the Cloud Manager create form.
       </Typography>
-      <Tabs
-        sx={{ paddingTop: theme.spacing() }}
-        defaultIndex={0}
-        onChange={handleTabChange}
-      >
+      <StyledTabs defaultIndex={0} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
@@ -175,7 +172,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
             />
           </SafeTabPanel>
         </TabPanels>
-      </Tabs>
+      </StyledTabs>
       <Notice spacingBottom={0} spacingTop={24} variant="marketing">
         <Typography
           sx={{
@@ -211,14 +208,20 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
         </Typography>
       </Notice>
       <ActionsPanel
-        sx={{ marginTop: '18px !important', paddingBottom: 0, paddingTop: 0 }}
         secondaryButtonProps={{
           compactX: true,
           'data-testid': 'close-button',
           label: 'Close',
           onClick: onClose,
         }}
+        sx={{ marginTop: '18px !important', paddingBottom: 0, paddingTop: 0 }}
       />
     </Dialog>
   );
 };
+
+const StyledTabs = styled(Tabs, {
+  label: 'StyledTabs',
+})(() => ({
+  position: 'relative',
+}));
