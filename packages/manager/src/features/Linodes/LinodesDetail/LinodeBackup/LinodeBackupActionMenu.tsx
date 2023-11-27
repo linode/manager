@@ -1,7 +1,7 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   backup: LinodeBackup;

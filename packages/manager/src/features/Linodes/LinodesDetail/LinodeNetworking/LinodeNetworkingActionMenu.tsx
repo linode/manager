@@ -1,11 +1,10 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { useTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';

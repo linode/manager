@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { ActionMenu } from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { TextTooltip } from 'src/components/TextTooltip';
 

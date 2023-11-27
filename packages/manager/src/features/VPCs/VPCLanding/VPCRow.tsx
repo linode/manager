@@ -2,7 +2,7 @@ import { VPC } from '@linode/api-v4/lib/vpcs/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Action } from 'src/components/ActionMenu';
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';

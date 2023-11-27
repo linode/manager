@@ -1,12 +1,11 @@
 import { LinodeBackups, LinodeType } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
