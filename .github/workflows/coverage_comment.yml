@@ -14,29 +14,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      # TODO: Uncomment the following lines to enable coverage comment in part 2
-      # It should work in theory, but want to limit the noise in everyone's PRs for now until
-      # I can confirm the action works as expected
-      
-      - name: Download base coverage artifact
+      - name: Use Node.js v18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.14"
+
+      - name: Download PR Number Artifact
+        uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
+        with:
+          workflow: "coverage.yml"
+          run_id: ${{ github.event.workflow_run.id }}
+          name: pr_number
+
+      - name: Download Base Coverage Artifact
         uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
         with:
           workflow: "coverage.yml"
           run_id: ${{ github.event.workflow_run.id }}
           name: ref_code_coverage
 
-      - name: Download current coverage artifact
+      - name: Download Current Coverage Artifact
         uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
         with:
           workflow: "coverage.yml"
           run_id: ${{ github.event.workflow_run.id }}
           name: current_code_coverage
 
-      - name: Update Coverage Badge
-        run: yarn coverage:badge
+      - name: Set PR Number Environment Variables
+        run: |
+            echo "PR_NUMBER=$(cat pr_number.txt)" >> $GITHUB_ENV
 
       - name: Generate Coverage Comment
         run: |
@@ -54,8 +63,8 @@ jobs:
       - name: Post Comment
         uses: mshick/add-pr-comment@7c0890544fb33b0bdd2e59467fbacb62e028a096 #v2.8.1
         with:
-          message: |
-            $(cat updated_comment.txt)
+          issue: ${{ env.PR_NUMBER }}
+          message-path: updated_comment.txt
 
       - name: Validate Coverage
         run: |
