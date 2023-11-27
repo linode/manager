@@ -20,7 +20,7 @@ export interface ActionMenuProps {
    */
   actionsList: Action[];
   /**
-   * Gives the Menu Button an accessable name
+   * Gives the Menu Button an accessible name
    */
   ariaLabel: string;
   /**
