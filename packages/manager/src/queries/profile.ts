@@ -1,3 +1,4 @@
+import { getQueryKeys } from '@banksnussman/query-key';
 import { APIError, Filter, Grants, Params, ResourcePage } from '@linode/api-v4';
 import {
   Profile,
@@ -22,7 +23,6 @@ import {
   updateSSHKey,
   verifyPhoneNumberCode,
 } from '@linode/api-v4/lib/profile';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   QueryClient,
   useMutation,
@@ -35,35 +35,34 @@ import { EventWithStore } from 'src/events';
 import { queryKey as accountQueryKey } from './account';
 import { queryPresets } from './base';
 
-export const profileQueries = createQueryKeys('profile', {
-  appTokens: (params: Params = {}, filter: Filter = {}) => ({
-    queryFn: getAppTokens,
-    queryKey: [params, filter],
-  }),
-  grants: {
-    queryFn: listGrants,
-    queryKey: null,
+export const { profile: profileQueries } = getQueryKeys({
+  profile: {
+    appTokens: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: getAppTokens,
+      queryKey: [params, filter],
+    }),
+    grants: {
+      queryFn: listGrants,
+    },
+    info: {
+      queryFn: getProfile,
+    },
+    personalAccessTokens: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: getPersonalAccessTokens,
+      queryKey: [params, filter],
+    }),
+    securityQuestions: {
+      queryFn: getSecurityQuestions,
+    },
+    sshKeys: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: getSSHKeys,
+      queryKey: [params, filter],
+    }),
+    trustedDevices: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: getTrustedDevices,
+      queryKey: [params, filter],
+    }),
   },
-  info: {
-    queryFn: getProfile,
-    queryKey: null,
-  },
-  personalAccessTokens: (params: Params = {}, filter: Filter = {}) => ({
-    queryFn: getPersonalAccessTokens,
-    queryKey: [params, filter],
-  }),
-  securityQuestions: {
-    queryFn: getSecurityQuestions,
-    queryKey: null,
-  },
-  sshKeys: (params: Params = {}, filter: Filter = {}) => ({
-    queryFn: getSSHKeys,
-    queryKey: [params, filter],
-  }),
-  trustedDevices: (params: Params = {}, filter: Filter = {}) => ({
-    queryFn: getTrustedDevices,
-    queryKey: [params, filter],
-  }),
 });
 
 export const useProfile = (givenProfile?: Profile) =>
@@ -147,7 +146,7 @@ export const useCreateSSHKeyMutation = () => {
   return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>({
     mutationFn: createSSHKey,
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.sshKeys._def);
+      queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
       queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
@@ -159,7 +158,7 @@ export const useUpdateSSHKeyMutation = (id: number) => {
   return useMutation<SSHKey, APIError[], { label: string }>({
     mutationFn: (data) => updateSSHKey(id, data),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.sshKeys._def);
+      queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
       queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
@@ -171,7 +170,7 @@ export const useDeleteSSHKeyMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteSSHKey(id),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.sshKeys._def);
+      queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
       queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
@@ -182,7 +181,7 @@ export const sshKeyEventHandler = (event: EventWithStore) => {
   // This event handler is a bit agressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 
-  event.queryClient.invalidateQueries(profileQueries.sshKeys._def);
+  event.queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
   event.queryClient.invalidateQueries([accountQueryKey, 'users']);
 };
@@ -198,7 +197,7 @@ export const useRevokeTrustedDeviceMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteTrustedDevice(id),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.trustedDevices._def);
+      queryClient.invalidateQueries(profileQueries.trustedDevices.queryKey);
     },
   });
 };

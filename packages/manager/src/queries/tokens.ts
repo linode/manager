@@ -39,7 +39,9 @@ export const useCreatePersonalAccessTokenMutation = () => {
   return useMutation<Token, APIError[], TokenRequest>({
     mutationFn: createPersonalAccessToken,
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+      queryClient.invalidateQueries(
+        profileQueries.personalAccessTokens.queryKey
+      );
     },
   });
 };
@@ -49,7 +51,9 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
   return useMutation<Token, APIError[], Partial<TokenRequest>>({
     mutationFn: (data) => updatePersonalAccessToken(id, data),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+      queryClient.invalidateQueries(
+        profileQueries.personalAccessTokens.queryKey
+      );
     },
   });
 };
@@ -63,7 +67,7 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
       setTimeout(
         () =>
           queryClient.invalidateQueries(
-            profileQueries.personalAccessTokens._def
+            profileQueries.personalAccessTokens.queryKey
           ),
         1000
       );
@@ -78,7 +82,7 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
-        () => queryClient.invalidateQueries(profileQueries.appTokens._def),
+        () => queryClient.invalidateQueries(profileQueries.appTokens.queryKey),
         1000
       );
     },
@@ -86,5 +90,5 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
 };
 
 export function tokenEventHandler({ queryClient }: EventWithStore) {
-  queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+  queryClient.invalidateQueries(profileQueries.personalAccessTokens.queryKey);
 }
