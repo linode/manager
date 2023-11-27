@@ -21,6 +21,7 @@ import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
@@ -67,6 +68,21 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
+    const { data } = useAllFirewallsQuery();
+
+    const assignedServices = data
+      ?.map((firewall) => {
+        return firewall.entities;
+      })
+      .flat();
+
+    const assignedLinodes = assignedServices?.filter((service) => {
+      return service.type === 'linode';
+    });
+
+    const assignedNodeBalancers = assignedServices?.filter((service) => {
+      return service.type === 'nodebalancer';
+    });
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
@@ -189,11 +205,19 @@ export const CreateFirewallDrawer = React.memo(
         : undefined;
 
     const linodeOptionsFilter = (linode: Linode) => {
-      return !readOnlyLinodeIds.includes(linode.id);
+      return (
+        !readOnlyLinodeIds.includes(linode.id) &&
+        !assignedLinodes?.some((service) => service.id === linode.id)
+      );
     };
 
     const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-      return !readOnlyNodebalancerIds.includes(nodebalancer.id);
+      return (
+        !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
+        !assignedNodeBalancers?.some(
+          (service) => service.id === nodebalancer.id
+        )
+      );
     };
 
     // TODO: NBFW - Placeholder until real link is available

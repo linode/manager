@@ -5,17 +5,15 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
-  useAllFirewallDevicesQuery,
-  useFirewallQuery,
+  useAllFirewallsQuery,
 } from 'src/queries/firewalls';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
@@ -37,17 +35,26 @@ export const AddLinodeDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
 
-  const { data: firewall } = useFirewallQuery(Number(id));
-  const {
-    data: currentDevices,
-    isLoading: currentDevicesLoading,
-  } = useAllFirewallDevicesQuery(Number(id));
+  const { data, error, isLoading } = useAllFirewallsQuery();
+
+  const assignedServices = data
+    ?.map((firewall) => {
+      return firewall.entities;
+    })
+    .flat();
+
+  const assignedLinodes = assignedServices?.filter((service) => {
+    return service.type === 'linode';
+  });
+
+  const firewall = data?.find((firewall) => firewall.id === Number(id));
 
   const theme = useTheme();
 
-  const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
-    Number(id)
-  );
+  const {
+    isLoading: addDeviceIsLoading,
+    mutateAsync: addDevice,
+  } = useAddFirewallDeviceMutation(Number(id));
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 
@@ -140,33 +147,23 @@ export const AddLinodeDrawer = (props: Props) => {
     }
   };
 
-  const currentLinodeIds =
-    currentDevices
-      ?.filter((device) => device.entity.type === 'linode')
-      .map((device) => device.entity.id) ?? [];
-
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
-  const optionsFilter = (linode: Linode) => {
-    return ![...currentLinodeIds, ...readOnlyLinodeIds].includes(linode.id);
+  const linodeOptionsFilter = (linode: Linode) => {
+    return (
+      !readOnlyLinodeIds.includes(linode.id) &&
+      !assignedLinodes?.some((service) => service.id === linode.id)
+    );
   };
 
-  const {
-    data,
-    error: linodeError,
-    isLoading: linodeIsLoading,
-  } = useAllLinodesQuery();
-
   React.useEffect(() => {
-    if (linodeError) {
-      setLocalError('Could not load Linode Data');
+    if (error) {
+      setLocalError('Could not load firewall data');
     }
-  }, [linodeError]);
-
-  const linodes = data?.filter(optionsFilter);
+  }, [error]);
 
   return (
     <Drawer
@@ -185,22 +182,20 @@ export const AddLinodeDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
-        <Autocomplete
-          disabled={currentDevicesLoading || linodeIsLoading}
+        <LinodeSelect
+          disabled={isLoading}
           helperText={helperText}
           label="Linodes"
-          loading={currentDevicesLoading || linodeIsLoading}
           multiple
-          noOptionsText="No Linodes available to add"
-          onChange={(_, linodes) => setSelectedLinodes(linodes)}
-          options={linodes || []}
-          value={selectedLinodes}
+          onSelectionChange={(linodes) => setSelectedLinodes(linodes)}
+          optionsFilter={linodeOptionsFilter}
+          value={selectedLinodes.map((linode) => linode.id)}
         />
         <ActionsPanel
           primaryButtonProps={{
             disabled: selectedLinodes.length === 0,
             label: 'Add',
-            loading: isLoading,
+            loading: addDeviceIsLoading,
             onClick: handleSubmit,
           }}
           secondaryButtonProps={{
