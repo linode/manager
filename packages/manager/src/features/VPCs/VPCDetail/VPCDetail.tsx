@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

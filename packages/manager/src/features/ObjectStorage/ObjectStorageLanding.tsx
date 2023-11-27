@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';

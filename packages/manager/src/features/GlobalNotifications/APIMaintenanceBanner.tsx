@@ -1,8 +1,8 @@
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { SuppliedMaintenanceData } from 'src/featureFlags';
 import { queryPresets } from 'src/queries/base';
