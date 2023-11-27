@@ -9,7 +9,9 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -40,7 +42,10 @@ export const AddRouteDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Route">
-      {ROUTE_COPY.Description[routeProtocol]}
+      <Stack spacing={1}>
+        <Typography>{ROUTE_COPY.Description.main}</Typography>
+        <Typography>{ROUTE_COPY.Description[routeProtocol]}</Typography>
+      </Stack>
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>
         <FormControlLabel
           control={<Radio />}
