@@ -6,11 +6,11 @@ import {
   LandingHeader,
   LandingHeaderProps,
 } from 'src/components/LandingHeader';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 

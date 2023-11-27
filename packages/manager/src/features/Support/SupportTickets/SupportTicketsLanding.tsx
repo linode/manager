@@ -3,11 +3,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Tab } from 'src/components/ReachTab';
-import { TabList } from 'src/components/ReachTabList';
-import { TabPanel } from 'src/components/ReachTabPanel';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
+import { TabPanel } from 'src/components/Tabs/TabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';

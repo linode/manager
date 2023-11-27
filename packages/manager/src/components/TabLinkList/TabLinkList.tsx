@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Tab } from 'src/components/ReachTab';
-import { TabList } from 'src/components/ReachTabList';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
 
 export interface Tab {
   routeName: string;
