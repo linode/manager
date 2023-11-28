@@ -26,7 +26,14 @@ export const getRegionOptions = ({
   currentCapability,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
-  return regions
+  // TODO DC_GET_WELL - when currentCapability becomes a requiredProp, we can remove the extra `filteredRegions` constant and filter directly on `regions`
+  const filteredRegions = currentCapability
+    ? regions.filter((region) =>
+        region.capabilities.includes(currentCapability)
+      )
+    : regions;
+
+  return filteredRegions
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 
