@@ -8,6 +8,10 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import { CloudViewTimeRangeSelect } from '../shared/CloudViewTimeRange';
 import { MemoryChart } from './MemoryChart';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { CloudViewLinodes } from '../shared/CloudViewLinodes';
+import { Typography } from 'src/components/Typography';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 export const GuestMetrics = (props: any) => {
   const theme = useTheme();
@@ -17,9 +21,22 @@ export const GuestMetrics = (props: any) => {
     start: 0,
   });
 
+  const [linodeId, setlinodeId] = React.useState<number>();
+
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const [error, setError] = React.useState<boolean>(false);
+
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ end, start });
   };
+
+  const handleLinodeChange = (linodeId: number | undefined,
+    isLoading: boolean, isError: boolean) => {
+    setlinodeId(linodeId);
+    setLoading(isLoading);
+    setError(isError);
+  }
 
   const isToday = _isToday(time.start, time.end);
 
@@ -27,11 +44,20 @@ export const GuestMetrics = (props: any) => {
     end: time.end,
     isToday,
     start: time.start,
+    currentToken: useCurrentToken(),
+    linodeId
   };
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
+        <Grid
+            sx={{
+              width: 350,
+            }}
+          >
+            <CloudViewLinodes handleLinodeChange={handleLinodeChange} />
+        </Grid>
         <Grid sx={{ ...itemSpacing }}>
         </Grid>
         <Grid
@@ -59,6 +85,22 @@ export const GuestMetrics = (props: any) => {
             padding: `calc(${theme.spacing(3)} + 1px)`,
           }}
         >
+          {error && <ErrorState 
+          errorText={'Could not load linodes list'}/> 
+          }
+
+          {!loading && !error && !linodeId &&
+          <Typography 
+            sx={{ fontSize: '1.1em' }} 
+            variant="body1" 
+            align={'center'} 
+            marginTop={15}
+            marginBottom={15}
+          >
+            {'You have no Linodes configured'}
+          </Typography>}
+
+          {!loading && !error && time.start && time.end && linodeId &&
           <Grid
             alignItems="center"
             container
@@ -67,9 +109,10 @@ export const GuestMetrics = (props: any) => {
             spacing={4}
           >
             <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
-              {time.start && time.end && <MemoryChart {...graphProps} />}
+              <MemoryChart {...graphProps} />
             </Grid>
-          </Grid>
+          </Grid>}
+          
         </Paper>
       </Grid>
     </Grid>
@@ -80,6 +123,7 @@ const StyledCloudViewTimeRangeSelect = styled(CloudViewTimeRangeSelect, {
   label: 'StyledCloudViewTimeRangeSelect',
 })({
   width: 150,
+  marginTop: 15
 });
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({

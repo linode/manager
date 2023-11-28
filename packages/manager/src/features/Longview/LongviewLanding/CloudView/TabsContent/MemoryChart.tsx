@@ -16,10 +16,10 @@ export const MemoryChart = (props: any) => {
     const metricName: string = 'system_memory_usage_bytes';
 
     const { data, loading, error } = useAPIRequest(
-        () => getMetrics(metricName,props.start,props.end).
+        () => getMetrics(metricName, props.start, props.end, props.linodeId ,props.currentToken).
         then((response) => response.data.data.result),
         [],
-        [props.start, props.end]
+        [props.start, props.end, props.linodeId]
     );
 
     return (
