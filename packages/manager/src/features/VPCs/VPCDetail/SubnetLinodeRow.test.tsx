@@ -190,6 +190,7 @@ describe('SubnetLinodeRow', () => {
       id: 10,
       ipam_address: null,
       purpose: 'vpc',
+      subnet_id: 1,
     });
 
     const configurationProfile = linodeConfigFactory.build({
