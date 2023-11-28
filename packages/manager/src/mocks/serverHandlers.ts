@@ -1161,31 +1161,34 @@ export const handlers = [
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
-  rest.get('*/account/users/ChildUser', (req, res, ctx) => {
+  rest.get(`*/account/users/${childAccount.username}`, (req, res, ctx) => {
     return res(ctx.json(childAccount));
   }),
-  rest.get('*/account/users/ParentCompany_a1b2c3d4e5', (req, res, ctx) => {
+  rest.get(`*/account/users/${proxyAccount.username}`, (req, res, ctx) => {
     return res(ctx.json(proxyAccount));
   }),
-  rest.get('*/account/users/ParentUser', (req, res, ctx) => {
+  rest.get(`*/account/users/${parentAccount.username}`, (req, res, ctx) => {
     return res(ctx.json(parentAccount));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     return res(ctx.json(accountUserFactory.build()));
   }),
-  rest.get('*/account/users/ChildUser/grants', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        grantsFactory.build({
-          global: {
-            cancel_account: false,
-          },
-        })
-      )
-    );
-  }),
   rest.get(
-    '*/account/users/ParentCompany_a1b2c3d4e5/grants',
+    `*/account/users/${childAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              cancel_account: false,
+            },
+          })
+        )
+      );
+    }
+  ),
+  rest.get(
+    `*/account/users/${proxyAccount.username}/grants`,
     (req, res, ctx) => {
       return res(
         ctx.json(
@@ -1208,18 +1211,21 @@ export const handlers = [
       );
     }
   ),
-  rest.get('*/account/users/ParentUser/grants', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        grantsFactory.build({
-          global: {
-            cancel_account: false,
-            child_account_access: true,
-          },
-        })
-      )
-    );
-  }),
+  rest.get(
+    `*/account/users/${parentAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              cancel_account: false,
+              child_account_access: true,
+            },
+          })
+        )
+      );
+    }
+  ),
   rest.get('*/account/users/:user/grants', (req, res, ctx) => {
     return res(
       ctx.json(
