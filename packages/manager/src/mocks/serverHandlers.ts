@@ -1020,7 +1020,7 @@ export const handlers = [
   rest.get('*/account/availability', (req, res, ctx) => {
     const newarkStorage = accountAvailabilityFactory.build({
       id: 'us-east-0',
-      unavailable: ['Block Storage'],
+      unavailable: ['Object Storage'],
     });
     const atlanta = accountAvailabilityFactory.build({
       id: 'us-southeast',
