@@ -1155,6 +1155,7 @@ export const handlers = [
           status: 'successful',
         },
       }),
+      accountUserFactory.build({ last_login: null }),
       childAccount,
       parentAccount,
       proxyAccount,
