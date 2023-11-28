@@ -12,7 +12,11 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledSpan, StyledTruncateLinks } from './FirewallRow.styles';
+import {
+  StyledDivWrapper,
+  StyledSpan,
+  StyledTruncateLinks,
+} from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -48,7 +52,7 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       </TableCell>
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
-        <TableCell sx={{ padding: 0 }}>
+        <TableCell>
           {getDevicesCellString(
             featureFlaggedDevices ?? [],
             isLoading,
@@ -56,7 +60,7 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
           )}
         </TableCell>
       </Hidden>
-      <TableCell actionCell>
+      <TableCell actionCell sx={{ height: '100%' }}>
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
@@ -119,7 +123,7 @@ const getDevicesCellString = (
 
 export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   return (
-    <div>
+    <StyledDivWrapper>
       <StyledTruncateLinks>
         {data.map((thisDevice, idx) => (
           <StyledSpan key={thisDevice.id}>
@@ -134,6 +138,6 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
           </StyledSpan>
         ))}
       </StyledTruncateLinks>
-    </div>
+    </StyledDivWrapper>
   );
 };
