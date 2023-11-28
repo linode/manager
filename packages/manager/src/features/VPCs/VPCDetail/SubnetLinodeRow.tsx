@@ -23,13 +23,21 @@ import {
 } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
-import { VPC_REBOOT_MESSAGE } from '../constants';
-import { getSubnetInterfaceFromConfigs } from '../utils';
+import {
+  NETWORK_INTERFACES_GUIDE_URL,
+  VPC_REBOOT_MESSAGE,
+  WARNING_ICON_UNRECOMMENDED_CONFIG,
+} from '../constants';
+import {
+  hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
+  getSubnetInterfaceFromConfigs,
+} from '../utils';
 import {
   StyledActionTableCell,
   StyledTableCell,
   StyledTableHeadCell,
   StyledTableRow,
+  StyledWarningIcon,
 } from './SubnetLinodeRow.styles';
 
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
@@ -70,6 +78,11 @@ export const SubnetLinodeRow = (props: Props) => {
     error: configsError,
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId);
+
+  const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
+    configs ?? [],
+    subnet?.id ?? -1
+  );
 
   // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
@@ -113,6 +126,37 @@ export const SubnetLinodeRow = (props: Props) => {
     );
   }
 
+  const linkifiedLinodeLabel = (
+    <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+  );
+
+  const labelCell = hasUnrecommendedConfiguration ? (
+    <Box
+      data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
+      sx={{ alignItems: 'center', display: 'flex' }}
+    >
+      <TooltipIcon
+        text={
+          <Typography>
+            This Linode is using an unrecommended configuration profile. Update
+            its configuration profile to avoid connectivity issues. Read our{' '}
+            <Link to={NETWORK_INTERFACES_GUIDE_URL}>
+              Configuration Profiles
+            </Link>{' '}
+            guide for more information.
+          </Typography>
+        }
+        icon={<StyledWarningIcon />}
+        interactive
+        status="other"
+        sxTooltipIcon={{ paddingLeft: 0 }}
+      />
+      {linkifiedLinodeLabel}
+    </Box>
+  ) : (
+    linkifiedLinodeLabel
+  );
+
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
   const isOffline = linode.status === 'stopped' || linode.status === 'offline';
@@ -130,7 +174,7 @@ export const SubnetLinodeRow = (props: Props) => {
   return (
     <StyledTableRow>
       <StyledTableCell component="th" scope="row" sx={{ paddingLeft: 6 }}>
-        <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+        {labelCell}
       </StyledTableCell>
       <StyledTableCell statusCell>
         <StatusIcon
