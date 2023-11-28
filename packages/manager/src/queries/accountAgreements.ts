@@ -11,19 +11,23 @@ import { useProfile } from 'src/queries/profile';
 
 import { queryPresets, simpleMutationHandlers } from './base';
 
-export const queryKey = 'account-agreements';
+export const accountAgreementsQueryKey = 'account-agreements';
 
 export const useAccountAgreements = (enabled?: boolean) => {
   const { data: profile } = useProfile();
 
-  return useQuery<Agreements, APIError[]>(queryKey, getAccountAgreements, {
-    ...queryPresets.oneTimeFetch,
-    ...queryPresets.noRetry,
-    enabled:
-      enabled === undefined
-        ? !profile?.restricted
-        : enabled && !profile?.restricted,
-  });
+  return useQuery<Agreements, APIError[]>(
+    accountAgreementsQueryKey,
+    getAccountAgreements,
+    {
+      ...queryPresets.oneTimeFetch,
+      ...queryPresets.noRetry,
+      enabled:
+        enabled === undefined
+          ? !profile?.restricted
+          : enabled && !profile?.restricted,
+    }
+  );
 };
 
 export const useMutateAccountAgreements = () => {
@@ -31,7 +35,7 @@ export const useMutateAccountAgreements = () => {
   return useMutation<{}, APIError[], Partial<Agreements>>(
     (data) => signAgreement(data),
     simpleMutationHandlers<Agreements, Partial<Agreements>>(
-      queryKey,
+      accountAgreementsQueryKey,
       queryClient
     )
   );
