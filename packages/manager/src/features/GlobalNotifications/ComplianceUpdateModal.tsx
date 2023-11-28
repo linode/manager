@@ -10,7 +10,7 @@ import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
 import { queryKey } from 'src/queries/accountNotifications';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 
 export const ComplianceUpdateModal = () => {
   const [error, setError] = React.useState('');
