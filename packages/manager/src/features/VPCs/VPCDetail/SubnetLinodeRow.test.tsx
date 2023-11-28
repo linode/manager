@@ -1,10 +1,15 @@
 import { fireEvent } from '@testing-library/react';
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
-import { firewallFactory } from 'src/factories';
-import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
+import {
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
+  firewallFactory,
+  subnetAssignedLinodeDataFactory,
+  subnetFactory,
+} from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -15,6 +20,7 @@ import {
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
+import { WARNING_ICON_UNRECOMMENDED_CONFIG } from '../constants';
 import { SubnetLinodeRow } from './SubnetLinodeRow';
 
 const queryClient = new QueryClient();
@@ -25,23 +31,33 @@ afterEach(() => {
 });
 
 const loadingTestId = 'circle-progress';
+const mockFirewall0 = 'mock-firewall-0';
 
 describe('SubnetLinodeRow', () => {
+  const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+
+  server.use(
+    rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
+      return res(ctx.json(linodeFactory1));
+    }),
+    rest.get('*/linode/instances/:id/firewalls', (req, res, ctx) => {
+      return res(
+        ctx.json(
+          makeResourcePage(
+            firewallFactory.buildList(1, { label: mockFirewall0 })
+          )
+        )
+      );
+    })
+  );
+
+  const linodeFactory2 = linodeFactory.build({ id: 2, label: 'linode-2' });
+
+  const handleUnassignLinode = vi.fn();
+
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
-      rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
-        return res(ctx.json(linodeFactory1));
-      }),
-      rest.get('*/linode/instances/:id/firewalls', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              firewallFactory.buildList(1, { label: 'mock-firewall-0' })
-            )
-          )
-        );
-      }),
       rest.get('*/instances/*/configs', async (req, res, ctx) => {
         const configs = linodeConfigFactory.buildList(3);
         return res(ctx.json(makeResourcePage(configs)));
@@ -82,7 +98,7 @@ describe('SubnetLinodeRow', () => {
     );
 
     getAllByText('10.0.0.0');
-    getByText('mock-firewall-0');
+    getByText(mockFirewall0);
 
     const rebootLinodeButton = getAllByRole('button')[1];
     expect(rebootLinodeButton).toHaveTextContent('Reboot');
@@ -97,6 +113,7 @@ describe('SubnetLinodeRow', () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      primary: true,
     });
     server.use(
       rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
@@ -106,7 +123,7 @@ describe('SubnetLinodeRow', () => {
         return res(
           ctx.json(
             makeResourcePage(
-              firewallFactory.buildList(1, { label: 'mock-firewall-0' })
+              firewallFactory.buildList(1, { label: mockFirewall0 })
             )
           )
         );
@@ -157,5 +174,77 @@ describe('SubnetLinodeRow', () => {
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     fireEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
+  });
+
+  it('should display a warning icon for Linodes using unrecommended configuration profiles', async () => {
+    const publicInterface = LinodeConfigInterfaceFactory.build({
+      active: true,
+      id: 5,
+      ipam_address: null,
+      primary: true,
+      purpose: 'public',
+    });
+
+    const vpcInterface = LinodeConfigInterfaceFactory.build({
+      active: true,
+      id: 10,
+      ipam_address: null,
+      purpose: 'vpc',
+      subnet_id: 1,
+    });
+
+    const configurationProfile = linodeConfigFactory.build({
+      interfaces: [publicInterface, vpcInterface],
+    });
+
+    const subnet = subnetFactory.build({
+      id: 1,
+      linodes: [
+        subnetAssignedLinodeDataFactory.build({
+          id: 1,
+          interfaces: [
+            {
+              active: true,
+              id: 5,
+            },
+            {
+              active: true,
+              id: 10,
+            },
+          ],
+        }),
+      ],
+    });
+
+    server.use(
+      rest.get('*/instances/*/configs', async (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([configurationProfile])));
+      })
+    );
+
+    const { getByTestId } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={vi.fn()}
+          handleUnassignLinode={handleUnassignLinode}
+          linodeId={linodeFactory2.id}
+          subnet={subnet}
+          subnetId={subnet.id}
+        />
+      ),
+      {
+        queryClient,
+      }
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const warningIcon = getByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG);
+
+    await waitFor(() => {
+      expect(warningIcon).toBeInTheDocument();
+    });
   });
 });
