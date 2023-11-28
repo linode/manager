@@ -16,7 +16,7 @@ export const StyledAutocompleteContainer = styled(Box, {
     textTransform: 'initial',
   },
   '& .MuiAutocomplete-listbox': {
-    '& li:first-child .MuiAutocomplete-groupLabel': {
+    '& li:first-of-type .MuiAutocomplete-groupLabel': {
       marginTop: -8,
     },
   },

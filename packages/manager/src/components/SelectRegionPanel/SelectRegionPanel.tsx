@@ -111,7 +111,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           Region
         </Typography>
         {/* TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed */}
-        {/* 
+        {/*
           <DocsLink
             href="https://www.linode.com/pricing"
             label="How Data Center Pricing Works"
