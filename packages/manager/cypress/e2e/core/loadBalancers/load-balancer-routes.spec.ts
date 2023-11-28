@@ -263,7 +263,7 @@ describe('Akamai Global Load Balancer routes page', () => {
             .should('be.visible')
             .click();
 
-          cy.findAllByLabelText('Cookie')
+          cy.findByLabelText('Cookie Key')
             .should('be.visible')
             .click()
             .clear()
