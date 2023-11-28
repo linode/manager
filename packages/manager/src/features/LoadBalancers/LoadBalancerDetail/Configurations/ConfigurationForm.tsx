@@ -101,6 +101,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
       }
     },
+    // Prevent errors from being cleared when we show API errors
     validateOnBlur: !error,
     validateOnChange: !error,
     validationSchema,
@@ -257,14 +258,24 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       </Stack>
       <Divider spacingBottom={16} spacingTop={16} />
       <Stack direction="row" flexWrap="wrap" gap={2} justifyContent="flex-end">
-        <Button
-          onClick={
-            mode === 'edit' ? () => setIsDeleteDialogOpen(true) : onCancel
-          }
-          buttonType="secondary"
-        >
-          {mode === 'edit' ? 'Delete' : 'Cancel'}
-        </Button>
+        {mode === 'edit' && formik.dirty && (
+          <Button buttonType="secondary" onClick={() => formik.resetForm()}>
+            Reset
+          </Button>
+        )}
+        {mode === 'edit' && (
+          <Button
+            buttonType="secondary"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
+            Delete
+          </Button>
+        )}
+        {mode === 'create' && (
+          <Button buttonType="secondary" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
         <Button
           buttonType="primary"
           disabled={mode === 'edit' && !formik.dirty}
