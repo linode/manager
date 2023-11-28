@@ -1018,19 +1018,25 @@ export const handlers = [
     return res(ctx.json(account));
   }),
   rest.get('*/account/availability', (req, res, ctx) => {
-    const florida = accountAvailabilityFactory.build({
-      id: 'us-mia',
+    const newarkStorage = accountAvailabilityFactory.build({
+      id: 'us-east-0',
+      unavailable: ['Block Storage'],
+    });
+    const atlanta = accountAvailabilityFactory.build({
+      id: 'us-southeast',
       unavailable: ['Block Storage'],
     });
     const singapore = accountAvailabilityFactory.build({
       id: 'ap-south',
-      unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
+      unavailable: ['Linodes', 'Kubernetes', 'NodeBalancers'],
     });
     const tokyo = accountAvailabilityFactory.build({
       id: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
-    return res(ctx.json(makeResourcePage([florida, singapore, tokyo])));
+    return res(
+      ctx.json(makeResourcePage([atlanta, newarkStorage, singapore, tokyo]))
+    );
   }),
   rest.get('*/account/availability/:regionId', (req, res, ctx) => {
     return res(ctx.json(accountAvailabilityFactory.build()));
