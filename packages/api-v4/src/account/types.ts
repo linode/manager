@@ -1,6 +1,8 @@
 import { APIWarning } from '../types';
 import type { Capabilities, Region } from '../regions';
 
+export type UserType = 'child' | 'parent' | 'proxy';
+
 export interface User {
   username: string;
   email: string;
@@ -29,6 +31,7 @@ export interface User {
      */
     status: AccountLoginStatus;
   } | null;
+  user_type: UserType | null;
 }
 
 export interface Account {
