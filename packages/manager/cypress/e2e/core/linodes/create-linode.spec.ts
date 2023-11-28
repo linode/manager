@@ -64,7 +64,6 @@ describe('create linode', () => {
    * - Confirms that region select dropdown is populated with expected regions.
    * - Confirms that region select dropdown is sorted alphabetically by region, with North America first.
    * - Confirms that region select dropdown is populated with expected DCs, sorted alphabetically.
-   * - Confirms that region select dropdown is populated with expected fake DC.
    */
   it('region select', () => {
     mockGetRegions(mockRegions).as('getRegions');
@@ -84,7 +83,7 @@ describe('create linode', () => {
 
     // Confirm that region select dropdown are grouped by region,
     // sorted alphabetically, with North America first.
-    cy.get('[data-qa-region-select-group]')
+    cy.get('.MuiAutocomplete-groupLabel')
       .should('have.length', 3)
       .should((group) => {
         expect(group[0]).to.contain('North America');
@@ -93,7 +92,7 @@ describe('create linode', () => {
       });
 
     // Confirm that region select dropdown is populated with expected regions, sorted alphabetically.
-    cy.get('[data-qa-option]').should('exist').should('have.length', 5);
+    cy.get('[data-qa-option]').should('exist').should('have.length', 4);
     mockRegions.forEach((region) => {
       cy.get('[data-qa-option]').contains(region.label);
     });
