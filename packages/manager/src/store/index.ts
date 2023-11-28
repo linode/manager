@@ -1,5 +1,4 @@
 import { QueryClient } from 'react-query';
-import { useStore } from 'react-redux';
 import {
   Store,
   applyMiddleware,
@@ -100,6 +99,3 @@ export const storeFactory = (queryClient: QueryClient) =>
   createStore(reducers, defaultState, enhancersFactory(queryClient));
 
 export type ApplicationStore = Store<ApplicationState>;
-
-export const useApplicationStore = (): ApplicationStore =>
-  useStore<ApplicationState>();
