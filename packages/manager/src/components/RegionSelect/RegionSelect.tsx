@@ -76,7 +76,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         currentCapability,
         regions,
       }),
-    [regions]
+    [accountAvailability, currentCapability, regions]
   );
 
   return (

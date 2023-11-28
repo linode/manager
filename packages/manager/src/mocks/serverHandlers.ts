@@ -1022,8 +1022,8 @@ export const handlers = [
       id: 'us-east-0',
       unavailable: ['Block Storage'],
     });
-    const florida = accountAvailabilityFactory.build({
-      id: 'us-mia',
+    const atlanta = accountAvailabilityFactory.build({
+      id: 'us-southeast',
       unavailable: ['Block Storage'],
     });
     const singapore = accountAvailabilityFactory.build({
@@ -1035,7 +1035,7 @@ export const handlers = [
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
     return res(
-      ctx.json(makeResourcePage([florida, newarkStorage, singapore, tokyo]))
+      ctx.json(makeResourcePage([atlanta, newarkStorage, singapore, tokyo]))
     );
   }),
   rest.get('*/account/availability/:regionId', (req, res, ctx) => {
