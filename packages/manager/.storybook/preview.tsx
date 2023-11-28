@@ -16,6 +16,7 @@ import { themes } from '@storybook/theming';
 import { worker } from '../src/mocks/testBrowser';
 
 import '../src/index.css';
+import '@reach/tabs/styles.css';
 
 MINIMAL_VIEWPORTS.mobile1.styles = {
   height: '667px',

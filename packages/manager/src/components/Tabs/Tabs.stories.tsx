@@ -2,15 +2,17 @@ import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 
+import { Tab } from './Tab';
+
 import type { TabProps } from '@reach/tabs';
 import type { Meta, StoryObj } from '@storybook/react';
 
-export const _tabs = [
+const _tabs = [
   {
     routeName: '/tab1',
     title: 'Tab 1',
@@ -26,29 +28,29 @@ export const _tabs = [
 ];
 
 export const Default: StoryObj<TabProps> = {
-  render: (args) => (
-    <Tabs {...args}>
-      {_tabs.map((_, idx) => (
-        <>
-          <TabLinkList tabs={_tabs} />
-          <TabPanels>
-            <SafeTabPanel index={idx} key={`tab-${idx}`}>
-              <Paper sx={{ paddingLeft: 16, paddingTop: 8 }}>
-                <Typography variant="body1">Panel {idx + 1}</Typography>
-              </Paper>
-            </SafeTabPanel>
-          </TabPanels>
-        </>
-      ))}
+  render: () => (
+    <Tabs>
+      <TabList>
+        {_tabs.map((tab, idx) => (
+          <Tab index={idx} key={`tab-${idx}`}>
+            {tab.title}
+          </Tab>
+        ))}
+      </TabList>
+      <TabPanels>
+        {_tabs.map((tab, idx) => (
+          <SafeTabPanel index={idx} key={`tab-${idx}`}>
+            <Paper sx={{ padding: 2 }}>
+              <Typography variant="body1">Content for {tab.title}</Typography>
+            </Paper>
+          </SafeTabPanel>
+        ))}
+      </TabPanels>
     </Tabs>
   ),
 };
 
 const meta: Meta<TabProps> = {
-  args: {
-    disabled: false,
-    index: 0,
-  },
   component: Tabs,
   title: 'Components/Tabs',
 };

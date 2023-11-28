@@ -3,7 +3,7 @@ import { Route, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Stack } from 'src/components/Stack';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 
