@@ -60,7 +60,7 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
           )}
         </TableCell>
       </Hidden>
-      <TableCell actionCell sx={{ height: '100%' }}>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
