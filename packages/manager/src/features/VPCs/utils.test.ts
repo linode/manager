@@ -12,7 +12,6 @@ import {
   getSubnetInterfaceFromConfigs,
   getUniqueLinodesFromSubnets,
   hasUnrecommendedConfiguration,
-  interfaceInSubnet,
 } from './utils';
 
 const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
@@ -91,6 +90,7 @@ describe('hasUnrecommendedConfiguration function', () => {
     const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       id: 20,
+      subnet_id: 1,
     });
 
     const config1 = linodeConfigFactory.build({
@@ -118,7 +118,7 @@ describe('hasUnrecommendedConfiguration function', () => {
       ],
     });
 
-    expect(hasUnrecommendedConfiguration([config1, config2], subnet)).toBe(
+    expect(hasUnrecommendedConfiguration([config1, config2], subnet.id)).toBe(
       true
     );
   });
@@ -129,6 +129,7 @@ describe('hasUnrecommendedConfiguration function', () => {
       active: true,
       id: 20,
       primary: true,
+      subnet_id: 1,
     });
 
     const config1 = linodeConfigFactory.build({
@@ -158,47 +159,7 @@ describe('hasUnrecommendedConfiguration function', () => {
       ],
     });
 
-    expect(hasUnrecommendedConfiguration([config1, config2], subnet)).toBe(
-      false
-    );
-  });
-});
-
-describe('interfaceInSubnet function', () => {
-  it('should return true if the provided interface ID is found in the nested array of Linode interface data', () => {
-    const interfaceId = 25;
-
-    const subnetAssignedLinodeData = [
-      {
-        id: 1000,
-        interfaces: [
-          {
-            active: true,
-            id: 25,
-          },
-        ],
-      },
-    ];
-
-    expect(interfaceInSubnet(interfaceId, subnetAssignedLinodeData)).toBe(true);
-  });
-
-  it('should return false if the provided interface ID is not found in the nested array of Linode interface data', () => {
-    const interfaceId = 25;
-
-    const subnetAssignedLinodeData = [
-      {
-        id: 1000,
-        interfaces: [
-          {
-            active: true,
-            id: 80,
-          },
-        ],
-      },
-    ];
-
-    expect(interfaceInSubnet(interfaceId, subnetAssignedLinodeData)).toBe(
+    expect(hasUnrecommendedConfiguration([config1, config2], subnet.id)).toBe(
       false
     );
   });
