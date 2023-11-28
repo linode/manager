@@ -6,12 +6,6 @@ export type UserType = 'child' | 'parent' | 'proxy';
 export interface User {
   email: string;
   /**
-   * The date of when a password was set on a user.
-   * `null` if this user has not created a password yet
-   * @example 2022-02-09T16:19:26
-   * @example null
-   */
-  /**
    * Information for the most recent login attempt for this User.
    * `null` if no login attempts have been made since creation of this User.
    */
@@ -25,6 +19,12 @@ export interface User {
      */
     status: AccountLoginStatus;
   } | null;
+  /**
+   * The date of when a password was set on a user.
+   * `null` if this user has not created a password yet
+   * @example 2022-02-09T16:19:26
+   * @example null
+   */
   password_created: string | null;
   restricted: boolean;
   ssh_keys: string[];
