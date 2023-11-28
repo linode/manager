@@ -1,14 +1,15 @@
-import { Stack } from 'src/components/Stack';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
+import { Stack } from 'src/components/Stack';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import type { Filter } from '@linode/api-v4';
+import type { TextFieldProps } from 'src/components/TextField';
 
 interface Props {
   /**
@@ -20,13 +21,17 @@ interface Props {
    */
   onChange: (ip: string) => void;
   /**
+   * Optional props passed to the TextField
+   */
+  textFieldProps?: Partial<TextFieldProps>;
+  /**
    * The id of the selected certificate
    */
   value: null | string;
 }
 
 export const LinodeOrIPSelect = (props: Props) => {
-  const { errorText, onChange, value } = props;
+  const { errorText, onChange, textFieldProps, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
@@ -118,6 +123,7 @@ export const LinodeOrIPSelect = (props: Props) => {
       onChange={(e, value) => onChange(value?.ipv4[0] ?? '')}
       options={options}
       placeholder="Select Linode or Enter IPv4 Address"
+      textFieldProps={textFieldProps}
       value={linodes.length === 0 ? customIpPlaceholder : selectedLinode}
     />
   );
