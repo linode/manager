@@ -488,6 +488,27 @@ const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
 
+const proxyAccount = accountUserFactory.build({
+  email: 'partner@proxy.com',
+  last_login: null,
+  user_type: 'proxy',
+  username: 'ParentCompany_a1b2c3d4e5',
+});
+const parentAccount = accountUserFactory.build({
+  email: 'parent@acme.com',
+  last_login: null,
+  restricted: false,
+  user_type: 'parent',
+  username: 'ParentUser',
+});
+const childAccount = accountUserFactory.build({
+  email: 'child@linode.com',
+  last_login: null,
+  restricted: false,
+  user_type: 'child',
+  username: 'ChildUser',
+});
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
@@ -1134,64 +1155,20 @@ export const handlers = [
           status: 'successful',
         },
       }),
-      accountUserFactory.build({
-        email: 'child@linode.com',
-        last_login: null,
-        user_type: 'child',
-        username: 'ChildUser',
-      }),
-      accountUserFactory.build({
-        email: 'partner@partner.com',
-        last_login: null,
-        user_type: 'proxy',
-        username: 'ParentCompany_a1b2c3d4e5',
-      }),
-      accountUserFactory.build({
-        email: 'parent@acme.com',
-        last_login: null,
-        user_type: 'parent',
-        username: 'ParentUser',
-      }),
+      childAccount,
+      parentAccount,
+      proxyAccount,
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
   rest.get('*/account/users/ChildUser', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        accountUserFactory.build({
-          email: 'child@linode.com',
-          last_login: null,
-          restricted: false,
-          user_type: 'child',
-          username: 'ChildUser',
-        })
-      )
-    );
+    return res(ctx.json(childAccount));
   }),
   rest.get('*/account/users/ParentCompany_a1b2c3d4e5', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        accountUserFactory.build({
-          email: 'partner@partner.com',
-          last_login: null,
-          user_type: 'proxy',
-          username: 'ParentCompany_a1b2c3d4e5',
-        })
-      )
-    );
+    return res(ctx.json(proxyAccount));
   }),
   rest.get('*/account/users/ParentUser', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        accountUserFactory.build({
-          email: 'parent@acme.com',
-          last_login: null,
-          restricted: false,
-          user_type: 'parent',
-          username: 'ParentUser',
-        })
-      )
-    );
+    return res(ctx.json(parentAccount));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     return res(ctx.json(accountUserFactory.build()));
@@ -1213,8 +1190,6 @@ export const handlers = [
       return res(
         ctx.json(
           grantsFactory.build({
-            domain: [],
-            firewall: [],
             global: {
               add_domains: false,
               add_firewalls: false,
@@ -1228,12 +1203,6 @@ export const handlers = [
               cancel_account: false,
               longview_subscription: false,
             },
-            image: [],
-            linode: [],
-            longview: [],
-            nodebalancer: [],
-            stackscript: [],
-            volume: [],
           })
         )
       );
