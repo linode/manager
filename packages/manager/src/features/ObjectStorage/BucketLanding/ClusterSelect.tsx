@@ -44,6 +44,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
 
   return (
     <RegionSelect
+      currentCapability="Object Storage"
       data-qa-select-cluster
       disabled={disabled}
       errorText={errorText}
