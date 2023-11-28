@@ -1,67 +1,46 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import {
+  getRegionCountryGroup,
+  getSelectedRegion,
+} from 'src/utilities/formatRegion';
 
-import { listOfFakeRegions } from './disabledRegions';
-
-import type { RegionSelectOption } from './RegionSelect.types';
-import type { FakeRegion } from './disabledRegions';
-import type { Region } from '@linode/api-v4';
-import type { FlagSet } from 'src/featureFlags';
+import type {
+  GetRegionOptionAvailability,
+  GetRegionOptions,
+  GetSelectedRegionById,
+  RegionSelectOption,
+} from './RegionSelect.types';
+import type { AccountAvailability, Region } from '@linode/api-v4';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 /**
  * Returns an array of OptionType objects for use in the RegionSelect component.
  * Regions are sorted alphabetically by region, with North America first.
- * Includes fake regions if they are enabled by a feature flag.
- * Fake regions only appear in the list if they are not already included in the
- * /regions response, and if they are not excluded by the current path.
  *
- * @returns {OptionType[]} An array of OptionType objects
+ * @returns An array of RegionSelectOption objects
  */
-export const getRegionOptions = (
-  regions: Region[],
-  flags: FlagSet,
-  path: string
-): RegionSelectOption[] => {
-  const allRegions = [
-    ...regions,
-    ...listOfFakeRegions
-      .filter((disabledRegion) => {
-        /**
-         * Only display a fake region if the feature flag for it is enabled
-         */
-        const isFlagEnabled = flags[disabledRegion.featureFlag];
-        /**
-         * Don't display a fake region if it's included in the real /regions response
-         */
-        const isAlreadyIncluded = regions.some(
-          (region) => region.id === disabledRegion.fakeRegion.id
-        );
-        /**
-         * Don't display a fake region if it's excluded by the current path
-         */
-        const isExcludedByPath = disabledRegion.excludePaths?.some(
-          (pathToExclude) => path.includes(pathToExclude)
-        );
-
-        return isFlagEnabled && !isAlreadyIncluded && !isExcludedByPath;
-      })
-      .map((disabledRegion) => disabledRegion.fakeRegion),
-  ];
-
-  return allRegions
+export const getRegionOptions = ({
+  accountAvailabilityData,
+  currentCapability,
+  regions,
+}: GetRegionOptions): RegionSelectOption[] => {
+  return regions
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 
       return {
         data: {
           country: region.country,
-          disabledMessage: (region as FakeRegion).disabledMessage,
           region: group,
         },
         label: `${region.label} (${region.id})`,
+        unavailable: getRegionOptionAvailability({
+          accountAvailabilityData,
+          currentCapability,
+          region,
+        }),
         value: region.id,
       };
     })
@@ -99,29 +78,61 @@ export const getRegionOptions = (
 /**
  * Util to map a region ID to an OptionType object.
  *
- * @returns an OptionType object for the currently selected region.
+ * @returns an RegionSelectOption object for the currently selected region.
  */
-export const getSelectedRegionById = (
-  regions: Region[],
-  selectedRegionId: string
-): RegionSelectOption | undefined => {
-  const selectedRegion: Region | undefined = regions.find(
-    (thisRegion) => selectedRegionId === thisRegion.id
-  );
-
-  const group = getRegionCountryGroup(selectedRegion);
+export const getSelectedRegionById = ({
+  accountAvailabilityData,
+  currentCapability,
+  regions,
+  selectedRegionId,
+}: GetSelectedRegionById): RegionSelectOption | undefined => {
+  const selectedRegion = getSelectedRegion(regions, selectedRegionId);
 
   if (!selectedRegion) {
     return undefined;
   }
 
+  const group = getRegionCountryGroup(selectedRegion);
+
   return {
     data: {
       country: selectedRegion?.country,
-      disabledMessage: (selectedRegion as FakeRegion).disabledMessage,
       region: group,
     },
     label: `${selectedRegion.label} (${selectedRegion.id})`,
+    unavailable: getRegionOptionAvailability({
+      accountAvailabilityData,
+      currentCapability,
+      region: selectedRegion,
+    }),
     value: selectedRegion.id,
   };
+};
+
+/**
+ * Util to determine if a region is available to the user for a given capability.
+ *
+ * @returns a boolean indicating whether the region is available to the user.
+ */
+export const getRegionOptionAvailability = ({
+  accountAvailabilityData,
+  currentCapability,
+  region,
+}: GetRegionOptionAvailability): boolean => {
+  if (!accountAvailabilityData || !currentCapability) {
+    return false;
+  }
+
+  const regionWithUnavailability:
+    | AccountAvailability
+    | undefined = accountAvailabilityData.find(
+    (regionAvailability: AccountAvailability) =>
+      regionAvailability.id === region.id
+  );
+
+  if (!regionWithUnavailability) {
+    return false;
+  }
+
+  return regionWithUnavailability.unavailable.includes(currentCapability);
 };

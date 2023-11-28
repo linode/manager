@@ -2,7 +2,7 @@ import { Hidden } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ActionMenu } from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { CircleProgress } from 'src/components/CircleProgress';
 import {
   CollapsibleTable,

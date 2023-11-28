@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { List } from 'src/components/List';
+import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import {
-  GroupHeader,
   SelectedIcon,
+  StyledAutocompleteContainer,
   StyledFlagContainer,
-  StyledLParentListItem,
   StyledListItem,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
@@ -25,6 +24,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
+    currentCapability,
     disabled,
     errorText,
     handleSelection,
@@ -37,15 +37,23 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     width,
   } = props;
 
+  const flags = useFlags();
+  const {
+    data: accountAvailability,
+    isLoading: accountAvailabilityLoading,
+  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
+
   const regionFromSelectedId: RegionSelectOption | null =
-    getSelectedRegionById(regions, selectedId ?? '') ?? null;
+    getSelectedRegionById({
+      accountAvailabilityData: accountAvailability,
+      currentCapability,
+      regions,
+      selectedRegionId: selectedId ?? '',
+    }) ?? null;
 
   const [selectedRegion, setSelectedRegion] = React.useState<
     RegionSelectOption | null | undefined
   >(regionFromSelectedId);
-  const flags = useFlags();
-  const location = useLocation();
-  const path = location.pathname;
 
   const handleRegionChange = (selection: RegionSelectOption) => {
     setSelectedRegion(selection);
@@ -55,20 +63,27 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   React.useEffect(() => {
     if (selectedId) {
       setSelectedRegion(regionFromSelectedId);
+    } else {
+      // We need to reset the state when create types change
+      setSelectedRegion(null);
     }
   }, [selectedId]);
 
-  const options = React.useMemo(() => getRegionOptions(regions, flags, path), [
-    flags,
-    path,
-    regions,
-  ]);
+  const options = React.useMemo(
+    () =>
+      getRegionOptions({
+        accountAvailabilityData: accountAvailability,
+        currentCapability,
+        regions,
+      }),
+    [accountAvailability, currentCapability, regions]
+  );
 
   return (
-    <Box sx={{ width }}>
+    <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
         getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(option.data.disabledMessage)
+          Boolean(flags.dcGetWell) && Boolean(option.unavailable)
         }
         isOptionEqualToValue={(
           option: RegionSelectOption,
@@ -80,29 +95,29 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         onKeyDown={() => {
           setSelectedRegion(null);
         }}
-        renderGroup={(params) => (
-          <StyledLParentListItem key={params.key}>
-            <GroupHeader data-qa-region-select-group={params.group}>
-              {params.group}
-            </GroupHeader>
-            <List>{params.children}</List>
-          </StyledLParentListItem>
-        )}
         renderOption={(props, option, { selected }) => {
-          // The tooltip is likely to be removed for DC Get Well
-          // Because the the way Autocomplete is implemented, we need to wrap the entire list item in the tooltip, otherwise the tooltip will not show.
-          // This is the reason for disabling event listeners on the tooltip when there is no disabled message.
-          // It's probably superfluous, but won't hurt either.
-          const isDisabledMenuItem = Boolean(option.data.disabledMessage);
+          const isDisabledMenuItem =
+            Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
             <Tooltip
+              title={
+                // TODO DC_GET_WELL: add proper link to status page when available
+                isDisabledMenuItem ? (
+                  <>
+                    For more information about regional availability, please see
+                    our new <Link to="https://linode.com">status page</Link>.
+                  </>
+                ) : (
+                  ''
+                )
+              }
               disableFocusListener={!isDisabledMenuItem}
               disableHoverListener={!isDisabledMenuItem}
               disableTouchListener={!isDisabledMenuItem}
-              enterDelay={500}
-              enterTouchDelay={500}
+              enterDelay={200}
+              enterNextDelay={200}
+              enterTouchDelay={200}
               key={option.value}
-              title={option.data.disabledMessage ?? ''}
             >
               <StyledListItem
                 {...props}
@@ -118,8 +133,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                     <StyledFlagContainer>
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
-                    {option.label}{' '}
-                    {Boolean(option.data.disabledMessage) && ' (Not available)'}
+                    {option.label} {isDisabledMenuItem && ' (Not available)'}
                   </Box>
                   {selected && <SelectedIcon visible={selected} />}
                 </>
@@ -146,11 +160,13 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         errorText={errorText}
         groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
+        loading={accountAvailabilityLoading}
+        loadingText="Loading regions..."
         noOptionsText="No results"
         options={options}
         placeholder="Select a Region"
         value={selectedRegion}
       />
-    </Box>
+    </StyledAutocompleteContainer>
   );
 });

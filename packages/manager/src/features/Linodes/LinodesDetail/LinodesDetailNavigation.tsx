@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabPanels } from 'src/components/ReachTabPanels';
