@@ -172,6 +172,7 @@ export type GlobalGrantTypes =
   | 'add_longview'
   | 'longview_subscription'
   | 'account_access'
+  | 'child_account_access'
   | 'cancel_account'
   | 'add_domains'
   | 'add_stackscripts'
