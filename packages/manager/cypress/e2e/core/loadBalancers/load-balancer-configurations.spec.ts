@@ -18,6 +18,8 @@ import {
   mockGetLoadBalancerCertificates,
   mockGetLoadBalancerConfigurations,
   mockGetLoadBalancerRoutes,
+  mockUpdateLoadBalancerConfiguration,
+  mockUpdateLoadBalancerConfigurationError,
 } from 'support/intercepts/load-balancers';
 import { ui } from 'support/ui';
 
@@ -353,6 +355,151 @@ describe('Akamai Global Load Balancer configurations page', () => {
       }
     });
   });
+
+  describe('update', () => {
+    it('edits a HTTPS configuration', () => {
+      const configuration = configurationFactory.build({ protocol: 'https' });
+      const loadbalancer = loadbalancerFactory.build({
+        configurations: [{ id: configuration.id, label: configuration.label }],
+      });
+      const certificates = certificateFactory.buildList(3);
+      const routes = routeFactory.buildList(3);
+
+      mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+      mockGetLoadBalancerConfigurations(loadbalancer.id, [configuration]).as(
+        'getConfigurations'
+      );
+      mockGetLoadBalancerCertificates(loadbalancer.id, certificates).as(
+        'getCertificates'
+      );
+      mockUpdateLoadBalancerConfiguration(loadbalancer.id, configuration).as(
+        'updateConfiguration'
+      );
+      mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+
+      cy.visitWithLogin(
+        `/loadbalancers/${loadbalancer.id}/configurations/${configuration.id}`
+      );
+
+      cy.wait([
+        '@getFeatureFlags',
+        '@getClientStream',
+        '@getLoadBalancer',
+        '@getConfigurations',
+        '@getRoutes',
+        '@getCertificates',
+      ]);
+
+      // In edit mode, we will disable the "save" button if the user hasn't made any changes
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.disabled');
+
+      cy.findByLabelText('Configuration Label')
+        .should('be.visible')
+        .clear()
+        .type('new-label');
+
+      cy.findByLabelText('Port').should('be.visible').clear().type('444');
+
+      ui.button
+        .findByTitle('Apply More Certificates')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer.findByTitle('Apply Certificates').within(() => {
+        cy.findByLabelText('Host Header').type('example-1.com');
+
+        cy.findByLabelText('Certificate').click();
+
+        ui.autocompletePopper.findByTitle(certificates[1].label).click();
+
+        ui.button
+          .findByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@updateConfiguration');
+    });
+
+    it('shows API errors when editing', () => {
+      const configuration = configurationFactory.build({ protocol: 'https' });
+      const loadbalancer = loadbalancerFactory.build({
+        configurations: [{ id: configuration.id, label: configuration.label }],
+      });
+
+      mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+      mockGetLoadBalancerConfigurations(loadbalancer.id, [configuration]).as(
+        'getConfigurations'
+      );
+
+      const errors = [
+        { field: 'label', reason: 'Bad Label.' },
+        { field: 'port', reason: 'Port number is too high.' },
+        { field: 'protocol', reason: 'This protocol is not supported.' },
+        {
+          field: 'certificates[0].id',
+          reason: 'Certificate 0 does not exist.',
+        },
+        {
+          field: 'certificates[0].hostname',
+          reason: 'That hostname is too long.',
+        },
+        { field: 'route_ids', reason: 'Some of these routes do not exist.' },
+      ];
+
+      mockUpdateLoadBalancerConfigurationError(
+        loadbalancer.id,
+        configuration.id,
+        errors
+      ).as('updateConfigurationError');
+
+      cy.visitWithLogin(
+        `/loadbalancers/${loadbalancer.id}/configurations/${configuration.id}`
+      );
+
+      cy.wait([
+        '@getFeatureFlags',
+        '@getClientStream',
+        '@getLoadBalancer',
+        '@getConfigurations',
+      ]);
+
+      // In edit mode, we will disable the "save" button if the user hasn't made any changes
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.disabled');
+
+      cy.findByLabelText('Configuration Label')
+        .should('be.visible')
+        .clear()
+        .type('new-label');
+
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@updateConfigurationError');
+
+      for (const error of errors) {
+        cy.findByText(error.reason).should('be.visible');
+      }
+    });
+  });
+
   describe('delete', () => {
     it('deletes a configuration', () => {
       const loadbalancer = loadbalancerFactory.build();

@@ -101,6 +101,8 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
       }
     },
+    validateOnBlur: !error,
+    validateOnChange: !error,
     validationSchema,
   });
 
@@ -111,6 +113,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   ];
 
   const handleRemoveCert = (index: number) => {
+    formik.setFieldTouched('certificates');
     formik.values.certificates.splice(index, 1);
     formik.setFieldValue('certificates', formik.values.certificates);
   };
@@ -124,6 +127,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   };
 
   const handleAddCerts = (certificates: Configuration['certificates']) => {
+    formik.setFieldTouched('certificates');
     formik.setFieldValue('certificates', [
       ...formik.values.certificates,
       ...certificates,
@@ -133,7 +137,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   const generalErrors = error?.reduce((acc, { field, reason }) => {
     if (
       !field ||
-      !['certificates', 'label', 'port', 'protocol'].includes(field)
+      (formik.values.protocol !== 'https' && field.startsWith('certificates'))
     ) {
       return acc ? `${acc}, ${reason}` : reason;
     }
@@ -202,6 +206,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
                 />
               )}
             <CertificateTable
+              errors={
+                Array.isArray(formik.errors.certificates)
+                  ? formik.errors.certificates
+                  : []
+              }
               certificates={formik.values.certificates}
               loadbalancerId={loadbalancerId}
               onRemove={handleRemoveCert}
@@ -209,7 +218,6 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             <Box mt={2}>
               <Button
                 onClick={() => {
-                  formik.setFieldTouched('certificates');
                   setIsApplyCertDialogOpen(true);
                 }}
                 buttonType="outlined"
@@ -224,6 +232,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       <Divider spacingBottom={16} spacingTop={16} />
       <Stack spacing={2}>
         <Typography variant="h2">Routes</Typography>
+        {formik.errors.route_ids && (
+          <Notice text={formik.errors.route_ids} variant="error" />
+        )}
         <Stack direction="row" flexWrap="wrap" gap={2}>
           <Button
             buttonType="outlined"
@@ -254,7 +265,12 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         >
           {mode === 'edit' ? 'Delete' : 'Cancel'}
         </Button>
-        <Button buttonType="primary" loading={isLoading} type="submit">
+        <Button
+          buttonType="primary"
+          disabled={mode === 'edit' && !formik.dirty}
+          loading={isLoading}
+          type="submit"
+        >
           {mode == 'edit' ? 'Save' : 'Create'} Configuration
         </Button>
       </Stack>
