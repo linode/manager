@@ -1,16 +1,25 @@
 import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
+import { Box } from 'src/components/Box';
 import { ListItem } from 'src/components/ListItem';
 
-export const GroupHeader = styled('div', {
-  label: 'RegionSelectGroupHeader',
+export const StyledAutocompleteContainer = styled(Box, {
+  label: 'RegionSelect',
 })(({ theme }) => ({
-  color: theme.color.headline,
-  fontFamily: theme.font.bold,
-  fontSize: '1rem',
-  padding: '16px 4px 4px 10px',
-  textTransform: 'initial',
+  '& .MuiAutocomplete-groupLabel': {
+    color: theme.color.headline,
+    fontFamily: theme.font.bold,
+    fontSize: '1rem',
+    lineHeight: 1,
+    padding: '16px 4px 8px 10px',
+    textTransform: 'initial',
+  },
+  '& .MuiAutocomplete-listbox': {
+    '& li:first-of-type .MuiAutocomplete-groupLabel': {
+      marginTop: -8,
+    },
+  },
 }));
 
 export const StyledFlagContainer = styled('div', {
@@ -35,6 +44,7 @@ export const StyledListItem = styled(ListItem, {
   label: 'RegionSelectListItem',
 })(({ theme }) => ({
   '&.MuiAutocomplete-option': {
+    minHeight: 'auto !important',
     padding: '8px 10px !important',
   },
   '&.MuiListItem-root[aria-disabled="true"]': {
