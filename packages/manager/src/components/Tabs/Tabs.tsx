@@ -1,3 +1,1 @@
-import { Tabs } from '@reach/tabs';
-
-export { Tabs };
+export { Tabs } from '@reach/tabs';
