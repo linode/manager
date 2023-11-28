@@ -1125,16 +1125,22 @@ export const handlers = [
   rest.get('*/account/users', (req, res, ctx) => {
     const accountUsers = [
       accountUserFactory.build({
-        last_login: { status: 'failed', login_datetime: '2023-10-16T17:04' },
+        last_login: { login_datetime: '2023-10-16T17:04', status: 'failed' },
         tfa_enabled: true,
       }),
       accountUserFactory.build({
         last_login: {
-          status: 'successful',
           login_datetime: '2023-10-06T12:04',
+          status: 'successful',
         },
       }),
       accountUserFactory.build({ last_login: null }),
+      accountUserFactory.build({
+        email: 'partner@partnercompany.com',
+        last_login: null,
+        user_type: 'proxy',
+        username: 'ParentCompany_a1b2c3d4e5',
+      }),
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
