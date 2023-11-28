@@ -28,7 +28,7 @@ jobs:
       - name: Write Base Coverage to an Artifact
         run: |
           coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
-          pct=$(echo "$coverage_json" | jq -r '.total.lines.pct')
+          pct=$(echo "$coverage_json" | jq -r '.total.statements.pct')
           echo "$pct" > ref_code_coverage.txt
 
       - name: Upload Base Coverage Artifact
@@ -66,7 +66,7 @@ jobs:
       - name: Write Current Coverage to an Artifact
         run: |
           coverage_json=$(cat ./packages/manager/coverage/coverage-summary.json)
-          pct=$(echo "$coverage_json" | jq -r '.total.lines.pct')
+          pct=$(echo "$coverage_json" | jq -r '.total.statements.pct')
           echo "$pct" > current_code_coverage.txt
 
       - name: Upload PR Number Artifact
