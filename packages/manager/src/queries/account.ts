@@ -42,25 +42,36 @@ export const useMutateAccount = () => {
   });
 };
 
-export const useChildAccounts = ({ filter, params }: RequestOptions) => {
+export const useChildAccounts = ({
+  filter,
+  headers,
+  params,
+}: RequestOptions) => {
   const { data: grants } = useGrants();
+  const hasExplictAuthToken = headers?.hasAuthorization();
 
   return useQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
-    () => getChildAccounts({ filter, params }),
+    () => getChildAccounts({ filter, headers, params }),
     {
-      enabled: Boolean(grants?.global?.child_account_access),
+      enabled:
+        Boolean(grants?.global?.child_account_access) || hasExplictAuthToken,
       keepPreviousData: true,
     }
   );
 };
 
-export const useChildAccount = ({ euuid }: ChildAccountPayload) => {
+export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   const { data: grants } = useGrants();
+  const hasExplictAuthToken = headers?.hasAuthorization();
+
   return useQuery<Account, APIError[]>(
     [queryKey, 'childAccounts', 'childAccount', euuid],
     () => getChildAccount({ euuid }),
-    { enabled: Boolean(grants?.global?.child_account_access) }
+    {
+      enabled:
+        Boolean(grants?.global?.child_account_access) || hasExplictAuthToken,
+    }
   );
 };
 

@@ -159,10 +159,11 @@ export const signAgreement = (data: Partial<Agreements>) => {
  * This endpoint will return a paginated list of all Child Accounts with a Parent Account.
  * The response would be similar to /account, except that it would list details for multiple accounts.
  */
-export const getChildAccounts = ({ filter, params }: RequestOptions) =>
+export const getChildAccounts = ({ filter, params, headers }: RequestOptions) =>
   Request<ResourcePage<Account>>(
     setURL(`${API_ROOT}/account/child-accounts`),
     setMethod('GET'),
+    setHeaders(headers),
     setParams(params),
     setXFilter(filter)
   );
@@ -173,10 +174,11 @@ export const getChildAccounts = ({ filter, params }: RequestOptions) =>
  * This endpoint will function similarly to /account/child-accounts,
  * except that it will return account details for only a specific euuid.
  */
-export const getChildAccount = ({ euuid }: ChildAccountPayload) =>
+export const getChildAccount = ({ euuid, headers }: ChildAccountPayload) =>
   Request<Account>(
     setURL(`${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}`),
-    setMethod('GET')
+    setMethod('GET'),
+    setHeaders(headers)
   );
 
 /**
