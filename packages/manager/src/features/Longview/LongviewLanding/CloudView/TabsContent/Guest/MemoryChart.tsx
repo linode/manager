@@ -1,10 +1,10 @@
 import React from "react";
-import { getMetrics } from "../CloudViewRequest";
+import { getMetrics } from "../../CloudViewRequest";
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { LongviewLineGraph } from "src/components/LongviewLineGraph/LongviewLineGraph";
 import { useProfile } from 'src/queries/profile';
 import { useTheme } from "@mui/material/styles";
-import { seriesDataFormatter } from "../shared/CloudViewFormatters";
+import { seriesDataFormatter } from "../../shared/CloudViewFormatters";
 
 export const MemoryChart = (props: any) => {
     const theme = useTheme();

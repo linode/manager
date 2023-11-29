@@ -4,7 +4,7 @@
   import { Tabs } from 'src/components/ReachTabs';
   import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
   import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { GuestMetrics } from './TabsContent/GuestMetrics';
+import { GuestMetrics } from './TabsContent/Guest/GuestMetrics';
   
   export const CloudViewTabs = (props: any) => {
     const tabs = [

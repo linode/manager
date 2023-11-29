@@ -5,11 +5,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Paper } from 'src/components/Paper';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
-import { WithStartAndEnd } from '../../../request.types';
-import { CloudViewTimeRangeSelect } from '../shared/CloudViewTimeRange';
+import { WithStartAndEnd } from '../../../../request.types';
+import { CloudViewTimeRangeSelect } from '../../shared/CloudViewTimeRange';
 import { MemoryChart } from './MemoryChart';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { CloudViewLinodes } from '../shared/CloudViewLinodes';
+import { CloudViewLinodes } from '../../shared/CloudViewLinodes';
 import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
@@ -108,7 +108,10 @@ export const GuestMetrics = (props: any) => {
             justifyContent="space-between"
             spacing={4}
           >
-            <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+              <MemoryChart {...graphProps} />
+            </Grid>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <MemoryChart {...graphProps} />
             </Grid>
           </Grid>}
