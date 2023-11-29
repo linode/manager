@@ -1,4 +1,4 @@
-import type { APIWarning, RequestConfig } from '../types';
+import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
 
 export interface User {
@@ -223,7 +223,7 @@ export interface CancelAccountPayload {
   comments: string;
 }
 
-export interface ChildAccountPayload extends RequestConfig {
+export interface ChildAccountPayload extends RequestOptions {
   euuid: string;
 }
 

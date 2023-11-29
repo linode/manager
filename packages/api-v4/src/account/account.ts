@@ -21,7 +21,7 @@ import {
   RegionalNetworkUtilization,
   ChildAccountPayload,
 } from './types';
-import { Filter, ResourcePage, Params, RequestConfig } from '../types';
+import { Filter, ResourcePage, Params, RequestOptions } from '../types';
 import { Token } from '../profile';
 
 /**
@@ -159,7 +159,7 @@ export const signAgreement = (data: Partial<Agreements>) => {
  * This endpoint will return a paginated list of all Child Accounts with a Parent Account.
  * The response would be similar to /account, except that it would list details for multiple accounts.
  */
-export const getChildAccounts = ({ filter, params }: RequestConfig) =>
+export const getChildAccounts = ({ filter, params }: RequestOptions) =>
   Request<ResourcePage<Account>>(
     setURL(`${API_ROOT}/account/child-accounts`),
     setMethod('GET'),

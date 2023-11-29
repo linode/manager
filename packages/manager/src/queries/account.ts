@@ -15,7 +15,7 @@ import type {
   APIError,
   Account,
   ChildAccountPayload,
-  RequestConfig,
+  RequestOptions,
   ResourcePage,
   Token,
 } from '@linode/api-v4';
@@ -42,7 +42,7 @@ export const useMutateAccount = () => {
   });
 };
 
-export const useChildAccounts = ({ filter, params }: RequestConfig) => {
+export const useChildAccounts = ({ filter, params }: RequestOptions) => {
   const { data: grants } = useGrants();
 
   return useQuery<ResourcePage<Account>, APIError[]>(

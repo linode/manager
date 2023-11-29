@@ -33,7 +33,7 @@ export interface Params {
   page_size?: number;
 }
 
-export interface RequestConfig {
+export interface RequestOptions {
   params?: Params;
   filter?: Filter;
   headers?: AxiosRequestHeaders;
