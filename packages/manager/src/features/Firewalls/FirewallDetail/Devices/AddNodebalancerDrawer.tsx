@@ -173,8 +173,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
     }
   }, [error]);
 
-  // const nodebalancers = data?.filter(optionsFilter);
-
   return (
     <Drawer
       onClose={() => {
