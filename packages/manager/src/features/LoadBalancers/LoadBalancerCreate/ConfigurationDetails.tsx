@@ -10,8 +10,6 @@ import { Typography } from 'src/components/Typography';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
-type Configurations = Pick<CreateLoadbalancerPayload, 'configurations'>;
-
 const protocolOptions = [
   { label: 'HTTPS', value: 'https' },
   { label: 'HTTP', value: 'http' },
@@ -23,9 +21,12 @@ interface Props {
 }
 
 export const ConfigurationDetails = ({ index }: Props) => {
-  const { errors, handleChange, setFieldValue, values } = useFormikContext<{
-    configurations: Configurations;
-  }>();
+  const {
+    errors,
+    handleChange,
+    setFieldValue,
+    values,
+  } = useFormikContext<CreateLoadbalancerPayload>();
 
   return (
     <Grid padding={1}>
@@ -44,7 +45,8 @@ export const ConfigurationDetails = ({ index }: Props) => {
               labelTooltipText: 'TODO',
             }}
             value={protocolOptions.find(
-              (option) => option.value === values.configurations[index].protocol
+              (option) =>
+                option.value === values.configurations?.[index]?.protocol
             )}
             disableClearable
             errorText={errors[`configurations.${index}.protocol`]}
@@ -58,7 +60,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
             name={`configurations.${index}.port`}
             onChange={handleChange}
             placeholder="Enter Port"
-            value={values.configurations[index].port}
+            value={values.configurations?.[index]?.port}
           />
         </Stack>
         <Stack maxWidth="600px">
@@ -78,7 +80,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
         name={`configurations.${index}.label`}
         onChange={handleChange}
         placeholder="Enter Configuration Label"
-        value={values.configurations[index].label}
+        value={values.configurations?.[index]?.label}
       />
     </Grid>
   );
