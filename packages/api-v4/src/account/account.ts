@@ -5,6 +5,7 @@ import {
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
+  setHeaders,
   setMethod,
   setURL,
   setParams,
@@ -20,8 +21,7 @@ import {
   RegionalNetworkUtilization,
 } from './types';
 import { Filter, ResourcePage, Params } from 'src/types';
-import { Token, TokenRequest } from 'src/profile';
-import { createPersonalAccessTokenSchema } from '@linode/validation/lib/profile.schema';
+import { Token } from 'src/profile';
 
 /**
  * getAccountInfo
@@ -173,7 +173,7 @@ export const getChildAccounts = (params?: Params, filter?: Filter) =>
  * except that it will return account details for only a specific euuid.
  */
 export const getChildAccount = (euuid: string) =>
-  Request<{}>(
+  Request<Account>(
     setURL(`${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}`),
     setMethod('GET')
   );
@@ -186,15 +186,18 @@ export const getChildAccount = (euuid: string) =>
  * that child account. As noted in previous sections, this Token will inherit the
  * permissions of the Proxy User, and the token itself will not be subject to additional
  * restrictions.
+ *
+ * The `parentToken` will be used for creating tokens from within the proxy account.
  */
 export const createChildAccountPersonalAccessToken = (
   euuid: string,
-  data: TokenRequest
+  parentToken?: string
 ) =>
   Request<Token>(
     setURL(
       `${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}/token`
     ),
     setMethod('POST'),
-    setData(data, createPersonalAccessTokenSchema)
+    setHeaders({ Authorization: `Bearer ${parentToken}` }),
+    setData(euuid)
   );
