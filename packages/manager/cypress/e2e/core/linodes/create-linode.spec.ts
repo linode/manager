@@ -33,20 +33,24 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 const mockRegions: Region[] = [
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'uk',
     id: 'eu-west',
     label: 'London, UK',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'sg',
     id: 'ap-south',
     label: 'Singapore, SG',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     id: 'us-east',
     label: 'Newark, NJ',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     id: 'us-central',
     label: 'Dallas, TX',
   }),
