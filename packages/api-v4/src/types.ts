@@ -1,3 +1,5 @@
+import { AxiosRequestHeaders } from 'axios';
+
 export interface APIError {
   field?: string;
   reason: string;
@@ -29,6 +31,12 @@ export type DeepPartial<T> = {
 export interface Params {
   page?: number;
   page_size?: number;
+}
+
+export interface RequestConfig {
+  params?: Params;
+  filter?: Filter;
+  headers?: AxiosRequestHeaders;
 }
 
 interface FilterConditionTypes {

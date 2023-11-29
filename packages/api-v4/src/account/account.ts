@@ -19,8 +19,9 @@ import {
   CancelAccountPayload,
   Agreements,
   RegionalNetworkUtilization,
+  ChildAccountPayload,
 } from './types';
-import { Filter, ResourcePage, Params } from 'src/types';
+import { Filter, ResourcePage, Params, RequestConfig } from 'src/types';
 import { Token } from 'src/profile';
 
 /**
@@ -158,7 +159,7 @@ export const signAgreement = (data: Partial<Agreements>) => {
  * This endpoint will return a paginated list of all Child Accounts with a Parent Account.
  * The response would be similar to /account, except that it would list details for multiple accounts.
  */
-export const getChildAccounts = (params?: Params, filter?: Filter) =>
+export const getChildAccounts = ({ filter, params }: RequestConfig) =>
   Request<ResourcePage<Account>>(
     setURL(`${API_ROOT}/account/child-accounts`),
     setMethod('GET'),
@@ -172,7 +173,7 @@ export const getChildAccounts = (params?: Params, filter?: Filter) =>
  * This endpoint will function similarly to /account/child-accounts,
  * except that it will return account details for only a specific euuid.
  */
-export const getChildAccount = (euuid: string) =>
+export const getChildAccount = ({ euuid }: ChildAccountPayload) =>
   Request<Account>(
     setURL(`${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}`),
     setMethod('GET')
@@ -189,15 +190,15 @@ export const getChildAccount = (euuid: string) =>
  *
  * The `parentToken` will be used for creating tokens from within the proxy account.
  */
-export const createChildAccountPersonalAccessToken = (
-  euuid: string,
-  parentToken?: string
-) =>
+export const createChildAccountPersonalAccessToken = ({
+  euuid,
+  headers,
+}: ChildAccountPayload) =>
   Request<Token>(
     setURL(
       `${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}/token`
     ),
     setMethod('POST'),
-    setHeaders({ Authorization: `Bearer ${parentToken}` }),
+    setHeaders(headers),
     setData(euuid)
   );

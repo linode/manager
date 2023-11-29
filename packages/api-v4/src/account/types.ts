@@ -1,5 +1,5 @@
-import { APIWarning } from '../types';
-import type { Capabilities, Region } from '../regions';
+import { APIWarning, RequestConfig } from 'src/types';
+import type { Capabilities, Region } from 'src/regions';
 
 export interface User {
   username: string;
@@ -223,7 +223,7 @@ export interface CancelAccountPayload {
   comments: string;
 }
 
-export interface CreateChildAccountPersonalAccessTokenPayload {
+export interface ChildAccountPayload extends RequestConfig {
   euuid: string;
 }
 

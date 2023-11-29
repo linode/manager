@@ -1,20 +1,19 @@
 import {
-  Account,
-  CreateChildAccountPersonalAccessTokenPayload,
   createChildAccountPersonalAccessToken,
   getAccountInfo,
   getChildAccount,
   getChildAccounts,
   updateAccountInfo,
 } from '@linode/api-v4/lib/account';
-import { Token } from '@linode/api-v4/lib/profile/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 
 import { queryPresets } from './base';
 
-import type { APIError, Filter, Params } from '@linode/api-v4';
+import type { APIError, RequestConfig } from '@linode/api-v4';
+import type { Account, ChildAccountPayload } from '@linode/api-v4/lib/account';
+import type { Token } from '@linode/api-v4/lib/profile/types';
 
 export const queryKey = 'account';
 
@@ -38,12 +37,12 @@ export const useMutateAccount = () => {
   });
 };
 
-export const useChildAccounts = (params?: Params, filters?: Filter) => {
+export const useChildAccounts = ({ filter, params }: RequestConfig) => {
   const { data: grants } = useGrants();
 
   return useQuery<Account, APIError[]>(
-    [queryKey, 'childAccounts', 'paginated', params, filters],
-    () => getChildAccounts(params, filters),
+    [queryKey, 'childAccounts', 'paginated', params, filter],
+    () => getChildAccounts({ filter, params }),
     {
       enabled: Boolean(grants?.global?.child_account_access),
       keepPreviousData: true,
@@ -51,34 +50,31 @@ export const useChildAccounts = (params?: Params, filters?: Filter) => {
   );
 };
 
-export const useChildAccount = (euuid: string) => {
+export const useChildAccount = ({ euuid }: ChildAccountPayload) => {
   const { data: grants } = useGrants();
   return useQuery<Account, APIError[]>(
     [queryKey, 'childAccounts', 'childAccount', euuid],
-    () => getChildAccount(euuid),
+    () => getChildAccount({ euuid }),
     { enabled: Boolean(grants?.global?.child_account_access) }
   );
 };
 
-export const useCreateChildAccountPersonalAccessTokenMutation = (
-  euuid: string,
-  parentToken?: string
-) => {
+export const useCreateChildAccountPersonalAccessTokenMutation = ({
+  euuid,
+  headers,
+}: ChildAccountPayload) => {
   const { data: grants } = useGrants();
+  const hasExplictAuthToken = headers?.hasAuthorization();
 
-  return useQuery<
-    Token,
-    APIError[],
-    CreateChildAccountPersonalAccessTokenPayload
-  >(
+  return useQuery<Token, APIError[], ChildAccountPayload>(
     [queryKey, 'childAccounts', 'childAccount', euuid, 'personal-access-token'],
-    () => createChildAccountPersonalAccessToken(euuid, parentToken),
+    () => createChildAccountPersonalAccessToken({ euuid, headers }),
     {
-      // If the parentToken param is provided, we're going to assume it's the parent account
+      // If the header has an authorization defined, we're going to assume it's the parent account
       // This is to avoid having to add more logic to useGrants and useProfile.
-      // The API will return an error if the parentToken does not have the child_account_access grant.
+      // The API will return an error if the parent account does not have the child_account_access grant.
       enabled:
-        Boolean(grants?.global?.child_account_access) || Boolean(parentToken),
+        Boolean(grants?.global?.child_account_access) || hasExplictAuthToken,
     }
   );
 };
