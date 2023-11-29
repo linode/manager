@@ -1024,7 +1024,7 @@ export const handlers = [
     });
     const atlanta = accountAvailabilityFactory.build({
       id: 'us-southeast',
-      unavailable: ['Block Storage'],
+      unavailable: ['Block Storage', 'Managed Databases'],
     });
     const singapore = accountAvailabilityFactory.build({
       id: 'ap-south',
