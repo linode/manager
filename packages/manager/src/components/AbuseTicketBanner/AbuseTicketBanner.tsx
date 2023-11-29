@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Typography } from 'src/components/Typography';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';

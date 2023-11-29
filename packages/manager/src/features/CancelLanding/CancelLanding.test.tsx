@@ -35,7 +35,7 @@ describe('CancelLanding', () => {
   it('navigates to the survey link when the button is clicked', () => {
     // Mock window.location.assign.
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
-    const mockAssign = jest.fn();
+    const mockAssign = vi.fn();
     delete (window as Partial<Window>).location;
     // eslint-disable-next-line
     window.location = { ...realLocation, assign: mockAssign };

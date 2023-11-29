@@ -7,14 +7,14 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SubnetActionMenu } from './SubnetActionMenu';
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 const props = {
-  handleAssignLinodes: jest.fn(),
-  handleDelete: jest.fn(),
-  handleEdit: jest.fn(),
-  handleUnassignLinodes: jest.fn(),
+  handleAssignLinodes: vi.fn(),
+  handleDelete: vi.fn(),
+  handleEdit: vi.fn(),
+  handleUnassignLinodes: vi.fn(),
   numLinodes: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,

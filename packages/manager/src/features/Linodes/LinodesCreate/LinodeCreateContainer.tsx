@@ -38,6 +38,10 @@ import {
   withLinodes,
 } from 'src/containers/withLinodes.container';
 import {
+  WithMarketplaceAppsProps,
+  withMarketplaceApps,
+} from 'src/containers/withMarketplaceApps';
+import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
@@ -46,7 +50,7 @@ import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
 import {
-  queryKey as accountAgreementsQueryKey,
+  accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import { simpleMutationHandlers } from 'src/queries/base';
@@ -59,8 +63,12 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import {
+  getGDPRDetails,
+  getSelectedRegionGroup,
+} from 'src/utilities/formatRegion';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { getPrice } from 'src/utilities/pricing/linodes';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -77,11 +85,7 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import {
-  WithMarketplaceAppsProps,
-  withMarketplaceApps,
-} from 'src/containers/withMarketplaceApps';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -94,7 +98,6 @@ interface State {
   availableUserDefinedFields?: UserDefinedField[];
   backupsEnabled: boolean;
   customLabel?: string;
-  dcSpecificPricing?: boolean;
   disabledClasses?: LinodeTypeClass[];
   errors?: APIError[];
   formIsSubmitting: boolean;
@@ -112,8 +115,8 @@ interface State {
   selectedTypeID?: string;
   selectedVPCId?: number;
   selectedfirewallId?: number;
-  showAgreement: boolean;
   showApiAwarenessModal: boolean;
+  showGDPRCheckbox: boolean;
   signedAgreement: boolean;
   tags?: Tag[];
   udfs?: any;
@@ -143,7 +146,6 @@ const defaultState: State = {
   autoassignIPv4WithinVPCEnabled: true,
   backupsEnabled: false,
   customLabel: undefined,
-  dcSpecificPricing: false,
   disabledClasses: [],
   errors: undefined,
   formIsSubmitting: false,
@@ -161,8 +163,8 @@ const defaultState: State = {
   selectedTypeID: undefined,
   selectedVPCId: undefined,
   selectedfirewallId: undefined,
-  showAgreement: false,
   showApiAwarenessModal: false,
+  showGDPRCheckbox: false,
   signedAgreement: false,
   tags: [],
   udfs: undefined,
@@ -208,12 +210,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     /**
-     * The flag state gets lost when navigating between create types,
-     * so we need to keep it up to date here.
-     */
-    this.setState({ dcSpecificPricing: this.props.flags.dcSpecificPricing });
-
-    /**
      * When switching to a creation flow where
      * having a pre-selected image is problematic,
      * deselect it.
@@ -224,9 +220,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     // Update search params for Linode Clone
     if (prevProps.location.search !== this.props.history.location.search) {
+      const { showGDPRCheckbox } = getGDPRDetails({
+        agreements: this.props.agreements?.data,
+        profile: this.props.profile.data,
+        regions: this.props.regionsData,
+        selectedRegionId: this.params.regionID,
+      });
+
       this.params = getQueryParamsFromQueryString(
         this.props.location.search
       ) as Record<string, string>;
+
+      this.setState({
+        showGDPRCheckbox,
+      });
     }
   }
 
@@ -282,6 +289,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             regionDisplayInfo={this.getRegionInfo()}
             regionsData={regionsData}
             resetCreationState={this.clearCreationState}
+            selectedRegionID={this.state.selectedRegionID}
             selectedUDFs={selectedUDFs}
             selectedVPCId={this.state.selectedVPCId}
             setAuthorizedUsers={this.setAuthorizedUsers}
@@ -477,7 +485,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleSubnetChange = (subnetID: number) => {
-    this.setState({ selectedSubnetId: subnetID });
+    this.setState((prevState) => ({
+      errors: prevState.errors?.filter(
+        (error) => error.field !== 'interfaces[0].subnet_id'
+      ),
+      selectedSubnetId: subnetID,
+    }));
   };
 
   handleVLANChange = (updatedInterface: Interface) => {
@@ -488,11 +501,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleVPCChange = (vpcId: number) => {
-    this.setState({
-      selectedSubnetId: undefined, // Ensure the selected subnet is cleared
-      selectedVPCId: vpcId,
-      vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
-    });
+    // Only clear VPC related fields if VPC selection changes
+    if (vpcId !== this.state.selectedVPCId) {
+      this.setState({
+        selectedSubnetId: undefined, // Ensure the selected subnet is cleared
+        selectedVPCId: vpcId,
+        vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
+      });
+    }
   };
 
   handleVPCIPv4Change = (IPv4: string) => {
@@ -505,12 +521,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   >;
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
-    const { dcSpecificPricing, selectedRegionID } = this.state;
+    const { selectedRegionID } = this.state;
 
-    const linodePrice: PriceObject | undefined = getPrice(
+    const linodePrice: PriceObject | undefined = getLinodeRegionPrice(
       type,
-      selectedRegionID,
-      dcSpecificPricing
+      selectedRegionID
     );
 
     return (
@@ -577,19 +592,25 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setPassword = (password: string) => this.setState({ password });
 
-  setRegionID = (id: string) => {
-    const disabledClasses = getDisabledClasses(id, this.props.regionsData);
+  setRegionID = (selectedRegionId: string) => {
+    const { showGDPRCheckbox } = getGDPRDetails({
+      agreements: this.props.agreements?.data,
+      profile: this.props.profile.data,
+      regions: this.props.regionsData,
+      selectedRegionId,
+    });
+
+    const disabledClasses = getDisabledClasses(
+      selectedRegionId,
+      this.props.regionsData
+    );
     this.setState({
       disabledClasses,
-      selectedRegionID: id,
+      selectedRegionID: selectedRegionId,
       // When the region gets changed, ensure the VPC-related selections are cleared
       selectedSubnetId: undefined,
       selectedVPCId: -1,
-      showAgreement: Boolean(
-        !this.props.profile.data?.restricted &&
-          isEURegion(id) &&
-          !this.props.agreements?.data?.eu_model
-      ),
+      showGDPRCheckbox,
       vpcIPv4AddressOfLinode: '',
     });
   };
@@ -663,10 +684,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedRegionID: this.params.regionID,
     // These can be passed in as query params
     selectedTypeID: this.params.typeID,
-    showAgreement: Boolean(
+    showGDPRCheckbox: Boolean(
       !this.props.profile.data?.restricted &&
-        isEURegion(this.params.regionID) &&
-        !this.props.agreements?.data?.eu_model
+        isEURegion(
+          getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
+        ) &&
+        this.props.agreements?.data?.eu_model
     ),
     signedAgreement: false,
   };

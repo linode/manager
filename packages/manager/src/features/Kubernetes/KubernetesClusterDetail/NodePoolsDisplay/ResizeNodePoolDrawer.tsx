@@ -9,7 +9,6 @@ import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -17,7 +16,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
-import { getPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
 
@@ -29,9 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(3),
   },
   summary: {
+    fontFamily: theme.font.bold,
     fontSize: '16px',
-    fontWeight: 'bold',
-    lineHeight: '20px',
   },
 }));
 
@@ -68,8 +66,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
 
-  const flags = useFlags();
-
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
   );
@@ -99,17 +95,13 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = getPrice(
-    planType,
-    kubernetesRegionId,
-    flags.dcSpecificPricing
-  )?.monthly;
+  const pricePerNode = getLinodeRegionPrice(planType, kubernetesRegionId)
+    ?.monthly;
 
   const totalMonthlyPrice =
     planType &&
     getKubernetesMonthlyPrice({
       count: nodePool.count,
-      flags,
       region: kubernetesRegionId,
       type: nodePool.type,
       types: planType ? [planType] : [],

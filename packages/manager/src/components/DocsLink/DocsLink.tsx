@@ -17,6 +17,8 @@ export interface DocsLinkProps {
   label?: string;
   /** A callback function when the link is clicked */
   onClick?: () => void;
+  /*  */
+  icon?: JSX.Element;
 }
 
 /**
@@ -25,7 +27,7 @@ export interface DocsLinkProps {
  * - Consider displaying the title of a key guide or product document as the link instead of the generic “Docs”.
  */
 export const DocsLink = (props: DocsLinkProps) => {
-  const { analyticsLabel, href, label, onClick } = props;
+  const { analyticsLabel, href, label, onClick, icon } = props;
 
   return (
     <StyledDocsLink
@@ -39,7 +41,7 @@ export const DocsLink = (props: DocsLinkProps) => {
       className="docsButton"
       to={href}
     >
-      <DocsIcon />
+      {icon ?? <DocsIcon />}
       {label ?? 'Docs'}
     </StyledDocsLink>
   );

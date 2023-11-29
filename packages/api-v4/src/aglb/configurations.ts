@@ -7,7 +7,15 @@ import Request, {
 } from '../request';
 import { Filter, Params, ResourcePage } from '../types';
 import { BETA_API_ROOT } from '../constants';
-import type { Configuration, ConfigurationPayload } from './types';
+import type {
+  Configuration,
+  ConfigurationPayload,
+  UpdateConfigurationPayload,
+} from './types';
+import {
+  CreateConfigurationSchema,
+  UpdateConfigurationSchema,
+} from '@linode/validation';
 
 /**
  * getLoadbalancerConfigurations
@@ -63,7 +71,7 @@ export const createLoadbalancerConfiguration = (
         loadbalancerId
       )}/configurations`
     ),
-    setData(data),
+    setData(data, CreateConfigurationSchema),
     setMethod('POST')
   );
 
@@ -75,7 +83,7 @@ export const createLoadbalancerConfiguration = (
 export const updateLoadbalancerConfiguration = (
   loadbalancerId: number,
   configurationId: number,
-  data: Partial<Configuration>
+  data: UpdateConfigurationPayload
 ) =>
   Request<Configuration>(
     setURL(
@@ -83,7 +91,7 @@ export const updateLoadbalancerConfiguration = (
         loadbalancerId
       )}/configurations/${encodeURIComponent(configurationId)}`
     ),
-    setData(data),
+    setData(data, UpdateConfigurationSchema),
     setMethod('PUT')
   );
 

@@ -112,6 +112,14 @@ export interface Configuration {
   routes: { id: number; label: string }[];
 }
 
+export type UpdateConfigurationPayload = Partial<{
+  label: string;
+  port: number;
+  protocol: Protocol;
+  certificates: CertificateConfig[];
+  route_ids: number[];
+}>;
+
 export interface CertificateConfig {
   hostname: string;
   id: number;
@@ -137,9 +145,10 @@ export interface RouteServiceTargetPayload {
 
 export interface ServiceTargetPayload {
   label: string;
+  protocol: Protocol;
   percentage: number;
   endpoints: Endpoint[];
-  ca_certificate: string;
+  certificate_id: number | null;
   load_balancing_policy: Policy;
   healthcheck: HealthCheck;
 }

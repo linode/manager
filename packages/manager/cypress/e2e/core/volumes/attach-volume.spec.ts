@@ -11,7 +11,7 @@ import {
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
-import { interceptGetLinodeConfigs } from 'support/intercepts/linodes';
+import { interceptGetLinodeConfigs } from 'support/intercepts/configs';
 import { cleanUp } from 'support/util/cleanup';
 
 // Local storage override to force volume table to list up to 100 items.

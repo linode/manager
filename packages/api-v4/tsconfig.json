@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "types": ["vitest/globals"],
     "module": "umd",
     "emitDeclarationOnly": true,
     "declaration": true,

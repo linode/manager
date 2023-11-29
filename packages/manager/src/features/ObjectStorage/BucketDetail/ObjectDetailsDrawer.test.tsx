@@ -10,17 +10,21 @@ import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 
 import type { ObjectDetailsDrawerProps } from './ObjectDetailsDrawer';
 
-jest.mock('@linode/api-v4/lib/object-storage/objects', () => {
+vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
+  const actual = await vi.importActual<any>(
+    '@linode/api-v4/lib/object-storage/objects'
+  );
   return {
-    getObjectACL: jest.fn().mockResolvedValue({
+    ...actual,
+    getObjectACL: vi.fn().mockResolvedValue({
       acl: 'public-read',
       acl_xml: 'long xml string',
     }),
-    updateObjectACL: jest.fn().mockResolvedValue({}),
+    updateObjectACL: vi.fn().mockResolvedValue({}),
   };
 });
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const props: ObjectDetailsDrawerProps = {
   bucketName: 'my-bucket',
@@ -28,7 +32,7 @@ const props: ObjectDetailsDrawerProps = {
   displayName: 'my-image.png',
   lastModified: '2019-12-31T23:59:59Z',
   name: 'my-dir/my-image.png',
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   size: 12345,
   url: 'https://my-bucket.cluster-id.linodeobjects.com/my-image.png',

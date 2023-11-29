@@ -15,6 +15,11 @@ import { apiMatcher } from 'support/util/intercepts';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { userPreferencesFactory } from '@src/factories';
+import {
+  mockGetUserPreferences,
+  mockUpdateUserPreferences,
+} from 'support/intercepts/profile';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -360,12 +365,27 @@ describe('linode landing checks', () => {
   });
 
   it('checks summary view for linode table', () => {
+    const mockPreferencesListView = userPreferencesFactory.build({
+      linodes_view_style: 'list',
+    });
+
+    const mockPreferencesSummaryView = {
+      ...mockPreferencesListView,
+      linodes_view_style: 'grid',
+    };
+
     mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetUserPreferences(mockPreferencesListView).as('getUserPreferences');
+    mockUpdateUserPreferences(mockPreferencesSummaryView).as(
+      'updateUserPreferences'
+    );
+
     cy.visitWithLogin('/linodes');
-    cy.wait('@getLinodes');
+    cy.wait(['@getLinodes', '@getUserPreferences']);
 
     // Check 'Summary View' button works as expected that can be visiable, enabled and clickable
     getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+    cy.wait('@updateUserPreferences');
 
     mockLinodes.forEach((linode) => {
       cy.findByText(linode.label)
@@ -373,7 +393,7 @@ describe('linode landing checks', () => {
         .closest('[data-qa-linode-card]')
         .within(() => {
           cy.findByText('Summary').should('be.visible');
-          cy.findByText('IP Addresses').should('be.visible');
+          cy.findByText('Public IP Addresses').should('be.visible');
           cy.findByText('Access').should('be.visible');
 
           cy.findByText('Plan:').should('be.visible');
@@ -387,7 +407,7 @@ describe('linode landing checks', () => {
     getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
 
     cy.findByText('Summary').should('not.exist');
-    cy.findByText('IP Addresses').should('not.exist');
+    cy.findByText('Public IP Addresses').should('not.exist');
     cy.findByText('Access').should('not.exist');
 
     cy.findByText('Plan:').should('not.exist');

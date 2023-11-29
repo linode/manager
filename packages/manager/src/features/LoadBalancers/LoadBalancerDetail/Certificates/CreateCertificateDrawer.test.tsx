@@ -8,7 +8,7 @@ import { CreateCertificateDrawer } from './CreateCertificateDrawer';
 
 describe('CreateCertificateDrawer', () => {
   it('should be submittable when form is filled out correctly', async () => {
-    const onClose = jest.fn();
+    const onClose = vi.fn();
 
     const { getByLabelText, getByTestId } = renderWithTheme(
       <CreateCertificateDrawer

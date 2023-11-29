@@ -5,7 +5,12 @@ import {
   getLoadbalancerRoutes,
   updateLoadbalancerRoute,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
@@ -25,7 +30,7 @@ export const useLoadBalancerRoutesQuery = (
   filter: Filter
 ) => {
   return useQuery<ResourcePage<Route>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'routes', params, filter],
+    [QUERY_KEY, 'loadbalancer', id, 'routes', 'paginated', params, filter],
     () => getLoadbalancerRoutes(id, params, filter),
     { keepPreviousData: true }
   );
@@ -66,7 +71,13 @@ export const useLoadBalancerRouteUpdateMutation = (
         ]);
       },
       onMutate(variables) {
-        const key = [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'];
+        const key = [
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+          'paginated',
+        ];
         // Optimistically update the route on mutate
         updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
       },
@@ -89,6 +100,25 @@ export const useLoadBalancerRouteDeleteMutation = (
           loadbalancerId,
           'routes',
         ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerRoutesInfiniteQuery = (
+  id: number,
+  filter: Filter = {}
+) => {
+  return useInfiniteQuery<ResourcePage<Route>, APIError[]>(
+    [QUERY_KEY, 'loadbalancer', id, 'routes', 'infinite', filter],
+    ({ pageParam }) =>
+      getLoadbalancerRoutes(id, { page: pageParam, page_size: 25 }, filter),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
       },
     }
   );

@@ -7,6 +7,7 @@ import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
 import type { Disk, Linode, LinodeType, Volume } from '@linode/api-v4/types';
+import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts POST request to create a Linode.
@@ -82,22 +83,6 @@ export const interceptGetLinodeDetails = (
 };
 
 /**
- * Intercepts GET request to retrieve Linode configs.
- *
- * @param linodeId - ID of Linode for intercepted request.
- *
- * @returns Cypress chainable.
- */
-export const interceptGetLinodeConfigs = (
-  linodeId: number
-): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'GET',
-    apiMatcher(`linode/instances/${linodeId}/configs*`)
-  );
-};
-
-/**
  * Intercepts GET request to retrieve Linode details and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.
@@ -136,6 +121,43 @@ export const mockGetLinodeVolumes = (
 };
 
 /**
+ * Intercepts POST request to rebuild a Linode.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptRebuildLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/rebuild`)
+  );
+};
+
+/**
+ * Intercepts POST request to rebuild a Linode and mocks an error response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRebuildLinodeError = (
+  linodeId: number,
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/rebuild`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
  * Intercepts POST request to reboot a Linode.
  *
  * @param linodeId - ID of Linode for intercepted request.
@@ -164,6 +186,27 @@ export const interceptRebootLinodeIntoRescueMode = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/rescue`)
+  );
+};
+
+/**
+ * Intercepts POST request to reboot a Linode into rescue mode and mocks error response.
+ *
+ * @param linodeId - ID of Linode to reboot into rescue mode.
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRebootLinodeIntoRescueModeError = (
+  linodeId: number,
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/rescue`),
+    makeErrorResponse(errorMessage, statusCode)
   );
 };
 

@@ -9,7 +9,10 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerCertificateMutation } from 'src/queries/aglb/certificates';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+
+import { CERTIFICATES_COPY, labelMap } from './constants';
 
 interface Props {
   certificate: Certificate | undefined;
@@ -17,18 +20,6 @@ interface Props {
   onClose: () => void;
   open: boolean;
 }
-
-export const labelMap: Record<Certificate['type'], string> = {
-  ca: 'Server Certificate',
-  downstream: 'TLS Certificate',
-};
-
-/* TODO: AGLB - Update with final copy. */
-const descriptionMap: Record<Certificate['type'], string> = {
-  ca: 'You can edit this cert here. Maybe something about service targets.',
-  downstream:
-    'You can edit this cert here. Perhaps something about the private key and the hos header and what it does.',
-};
 
 export const EditCertificateDrawer = (props: Props) => {
   const { certificate, loadbalancerId, onClose: _onClose, open } = props;
@@ -55,26 +46,29 @@ export const EditCertificateDrawer = (props: Props) => {
         certificate?.certificate.trim() === values.certificate &&
         values.key === '';
 
-      await updateCertificate({
-        certificate:
-          values.certificate && !shouldIgnoreField
-            ? values.certificate
-            : undefined,
-        key: values.key && !shouldIgnoreField ? values.key : undefined,
-        label: values.label,
-        type: values.type,
-      });
-      onClose();
+      try {
+        await updateCertificate({
+          certificate:
+            values.certificate && !shouldIgnoreField
+              ? values.certificate
+              : undefined,
+          key: values.key && !shouldIgnoreField ? values.key : undefined,
+          label: values.label,
+          type: values.type,
+        });
+        onClose();
+      } catch (errors) {
+        formik.setErrors(getFormikErrorsFromAPIErrors(errors));
+        scrollErrorIntoView();
+      }
     },
+    // Disabling validateOnBlur and validateOnChange when an API error is shown prevents
+    // all API errors from disappearing when one field is changed.
+    validateOnBlur: !error,
+    validateOnChange: !error,
   });
 
-  const errorFields = ['label', 'certificate'];
-
-  if (certificate?.type === 'downstream') {
-    errorFields.push('key');
-  }
-
-  const errorMap = getErrorMap(errorFields, error);
+  const generalError = error?.find((e) => !e.field)?.reason;
 
   const onClose = () => {
     formik.resetForm();
@@ -89,17 +83,16 @@ export const EditCertificateDrawer = (props: Props) => {
       title={`Edit ${certificate?.label ?? 'Certificate'}`}
       wide
     >
-      {errorMap.none && <Notice variant="error">{errorMap.none}</Notice>}
+      {generalError && <Notice variant="error">{generalError}</Notice>}
       {!certificate ? (
         <Notice variant="error">Error loading certificate.</Notice>
       ) : (
         <form onSubmit={formik.handleSubmit}>
-          {errorMap.none && <Notice text={errorMap.none} variant="error" />}
           <Typography sx={{ marginBottom: theme.spacing(2) }}>
-            {descriptionMap[certificate.type]}
+            {CERTIFICATES_COPY.Edit[certificate.type]}
           </Typography>
           <TextField
-            errorText={errorMap.label}
+            errorText={formik.errors.label}
             expand
             label="Certificate Label"
             name="label"
@@ -107,10 +100,10 @@ export const EditCertificateDrawer = (props: Props) => {
             value={formik.values.label}
           />
           <TextField
-            errorText={errorMap.certificate}
+            errorText={formik.errors.certificate}
             expand
             label={labelMap[certificate.type]}
-            labelTooltipText="TODO: AGLB"
+            labelTooltipText={CERTIFICATES_COPY.Tooltips.Certificate}
             multiline
             name="certificate"
             onChange={formik.handleChange}
@@ -119,10 +112,10 @@ export const EditCertificateDrawer = (props: Props) => {
           />
           {certificate?.type === 'downstream' && (
             <TextField
-              errorText={errorMap.key}
+              errorText={formik.errors.key}
               expand
               label="Private Key"
-              labelTooltipText="TODO: AGLB"
+              labelTooltipText={CERTIFICATES_COPY.Tooltips.Key}
               multiline
               name="key"
               onChange={formik.handleChange}

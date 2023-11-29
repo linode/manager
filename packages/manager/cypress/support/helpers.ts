@@ -10,6 +10,10 @@ export const containsClick = (text) => {
   return cy.contains(text).click();
 };
 
+export const containsPlaceholderClick = (text) => {
+  return cy.get(`[placeholder="${text}"]`).click();
+};
+
 export const getVisible = (element) => {
   return cy.get(element).should(visible);
 };

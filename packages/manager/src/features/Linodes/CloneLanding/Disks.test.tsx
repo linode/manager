@@ -9,7 +9,7 @@ import type { DisksProps } from './Disks';
 
 const disks = [extDisk3, swapDisk];
 
-const mockHandleSelect = jest.fn();
+const mockHandleSelect = vi.fn();
 
 const props: DisksProps = {
   diskSelection: {

@@ -20,28 +20,31 @@ export const UpdateCertificateSchema = object().shape(
         type === 'downstream' && certificate,
       then: string().required('Private Key is required'),
     }),
-    label: string(),
+    label: string().min(1, 'Label must not be empty.'),
     type: string().oneOf(['downstream', 'ca']),
   },
   [['certificate', 'key']]
 );
 
-export const certificateConfigSchema = object({
-  certificates: array(
-    object({
-      id: number()
-        .typeError('Certificate ID must be a number.')
-        .required('Certificate ID is required.')
-        .min(0, 'Certificate ID is required.'),
-      hostname: string().required('A Host Header is required.'),
-    })
-  ),
+const CertificateEntrySchema = object({
+  id: number()
+    .typeError('Certificate ID must be a number.')
+    .required('Certificate ID is required.')
+    .min(0, 'Certificate ID is required.'),
+  hostname: string().required('A Host Header is required.'),
+});
+
+export const CertificateConfigSchema = object({
+  certificates: array(CertificateEntrySchema),
 });
 
 export const EndpointSchema = object({
   ip: string().required('IP is required.'),
   host: string(),
-  port: number().required('Port is required.').min(0).max(65_535),
+  port: number()
+    .required('Port is required.')
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.'),
   rate_capacity: number().required('Rate Capacity is required.'),
 });
 
@@ -57,8 +60,9 @@ const HealthCheckSchema = object({
 
 export const CreateServiceTargetSchema = object({
   label: string().required(LABEL_REQUIRED),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   endpoints: array(EndpointSchema).required(),
-  ca_certificate: string().nullable(),
+  certificate_id: string().nullable(),
   load_balancing_policy: string()
     .required()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev']),
@@ -67,8 +71,9 @@ export const CreateServiceTargetSchema = object({
 
 export const UpdateServiceTargetSchema = object({
   label: string().min(1, 'Label must not be empty.'),
+  protocol: string().oneOf(['tcp', 'http', 'https']),
   endpoints: array(EndpointSchema),
-  ca_certificate: string().nullable(),
+  certificate_id: number().nullable(),
   load_balancing_policy: string().oneOf([
     'round_robin',
     'least_request',
@@ -154,33 +159,61 @@ export const UpdateRouteSchema = object({
   }),
 });
 
-// Endpoint Schema
-const endpointSchema = object().shape({
-  ip: string().test(
-    'ip-or-hostname',
-    'Either IP or hostname must be provided.',
-    function (value) {
-      const { hostname } = this.parent;
-      return !!value || !!hostname;
-    }
-  ),
-  hostname: string().test(
-    'hostname-or-ip',
-    'Either hostname or IP must be provided.',
-    function (value) {
-      const { ip } = this.parent;
-      return !!value || !!ip;
-    }
-  ),
-  port: number().integer().required(),
-  capacity: number().integer().required(),
+export const UpdateConfigurationSchema = object({
+  label: string().min(1, 'Label must not be empty.'),
+  port: number()
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.')
+    .typeError('Port must be a number.'),
+  protocol: string().oneOf(['tcp', 'http', 'https']),
+  certificates: array().when('protocol', {
+    is: 'https',
+    then: (o) =>
+      o
+        .of(CertificateEntrySchema)
+        .min(1, 'Certificates must not be empty for HTTPS configurations.')
+        .required(),
+    otherwise: (o) => o.notRequired(),
+  }),
+  route_ids: array().of(number()),
 });
+
+export const CreateConfigurationSchema = object({
+  label: string()
+    .min(1, 'Label must not be empty.')
+    .required('Label is required.'),
+  port: number()
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.')
+    .typeError('Port must be a number.')
+    .required('Port is required.'),
+  protocol: string().oneOf(['tcp', 'http', 'https']).required(),
+  certificates: array().when('protocol', {
+    is: 'https',
+    then: (o) =>
+      o
+        .of(CertificateEntrySchema)
+        .min(1, 'Certificates must not be empty for HTTPS configurations.')
+        .required(),
+    otherwise: (o) => o.notRequired(),
+  }),
+  route_ids: array().of(number()),
+});
+
+// Endpoint Schema
+const CreateLoadBalancerEndpointSchema = object({
+  ip: string().required(),
+  host: string(),
+  port: number().integer().required(),
+  rate_capacity: number().integer().required(),
+});
+
 // Service Target Schema
-const createLoadBalancerServiceTargetSchema = object({
+const CreateLoadBalancerServiceTargetSchema = object({
   percentage: number().integer().required(),
   label: string().required(),
-  endpoints: array().of(endpointSchema).required(),
-  ca_certificate: string(),
+  endpoints: array().of(CreateLoadBalancerEndpointSchema).required(),
+  certificate_id: number().integer(),
   load_balancing_policy: string()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
     .required(),
@@ -188,7 +221,7 @@ const createLoadBalancerServiceTargetSchema = object({
 });
 
 // Rule Schema
-const createLoadBalancerRuleSchema = object({
+const CreateLoadBalancerRuleSchema = object({
   match_condition: object().shape({
     hostname: string().required(),
     match_field: string()
@@ -198,17 +231,17 @@ const createLoadBalancerRuleSchema = object({
     session_stickiness_cookie: string(),
     session_stickiness_ttl: number().integer(),
   }),
-  service_targets: array().of(createLoadBalancerServiceTargetSchema).required(),
+  service_targets: array().of(CreateLoadBalancerServiceTargetSchema).required(),
 });
 
-export const configurationSchema = object({
+export const ConfigurationSchema = object({
   label: string().required(LABEL_REQUIRED),
-  port: number().required('Port is required.').min(0).max(65_535),
+  port: number().required('Port is required.').min(1).max(65535),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
-  certificates: string().when('protocol', {
-    is: (val: string) => val !== 'http' && val !== 'tcp',
-    then: array().of(certificateConfigSchema).required(),
-    otherwise: array().strip(),
+  certificates: array().when('protocol', {
+    is: (val: string) => val === 'https',
+    then: (o) => o.of(CertificateEntrySchema).required(),
+    otherwise: (o) => o.notRequired(),
   }),
   routes: string().when('protocol', {
     is: 'tcp',
@@ -217,7 +250,7 @@ export const configurationSchema = object({
         object({
           label: string().required(),
           protocol: string().oneOf(['tcp']).required(),
-          rules: array().of(createLoadBalancerRuleSchema).required(),
+          rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
       )
       .required(),
@@ -226,13 +259,14 @@ export const configurationSchema = object({
         object().shape({
           label: string().required(),
           protocol: string().oneOf(['http']).required(),
-          rules: array().of(createLoadBalancerRuleSchema).required(),
+          rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
       )
       .required(),
   }),
 });
-export const createLoadBalancerSchema = object({
+
+export const CreateLoadBalancerSchema = object({
   label: string()
     .matches(
       /^[a-zA-Z0-9.\-_]+$/,
@@ -241,7 +275,7 @@ export const createLoadBalancerSchema = object({
     .required(LABEL_REQUIRED),
   tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
-  configurations: array().of(configurationSchema),
+  configurations: array().of(ConfigurationSchema),
 });
 
 /**

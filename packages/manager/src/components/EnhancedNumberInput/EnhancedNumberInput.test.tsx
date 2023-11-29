@@ -4,7 +4,7 @@ import * as React from 'react';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-const setValue = jest.fn();
+const setValue = vi.fn();
 
 const props = {
   setValue,
@@ -16,7 +16,7 @@ const disabledProps = {
   disabled: true,
 };
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 describe('EnhancedNumberInput', () => {
   it("should increment the input's value by 1 when the plus button is clicked", () => {

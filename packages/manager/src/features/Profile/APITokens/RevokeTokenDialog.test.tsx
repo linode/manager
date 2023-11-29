@@ -10,7 +10,7 @@ import { Props, RevokeTokenDialog } from './RevokeTokenDialog';
 const token = appTokenFactory.build({ label: 'my-token' });
 
 const props: Props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   token,
   type: 'Personal Access Token',

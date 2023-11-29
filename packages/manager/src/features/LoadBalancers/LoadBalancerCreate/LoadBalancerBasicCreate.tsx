@@ -1,3 +1,4 @@
+import { CreateBasicLoadbalancerSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -11,11 +12,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 import { useLoadBalancerBasicCreateMutation } from 'src/queries/aglb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LoadBalancerRegions } from './LoadBalancerRegions';
-import { CreateBasicLoadbalancerSchema } from '@linode/validation';
 
 export const LoadBalancerBasicCreate = () => {
   const {
@@ -63,6 +64,7 @@ export const LoadBalancerBasicCreate = () => {
           ],
           pathname: location.pathname,
         }}
+        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         title="Create"
       />
       <Stack spacing={3}>

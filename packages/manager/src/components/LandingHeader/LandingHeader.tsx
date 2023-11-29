@@ -1,7 +1,9 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { Theme, styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
 import {
   Breadcrumb,
   BreadcrumbProps,
@@ -11,6 +13,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;
+  betaFeedbackLink?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
   buttonDataAttrs?: { [key: string]: boolean | string };
@@ -35,6 +38,7 @@ export interface LandingHeaderProps {
  */
 export const LandingHeader = ({
   analyticsLabel,
+  betaFeedbackLink,
   breadcrumbDataAttrs,
   breadcrumbProps,
   buttonDataAttrs,
@@ -55,6 +59,8 @@ export const LandingHeader = ({
   const theme = useTheme();
   const renderActions = Boolean(onButtonClick || extraActions);
   const labelTitle = title?.toString();
+
+  const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const docsAnalyticsLabel = analyticsLabel
     ? analyticsLabel
@@ -86,6 +92,20 @@ export const LandingHeader = ({
       {!shouldHideDocsAndCreateButtons && (
         <Grid>
           <Grid alignItems="center" container justifyContent="flex-end">
+            {betaFeedbackLink && (
+              <span
+                style={{
+                  marginLeft: xsDown ? `${theme.spacing(2)}` : undefined,
+                  marginRight: `${theme.spacing(2)}`,
+                }}
+              >
+                <DocsLink
+                  href={betaFeedbackLink}
+                  icon={<BetaFeedbackIcon />}
+                  label="BETA Feedback"
+                />
+              </span>
+            )}
             {docsLink ? (
               <DocsLink
                 analyticsLabel={docsAnalyticsLabel}

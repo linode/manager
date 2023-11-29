@@ -132,7 +132,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                 },
                 service_targets: [
                   {
-                    ca_certificate: 'my-cms-certificate',
+                    certificate_id: 0,
                     endpoints: [
                       {
                         ip: '192.168.0.100',
@@ -151,6 +151,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                     },
                     label: 'my-service-target',
                     load_balancing_policy: 'round_robin',
+                    protocol: 'https',
                     percentage: 0,
                   },
                 ],
@@ -261,7 +262,7 @@ export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
 // *************************
 
 export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
-  ca_certificate: 'my-cms-certificate',
+  certificate_id: 0,
   endpoints: [
     {
       ip: '192.168.0.100',
@@ -279,14 +280,15 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
     unhealthy_threshold: 5,
   },
   id: Factory.each((i) => i),
-  label: Factory.each((i) => `images-backend-aws-${i}`),
+  label: Factory.each((i) => `service-target-${i}`),
   load_balancing_policy: 'round_robin',
+  protocol: 'https',
   percentage: 0,
 });
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
   {
-    ca_certificate: 'my-cms-certificate',
+    certificate_id: 0,
     endpoints: [
       {
         ip: '192.168.0.100',
@@ -305,6 +307,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     },
     label: 'my-service-target',
     load_balancing_policy: 'least_request',
+    protocol: 'https',
     percentage: 0,
   }
 );

@@ -13,7 +13,7 @@ import {
 const props: Props = {
   clusterId: 1,
   clusterLabel: 'this-cluster',
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

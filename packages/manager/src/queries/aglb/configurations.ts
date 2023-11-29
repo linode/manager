@@ -1,4 +1,5 @@
 import {
+  createLoadbalancerConfiguration,
   deleteLoadbalancerConfiguration,
   getLoadbalancerConfigurations,
   updateLoadbalancerConfiguration,
@@ -15,9 +16,11 @@ import { QUERY_KEY } from './loadbalancers';
 import type {
   APIError,
   Configuration,
+  ConfigurationPayload,
   Filter,
   Params,
   ResourcePage,
+  UpdateConfigurationPayload,
 } from '@linode/api-v4';
 
 export const useLoadBalancerConfigurationsQuery = (
@@ -59,7 +62,7 @@ export const useLoadBalancerConfigurationMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, APIError[], Partial<Configuration>>(
+  return useMutation<Configuration, APIError[], UpdateConfigurationPayload>(
     (data) =>
       updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
     {
@@ -70,6 +73,32 @@ export const useLoadBalancerConfigurationMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerConfigurationCreateMutation = (
+  loadbalancerId: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Configuration, APIError[], ConfigurationPayload>(
+    (data) => createLoadbalancerConfiguration(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'configurations',
+        ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );
@@ -91,6 +120,9 @@ export const useLoadBalancerConfigurationDeleteMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );

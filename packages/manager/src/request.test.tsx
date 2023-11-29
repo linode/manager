@@ -1,47 +1,51 @@
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
 import { profileFactory } from './factories';
 import { queryClientFactory } from './queries/base';
-import { getURL, handleError, injectEuuidToProfile } from './request';
+import {
+  LinodeError,
+  getURL,
+  handleError,
+  injectEuuidToProfile,
+} from './request';
 import { storeFactory } from './store';
+
+import type { APIError } from '@linode/api-v4';
 
 const store = storeFactory(queryClientFactory());
 
-const baseErrorConfig: AxiosRequestConfig = {
-  headers: {},
-  method: 'POST',
-};
-const baseError = {
-  config: baseErrorConfig,
+const mockAxiosError = {
   isAxiosError: true,
   message: 'helloworld',
   name: 'requestName',
   response: {
-    config: {},
-    data: [],
+    config: {
+      headers: new AxiosHeaders({}),
+    },
+    data: { errors: [{ reason: 'This is a Linode error.' }] },
     headers: {},
     statusText: '',
   },
 };
 const baseErrorWithJson = {
-  ...baseError,
-  toJSON: () => baseError,
+  ...mockAxiosError,
+  toJSON: () => mockAxiosError,
 };
 
-const error400: AxiosError = {
+const error400: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
   response: {
-    ...baseError.response,
+    ...mockAxiosError.response,
     status: 400,
   },
 };
 
-const error401: AxiosError = {
+const error401: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
   response: {
-    ...baseError.response,
+    ...mockAxiosError.response,
     status: 401,
   },
 };
@@ -67,8 +71,8 @@ describe('Expiring Tokens', () => {
       scopes: null,
       token: null,
     });
-    expireToken.catch((e: AxiosError) =>
-      expect(e[0].reason).toMatch(/unexpected error/)
+    expireToken.catch((e: APIError[]) =>
+      expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
     );
   });
 
@@ -92,15 +96,15 @@ describe('Expiring Tokens', () => {
       scopes: '*',
       token: 'helloworld',
     });
-    expireToken.catch((e: AxiosError) =>
-      expect(e[0].reason).toMatch(/unexpected error/)
+    expireToken.catch((e: APIError[]) =>
+      expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
     );
   });
 });
 
 describe('getURL', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   it('replaces the API baseURL with the one from the environment', () => {
@@ -116,7 +120,7 @@ describe('getURL', () => {
 describe('injectEuuidToProfile', () => {
   const profile = profileFactory.build();
   const response: Partial<AxiosResponse> = {
-    config: { method: 'get', url: '/profile' },
+    config: { headers: new AxiosHeaders(), method: 'get', url: '/profile' },
     data: profile,
     headers: { 'x-customer-uuid': '1234' },
     status: 200,

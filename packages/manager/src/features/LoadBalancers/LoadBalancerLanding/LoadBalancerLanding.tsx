@@ -14,6 +14,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import {
+  AGLB_DOCS,
+  AGLB_FEEDBACK_FORM_URL,
+} from 'src/features/LoadBalancers/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
@@ -26,7 +30,7 @@ import { LoadBalancerRow } from './LoadBalancerRow';
 const LOADBALANCER_CREATE_ROUTE = 'loadbalancers/create';
 const preferenceKey = 'loadbalancers';
 
-const LoadBalancerLanding = () => {
+export const LoadBalancerLanding = () => {
   const history = useHistory();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -95,10 +99,11 @@ const LoadBalancerLanding = () => {
       ) : (
         <>
           <LandingHeader
+            betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
             breadcrumbProps={{ pathname: '/loadbalancers' }}
             createButtonText="Create Load Balancer"
             docsLabel="Docs"
-            docsLink="" // TODO: AGLB -  Add docs link
+            docsLink={AGLB_DOCS.GettingStarted}
             entity="Global Load Balancers"
             onButtonClick={createLoadBalancer}
             removeCrumbX={1}
@@ -116,9 +121,11 @@ const LoadBalancerLanding = () => {
                 >
                   Label
                 </TableSortCell>
-                <TableCell>Endpoints</TableCell>
                 <Hidden smDown>
                   <TableCell>Ports</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Hostname</TableCell>
                 </Hidden>
                 <Hidden mdDown>
                   <TableCell>Regions</TableCell>
@@ -156,5 +163,3 @@ const LoadBalancerLanding = () => {
     </>
   );
 };
-
-export default LoadBalancerLanding;

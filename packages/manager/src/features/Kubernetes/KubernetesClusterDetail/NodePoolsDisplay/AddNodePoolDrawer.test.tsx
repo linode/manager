@@ -8,7 +8,7 @@ const props: Props = {
   clusterId: 0,
   clusterLabel: 'test',
   clusterRegionId: 'us-east',
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   regionsData: [],
 };

@@ -36,7 +36,7 @@ import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
@@ -123,8 +123,8 @@ export interface LinodeCreateProps {
   setAuthorizedUsers: (usernames: string[]) => void;
   setBackupID: (id: number) => void;
   setSelectedVPC: (vpcID: number) => void;
-  showAgreement: boolean;
   showApiAwarenessModal: boolean;
+  showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
   toggleAssignPublicIPv4Address: () => void;
@@ -261,8 +261,8 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       regionsLoading,
       selectedRegionID,
-      showAgreement,
       showApiAwarenessModal,
+      showGDPRCheckbox,
       showGeneralError,
       signedAgreement,
       tags,
@@ -349,7 +349,6 @@ export class LinodeCreate extends React.PureComponent<
     const backupsMonthlyPrice:
       | PriceObject['monthly']
       | undefined = getMonthlyBackupsPrice({
-      flags: this.props.flags,
       region: selectedRegionID,
       type,
     });
@@ -552,7 +551,7 @@ export class LinodeCreate extends React.PureComponent<
               handleSelection={this.props.updateRegionID}
               helperText={this.props.regionHelperText}
               regions={regionsData!}
-              selectedID={this.props.selectedRegionID}
+              selectedId={this.props.selectedRegionID}
               selectedLinodeTypeId={this.props.selectedTypeID}
             />
           )}
@@ -575,7 +574,7 @@ export class LinodeCreate extends React.PureComponent<
             linodeID={this.props.selectedLinodeID}
             onSelect={this.props.updateTypeID}
             regionsData={regionsData!}
-            selectedID={this.props.selectedTypeID}
+            selectedId={this.props.selectedTypeID}
             selectedRegionID={selectedRegionID}
             showTransfer
             types={this.filterTypes()}
@@ -681,13 +680,13 @@ export class LinodeCreate extends React.PureComponent<
             alignItems="center"
             display="flex"
             flexWrap="wrap"
-            justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+            justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
           >
-            <StyledMessageDiv showAgreement={!!showAgreement}>
+            <StyledMessageDiv showGDPRCheckbox={!!showGDPRCheckbox}>
               <SMTPRestrictionText>
                 {({ text }) => <Grid xs={12}>{text}</Grid>}
               </SMTPRestrictionText>
-              {showAgreement ? (
+              {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
                   centerCheckbox
                   checked={signedAgreement}
@@ -705,7 +704,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement)
               }
               buttonType="outlined"
               data-qa-api-cli-linode
@@ -717,7 +716,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement)
               }
               buttonType="primary"
               data-qa-deploy-linode
