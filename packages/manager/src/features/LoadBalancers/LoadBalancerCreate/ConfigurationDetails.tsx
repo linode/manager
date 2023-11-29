@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const ConfigurationDetails = ({ index }: Props) => {
-  const { handleChange, setFieldValue, values } = useFormikContext<{
+  const { errors, handleChange, setFieldValue, values } = useFormikContext<{
     configurations: Configurations;
   }>();
 
@@ -47,11 +47,12 @@ export const ConfigurationDetails = ({ index }: Props) => {
               (option) => option.value === values.configurations[index].protocol
             )}
             disableClearable
+            errorText={errors[`configurations.${index}.protocol`]}
             label="Protocol"
             options={protocolOptions}
           />
           <TextField
-            errorText={''}
+            errorText={errors[`configurations.${index}.port`]}
             label="Port"
             labelTooltipText="TODO"
             name={`configurations.${index}.port`}
@@ -72,6 +73,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
         </Stack>
       </Stack>
       <TextField
+        errorText={errors[`configurations.${index}.label`]}
         label="Configuration Label"
         name={`configurations.${index}.label`}
         onChange={handleChange}
