@@ -155,18 +155,18 @@ export const TransferHistory = React.memo((props: Props) => {
       );
     }
 
-    const timeData = combinedData.reduce((acc: any, point: any) => {
-      acc.push({
-        'Public Outbound Traffic': convertNetworkData
-          ? convertNetworkData(point[1])
-          : point[1],
-        t: point[0],
-      });
-      return acc;
-    }, []);
-
-    // @TODO recharts: remove conditional code if charts are stable
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
     if (flags?.recharts) {
+      const timeData = combinedData.reduce((acc: any, point: any) => {
+        acc.push({
+          'Public Outbound Traffic': convertNetworkData
+            ? convertNetworkData(point[1])
+            : point[1],
+          t: point[0],
+        });
+        return acc;
+      }, []);
+
       return (
         <NetworkTransferHistoryChart
           aria-label={graphAriaLabel}
