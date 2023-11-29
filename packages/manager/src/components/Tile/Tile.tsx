@@ -25,7 +25,7 @@ export interface TileProps {
    */
   errorText?: string;
   /**
-   * 'An SVG to display at the top of the Tile.',
+   * An SVG to display at the top of the Tile,
    */
   icon?: JSX.Element;
   /**
