@@ -151,8 +151,8 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                     },
                     label: 'my-service-target',
                     load_balancing_policy: 'round_robin',
-                    protocol: 'https',
                     percentage: 0,
+                    protocol: 'https',
                   },
                 ],
               },
@@ -282,8 +282,8 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `service-target-${i}`),
   load_balancing_policy: 'round_robin',
-  protocol: 'https',
   percentage: 0,
+  protocol: 'https',
 });
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
@@ -307,8 +307,8 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     },
     label: 'my-service-target',
     load_balancing_policy: 'least_request',
-    protocol: 'https',
     percentage: 0,
+    protocol: 'https',
   }
 );
 

@@ -14,13 +14,6 @@ import { LoadBalancerRegions } from './LoadBalancerRegions';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
-const initialValues = {
-  label: '',
-  regions: [],
-};
-
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
-
 const initialValues: CreateLoadbalancerPayload = {
   configurations: [
     {
@@ -44,7 +37,7 @@ const initialValues: CreateLoadbalancerPayload = {
               },
               service_targets: [
                 {
-                  ca_certificate: '', // TODO: AGLB - Need to confirm with API team on this field.
+                  certificate_id: 0,
                   endpoints: [
                     {
                       host: '',
@@ -65,6 +58,7 @@ const initialValues: CreateLoadbalancerPayload = {
                   label: '',
                   load_balancing_policy: 'round_robin',
                   percentage: 0,
+                  protocol: 'tcp',
                 },
               ],
             },
@@ -77,7 +71,7 @@ const initialValues: CreateLoadbalancerPayload = {
   regions: [],
 };
 
-const LoadBalancerCreate = () => {
+export const LoadBalancerCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Load Balancer" />
