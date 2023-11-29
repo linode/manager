@@ -188,7 +188,7 @@ export const getChildAccount = ({ euuid }: ChildAccountPayload) =>
  * permissions of the Proxy User, and the token itself will not be subject to additional
  * restrictions.
  *
- * The `parentToken` will be used for creating tokens from within the proxy account.
+ * setHeaders() will be used for creating tokens from within the proxy account.
  */
 export const createChildAccountPersonalAccessToken = ({
   euuid,

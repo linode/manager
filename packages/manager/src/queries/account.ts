@@ -16,6 +16,7 @@ import type {
   Account,
   ChildAccountPayload,
   RequestConfig,
+  ResourcePage,
   Token,
 } from '@linode/api-v4';
 
@@ -44,7 +45,7 @@ export const useMutateAccount = () => {
 export const useChildAccounts = ({ filter, params }: RequestConfig) => {
   const { data: grants } = useGrants();
 
-  return useQuery<Account, APIError[]>(
+  return useQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
     () => getChildAccounts({ filter, params }),
     {
