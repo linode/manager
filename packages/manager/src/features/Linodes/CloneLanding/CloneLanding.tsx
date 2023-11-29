@@ -22,7 +22,7 @@ import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
