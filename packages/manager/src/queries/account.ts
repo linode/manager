@@ -4,16 +4,20 @@ import {
   getChildAccount,
   getChildAccounts,
   updateAccountInfo,
-} from '@linode/api-v4/lib/account';
+} from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 
 import { queryPresets } from './base';
 
-import type { APIError, RequestConfig } from '@linode/api-v4';
-import type { Account, ChildAccountPayload } from '@linode/api-v4/lib/account';
-import type { Token } from '@linode/api-v4/lib/profile/types';
+import type {
+  APIError,
+  Account,
+  ChildAccountPayload,
+  RequestConfig,
+  Token,
+} from '@linode/api-v4';
 
 export const queryKey = 'account';
 

@@ -1,4 +1,4 @@
-import { AxiosRequestHeaders } from 'axios';
+import type { AxiosRequestHeaders } from 'axios';
 
 export interface APIError {
   field?: string;
