@@ -7,6 +7,7 @@ import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -14,16 +15,24 @@ import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
 import {
   StyledDivWrapper,
   StyledSpan,
-  StyledTableCell,
   StyledTruncateLinks,
 } from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
 export const FirewallRow = React.memo((props: CombinedProps) => {
+  const flags = useFlags();
   const { id, label, rules, status, ...actionHandlers } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
+
+  let featureFlaggedDevices: FirewallDevice[] = devices ?? [];
+  if (!flags.firewallNodebalancer) {
+    featureFlaggedDevices =
+      devices?.filter((thisDevice) => {
+        return thisDevice.entity.type === 'linode';
+      }) ?? [];
+  }
 
   const count = getCountOfRules(rules);
 
@@ -44,18 +53,21 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
-          {getDevicesCellString(devices ?? [], isLoading, error ?? undefined)}
+          {getDevicesCellString(
+            featureFlaggedDevices ?? [],
+            isLoading,
+            error ?? undefined
+          )}
         </TableCell>
       </Hidden>
-      <StyledTableCell actionCell>
+      <TableCell sx={{ textAlign: 'end', whiteSpace: 'nowrap' }}>
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
           {...actionHandlers}
-          style={{ border: '0', padding: '0' }}
         />
-      </StyledTableCell>
+      </TableCell>
     </TableRow>
   );
 });

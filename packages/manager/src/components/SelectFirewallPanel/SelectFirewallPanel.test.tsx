@@ -46,6 +46,7 @@ describe('SelectFirewallPanel', () => {
         selectedFirewallId={-1}
       />,
       {
+        flags: { firewallNodebalancer: true },
         queryClient,
       }
     );
@@ -70,6 +71,7 @@ describe('SelectFirewallPanel', () => {
         selectedFirewallId={-1}
       />,
       {
+        flags: { firewallNodebalancer: true },
         queryClient,
       }
     );

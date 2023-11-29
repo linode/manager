@@ -22,6 +22,7 @@ import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
@@ -33,8 +34,8 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-const FIREWALL_LABEL_TEXT = `Assign services to the firewall.`;
-const FIREWALL_HELPER_TEXT = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
+// const FIREWALL_LABEL_TEXT = `Assign services to the firewall.`;
+// const FIREWALL_HELPER_TEXT = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
 const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to NodeBalancers.`;
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -64,6 +65,7 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
+    const flags = useFlags();
     const { createFlow, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
@@ -165,6 +167,11 @@ export const CreateFirewallDrawer = React.memo(
       validationSchema: CreateFirewallSchema,
     });
 
+    const entityName = flags.firewallNodebalancer ? 'services' : 'Linodes';
+
+    const FirewallLabelText = `Assign ${entityName} to the firewall.`;
+    const FirewallHelperText = `Assign one or more ${entityName} to this firewall. You can add ${entityName} later if you want to customize your rules first.`;
+
     React.useEffect(() => {
       if (open) {
         resetForm();
@@ -247,21 +254,23 @@ export const CreateFirewallDrawer = React.memo(
               })}
               variant="h3"
             >
-              {FIREWALL_LABEL_TEXT}
+              {FirewallLabelText}
             </Typography>
             <Typography>
-              {FIREWALL_HELPER_TEXT}
+              {FirewallHelperText}
               {deviceSelectGuidance ? ` ${deviceSelectGuidance}` : null}
             </Typography>
-            <Typography
-              sx={(theme) => ({
-                margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
-              })}
-            >
-              {NODEBALANCER_HELPER_TEXT}
-              <br />
-              {learnMoreLink}.
-            </Typography>
+            {flags.firewallNodebalancer && (
+              <Typography
+                sx={(theme) => ({
+                  margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
+                })}
+              >
+                {NODEBALANCER_HELPER_TEXT}
+                <br />
+                {learnMoreLink}
+              </Typography>
+            )}
           </Box>
           <LinodeSelect
             label={
@@ -279,24 +288,26 @@ export const CreateFirewallDrawer = React.memo(
             optionsFilter={linodeOptionsFilter}
             value={values.devices?.linodes ?? null}
           />
-          <NodeBalancerSelect
-            label={
-              createFlow === 'nodebalancer'
-                ? NODEBALANCER_CREATE_FLOW_TEXT
-                : 'NodeBalancers'
-            }
-            onSelectionChange={(nodebalancers) => {
-              setFieldValue(
-                'devices.nodebalancers',
-                nodebalancers.map((nodebalancer) => nodebalancer.id)
-              );
-            }}
-            errorText={errors['devices.nodebalancers']}
-            helperText={deviceSelectGuidance}
-            multiple
-            optionsFilter={nodebalancerOptionsFilter}
-            value={values.devices?.nodebalancers ?? null}
-          />
+          {flags.firewallNodebalancer && (
+            <NodeBalancerSelect
+              label={
+                createFlow === 'nodebalancer'
+                  ? NODEBALANCER_CREATE_FLOW_TEXT
+                  : 'NodeBalancers'
+              }
+              onSelectionChange={(nodebalancers) => {
+                setFieldValue(
+                  'devices.nodebalancers',
+                  nodebalancers.map((nodebalancer) => nodebalancer.id)
+                );
+              }}
+              errorText={errors['devices.nodebalancers']}
+              helperText={deviceSelectGuidance}
+              multiple
+              optionsFilter={nodebalancerOptionsFilter}
+              value={values.devices?.nodebalancers ?? null}
+            />
+          )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
