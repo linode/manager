@@ -75,7 +75,7 @@ export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   );
 };
 
-export const useCreateChildAccountPersonalAccessTokenMutation = ({
+export const useCreateChildAccountPersonalAccessToken = ({
   euuid,
   headers,
 }: ChildAccountPayload) => {
