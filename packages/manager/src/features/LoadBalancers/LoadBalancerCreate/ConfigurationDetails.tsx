@@ -54,6 +54,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
             labelTooltipText="TODO"
             name={`configurations.${index}.port`}
             onChange={handleChange}
+            placeholder="Enter Port"
             value={values.configurations[index].port}
           />
         </Stack>
@@ -72,6 +73,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
         label="Configuration Label"
         name={`configurations.${index}.label`}
         onChange={handleChange}
+        placeholder="Enter Configuration Label"
         value={values.configurations[index].label}
       />
     </Grid>
