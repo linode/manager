@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
