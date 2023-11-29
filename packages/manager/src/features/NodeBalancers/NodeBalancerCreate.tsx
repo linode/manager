@@ -29,6 +29,7 @@ import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegion
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -86,6 +87,7 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
+  const flags = useFlags();
   const { data: agreements } = useAccountAgreements();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
@@ -499,25 +501,27 @@ const NodeBalancerCreate = () => {
         regions={regions ?? []}
         selectedId={nodeBalancerFields.region}
       />
-      <SelectFirewallPanel
-        handleFirewallChange={(firewallId: number) => {
-          setNodeBalancerFields((prev) => ({
-            ...prev,
-            firewall_id: firewallId > 0 ? firewallId : undefined,
-          }));
-        }}
-        helperText={
-          <Typography>
-            Assign an existing Firewall to this NodeBalancer to control inbound
-            network traffic. If you want to assign a new Firewall to this
-            NodeBalancer, go to <Link to="/firewalls">Firewalls</Link>.{' '}
-            {/* @TODO Firewall-NodeBalancer: Update link */}
-            <Link to="">Learn more about creating Firewalls</Link>.
-          </Typography>
-        }
-        entityType="nodebalancer"
-        selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
-      />
+      {flags.firewallNodebalancer && (
+        <SelectFirewallPanel
+          handleFirewallChange={(firewallId: number) => {
+            setNodeBalancerFields((prev) => ({
+              ...prev,
+              firewall_id: firewallId > 0 ? firewallId : undefined,
+            }));
+          }}
+          helperText={
+            <Typography>
+              Assign an existing Firewall to this NodeBalancer to control
+              inbound network traffic. If you want to assign a new Firewall to
+              this NodeBalancer, go to <Link to="/firewalls">Firewalls</Link>.{' '}
+              {/* @TODO Firewall-NodeBalancer: Update link */}
+              <Link to="">Learn more about creating Firewalls</Link>.
+            </Typography>
+          }
+          entityType="nodebalancer"
+          selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
+        />
+      )}
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
           const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (

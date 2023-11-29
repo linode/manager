@@ -114,7 +114,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
     if (nodebalancer) {
       const [, label, id] = nodebalancer;
 
-      // Break the errorMsg into two parts: before and after the nodebalancer pattern
+      // Break the errorMsg into two parts: before and after the NodeBalancer pattern
       const startMsg = errorMsg.substring(
         0,
         errorMsg.indexOf(`NodeBalancer ${label}`)
