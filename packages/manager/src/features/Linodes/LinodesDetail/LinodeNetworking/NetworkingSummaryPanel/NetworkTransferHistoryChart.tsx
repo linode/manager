@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 import {
@@ -25,6 +26,8 @@ export const NetworkTransferHistoryChart = (
 ) => {
   const { data, timezone, unit } = props;
 
+  const theme = useTheme();
+
   const xAxisTickFormatter = (t: number) => {
     return DateTime.fromMillis(t, { zone: timezone }).toFormat('LLL dd');
   };
@@ -39,19 +42,11 @@ export const NetworkTransferHistoryChart = (
     `${roundTo(value)} ${unit}/s`;
 
   return (
-    <Box marginLeft={-4}>
+    <Box marginLeft={-5}>
       <ResponsiveContainer height={190} width="100%">
-        <AreaChart
-          margin={{
-            bottom: 5,
-            left: 0,
-            right: 0,
-            top: 5,
-          }}
-          data={data}
-        >
+        <AreaChart data={data}>
           <CartesianGrid
-            stroke="#dbdde1"
+            stroke={theme.color.grey7}
             strokeDasharray="3 3"
             vertical={false}
           />
@@ -61,18 +56,26 @@ export const NetworkTransferHistoryChart = (
             interval="equidistantPreserveStart"
             minTickGap={15}
             scale="time"
-            stroke="#606469"
+            stroke={theme.color.label}
             tickFormatter={xAxisTickFormatter}
             type="number"
           />
-          <YAxis dataKey="Public Outbound Traffic" stroke="#606469" />
+          <YAxis dataKey="Public Outbound Traffic" stroke={theme.color.label} />
           <Tooltip
+            contentStyle={{
+              color: '#606469',
+            }}
+            itemStyle={{
+              color: '#606469',
+              fontFamily: theme.font.bold,
+            }}
             formatter={tooltipValueFormatter}
             labelFormatter={tooltipLabelFormatter}
           />
           <Area
             dataKey="Public Outbound Traffic"
             fill="#1CB35C"
+            isAnimationActive={false}
             stroke="#1CB35C"
             type="monotone"
           />
