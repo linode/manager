@@ -44,7 +44,7 @@ export interface ShowMoreExpansionProps {
    */
   children?: JSX.Element;
   /**
-   * Whether or not the component should be expanded by default
+   * Whether or not the component should be expanded by default.
    */
   defaultExpanded?: boolean;
   /**
