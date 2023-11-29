@@ -26,7 +26,7 @@ export const getRegionOptions = ({
   currentCapability,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
-  // TODO DC_GET_WELL - when currentCapability becomes a requiredProp, we can remove the extra `filteredRegions` constant and filter directly on `regions`
+  // TODO DC_GET_WELL - when currentCapability becomes a required prop (M3-7355), we can remove the extra `filteredRegions` constant and filter directly on `regions`
   const filteredRegions = currentCapability
     ? regions.filter((region) =>
         region.capabilities.includes(currentCapability)

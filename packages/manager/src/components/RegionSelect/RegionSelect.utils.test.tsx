@@ -53,7 +53,6 @@ const expectedRegions: RegionSelectOption[] = [
     unavailable: false,
     value: 'us-1',
   },
-
   {
     data: { country: 'jp', region: 'Asia' },
     label: 'JP Location (jp-1)',
