@@ -8,7 +8,9 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
-import type { Protocol } from '@linode/api-v4';
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+
+type Configurations = Pick<CreateLoadbalancerPayload, 'configurations'>;
 
 const protocolOptions = [
   { label: 'HTTPS', value: 'https' },
@@ -22,7 +24,7 @@ interface Props {
 
 export const ConfigurationDetails = ({ index }: Props) => {
   const { handleChange, setFieldValue, values } = useFormikContext<{
-    configurations: { label: string; port: number; protocol: Protocol }[];
+    configurations: Configurations;
   }>();
 
   return (

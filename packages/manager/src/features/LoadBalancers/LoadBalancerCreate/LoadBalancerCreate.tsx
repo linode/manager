@@ -12,21 +12,17 @@ import { LoadBalancerConfigurations } from './LoadBalancerConfigurations';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
-import type { Protocol } from '@linode/api-v4';
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
-// TODO: AGLB - CreateLoadBalancerFormValues could be replaced with CreateLoadBalancerPayload once the form is completely build.
-export interface CreateLoadBalancerFormValues {
-  configurations: { label: string; port: number; protocol: Protocol }[];
-  label: string;
-}
-
-const initialValues: CreateLoadBalancerFormValues = {
-  configurations: [{ label: '', port: 80, protocol: 'https' }],
+const initialValues: CreateLoadbalancerPayload = {
+  configurations: [
+    { certificates: [], label: '', port: 80, protocol: 'https' },
+  ],
   label: '',
 };
 
 export const LoadBalancerCreate = () => {
-  const handleSubmit = (values: CreateLoadBalancerFormValues) => {
+  const handleSubmit = (values: CreateLoadbalancerPayload) => {
     // console.log('Submitted values:', values);
   };
 
