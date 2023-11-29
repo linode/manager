@@ -267,15 +267,10 @@ export const ConfigurationSchema = object({
 });
 
 export const CreateLoadBalancerSchema = object({
-  label: string()
-    .matches(
-      /^[a-zA-Z0-9.\-_]+$/,
-      'Label may only contain letters, numbers, periods, dashes, and underscores.'
-    )
-    .required(LABEL_REQUIRED),
-  tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
-  regions: array().of(string()).required(),
-  configurations: array().of(ConfigurationSchema),
+  label: string().min(1, 'Label must not be empty.').required(LABEL_REQUIRED),
+  // tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
+  // regions: array().of(string()).required(),
+  // configurations: array().of(ConfigurationSchema),
 });
 
 /**

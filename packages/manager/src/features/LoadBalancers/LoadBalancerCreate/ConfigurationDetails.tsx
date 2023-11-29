@@ -1,11 +1,14 @@
 import { Grid } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import { useFormikContext } from 'formik';
 import * as React from 'react';
 
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+
+import type { Protocol } from '@linode/api-v4';
 
 const protocolOptions = [
   { label: 'HTTPS', value: 'https' },
@@ -13,7 +16,15 @@ const protocolOptions = [
   { label: 'TCP', value: 'tcp' },
 ];
 
-export const ConfigurationDetails = () => {
+interface Props {
+  index: number;
+}
+
+export const ConfigurationDetails = ({ index }: Props) => {
+  const { handleChange, setFieldValue, values } = useFormikContext<{
+    configurations: { label: string; port: number; protocol: Protocol }[];
+  }>();
+
   return (
     <Grid padding={1}>
       <Typography variant="h2">Details</Typography>
@@ -23,27 +34,27 @@ export const ConfigurationDetails = () => {
       </Typography>
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Select
+          <Autocomplete
+            onChange={(_, { value }) =>
+              setFieldValue(`configurations.${index}.protocol`, value)
+            }
             textFieldProps={{
               labelTooltipText: 'TODO',
             }}
-            value={
-              protocolOptions.find((option) => option.value === '') ?? null
-            }
-            errorText={''}
-            isClearable={false}
+            value={protocolOptions.find(
+              (option) => option.value === values.configurations[index].protocol
+            )}
+            disableClearable
             label="Protocol"
-            onChange={() => null}
             options={protocolOptions}
-            styles={{ container: () => ({ width: 'unset' }) }}
           />
           <TextField
             errorText={''}
             label="Port"
             labelTooltipText="TODO"
-            name="port"
-            onChange={() => null}
-            value={''}
+            name={`configurations.${index}.port`}
+            onChange={handleChange}
+            value={values.configurations[index].port}
           />
         </Stack>
         <Stack maxWidth="600px">
@@ -59,9 +70,9 @@ export const ConfigurationDetails = () => {
       </Stack>
       <TextField
         label="Configuration Label"
-        name="label"
-        onChange={() => null}
-        value={''}
+        name={`configurations.${index}.label`}
+        onChange={handleChange}
+        value={values.configurations[index].label}
       />
     </Grid>
   );

@@ -6,13 +6,10 @@ import { TextField } from 'src/components/TextField';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
+type Label = Pick<CreateLoadbalancerPayload, 'label'>;
+
 export const LoadBalancerLabel = () => {
-  const {
-    errors,
-    handleChange,
-    touched,
-    values,
-  } = useFormikContext<CreateLoadbalancerPayload>();
+  const { errors, handleChange, touched, values } = useFormikContext<Label>();
 
   return (
     <Paper

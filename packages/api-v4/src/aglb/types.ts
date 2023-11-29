@@ -12,7 +12,7 @@ export interface Loadbalancer {
 
 export interface CreateLoadbalancerPayload {
   label: string;
-  regions: string[];
+  regions?: string[];
   tags?: string[];
   configurations?: ConfigurationPayload[];
 }
@@ -31,7 +31,7 @@ export interface UpdateLoadbalancerPayload {
   configuration_ids?: number[];
 }
 
-type Protocol = 'tcp' | 'http' | 'https';
+export type Protocol = 'tcp' | 'http' | 'https';
 
 type RouteProtocol = 'tcp' | 'http';
 

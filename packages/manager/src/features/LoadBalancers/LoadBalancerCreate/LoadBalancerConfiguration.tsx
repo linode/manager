@@ -7,25 +7,28 @@ import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/Vert
 
 import { ConfigurationDetails } from './ConfigurationDetails';
 
-export const configurationSteps = [
-  {
-    content: <ConfigurationDetails />,
-    handler: () => null,
-    label: 'Details',
-  },
-  {
-    content: <div>TODO: AGLB - Implement Service Targets Configuration.</div>,
-    handler: () => null,
-    label: 'Service Targets',
-  },
-  {
-    content: <div>TODO: AGLB - Implement Routes Configuration.</div>,
-    handler: () => null,
-    label: 'Routes',
-  },
-];
+interface Props {
+  index: number;
+}
 
-export const LoadBalancerConfiguration = () => {
+export const LoadBalancerConfiguration = ({ index }: Props) => {
+  const configurationSteps = [
+    {
+      content: <ConfigurationDetails index={index} />,
+      handler: () => null,
+      label: 'Details',
+    },
+    {
+      content: <div>TODO: AGLB - Implement Service Targets Configuration.</div>,
+      handler: () => null,
+      label: 'Service Targets',
+    },
+    {
+      content: <div>TODO: AGLB - Implement Routes Configuration.</div>,
+      handler: () => null,
+      label: 'Routes',
+    },
+  ];
   return (
     <Paper>
       <Typography
