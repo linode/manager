@@ -100,6 +100,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
             <Tooltip
+              PopperProps={{
+                sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+              }}
               title={
                 isDisabledMenuItem ? (
                   <>
