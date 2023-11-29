@@ -1,5 +1,5 @@
-import { APIWarning, RequestConfig } from 'src/types';
-import type { Capabilities, Region } from 'src/regions';
+import type { APIWarning, RequestConfig } from '../types';
+import type { Capabilities, Region } from '../regions';
 
 export interface User {
   username: string;

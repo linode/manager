@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setParams,
   setXFilter,
-} from 'src/request';
+} from '../request';
 import {
   Account,
   AccountAvailability,
@@ -21,8 +21,8 @@ import {
   RegionalNetworkUtilization,
   ChildAccountPayload,
 } from './types';
-import { Filter, ResourcePage, Params, RequestConfig } from 'src/types';
-import { Token } from 'src/profile';
+import { Filter, ResourcePage, Params, RequestConfig } from '../types';
+import { Token } from '../profile';
 
 /**
  * getAccountInfo
