@@ -12,7 +12,7 @@ export interface Loadbalancer {
 
 export interface CreateLoadbalancerPayload {
   label: string;
-  regions?: string[];
+  regions: string[];
   tags?: string[];
   configurations?: ConfigurationPayload[];
 }

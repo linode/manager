@@ -19,6 +19,7 @@ const initialValues: CreateLoadbalancerPayload = {
     { certificates: [], label: '', port: 80, protocol: 'https' },
   ],
   label: '',
+  regions: [],
 };
 
 export const LoadBalancerCreate = () => {

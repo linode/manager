@@ -1,9 +1,9 @@
-import { Grid } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -29,7 +29,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
   } = useFormikContext<CreateLoadbalancerPayload>();
 
   return (
-    <Grid padding={1}>
+    <Box padding={1}>
       <Typography variant="h2">Details</Typography>
       <Typography sx={(theme) => ({ marginRight: theme.spacing(1) })}>
         The port the load balancer listens on, and the protocol for routing
@@ -82,6 +82,6 @@ export const ConfigurationDetails = ({ index }: Props) => {
         placeholder="Enter Configuration Label"
         value={values.configurations?.[index]?.label}
       />
-    </Grid>
+    </Box>
   );
 };
