@@ -182,6 +182,6 @@ const getDefaultNoOptionsMessage = (
   } else if (loading) {
     return 'Loading your Linodes...';
   } else {
-    return 'No options';
+    return 'No available Linodes';
   }
 };
