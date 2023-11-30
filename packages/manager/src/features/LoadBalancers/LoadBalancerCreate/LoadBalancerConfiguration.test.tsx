@@ -16,7 +16,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
     renderWithThemeAndFormik(
       <LoadBalancerConfiguration index={0} name="configurations" />,
-      { initialValues, onSubmit: () => {} }
+      { initialValues, onSubmit: vi.fn() }
     );
 
     const ConfigurationInputLabel = screen.getByPlaceholderText(
@@ -47,7 +47,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should navigate to Service Targets content', () => {
     renderWithThemeAndFormik(
       <LoadBalancerConfiguration index={0} name="configurations" />,
-      { initialValues, onSubmit: () => {} }
+      { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
     expect(
@@ -66,7 +66,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should navigate to Routes content', () => {
     renderWithThemeAndFormik(
       <LoadBalancerConfiguration index={0} name="configurations" />,
-      { initialValues, onSubmit: () => {} }
+      { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByTestId('routes'));
@@ -86,7 +86,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should be able to go previous step', () => {
     renderWithThemeAndFormik(
       <LoadBalancerConfiguration index={0} name="configurations" />,
-      { initialValues, onSubmit: () => {} }
+      { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByText('Previous: Details'));
