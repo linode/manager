@@ -9,9 +9,10 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import {
-  dcPricingRegionNotice,
   dcPricingMockLinodeTypes,
   dcPricingRegionDifferenceNotice,
+  dcPricingDocsLabel,
+  dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { randomLabel } from 'support/util/random';
@@ -106,7 +107,7 @@ describe('clone linode', () => {
 
   /*
    * - Confirms DC-specific pricing UI flow works as expected during Linode clone.
-   * - Confirms that pricing notice is shown in "Region" section.
+   * - Confirms that pricing docs link is shown in "Region" section.
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during clone flow', () => {
@@ -129,12 +130,9 @@ describe('clone linode', () => {
     cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
     cy.wait(['@getLinode', '@getLinodes', '@getLinodeTypes']);
 
-    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
-
-    // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
-    // cy.findByText(dcPricingDocsLabel)
-    //   .should('be.visible')
-    //   .should('have.attr', 'href', dcPricingDocsUrl);
+    cy.findByText(dcPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', dcPricingDocsUrl);
 
     // Confirm that DC-specific pricing difference notice is not yet shown.
     cy.findByText(dcPricingRegionDifferenceNotice, { exact: false }).should(
