@@ -1,10 +1,9 @@
 import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useGrants, useProfile } from 'src/queries/profile';
 

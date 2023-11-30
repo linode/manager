@@ -9,6 +9,7 @@ import { Box, BoxProps } from '../Box';
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
   'data-testid'?: string;
+  'data-qa-form-data-loading'?: boolean;
   label: string;
 }
 

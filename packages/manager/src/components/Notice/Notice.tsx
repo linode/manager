@@ -79,7 +79,7 @@ export interface NoticeProps extends Grid2Props {
 - Appear within the page or modal
 - Might be triggered by user action
 - Typically used to alert the user to a new service, limited availability, or a potential consequence of the action being taken
-- Consider using a [Dismissible Banner](/docs/components-notifications-dismissible-banners--beta-banner) if it&rsquo;s not critical information
+- Consider using a [Dismissible Banner](/docs/components-notifications-dismissible-banners--beta-banner) if it’s not critical information
 
 ## Types of Notices:
 

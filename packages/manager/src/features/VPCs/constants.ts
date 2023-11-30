@@ -30,3 +30,22 @@ export const VPC_FEEDBACK_FORM_URL =
 
 export const VPC_REBOOT_MESSAGE =
   'The VPC configuration has been updated and the Linode needs to be rebooted.';
+
+export const NETWORK_INTERFACES_GUIDE_URL =
+  'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
+
+export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
+  'not-recommended-configuration';
+
+export const WARNING_ICON_UNRECOMMENDED_CONFIG =
+  'warning-icon-for-unrecommended-config';
+
+// Linode Config dialog helper text for unrecommended configurations
+export const LINODE_UNREACHABLE_HELPER_TEXT =
+  'This network configuration is not recommended. The Linode will not be reachable or be able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
+
+export const NATTED_PUBLIC_IP_HELPER_TEXT =
+  "This network configuration is not recommended. The VPC interface with 1:1 NAT will use the Public IP even if it's not on the default network interface. The Linode will lose access to public network connectivity since the default route isn't able to route through the public IPv4 address. We recommend selecting VPC as the primary interface.";
+
+export const NOT_NATTED_HELPER_TEXT =
+  'The Linode will not be able to access the internet. If this Linode needs access to the internet we recommend checking the “Assign a public IPv4 address for this Linode” checkbox to enable 1:1 NAT on the VPC interface.';

@@ -138,7 +138,6 @@ export const chooseRegions = (count: number): Region[] => {
     );
   }
   const overrideRegion = getOverrideRegion();
-
   return new Array(count).fill(null).reduce((acc: Region[], _cur, index) => {
     const chosenRegion: Region = ((): Region => {
       if (index === 0 && overrideRegion) {
@@ -146,8 +145,7 @@ export const chooseRegions = (count: number): Region[] => {
       }
       // Get an array of regions that have not already been selected.
       const unusedRegions = regions.filter(
-        (regionA: Region) =>
-          !!regions.find((regionB: Region) => regionA.id !== regionB.id)
+        (region: Region) => !acc.includes(region)
       );
       return randomItem(unusedRegions);
     })();
