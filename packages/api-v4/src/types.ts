@@ -97,13 +97,6 @@ type LinodeFilter =
 
 type RequestHeaderValue = string | string[] | number | boolean | null;
 
-type CommonRequestHeadersList =
-  | 'Accept'
-  | 'Authorization'
-  | 'Content-Encoding'
-  | 'Content-Length'
-  | 'User-Agent';
-
 type RequestContentType =
   | RequestHeaderValue
   | 'application/json'
@@ -113,13 +106,12 @@ type RequestContentType =
   | 'text/html'
   | 'text/plain';
 
-interface RawHeaders {
-  [key: string]: RequestHeaderValue;
+export interface RequestHeaders {
+  [key: string]: RequestHeaderValue | undefined;
+  Accept?: string;
+  Authorization?: string;
+  'Content-Encoding'?: string;
+  'Content-Length'?: number;
+  'User-Agent'?: string;
+  'Content-Type'?: RequestContentType;
 }
-
-export type RequestHeaders = Partial<
-  RawHeaders &
-    Record<CommonRequestHeadersList, RequestHeaderValue> & {
-      'Content-Type': RequestContentType;
-    }
->;
