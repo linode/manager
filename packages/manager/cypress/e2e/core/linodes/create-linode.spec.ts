@@ -58,6 +58,13 @@ describe('create linode', () => {
     cleanUp('linodes');
   });
 
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      firewallNodebalancer: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+  });
+
   /*
    * Region select test.
    * - Confirms that region select dropdown is visible and interactive.
@@ -70,6 +77,7 @@ describe('create linode', () => {
 
     mockAppendFeatureFlags({
       soldOutTokyo: makeFeatureFlagData(true),
+      firewallNodebalancer: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
