@@ -60,7 +60,7 @@ export const useChildAccounts = ({
     () => getChildAccounts({ filter, headers, params }),
     {
       enabled:
-        Boolean(grants?.global?.child_account_access) || hasExplictAuthToken,
+        Boolean(grants?.global?.child_account_access) || hasExplicitAuthToken,
       keepPreviousData: true,
     }
   );
@@ -75,7 +75,7 @@ export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
     () => getChildAccount({ euuid }),
     {
       enabled:
-        Boolean(grants?.global?.child_account_access) || hasExplictAuthToken,
+        Boolean(grants?.global?.child_account_access) || hasExplicitAuthToken,
     }
   );
 };
