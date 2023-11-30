@@ -2,4 +2,4 @@
 * @linode/frontend
 
 # Frontend SDET code owners for Cypress tests
-/packages/manager/cypress/ @linode/frontend-sdets
+/packages/manager/cypress/ @linode/frontend-sdet
