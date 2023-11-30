@@ -1,7 +1,7 @@
 import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
@@ -65,13 +65,6 @@ export const LoadBalancerServiceTargets = () => {
     setIsDeleteDialogOpen(true);
     setSelectedServiceTarget(serviceTarget);
   };
-
-  // Once the drawer is closed, clear the selected service target for the correct add/edit drawer data.
-  useEffect(() => {
-    if (!isDrawerOpen) {
-      setSelectedServiceTarget(undefined);
-    }
-  }, [isDrawerOpen]);
 
   // If the user types in a search query, filter results by label.
   if (query) {
@@ -197,8 +190,11 @@ export const LoadBalancerServiceTargets = () => {
         pageSize={pagination.pageSize}
       />
       <ServiceTargetDrawer
+        onClose={() => {
+          setIsDrawerOpen(false);
+          setSelectedServiceTarget(undefined);
+        }}
         loadbalancerId={Number(loadbalancerId)}
-        onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
         serviceTarget={selectedServiceTarget}
       />
