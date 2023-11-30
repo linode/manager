@@ -545,6 +545,7 @@ export class LinodeCreate extends React.PureComponent<
 
           {this.props.createType !== 'fromBackup' && (
             <SelectRegionPanel
+              currentCapability="Linodes"
               data-qa-select-region-panel
               disabled={userCannotCreateLinode}
               error={hasErrorFor.region}

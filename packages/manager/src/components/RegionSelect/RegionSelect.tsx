@@ -100,12 +100,17 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
             <Tooltip
+              PopperProps={{
+                sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+              }}
               title={
-                // TODO DC_GET_WELL: add proper link to status page when available
                 isDisabledMenuItem ? (
                   <>
-                    For more information about regional availability, please see
-                    our new <Link to="https://linode.com">status page</Link>.
+                    There may be limited capacity in this region.{' '}
+                    <Link to="https://www.linode.com/global-infrastructure/availability">
+                      Learn more
+                    </Link>
+                    .
                   </>
                 ) : (
                   ''
@@ -133,7 +138,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                     <StyledFlagContainer>
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
-                    {option.label} {isDisabledMenuItem && ' (Not available)'}
+                    {option.label}
                   </Box>
                   {selected && <SelectedIcon visible={selected} />}
                 </>
