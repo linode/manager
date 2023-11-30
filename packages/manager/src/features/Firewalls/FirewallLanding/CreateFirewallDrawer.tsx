@@ -15,6 +15,7 @@ import { useQueryClient } from 'react-query';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -227,8 +228,11 @@ export const CreateFirewallDrawer = React.memo(
       );
     };
 
-    // TODO: NBFW - Placeholder until real link is available
-    const learnMoreLink = <a href="#">Learn more</a>;
+    const learnMoreLink = (
+      <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
+        Learn more
+      </Link>
+    );
 
     const generalError =
       status?.generalError ||
