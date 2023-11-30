@@ -1,4 +1,5 @@
 import { createLinode, Devices, getLinodeConfigs } from '@linode/api-v4';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeStatus, pollLinodeDiskStatuses } from 'support/util/polling';
@@ -8,14 +9,21 @@ import { chooseRegion } from 'support/util/regions';
 import type { Config, Linode, LinodeConfigCreationData } from '@linode/api-v4';
 
 /**
- *  Creates a Linode and waits for it to be in "running" state.
+ * Creates a Linode and waits for it to be in "running" state.
+ *
+ * @param createPayload - Optional Linode create payload options.
+ *
+ * @returns Promis that resolves when Linode is created and booted.
  */
-export const createAndBootLinode = async (): Promise<Linode> => {
-  const createPayload = createLinodeRequestFactory.build({
+export const createAndBootLinode = async (
+  createPayload?: Partial<CreateLinodeRequest>
+): Promise<Linode> => {
+  const payload = createLinodeRequestFactory.build({
     label: randomLabel(),
     region: chooseRegion().id,
+    ...(createPayload ?? {}),
   });
-  const linode = await createLinode(createPayload);
+  const linode = await createLinode(payload);
 
   await pollLinodeStatus(
     linode.id,

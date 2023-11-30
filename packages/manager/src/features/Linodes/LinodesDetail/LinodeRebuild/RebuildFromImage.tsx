@@ -74,13 +74,21 @@ export const RebuildFromImage = (props: Props) => {
     passwordHelperText,
   } = props;
 
-  const { data: preferences } = usePreferences();
+  const {
+    data: preferences,
+    isLoading: isLoadingPreferences,
+  } = usePreferences();
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
-  const { data: _imagesData, error: imagesError } = useAllImagesQuery();
-  const { data: regionsData } = useRegionsQuery();
+  const {
+    data: _imagesData,
+    error: imagesError,
+    isLoading: isLoadingImages,
+  } = useAllImagesQuery();
+  const { data: regionsData, isLoading: isLoadingRegions } = useRegionsQuery();
+  const isLoading = isLoadingPreferences || isLoadingImages || isLoadingRegions;
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
@@ -288,6 +296,7 @@ export const RebuildFromImage = (props: Props) => {
                 <StyledActionsPanel
                   primaryButtonProps={{
                     'data-testid': 'rebuild-button',
+                    'data-qa-form-data-loading': isLoading,
                     disabled: submitButtonDisabled || disabled,
                     label: 'Rebuild Linode',
                     onClick: handleRebuildButtonClick,

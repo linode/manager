@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { Capabilities, Region } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -25,6 +25,7 @@ import { DynamicPriceNotice } from '../DynamicPriceNotice';
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
+  currentCapability?: Capabilities | undefined;
   disabled?: boolean;
   error?: string;
   handleSelection: (id: string) => void;
@@ -39,6 +40,7 @@ interface SelectRegionPanelProps {
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
+    currentCapability,
     disabled,
     error,
     handleSelection,
@@ -111,7 +113,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           Region
         </Typography>
         {/* TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed */}
-        {/* 
+        {/*
           <DocsLink
             href="https://www.linode.com/pricing"
             label="How Data Center Pricing Works"
@@ -134,6 +136,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       <RegionSelect
+        currentCapability={currentCapability}
         disabled={disabled}
         errorText={error}
         handleSelection={handleSelection}

@@ -21,11 +21,11 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import {
   WithAccountProps,
@@ -97,7 +97,7 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 
-import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
@@ -545,6 +545,7 @@ export class LinodeCreate extends React.PureComponent<
 
           {this.props.createType !== 'fromBackup' && (
             <SelectRegionPanel
+              currentCapability="Linodes"
               data-qa-select-region-panel
               disabled={userCannotCreateLinode}
               error={hasErrorFor.region}

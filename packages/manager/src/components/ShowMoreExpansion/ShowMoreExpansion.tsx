@@ -38,9 +38,18 @@ const useStyles = makeStyles<void, 'caret'>()(
   })
 );
 
-interface ShowMoreExpansionProps {
+export interface ShowMoreExpansionProps {
+  /**
+   * The content that will be shown when the component is expanded.
+   */
   children?: JSX.Element;
+  /**
+   * Whether or not the component should be expanded by default.
+   */
   defaultExpanded?: boolean;
+  /**
+   * The text that appears in the clickabe button to show more content.
+   */
   name: string;
 }
 

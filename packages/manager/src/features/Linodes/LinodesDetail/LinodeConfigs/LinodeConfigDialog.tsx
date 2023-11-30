@@ -33,6 +33,11 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
+import {
+  LINODE_UNREACHABLE_HELPER_TEXT,
+  NATTED_PUBLIC_IP_HELPER_TEXT,
+  NOT_NATTED_HELPER_TEXT,
+} from 'src/features/VPCs/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -84,7 +89,7 @@ interface Helpers {
 
 type RunLevel = 'binbash' | 'default' | 'single';
 type VirtMode = 'fullvirt' | 'paravirt';
-type MemoryLimit = 'no_limit' | 'set_limit';
+export type MemoryLimit = 'no_limit' | 'set_limit';
 
 interface EditableFields {
   comments?: string;
@@ -991,36 +996,46 @@ export const LinodeConfigDialog = (props: Props) => {
               )}
               {values.interfaces.map((thisInterface, idx) => {
                 return (
-                  <InterfaceSelect
-                    errors={{
-                      ipamError:
-                        formik.errors[`interfaces[${idx}].ipam_address`],
-                      labelError: formik.errors[`interfaces[${idx}].label`],
-                      publicIPv4Error:
-                        formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
-                      subnetError:
-                        formik.errors[`interfaces[${idx}].subnet_id`],
-                      vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
-                      vpcIPv4Error:
-                        formik.errors[`interfaces[${idx}].ipv4.vpc`],
-                    }}
-                    handleChange={(newInterface: Interface) =>
-                      handleInterfaceChange(idx, newInterface)
-                    }
-                    ipamAddress={thisInterface.ipam_address}
-                    key={`eth${idx}-interface`}
-                    label={thisInterface.label}
-                    nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
-                    purpose={thisInterface.purpose}
-                    readOnly={isReadOnly}
-                    region={linode?.region}
-                    regionHasVLANs={regionHasVLANS}
-                    regionHasVPCs={regionHasVPCs}
-                    slotNumber={idx}
-                    subnetId={thisInterface.subnet_id}
-                    vpcIPv4={thisInterface.ipv4?.vpc}
-                    vpcId={thisInterface.vpc_id}
-                  />
+                  <>
+                    {unrecommendedConfigNoticeSelector({
+                      _interface: thisInterface,
+                      primaryInterfaceIndex,
+                      thisIndex: idx,
+                      values,
+                    })}
+                    <InterfaceSelect
+                      errors={{
+                        ipamError:
+                          formik.errors[`interfaces[${idx}].ipam_address`],
+                        labelError: formik.errors[`interfaces[${idx}].label`],
+                        primaryError:
+                          formik.errors[`interfaces[${idx}].primary`],
+                        publicIPv4Error:
+                          formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
+                        subnetError:
+                          formik.errors[`interfaces[${idx}].subnet_id`],
+                        vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
+                        vpcIPv4Error:
+                          formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                      }}
+                      handleChange={(newInterface: Interface) =>
+                        handleInterfaceChange(idx, newInterface)
+                      }
+                      ipamAddress={thisInterface.ipam_address}
+                      key={`eth${idx}-interface`}
+                      label={thisInterface.label}
+                      nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
+                      purpose={thisInterface.purpose}
+                      readOnly={isReadOnly}
+                      region={linode?.region}
+                      regionHasVLANs={regionHasVLANS}
+                      regionHasVPCs={regionHasVPCs}
+                      slotNumber={idx}
+                      subnetId={thisInterface.subnet_id}
+                      vpcIPv4={thisInterface.ipv4?.vpc}
+                      vpcId={thisInterface.vpc_id}
+                    />
+                  </>
                 );
               })}
             </Grid>
@@ -1152,3 +1167,74 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdg',
     '/dev/sdh',
   ].includes(value) === false;
+
+const noticeForScenario = (scenarioText: string) => (
+  <Notice
+    data-testid={'notice-for-unrecommended-scenario'}
+    text={scenarioText}
+    variant="warning"
+  />
+);
+
+/**
+ *
+ * @param _interface the current config interface being passed in
+ * @param primaryInterfaceIndex the index of the primary interface
+ * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
+ * @param values the values held in Formik state, having a type of `EditableFields`
+ * @returns JSX.Element | null
+ */
+export const unrecommendedConfigNoticeSelector = ({
+  _interface,
+  primaryInterfaceIndex,
+  thisIndex,
+  values,
+}: {
+  _interface: ExtendedInterface;
+  primaryInterfaceIndex: number | undefined;
+  thisIndex: number;
+  values: EditableFields;
+}): JSX.Element | null => {
+  const vpcInterface = _interface.purpose === 'vpc';
+  const nattedIPv4Address = Boolean(_interface.ipv4?.nat_1_1);
+
+  const filteredInterfaces = values.interfaces.filter(
+    (_interface) => _interface.purpose !== 'none'
+  );
+
+  // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
+  const primaryInterfaceIsVPC =
+    primaryInterfaceIndex !== undefined
+      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
+      : false;
+
+  /*
+   Scenario 1:
+    - the interface passed in to this function is a VPC interface
+    - the index of the primary interface !== the index of the interface passed in to this function
+    - nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" checked)
+
+   Scenario 2:
+    - all of Scenario 1, except: !nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" unchecked)
+
+   Scenario 3:
+    - only eth0 populated, and it is a VPC interface
+
+   If not one of the above scenarios, do not display a warning notice re: configuration
+  */
+  if (
+    vpcInterface &&
+    primaryInterfaceIndex !== thisIndex &&
+    !primaryInterfaceIsVPC
+  ) {
+    return nattedIPv4Address
+      ? noticeForScenario(NATTED_PUBLIC_IP_HELPER_TEXT)
+      : noticeForScenario(LINODE_UNREACHABLE_HELPER_TEXT);
+  }
+
+  if (filteredInterfaces.length === 1 && vpcInterface && !nattedIPv4Address) {
+    return noticeForScenario(NOT_NATTED_HELPER_TEXT);
+  }
+
+  return null;
+};

@@ -15,18 +15,36 @@ RUN apt-get update \
 
 CMD yarn start:manager:ci
 
+# e2e-build
+#
+# Builds an image containing Cypress and miscellaneous system utilities required
+# by the tests.
+FROM cypress/included:13.5.0 as e2e-build
+RUN apt-get update \
+    && apt-get install -y expect openssh-client \
+    && rm -rf /var/cache/apt/* \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# e2e-install
+#
+# Installs Cypress and sets up cache directories.
+FROM e2e-build as e2e-install
+USER node
+WORKDIR /home/node/app
+VOLUME /home/node/app
+ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
+RUN mkdir -p /home/node/.cache/Cypress && cypress install
+
 # `e2e`
 #
 # Runs Cloud Manager Cypress tests.
-FROM cypress/included:13.5.0 as e2e
+FROM e2e-install as e2e
 WORKDIR /home/node/app
 VOLUME /home/node/app
 USER node
-RUN mkdir -p /home/node/.cache/Cypress
 ENV CI=1
 ENV NO_COLOR=1
 ENV HOME=/home/node/
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
 ENTRYPOINT yarn cy:ci
-
-# TODO Add `e2e-m1`.

@@ -488,6 +488,27 @@ const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
 
+const proxyAccount = accountUserFactory.build({
+  email: 'partner@proxy.com',
+  last_login: null,
+  user_type: 'proxy',
+  username: 'ParentCompany_a1b2c3d4e5',
+});
+const parentAccount = accountUserFactory.build({
+  email: 'parent@acme.com',
+  last_login: null,
+  restricted: false,
+  user_type: 'parent',
+  username: 'ParentUser',
+});
+const childAccount = accountUserFactory.build({
+  email: 'child@linode.com',
+  last_login: null,
+  restricted: false,
+  user_type: 'child',
+  username: 'ChildUser',
+});
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
@@ -1018,19 +1039,25 @@ export const handlers = [
     return res(ctx.json(account));
   }),
   rest.get('*/account/availability', (req, res, ctx) => {
-    const florida = accountAvailabilityFactory.build({
-      id: 'us-mia',
-      unavailable: ['Block Storage'],
+    const newarkStorage = accountAvailabilityFactory.build({
+      id: 'us-east-0',
+      unavailable: ['Object Storage'],
+    });
+    const atlanta = accountAvailabilityFactory.build({
+      id: 'us-southeast',
+      unavailable: ['Block Storage', 'Managed Databases'],
     });
     const singapore = accountAvailabilityFactory.build({
       id: 'ap-south',
-      unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
+      unavailable: ['Linodes', 'Kubernetes', 'NodeBalancers'],
     });
     const tokyo = accountAvailabilityFactory.build({
       id: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
-    return res(ctx.json(makeResourcePage([florida, singapore, tokyo])));
+    return res(
+      ctx.json(makeResourcePage([atlanta, newarkStorage, singapore, tokyo]))
+    );
   }),
   rest.get('*/account/availability/:regionId', (req, res, ctx) => {
     return res(ctx.json(accountAvailabilityFactory.build()));
@@ -1125,22 +1152,87 @@ export const handlers = [
   rest.get('*/account/users', (req, res, ctx) => {
     const accountUsers = [
       accountUserFactory.build({
-        last_login: { status: 'failed', login_datetime: '2023-10-16T17:04' },
+        last_login: { login_datetime: '2023-10-16T17:04', status: 'failed' },
         tfa_enabled: true,
       }),
       accountUserFactory.build({
         last_login: {
-          status: 'successful',
           login_datetime: '2023-10-06T12:04',
+          status: 'successful',
         },
       }),
       accountUserFactory.build({ last_login: null }),
+      childAccount,
+      parentAccount,
+      proxyAccount,
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
-  rest.get('*/account/users/:user', (req, res, ctx) => {
-    return res(ctx.json(profileFactory.build()));
+  rest.get(`*/account/users/${childAccount.username}`, (req, res, ctx) => {
+    return res(ctx.json(childAccount));
   }),
+  rest.get(`*/account/users/${proxyAccount.username}`, (req, res, ctx) => {
+    return res(ctx.json(proxyAccount));
+  }),
+  rest.get(`*/account/users/${parentAccount.username}`, (req, res, ctx) => {
+    return res(ctx.json(parentAccount));
+  }),
+  rest.get('*/account/users/:user', (req, res, ctx) => {
+    return res(ctx.json(accountUserFactory.build()));
+  }),
+  rest.get(
+    `*/account/users/${childAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              cancel_account: false,
+            },
+          })
+        )
+      );
+    }
+  ),
+  rest.get(
+    `*/account/users/${proxyAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              add_domains: false,
+              add_firewalls: false,
+              add_images: false,
+              add_linodes: false,
+              add_longview: false,
+              add_nodebalancers: false,
+              add_stackscripts: false,
+              add_volumes: false,
+              add_vpcs: false,
+              cancel_account: false,
+              longview_subscription: false,
+            },
+          })
+        )
+      );
+    }
+  ),
+  rest.get(
+    `*/account/users/${parentAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              cancel_account: false,
+              child_account_access: true,
+            },
+          })
+        )
+      );
+    }
+  ),
   rest.get('*/account/users/:user/grants', (req, res, ctx) => {
     return res(
       ctx.json(
