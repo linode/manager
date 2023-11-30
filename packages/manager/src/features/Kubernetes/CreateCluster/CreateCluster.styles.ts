@@ -1,19 +1,19 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   inputWidth: {
     '& .react-select__menu': {
-      maxWidth: 440,
+      maxWidth: 416,
     },
-    maxWidth: 440,
+    maxWidth: 416,
   },
   regionSubtitle: {
     '& .MuiInput-root': {
-      maxWidth: 440,
+      maxWidth: 416,
     },
     '& .react-select__menu': {
-      maxWidth: 440,
+      maxWidth: 416,
     },
     '& p': {
       lineHeight: '1.43rem',

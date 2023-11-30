@@ -52,7 +52,7 @@ import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
 export const CreateCluster = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
