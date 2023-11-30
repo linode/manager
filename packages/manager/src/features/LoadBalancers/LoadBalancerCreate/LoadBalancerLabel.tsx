@@ -27,7 +27,6 @@ export const LoadBalancerLabel = () => {
         onBlur={(e) => {
           setFieldTouched(e.target.name, true); // mark the field as touched
         }}
-        data-qa-label-input
         disabled={false}
         errorText={touched.label && errors.label ? errors.label : undefined} // Display errors if the field is touched and there's an error
         label="Load Balancer Label"
