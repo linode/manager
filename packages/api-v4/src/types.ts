@@ -1,5 +1,3 @@
-import type { AxiosRequestHeaders } from 'axios';
-
 export interface APIError {
   field?: string;
   reason: string;
@@ -36,7 +34,7 @@ export interface Params {
 export interface RequestOptions {
   params?: Params;
   filter?: Filter;
-  headers?: AxiosRequestHeaders;
+  headers?: RequestHeaders;
 }
 
 interface FilterConditionTypes {
@@ -96,3 +94,32 @@ type LinodeFilter =
 //     },
 //   ],
 // };
+
+type RequestHeaderValue = string | string[] | number | boolean | null;
+
+type CommonRequestHeadersList =
+  | 'Accept'
+  | 'Authorization'
+  | 'Content-Encoding'
+  | 'Content-Length'
+  | 'User-Agent';
+
+type RequestContentType =
+  | RequestHeaderValue
+  | 'application/json'
+  | 'application/octet-stream'
+  | 'application/x-www-form-urlencoded'
+  | 'multipart/form-data'
+  | 'text/html'
+  | 'text/plain';
+
+interface RawHeaders {
+  [key: string]: RequestHeaderValue;
+}
+
+export type RequestHeaders = Partial<
+  RawHeaders &
+    Record<CommonRequestHeadersList, RequestHeaderValue> & {
+      'Content-Type': RequestContentType;
+    }
+>;
