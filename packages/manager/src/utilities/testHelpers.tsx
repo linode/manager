@@ -166,7 +166,7 @@ export const renderWithTheme = (ui: any, options: Options = {}) => {
 export const renderWithThemeAndFormik = <T extends FormikValues>(
   ui: React.ReactElement,
   configObj: FormikConfig<T>
-) => renderWithTheme(<Formik {...configObj}>{() => ui}</Formik>);
+) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
 declare global {
   // export would be better, but i m aligning with how the namespace is declared by vi-axe
