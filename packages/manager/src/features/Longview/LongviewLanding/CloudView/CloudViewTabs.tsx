@@ -1,6 +1,6 @@
   import * as React from 'react';
   
-  import { TabPanels } from 'src/components/ReachTabPanels';
+  import { TabPanels } from 'src/components/Tabs/TabPanels';
   import { Tabs } from 'src/components/Tabs/Tabs';
   import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
   import { TabLinkList } from 'src/components/Tabs/TabLinkList';
