@@ -9,8 +9,8 @@ import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 export const LoadBalancerLabel = () => {
   const {
     errors,
+    handleBlur,
     handleChange,
-    setFieldTouched,
     touched,
     values,
   } = useFormikContext<CreateLoadbalancerPayload>();
@@ -24,15 +24,12 @@ export const LoadBalancerLabel = () => {
       data-qa-label-header
     >
       <TextField
-        onBlur={(e) => {
-          setFieldTouched(e.target.name, true); // mark the field as touched
-        }}
-        data-qa-label-input
         disabled={false}
         errorText={touched.label && errors.label ? errors.label : undefined} // Display errors if the field is touched and there's an error
         label="Load Balancer Label"
         name="label"
         noMarginTop
+        onBlur={handleBlur}
         onChange={handleChange}
         placeholder="Enter a label"
         value={values?.label}

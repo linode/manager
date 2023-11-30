@@ -12,10 +12,11 @@ export const LoadBalancerConfigurations = () => {
       {({ insert, push, remove }) => (
         <div>
           {values.configurations?.map((configuration, index) => (
-            <div key={index}>
-              {/* Render the LoadBalancerConfiguration component for each configuration */}
-              <LoadBalancerConfiguration index={index} name="configurations" />
-            </div>
+            <LoadBalancerConfiguration
+              index={index}
+              key={index}
+              name="configurations"
+            />
           ))}
         </div>
       )}

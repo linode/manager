@@ -24,18 +24,12 @@ interface Props {
 export const ConfigurationDetails = ({ index, name }: Props) => {
   const {
     errors,
+    handleBlur,
     handleChange,
-    setFieldTouched,
     setFieldValue,
     touched,
     values,
   } = useFormikContext<CreateLoadbalancerPayload>();
-
-  const handleOnBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFieldTouched(e.target.name, true);
-  };
 
   return (
     <Box padding={1}>
@@ -72,7 +66,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
             label="Port"
             labelTooltipText="TODO"
             name={`${name}.${index}.port`}
-            onBlur={handleOnBlur} // mark the field as touched
+            onBlur={handleBlur}
             onChange={handleChange}
             placeholder="Enter Port"
             value={values[name]?.[index]?.port}
@@ -95,7 +89,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
         }
         label="Configuration Label"
         name={`${name}.${index}.label`}
-        onBlur={handleOnBlur} // mark the field as touched
+        onBlur={handleBlur}
         onChange={handleChange}
         placeholder="Enter Configuration Label"
         value={values[name]?.[index]?.label}
