@@ -5,7 +5,6 @@ import 'rxjs/add/operator/filter';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { events$ } from 'src/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
@@ -142,71 +141,58 @@ const toasts: Toasts = {
   },
 };
 
-/**
- * Subscribes to incoming events and displays a toast notification if
- * one is defined in `toasts`.
- */
 export const useToastNotifications = () => {
   const { enqueueSnackbar } = useSnackbar();
 
-  React.useEffect(() => {
-    const subscription = events$
-      .filter(({ event }) => !event._initial)
-      .subscribe(({ event }) => {
-        const toastInfo = toasts[event.action];
+  const handleGlobalToast = (event: Event) => {
+    const toastInfo = toasts[event.action];
 
-        if (!toastInfo) {
-          return;
-        }
+    if (!toastInfo) {
+      return;
+    }
 
-        if (
-          ['finished', 'notification'].includes(event.status) &&
-          toastInfo.success
-        ) {
-          const successMessage =
-            typeof toastInfo.success === 'function'
-              ? toastInfo.success(event)
-              : toastInfo.success;
+    if (
+      ['finished', 'notification'].includes(event.status) &&
+      toastInfo.success
+    ) {
+      const successMessage =
+        typeof toastInfo.success === 'function'
+          ? toastInfo.success(event)
+          : toastInfo.success;
 
-          enqueueSnackbar(successMessage, {
-            variant: 'success',
-          });
-        }
-
-        if (event.status === 'failed' && toastInfo.failure) {
-          const failureMessage =
-            typeof toastInfo.failure === 'function'
-              ? toastInfo.failure(event)
-              : toastInfo.failure;
-
-          const hasSupportLink =
-            failureMessage?.includes('contact Support') ?? false;
-
-          const formattedFailureMessage = (
-            <>
-              {failureMessage?.replace(/ contact Support/i, '') ??
-                failureMessage}
-              {hasSupportLink ? (
-                <>
-                  &nbsp;
-                  <SupportLink text="contact Support" title={failureMessage} />.
-                </>
-              ) : null}
-              {toastInfo.link ? <>&nbsp;{toastInfo.link}</> : null}
-            </>
-          );
-
-          enqueueSnackbar(formattedFailureMessage, {
-            persist: toastInfo.persistFailureMessage,
-            variant: 'error',
-          });
-        }
+      enqueueSnackbar(successMessage, {
+        variant: 'success',
       });
+    }
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+    if (event.status === 'failed' && toastInfo.failure) {
+      const failureMessage =
+        typeof toastInfo.failure === 'function'
+          ? toastInfo.failure(event)
+          : toastInfo.failure;
 
-  return null;
+      const hasSupportLink =
+        failureMessage?.includes('contact Support') ?? false;
+
+      const formattedFailureMessage = (
+        <>
+          {failureMessage?.replace(/ contact Support/i, '') ?? failureMessage}
+          {hasSupportLink ? (
+            <>
+              &nbsp;
+              <SupportLink text="contact Support" title={failureMessage} />.
+            </>
+          ) : null}
+          {toastInfo.link ? <>&nbsp;{toastInfo.link}</> : null}
+        </>
+      );
+
+      enqueueSnackbar(formattedFailureMessage, {
+        persist: toastInfo.persistFailureMessage,
+        variant: 'error',
+      });
+    }
+  };
+
+  return { handleGlobalToast };
 };

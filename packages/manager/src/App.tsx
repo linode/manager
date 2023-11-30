@@ -14,13 +14,12 @@ import { GoTo } from './GoTo';
 import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
-import { useEventHandlers } from './hooks/useEventHandlers';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
 import { useToastNotifications } from './hooks/useToastNotifications';
-import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 import { useEventsPoller } from './queries/events';
+import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -34,7 +33,6 @@ const BaseApp = withDocumentTitleProvider(
 
       const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
-      useEventHandlers();
       useEventsPoller();
       useToastNotifications();
 

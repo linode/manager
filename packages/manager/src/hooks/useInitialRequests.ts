@@ -2,9 +2,7 @@ import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { getProfile, getUserPreferences } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
-import { useStore } from 'react-redux';
 
-import { startEventsInterval } from 'src/events';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { queryKey as accountQueryKey } from 'src/queries/account';
@@ -16,7 +14,6 @@ import { redirectToLogin } from 'src/session';
  * as we make our inital requests.
  */
 export const useInitialRequests = () => {
-  const store = useStore();
   const queryClient = useQueryClient();
 
   const { token } = useAuthentication();

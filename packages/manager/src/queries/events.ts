@@ -8,6 +8,7 @@ import {
 
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
 import { eventHandlers } from 'src/hooks/useEventHandlers';
+import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 
@@ -40,6 +41,7 @@ export const useInProgressEvents = () => {
 export const useEventsPoller = () => {
   const { incrementPollingInterval, pollingInterval } = usePollingInterval();
 
+  const { handleGlobalToast } = useToastNotifications();
   const queryClient = useQueryClient();
 
   const { events } = useEventsInfiniteQuery();
@@ -112,10 +114,11 @@ export const useEventsPoller = () => {
 
       for (const event of events.data) {
         for (const eventHandler of eventHandlers) {
-          if (eventHandler.filter({ event, queryClient })) {
+          if (eventHandler.filter(event)) {
             eventHandler.handler({ event, queryClient });
           }
         }
+        handleGlobalToast(event);
       }
     },
     queryFn: () => getEvents({}, filter),
