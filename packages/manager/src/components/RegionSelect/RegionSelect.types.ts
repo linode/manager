@@ -22,9 +22,11 @@ export interface RegionSelectProps
     'label' | 'onChange' | 'options'
   > {
   /**
-   * The specified capability to filter the regions on. Any region that does not have the currentCapability will not appear in the RegionSelect dropdown.
-   * Only use undefined for situations where there is no relevant capability for the RegionSelect - this will not filter any of the regions passed in.
+   * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
+   * Only use `undefined` for situations where there is no relevant capability for the RegionSelect - this will not filter any of the regions passed in.
    * Otherwise, a capability should always be passed in.
+   *
+   * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
   handleSelection: (id: string) => void;

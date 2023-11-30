@@ -209,7 +209,6 @@ export const CreateCluster = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               updateLabel(e.target.value)
             }
-            className={classes.inputWidth}
             data-qa-label-input
             errorText={errorMap.label}
             label="Cluster Label"
@@ -224,7 +223,6 @@ export const CreateCluster = () => {
               helperText: <RegionHelperText mb={2} />,
               helperTextPosition: 'top',
             }}
-            className={classes.regionSubtitle}
             currentCapability="Kubernetes"
             errorText={errorMap.region}
             regions={regionsData}
@@ -238,7 +236,6 @@ export const CreateCluster = () => {
             onChange={(selected: Item<string>) => {
               setVersion(selected);
             }}
-            className={classes.inputWidth}
             errorText={errorMap.k8s_version}
             isClearable={false}
             label="Kubernetes Version"
