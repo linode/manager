@@ -19,6 +19,7 @@ import { queryKey } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { useFlags } from 'src/hooks/useFlags';
 
 interface Props {
   helperText: string;
@@ -34,18 +35,9 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
   const queryClient = useQueryClient();
+  const flags = useFlags();
 
   const { data, error, isLoading } = useAllFirewallsQuery();
-
-  const assignedServices = data
-    ?.map((firewall) => {
-      return firewall.entities;
-    })
-    .flat();
-
-  const assignedNodeBalancers = assignedServices?.filter((service) => {
-    return service.type === 'nodebalancer';
-  });
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
@@ -160,12 +152,27 @@ export const AddNodebalancerDrawer = (props: Props) => {
     ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
     : [];
 
-  const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-    return (
-      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
-    );
-  };
+  const nodebalancerOptionsFilter = (() => {
+    // When `firewallNodebalancer` feature flag is disabled, no filtering
+    // occurs. In this case, pass a filter callback that always returns `true`.
+    if (!flags.firewallNodebalancer) {
+      return () => true;
+    }
+
+    const assignedNodeBalancers = data
+      ?.map((firewall) => firewall.entities)
+      .flat()
+      ?.filter((service) => service.type === 'nodebalancer');
+
+    return (nodebalancer: NodeBalancer) => {
+      return (
+        !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
+        !assignedNodeBalancers?.some(
+          (service) => service.id === nodebalancer.id
+        )
+      );
+    };
+  })();
 
   React.useEffect(() => {
     if (error) {
