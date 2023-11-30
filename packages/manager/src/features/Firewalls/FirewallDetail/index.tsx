@@ -10,8 +10,9 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -30,6 +31,7 @@ const FirewallDeviceLanding = React.lazy(() =>
 );
 
 export const FirewallDetail = () => {
+  const flags = useFlags();
   const { id, tab } = useParams<{ id: string; tab?: string }>();
   const history = useHistory();
   const { data: profile } = useProfile();
@@ -66,11 +68,14 @@ export const FirewallDetail = () => {
       routeName: `/firewalls/${id}/linodes`,
       title: `Linodes (${linodeCount})`,
     },
-    {
+  ];
+
+  if (flags.firewallNodebalancer) {
+    tabs.push({
       routeName: `/firewalls/${id}/nodebalancers`,
       title: `NodeBalancers (${nodebalancerCount})`,
-    },
-  ];
+    });
+  }
 
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
