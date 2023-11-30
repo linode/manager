@@ -177,7 +177,7 @@ type CertificateType = 'ca' | 'downstream';
 export interface Certificate {
   id: number;
   label: string;
-  certificate: string;
+  certificate?: string; // Not returned for Alpha
   type: CertificateType;
 }
 
