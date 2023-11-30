@@ -18,8 +18,14 @@ jobs:
         with:
           node-version: "18.14"
 
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install Dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
 
       - name: Run Build
         run: yarn build
