@@ -29,6 +29,7 @@ export const VPCTopSectionContent = (props: Props) => {
       </StyledBodyTypography>
       <RegionSelect
         aria-label="Choose a region"
+        currentCapability="VPCs"
         disabled={isDrawer ? true : disabled}
         errorText={errors.region}
         handleSelection={(region: string) => onChangeField('region', region)}
