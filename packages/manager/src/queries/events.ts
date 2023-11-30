@@ -1,10 +1,12 @@
-import { APIError, Event, ResourcePage, getEvents } from '@linode/api-v4';
+import { getEvents } from '@linode/api-v4';
 import { useInfiniteQuery } from 'react-query';
 
-export const useEventsInfiniteQuery = () => {
+import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
+
+export const useEventsInfiniteQuery = (filter: Filter = {}) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
-    ['events', 'infinite'],
-    ({ pageParam }) => getEvents({ page: pageParam }),
+    ['events', 'infinite', filter],
+    ({ pageParam }) => getEvents({ page: pageParam }, filter),
     {
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,

@@ -1,4 +1,4 @@
-import { Event, getEvents } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -21,25 +21,31 @@ import {
   StyledTypography,
 } from './EventsLanding.styles';
 
+import type { Filter } from '@linode/api-v4';
+
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
-  // isEventsLandingForEntity?: boolean;
   entityId?: number;
-  errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
-  getEventsRequest?: typeof getEvents;
 }
 
 export const EventsLanding = (props: Props) => {
-  const {
-    events,
-    isLoading,
-    hasNextPage,
-    fetchNextPage,
-    error,
-    isFetchingNextPage
-  } = useEventsInfiniteQuery();
+  const { emptyMessage, entityId } = props;
 
-  const { emptyMessage, entityId, errorMessage } = props;
+  const filter: Filter = { action: { '+neq': 'profile_update' } };
+
+  if (entityId) {
+    filter['entity.id'] = entityId;
+    filter['entity.type'] = 'linode';
+  }
+
+  const {
+    error,
+    events,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useEventsInfiniteQuery(filter);
 
   return (
     <>
@@ -66,7 +72,6 @@ export const EventsLanding = (props: Props) => {
           {renderTableBody(
             isLoading,
             isFetchingNextPage,
-            errorMessage,
             entityId,
             error?.[0].reason,
             events,
@@ -79,7 +84,8 @@ export const EventsLanding = (props: Props) => {
           <div />
         </Waypoint>
       ) : (
-        events && events.length > 0 && (
+        events &&
+        events.length > 0 && (
           <StyledTypography>No more events to show</StyledTypography>
         )
       )}
@@ -90,7 +96,6 @@ export const EventsLanding = (props: Props) => {
 export const renderTableBody = (
   loading: boolean,
   isRequesting: boolean,
-  errorMessage = 'There was an error retrieving the events on your account.',
   entityId?: number,
   error?: string,
   events?: Event[],
@@ -106,11 +111,7 @@ export const renderTableBody = (
     );
   } else if (error) {
     return (
-      <TableRowError
-        colSpan={12}
-        data-qa-events-table-error
-        message={errorMessage}
-      />
+      <TableRowError colSpan={12} data-qa-events-table-error message={error} />
     );
   } else if (events && events.length === 0) {
     return (
