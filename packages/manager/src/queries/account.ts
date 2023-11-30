@@ -68,7 +68,7 @@ export const useChildAccounts = ({
 
 export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   const { data: grants } = useGrants();
-  const hasExplictAuthToken = headers?.hasAuthorization();
+  const hasExplicitAuthToken = headers?.hasAuthorization();
 
   return useQuery<Account, APIError[]>(
     [queryKey, 'childAccounts', 'childAccount', euuid],
