@@ -9,12 +9,13 @@ import { ConfigurationDetails } from './ConfigurationDetails';
 
 interface Props {
   index: number;
+  name: string;
 }
 
-export const LoadBalancerConfiguration = ({ index }: Props) => {
+export const LoadBalancerConfiguration = ({ index, name }: Props) => {
   const configurationSteps = [
     {
-      content: <ConfigurationDetails index={index} />,
+      content: <ConfigurationDetails index={index} name={name} />,
       handler: () => null,
       label: 'Details',
     },

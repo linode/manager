@@ -17,7 +17,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
     renderWithTheme(
       <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} />}
+        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
       </Formik>
     );
     const ConfigurationInputLabel = screen.getByPlaceholderText(
@@ -48,7 +48,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should navigate to Service Targets content', () => {
     renderWithTheme(
       <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} />}
+        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
       </Formik>
     );
     userEvent.click(screen.getByTestId('service-targets'));
@@ -68,7 +68,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should navigate to Routes content', () => {
     renderWithTheme(
       <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} />}
+        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
       </Formik>
     );
     userEvent.click(screen.getByTestId('service-targets'));
@@ -89,7 +89,7 @@ describe('LoadBalancerConfiguration', () => {
   test('Should be able to go previous step', () => {
     renderWithTheme(
       <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} />}
+        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
       </Formik>
     );
     userEvent.click(screen.getByTestId('service-targets'));

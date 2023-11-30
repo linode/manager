@@ -18,15 +18,24 @@ const protocolOptions = [
 
 interface Props {
   index: number;
+  name: string;
 }
 
-export const ConfigurationDetails = ({ index }: Props) => {
+export const ConfigurationDetails = ({ index, name }: Props) => {
   const {
     errors,
     handleChange,
+    setFieldTouched,
     setFieldValue,
+    touched,
     values,
   } = useFormikContext<CreateLoadbalancerPayload>();
+
+  const handleOnBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFieldTouched(e.target.name, true);
+  };
 
   return (
     <Box padding={1}>
@@ -38,29 +47,35 @@ export const ConfigurationDetails = ({ index }: Props) => {
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           <Autocomplete
+            errorText={
+              touched[name]?.[index]?.protocol
+                ? errors[name]?.[index]?.protocol
+                : ''
+            }
             onChange={(_, { value }) =>
-              setFieldValue(`configurations.${index}.protocol`, value)
+              setFieldValue(`${name}.${index}.protocol`, value)
             }
             textFieldProps={{
               labelTooltipText: 'TODO',
             }}
             value={protocolOptions.find(
-              (option) =>
-                option.value === values.configurations?.[index]?.protocol
+              (option) => option.value === values[name]?.[index]?.protocol
             )}
             disableClearable
-            errorText={errors[`configurations.${index}.protocol`]}
             label="Protocol"
             options={protocolOptions}
           />
           <TextField
-            errorText={errors[`configurations.${index}.port`]}
+            errorText={
+              touched[name]?.[index]?.port ? errors[name]?.[index]?.port : ''
+            }
             label="Port"
             labelTooltipText="TODO"
-            name={`configurations.${index}.port`}
+            name={`${name}.${index}.port`}
+            onBlur={handleOnBlur} // mark the field as touched
             onChange={handleChange}
             placeholder="Enter Port"
-            value={values.configurations?.[index]?.port}
+            value={values[name]?.[index]?.port}
           />
         </Stack>
         <Stack maxWidth="600px">
@@ -75,12 +90,15 @@ export const ConfigurationDetails = ({ index }: Props) => {
         </Stack>
       </Stack>
       <TextField
-        errorText={errors[`configurations.${index}.label`]}
+        errorText={
+          touched[name]?.[index]?.label ? errors[name]?.[index]?.label : ''
+        }
         label="Configuration Label"
-        name={`configurations.${index}.label`}
+        name={`${name}.${index}.label`}
+        onBlur={handleOnBlur} // mark the field as touched
         onChange={handleChange}
         placeholder="Enter Configuration Label"
-        value={values.configurations?.[index]?.label}
+        value={values[name]?.[index]?.label}
       />
     </Box>
   );
