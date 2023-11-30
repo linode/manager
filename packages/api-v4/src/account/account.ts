@@ -157,7 +157,7 @@ export const signAgreement = (data: Partial<Agreements>) => {
  * getChildAccounts
  *
  * This endpoint will return a paginated list of all Child Accounts with a Parent Account.
- * The response would be similar to /account, except that it would list details for multiple accounts.
+ * The response will be similar to /account, except that it will list details for multiple accounts.
  */
 export const getChildAccounts = ({ filter, params, headers }: RequestOptions) =>
   Request<ResourcePage<Account>>(
