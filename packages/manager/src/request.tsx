@@ -201,7 +201,7 @@ export const setupInterceptors = (store: ApplicationStore) => {
 
     // If headers are explicitly passed to our endpoint via
     // setHeaders(), we don't want this overridden.
-    const hasExplictAuthToken = headers.hasAuthorization();
+    const hasExplicitAuthToken = headers.hasAuthorization();
 
     const bearer = hasExplictAuthToken ? headers.getAuthorization() : token;
 
