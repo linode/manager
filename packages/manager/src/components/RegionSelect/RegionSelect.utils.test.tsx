@@ -18,20 +18,47 @@ const accountAvailabilityData = [
 
 const regions: Region[] = [
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'us',
     id: 'us-1',
     label: 'US Location',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'ca',
     id: 'ca-1',
     label: 'CA Location',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'jp',
     id: 'jp-1',
     label: 'JP Location',
   }),
+];
+
+const expectedRegions: RegionSelectOption[] = [
+  {
+    data: { country: 'ca', region: 'North America' },
+    label: 'CA Location (ca-1)',
+    unavailable: false,
+    value: 'ca-1',
+  },
+  {
+    data: {
+      country: 'us',
+      region: 'North America',
+    },
+    label: 'US Location (us-1)',
+    unavailable: false,
+    value: 'us-1',
+  },
+  {
+    data: { country: 'jp', region: 'Asia' },
+    label: 'JP Location (jp-1)',
+    unavailable: false,
+    value: 'jp-1',
+  },
 ];
 
 describe('getRegionOptions', () => {
@@ -53,33 +80,27 @@ describe('getRegionOptions', () => {
       regions,
     });
 
-    // Expected result
-    const expected: RegionSelectOption[] = [
-      {
-        data: { country: 'ca', region: 'North America' },
-        label: 'CA Location (ca-1)',
-        unavailable: false,
-        value: 'ca-1',
-      },
-      {
-        data: {
-          country: 'us',
-          region: 'North America',
-        },
-        label: 'US Location (us-1)',
-        unavailable: false,
-        value: 'us-1',
-      },
+    expect(result).toEqual(expectedRegions);
+  });
 
-      {
-        data: { country: 'jp', region: 'Asia' },
-        label: 'JP Location (jp-1)',
-        unavailable: false,
-        value: 'jp-1',
-      },
+  it('should filter out regions that do not have the currentCapability if currentCapability is provided', () => {
+    const regionsToFilter: Region[] = [
+      ...regions,
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        country: 'pe',
+        id: 'peru-1',
+        label: 'Peru Location',
+      }),
     ];
 
-    expect(result).toEqual(expected);
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions: regionsToFilter,
+    });
+
+    expect(result).toEqual(expectedRegions);
   });
 });
 
