@@ -14,7 +14,7 @@ import { supportTicketEventHandler } from 'src/queries/support';
 import { tokenEventHandler } from 'src/queries/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes';
 
-const eventHandlers: {
+export const eventHandlers: {
   filter: (event: EventWithStore) => boolean;
   handler: (event: EventWithStore) => void;
 }[] = [

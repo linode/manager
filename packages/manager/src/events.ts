@@ -29,7 +29,7 @@ import { ApplicationStore } from './store';
 export interface EventWithStore {
   event: Event;
   queryClient: QueryClient;
-  store: ApplicationStore;
+  store?: ApplicationStore;
 }
 
 export interface EntityEventWithStore extends EventWithStore {

@@ -1,7 +1,13 @@
 import { getEvents } from '@linode/api-v4';
-import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
+import { eventHandlers } from 'src/hooks/useEventHandlers';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 
@@ -34,23 +40,83 @@ export const useInProgressEvents = () => {
 export const useEventsPoller = () => {
   const { incrementPollingInterval, pollingInterval } = usePollingInterval();
 
+  const queryClient = useQueryClient();
+
   const { events } = useEventsInfiniteQuery();
 
   const latestEventTime = events ? events[0].created : '';
 
+  // @todo run a reducde to optimize
   const inProgressEvents = events?.filter(isInProgressEvent);
+  const eventsThatAlreadyHappenedAtTheFilterTime = events?.filter(
+    (event) => event.created === latestEventTime
+  );
 
   const hasFetchedInitialEvents = events !== undefined;
 
   const filter = generatePollingFilter(
     latestEventTime,
-    inProgressEvents?.map((event) => event.id)
+    inProgressEvents?.map((event) => event.id),
+    eventsThatAlreadyHappenedAtTheFilterTime?.map((e) => e.id)
   );
 
   useQuery({
     enabled: hasFetchedInitialEvents,
-    onSuccess() {
+    onSuccess(events) {
       incrementPollingInterval();
+
+      const { existingEvents, newEvents } = events.data.reduce<{
+        existingEvents: Event[];
+        newEvents: Event[];
+      }>(
+        (acc, event) => {
+          if (inProgressEvents?.some((e) => e.id === event.id)) {
+            acc.existingEvents.push(event);
+          } else {
+            acc.newEvents.push(event);
+          }
+          return acc;
+        },
+        { existingEvents: [], newEvents: [] }
+      );
+
+      queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+        ['events', 'infinite', {}],
+        (prev) => {
+          const newPages = prev?.pages.map((page, index) => {
+            if (index === 0 && newEvents.length > 0) {
+              page.data = [...newEvents, ...page.data];
+
+              return page;
+            }
+
+            for (const event of existingEvents) {
+              const indexOfEvent = page.data.findIndex(
+                (e) => e.id === event.id
+              );
+
+              if (indexOfEvent !== -1) {
+                page.data[index] = event;
+              }
+            }
+
+            return page;
+          });
+
+          return {
+            pageParams: prev?.pageParams ?? [],
+            pages: newPages ?? [],
+          };
+        }
+      );
+
+      for (const event of events.data) {
+        for (const eventHandler of eventHandlers) {
+          if (eventHandler.filter({ event, queryClient })) {
+            eventHandler.handler({ event, queryClient });
+          }
+        }
+      }
     },
     queryFn: () => getEvents({}, filter),
     queryKey: ['events', 'poller'],
