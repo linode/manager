@@ -20,6 +20,7 @@ import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
 import { useToastNotifications } from './hooks/useToastNotifications';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
+import { useEventsPoller } from './queries/events';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -34,6 +35,7 @@ const BaseApp = withDocumentTitleProvider(
       const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
       useEventHandlers();
+      useEventsPoller();
       useToastNotifications();
 
       useAdobeAnalytics();
