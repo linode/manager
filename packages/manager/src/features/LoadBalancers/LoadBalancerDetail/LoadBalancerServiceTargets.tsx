@@ -148,10 +148,10 @@ export const LoadBalancerServiceTargets = () => {
             </TableSortCell>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'algorithm'}
+                active={orderBy === 'load_balancing_policy'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="algorithm"
+                label="load_balancing_policy"
               >
                 Algorithm
               </TableSortCell>
