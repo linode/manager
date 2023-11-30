@@ -82,15 +82,6 @@ export const CreateCluster = () => {
     mutateAsync: createKubernetesCluster,
   } = useCreateKubernetesClusterMutation();
 
-  // Only include regions that have LKE capability
-  const filteredRegions = React.useMemo(() => {
-    return regionsData
-      ? regionsData.filter((thisRegion) =>
-          thisRegion.capabilities.includes('Kubernetes')
-        )
-      : [];
-  }, [regionsData]);
-
   const {
     data: versionData,
     isError: versionLoadError,
@@ -100,12 +91,6 @@ export const CreateCluster = () => {
     label: thisVersion.id,
     value: thisVersion.id,
   }));
-
-  React.useEffect(() => {
-    if (filteredRegions.length === 1 && !selectedRegionID) {
-      setSelectedRegionID(filteredRegions[0].id);
-    }
-  }, [filteredRegions, selectedRegionID]);
 
   React.useEffect(() => {
     if (versions.length > 0) {
@@ -240,8 +225,9 @@ export const CreateCluster = () => {
               helperTextPosition: 'top',
             }}
             className={classes.regionSubtitle}
+            currentCapability="Kubernetes"
             errorText={errorMap.region}
-            regions={filteredRegions}
+            regions={regionsData}
             selectedId={selectedId}
           />
           {showPricingNotice && (
