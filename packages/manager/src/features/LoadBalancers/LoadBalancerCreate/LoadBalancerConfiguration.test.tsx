@@ -13,13 +13,19 @@ const initialValues = {
   label: '',
 };
 
+export const renderWithFormikAndTheme = () => {
+  const formikWrapper = (
+    <Formik initialValues={initialValues} onSubmit={() => {}}>
+      {() => <LoadBalancerConfiguration index={0} name="configurations" />}
+    </Formik>
+  );
+
+  return renderWithTheme(formikWrapper);
+};
+
 describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
-    renderWithTheme(
-      <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
-      </Formik>
-    );
+    renderWithFormikAndTheme();
     const ConfigurationInputLabel = screen.getByPlaceholderText(
       'Enter Configuration Label'
     );
@@ -46,11 +52,7 @@ describe('LoadBalancerConfiguration', () => {
     expect(screen.queryByText('Previous: Details')).toBeNull();
   });
   test('Should navigate to Service Targets content', () => {
-    renderWithTheme(
-      <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
-      </Formik>
-    );
+    renderWithFormikAndTheme();
     userEvent.click(screen.getByTestId('service-targets'));
     expect(
       screen.getByText('TODO: AGLB - Implement Service Targets Configuration.')
@@ -66,11 +68,7 @@ describe('LoadBalancerConfiguration', () => {
     expect(screen.queryByText('Previous: Service Targets')).toBeNull();
   });
   test('Should navigate to Routes content', () => {
-    renderWithTheme(
-      <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
-      </Formik>
-    );
+    renderWithFormikAndTheme();
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByTestId('routes'));
     expect(
@@ -87,11 +85,7 @@ describe('LoadBalancerConfiguration', () => {
     expect(screen.getByText('Previous: Service Targets')).toBeInTheDocument();
   });
   test('Should be able to go previous step', () => {
-    renderWithTheme(
-      <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {() => <LoadBalancerConfiguration index={0} name="configurations" />}
-      </Formik>
-    );
+    renderWithFormikAndTheme();
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByText('Previous: Details'));
     expect(screen.getByText('Protocol')).toBeInTheDocument();
