@@ -53,7 +53,7 @@ export const useChildAccounts = ({
   params,
 }: RequestOptions) => {
   const { data: grants } = useGrants();
-  const hasExplictAuthToken = headers?.hasAuthorization();
+  const hasExplicitAuthToken = headers?.hasAuthorization();
 
   return useQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
