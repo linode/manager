@@ -111,6 +111,9 @@ export const GuestMetrics = (props: any) => {
             <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
               <MemoryChart {...graphProps} />
             </Grid>
+            {/* <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
+              <MemoryChart {...graphProps} />
+            </Grid> */}
           </Grid>}
           
         </Paper>
