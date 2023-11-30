@@ -126,4 +126,13 @@ describe('Akamai Global Load Balancer landing page', () => {
         .should('be.enabled');
     });
   });
+
+  /*
+   * - Confirms that Deleting a load balancer from the AGLB landing page.
+   * - Confirms AGLB landing page updates to reflect deleted load balancer upon deleting from the landing page
+   * - Confirms AGLB landing page reverts to its empty state when all of the load balancers have been deleted.
+   * - Confirms User is redirected to AGLB landing page upon deleting from Load Balancer details page "Settings" tab, and load balancer is not listed on the landing page.
+   * Deleting a load balancer from the AGLB load balancer details page "Settings" tab (route: /loadbalancers/:id/settings)
+   */
+  it('Delete a Load Balancer from landing page.', () => {});
 });
