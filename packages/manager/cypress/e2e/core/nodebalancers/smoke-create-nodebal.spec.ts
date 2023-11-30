@@ -43,6 +43,7 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
       cy.findByText(`$10/month`).should('be.visible');
     });
 
+    // Confirm there is a docs link to the pricing page
     cy.findByText(dcPricingDocsLabel)
       .should('be.visible')
       .should('have.attr', 'href', dcPricingDocsUrl);
@@ -137,8 +138,7 @@ describe('create NodeBalancer', () => {
 
   /*
    * - Confirms DC-specific pricing UI flow works as expected during NodeBalancer creation.
-   * - Confirms that pricing notice is shown in "Region" section.
-   * - Confirms that notice is shown when selecting a region with a different price structure.
+   * - Confirms that pricing docs link is shown in "Region" section.
    */
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     const initialRegion = getRegionById('us-west');

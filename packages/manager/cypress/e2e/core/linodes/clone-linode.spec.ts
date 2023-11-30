@@ -130,6 +130,7 @@ describe('clone linode', () => {
     cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
     cy.wait(['@getLinode', '@getLinodes', '@getLinodeTypes']);
 
+    // Confirm there is a docs link to the pricing page.
     cy.findByText(dcPricingDocsLabel)
       .should('be.visible')
       .should('have.attr', 'href', dcPricingDocsUrl);

@@ -210,8 +210,7 @@ describe('create linode', () => {
 
   /*
    * - Confirms DC-specific pricing UI flow works as expected during Linode creation.
-   * - Confirms that pricing notice is shown in "Region" section.
-   * - Confirms that notice is shown when selecting a region with a different price structure.
+   * - Confirms that pricing docs link is shown in "Region" section.
    * - Confirms that backups pricing is correct when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during create flow', () => {
@@ -286,6 +285,7 @@ describe('create linode', () => {
       );
     });
 
+    // Confirm there is a docs link to the pricing page.
     cy.findByText(dcPricingDocsLabel)
       .should('be.visible')
       .should('have.attr', 'href', dcPricingDocsUrl);
