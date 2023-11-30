@@ -42,6 +42,11 @@ export const useMutateAccount = () => {
   });
 };
 
+/**
+ * For useChildAccounts and useChildAccount:
+ * Assuming authorization in the header implies parent account.
+ * API error expected if parent account lacks child_account_access grant.
+ */
 export const useChildAccounts = ({
   filter,
   headers,
@@ -75,22 +80,10 @@ export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   );
 };
 
-export const useCreateChildAccountPersonalAccessToken = ({
+export const useCreateChildAccountPersonalAccessTokenMutation = ({
   euuid,
   headers,
-}: ChildAccountPayload) => {
-  const { data: grants } = useGrants();
-  const hasExplictAuthToken = headers?.hasAuthorization();
-
-  return useQuery<Token, APIError[], ChildAccountPayload>(
-    [queryKey, 'childAccounts', 'childAccount', euuid, 'personal-access-token'],
-    () => createChildAccountPersonalAccessToken({ euuid, headers }),
-    {
-      // If the header has an authorization defined, we're going to assume it's the parent account
-      // This is to avoid having to add more logic to useGrants and useProfile.
-      // The API will return an error if the parent account does not have the child_account_access grant.
-      enabled:
-        Boolean(grants?.global?.child_account_access) || hasExplictAuthToken,
-    }
+}: ChildAccountPayload) =>
+  useMutation<Token, APIError[], ChildAccountPayload>(() =>
+    createChildAccountPersonalAccessToken({ euuid, headers })
   );
-};
