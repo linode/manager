@@ -6,6 +6,7 @@ import {
   ActiveLongviewPlan,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
+import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -13,11 +14,11 @@ import { RouteComponentProps, matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
@@ -138,13 +139,12 @@ export const LongviewLanding = (props: CombinedProps) => {
         removeCrumbX={1}
         title="Longview"
       />
-      <Tabs
+      <StyledTabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
-        style={{ marginTop: 0 }}
       >
         <TabLinkList tabs={tabs} />
 
@@ -171,7 +171,7 @@ export const LongviewLanding = (props: CombinedProps) => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-      </Tabs>
+      </StyledTabs>
       <SubscriptionDialog
         clientLimit={
           isEmpty(activeSubscriptionRequestHook.data)
@@ -187,6 +187,12 @@ export const LongviewLanding = (props: CombinedProps) => {
     </>
   );
 };
+
+const StyledTabs = styled(Tabs, {
+  label: 'StyledTabs',
+})(() => ({
+  marginTop: 0,
+}));
 
 export default compose<CombinedProps, {} & RouteComponentProps>(
   withLongviewClients()

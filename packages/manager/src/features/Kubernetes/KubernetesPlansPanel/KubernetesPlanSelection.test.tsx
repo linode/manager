@@ -26,13 +26,13 @@ const storage = '1024 GB';
 const extendedType = extendedTypeFactory.build();
 
 const props: KubernetesPlanSelectionProps = {
-  getTypeCount: jest.fn(),
+  getTypeCount: vi.fn(),
   idx: 0,
-  onAdd: jest.fn(),
-  onSelect: jest.fn(),
+  onAdd: vi.fn(),
+  onSelect: vi.fn(),
   selectedRegionID: 'us-east',
   type: extendedType,
-  updatePlanCount: jest.fn(),
+  updatePlanCount: vi.fn(),
 };
 
 describe('KubernetesPlanSelection (table, desktop view)', () => {
@@ -59,27 +59,15 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
     expect(addPlanButton).toBeInTheDocument();
   });
 
-  it('displays DC-specific prices in a region with a price increase when the DC-Specific pricing feature flag is on', async () => {
-    const { queryByText } = render(
-      wrapWithTableBody(
-        <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />,
-        { flags: { dcSpecificPricing: true } }
-      )
-    );
-
-    expect(queryByText(regionHourlyPrice)).toBeInTheDocument();
-    expect(queryByText(regionMonthlyPrice)).toBeInTheDocument();
-  });
-
-  it('displays base prices in a region with a price increase when the DC-Specific pricing feature flag is off', async () => {
+  it('displays DC-specific prices in a region with a price increase', async () => {
     const { queryByText } = render(
       wrapWithTableBody(
         <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />
       )
     );
 
-    expect(queryByText(baseHourlyPrice)).toBeInTheDocument();
-    expect(queryByText(baseMonthlyPrice)).toBeInTheDocument();
+    expect(queryByText(regionHourlyPrice)).toBeInTheDocument();
+    expect(queryByText(regionMonthlyPrice)).toBeInTheDocument();
   });
 
   describe('KubernetesPlanSelection (cards, mobile view)', () => {
@@ -106,10 +94,9 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       expect(getByText(`${ram} RAM`, { exact: false })).toBeInTheDocument();
     });
 
-    it('displays DC-specific prices in a region with a price increase when the DC-Specific pricing feature flag on', async () => {
+    it('displays DC-specific prices in a region with a price increase', async () => {
       const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />,
-        { flags: { dcSpecificPricing: true } }
+        <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />
       );
 
       expect(
@@ -117,19 +104,6 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       ).toBeInTheDocument();
       expect(
         getByText(`${regionHourlyPrice}/hr`, { exact: false })
-      ).toBeInTheDocument();
-    });
-
-    it('displays base prices in a region with a price increase when the DC-Specific pricing feature flag off', async () => {
-      const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />
-      );
-
-      expect(
-        getByText(`${baseMonthlyPrice}/mo`, { exact: false })
-      ).toBeInTheDocument();
-      expect(
-        getByText(`${baseHourlyPrice}/hr`, { exact: false })
       ).toBeInTheDocument();
     });
   });

@@ -1,15 +1,15 @@
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Paper } from 'src/components/Paper';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurations';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 import { useRegionsQuery } from 'src/queries/regions';
+
+import { Ports } from '../LoadBalancerLanding/Ports';
+import { Stack } from 'src/components/Stack';
 
 export const LoadBalancerSummary = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
@@ -17,36 +17,16 @@ export const LoadBalancerSummary = () => {
   const id = Number(loadbalancerId);
 
   const { data: loadbalancer } = useLoadBalancerQuery(id);
-  const { data: configurations } = useLoadBalancerConfigurationsQuery(id);
   const { data: regions } = useRegionsQuery();
-
-  const ports = configurations?.data.map((config) => config.port);
 
   const items = [
     {
-      title: 'Endpoint Health',
-      value: (
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <StatusIcon status="active" />
-          <Typography>4 up</Typography>
-          <Typography>&mdash;</Typography>
-          <StatusIcon status="error" />
-          <Typography>6 down</Typography>
-        </Stack>
-      ),
-    },
-
-    {
       title: 'Hostname',
-      value: (
-        <Typography>
-          <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />
-        </Typography>
-      ),
+      value: <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />,
     },
     {
       title: 'Ports',
-      value: <Typography>{ports?.join(', ')}</Typography>,
+      value: <Ports loadbalancerId={id} />,
     },
     {
       title: 'Regions',
@@ -57,6 +37,10 @@ export const LoadBalancerSummary = () => {
             .join(', ')}
         </Typography>
       ),
+    },
+    {
+      title: 'Load Balancer ID',
+      value: <Typography>{loadbalancer?.id}</Typography>,
     },
   ];
 

@@ -4,8 +4,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LabelAndTagsPanel } from './LabelAndTagsPanel';
 
-const onLabelChange = jest.fn();
-const onTagsChange = jest.fn();
+const onLabelChange = vi.fn();
+const onTagsChange = vi.fn();
 const INPUT_LABEL = 'Linode Label';
 const TAG_LABEL = 'Custom Label';
 

@@ -1,6 +1,5 @@
 import { entityTag } from 'support/constants/cypress';
 import { createLinode } from 'support/api/linodes';
-import { selectRegionString } from 'support/ui/constants';
 import {
   containsClick,
   fbtClick,
@@ -12,11 +11,6 @@ import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { dcPricingRegionNotice } from 'support/constants/dc-specific-pricing';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
@@ -27,6 +21,7 @@ const deployNodeBalancer = () => {
 
 const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   const regionName = getRegionById(nodeBal.region).label;
+
   cy.visitWithLogin('/nodebalancers/create');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(entityTag);
@@ -34,15 +29,13 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
 
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
-
     // Confirms that the price will not display when the region is not selected
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText('/month').should('not.exist');
     });
 
     // Confirms that the price will show up when the region is selected
-    containsClick(selectRegionString).type(`${regionName}{enter}`);
+    ui.regionSelect.find().click().type(`${regionName}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$10/month`).should('be.visible');
     });
@@ -53,20 +46,16 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
     //   .should('have.attr', 'href', dcPricingDocsUrl);
 
     // Confirms that the summary updates to reflect price changes if the user changes their region.
-    cy.get(`[value="${regionName}"]`).click().type(`${newRegion.label}{enter}`);
+    ui.regionSelect.find().click().clear().type(`${newRegion.label}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$14/month`).should('be.visible');
     });
 
     // Confirms that a notice is shown in the "Region" section of the NodeBalancer Create form informing the user of DC-specific pricing
     cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
-
-    // Change back to the initial region to create the Node Balancer
-    cy.get(`[value="${newRegion.label}"]`).click().type(`${regionName}{enter}`);
-  } else {
-    // this will create the NB in newark, where the default Linode was created
-    containsClick(selectRegionString).type(`${regionName}{enter}`);
   }
+  // this will create the NB in newark, where the default Linode was created
+  ui.regionSelect.find().click().clear().type(`${regionName}{enter}`);
 
   // node backend config
   fbtClick('Label').type(randomLabel());
@@ -165,11 +154,6 @@ describe('create NodeBalancer', () => {
       cy.intercept('POST', apiMatcher('nodebalancers')).as(
         'createNodeBalancer'
       );
-
-      mockAppendFeatureFlags({
-        dcSpecificPricing: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
 
       createNodeBalancerWithUI(nodeBal, true);
     });

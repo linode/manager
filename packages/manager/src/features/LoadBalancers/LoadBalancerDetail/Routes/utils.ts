@@ -1,6 +1,13 @@
 /* eslint-disable perfectionist/sort-objects */
-import type { MatchField, Rule, RulePayload } from '@linode/api-v4';
 import { capitalize } from 'src/utilities/capitalize';
+
+import type {
+  Configuration,
+  MatchField,
+  Route,
+  Rule,
+  RulePayload,
+} from '@linode/api-v4';
 
 export const matchFieldMap: Record<MatchField, string> = {
   header: 'HTTP Header',
@@ -73,3 +80,18 @@ export const timeUnitOptions = Object.keys(timeUnitFactorMap).map(
 );
 
 export const defaultTTL = timeUnitFactorMap['hour'] * 8;
+
+/**
+ * Routes can be `http` or `tcp`.
+ * Configurations can be `http`, `https`, or `tcp`.
+ *
+ * Use this function to get the corresponding *route* protocol from a *configuration*
+ */
+export function getRouteProtocolFromConfigurationProtocol(
+  protocol: Configuration['protocol']
+): Route['protocol'] {
+  if (protocol === 'http' || protocol === 'https') {
+    return 'http';
+  }
+  return 'tcp';
+}

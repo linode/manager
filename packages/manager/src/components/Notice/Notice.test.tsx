@@ -30,7 +30,7 @@ describe('Notice Component', () => {
   });
 
   it('handles click events', () => {
-    const handleClick = jest.fn();
+    const handleClick = vi.fn();
     const { getByText } = renderWithTheme(
       <Notice onClick={handleClick} text="Click me" />
     );
@@ -89,11 +89,11 @@ describe('Notice Component', () => {
     const { container } = renderWithTheme(
       <Notice
         text="Styled Text"
-        typeProps={{ style: { fontWeight: 'bold' } }}
+        typeProps={{ style: { fontFamily: 'monospace' } }}
       />
     );
     const typography = container.querySelector('.noticeText');
 
-    expect(typography).toHaveStyle('font-weight: bold');
+    expect(typography).toHaveStyle('font-family: monospace');
   });
 });

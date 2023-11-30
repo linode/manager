@@ -1,14 +1,19 @@
-import { createLinode, Linode } from '@linode/api-v4';
-import { createLinodeRequestFactory } from '@src/factories';
+import type { Linode } from '@linode/api-v4';
+import { createLinode } from '@linode/api-v4';
+import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptGetLinodeDetails,
   interceptRebootLinodeIntoRescueMode,
+  mockGetLinodeDetails,
+  mockGetLinodeDisks,
+  mockGetLinodeVolumes,
+  mockRebootLinodeIntoRescueModeError,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { createAndBootLinode } from '../../../support/util/linode-utils';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {
@@ -16,11 +21,16 @@ const rebootInRescueMode = () => {
     .findByTitle('Reboot into Rescue Mode')
     .should('be.visible')
     .should('be.enabled')
+    .should('have.attr', 'data-qa-form-data-loading', 'false')
     .click();
 };
 
 authenticate();
 describe('Rescue Linodes', () => {
+  before(() => {
+    cleanUp(['linodes', 'lke-clusters']);
+  });
+
   /*
    * - Creates a Linode, waits for it to boot, and reboots it into rescue mode.
    * - Confirms that rescue mode API requests succeed.
@@ -28,17 +38,32 @@ describe('Rescue Linodes', () => {
    * - Confirms that toast appears confirming successful reboot into rescue mode.
    */
   it('Can reboot a Linode into rescue mode', () => {
-    cy.defer(createAndBootLinode(), 'creating and booting Linode').then(
+    const linodePayload = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+    });
+
+    cy.defer(createLinode(linodePayload), 'creating Linode').then(
       (linode: Linode) => {
-        // mock 200 response
         interceptGetLinodeDetails(linode.id).as('getLinode');
         interceptRebootLinodeIntoRescueMode(linode.id).as(
           'rebootLinodeRescueMode'
         );
 
-        const rescueUrl = `/linodes/${linode.id}/?rescue=true`;
+        const rescueUrl = `/linodes/${linode.id}`;
         cy.visitWithLogin(rescueUrl);
         cy.wait('@getLinode');
+
+        // Wait for Linode to boot.
+        cy.findByText('RUNNING').should('be.visible');
+
+        // Open rescue dialog using action menu..
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode ${linode.label}`)
+          .should('be.visible')
+          .click();
+
+        ui.actionMenuItem.findByTitle('Rescue').should('be.visible').click();
 
         ui.dialog
           .findByTitle(`Rescue Linode ${linode.label}`)
@@ -47,7 +72,7 @@ describe('Rescue Linodes', () => {
             rebootInRescueMode();
           });
 
-        // Check mocked response and make sure UI responded correctly.
+        // Check intercepted response and make sure UI responded correctly.
         cy.wait('@rebootLinodeRescueMode')
           .its('response.statusCode')
           .should('eq', 200);
@@ -59,41 +84,32 @@ describe('Rescue Linodes', () => {
   });
 
   /*
-   * - Creates a Linode and immediately attempts to reboot it into rescue mode.
-   * - Confirms that an error message appears in the UI explaining that the Linode is busy.
+   * - Confirms UI error flow when user rescues a Linode that is provisioning.
+   * - Confirms that API error message is displayed in the rescue dialog.
    */
   it('Cannot reboot a provisioning Linode into rescue mode', () => {
-    const linodeRequest = createLinodeRequestFactory.build({
+    const mockLinode = linodeFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
+      status: 'provisioning',
     });
 
-    cy.defer(createLinode(linodeRequest), 'creating Linode').then(
-      (linode: Linode) => {
-        interceptGetLinodeDetails(linode.id).as('getLinode');
-        interceptRebootLinodeIntoRescueMode(linode.id).as(
-          'rebootLinodeRescueMode'
-        );
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    mockGetLinodeDisks(mockLinode.id, []).as('getLinodeDisks');
+    mockGetLinodeVolumes(mockLinode.id, []).as('getLinodeVolumes');
 
-        const rescueUrl = `/linodes/${linode.id}?rescue=true`;
-
-        cy.visitWithLogin(rescueUrl);
-        cy.wait('@getLinode');
-
-        ui.dialog
-          .findByTitle(`Rescue Linode ${linode.label}`)
-          .should('be.visible')
-          .within(() => {
-            rebootInRescueMode();
-
-            // Wait for API request and confirm that error message appears in dialog.
-            cy.wait('@rebootLinodeRescueMode')
-              .its('response.statusCode')
-              .should('eq', 400);
-
-            cy.findByText('Linode busy.').should('be.visible');
-          });
-      }
+    mockRebootLinodeIntoRescueModeError(mockLinode.id, 'Linode busy.').as(
+      'rescueLinode'
     );
+
+    cy.visitWithLogin(`/linodes/${mockLinode.id}?rescue=true`);
+    ui.dialog
+      .findByTitle(`Rescue Linode ${mockLinode.label}`)
+      .should('be.visible')
+      .within(() => {
+        rebootInRescueMode();
+        cy.wait('@rescueLinode');
+        cy.findByText('Linode busy.').should('be.visible');
+      });
   });
 });

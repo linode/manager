@@ -198,13 +198,13 @@ describe('Object Storage utilities', () => {
 
   describe('confirmObjectStorage', () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
-    const validateForm = jest.fn(() => Promise.resolve({}));
-    const setFieldTouched = jest.fn();
-    const setFieldError = jest.fn();
-    const handleSubmit = jest.fn();
-    const openConfirmationDialog = jest.fn();
+    const validateForm = vi.fn(() => Promise.resolve({}));
+    const setFieldTouched = vi.fn();
+    const setFieldError = vi.fn();
+    const handleSubmit = vi.fn();
+    const openConfirmationDialog = vi.fn();
     const mockFormikProps = {
       handleSubmit,
       setFieldError,

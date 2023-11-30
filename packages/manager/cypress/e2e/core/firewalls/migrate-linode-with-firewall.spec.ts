@@ -19,7 +19,6 @@ import {
 } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { selectRegionString } from 'support/ui/constants';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber } from 'support/util/random';
 import type { Linode, Region } from '@linode/api-v4';
@@ -120,7 +119,7 @@ describe('Migrate Linode With Firewall', () => {
 
         // Select migration region.
         cy.findByText(`North America: Dallas, TX`).should('be.visible');
-        cy.contains(selectRegionString).click();
+        ui.regionSelect.find().click();
         ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
 
         ui.button
@@ -216,7 +215,7 @@ describe('Migrate Linode With Firewall', () => {
           cy.findByText('Accept').should('be.visible').click();
 
           // Select region for migration.
-          cy.findByText(selectRegionString).click();
+          ui.regionSelect.find().click();
           ui.regionSelect
             .findItemByRegionLabel(migrationRegionEnd.label)
             .click();

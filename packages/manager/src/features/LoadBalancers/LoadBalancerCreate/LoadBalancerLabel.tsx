@@ -1,16 +1,18 @@
+import { useFormikContext } from 'formik';
 import * as React from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
-interface LabelProps {
-  error?: string;
-  labelFieldProps: TextFieldProps;
-}
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
-export const LoadBalancerLabel = (props: LabelProps) => {
-  const { error, labelFieldProps } = props;
+export const LoadBalancerLabel = () => {
+  const {
+    errors,
+    handleChange,
+    touched,
+    values,
+  } = useFormikContext<CreateLoadbalancerPayload>();
 
   return (
     <Paper
@@ -20,16 +22,16 @@ export const LoadBalancerLabel = (props: LabelProps) => {
       }}
       data-qa-label-header
     >
-      {error && <Notice text={error} variant="error" />}
       <TextField
         data-qa-label-input
-        disabled={labelFieldProps.disabled}
-        errorText={labelFieldProps.errorText}
+        disabled={false}
+        errorText={touched.label && errors.label ? errors.label : undefined} // Display errors if the field is touched and there's an error
         label="Load Balancer Label"
+        name="label"
         noMarginTop
-        onChange={() => labelFieldProps.onChange}
+        onChange={handleChange}
         placeholder="Enter a label"
-        value={labelFieldProps.value}
+        value={values?.label}
       />
     </Paper>
   );

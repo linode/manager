@@ -1,3 +1,5 @@
+import { AGLB_DOCS } from '../constants';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -11,48 +13,38 @@ export const headers: ResourcesHeaders = {
   title: 'Global Load Balancers',
 };
 
-// TODO: AGLB - These are not finalized yet; changes may be expected.
-// Links may currently show 404 as work is in progress from the docs team side.
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview',
-      to:
-        'https://www.linode.com/docs/products/networking/global-loadbalancer/',
+      to: AGLB_DOCS.Overview,
     },
     {
       text: 'Getting Started',
-      to:
-        'https://www.linode.com/docs/products/networking/global-loadbalancer/get-started/',
+      to: AGLB_DOCS.GettingStarted,
     },
   ],
   moreInfo: {
     text: 'Guides',
-    to:
-      'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
+    to: AGLB_DOCS.Guides,
   },
   title: 'Getting Started Guides',
 };
-// TODO: AGLB - These are not finalized yet; changes may be expected.
-// Links may currently show 404 as work is in progress from the docs team side.
 
 export const resourcesLinks: ResourcesLinkSection = {
   links: [
     {
       text: 'Resources',
-      to:
-        'https://www.linode.com/docs/products/networking/global-loadbalancer/resources/',
+      to: AGLB_DOCS.Resouces,
     },
     {
       text: 'Developers',
-      to:
-        'https://www.linode.com/docs/products/networking/global-loadbalancer/developers/',
+      to: AGLB_DOCS.Developers,
     },
   ],
   moreInfo: {
     text: 'Guides',
-    to:
-      'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
+    to: AGLB_DOCS.Guides,
   },
   title: 'Resources',
 };

@@ -1,43 +1,28 @@
 import * as React from 'react';
 
-import { worker } from '../mocks/testBrowser';
+const LOCAL_STORAGE_KEY = 'msw';
 
-export const ServiceWorkerTool: React.FC<{}> = (_) => {
-  const _workerActive =
-    localStorage.getItem('devTools/mock-service-worker-enabled') ?? 'disabled';
-  const workerActive = _workerActive === 'enabled';
+export const isMSWEnabled =
+  localStorage.getItem(LOCAL_STORAGE_KEY) === 'enabled';
 
-  React.useEffect(() => {
-    if (workerActive) {
-      worker.start();
-    } else {
-      worker.stop();
-    }
-  }, [workerActive]);
+export const setMSWEnabled = (enabled: boolean) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, enabled ? 'enabled' : 'disabled');
+  window.location.reload();
+};
 
-  const handleToggleWorker = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    localStorage.setItem(
-      'devTools/mock-service-worker-enabled',
-      checked ? 'enabled' : 'disabled'
-    );
-    window.location.reload();
-  };
-
+export const ServiceWorkerTool = () => {
   return (
     <>
       <span style={{ marginRight: 8 }}>
         <span style={{ marginRight: 8 }}>Mock Service Worker:</span>
-        {workerActive ? 'Enabled' : 'Disabled'}
+        {isMSWEnabled ? 'Enabled' : 'Disabled'}
       </span>
       <input
-        checked={workerActive}
-        onChange={(e) => handleToggleWorker(e)}
+        checked={isMSWEnabled}
+        onChange={(e) => setMSWEnabled(e.target.checked)}
         style={{ margin: 0 }}
         type="checkbox"
       />
     </>
   );
 };
-
-export default ServiceWorkerTool;

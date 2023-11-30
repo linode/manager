@@ -16,7 +16,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     display: 'flex',
-    height: 40,
     justifyContent: 'flex-end',
     padding: 0,
   },
@@ -55,11 +54,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& button, & button:focus': {
       color: theme.color.headline,
-      fontWeight: 'normal',
+      fontFamily: theme.font.normal,
     },
     color: theme.color.headline,
     cursor: 'pointer',
-    fontWeight: 'normal',
+    fontFamily: theme.font.normal,
   },
   status: {
     alignItems: 'center',

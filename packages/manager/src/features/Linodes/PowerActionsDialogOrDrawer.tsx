@@ -23,6 +23,7 @@ interface Props {
   action: Action;
   isOpen: boolean;
   linodeId: number | undefined;
+  manuallyUpdateConfigs?: boolean;
   onClose: () => void;
 }
 
@@ -38,7 +39,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, onClose } = props;
+  const { action, isOpen, linodeId, manuallyUpdateConfigs, onClose } = props;
   const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
@@ -59,13 +60,19 @@ export const PowerActionsDialog = (props: Props) => {
     error: bootError,
     isLoading: isBooting,
     mutateAsync: bootLinode,
-  } = useBootLinodeMutation(linodeId ?? -1);
+  } = useBootLinodeMutation(
+    linodeId ?? -1,
+    manuallyUpdateConfigs ? configs : undefined
+  );
 
   const {
     error: rebootError,
     isLoading: isRebooting,
     mutateAsync: rebootLinode,
-  } = useRebootLinodeMutation(linodeId ?? -1);
+  } = useRebootLinodeMutation(
+    linodeId ?? -1,
+    manuallyUpdateConfigs ? configs : undefined
+  );
 
   const {
     error: shutdownError,
@@ -97,9 +104,11 @@ export const PowerActionsDialog = (props: Props) => {
 
   const error = errorMap[action];
   const isLoading = loadingMap[action];
+  const isRebootAction = props.action === 'Reboot';
+  const isPowerOnAction = props.action === 'Power On';
 
   const onSubmit = async () => {
-    if (props.action === 'Power On' || props.action === 'Reboot') {
+    if (isPowerOnAction || isRebootAction) {
       const mutateAsync = mutationMap[action as 'Power On' | 'Reboot'];
       await mutateAsync({
         config_id: selectedConfigID ?? selectDefaultConfig(configs),
@@ -115,7 +124,7 @@ export const PowerActionsDialog = (props: Props) => {
   const showConfigSelect =
     configs !== undefined &&
     configs?.length > 1 &&
-    (props.action === 'Power On' || props.action === 'Reboot');
+    (isPowerOnAction || isRebootAction);
 
   const configOptions =
     configs?.map((config) => ({
@@ -146,7 +155,7 @@ export const PowerActionsDialog = (props: Props) => {
       open={isOpen}
       title={`${action} Linode ${linode?.label ?? ''}?`}
     >
-      {props.action === 'Power On' ? (
+      {isPowerOnAction ? (
         <Typography
           sx={{
             alignItems: 'center',

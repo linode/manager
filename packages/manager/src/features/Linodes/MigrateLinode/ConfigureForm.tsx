@@ -1,11 +1,9 @@
 import * as React from 'react';
 
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
@@ -56,14 +54,12 @@ export const ConfigureForm = React.memo((props: Props) => {
     linodeType || '',
     Boolean(linodeType)
   );
-  const flags = useFlags();
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
   const shouldDisplayPriceComparison = Boolean(
-    flags.dcSpecificPricing &&
-      selectedRegion &&
+    selectedRegion &&
       isLinodeTypeDifferentPriceInSelectedRegion({
         regionA: currentRegion,
         regionB: selectedRegion,
@@ -109,7 +105,7 @@ export const ConfigureForm = React.memo((props: Props) => {
         <StyledMigrationBox>
           <StyledSpan>Current Region</StyledSpan>
           <StyledDiv>
-            <Flag country={country as Lowercase<Country>} />
+            <Flag country={country} />
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
@@ -128,20 +124,13 @@ export const ConfigureForm = React.memo((props: Props) => {
                 (eachRegion) => eachRegion.id !== currentRegion
               ) ?? []
             }
-            styles={{
-              menuList: (base: any) => ({
-                ...base,
-                maxHeight: `30vh !important`,
-              }),
-            }}
             textFieldProps={{
               helperText,
             }}
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"
-            menuPlacement="top"
-            selectedID={selectedRegion}
+            selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

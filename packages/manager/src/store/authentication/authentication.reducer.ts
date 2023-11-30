@@ -12,18 +12,30 @@ import {
 import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
 
-export const defaultState: State = {
-  expiration: null,
-  loggedInAsCustomer: false,
-  scopes: null,
-  token: null,
-};
-
 const {
   expire: expiryInLocalStorage,
   scopes: scopesInLocalStorage,
   token: tokenInLocalStorage,
 } = authentication;
+
+const defaultToken = tokenInLocalStorage.get();
+
+/**
+ * Tokens will either be "Admin 1234" or "Bearer 1234"
+ */
+function getIsLoggedInAsCustomer(token: string) {
+  if (!token) {
+    return false;
+  }
+  return token.toLowerCase().includes('admin');
+}
+
+export const defaultState: State = {
+  expiration: expiryInLocalStorage.get(),
+  loggedInAsCustomer: getIsLoggedInAsCustomer(defaultToken),
+  scopes: scopesInLocalStorage.get(),
+  token: defaultToken,
+};
 
 const reducer = reducerWithInitialState(defaultState)
   .case(handleStartSession, (state, payload) => {
@@ -75,8 +87,7 @@ const reducer = reducerWithInitialState(defaultState)
       redirectToLogin(location.pathname, location.search);
     }
 
-    /** token will either be "Admin: 1234" or "Bearer: 1234" */
-    const isLoggedInAsCustomer = (token || '').toLowerCase().includes('admin');
+    const isLoggedInAsCustomer = getIsLoggedInAsCustomer(token);
 
     return {
       ...state,

@@ -4,14 +4,11 @@ import { Hidden, IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ActionMenu } from 'src/components/ActionMenu';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Stack } from 'src/components/Stack';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -21,13 +18,13 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 import { ServiceTargetDrawer } from './ServiceTargets/ServiceTargetDrawer';
+import { ServiceTargetRow } from './ServiceTargets/ServiceTargetRow';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -106,7 +103,7 @@ export const LoadBalancerServiceTargets = () => {
       >
         <TextField
           InputProps={{
-            endAdornment: (
+            endAdornment: query && (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Clear"
@@ -114,10 +111,7 @@ export const LoadBalancerServiceTargets = () => {
                   size="small"
                   sx={{ padding: 'unset' }}
                 >
-                  <CloseIcon
-                    color="inherit"
-                    sx={{ color: '#aaa !important' }}
-                  />
+                  <CloseIcon sx={{ color: '#aaa !important' }} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -144,9 +138,23 @@ export const LoadBalancerServiceTargets = () => {
             >
               Label
             </TableSortCell>
-            <TableCell>Endpoints</TableCell>
+            <TableSortCell
+              active={orderBy === 'protocol'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="protocol"
+            >
+              Protocol
+            </TableSortCell>
             <Hidden smDown>
-              <TableCell>Algorithm</TableCell>
+              <TableSortCell
+                active={orderBy === 'algorithm'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="algorithm"
+              >
+                Algorithm
+              </TableSortCell>
             </Hidden>
             <Hidden mdDown>
               <TableCell>Certificate</TableCell>
@@ -154,56 +162,30 @@ export const LoadBalancerServiceTargets = () => {
             <Hidden lgDown>
               <TableCell>Health Checks</TableCell>
             </Hidden>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'id'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="id"
+              >
+                ID
+              </TableSortCell>
+            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {error && <TableRowError colSpan={6} message={error?.[0]?.reason} />}
-          {data?.results === 0 && <TableRowEmpty colSpan={6} />}
+          {error && <TableRowError colSpan={8} message={error?.[0]?.reason} />}
+          {data?.results === 0 && <TableRowEmpty colSpan={8} />}
           {data?.data.map((serviceTarget) => (
-            <TableRow key={serviceTarget.label}>
-              <TableCell>
-                <Link to={String(serviceTarget.id)}>{serviceTarget.label}</Link>
-              </TableCell>
-              <TableCell>
-                <Stack alignItems="center" direction="row" spacing={1}>
-                  <StatusIcon status="active" />
-                  <Typography noWrap>4 up</Typography>
-                  <Typography>&mdash;</Typography>
-                  <StatusIcon status="error" />
-                  <Typography noWrap>6 down</Typography>
-                </Stack>
-              </TableCell>
-              <Hidden smDown>
-                <TableCell sx={{ textTransform: 'capitalize' }}>
-                  {serviceTarget.load_balancing_policy.replace('_', ' ')}
-                </TableCell>
-              </Hidden>
-              <Hidden mdDown>
-                <TableCell>{serviceTarget.ca_certificate}</TableCell>
-              </Hidden>
-              <Hidden lgDown>
-                <TableCell>
-                  {serviceTarget.healthcheck.interval !== 0 ? 'Yes' : 'No'}
-                </TableCell>
-              </Hidden>
-              <TableCell actionCell>
-                <ActionMenu
-                  actionsList={[
-                    {
-                      onClick: () => handleEditServiceTarget(serviceTarget),
-                      title: 'Edit',
-                    },
-                    { onClick: () => null, title: 'Clone Service Target' },
-                    {
-                      onClick: () => handleDeleteServiceTarget(serviceTarget),
-                      title: 'Delete',
-                    },
-                  ]}
-                  ariaLabel={`Action Menu for service target ${serviceTarget.label}`}
-                />
-              </TableCell>
-            </TableRow>
+            <ServiceTargetRow
+              key={serviceTarget.id}
+              loadbalancerId={Number(loadbalancerId)}
+              onDelete={() => handleDeleteServiceTarget(serviceTarget)}
+              onEdit={() => handleEditServiceTarget(serviceTarget)}
+              serviceTarget={serviceTarget}
+            />
           ))}
         </TableBody>
       </Table>

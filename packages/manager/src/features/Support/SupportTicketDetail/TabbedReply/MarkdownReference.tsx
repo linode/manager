@@ -1,11 +1,11 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   example: {
     backgroundColor: theme.name === 'dark' ? theme.bg.white : theme.bg.offWhite,
     margin: `${theme.spacing(2)} 0`,
@@ -22,10 +22,8 @@ interface Props {
   rootClass?: string;
 }
 
-type CombinedProps = Props;
-
-const MarkdownReference: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const MarkdownReference = (props: Props) => {
+  const { classes } = useStyles();
 
   return (
     <div className={props.rootClass}>
@@ -65,5 +63,3 @@ const MarkdownReference: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default React.memo(MarkdownReference);

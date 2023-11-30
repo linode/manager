@@ -3,7 +3,6 @@ import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles } from 'tss-react/mui';
 
 import Logo from 'src/assets/logo/akamai-logo.svg';
@@ -11,12 +10,8 @@ import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
-import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { SideMenu } from 'src/components/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import withGlobalErrors, {
-  Props as GlobalErrorProps,
-} from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
@@ -24,20 +19,18 @@ import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
-import { usePreferences } from 'src/queries/preferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { useGlobalErrors } from './hooks/useGlobalErrors';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -98,21 +91,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     width: '100%',
   },
-  hidden: {
-    display: 'none',
-    overflow: 'hidden',
-  },
   logo: {
     '& > g': {
       fill: theme.color.black,
     },
   },
   switchWrapper: {
-    '& .mlSidebar': {
-      [theme.breakpoints.up('lg')]: {
-        paddingRight: `0 !important`,
-      },
-    },
     '& > .MuiGrid-container': {
       maxWidth: theme.breakpoints.values.lg,
       width: '100%',
@@ -127,13 +111,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     position: 'relative',
   },
 }));
-
-interface Props {
-  appIsLoading: boolean;
-  isLoggedInAsCustomer: boolean;
-}
-
-type CombinedProps = Props & GlobalErrorProps;
 
 const Account = React.lazy(() =>
   import('src/features/Account').then((module) => ({
@@ -151,7 +128,11 @@ const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile/Profile'));
-const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
+const LoadBalancers = React.lazy(() =>
+  import('src/features/LoadBalancers').then((module) => ({
+    default: module.LoadBalancers,
+  }))
+);
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
@@ -189,10 +170,13 @@ const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
-const MainContent = (props: CombinedProps) => {
+export const MainContent = () => {
   const { classes, cx } = useStyles();
   const flags = useFlags();
   const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
+
+  const globalErrors = useGlobalErrors();
 
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
@@ -249,7 +233,7 @@ const MainContent = (props: CombinedProps) => {
    *
    * So in this case, we'll show something more user-friendly
    */
-  if (props.globalErrors.account_unactivated) {
+  if (globalErrors.account_unactivated) {
     return (
       <div className={classes.bgStyling}>
         <div className={classes.activationWrapper}>
@@ -283,138 +267,116 @@ const MainContent = (props: CombinedProps) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (props.globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
+  if (globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
+
+  const desktopMenuIsOpen = preferences?.desktop_sidebar_open ?? false;
+
+  const desktopMenuToggle = () => {
+    updatePreferences({
+      desktop_sidebar_open: !preferences?.desktop_sidebar_open,
+    });
+  };
 
   /**
    * otherwise just show the rest of the app.
    */
   return (
-    <div
-      className={cx({
-        [classes.appFrame]: true,
-        /**
-         * hidden to prevent some jankiness with the app loading before the splash screen
-         */
-        [classes.hidden]: props.appIsLoading,
-      })}
-    >
-      <PreferenceToggle<boolean>
-        preferenceKey="desktop_sidebar_open"
-        preferenceOptions={[true, false]}
-      >
-        {({
-          preference: desktopMenuIsOpen,
-          togglePreference: desktopMenuToggle,
-        }: PreferenceToggleProps<boolean>) => (
-          <ComplianceUpdateProvider value={complianceUpdateContextValue}>
-            <NotificationProvider value={contextValue}>
-              <>
-                {shouldDisplayMainContentBanner ? (
-                  <MainContentBanner
-                    bannerKey={flags.mainContentBanner?.key ?? ''}
-                    bannerText={flags.mainContentBanner?.text ?? ''}
-                    linkText={flags.mainContentBanner?.link?.text ?? ''}
-                    onClose={() => setBannerDismissed(true)}
-                    url={flags.mainContentBanner?.link?.url ?? ''}
-                  />
-                ) : null}
-                <SideMenu
-                  closeMenu={() => toggleMenu(false)}
-                  collapse={desktopMenuIsOpen || false}
-                  open={menuIsOpen}
-                />
-                <div
-                  className={cx(classes.content, {
-                    [classes.fullWidthContent]:
-                      desktopMenuIsOpen ||
-                      (desktopMenuIsOpen && desktopMenuIsOpen === true),
-                  })}
-                >
-                  <TopMenu
-                    desktopMenuToggle={desktopMenuToggle}
-                    isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-                    isSideMenuOpen={!desktopMenuIsOpen}
-                    openSideMenu={() => toggleMenu(true)}
-                    username={username}
-                  />
-                  <main
-                    className={classes.cmrWrapper}
-                    id="main-content"
-                    role="main"
-                  >
-                    <Grid className={classes.grid} container spacing={0}>
-                      <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
-                        <React.Suspense fallback={<SuspenseLoader />}>
-                          <Switch>
-                            <Route component={LinodesRoutes} path="/linodes" />
-                            <Route component={Volumes} path="/volumes" />
-                            <Redirect path="/volumes*" to="/volumes" />
-                            {flags.aglb && (
-                              <Route
-                                component={LoadBalancers}
-                                path="/loadbalancer*"
-                              />
-                            )}
-                            <Route
-                              component={NodeBalancers}
-                              path="/nodebalancers"
-                            />
-                            <Route component={Domains} path="/domains" />
-                            <Route component={Managed} path="/managed" />
-                            <Route component={Longview} path="/longview" />
-                            <Route component={Images} path="/images" />
-                            <Route
-                              component={StackScripts}
-                              path="/stackscripts"
-                            />
-                            <Route
-                              component={ObjectStorage}
-                              path="/object-storage"
-                            />
-                            <Route component={Kubernetes} path="/kubernetes" />
-                            <Route component={Account} path="/account" />
-                            <Route component={Profile} path="/profile" />
-                            <Route component={Help} path="/support" />
-                            <Route component={SearchLanding} path="/search" />
-                            <Route component={EventsLanding} path="/events" />
-                            <Route component={Firewalls} path="/firewalls" />
-                            {showDatabases ? (
-                              <Route component={Databases} path="/databases" />
-                            ) : null}
-                            {flags.selfServeBetas ? (
-                              <Route component={BetaRoutes} path="/betas" />
-                            ) : null}
-                            {showVPCs ? (
-                              <Route component={VPC} path="/vpcs" />
-                            ) : null}
-                            <Redirect exact from="/" to={defaultRoot} />
-                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                            <Redirect from="/dashboard" to={defaultRoot} />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </React.Suspense>
-                      </Grid>
-                    </Grid>
-                  </main>
-                </div>
-              </>
-            </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <ToastNotifications />
-          </ComplianceUpdateProvider>
-        )}
-      </PreferenceToggle>
+    <div className={classes.appFrame}>
+      <ComplianceUpdateProvider value={complianceUpdateContextValue}>
+        <NotificationProvider value={contextValue}>
+          <>
+            {shouldDisplayMainContentBanner ? (
+              <MainContentBanner
+                bannerKey={flags.mainContentBanner?.key ?? ''}
+                bannerText={flags.mainContentBanner?.text ?? ''}
+                linkText={flags.mainContentBanner?.link?.text ?? ''}
+                onClose={() => setBannerDismissed(true)}
+                url={flags.mainContentBanner?.link?.url ?? ''}
+              />
+            ) : null}
+            <SideMenu
+              closeMenu={() => toggleMenu(false)}
+              collapse={desktopMenuIsOpen || false}
+              open={menuIsOpen}
+            />
+            <div
+              className={cx(classes.content, {
+                [classes.fullWidthContent]:
+                  desktopMenuIsOpen ||
+                  (desktopMenuIsOpen && desktopMenuIsOpen === true),
+              })}
+            >
+              <TopMenu
+                desktopMenuToggle={desktopMenuToggle}
+                isSideMenuOpen={!desktopMenuIsOpen}
+                openSideMenu={() => toggleMenu(true)}
+                username={username}
+              />
+              <main
+                className={classes.cmrWrapper}
+                id="main-content"
+                role="main"
+              >
+                <Grid className={classes.grid} container spacing={0}>
+                  <Grid className={cx(classes.switchWrapper, 'p0')}>
+                    <GlobalNotifications />
+                    <React.Suspense fallback={<SuspenseLoader />}>
+                      <Switch>
+                        <Route component={LinodesRoutes} path="/linodes" />
+                        <Route component={Volumes} path="/volumes" />
+                        <Redirect path="/volumes*" to="/volumes" />
+                        {flags.aglb && (
+                          <Route
+                            component={LoadBalancers}
+                            path="/loadbalancer*"
+                          />
+                        )}
+                        <Route
+                          component={NodeBalancers}
+                          path="/nodebalancers"
+                        />
+                        <Route component={Domains} path="/domains" />
+                        <Route component={Managed} path="/managed" />
+                        <Route component={Longview} path="/longview" />
+                        <Route component={Images} path="/images" />
+                        <Route component={StackScripts} path="/stackscripts" />
+                        <Route
+                          component={ObjectStorage}
+                          path="/object-storage"
+                        />
+                        <Route component={Kubernetes} path="/kubernetes" />
+                        <Route component={Account} path="/account" />
+                        <Route component={Profile} path="/profile" />
+                        <Route component={Help} path="/support" />
+                        <Route component={SearchLanding} path="/search" />
+                        <Route component={EventsLanding} path="/events" />
+                        <Route component={Firewalls} path="/firewalls" />
+                        {showDatabases && (
+                          <Route component={Databases} path="/databases" />
+                        )}
+                        {flags.selfServeBetas && (
+                          <Route component={BetaRoutes} path="/betas" />
+                        )}
+                        {showVPCs && <Route component={VPC} path="/vpcs" />}
+                        <Redirect exact from="/" to={defaultRoot} />
+                        {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                        <Redirect from="/dashboard" to={defaultRoot} />
+                        <Route component={NotFound} />
+                      </Switch>
+                    </React.Suspense>
+                  </Grid>
+                </Grid>
+              </main>
+            </div>
+          </>
+        </NotificationProvider>
+        <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+      </ComplianceUpdateProvider>
     </div>
   );
 };
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withGlobalErrors()
-)(MainContent);
 
 // =============================================================================
 // Utilities

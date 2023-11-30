@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 
 const props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   token: appTokenFactory.build({ label: 'my-token' }),
 };

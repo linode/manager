@@ -1,3 +1,20 @@
+## [2023-11-13] - v0.105.0
+
+
+### Upcoming Features:
+
+- Add `UpdateConfigurationPayload` ([#9853](https://github.com/linode/manager/pull/9853))
+- Add `getAccountAvailabilities` and `getAccountAvailability` methods for DC Get Well initiative ([#9860](https://github.com/linode/manager/pull/9860))
+- Add `getRegionAvailabilities` and `getRegionAvailability` endpoints and related types for Sold Out Plans initiative ([#9878](https://github.com/linode/manager/pull/9878))
+
+## [2023-10-30] - v0.104.0
+
+### Upcoming Features:
+
+- Update AGLB `updateLoadbalancerServiceTarget` endpoint with method and schema ([#9800](https://github.com/linode/manager/pull/9800))
+- Update AGLB `createLoadbalancerRoute` endpoint with payload/schema ([#9806](https://github.com/linode/manager/pull/9806))
+- Update the `Subnet` and `Interface` interfaces to match new API spec ([#9824](https://github.com/linode/manager/pull/9824))
+
 ## [2023-10-16] - v0.103.0
 
 ### Upcoming Features:

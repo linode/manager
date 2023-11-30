@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
@@ -22,19 +22,22 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormGroup } from 'src/components/FormGroup';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
+import {
+  LINODE_UNREACHABLE_HELPER_TEXT,
+  NATTED_PUBLIC_IP_HELPER_TEXT,
+  NOT_NATTED_HELPER_TEXT,
+} from 'src/features/VPCs/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -68,6 +71,13 @@ import {
   InterfaceSelect,
 } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
+import {
+  StyledDivider,
+  StyledFormControl,
+  StyledFormControlLabel,
+  StyledFormGroup,
+  StyledRadioGroup,
+} from './LinodeConfigDialog.styles';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -79,7 +89,7 @@ interface Helpers {
 
 type RunLevel = 'binbash' | 'default' | 'single';
 type VirtMode = 'fullvirt' | 'paravirt';
-type MemoryLimit = 'no_limit' | 'set_limit';
+export type MemoryLimit = 'no_limit' | 'set_limit';
 
 interface EditableFields {
   comments?: string;
@@ -281,8 +291,6 @@ export const LinodeConfigDialog = (props: Props) => {
       thisRegion.capabilities.includes('VPCs')
   );
 
-  const showVlans = regionHasVLANS;
-
   // @TODO VPC: remove once VPC is fully rolled out
   const vpcEnabled = isFeatureEnabled(
     'VPCs',
@@ -425,20 +433,9 @@ export const LinodeConfigDialog = (props: Props) => {
         });
       };
 
-      // @TODO VPC: Remove this override and surface the field errors appropriately
-      // once API fixes interface index bug for ipv4.vpc & ipv4.nat_1_1 errors
-      const overrideFieldForIPv4 = (error: APIError[]) => {
-        error.forEach((err) => {
-          if (err.field && ['ipv4.nat_1_1', 'ipv4.vpc'].includes(err.field)) {
-            err.field = 'interfaces';
-          }
-        });
-      };
-
       formik.setSubmitting(false);
 
       overrideFieldForDevices(error);
-      overrideFieldForIPv4(error);
 
       handleFieldErrors(formik.setErrors, error);
 
@@ -952,59 +949,67 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            {showVlans ? (
-              <Grid xs={12}>
-                <Box alignItems="center" display="flex">
-                  <Typography variant="h3">
-                    {vpcEnabled ? 'Networking' : 'Network Interfaces'}
-                  </Typography>
-                  <TooltipIcon
-                    sxTooltipIcon={{
-                      paddingBottom: 0,
-                      paddingTop: 0,
+            <Grid xs={12}>
+              <Box alignItems="center" display="flex">
+                <Typography variant="h3">
+                  {vpcEnabled ? 'Networking' : 'Network Interfaces'}
+                </Typography>
+                <TooltipIcon
+                  sxTooltipIcon={{
+                    paddingBottom: 0,
+                    paddingTop: 0,
+                  }}
+                  interactive
+                  status="help"
+                  sx={{ tooltip: { maxWidth: 350 } }}
+                  text={networkInterfacesHelperText}
+                />
+              </Box>
+              {formik.errors.interfaces && (
+                <Notice
+                  text={formik.errors.interfaces as string}
+                  variant="error"
+                />
+              )}
+              {vpcEnabled && (
+                <>
+                  <Select
+                    defaultValue={
+                      primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
+                    }
+                    data-testid="primary-interface-dropdown"
+                    disabled={isReadOnly}
+                    isClearable={false}
+                    label="Primary Interface (Default Route)"
+                    onChange={handlePrimaryInterfaceChange}
+                    options={getPrimaryInterfaceOptions(values.interfaces)}
+                  />
+                  <Divider
+                    sx={{
+                      margin: `${theme.spacing(
+                        4.5
+                      )} ${theme.spacing()} ${theme.spacing(1.5)} `,
+                      width: `calc(100% - ${theme.spacing(2)})`,
                     }}
-                    interactive
-                    status="help"
-                    sx={{ tooltip: { maxWidth: 350 } }}
-                    text={networkInterfacesHelperText}
                   />
-                </Box>
-                {formik.errors.interfaces && (
-                  <Notice
-                    text={formik.errors.interfaces as string}
-                    variant="error"
-                  />
-                )}
-                {vpcEnabled && (
+                </>
+              )}
+              {values.interfaces.map((thisInterface, idx) => {
+                return (
                   <>
-                    <Select
-                      defaultValue={
-                        primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
-                      }
-                      data-testid="primary-interface-dropdown"
-                      disabled={isReadOnly}
-                      isClearable={false}
-                      label="Primary Interface (Default Route)"
-                      onChange={handlePrimaryInterfaceChange}
-                      options={getPrimaryInterfaceOptions(values.interfaces)}
-                    />
-                    <Divider
-                      sx={{
-                        margin: `${theme.spacing(
-                          4.5
-                        )} ${theme.spacing()} ${theme.spacing(1.5)} `,
-                        width: `calc(100% - ${theme.spacing(2)})`,
-                      }}
-                    />
-                  </>
-                )}
-                {values.interfaces.map((thisInterface, idx) => {
-                  return (
+                    {unrecommendedConfigNoticeSelector({
+                      _interface: thisInterface,
+                      primaryInterfaceIndex,
+                      thisIndex: idx,
+                      values,
+                    })}
                     <InterfaceSelect
                       errors={{
                         ipamError:
                           formik.errors[`interfaces[${idx}].ipam_address`],
                         labelError: formik.errors[`interfaces[${idx}].label`],
+                        primaryError:
+                          formik.errors[`interfaces[${idx}].primary`],
                         publicIPv4Error:
                           formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
                         subnetError:
@@ -1019,18 +1024,21 @@ export const LinodeConfigDialog = (props: Props) => {
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
+                      nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
                       purpose={thisInterface.purpose}
                       readOnly={isReadOnly}
                       region={linode?.region}
+                      regionHasVLANs={regionHasVLANS}
+                      regionHasVPCs={regionHasVPCs}
                       slotNumber={idx}
                       subnetId={thisInterface.subnet_id}
                       vpcIPv4={thisInterface.ipv4?.vpc}
                       vpcId={thisInterface.vpc_id}
                     />
-                  );
-                })}
-              </Grid>
-            ) : null}
+                  </>
+                );
+              })}
+            </Grid>
 
             <Grid xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
@@ -1122,45 +1130,11 @@ export const LinodeConfigDialog = (props: Props) => {
           onClick: formik.submitForm,
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        sx={{ display: 'flex', justifySelf: 'flex-end' }}
       />
     </Dialog>
   );
 };
-
-const formGroupStyling = () => ({
-  '&.MuiFormGroup-root[role="radiogroup"]': {
-    marginBottom: 0,
-  },
-  alignItems: 'flex-start',
-});
-
-const StyledRadioGroup = styled(RadioGroup, { label: 'StyledRadioGroup' })({
-  ...formGroupStyling(),
-});
-
-const StyledFormControl = styled(FormControl, { label: 'StyledFormControl' })({
-  ...formGroupStyling(),
-});
-
-const StyledFormGroup = styled(FormGroup, { label: 'StyledFormGroup' })({
-  ...formGroupStyling(),
-});
-
-const StyledDivider = styled(Divider, { label: 'StyledDivider' })(
-  ({ theme }) => ({
-    margin: '36px 8px 12px',
-    width: `calc(100% - ${theme.spacing(2)})`,
-  })
-);
-
-const StyledFormControlLabel = styled(FormControlLabel, {
-  label: 'StyledFormControlLabel',
-})(({ theme }) => ({
-  '& button': {
-    color: theme.textColors.tableHeader,
-    order: 3,
-  },
-}));
 
 interface ConfigFormProps {
   children: JSX.Element;
@@ -1193,3 +1167,74 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdg',
     '/dev/sdh',
   ].includes(value) === false;
+
+const noticeForScenario = (scenarioText: string) => (
+  <Notice
+    data-testid={'notice-for-unrecommended-scenario'}
+    text={scenarioText}
+    variant="warning"
+  />
+);
+
+/**
+ *
+ * @param _interface the current config interface being passed in
+ * @param primaryInterfaceIndex the index of the primary interface
+ * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
+ * @param values the values held in Formik state, having a type of `EditableFields`
+ * @returns JSX.Element | null
+ */
+export const unrecommendedConfigNoticeSelector = ({
+  _interface,
+  primaryInterfaceIndex,
+  thisIndex,
+  values,
+}: {
+  _interface: ExtendedInterface;
+  primaryInterfaceIndex: number | undefined;
+  thisIndex: number;
+  values: EditableFields;
+}): JSX.Element | null => {
+  const vpcInterface = _interface.purpose === 'vpc';
+  const nattedIPv4Address = Boolean(_interface.ipv4?.nat_1_1);
+
+  const filteredInterfaces = values.interfaces.filter(
+    (_interface) => _interface.purpose !== 'none'
+  );
+
+  // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
+  const primaryInterfaceIsVPC =
+    primaryInterfaceIndex !== undefined
+      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
+      : false;
+
+  /*
+   Scenario 1:
+    - the interface passed in to this function is a VPC interface
+    - the index of the primary interface !== the index of the interface passed in to this function
+    - nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" checked)
+
+   Scenario 2:
+    - all of Scenario 1, except: !nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" unchecked)
+
+   Scenario 3:
+    - only eth0 populated, and it is a VPC interface
+
+   If not one of the above scenarios, do not display a warning notice re: configuration
+  */
+  if (
+    vpcInterface &&
+    primaryInterfaceIndex !== thisIndex &&
+    !primaryInterfaceIsVPC
+  ) {
+    return nattedIPv4Address
+      ? noticeForScenario(NATTED_PUBLIC_IP_HELPER_TEXT)
+      : noticeForScenario(LINODE_UNREACHABLE_HELPER_TEXT);
+  }
+
+  if (filteredInterfaces.length === 1 && vpcInterface && !nattedIPv4Address) {
+    return noticeForScenario(NOT_NATTED_HELPER_TEXT);
+  }
+
+  return null;
+};

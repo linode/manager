@@ -1,18 +1,14 @@
 import { Linode } from '@linode/api-v4';
-import { Region } from '@linode/api-v4/lib/regions';
 import Close from '@mui/icons-material/Close';
-import { Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
 
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
-import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { linodeFactory } from 'src/factories';
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
@@ -50,51 +46,6 @@ const linodes: OptionType[] = [
     value: 'linode-005',
   },
 ];
-
-const fakeRegionsData = [
-  {
-    country: 'us',
-    id: 'us-east',
-    label: 'Newark, NJ',
-  },
-  {
-    country: 'us',
-    id: 'us-central',
-    label: 'Texas, TX',
-  },
-  {
-    country: 'fr',
-    id: 'fr-par',
-    label: 'Paris, FR',
-  },
-  {
-    country: 'br',
-    id: 'br-sao',
-    label: 'Sao Paulo, BR',
-  },
-  {
-    country: 'jp',
-    id: 'jp-tyo',
-    label: 'Tokyo, JP',
-  },
-];
-
-const getRegionsOptions = (
-  fakeRegionsData: Pick<Region, 'country' | 'id' | 'label'>[]
-) => {
-  return fakeRegionsData.map((region: Region) => {
-    const group = getRegionCountryGroup(region);
-    return {
-      data: {
-        country: region.country,
-        flag: <Flag country={region.country as Lowercase<Country>} />,
-        region: group,
-      },
-      label: `${region.label} (${region.id})`,
-      value: region.id,
-    };
-  });
-};
 
 const AutocompleteWithSeparateSelectedOptions = (
   props: EnhancedAutocompleteProps<OptionType, true>
@@ -172,7 +123,7 @@ const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
       </div>
     ),
   ],
-  title: 'Components/Autocomplete',
+  title: 'Components/Selects/Autocomplete',
 };
 
 export default meta;
@@ -199,12 +150,8 @@ const StyledListItem = styled('li')(() => ({
 
 const StyledLabel = styled('span')(({ theme }) => ({
   color: theme.color.label,
-  fontFamily: theme.font.semiBold,
+  fontFamily: theme.font.bold,
   fontSize: '14px',
-}));
-
-const StyledFlag = styled('span')(({ theme }) => ({
-  marginRight: theme.spacing(1),
 }));
 
 const SelectedOptionsHeader = styled('h4')(({ theme }) => ({
@@ -227,18 +174,6 @@ const SelectedOptionsListItem = styled(ListItem)(() => ({
   paddingTop: 0,
 }));
 
-const GroupHeader = styled('div')(({ theme }) => ({
-  color: theme.color.headline,
-  fontFamily: theme.font.bold,
-  fontSize: '1rem',
-  padding: '15px 4px 4px 10px',
-  textTransform: 'initial',
-}));
-
-const GroupItems = styled('ul')({
-  padding: 0,
-});
-
 // Story Definitions ==========================================================
 
 export const Default: Story = {
@@ -258,33 +193,6 @@ export const NoOptionsMessage: Story = {
 };
 
 type RegionStory = StoryObj<EnhancedAutocompleteProps<OptionType>>;
-
-export const Regions: RegionStory = {
-  args: {
-    groupBy: (option) => option.data.region,
-    label: 'Select a Region',
-    options: getRegionsOptions(fakeRegionsData),
-    placeholder: 'Select a Region',
-    renderGroup: (params) => (
-      <li key={params.key}>
-        <GroupHeader>{params.group}</GroupHeader>
-        <GroupItems>{params.children}</GroupItems>
-      </li>
-    ),
-    renderOption: (props, option, { selected }) => {
-      return (
-        <StyledListItem {...props}>
-          <Box alignItems={'center'} display={'flex'} flexGrow={1}>
-            <StyledFlag>{option.data.flag}</StyledFlag>
-            {option.label}
-          </Box>
-          <SelectedIcon visible={selected} />
-        </StyledListItem>
-      );
-    },
-  },
-  render: (args) => <Autocomplete {...args} />,
-};
 
 export const CustomRenderOptions: RegionStory = {
   args: {

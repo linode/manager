@@ -12,17 +12,17 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'metadata', label: 'Metadata' },
-  { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
-  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
-  { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
-  { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },
+  { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
+  { flag: 'dcGetWell', label: 'DC Get Well' },
+  { flag: 'metadata', label: 'Metadata' },
+  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'soldOutTokyo', label: 'Sold Out Tokyo' },
+  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
+  { flag: 'vpc', label: 'VPC' },
 ];
 
-const FeatureFlagTool: React.FC<{}> = () => {
+export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
 
@@ -76,6 +76,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
       </Grid>
     </Grid>
   );
-};
-
-export default withFeatureFlagProvider(FeatureFlagTool);
+});

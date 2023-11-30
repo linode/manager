@@ -8,13 +8,13 @@ import {
 } from './SupportTicketDialog';
 
 const props: SupportTicketDialogProps = {
-  onClose: jest.fn(),
-  onSuccess: jest.fn(),
+  onClose: vi.fn(),
+  onSuccess: vi.fn(),
   open: true,
 };
 
 // Mock React-Select
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('Support Ticket Drawer', () => {
   it('should render', () => {

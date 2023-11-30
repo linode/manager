@@ -95,7 +95,7 @@ describe('volumes', () => {
 
     cy.findByText('Must provide a region or a Linode ID.').should('be.visible');
 
-    cy.findByText('Region').should('be.visible').click().type('new {enter}');
+    ui.regionSelect.find().click().type('newark{enter}');
 
     mockGetVolumes([mockVolume]).as('getVolumes');
     ui.button.findByTitle('Create Volume').should('be.visible').click();

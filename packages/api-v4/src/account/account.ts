@@ -3,15 +3,23 @@ import {
   UpdateAccountSettingsSchema,
 } from '@linode/validation/lib/account.schema';
 import { API_ROOT, BETA_API_ROOT } from '../constants';
-import Request, { setData, setMethod, setURL } from '../request';
+import Request, {
+  setData,
+  setMethod,
+  setURL,
+  setParams,
+  setXFilter,
+} from '../request';
 import {
   Account,
+  AccountAvailability,
   AccountSettings,
   CancelAccount,
   CancelAccountPayload,
   Agreements,
   RegionalNetworkUtilization,
 } from './types';
+import { Filter, ResourcePage as Page, Params } from '../types';
 
 /**
  * getAccountInfo
@@ -96,6 +104,36 @@ export const cancelAccount = (data: CancelAccountPayload) => {
 export const getAccountAgreements = () =>
   Request<Agreements>(
     setURL(`${BETA_API_ROOT}/account/agreements`),
+    setMethod('GET')
+  );
+
+/**
+ * getAccountAvailabilities
+ *
+ * Gets the account's entity availability for each region. Specifically
+ * tells which entities the account does not have capability for in each region.
+ *
+ */
+export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
+  Request<Page<AccountAvailability>>(
+    setURL(`${BETA_API_ROOT}/account/availability`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
+  );
+
+/**
+ * getAccountAvailability
+ *
+ * Gets the account's entity availability for given region. Specifically
+ * tells which entities the account does not have capability for in given region.
+ *
+ */
+export const getAccountAvailability = (regionId: string) =>
+  Request<AccountAvailability>(
+    setURL(
+      `${BETA_API_ROOT}/account/availability/${encodeURIComponent(regionId)}`
+    ),
     setMethod('GET')
   );
 

@@ -4,7 +4,7 @@ import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { sendEvent } from 'src/utilities/analytics';
