@@ -37,6 +37,7 @@ describe('SelectRegionPanel in Create Flow', () => {
 
     const { findByText } = renderWithTheme(
       <SelectRegionPanel
+        currentCapability={undefined}
         handleSelection={vi.fn()}
         regions={regions}
         selectedId="id-cgk"
@@ -65,6 +66,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
 
   const regions = [...regionFactory.buildList(3)];
   const mockedProps = {
+    currentCapability: undefined,
     handleSelection: () => vi.fn(),
     regions,
     selectedLinodeTypeId: 'g6-standard-2',

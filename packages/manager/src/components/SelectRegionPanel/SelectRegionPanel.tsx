@@ -25,7 +25,11 @@ import { DynamicPriceNotice } from '../DynamicPriceNotice';
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
-  currentCapability?: Capabilities | undefined;
+  /**
+   * The capability to filter the regions on. Any region that does not have the currentCapability will not appear in the RegionSelect dropdown.
+   * Only use undefined if there is no associated capability when using the region select - this will not filter any of the regions passed in.
+   */
+  currentCapability: Capabilities | undefined;
   disabled?: boolean;
   error?: string;
   handleSelection: (id: string) => void;
