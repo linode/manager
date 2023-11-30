@@ -46,6 +46,7 @@
     "coverage:summary": "yarn workspace linode-manager coverage:summary"
   },
   "resolutions": {
+    "minimatch": "^9.0.2",
     "minimist": "^1.2.3",
     "yargs-parser": "^18.1.3",
     "kind-of": "^6.0.3",

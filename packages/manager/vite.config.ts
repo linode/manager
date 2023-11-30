@@ -30,7 +30,6 @@ export default defineConfig({
         'src/utilities/**/*.{js,jsx,ts,tsx}',
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
-      provider: 'istanbul',
     },
     environment: 'jsdom',
     globals: true,
