@@ -25,7 +25,6 @@ import { DynamicPriceNotice } from '../DynamicPriceNotice';
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
-  // TODO DC_GET_WELL: eventually we will make this prop required M3-7355
   currentCapability?: Capabilities | undefined;
   disabled?: boolean;
   error?: string;
