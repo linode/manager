@@ -6,6 +6,8 @@ import {
   interceptGetLinodeDetails,
   interceptRebootLinodeIntoRescueMode,
   mockGetLinodeDetails,
+  mockGetLinodeDisks,
+  mockGetLinodeVolumes,
   mockRebootLinodeIntoRescueModeError,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
@@ -19,6 +21,7 @@ const rebootInRescueMode = () => {
     .findByTitle('Reboot into Rescue Mode')
     .should('be.visible')
     .should('be.enabled')
+    .should('have.attr', 'data-qa-form-data-loading', 'false')
     .click();
 };
 
@@ -92,6 +95,9 @@ describe('Rescue Linodes', () => {
     });
 
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    mockGetLinodeDisks(mockLinode.id, []).as('getLinodeDisks');
+    mockGetLinodeVolumes(mockLinode.id, []).as('getLinodeVolumes');
+
     mockRebootLinodeIntoRescueModeError(mockLinode.id, 'Linode busy.').as(
       'rescueLinode'
     );

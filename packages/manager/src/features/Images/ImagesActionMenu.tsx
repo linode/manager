@@ -2,7 +2,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import { ImageStatus } from '@linode/api-v4/lib/images/types';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Handlers {
   onCancelFailed?: (imageID: string) => void;

@@ -118,6 +118,44 @@ export const mockGetLinodeConfigs = (
 };
 
 /**
+ * Mocks PUT request to update a linode config.
+ *
+ * @param linodeId - ID of Linode for mock request.
+ * @param config - config data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinodeConfigs = (
+  linodeId: number,
+  config: Config
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`linode/instances/${linodeId}/configs/${config.id}`),
+    config
+  );
+};
+
+/**
+ * Mocks POST request to create a Linode config.
+ *
+ * @param linodeId - ID of Linode for mocked request.
+ * @param config - config data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeConfigs = (
+  linodeId: number,
+  config: Config
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/configs`),
+    config
+  );
+};
+
+/**
  * Mocks POST request to retrieve interfaces from a given Linode config.
  *
  * @param linodeId - ID of Linode for mocked request.

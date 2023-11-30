@@ -41,6 +41,7 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     add_volumes: true,
     add_vpcs: true,
     cancel_account: false,
+    child_account_access: false,
     longview_subscription: true,
   },
   image: [
