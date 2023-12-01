@@ -59,19 +59,3 @@ import { DateTime } from 'luxon';
           return (Promise.resolve(res));
         })
   };
-
-  export const testCors = () => {
-    const config: AxiosRequestConfig = {
-      // baseURL: `https://cloud.dev.linode.com/api/v4/linode/instances`,
-      baseURL: `https://api.dev.linode.com/v4/linode/instances`,
-      method: 'GET'
-    };
-    config.headers = {
-      'Authorization': 'Bearer c14dbaaf1e598cae518fcdf05cf8051cee97e50d8bc8bded3498a194e08f7b33'
-    }
-    return axios
-        .request(config)
-        .then(res => {
-          return (Promise.resolve(res));
-        });
-  }
