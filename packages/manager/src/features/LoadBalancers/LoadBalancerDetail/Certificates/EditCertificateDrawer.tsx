@@ -35,7 +35,7 @@ export const EditCertificateDrawer = (props: Props) => {
   const formik = useFormik<UpdateCertificatePayload>({
     enableReinitialize: true,
     initialValues: {
-      certificate: certificate?.certificate.trim(),
+      certificate: certificate?.certificate?.trim(),
       key: '',
       label: certificate?.label ?? '',
       type: certificate?.type,
@@ -43,7 +43,7 @@ export const EditCertificateDrawer = (props: Props) => {
     async onSubmit(values) {
       // The user has not edited their cert or the private key, so we exclude both cert and key from the request.
       const shouldIgnoreField =
-        certificate?.certificate.trim() === values.certificate &&
+        certificate?.certificate?.trim() === values.certificate &&
         values.key === '';
 
       try {

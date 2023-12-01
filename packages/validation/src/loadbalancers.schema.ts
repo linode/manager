@@ -134,6 +134,7 @@ const BaseRuleSchema = object({
         return sum === 100;
       }
     )
+    .min(1, 'Rules must have at least 1 Service Target.')
     .required(),
 });
 

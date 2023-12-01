@@ -120,6 +120,45 @@ export const mockCreateLoadBalancerConfiguration = (
 };
 
 /**
+ * Intercepts PUT request to update an AGLB configuration.
+ *
+ * @param loadBalancerId - ID of load balancer for which to update the configuration.
+ * @param configuration - The AGLB configuration being updated.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLoadBalancerConfiguration = (
+  loadBalancerId: number,
+  configuration: Configuration
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configuration.id}`),
+    makeResponse(configuration)
+  );
+};
+
+/**
+ * Intercepts PUT request to update an AGLB configuration.
+ *
+ * @param loadBalancerId - ID of load balancer for which to update the configuration.
+ * @param configuration - The AGLB configuration being updated.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLoadBalancerConfigurationError = (
+  loadBalancerId: number,
+  configurationId: number,
+  errors: APIError[]
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configurationId}`),
+    makeResponse({ errors }, 400)
+  );
+};
+
+/**
  * Intercepts POST request to create an AGLB configuration and returns an error.
  *
  * @param loadBalancerId - ID of load balancer for which to create the configuration.
