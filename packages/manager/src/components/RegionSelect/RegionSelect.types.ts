@@ -21,9 +21,14 @@ export interface RegionSelectProps
     EnhancedAutocompleteProps<RegionSelectOption, false>,
     'label' | 'onChange' | 'options'
   > {
-  // TODO DC_GET_WELL
-  // Make this prop required & remove the undefined union type once all consumers are updated
-  currentCapability?: Capabilities | undefined;
+  /**
+   * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
+   * Only use `undefined` for situations where there is no relevant capability for the RegionSelect - this will not filter any of the regions passed in.
+   * Otherwise, a capability should always be passed in.
+   *
+   * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
+   */
+  currentCapability: Capabilities | undefined;
   handleSelection: (id: string) => void;
   helperText?: string;
   isClearable?: boolean;
@@ -36,8 +41,6 @@ export interface RegionSelectProps
 
 export interface RegionOptionAvailability {
   accountAvailabilityData: AccountAvailability[] | undefined;
-  // TODO DC_GET_WELL
-  // remove the undefined union type once all consumers are updated
   currentCapability: Capabilities | undefined;
 }
 
