@@ -42,7 +42,7 @@ export const StyledLParentListItem = styled(ListItem, {
 
 export const StyledListItem = styled(ListItem, {
   label: 'RegionSelectListItem',
-})(({ theme }) => ({
+})(() => ({
   '&.Mui-disabled': {
     cursor: 'not-allowed',
   },
