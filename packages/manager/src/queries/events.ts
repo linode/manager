@@ -53,16 +53,16 @@ export const useEventsPoller = () => {
     eventsThatAlreadyHappenedAtTheFilterTime,
     inProgressEvents,
   } = events?.reduce<{
-    eventsThatAlreadyHappenedAtTheFilterTime: Event[];
-    inProgressEvents: Event[];
+    eventsThatAlreadyHappenedAtTheFilterTime: number[];
+    inProgressEvents: number[];
   }>(
     (acc, event) => {
       if (isInProgressEvent(event)) {
-        acc.inProgressEvents.push(event);
+        acc.inProgressEvents.push(event.id);
         return acc;
       }
       if (event.created === latestEventTime) {
-        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event);
+        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event.id);
         return acc;
       }
       return acc;
@@ -74,8 +74,8 @@ export const useEventsPoller = () => {
 
   const filter = generatePollingFilter(
     latestEventTime,
-    inProgressEvents?.map((event) => event.id),
-    eventsThatAlreadyHappenedAtTheFilterTime?.map((e) => e.id)
+    inProgressEvents,
+    eventsThatAlreadyHappenedAtTheFilterTime
   );
 
   useQuery({
@@ -83,45 +83,47 @@ export const useEventsPoller = () => {
     onSuccess(events) {
       incrementPollingInterval();
 
-      const { existingEvents, newEvents } = events.reduce<{
-        existingEvents: Event[];
-        newEvents: Event[];
-      }>(
-        (acc, event) => {
-          if (inProgressEvents?.some((e) => e.id === event.id)) {
-            acc.existingEvents.push(event);
-          } else {
-            acc.newEvents.push(event);
-          }
-          return acc;
-        },
-        { existingEvents: [], newEvents: [] }
-      );
-
       queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
         ['events', 'infinite', {}],
         (prev) => {
-          const newPages = prev?.pages.map((page, index) => {
-            if (index === 0 && newEvents.length > 0) {
-              page.data = [...newEvents, ...page.data];
-            }
+          if (!prev) {
+            return {
+              pages: [],
+              pageParams: [],
+            };
+          }
 
-            for (const event of existingEvents) {
+          const updatedEventIndexes: number[] = [];
+
+          for (const page of prev.pages) {
+            for (let i = 0; i < events.length; i++) {
               const indexOfEvent = page.data.findIndex(
-                (e) => e.id === event.id
+                (e) => e.id === events[i].id
               );
 
               if (indexOfEvent !== -1) {
-                page.data[index] = event;
+                page.data[indexOfEvent] = events[i];
+                updatedEventIndexes.push(i);
               }
             }
+          }
 
-            return page;
-          });
+          const newEvents: Event[] = [];
+
+          for (let i = 0; i < events.length; i++) {
+            if (!updatedEventIndexes.includes(i)) {
+              newEvents.push(events[i]);
+            }
+          }
+
+          if (newEvents.length > 0) {
+            // For all events, that remain, append them to the top of the events list
+            prev.pages[0].data = [...newEvents, ...prev.pages[0].data];
+          }
 
           return {
-            pageParams: prev?.pageParams ?? [],
-            pages: newPages ?? [],
+            pageParams: prev.pageParams,
+            pages: prev.pages,
           };
         }
       );
