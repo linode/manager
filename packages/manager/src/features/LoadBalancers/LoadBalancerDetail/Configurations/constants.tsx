@@ -45,5 +45,5 @@ export const CONFIGURATION_COPY = {
     </Typography>
   ),
   configuration:
-    'If a label is not entered, a default value based on protocol, or port number is assigned.',
+    'If a label is not entered, a default value based on protocol or port number is assigned.',
 };
