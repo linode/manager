@@ -5,9 +5,11 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
+import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { AGLB_DOCS_TLS_CERTIFICATE } from 'src/features/LoadBalancers/constants';
 
 import {
   CONFIGURATION_COPY,
@@ -73,22 +75,24 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
             value={values[name]?.[index]?.port}
           />
         </Stack>
-        <Stack maxWidth="600px">
+        <Stack>
           <Typography variant="h3">
             TLS Certificates
             <TooltipIcon status="help" text={CONFIGURATION_COPY.Certificates} />
           </Typography>
-          <Typography>
+          <Box sx={{ alignItems: 'center', display: 'flex' }}>
             <BetaChip
               sx={(theme) => ({
                 marginLeft: '0 !important',
-                marginRight: `${theme.spacing(1)} !important`,
-                verticalAlign: 'top',
+                marginRight: `${theme.spacing(1 / 2)} !important`,
               })}
             />
-            After the load balancer is created, and if the protocol is HTTPS,
-            upload TLS termination certificates. Learn more.
-          </Typography>
+            <Typography>
+              After the load balancer is created, and if the protocol is HTTPS,
+              upload TLS termination certificates.
+              <Link to={AGLB_DOCS_TLS_CERTIFICATE}> Learn more.</Link>
+            </Typography>
+          </Box>
         </Stack>
       </Stack>
       <TextField
