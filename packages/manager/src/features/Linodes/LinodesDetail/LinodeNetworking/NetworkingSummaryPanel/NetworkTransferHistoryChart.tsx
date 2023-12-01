@@ -75,7 +75,7 @@ export const NetworkTransferHistoryChart = (
           <XAxis
             dataKey="t"
             domain={['dataMin', 'dataMax']}
-            interval="equidistantPreserveStart"
+            interval="preserveEnd"
             minTickGap={15}
             scale="time"
             stroke={theme.color.label}
