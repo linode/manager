@@ -933,11 +933,10 @@ export function applyLinking(event: Event, message: string) {
     return '';
   }
 
-  const entityLinkTarget = getLinkForEvent(event.action, event.entity, false);
+  const entityLinkTarget = getLinkForEvent(event.action, event.entity);
   const secondaryEntityLinkTarget = getLinkForEvent(
     event.action,
-    event.secondary_entity,
-    false
+    event.secondary_entity
   );
 
   let newMessage = message;

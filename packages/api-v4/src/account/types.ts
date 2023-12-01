@@ -404,7 +404,6 @@ export interface Event {
   time_remaining: null | string;
   username: string | null;
   secondary_entity: Entity | null;
-  _initial?: boolean;
   message: string | null;
 }
 /**

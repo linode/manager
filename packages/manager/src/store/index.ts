@@ -1,4 +1,4 @@
-import { Store, combineReducers, createStore } from 'redux';
+import { Store, applyMiddleware, combineReducers, createStore } from 'redux';
 
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
@@ -33,6 +33,7 @@ import pendingUpload, {
   State as PendingUploadState,
   defaultState as pendingUploadState,
 } from './pendingUpload';
+import thunk from 'redux-thunk';
 
 export interface ApplicationState {
   authentication: AuthState;
@@ -71,6 +72,7 @@ const reducers = combineReducers<ApplicationState>({
 });
 
 // We need an instance of the query client for some event event handlers
-export const storeFactory = () => createStore(reducers, defaultState);
+export const storeFactory = () =>
+  createStore(reducers, defaultState, applyMiddleware(thunk));
 
 export type ApplicationStore = Store<ApplicationState>;

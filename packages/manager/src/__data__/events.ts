@@ -574,7 +574,6 @@ export const uniqueEvents: Event[] = [
 ];
 
 export const reduxEvent: Event = {
-  _initial: false,
   action: 'linode_boot',
   created: '2018-12-02T20:23:43',
   duration: 0,
