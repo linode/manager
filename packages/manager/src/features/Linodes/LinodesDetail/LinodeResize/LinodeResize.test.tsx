@@ -27,7 +27,7 @@ describe('LinodeResize', () => {
       <LinodeResize
         linodeId={12}
         linodeLabel=""
-        onClose={jest.fn()}
+        onClose={vi.fn()}
         open={true}
       />
     );

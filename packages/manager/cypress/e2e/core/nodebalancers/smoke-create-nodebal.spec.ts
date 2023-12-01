@@ -11,11 +11,6 @@ import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { dcPricingRegionNotice } from 'support/constants/dc-specific-pricing';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
@@ -33,8 +28,6 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
 
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
-
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     // Confirms that the price will not display when the region is not selected
     cy.get('[data-qa-summary="true"]').within(() => {
@@ -161,11 +154,6 @@ describe('create NodeBalancer', () => {
       cy.intercept('POST', apiMatcher('nodebalancers')).as(
         'createNodeBalancer'
       );
-
-      mockAppendFeatureFlags({
-        dcSpecificPricing: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
 
       createNodeBalancerWithUI(nodeBal, true);
     });

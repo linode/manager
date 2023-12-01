@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { Capabilities, Region } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { DIFFERENT_PRICE_STRUCTURE_WARNING } from 'src/utilities/pricing/constants';
@@ -26,6 +25,7 @@ import { DynamicPriceNotice } from '../DynamicPriceNotice';
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
+  currentCapability?: Capabilities | undefined;
   disabled?: boolean;
   error?: string;
   handleSelection: (id: string) => void;
@@ -40,6 +40,7 @@ interface SelectRegionPanelProps {
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
+    currentCapability,
     disabled,
     error,
     handleSelection,
@@ -50,7 +51,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   } = props;
 
   const location = useLocation();
-  const flags = useFlags();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
 
@@ -69,7 +69,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     isCloning && selectedId && currentLinodeRegion !== selectedId;
 
   const showClonePriceWarning =
-    flags.dcSpecificPricing &&
     isCloning &&
     isLinodeTypeDifferentPriceInSelectedRegion({
       regionA: currentLinodeRegion,
@@ -83,18 +82,15 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   );
 
   const showUniquePricingNotice =
-    flags.dcSpecificPricing &&
     !showClonePriceWarning && // Don't show both notices at the same time.
     selectedRegionHasUniquePricing;
 
   // If this component is used in the context of Linodes,
   // use Linode types from the API to determine if the region
   // has specific pricing. Otherwise, check against our local pricing map.
-  const showRegionPriceNotice = flags.dcSpecificPricing
-    ? isLinode
-      ? showUniquePricingNotice
-      : selectedId && priceIncreaseMap[selectedId]
-    : false;
+  const showRegionPriceNotice = isLinode
+    ? showUniquePricingNotice
+    : selectedId && priceIncreaseMap[selectedId];
 
   if (props.regions.length === 0) {
     return null;
@@ -117,12 +113,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           Region
         </Typography>
         {/* TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed */}
-        {/* {flags.dcSpecificPricing && (
+        {/*
           <DocsLink
             href="https://www.linode.com/pricing"
             label="How Data Center Pricing Works"
           />
-        )} */}
+        */}
       </Box>
       <RegionHelperText
         onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
@@ -140,6 +136,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       <RegionSelect
+        currentCapability={currentCapability}
         disabled={disabled}
         errorText={error}
         handleSelection={handleSelection}

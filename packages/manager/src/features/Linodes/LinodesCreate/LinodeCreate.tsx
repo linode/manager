@@ -21,11 +21,11 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import {
   WithAccountProps,
@@ -36,7 +36,7 @@ import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
@@ -97,7 +97,7 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 
-import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
@@ -123,8 +123,8 @@ export interface LinodeCreateProps {
   setAuthorizedUsers: (usernames: string[]) => void;
   setBackupID: (id: number) => void;
   setSelectedVPC: (vpcID: number) => void;
-  showAgreement: boolean;
   showApiAwarenessModal: boolean;
+  showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
   toggleAssignPublicIPv4Address: () => void;
@@ -261,8 +261,8 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       regionsLoading,
       selectedRegionID,
-      showAgreement,
       showApiAwarenessModal,
+      showGDPRCheckbox,
       showGeneralError,
       signedAgreement,
       tags,
@@ -349,7 +349,6 @@ export class LinodeCreate extends React.PureComponent<
     const backupsMonthlyPrice:
       | PriceObject['monthly']
       | undefined = getMonthlyBackupsPrice({
-      flags: this.props.flags,
       region: selectedRegionID,
       type,
     });
@@ -546,6 +545,7 @@ export class LinodeCreate extends React.PureComponent<
 
           {this.props.createType !== 'fromBackup' && (
             <SelectRegionPanel
+              currentCapability="Linodes"
               data-qa-select-region-panel
               disabled={userCannotCreateLinode}
               error={hasErrorFor.region}
@@ -681,13 +681,13 @@ export class LinodeCreate extends React.PureComponent<
             alignItems="center"
             display="flex"
             flexWrap="wrap"
-            justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+            justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
           >
-            <StyledMessageDiv showAgreement={!!showAgreement}>
+            <StyledMessageDiv showGDPRCheckbox={!!showGDPRCheckbox}>
               <SMTPRestrictionText>
                 {({ text }) => <Grid xs={12}>{text}</Grid>}
               </SMTPRestrictionText>
-              {showAgreement ? (
+              {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
                   centerCheckbox
                   checked={signedAgreement}
@@ -705,7 +705,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement)
               }
               buttonType="outlined"
               data-qa-api-cli-linode
@@ -717,7 +717,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement)
               }
               buttonType="primary"
               data-qa-deploy-linode

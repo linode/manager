@@ -11,6 +11,8 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 
+import { getAll } from 'src/utilities/getAll';
+
 const queryKey = 'account-availability';
 
 export const useAccountAvailabilitiesQuery = (
@@ -27,6 +29,20 @@ export const useAccountAvailabilitiesQuery = (
     }
   );
 };
+
+export const useAccountAvailabilitiesQueryUnpaginated = (
+  enabled: boolean = true
+) =>
+  useQuery<AccountAvailability[], APIError[]>(
+    [queryKey, 'unpaginated'],
+    getAllAccountAvailabilitiesRequest,
+    { enabled, keepPreviousData: true }
+  );
+
+const getAllAccountAvailabilitiesRequest = () =>
+  getAll<AccountAvailability>((params, filters) =>
+    getAccountAvailabilities(params, filters)
+  )().then((data) => data.data);
 
 export const useAccountAvailabilityQuery = (
   id: string,

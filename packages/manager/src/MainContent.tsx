@@ -19,7 +19,6 @@ import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -98,11 +97,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   switchWrapper: {
-    '& .mlSidebar': {
-      [theme.breakpoints.up('lg')]: {
-        paddingRight: `0 !important`,
-      },
-    },
     '& > .MuiGrid-container': {
       maxWidth: theme.breakpoints.values.lg,
       width: '100%',
@@ -379,7 +373,6 @@ export const MainContent = () => {
           </>
         </NotificationProvider>
         <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-        <ToastNotifications />
       </ComplianceUpdateProvider>
     </div>
   );

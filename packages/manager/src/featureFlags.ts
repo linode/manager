@@ -46,15 +46,14 @@ export interface Flags {
   databaseBeta: boolean;
   databases: boolean;
   dcGetWell: boolean;
-  dcSpecificPricing: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
-  objDcSpecificPricing: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
+  parentChildAccountAccess: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];

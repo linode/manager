@@ -1185,8 +1185,8 @@ export const oneClickApps: OCA[] = [
       },
     ],
     summary:
-      'MainConcept P2 AVC Ultra Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+      'MainConcept P2 AVC-ULTRA Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Sony camera format encoder.',
@@ -1209,7 +1209,7 @@ export const oneClickApps: OCA[] = [
     ],
     summary:
       'MainConcept XAVC Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Sony XDCAM format encoder.',
@@ -1232,7 +1232,7 @@ export const oneClickApps: OCA[] = [
     ],
     summary:
       'MainConcept XDCAM Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Open source Twitter alternative.',

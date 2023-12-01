@@ -20,33 +20,37 @@ import {
 } from 'support/constants/dc-specific-pricing';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 
 import type { Region } from '@linode/api-v4';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 const mockRegions: Region[] = [
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'uk',
     id: 'eu-west',
     label: 'London, UK',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     country: 'sg',
     id: 'ap-south',
     label: 'Singapore, SG',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     id: 'us-east',
     label: 'Newark, NJ',
   }),
   regionFactory.build({
+    capabilities: ['Linodes'],
     id: 'us-central',
     label: 'Dallas, TX',
   }),
@@ -64,7 +68,6 @@ describe('create linode', () => {
    * - Confirms that region select dropdown is populated with expected regions.
    * - Confirms that region select dropdown is sorted alphabetically by region, with North America first.
    * - Confirms that region select dropdown is populated with expected DCs, sorted alphabetically.
-   * - Confirms that region select dropdown is populated with expected fake DC.
    */
   it('region select', () => {
     mockGetRegions(mockRegions).as('getRegions');
@@ -76,7 +79,7 @@ describe('create linode', () => {
 
     cy.visitWithLogin('linodes/create');
 
-    cy.wait(['@getFeatureFlags', '@getRegions']);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getRegions']);
 
     // Confirm that region select dropdown is visible and interactive.
     ui.regionSelect.find().click();
@@ -84,7 +87,7 @@ describe('create linode', () => {
 
     // Confirm that region select dropdown are grouped by region,
     // sorted alphabetically, with North America first.
-    cy.get('[data-qa-region-select-group]')
+    cy.get('.MuiAutocomplete-groupLabel')
       .should('have.length', 3)
       .should((group) => {
         expect(group[0]).to.contain('North America');
@@ -93,7 +96,7 @@ describe('create linode', () => {
       });
 
     // Confirm that region select dropdown is populated with expected regions, sorted alphabetically.
-    cy.get('[data-qa-option]').should('exist').should('have.length', 5);
+    cy.get('[data-qa-option]').should('exist').should('have.length', 4);
     mockRegions.forEach((region) => {
       cy.get('[data-qa-option]').contains(region.label);
     });
@@ -235,11 +238,6 @@ describe('create linode', () => {
       (regionPrice) => regionPrice.id === newRegion.id
     );
 
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Mock requests to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
@@ -247,7 +245,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getLinodeTypes']);
+    cy.wait(['@getLinodeTypes']);
 
     mockCreateLinode(mockLinode).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');

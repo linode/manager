@@ -428,7 +428,7 @@ const aglb = [
 ];
 
 const vpc = [
-  rest.get('*/vpcs', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs', (req, res, ctx) => {
     const vpcsWithSubnet1 = vpcFactory.buildList(5, {
       subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
     });
@@ -447,7 +447,7 @@ const vpc = [
       )
     );
   }),
-  rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
     return res(
       ctx.json(
         vpcFactory.build({
@@ -457,27 +457,27 @@ const vpc = [
       )
     );
   }),
-  rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
-  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+  rest.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
+  rest.delete('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.put('*/vpcs/:vpcId', (req, res, ctx) => {
+  rest.put('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json(vpcFactory.build({ description: 'testing' })));
   }),
-  rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
+  rest.get('*/v4beta/vpcs/:vpcID', (req, res, ctx) => {
     const id = Number(req.params.id);
     return res(ctx.json(vpcFactory.build({ id })));
   }),
-  rest.post('*/vpcs', (req, res, ctx) => {
+  rest.post('*/v4beta/vpcs', (req, res, ctx) => {
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
   }),
-  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+  rest.post('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
     const subnet = subnetFactory.build({ ...(req.body as any) });
     return res(ctx.json(subnet));
   }),
@@ -487,6 +487,27 @@ const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
+
+const proxyAccount = accountUserFactory.build({
+  email: 'partner@proxy.com',
+  last_login: null,
+  user_type: 'proxy',
+  username: 'ParentCompany_a1b2c3d4e5',
+});
+const parentAccount = accountUserFactory.build({
+  email: 'parent@acme.com',
+  last_login: null,
+  restricted: false,
+  user_type: 'parent',
+  username: 'ParentUser',
+});
+const childAccount = accountUserFactory.build({
+  email: 'child@linode.com',
+  last_login: null,
+  restricted: false,
+  user_type: 'child',
+  username: 'ChildUser',
+});
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
@@ -678,6 +699,11 @@ export const handlers = [
       )
     );
   }),
+  rest.get('*/linode/instances/:id/firewalls', async (req, res, ctx) => {
+    const firewalls = firewallFactory.buildList(10);
+    firewallFactory.resetSequenceNumber();
+    return res(ctx.json(makeResourcePage(firewalls)));
+  }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -760,20 +786,20 @@ export const handlers = [
   rest.get('*/lke/clusters/*/recycle', async (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/firewalls/', (req, res, ctx) => {
+  rest.get('*/v4beta/networking/firewalls', (req, res, ctx) => {
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
     return res(ctx.json(makeResourcePage(firewalls)));
   }),
-  rest.get('*/firewalls/*/devices', (req, res, ctx) => {
+  rest.get('*/v4beta/networking/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
   }),
-  rest.get('*/firewalls/:firewallId', (req, res, ctx) => {
+  rest.get('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build();
     return res(ctx.json(firewall));
   }),
-  rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
+  rest.put('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build({
       status: req.body?.['status'] ?? 'disabled',
     });
@@ -782,7 +808,7 @@ export const handlers = [
   // rest.post('*/account/agreements', (req, res, ctx) => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
-  rest.post('*/firewalls', (req, res, ctx) => {
+  rest.post('*/v4beta/networking/firewalls', (req, res, ctx) => {
     const payload = req.body as any;
     const newFirewall = firewallFactory.build({
       label: payload.label ?? 'mock-firewall',
@@ -1013,19 +1039,25 @@ export const handlers = [
     return res(ctx.json(account));
   }),
   rest.get('*/account/availability', (req, res, ctx) => {
-    const florida = accountAvailabilityFactory.build({
-      id: 'us-mia',
-      unavailable: ['Block Storage'],
+    const newarkStorage = accountAvailabilityFactory.build({
+      id: 'us-east-0',
+      unavailable: ['Object Storage'],
+    });
+    const atlanta = accountAvailabilityFactory.build({
+      id: 'us-southeast',
+      unavailable: ['Block Storage', 'Managed Databases'],
     });
     const singapore = accountAvailabilityFactory.build({
       id: 'ap-south',
-      unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
+      unavailable: ['Linodes', 'Kubernetes', 'NodeBalancers'],
     });
     const tokyo = accountAvailabilityFactory.build({
       id: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
-    return res(ctx.json(makeResourcePage([florida, singapore, tokyo])));
+    return res(
+      ctx.json(makeResourcePage([atlanta, newarkStorage, singapore, tokyo]))
+    );
   }),
   rest.get('*/account/availability/:regionId', (req, res, ctx) => {
     return res(ctx.json(accountAvailabilityFactory.build()));
@@ -1120,22 +1152,87 @@ export const handlers = [
   rest.get('*/account/users', (req, res, ctx) => {
     const accountUsers = [
       accountUserFactory.build({
-        last_login: { status: 'failed', login_datetime: '2023-10-16T17:04' },
+        last_login: { login_datetime: '2023-10-16T17:04', status: 'failed' },
         tfa_enabled: true,
       }),
       accountUserFactory.build({
         last_login: {
-          status: 'successful',
           login_datetime: '2023-10-06T12:04',
+          status: 'successful',
         },
       }),
       accountUserFactory.build({ last_login: null }),
+      childAccount,
+      parentAccount,
+      proxyAccount,
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
-  rest.get('*/account/users/:user', (req, res, ctx) => {
-    return res(ctx.json(profileFactory.build()));
+  rest.get(`*/account/users/${childAccount.username}`, (req, res, ctx) => {
+    return res(ctx.json(childAccount));
   }),
+  rest.get(`*/account/users/${proxyAccount.username}`, (req, res, ctx) => {
+    return res(ctx.json(proxyAccount));
+  }),
+  rest.get(`*/account/users/${parentAccount.username}`, (req, res, ctx) => {
+    return res(ctx.json(parentAccount));
+  }),
+  rest.get('*/account/users/:user', (req, res, ctx) => {
+    return res(ctx.json(accountUserFactory.build()));
+  }),
+  rest.get(
+    `*/account/users/${childAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              cancel_account: false,
+            },
+          })
+        )
+      );
+    }
+  ),
+  rest.get(
+    `*/account/users/${proxyAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              add_domains: false,
+              add_firewalls: false,
+              add_images: false,
+              add_linodes: false,
+              add_longview: false,
+              add_nodebalancers: false,
+              add_stackscripts: false,
+              add_volumes: false,
+              add_vpcs: false,
+              cancel_account: false,
+              longview_subscription: false,
+            },
+          })
+        )
+      );
+    }
+  ),
+  rest.get(
+    `*/account/users/${parentAccount.username}/grants`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json(
+          grantsFactory.build({
+            global: {
+              cancel_account: false,
+              child_account_access: true,
+            },
+          })
+        )
+      );
+    }
+  ),
   rest.get('*/account/users/:user/grants', (req, res, ctx) => {
     return res(
       ctx.json(
