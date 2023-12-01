@@ -68,6 +68,7 @@ export interface Flags {
   tpaProviders: Provider[];
   unifiedMigrations: boolean;
   vpc: boolean;
+  cloudView: boolean;
 }
 
 type PromotionalOfferFeature =

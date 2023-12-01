@@ -27,6 +27,7 @@ import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
+import { useFlags } from 'src/hooks/useFlags';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
@@ -35,6 +36,7 @@ const CloudviewLanding =React.lazy(() => import('./CloudView/CloudViewLanding'))
 type CombinedProps = LongviewProps & RouteComponentProps<{}>;
 
 export const LongviewLanding = (props: CombinedProps) => {
+  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),
@@ -68,12 +70,17 @@ export const LongviewLanding = (props: CombinedProps) => {
     {
       routeName: `${props.match.url}/plan-details`,
       title: 'Plan Details',
-    },
-    {
-      routeName: `${props.match.url}/cloudview`,
-      title: 'Cloudview',
     }
   ];
+
+  if (flags.cloudView) {
+    tabs.push(
+      {
+        routeName: `${props.match.url}/cloudview`,
+        title: 'Cloudview',
+      }
+    );
+  }
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
@@ -164,11 +171,11 @@ export const LongviewLanding = (props: CombinedProps) => {
                 subscriptionRequestHook={subscriptionsRequestHook}
               />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
+            {flags.cloudView && <SafeTabPanel index={2}>
               <CloudviewLanding
                 {...props}
               />
-            </SafeTabPanel>
+            </SafeTabPanel>}
           </TabPanels>
         </React.Suspense>
       </StyledTabs>
