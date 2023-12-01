@@ -131,7 +131,6 @@ export const FirewallDeviceLanding = React.memo(
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField
                 onSearch={(val) => {
-                  console.log('val: ', val);
                   filter(val);
                 }}
                 debounceTime={250}
