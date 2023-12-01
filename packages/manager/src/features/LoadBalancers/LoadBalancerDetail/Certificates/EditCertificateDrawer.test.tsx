@@ -1,4 +1,3 @@
-import { Certificate } from '@linode/api-v4';
 import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -8,18 +7,19 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditCertificateDrawer } from './EditCertificateDrawer';
 
-const mockTLSCertificate: Certificate = {
+const mockTLSCertificate = {
   certificate: mockCertificate,
   id: 0,
   label: 'test-tls-cert',
   type: 'downstream',
-};
-const mockCACertificate: Certificate = {
+} as const;
+
+const mockCACertificate = {
   certificate: mockCertificate,
   id: 0,
   label: 'test-ca-cert',
   type: 'ca',
-};
+} as const;
 
 describe('EditCertificateDrawer', () => {
   it('should contain the name of the cert in the drawer title and label field', () => {

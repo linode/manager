@@ -97,7 +97,7 @@ export const useLoadBalancerServiceTargetsInfiniteQuery = (
   filter: Filter = {}
 ) => {
   return useInfiniteQuery<ResourcePage<ServiceTarget>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'service-targets', 'infinite', filter],
+    [QUERY_KEY, 'aglb', id, 'service-targets', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerServiceTargets(
         id,
