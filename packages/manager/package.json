@@ -28,6 +28,7 @@
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "chartjs-adapter-luxon": "^0.2.1",
+    "clamp-js": "^0.7.0",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
     "country-region-data": "^1.4.5",
