@@ -54,15 +54,16 @@ export const FirewallDeviceLanding = React.memo(
       }
     }, [location.pathname]);
 
+    const devices =
+      allDevices?.filter((device) => device.entity.type === type) || [];
+
     const [filteredDevices, setFilteredDevices] = React.useState<
       FirewallDevice[]
     >([]);
 
     React.useEffect(() => {
-      setFilteredDevices(
-        allDevices?.filter((device) => device.entity.type === type) || []
-      );
-    }, [allDevices, type]);
+      setFilteredDevices(devices);
+    }, [allDevices]);
 
     const [
       isRemoveDeviceDialogOpen,
@@ -93,10 +94,10 @@ export const FirewallDeviceLanding = React.memo(
 
     const filter = (value: string) => {
       setSearchText(value);
-      const filtered = filteredDevices.filter((device) => {
+      const filtered = devices?.filter((device) => {
         return device.entity.label.toLowerCase().includes(value.toLowerCase());
       });
-      setFilteredDevices(filtered);
+      setFilteredDevices(filtered ?? []);
     };
 
     const formattedType = formattedTypes[type];
@@ -130,6 +131,7 @@ export const FirewallDeviceLanding = React.memo(
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField
                 onSearch={(val) => {
+                  console.log('val: ', val);
                   filter(val);
                 }}
                 debounceTime={250}
