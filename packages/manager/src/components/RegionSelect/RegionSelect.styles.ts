@@ -56,6 +56,9 @@ export const StyledListItem = styled(ListItem, {
   '&.MuiListItem-root[aria-disabled="true"]:active': {
     pointerEvents: 'none !important',
   },
+  '&.Mui-disabled': {
+    cursor: 'not-allowed',
+  },
 }));
 
 export const SelectedIcon = styled(DoneIcon, {
