@@ -22,6 +22,13 @@ import type {
 } from './RegionSelect.types';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
+/**
+ * A specific select for regions.
+ *
+ * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. There is no need to
+ * prefilter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ */
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     currentCapability,

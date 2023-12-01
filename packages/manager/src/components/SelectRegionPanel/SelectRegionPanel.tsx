@@ -25,7 +25,7 @@ import { DynamicPriceNotice } from '../DynamicPriceNotice';
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
-  currentCapability?: Capabilities | undefined;
+  currentCapability: Capabilities;
   disabled?: boolean;
   error?: string;
   handleSelection: (id: string) => void;

@@ -270,6 +270,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             helperText="For fastest initial upload, select the region that is geographically
             closest to you. Once uploaded you will be able to deploy the image
             to other regions."
+            currentCapability={undefined}
             disabled={!canCreateImage}
             errorText={errorMap.region}
             handleSelection={setRegion}
