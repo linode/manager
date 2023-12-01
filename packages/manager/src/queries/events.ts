@@ -1,6 +1,8 @@
 import { getEvents, markEventSeen } from '@linode/api-v4';
 import {
   InfiniteData,
+  QueryClient,
+  QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -15,13 +17,15 @@ import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 
-export const useEventsInfiniteQuery = (filter: Filter = {}) => {
+export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     ['events', 'infinite', filter],
     ({ pageParam }) => getEvents({ page: pageParam }, filter),
     {
+      cacheTime: Infinity,
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,
+      staleTime: Infinity,
     }
   );
 
@@ -83,50 +87,7 @@ export const useEventsPoller = () => {
     onSuccess(events) {
       incrementPollingInterval();
 
-      queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-        ['events', 'infinite', {}],
-        (prev) => {
-          if (!prev) {
-            return {
-              pages: [],
-              pageParams: [],
-            };
-          }
-
-          const updatedEventIndexes: number[] = [];
-
-          for (const page of prev.pages) {
-            for (let i = 0; i < events.length; i++) {
-              const indexOfEvent = page.data.findIndex(
-                (e) => e.id === events[i].id
-              );
-
-              if (indexOfEvent !== -1) {
-                page.data[indexOfEvent] = events[i];
-                updatedEventIndexes.push(i);
-              }
-            }
-          }
-
-          const newEvents: Event[] = [];
-
-          for (let i = 0; i < events.length; i++) {
-            if (!updatedEventIndexes.includes(i)) {
-              newEvents.push(events[i]);
-            }
-          }
-
-          if (newEvents.length > 0) {
-            // For all events, that remain, append them to the top of the events list
-            prev.pages[0].data = [...newEvents, ...prev.pages[0].data];
-          }
-
-          return {
-            pageParams: prev.pageParams,
-            pages: prev.pages,
-          };
-        }
-      );
+      updateEventsQueries(events, queryClient);
 
       for (const event of events) {
         for (const eventHandler of eventHandlers) {
@@ -199,6 +160,93 @@ export const useMarkEventsAsSeen = () => {
           }
         );
       },
+    }
+  );
+};
+
+export const updateEventsQueries = (
+  events: Event[],
+  queryClient: QueryClient
+) => {
+  queryClient
+    .getQueryCache()
+    .findAll(['events', 'infinite'])
+    .forEach(({ queryKey }) => {
+      const apiFilter = queryKey[queryKey.length - 1] as Filter | undefined;
+
+      if (apiFilter === undefined) {
+        updateEventsQuery(events, queryKey, queryClient);
+        return;
+      }
+
+      const filteredEvents = events.filter((event) => {
+        // @ts-expect-error todo fix filter type
+        const notEqualItems = apiFilter.action?.['+neq'];
+        if (notEqualItems && notEqualItems.includes(event.action)) {
+          return false;
+        }
+        if (
+          apiFilter?.['entity.id'] &&
+          apiFilter?.['entity.type'] &&
+          apiFilter['entity.id'] !== event.entity?.id &&
+          apiFilter['entity.type'] !== event.entity?.type
+        ) {
+          return false;
+        }
+        return true;
+      });
+
+      updateEventsQuery(filteredEvents, queryKey, queryClient);
+    });
+};
+
+export const updateEventsQuery = (
+  events: Event[],
+  queryKey: QueryKey,
+  queryClient: QueryClient
+) => {
+  queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+    queryKey,
+    (prev) => {
+      if (!prev) {
+        return {
+          pageParams: [],
+          pages: [],
+        };
+      }
+
+      const updatedEventIndexes: number[] = [];
+
+      for (const page of prev.pages) {
+        for (let i = 0; i < events.length; i++) {
+          const indexOfEvent = page.data.findIndex(
+            (e) => e.id === events[i].id
+          );
+
+          if (indexOfEvent !== -1) {
+            page.data[indexOfEvent] = events[i];
+            updatedEventIndexes.push(i);
+          }
+        }
+      }
+
+      const newEvents: Event[] = [];
+
+      for (let i = 0; i < events.length; i++) {
+        if (!updatedEventIndexes.includes(i)) {
+          newEvents.push(events[i]);
+        }
+      }
+
+      if (newEvents.length > 0) {
+        // For all events, that remain, append them to the top of the events list
+        prev.pages[0].data = [...newEvents, ...prev.pages[0].data];
+      }
+
+      return {
+        pageParams: prev.pageParams,
+        pages: prev.pages,
+      };
     }
   );
 };
