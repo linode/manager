@@ -11,11 +11,13 @@ import { makeResponse } from 'support/util/response';
 import type {
   Account,
   AccountSettings,
+  CancelAccount,
   EntityTransfer,
   Invoice,
   InvoiceItem,
   Payment,
   PaymentMethod,
+  User,
 } from '@linode/api-v4';
 
 /**
@@ -26,7 +28,7 @@ import type {
  * @returns Cypress chainable.
  */
 export const mockGetAccount = (account: Account): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('account'), account);
+  return cy.intercept('GET', apiMatcher('account'), makeResponse(account));
 };
 
 /**
@@ -39,7 +41,11 @@ export const mockGetAccount = (account: Account): Cypress.Chainable<null> => {
 export const mockUpdateAccount = (
   updatedAccount: Account
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', apiMatcher('account'), updatedAccount);
+  return cy.intercept(
+    'PUT',
+    apiMatcher('account'),
+    makeResponse(updatedAccount)
+  );
 };
 
 /**
@@ -320,5 +326,41 @@ export const mockGetPayments = (
     'GET',
     apiMatcher('account/payments*'),
     paginateResponse(payments)
+  );
+};
+
+/**
+ * Intercepts POST request to cancel account and mocks cancellation response.
+ *
+ * @param cancellation - Account cancellation object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCancelAccount = (
+  cancellation: CancelAccount
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/cancel'),
+    makeResponse(cancellation)
+  );
+};
+
+/**
+ * Intercepts POST request to cancel account and mocks an API error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCancelAccountError = (
+  errorMessage: string,
+  status: number = 400
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/cancel'),
+    makeErrorResponse(errorMessage, status)
   );
 };
