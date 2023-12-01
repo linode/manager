@@ -2,7 +2,7 @@ import {
   CreateConfigurationSchema,
   UpdateConfigurationSchema,
 } from '@linode/validation';
-import { useFormik } from 'formik';
+import { useFormik, yupToFormErrors } from 'formik';
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -101,10 +101,20 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
       }
     },
+    validate(values) {
+      // We must use `validate` insted of validationSchema because Formik decided to convert
+      // "" to undefined before passing the values to yup. This makes it hard to validate `label`.
+      // See https://github.com/jaredpalmer/formik/issues/805
+      try {
+        validationSchema.validateSync(values, { abortEarly: false });
+        return {};
+      } catch (error) {
+        return yupToFormErrors(error);
+      }
+    },
     // Prevent errors from being cleared when we show API errors
     validateOnBlur: !error,
     validateOnChange: !error,
-    validationSchema,
   });
 
   const protocolOptions = [
