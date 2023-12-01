@@ -27,6 +27,12 @@ export const initialValues = {
   route_ids: [],
 };
 
+export const protocolOptions = [
+  { label: 'HTTPS', value: 'https' },
+  { label: 'HTTP', value: 'http' },
+  { label: 'TCP', value: 'tcp' },
+];
+
 export const CONFIGURATION_COPY = {
   Certificates:
     'TLS termination certificates create an encrypted link between your clients and Global Load Balancer, and terminate incoming traffic on the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over encrypted TLS connections. Responses from your service targets to your clients are also encrypted.',
@@ -38,4 +44,6 @@ export const CONFIGURATION_COPY = {
       <Link to={AGLB_DOCS.Protocols}>Available Protocols</Link> for information.
     </Typography>
   ),
+  configuration:
+    'If a label is not entered, a default value based on protocol or port number is assigned.',
 };
