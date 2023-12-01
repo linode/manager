@@ -49,11 +49,26 @@ export const useEventsPoller = () => {
 
   const latestEventTime = events ? events[0].created : '';
 
-  // @todo run a reducde to optimize
-  const inProgressEvents = events?.filter(isInProgressEvent);
-  const eventsThatAlreadyHappenedAtTheFilterTime = events?.filter(
-    (event) => event.created === latestEventTime
-  );
+  const {
+    eventsThatAlreadyHappenedAtTheFilterTime,
+    inProgressEvents,
+  } = events?.reduce<{
+    eventsThatAlreadyHappenedAtTheFilterTime: Event[];
+    inProgressEvents: Event[];
+  }>(
+    (acc, event) => {
+      if (isInProgressEvent(event)) {
+        acc.inProgressEvents.push(event);
+        return acc;
+      }
+      if (event.created === latestEventTime) {
+        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event);
+        return acc;
+      }
+      return acc;
+    },
+    { eventsThatAlreadyHappenedAtTheFilterTime: [], inProgressEvents: [] }
+  ) ?? { eventsThatAlreadyHappenedAtTheFilterTime: [], inProgressEvents: [] };
 
   const hasFetchedInitialEvents = events !== undefined;
 
