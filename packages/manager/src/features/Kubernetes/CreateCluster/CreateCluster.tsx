@@ -50,7 +50,11 @@ import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
-import { useStyles } from './CreateCluster.styles';
+import {
+  StyledDocsLinkContainer,
+  StyledRegionSelectStack,
+  useStyles,
+} from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
@@ -213,8 +217,7 @@ export const CreateCluster = () => {
             value={label || ''}
           />
           <Divider sx={{ marginTop: 4 }} />
-          {/* TODO: account for small screens and the docs link wrapping */}
-          <Stack sx={{ flexDirection: 'row' }}>
+          <StyledRegionSelectStack>
             <Stack>
               <RegionSelect
                 handleSelection={(regionID: string) =>
@@ -231,15 +234,13 @@ export const CreateCluster = () => {
               />
               <RegionHelperText sx={{ marginTop: 1 }} />
             </Stack>
-            <Box
-              sx={{ alignSelf: 'flex-start', marginLeft: 'auto', marginTop: 2 }}
-            >
+            <StyledDocsLinkContainer>
               <DocsLink
                 href="https://www.linode.com/pricing"
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
-            </Box>
-          </Stack>
+            </StyledDocsLinkContainer>
+          </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
           <Select
             onChange={(selected: Item<string>) => {
