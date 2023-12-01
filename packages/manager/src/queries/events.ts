@@ -88,8 +88,6 @@ export const useEventsPoller = () => {
           const newPages = prev?.pages.map((page, index) => {
             if (index === 0 && newEvents.length > 0) {
               page.data = [...newEvents, ...page.data];
-
-              return page;
             }
 
             for (const event of existingEvents) {

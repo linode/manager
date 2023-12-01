@@ -18,8 +18,8 @@ import {
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useInProgressEvents } from 'src/queries/events';
 import { useTypeQuery } from 'src/queries/types';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
@@ -54,7 +54,11 @@ export const LinodeRow = (props: Props) => {
 
   const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
-  const recentEvent = useRecentEventForLinode(id);
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.data.find(
+    (e) => e.entity?.type === 'linode' && e.entity.id === id
+  );
 
   const { isVPCOnlyLinode } = useVPCConfigInterface(id);
 

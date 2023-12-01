@@ -7,12 +7,12 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
-import useEvents from 'src/hooks/useEvents';
+import { useInProgressEvents } from 'src/queries/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import { generateCurlCommand } from 'src/utilities/generate-cURL';
 import { generateCLICommand } from 'src/utilities/generate-cli';
@@ -31,16 +31,16 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const theme = useTheme();
   const history = useHistory();
-  const { events } = useEvents();
+  const { data: events } = useInProgressEvents();
 
-  const createdLinode = events.filter(
+  const linodeCreationEvent = events?.data.find(
     (event) =>
       (event.action === 'linode_create' || event.action === 'linode_clone') &&
       event.entity?.label === payLoad.label &&
       (event.status === 'scheduled' || event.status === 'started')
   );
 
-  const isLinodeCreated = createdLinode.length === 1;
+  const isLinodeCreated = linodeCreationEvent !== undefined;
 
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
@@ -69,7 +69,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   useEffect(() => {
     if (isLinodeCreated && isOpen) {
       onClose();
-      history.replace(`/linodes/${createdLinode[0].entity?.id}`);
+      history.replace(`/linodes/${linodeCreationEvent.entity?.id}`);
     }
   }, [isLinodeCreated]);
 
