@@ -90,7 +90,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
             <Typography>
               After the load balancer is created, and if the protocol is HTTPS,
               upload TLS termination certificates.
-              <Link to={AGLB_DOCS_TLS_CERTIFICATE}> Learn more.</Link>
+              <Link to={AGLB_DOCS_TLS_CERTIFICATE}>Learn more.</Link>
             </Typography>
           </Box>
         </Stack>
