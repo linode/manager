@@ -30,7 +30,7 @@ describe('LoadBalancerConfiguration', () => {
     userEvent.type(ConfigurationPort, '90');
 
     expect(ConfigurationInputLabel).toHaveValue('Test Label');
-    expect(ConfigurationPort).toHaveValue('90');
+    expect(ConfigurationPort).toHaveValue(90);
 
     expect(screen.getByText('Protocol')).toBeInTheDocument();
     expect(
