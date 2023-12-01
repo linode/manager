@@ -31,6 +31,7 @@ import {
   CONFIGURATION_COPY,
   getConfigurationPayloadFromConfiguration,
   initialValues,
+  protocolOptions,
 } from './constants';
 
 import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
@@ -103,12 +104,6 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     },
     validationSchema,
   });
-
-  const protocolOptions = [
-    { label: 'HTTPS', value: 'https' },
-    { label: 'HTTP', value: 'http' },
-    { label: 'TCP', value: 'tcp' },
-  ];
 
   const handleRemoveCert = (index: number) => {
     formik.values.certificates.splice(index, 1);

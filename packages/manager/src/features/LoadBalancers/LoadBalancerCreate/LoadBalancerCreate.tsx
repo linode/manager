@@ -16,7 +16,7 @@ import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 const initialValues: CreateLoadbalancerPayload = {
   configurations: [
-    { certificates: [], label: '', port: 80, protocol: 'https' },
+    { certificates: [], label: '', port: 443, protocol: 'https' },
   ],
   label: '',
   regions: [],

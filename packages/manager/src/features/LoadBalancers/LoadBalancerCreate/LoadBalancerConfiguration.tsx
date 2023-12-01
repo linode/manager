@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
@@ -6,6 +7,8 @@ import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
 import { ConfigurationDetails } from './ConfigurationDetails';
+
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 interface Props {
   index: number;
@@ -30,18 +33,21 @@ export const LoadBalancerConfiguration = ({ index, name }: Props) => {
       label: 'Routes',
     },
   ];
+
+  const { values } = useFormikContext<CreateLoadbalancerPayload>();
+
   return (
     <Paper>
       <Typography
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
       >
-        Configuration -{' '}
+        Configuration -{values[name]?.[index]?.label}
       </Typography>
       <Stack spacing={1}>
         <Typography>
-          A Configuration listens on a port and uses Route Rules to forward
-          request to Service Target Endpoints
+          The load balancer configuration for processing incoming requests, the
+          service targets it directs requests to and routing rules.
         </Typography>
         <VerticalLinearStepper steps={configurationSteps} />
       </Stack>

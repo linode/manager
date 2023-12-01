@@ -3,18 +3,18 @@ import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import {
+  CONFIGURATION_COPY,
+  protocolOptions,
+} from '../LoadBalancerDetail/Configurations/constants';
 
-const protocolOptions = [
-  { label: 'HTTPS', value: 'https' },
-  { label: 'HTTP', value: 'http' },
-  { label: 'TCP', value: 'tcp' },
-];
+import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 interface Props {
   index: number;
@@ -50,7 +50,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
               setFieldValue(`${name}.${index}.protocol`, value)
             }
             textFieldProps={{
-              labelTooltipText: 'TODO',
+              labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
             value={protocolOptions.find(
               (option) => option.value === values[name]?.[index]?.protocol
@@ -64,22 +64,30 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
               touched[name]?.[index]?.port ? errors[name]?.[index]?.port : ''
             }
             label="Port"
-            labelTooltipText="TODO"
+            labelTooltipText={CONFIGURATION_COPY.Port}
             name={`${name}.${index}.port`}
             onBlur={handleBlur}
             onChange={handleChange}
             placeholder="Enter Port"
+            type="number"
             value={values[name]?.[index]?.port}
           />
         </Stack>
         <Stack maxWidth="600px">
           <Typography variant="h3">
             TLS Certificates
-            <TooltipIcon status="help" text="OMG!" />
+            <TooltipIcon status="help" text={CONFIGURATION_COPY.Certificates} />
           </Typography>
           <Typography>
-            Upload and apply downstream Certificate after LB provisioning Learn
-            more.
+            <BetaChip
+              sx={(theme) => ({
+                marginLeft: '0 !important',
+                marginRight: `${theme.spacing(1)} !important`,
+                verticalAlign: 'top',
+              })}
+            />
+            After the load balancer is created, and if the protocol is HTTPS,
+            upload TLS termination certificates. Learn more.
           </Typography>
         </Stack>
       </Stack>
@@ -88,6 +96,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
           touched[name]?.[index]?.label ? errors[name]?.[index]?.label : ''
         }
         label="Configuration Label"
+        labelTooltipText={CONFIGURATION_COPY.configuration}
         name={`${name}.${index}.label`}
         onBlur={handleBlur}
         onChange={handleChange}
