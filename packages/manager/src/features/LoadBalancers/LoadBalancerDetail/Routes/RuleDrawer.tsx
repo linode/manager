@@ -62,8 +62,9 @@ export const RuleDrawer = (props: Props) => {
 
   const isEditMode = ruleIndexToEdit !== undefined;
 
-  const validationSchema =
-    route?.protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
+  const protocol = route?.protocol ?? 'tcp';
+
+  const validationSchema = protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
 
   const {
     error,
@@ -200,7 +201,7 @@ export const RuleDrawer = (props: Props) => {
     >
       <form onSubmit={formik.handleSubmit}>
         <Typography sx={{ marginBottom: 2 }}>
-          {ROUTE_COPY.Rule.Description}
+          {ROUTE_COPY.Rule.Description[protocol]}
         </Typography>
         {generalErrors && <Notice text={generalErrors} variant="error" />}
         <Stack spacing={2}>
