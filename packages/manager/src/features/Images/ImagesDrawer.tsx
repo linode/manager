@@ -13,7 +13,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
@@ -24,6 +23,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { useImageAndLinodeGrantCheck } from './utils';
+import { usePollingInterval } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionPanel: {
@@ -101,6 +101,8 @@ export const ImagesDrawer = (props: CombinedProps) => {
     canCreateImage,
     permissionedLinodes: availableLinodes,
   } = useImageAndLinodeGrantCheck();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);

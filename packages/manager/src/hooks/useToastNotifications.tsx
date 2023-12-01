@@ -1,7 +1,6 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import 'rxjs/add/operator/filter';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';

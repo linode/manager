@@ -3,12 +3,11 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
 
 import { CombinedProps, FromImageContent } from './FromImageContent';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,

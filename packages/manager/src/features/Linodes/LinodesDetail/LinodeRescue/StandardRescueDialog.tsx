@@ -10,8 +10,8 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { usePrevious } from 'src/hooks/usePrevious';
+import { usePollingInterval } from 'src/queries/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -139,6 +139,8 @@ export const StandardRescueDialog = (props: Props) => {
   const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
     deviceMap
   );
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const { enqueueSnackbar } = useSnackbar();
 

@@ -9,8 +9,6 @@ import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import { parseAPIDate } from 'src/utilities/date';
 import { updateRight } from 'src/utilities/updateRight';
 
-import { EntityEvent, ExtendedEvent } from './event.types';
-
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
 
@@ -51,7 +49,7 @@ export const isRelevantDeletionEvent = (
  * entity {null | Entity}
  */
 export const findInEvents = (
-  events: Pick<ExtendedEvent, 'entity'>[],
+  events: Pick<Event, 'entity'>[],
   entity: Partial<Entity> | null = {}
 ) => findIndex((e) => equals(e.entity, entity), events);
 
@@ -177,8 +175,6 @@ export const isCompletedEvent = ({
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete === 100;
 
-export const isEntityEvent = (e: Event): e is EntityEvent => Boolean(e.entity);
-
 export const isEventInProgressDiskImagize = (event: Event): boolean => {
   return (
     event.action === 'disk_imagize' &&
@@ -220,3 +216,33 @@ export const updateInProgressEvents = (
 
 export const getNumUnseenEvents = (events: Pick<Event, 'seen'>[]) =>
   events.reduce((result, event) => (event.seen ? result : result + 1), 0);
+
+export const eventsForLinode = (events: Event[], linodeId: number) => {
+  return events.filter((event) => isEventRelevantToLinode(event, linodeId));
+};
+
+export const isEventRelevantToLinode = (event: Event, linodeId: number) =>
+  isPrimaryEntity(event, linodeId) ||
+  (isSecondaryEntity(event, linodeId) &&
+    isEventRelevantToLinodeAsSecondaryEntity(event));
+
+export const isPrimaryEntity = (event: Event, linodeId: number) =>
+  event?.entity?.type === 'linode' && event?.entity?.id === linodeId;
+
+export const isSecondaryEntity = (event: Event, linodeId: number) =>
+  event?.secondary_entity?.type === 'linode' &&
+  event?.secondary_entity?.id === linodeId;
+
+// Some event types include a Linode as a `secondary_entity`. A subset of these
+// events should be included in the `eventsForLinode` selector since they are
+// relevant to that Linode.
+//
+// An example: `clone_linode` events include the source Linode as the `entity`
+// and the target Linode as the `secondary_entity`. In this case, we want the
+// consumer of the `eventsForLinode` selector to have access to these events so
+// it can do things like display progress bars.
+export const eventActionsForLinodeAsSecondaryEntity: EventAction[] = [
+  'linode_clone',
+];
+export const isEventRelevantToLinodeAsSecondaryEntity = (event: Event) =>
+  eventActionsForLinodeAsSecondaryEntity.includes(event?.action)

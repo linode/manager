@@ -69,7 +69,6 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "rxjs": "^5.5.6",
     "sanitize-html": "^2.11.0",
     "search-string": "^3.1.0",
     "simple-git": "^3.19.0",

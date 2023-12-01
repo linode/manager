@@ -16,7 +16,6 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
@@ -36,6 +35,7 @@ import {
   StyledGrid,
   StyledNotice,
 } from './RebuildFromImage.styles';
+import { usePollingInterval } from 'src/queries/events';
 
 interface Props {
   disabled: boolean;
@@ -75,6 +75,8 @@ export const RebuildFromImage = (props: Props) => {
   } = props;
 
   const { data: preferences } = usePreferences();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();

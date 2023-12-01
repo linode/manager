@@ -41,6 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export interface NotificationItem {
   body: JSX.Element | string;
   countInTotal: boolean;
+  eventId: number;
   id: string;
 }
 

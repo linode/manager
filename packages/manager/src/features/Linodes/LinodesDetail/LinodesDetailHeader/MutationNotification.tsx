@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { MBpsIntraDC } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { usePollingInterval } from 'src/queries/events';
 import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -23,6 +23,8 @@ export const MutationNotification = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId);
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const { data: currentTypeInfo } = useTypeQuery(
     linode?.type ?? '',

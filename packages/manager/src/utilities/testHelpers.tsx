@@ -81,9 +81,7 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore, queryClient: passedQueryClient } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
-  const storeToPass = customStore
-    ? baseStore(customStore)
-    : storeFactory(queryClient);
+  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
@@ -131,8 +129,7 @@ export const wrapWithStore = (props: {
   queryClient?: QueryClient;
   store?: ApplicationStore;
 }) => {
-  const queryClient = props.queryClient ?? queryClientFactory();
-  const store = props.store ?? storeFactory(queryClient);
+  const store = props.store ?? storeFactory();
   return <Provider store={store}>{props.children}</Provider>;
 };
 

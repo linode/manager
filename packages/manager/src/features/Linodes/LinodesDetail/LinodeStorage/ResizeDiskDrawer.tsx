@@ -8,13 +8,13 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
 import { Drawer } from 'src/components/Drawer';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { usePollingInterval } from 'src/queries/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
@@ -44,6 +44,8 @@ export const ResizeDiskDrawer = (props: Props) => {
   const { disk, linodeId, onClose, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const { mutateAsync: resizeDisk, reset } = useLinodeDiskResizeMutation(
     linodeId,

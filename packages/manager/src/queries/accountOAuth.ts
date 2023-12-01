@@ -12,7 +12,7 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { EventWithStore } from 'src/events';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import { queryKey as accountQueryKey } from './account';
 
@@ -66,7 +66,7 @@ export const useUpdateOAuthClientMutation = (id: string) => {
   );
 };
 
-export const oauthClientsEventHandler = ({ queryClient }: EventWithStore) => {
+export const oauthClientsEventHandler = ({ queryClient }: EventHandlerData) => {
   // We may over-fetch because on `onSuccess` also invalidates, but this will be
   // good for UX because Cloud will always be up to date
   queryClient.invalidateQueries(queryKey);

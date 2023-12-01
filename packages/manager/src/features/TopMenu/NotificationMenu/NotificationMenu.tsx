@@ -21,7 +21,7 @@ import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { markAllSeen } from 'src/store/events/event.request';
+import { useMarkEventsAsSeen } from 'src/queries/events';
 import { ThunkDispatch } from 'src/store/types';
 import { omittedProps } from 'src/utilities/omittedProps';
 
@@ -59,6 +59,7 @@ export const NotificationMenu = () => {
   const formattedNotifications = useFormattedNotifications();
   const eventNotifications = useEventNotifications();
   const notificationContext = React.useContext(_notificationContext);
+  const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
@@ -98,12 +99,15 @@ export const NotificationMenu = () => {
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
       // Dismiss seen notifications after the menu has closed.
-      dispatch(markAllSeen());
+      if (eventNotifications.length > 0) {
+        markEventsAsSeen(eventNotifications[0].eventId);
+      }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [
     notificationContext.menuOpen,
     dismissNotifications,
+    eventNotifications,
     notifications,
     dispatch,
     prevOpen,

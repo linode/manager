@@ -7,7 +7,7 @@ import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { usePollingInterval } from 'src/queries/events';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import {
@@ -45,6 +45,8 @@ export const LinodeVolumeAttachForm = (props: Props) => {
   const { data: grants } = useGrants();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const linodeGrant = grants?.linode.find(
     (grant: Grant) => grant.id === linode.id

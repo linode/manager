@@ -10,7 +10,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
@@ -19,7 +18,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useInProgressEvents } from 'src/queries/events';
+import { useInProgressEvents, usePollingInterval } from 'src/queries/events';
 import { useImageQuery } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -29,7 +28,7 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
+import { isEventRelevantToLinode } from 'src/store/events/event.helpers';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -51,6 +50,8 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { linodeId, onClose, open } = props;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,

@@ -4,9 +4,9 @@ import { useQueryClient } from 'react-query';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
+import { usePollingInterval } from 'src/queries/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useDeleteLinodeMutation,
@@ -28,6 +28,8 @@ export const DeleteLinodeDialog = (props: Props) => {
   const queryClient = useQueryClient();
   const flags = useFlags();
   const { data: account } = useAccount();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const enableVPCActions = isFeatureEnabled(
     'VPCs',

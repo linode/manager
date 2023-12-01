@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
-import { ExtendedEvent } from 'src/store/events/event.types';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
@@ -21,7 +20,7 @@ const unwantedEvents: EventAction[] = [
   'volume_update',
 ];
 
-export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
+export const useEventNotifications = (givenEvents?: Event[]) => {
   const events = removeBlocklistedEvents(
     givenEvents ?? useEventsInfiniteQuery().events
   );
@@ -48,19 +47,21 @@ export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
 };
 
 const formatEventForDisplay = (
-  event: ExtendedEvent,
+  event: Event,
   onClose: () => void
 ): NotificationItem => ({
   body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  eventId: event.id,
   id: `event-${event.id}`,
 });
 
 const formatProgressEventForDisplay = (
-  event: ExtendedEvent,
+  event: Event,
   onClose: () => void
 ): NotificationItem => ({
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  eventId: event.id,
   id: `progress-event-${event.id}`,
 });

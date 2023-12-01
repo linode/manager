@@ -1,7 +1,8 @@
-import { getEvents } from '@linode/api-v4';
+import { getEvents, markEventSeen } from '@linode/api-v4';
 import {
   InfiniteData,
   useInfiniteQuery,
+  useMutation,
   useQuery,
   useQueryClient,
 } from 'react-query';
@@ -125,7 +126,7 @@ export const useEventsPoller = () => {
   });
 };
 
-const usePollingInterval = () => {
+export const usePollingInterval = () => {
   const queryKey = ['events', 'interval'];
   const queryClient = useQueryClient();
   const { data: intervalMultiplier = 1 } = useQuery(queryKey, () =>
@@ -140,6 +141,47 @@ const usePollingInterval = () => {
     pollingInterval: DISABLE_EVENT_THROTTLE
       ? 500
       : intervalMultiplier * INTERVAL,
-    resetPollingInterval: () => queryClient.setQueryData<number>(queryKey, 1),
+    resetEventsPolling: () => queryClient.setQueryData<number>(queryKey, 1),
   };
+};
+
+export const useMarkEventsAsSeen = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[], number>(
+    (eventId) => markEventSeen(eventId),
+    {
+      onSuccess: (_, eventId) => {
+        queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+          ['events', 'infinite', {}],
+          (prev) => {
+            if (!prev) {
+              return {
+                pageParams: [],
+                pages: [],
+              };
+            }
+
+            let foundLatestSeenEvent = false;
+
+            for (const page of prev.pages) {
+              for (const event of page.data) {
+                if (event.id === eventId) {
+                  foundLatestSeenEvent = true;
+                }
+                if (foundLatestSeenEvent) {
+                  event.seen = true;
+                }
+              }
+            }
+
+            return {
+              pageParams: prev?.pageParams ?? [],
+              pages: prev?.pages ?? [],
+            };
+          }
+        );
+      },
+    }
+  );
 };

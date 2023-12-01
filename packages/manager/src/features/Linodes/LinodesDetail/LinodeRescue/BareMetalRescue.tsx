@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { usePollingInterval } from 'src/queries/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -25,6 +25,8 @@ export const BareMetalRescue = (props: Props) => {
     linodeId ?? -1,
     linodeId !== undefined && isOpen
   );
+
+  const { resetEventsPolling } = usePollingInterval();
 
   React.useEffect(() => {
     if (isOpen) {

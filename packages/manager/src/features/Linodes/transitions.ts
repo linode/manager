@@ -1,12 +1,11 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 
-import { isInProgressEvent } from 'src/store/events/event.helpers';
 import {
   isEventRelevantToLinode,
+  isInProgressEvent,
   isPrimaryEntity,
   isSecondaryEntity,
-} from 'src/store/events/event.selectors';
-import { ExtendedEvent } from 'src/store/events/event.types';
+} from 'src/store/events/event.helpers';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 export const transitionStatus = [
@@ -96,10 +95,8 @@ export const linodesInTransition = (events: Event[]) => {
 // an in-progress event, but we don't have the updated status from the API  yet.
 // In this case it doesn't have a recentEvent attached (since it has completed),
 // but its status is still briefly in transition, so give it a progress of 100.
-export const getProgressOrDefault = (
-  event?: ExtendedEvent,
-  defaultProgress = 0
-) => event?.percent_complete ?? defaultProgress;
+export const getProgressOrDefault = (event?: Event, defaultProgress = 0) =>
+  event?.percent_complete ?? defaultProgress;
 
 // Linodes have a literal "status" given by the API (linode.status). There are
 // states the Linode can be in which aren't entirely communicated with the

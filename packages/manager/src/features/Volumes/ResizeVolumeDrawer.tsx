@@ -7,7 +7,6 @@ import React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants } from 'src/queries/profile';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
@@ -17,6 +16,7 @@ import {
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
 import { SizeField } from './VolumeDrawer/SizeField';
+import { usePollingInterval } from 'src/queries/events';
 
 interface Props {
   onClose: () => void;
@@ -28,6 +28,8 @@ export const ResizeVolumeDrawer = (props: Props) => {
   const { onClose: _onClose, open, volume } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const validationSchema = ResizeVolumeSchema(volume?.size ?? -1);
 

@@ -27,7 +27,7 @@ import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { usePollingInterval } from 'src/queries/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -58,6 +58,8 @@ const CloneLanding = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const theme = useTheme();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const linodeId = Number(_linodeId);
 

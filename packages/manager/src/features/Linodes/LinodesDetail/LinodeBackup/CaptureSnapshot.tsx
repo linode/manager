@@ -5,12 +5,12 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { FormControl } from 'src/components/FormControl';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
-import { Paper } from 'src/components/Paper';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { usePollingInterval } from 'src/queries/events';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -24,6 +24,8 @@ interface Props {
 export const CaptureSnapshot = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const {
     error: snapshotError,

@@ -17,7 +17,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useFlags } from 'src/hooks/useFlags';
@@ -44,6 +43,7 @@ import {
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
 import type { ButtonProps } from 'src/components/Button/Button';
+import { usePollingInterval } from 'src/queries/events';
 
 interface Props {
   linodeId?: number;
@@ -88,6 +88,8 @@ export const LinodeResize = (props: Props) => {
     isLoading,
     mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
+
+  const { resetEventsPolling } = usePollingInterval();
 
   const { data: regionsData } = useRegionsQuery();
 

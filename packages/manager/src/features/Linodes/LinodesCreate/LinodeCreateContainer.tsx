@@ -45,7 +45,6 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
@@ -69,6 +68,7 @@ import {
 } from 'src/utilities/formatRegion';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -85,7 +85,7 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { WithPollingIntervalProps, withPollingInterval } from 'src/containers/events.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -137,7 +137,8 @@ type CombinedProps = WithSnackbarProps &
   AgreementsProps &
   WithQueryClientProps &
   WithMarketplaceAppsProps &
-  WithAccountSettingsProps;
+  WithAccountSettingsProps &
+  WithPollingIntervalProps;
 
 const defaultState: State = {
   assignPublicIPv4Address: false,
@@ -866,7 +867,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
 
         /** reset the Events polling */
-        resetEventsPolling();
+        this.props.resetEventsPolling();
 
         // If a VPC was assigned, invalidate the query so that the relevant VPC data
         // gets displayed in the LinodeEntityDetail
@@ -945,7 +946,8 @@ export default recompose<CombinedProps, {}>(
   withAgreements,
   withQueryClient,
   withAccountSettings,
-  withMarketplaceApps
+  withMarketplaceApps,
+  withPollingInterval
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {
