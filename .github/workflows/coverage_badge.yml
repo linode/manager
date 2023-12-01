@@ -1,0 +1,52 @@
+name: Coverage Badge
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-coverage-badge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js v18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.14"
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Run Build
+        run: yarn build
+
+      - name: Run Base Branch Coverage
+        run: yarn coverage:summary
+
+      - name: Generate Coverage Badge
+        uses: jaywcjlove/coverage-badges-cli@7f0781807ef3e7aba97a145beca881d36451b7b7 # v1.1.1
+        with:
+          label: '@linode/manager coverage'
+          source: ./packages/manager/coverage/coverage-summary.json
+          output: ./packages/manager/coverage/badges.svg
+
+      - uses: jakejarvis/s3-sync-action@7ed8b112447abb09f1da74f3466e4194fc7a6311 # v0.5.1
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_ENDPOINT: https://us-east-1.linodeobjects.com
+          AWS_S3_BUCKET: ${{ secrets.COVERAGE_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.COVERAGE_BUCKET_ACCESS }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.COVERAGE_BUCKET_SECRET }}
+          AWS_REGION: us-east-1
+          SOURCE_DIR: ./packages/manager/coverage
