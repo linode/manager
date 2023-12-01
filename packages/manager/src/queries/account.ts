@@ -53,7 +53,7 @@ export const useChildAccounts = ({
   params,
 }: RequestOptions) => {
   const { data: grants } = useGrants();
-  const hasExplicitAuthToken = headers?.hasAuthorization();
+  const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
   return useQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
@@ -68,7 +68,7 @@ export const useChildAccounts = ({
 
 export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   const { data: grants } = useGrants();
-  const hasExplicitAuthToken = headers?.hasAuthorization();
+  const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
   return useQuery<Account, APIError[]>(
     [queryKey, 'childAccounts', 'childAccount', euuid],
