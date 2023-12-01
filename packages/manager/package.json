@@ -126,6 +126,7 @@
     "@testing-library/user-event": "^12.1.1",
     "@types/braintree-web": "^3.75.23",
     "@types/chart.js": "^2.9.21",
+    "@types/clamp-js": "^0.7.6",
     "@types/classnames": "^2.2.3",
     "@types/css-mediaquery": "^0.1.1",
     "@types/enzyme": "^3.9.3",

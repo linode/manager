@@ -1,6 +1,7 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
+import clamp from 'clamp-js';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
@@ -12,11 +13,7 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import {
-  StyledDivWrapper,
-  StyledSpan,
-  StyledTruncateLinks,
-} from './FirewallRow.styles';
+import { StyledDivWrapper, StyledSpan } from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -35,6 +32,34 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
   }
 
   const count = getCountOfRules(rules);
+
+  const truncateRef = useRef<HTMLDivElement>(null);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const applyClamp = () => {
+    if (truncateRef.current) {
+      clamp(truncateRef.current, { clamp: 3 });
+    }
+  };
+
+  useEffect(() => {
+    applyClamp();
+  });
+
+  useEffect(() => {
+    applyClamp();
+  }, [windowWidth]);
 
   return (
     <TableRow
@@ -56,6 +81,7 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
           {getDevicesCellString(
             featureFlaggedDevices ?? [],
             isLoading,
+            truncateRef,
             error ?? undefined
           )}
         </TableCell>
@@ -104,6 +130,7 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 const getDevicesCellString = (
   data: FirewallDevice[],
   loading: boolean,
+  ref: React.RefObject<HTMLDivElement>,
   error?: APIError[]
 ): JSX.Element | string => {
   if (loading) {
@@ -118,13 +145,16 @@ const getDevicesCellString = (
     return 'None assigned';
   }
 
-  return getDeviceLinks(data);
+  return getDeviceLinks(data, ref);
 };
 
-export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
+export const getDeviceLinks = (
+  data: FirewallDevice[],
+  ref: React.RefObject<HTMLDivElement>
+): JSX.Element => {
   return (
     <StyledDivWrapper>
-      <StyledTruncateLinks>
+      <div ref={ref}>
         {data.map((thisDevice, idx) => (
           <StyledSpan key={thisDevice.id}>
             <Link
@@ -137,7 +167,7 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
             {idx !== data.length - 1 && ','}
           </StyledSpan>
         ))}
-      </StyledTruncateLinks>
+      </div>
     </StyledDivWrapper>
   );
 };

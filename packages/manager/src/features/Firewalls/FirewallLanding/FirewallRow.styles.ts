@@ -7,15 +7,6 @@ export const StyledDevicesLink = styled(Link, {
   display: 'inline-block',
 }));
 
-export const StyledTruncateLinks = styled('div', {
-  label: 'StyledTruncateLinks',
-})(() => ({
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 3,
-  display: '-webkit-box',
-  overflow: 'hidden',
-}));
-
 export const StyledDivWrapper = styled('div', {
   label: 'StyledDivWrapper',
 })(({ theme }) => ({
