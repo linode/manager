@@ -68,15 +68,19 @@ export const RebuildFromStackScript = (props: Props) => {
     passwordHelperText,
   } = props;
 
-  const { data: preferences } = usePreferences();
+  const {
+    data: preferences,
+    isLoading: isLoadingPreferences,
+  } = usePreferences();
 
   const { resetEventsPolling } = usePollingInterval();
 
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: imagesData } = useAllImagesQuery();
+  const { data: imagesData, isLoading: isLoadingImages } = useAllImagesQuery();
   const _imagesData = listToItemsByID(imagesData ?? []);
+  const isLoading = isLoadingPreferences || isLoadingImages;
 
   /**
    * Dynamic validation schema, with password validation
@@ -329,6 +333,7 @@ export const RebuildFromStackScript = (props: Props) => {
               <ActionsPanel
                 primaryButtonProps={{
                   'data-testid': 'rebuild',
+                  'data-qa-form-data-loading': isLoading,
                   disabled: submitButtonDisabled,
                   label: 'Rebuild Linode',
                   onClick: handleRebuildButtonClick,

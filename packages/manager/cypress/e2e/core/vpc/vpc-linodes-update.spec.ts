@@ -153,11 +153,16 @@ describe('VPC assign/unassign flows', () => {
         mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as(
           'getLinodeConfigs'
         );
-        cy.findByText('Linodes')
+        cy.findByLabelText('Linodes')
           .should('be.visible')
           .click()
           .type(mockLinode.label);
-        cy.findByRole('presentation').should('be.visible').click();
+
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
+
         cy.wait('@getLinodeConfigs');
 
         mockCreateLinodeConfigInterfaces(mockLinode.id, mockConfig).as(
@@ -270,11 +275,17 @@ describe('VPC assign/unassign flows', () => {
         mockGetLinodeConfigs(mockLinode.id, [mockLinodeConfig]).as(
           'getLinodeConfigs'
         );
-        cy.findByText('Linodes')
+
+        cy.findByLabelText('Linodes')
           .should('be.visible')
           .click()
           .type(mockLinode.label);
-        cy.findByRole('presentation').should('be.visible').click();
+
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
+
         cy.wait('@getLinodeConfigs');
 
         // the select option won't disappear unless click on somewhere else

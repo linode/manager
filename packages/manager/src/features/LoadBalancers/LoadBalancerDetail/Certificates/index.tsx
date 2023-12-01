@@ -1,10 +1,10 @@
-import { Stack } from 'src/components/Stack';
 import React from 'react';
 import { Route, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { Tabs } from 'src/components/ReachTabs';
+import { Stack } from 'src/components/Stack';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 
 const Certificates = React.lazy(() =>

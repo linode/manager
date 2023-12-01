@@ -79,19 +79,21 @@ export const StandardRescueDialog = (props: Props) => {
 
   const theme = useTheme();
 
-  const { data: linode } = useLinodeQuery(
+  const { data: linode, isLoading: isLoadingLinodes } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
   );
-  const { data: disks, error: disksError } = useAllLinodeDisksQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && open
-  );
-  const { data: volumes, error: volumesError } = useAllVolumesQuery(
-    {},
-    { region: linode?.region },
-    open
-  );
+  const {
+    data: disks,
+    error: disksError,
+    isLoading: isLoadingDisks,
+  } = useAllLinodeDisksQuery(linodeId ?? -1, linodeId !== undefined && open);
+  const {
+    data: volumes,
+    error: volumesError,
+    isLoading: isLoadingVolumes,
+  } = useAllVolumesQuery({}, { region: linode?.region }, open);
+  const isLoading = isLoadingLinodes || isLoadingDisks || isLoadingVolumes;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -237,6 +239,7 @@ export const StandardRescueDialog = (props: Props) => {
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
+                'data-qa-form-data-loading': isLoading,
                 disabled,
                 label: 'Reboot into Rescue Mode',
                 onClick: onSubmit,
