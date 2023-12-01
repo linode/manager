@@ -7,6 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const props = {
+  createFlow: undefined,
   onClose: vi.fn(),
   onFirewallCreated: vi.fn(),
   open: true,

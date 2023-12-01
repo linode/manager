@@ -23,6 +23,7 @@ describe('SelectFirewallPanel', () => {
   it('should render', async () => {
     const wrapper = renderWithTheme(
       <SelectFirewallPanel
+        entityType={undefined}
         handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}

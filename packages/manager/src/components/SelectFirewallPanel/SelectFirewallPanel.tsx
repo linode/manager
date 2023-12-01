@@ -13,7 +13,7 @@ import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
 interface Props {
-  entityType?: FirewallDeviceEntityType;
+  entityType: FirewallDeviceEntityType | undefined;
   handleFirewallChange: (firewallID: number) => void;
   helperText: JSX.Element;
   selectedFirewallId: number;

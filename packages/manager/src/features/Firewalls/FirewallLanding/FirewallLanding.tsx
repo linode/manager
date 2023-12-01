@@ -105,6 +105,7 @@ const FirewallLanding = () => {
       <>
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
+          createFlow={undefined}
           onClose={onCloseCreateDrawer}
           open={isCreateFirewallDrawerOpen}
         />
@@ -174,6 +175,7 @@ const FirewallLanding = () => {
         pageSize={pagination.pageSize}
       />
       <CreateFirewallDrawer
+        createFlow={undefined}
         onClose={onCloseCreateDrawer}
         open={isCreateFirewallDrawerOpen}
       />
