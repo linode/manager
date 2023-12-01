@@ -33,7 +33,7 @@ export const useEventsInfiniteQuery = (filter: Filter = {}) => {
 };
 
 export const useInProgressEvents = () => {
-  return useQuery<ResourcePage<Event>, APIError[]>({
+  return useQuery<Event[], APIError[]>({
     queryKey: ['events', 'poller'],
   });
 };
@@ -67,7 +67,7 @@ export const useEventsPoller = () => {
     onSuccess(events) {
       incrementPollingInterval();
 
-      const { existingEvents, newEvents } = events.data.reduce<{
+      const { existingEvents, newEvents } = events.reduce<{
         existingEvents: Event[];
         newEvents: Event[];
       }>(
@@ -110,7 +110,7 @@ export const useEventsPoller = () => {
         }
       );
 
-      for (const event of events.data) {
+      for (const event of events) {
         for (const eventHandler of eventHandlers) {
           if (eventHandler.filter(event)) {
             eventHandler.handler({ event, queryClient });
@@ -119,7 +119,7 @@ export const useEventsPoller = () => {
         handleGlobalToast(event);
       }
     },
-    queryFn: () => getEvents({}, filter),
+    queryFn: () => getEvents({}, filter).then((data) => data.data),
     queryKey: ['events', 'poller'],
     refetchInterval: pollingInterval,
   });

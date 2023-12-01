@@ -14,7 +14,6 @@ import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
-// import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
   chipWrapper: {
@@ -73,14 +72,6 @@ export const VolumeTableRow = React.memo((props: Props) => {
 
   const regionLabel =
     regions?.find((r) => r.id === volume.region)?.label ?? volume.region;
-
-  // const { events } = useEvents();
-
-  // const recentEvent = events.find((event) => event.entity?.id === id);
-
-  // Use this to show a progress bar
-  // const isUpdating = isVolumeUpdating(recentEvent);
-  // const progress = progressFromEvent(recentEvent);
 
   return (
     <TableRow data-qa-volume-cell={volume.id} key={`volume-row-${volume.id}`}>

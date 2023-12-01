@@ -56,7 +56,7 @@ export const LinodeRow = (props: Props) => {
 
   const { data: events } = useInProgressEvents();
 
-  const recentEvent = events?.data.find(
+  const recentEvent = events?.find(
     (e) => e.entity?.type === 'linode' && e.entity.id === id
   );
 

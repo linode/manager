@@ -7,7 +7,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useEvents } from 'src/hooks/useEvents';
+import { useInProgressEvents } from 'src/queries/events';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const LinodeDiskRow = React.memo((props: Props) => {
-  const { inProgressEvents } = useEvents();
+  const { data: events } = useInProgressEvents();
   const theme = useTheme();
   const {
     disk,
@@ -44,7 +44,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
 
   const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);
 
-  const event = inProgressEvents.find(
+  const event = events?.find(
     (event) =>
       event.secondary_entity?.id === disk.id &&
       diskEventsToShowProgressFor.includes(event.action)

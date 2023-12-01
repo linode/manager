@@ -13,13 +13,13 @@ import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
-import useEvents from 'src/hooks/useEvents';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { useInProgressEvents } from 'src/queries/events';
 import { useImageQuery } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -72,10 +72,10 @@ export const MigrateLinode = React.memo((props: Props) => {
     linodeId !== undefined && open
   );
 
-  const { events } = useEvents();
+  const { data: events } = useInProgressEvents();
 
   const eventsForLinode = linodeId
-    ? events.filter((event) => isEventRelevantToLinode(event, linodeId))
+    ? events?.filter((event) => isEventRelevantToLinode(event, linodeId)) ?? []
     : [];
 
   const {

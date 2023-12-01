@@ -33,7 +33,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const history = useHistory();
   const { data: events } = useInProgressEvents();
 
-  const linodeCreationEvent = events?.data.find(
+  const linodeCreationEvent = events?.find(
     (event) =>
       (event.action === 'linode_create' || event.action === 'linode_clone') &&
       event.entity?.label === payLoad.label &&

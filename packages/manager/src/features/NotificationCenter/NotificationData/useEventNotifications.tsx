@@ -2,7 +2,7 @@ import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { partition } from 'ramda';
 import * as React from 'react';
 
-import useEvents from 'src/hooks/useEvents';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
@@ -22,7 +22,9 @@ const unwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
-  const events = removeBlocklistedEvents(givenEvents ?? useEvents().events);
+  const events = removeBlocklistedEvents(
+    givenEvents ?? useEventsInfiniteQuery().events
+  );
   const notificationContext = React.useContext(_notificationContext);
 
   const _events = events.filter(

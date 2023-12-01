@@ -21,8 +21,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { transitionText } from 'src/features/Linodes/transitions';
+import { useInProgressEvents } from 'src/queries/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import NodeActionMenu from './NodeActionMenu';
@@ -217,7 +217,12 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
 
   const classes = useStyles();
 
-  const recentEvent = useRecentEventForLinode(instanceId ?? -1);
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (event) =>
+      event.entity?.id === instanceId && event.entity?.type === 'linode'
+  );
 
   const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
 

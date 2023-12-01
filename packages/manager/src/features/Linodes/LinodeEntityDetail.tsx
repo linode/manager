@@ -31,7 +31,6 @@ import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
@@ -68,6 +67,7 @@ import type {
   LinodeType,
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
+import { useInProgressEvents } from 'src/queries/events';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -86,7 +86,11 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const notificationContext = React.useContext(_notificationContext);
 
-  const recentEvent = useRecentEventForLinode(linode.id);
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (event) => event.entity?.id === linode.id && event.entity.type === 'linode'
+  );
 
   const { data: images } = useAllImagesQuery({}, {});
 
