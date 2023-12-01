@@ -146,3 +146,24 @@ describe('injectEuuidToProfile', () => {
     expect(injectEuuidToProfile(accountResponse as any).data).toEqual(profile);
   });
 });
+
+describe('setupInterceptors', () => {
+  it('should set the authorization header if it is explicitly set', () => {
+    const config = {
+      headers: {
+        Authorization: 'Bearer 1234',
+      },
+    };
+
+    const state = store.getState();
+    const token = state.authentication?.token ?? '';
+
+    const headers = new AxiosHeaders(config.headers);
+    const hasExplicitAuthToken = headers.hasAuthorization();
+    const bearer = hasExplicitAuthToken ? headers.getAuthorization() : token;
+
+    headers.setAuthorization(bearer);
+
+    expect(headers.getAuthorization()).toEqual('Bearer 1234');
+  });
+});
