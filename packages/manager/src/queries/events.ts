@@ -20,17 +20,22 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     ['events', 'infinite', filter],
-    ({ pageParam }) => getEvents({ page: pageParam }, filter),
+    ({ pageParam }) =>
+      getEvents({}, { ...filter, created: { '+lt': pageParam } }),
     {
       cacheTime: Infinity,
-      getNextPageParam: ({ page, pages }) =>
-        page < pages ? page + 1 : undefined,
+      getNextPageParam: ({ data, results }) => {
+        if (results === data.length) {
+          return undefined;
+        }
+        return data[data.length - 1].created;
+      },
       staleTime: Infinity,
     }
   );
 
   const events = query.data?.pages.reduce(
-    (events, page) => [...page.data, ...events],
+    (events, page) => [...events, ...page.data],
     []
   );
 
@@ -131,7 +136,7 @@ export const useMarkEventsAsSeen = () => {
     {
       onSuccess: (_, eventId) => {
         queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-          ['events', 'infinite', {}],
+          ['events', 'infinite', undefined],
           (prev) => {
             if (!prev) {
               return {
