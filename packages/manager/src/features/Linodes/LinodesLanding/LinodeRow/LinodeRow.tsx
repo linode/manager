@@ -17,7 +17,6 @@ import {
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useTypeQuery } from 'src/queries/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
@@ -55,8 +54,6 @@ export const LinodeRow = (props: Props) => {
   const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
   const recentEvent = useRecentEventForLinode(id);
-
-  const { isVPCOnlyLinode } = useVPCConfigInterface(id);
 
   const isBareMetalInstance = linodeType?.class === 'metal';
 
@@ -144,11 +141,7 @@ export const LinodeRow = (props: Props) => {
           {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
         <StyledIpTableCell data-qa-ips>
-          <IPAddress
-            disabled={isVPCOnlyLinode}
-            ips={ipv4}
-            isHovered={isHovered}
-          />
+          <IPAddress ips={ipv4} isHovered={isHovered} />
         </StyledIpTableCell>
         <Hidden lgDown>
           <TableCell data-qa-region>
