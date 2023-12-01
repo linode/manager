@@ -1,6 +1,9 @@
+import { Capabilities } from '@linode/api-v4';
 import React from 'react';
+
 import { regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { SelectRegionPanel } from './SelectRegionPanel';
 
 const pricingMocks = vi.hoisted(() => ({
@@ -37,6 +40,7 @@ describe('SelectRegionPanel in Create Flow', () => {
 
     const { findByText } = renderWithTheme(
       <SelectRegionPanel
+        currentCapability={'Linodes'}
         handleSelection={vi.fn()}
         regions={regions}
         selectedId="id-cgk"
@@ -65,6 +69,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
 
   const regions = [...regionFactory.buildList(3)];
   const mockedProps = {
+    currentCapability: 'Linodes' as Capabilities,
     handleSelection: () => vi.fn(),
     regions,
     selectedLinodeTypeId: 'g6-standard-2',

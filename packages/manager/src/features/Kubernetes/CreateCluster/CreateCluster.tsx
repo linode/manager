@@ -52,7 +52,7 @@ import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
 export const CreateCluster = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
@@ -82,15 +82,6 @@ export const CreateCluster = () => {
     mutateAsync: createKubernetesCluster,
   } = useCreateKubernetesClusterMutation();
 
-  // Only include regions that have LKE capability
-  const filteredRegions = React.useMemo(() => {
-    return regionsData
-      ? regionsData.filter((thisRegion) =>
-          thisRegion.capabilities.includes('Kubernetes')
-        )
-      : [];
-  }, [regionsData]);
-
   const {
     data: versionData,
     isError: versionLoadError,
@@ -100,12 +91,6 @@ export const CreateCluster = () => {
     label: thisVersion.id,
     value: thisVersion.id,
   }));
-
-  React.useEffect(() => {
-    if (filteredRegions.length === 1 && !selectedRegionID) {
-      setSelectedRegionID(filteredRegions[0].id);
-    }
-  }, [filteredRegions, selectedRegionID]);
 
   React.useEffect(() => {
     if (versions.length > 0) {
@@ -224,7 +209,6 @@ export const CreateCluster = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               updateLabel(e.target.value)
             }
-            className={classes.inputWidth}
             data-qa-label-input
             errorText={errorMap.label}
             label="Cluster Label"
@@ -239,9 +223,9 @@ export const CreateCluster = () => {
               helperText: <RegionHelperText mb={2} />,
               helperTextPosition: 'top',
             }}
-            className={classes.regionSubtitle}
+            currentCapability="Kubernetes"
             errorText={errorMap.region}
-            regions={filteredRegions}
+            regions={regionsData}
             selectedId={selectedId}
           />
           {showPricingNotice && (
@@ -252,7 +236,6 @@ export const CreateCluster = () => {
             onChange={(selected: Item<string>) => {
               setVersion(selected);
             }}
-            className={classes.inputWidth}
             errorText={errorMap.k8s_version}
             isClearable={false}
             label="Kubernetes Version"

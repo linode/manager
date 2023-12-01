@@ -30,6 +30,7 @@ export const Default: StoryObj<RegionSelectProps> = {
 
 const meta: Meta<RegionSelectProps> = {
   args: {
+    currentCapability: undefined,
     disabled: false,
     errorText: '',
     helperText: '',
