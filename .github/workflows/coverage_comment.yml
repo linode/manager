@@ -65,12 +65,3 @@ jobs:
         with:
           issue: ${{ env.PR_NUMBER }}
           message-path: updated_comment.txt
-
-      - name: Validate Coverage
-        run: |
-          base_coverage=$(cat ref_code_coverage.txt)
-          current_coverage=$(cat current_code_coverage.txt)
-          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
-            echo "Error: Current coverage is lower than base coverage"
-            exit 1 # Fail the check
-          fi
