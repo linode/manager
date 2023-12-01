@@ -96,7 +96,7 @@ export const NodeBalancerSettings = () => {
         <Accordion defaultExpanded heading="Firewalls">
           <NodeBalancerFirewalls
             displayFirewallInfoText={displayFirewallInfoText}
-            nodeBalancerID={id}
+            nodeBalancerId={id}
           />
         </Accordion>
       )}

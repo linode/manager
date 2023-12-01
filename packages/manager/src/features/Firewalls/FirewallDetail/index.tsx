@@ -37,15 +37,15 @@ export const FirewallDetail = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const firewallID = Number(id);
+  const firewallId = Number(id);
 
   const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallID,
+    firewallId,
     profile,
     grants
   );
 
-  const { data: allDevices } = useAllFirewallDevicesQuery(firewallID);
+  const { data: allDevices } = useAllFirewallDevicesQuery(firewallId);
 
   const { linodeCount, nodebalancerCount } = allDevices?.reduce(
     (acc, device) => {
@@ -79,13 +79,13 @@ export const FirewallDetail = () => {
 
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
-  const { data: firewall, error, isLoading } = useFirewallQuery(firewallID);
+  const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
   const {
     error: updateError,
     mutateAsync: updateFirewall,
     reset,
-  } = useMutateFirewall(firewallID);
+  } = useMutateFirewall(firewallId);
 
   const errorText = getErrorStringOrDefault(updateError ?? '');
 
@@ -141,14 +141,14 @@ export const FirewallDetail = () => {
           <SafeTabPanel index={0}>
             <FirewallRulesLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallID}
+              firewallID={firewallId}
               rules={firewall.rules}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <FirewallDeviceLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallID}
+              firewallID={firewallId}
               firewallLabel={firewall.label}
               type="linode"
             />
@@ -156,7 +156,7 @@ export const FirewallDetail = () => {
           <SafeTabPanel index={2}>
             <FirewallDeviceLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallID}
+              firewallID={firewallId}
               firewallLabel={firewall.label}
               type="nodebalancer"
             />

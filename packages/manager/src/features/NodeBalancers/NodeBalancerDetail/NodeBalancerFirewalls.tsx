@@ -21,17 +21,17 @@ import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
 interface Props {
   displayFirewallInfoText: boolean;
-  nodeBalancerID: number;
+  nodeBalancerId: number;
 }
 
 export const NodeBalancerFirewalls = (props: Props) => {
-  const { displayFirewallInfoText, nodeBalancerID } = props;
+  const { displayFirewallInfoText, nodeBalancerId } = props;
 
   const {
     data: attachedFirewallData,
     error,
     isLoading,
-  } = useNodeBalancersFirewallsQuery(nodeBalancerID);
+  } = useNodeBalancersFirewallsQuery(nodeBalancerId);
 
   const attachedFirewalls = attachedFirewallData?.data;
 
@@ -70,7 +70,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
       <NodeBalancerFirewallsRow
         firewall={attachedFirewall}
         key={`firewall-${attachedFirewall.id}`}
-        nodeBalancerID={nodeBalancerID}
+        nodeBalancerID={nodeBalancerId}
         onClickUnassign={handleClickUnassign}
       />
     ));

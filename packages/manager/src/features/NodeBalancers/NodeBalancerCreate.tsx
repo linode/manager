@@ -62,7 +62,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 
 interface NodeBalancerFieldsState {
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
-  firewall_id?: number;
+  firewallId?: number;
   label?: string;
   region?: string;
   tags?: string[];
@@ -421,7 +421,7 @@ const NodeBalancerCreate = () => {
     summaryItems.push({ title: regionLabel });
   }
 
-  if (nodeBalancerFields.firewall_id) {
+  if (nodeBalancerFields.firewallId) {
     summaryItems.push({ title: 'Firewall Assigned' });
   }
 
@@ -519,7 +519,7 @@ const NodeBalancerCreate = () => {
             </Typography>
           }
           entityType="nodebalancer"
-          selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
+          selectedFirewallId={nodeBalancerFields.firewallId ?? -1}
         />
       )}
       <Box marginBottom={2} marginTop={2}>

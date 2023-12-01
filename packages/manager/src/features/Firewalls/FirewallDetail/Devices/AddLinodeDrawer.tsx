@@ -72,16 +72,16 @@ export const AddLinodeDrawer = (props: Props) => {
         enqueueSnackbar(`Linode ${label} successfully added.`, {
           variant: 'success',
         });
-      } else {
-        failedLinodes?.push(selectedLinodes[index]);
-        const errorReason = getAPIErrorOrDefault(
-          result.reason,
-          `Failed to add Linode ${label} (ID ${id}).`
-        )[0].reason;
+        return;
+      }
+      failedLinodes?.push(selectedLinodes[index]);
+      const errorReason = getAPIErrorOrDefault(
+        result.reason,
+        `Failed to add Linode ${label} (ID ${id}).`
+      )[0].reason;
 
-        if (!firstError) {
-          firstError = errorReason;
-        }
+      if (!firstError) {
+        firstError = errorReason;
       }
     });
 
