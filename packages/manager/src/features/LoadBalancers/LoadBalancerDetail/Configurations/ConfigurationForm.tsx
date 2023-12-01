@@ -73,7 +73,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       ? useLoadBalancerConfigurationMutation
       : useLoadBalancerConfigurationCreateMutation;
 
-  const { error, isLoading, mutateAsync } = useMutation(
+  const { error, isLoading, mutateAsync, reset } = useMutation(
     loadbalancerId,
     configuration?.id ?? -1
   );
@@ -143,6 +143,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       ...formik.values.certificates,
       ...certificates,
     ]);
+  };
+
+  const handleReset = () => {
+    formik.resetForm();
+    reset();
   };
 
   const generalErrors = error?.reduce((acc, { field, reason }) => {
@@ -269,7 +274,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       <Divider spacingBottom={16} spacingTop={16} />
       <Stack direction="row" flexWrap="wrap" gap={2} justifyContent="flex-end">
         {mode === 'edit' && formik.dirty && (
-          <Button buttonType="secondary" onClick={() => formik.resetForm()}>
+          <Button buttonType="secondary" onClick={handleReset}>
             Reset
           </Button>
         )}
