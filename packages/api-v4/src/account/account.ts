@@ -21,8 +21,8 @@ import {
   RegionalNetworkUtilization,
   ChildAccountPayload,
 } from './types';
-import { Filter, ResourcePage, Params, RequestOptions } from '../types';
-import { Token } from '../profile';
+import type { Filter, ResourcePage, Params, RequestOptions } from '../types';
+import type { Token } from '../profile';
 
 /**
  * getAccountInfo
