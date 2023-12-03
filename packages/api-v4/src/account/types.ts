@@ -1,4 +1,4 @@
-import { APIWarning } from '../types';
+import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
 
 export type UserType = 'child' | 'parent' | 'proxy';
@@ -168,19 +168,19 @@ export interface Grant {
   label: string;
 }
 export type GlobalGrantTypes =
+  | 'account_access'
+  | 'add_domains'
+  | 'add_firewalls'
+  | 'add_images'
   | 'add_linodes'
   | 'add_longview'
-  | 'longview_subscription'
-  | 'account_access'
-  | 'child_account_access'
-  | 'cancel_account'
-  | 'add_domains'
-  | 'add_stackscripts'
   | 'add_nodebalancers'
-  | 'add_images'
+  | 'add_stackscripts'
   | 'add_volumes'
-  | 'add_firewalls'
-  | 'add_vpcs';
+  | 'add_vpcs'
+  | 'cancel_account'
+  | 'child_account_access'
+  | 'longview_subscription';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -224,6 +224,10 @@ export interface CancelAccount {
 
 export interface CancelAccountPayload {
   comments: string;
+}
+
+export interface ChildAccountPayload extends RequestOptions {
+  euuid: string;
 }
 
 export type AgreementType = 'eu_model' | 'privacy_policy';
