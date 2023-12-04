@@ -21,6 +21,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
+  { flag: 'recharts', label: 'Recharts' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

@@ -31,7 +31,7 @@ export interface UpdateLoadbalancerPayload {
   configuration_ids?: number[];
 }
 
-type Protocol = 'tcp' | 'http' | 'https';
+export type Protocol = 'tcp' | 'http' | 'https';
 
 type RouteProtocol = 'tcp' | 'http';
 
@@ -46,6 +46,7 @@ export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
+  protocol: Protocol;
   rules: RuleCreatePayload[];
 }
 
@@ -145,6 +146,7 @@ export interface RouteServiceTargetPayload {
 export interface ServiceTargetPayload {
   label: string;
   protocol: Protocol;
+  percentage: number;
   endpoints: Endpoint[];
   certificate_id: number | null;
   load_balancing_policy: Policy;
@@ -177,7 +179,7 @@ type CertificateType = 'ca' | 'downstream';
 export interface Certificate {
   id: number;
   label: string;
-  certificate: string;
+  certificate?: string; // Not returned for Alpha
   type: CertificateType;
 }
 

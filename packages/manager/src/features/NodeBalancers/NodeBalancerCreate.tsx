@@ -495,6 +495,7 @@ const NodeBalancerCreate = () => {
         />
       </Paper>
       <SelectRegionPanel
+        currentCapability="NodeBalancers"
         disabled={disabled}
         error={hasErrorFor('region')}
         handleSelection={regionChange}

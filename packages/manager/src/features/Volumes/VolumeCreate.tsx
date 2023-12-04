@@ -297,18 +297,13 @@ export const VolumeCreate = () => {
                   setFieldValue('region', value);
                   setFieldValue('linode_id', null);
                 }}
-                regions={
-                  regions?.filter((eachRegion) =>
-                    eachRegion.capabilities.some((eachCape) =>
-                      eachCape.match(/block/i)
-                    )
-                  ) ?? []
-                }
+                currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
                 isClearable
                 label="Region"
                 onBlur={handleBlur}
+                regions={regions ?? []}
                 selectedId={values.region}
                 width={400}
               />

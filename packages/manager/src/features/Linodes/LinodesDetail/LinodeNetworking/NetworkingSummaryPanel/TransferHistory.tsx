@@ -17,6 +17,7 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
@@ -27,6 +28,8 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
 
+import { NetworkTransferHistoryChart } from './NetworkTransferHistoryChart';
+
 interface Props {
   linodeCreated: string;
   linodeID: number;
@@ -36,6 +39,7 @@ export const TransferHistory = React.memo((props: Props) => {
   const { linodeCreated, linodeID } = props;
 
   const theme = useTheme();
+  const flags = useFlags();
 
   // Needed to see the user's timezone.
   const { data: profile } = useProfile();
@@ -147,6 +151,28 @@ export const TransferHistory = React.memo((props: Props) => {
           }
           CustomIcon={areStatsNotReady ? PendingIcon : undefined}
           compact
+        />
+      );
+    }
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags?.recharts) {
+      const timeData = combinedData.reduce((acc: any, point: any) => {
+        acc.push({
+          'Public Outbound Traffic': convertNetworkData
+            ? convertNetworkData(point[1])
+            : point[1],
+          t: point[0],
+        });
+        return acc;
+      }, []);
+
+      return (
+        <NetworkTransferHistoryChart
+          aria-label={graphAriaLabel}
+          data={timeData}
+          timezone={profile?.timezone ?? 'UTC'}
+          unit={unit}
         />
       );
     }

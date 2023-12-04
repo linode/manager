@@ -4,6 +4,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -12,14 +13,22 @@ import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { Typography } from 'src/components/Typography';
+import {
+  WithAccountProps,
+  withAccount,
+} from 'src/containers/account.container';
 import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
-import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
+import withFlags, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
@@ -92,11 +101,14 @@ export interface LinodesLandingProps {
 type CombinedProps = LinodesLandingProps &
   StateProps &
   RouteProps &
-  WithProfileProps;
+  WithProfileProps &
+  WithAccountProps &
+  FeatureFlagConsumerProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
+      flags,
       linodesData,
       linodesInTransition,
       linodesRequestError,
@@ -116,6 +128,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
     };
+
+    const VPCEnabled = isFeatureEnabled(
+      'VPCs',
+      Boolean(flags.vpc),
+      this.props.account.data?.capabilities ?? []
+    );
 
     if (linodesRequestError) {
       let errorText: JSX.Element | string =
@@ -157,6 +175,19 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        {VPCEnabled && (
+          <DismissibleBanner
+            preferenceKey="vpc-linode-ip-config"
+            variant="warning"
+          >
+            <Typography>
+              A Public IP address is provisionally reserved for each Linode, but
+              isn&rsquo;t automatically assigned for Linodes in a VPC. To see
+              whether a Public IPv4 address has been assigned, see the Linode
+              details page.
+            </Typography>
+          </DismissibleBanner>
+        )}
         <LinodeResize
           linodeId={this.state.selectedLinodeID}
           onClose={this.closeDialogs}
@@ -450,7 +481,8 @@ const connected = connect(mapStateToProps, undefined);
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
   connected,
-  withFeatureFlagConsumer,
+  withAccount,
+  withFlags,
   withProfile
 );
 

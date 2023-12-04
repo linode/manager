@@ -1,3 +1,4 @@
+import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -22,6 +23,13 @@ import type {
 } from './RegionSelect.types';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
+/**
+ * A specific select for regions.
+ *
+ * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. There is no need to
+ * prefilter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ */
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     currentCapability,
@@ -100,12 +108,17 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
             <Tooltip
+              PopperProps={{
+                sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+              }}
               title={
-                // TODO DC_GET_WELL: add proper link to status page when available
                 isDisabledMenuItem ? (
                   <>
-                    For more information about regional availability, please see
-                    our new <Link to="https://linode.com">status page</Link>.
+                    There may be limited capacity in this region.{' '}
+                    <Link to="https://www.linode.com/global-infrastructure/availability">
+                      Learn more
+                    </Link>
+                    .
                   </>
                 ) : (
                   ''
@@ -121,19 +134,39 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             >
               <StyledListItem
                 {...props}
+                className={
+                  isDisabledMenuItem
+                    ? `${props.className} Mui-disabled`
+                    : props.className
+                }
                 componentsProps={{
                   root: {
                     'data-qa-option': option.value,
                     'data-testid': option.value,
                   } as ListItemComponentsPropsOverrides,
                 }}
+                onClick={(e) =>
+                  isDisabledMenuItem
+                    ? e.preventDefault()
+                    : props.onClick
+                    ? props.onClick(e)
+                    : null
+                }
+                aria-disabled={undefined}
               >
                 <>
                   <Box alignItems="center" display="flex" flexGrow={1}>
                     <StyledFlagContainer>
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
-                    {option.label} {isDisabledMenuItem && ' (Not available)'}
+                    {option.label}
+                    {isDisabledMenuItem && (
+                      <Box sx={visuallyHidden}>
+                        Disabled option - There may be limited capacity in this
+                        region. Learn more at
+                        https://www.linode.com/global-infrastructure/availability.
+                      </Box>
+                    )}
                   </Box>
                   {selected && <SelectedIcon visible={selected} />}
                 </>
