@@ -29,7 +29,12 @@ export const safeSecondaryEntityLabel = (
   return label ? `${text} ${label}` : fallback;
 };
 
-const secondaryEntityTypeObj = {
+interface SecondaryEntityType {
+  linode: string;
+  nodebalancer: string;
+}
+
+const secondaryEntityTypeObj: SecondaryEntityType = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
 };
