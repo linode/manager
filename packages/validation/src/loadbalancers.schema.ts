@@ -40,7 +40,7 @@ export const CertificateConfigSchema = object({
 
 export const EndpointSchema = object({
   ip: string().required('IP is required.'),
-  host: string(),
+  host: string().nullable(),
   port: number()
     .required('Port is required.')
     .min(1, 'Port must be greater than 0.')
@@ -54,8 +54,8 @@ const HealthCheckSchema = object({
   timeout: number().min(0),
   unhealthy_threshold: number().min(0),
   healthy_threshold: number().min(0),
-  path: string(),
-  host: string(),
+  path: string().nullable(),
+  host: string().nullable(),
 });
 
 export const CreateServiceTargetSchema = object({

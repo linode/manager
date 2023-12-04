@@ -70,12 +70,12 @@ export const ServiceTargetDrawer = (props: Props) => {
         ...values,
         endpoints: values.endpoints.map((e) => ({
           ...e,
-          host: e.host ?? null,
+          host: e.host ? e.host : null,
         })),
         healthcheck: {
           ...values.healthcheck,
-          host: values.healthcheck.host ?? null,
-          path: values.healthcheck.path ?? null,
+          host: values.healthcheck.host ? values.healthcheck.host : null,
+          path: values.healthcheck.path ? values.healthcheck.path : null,
         },
       };
       try {
