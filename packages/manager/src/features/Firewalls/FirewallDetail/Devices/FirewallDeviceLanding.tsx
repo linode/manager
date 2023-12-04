@@ -182,6 +182,7 @@ export const FirewallDeviceLanding = React.memo(
           firewallId={firewallId}
           firewallLabel={firewallLabel}
           onClose={() => setIsRemoveDeviceDialogOpen(false)}
+          onService={undefined}
           open={isRemoveDeviceDialogOpen}
         />
       </>

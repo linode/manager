@@ -15,7 +15,7 @@ export interface Props {
   firewallId: number;
   firewallLabel: string;
   onClose: () => void;
-  onService?: boolean;
+  onService: boolean | undefined;
   open: boolean;
 }
 
