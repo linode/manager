@@ -61,7 +61,9 @@ export const CreateRouteDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Create Route">
       <form onSubmit={formik.handleSubmit}>
-        {generalError && <Notice text={generalError} variant="error" />}
+        {generalError && (
+          <Notice spacingBottom={0} text={generalError} variant="error" />
+        )}
         <TextField
           errorText={formik.touched.label ? formik.errors.label : undefined}
           label="Route Label"

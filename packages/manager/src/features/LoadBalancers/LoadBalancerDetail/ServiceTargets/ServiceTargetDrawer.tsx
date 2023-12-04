@@ -148,10 +148,20 @@ export const ServiceTargetDrawer = (props: Props) => {
       )}
       <form onSubmit={formik.handleSubmit}>
         {generalCreateErrors && (
-          <Notice text={generalCreateErrors} variant="error" />
+          <Notice
+            spacingBottom={0}
+            spacingTop={12}
+            text={generalCreateErrors}
+            variant="error"
+          />
         )}
         {generalUpdateErrors && (
-          <Notice text={generalUpdateErrors} variant="error" />
+          <Notice
+            spacingBottom={0}
+            spacingTop={12}
+            text={generalUpdateErrors}
+            variant="error"
+          />
         )}
         <TextField
           errorText={formik.errors.label}
