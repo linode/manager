@@ -20,7 +20,7 @@ const supportedCreditCards: CardType[] = [
   'JCB',
 ];
 
-const CreditCards = () => {
+const CreditCardExamples = () => {
   const paymentMethods = supportedCreditCards.map((creditCard) => (
     <PaymentMethodRow
       paymentMethod={paymentMethodFactory.build({
@@ -37,8 +37,8 @@ const CreditCards = () => {
   return <>{paymentMethods}</>;
 };
 
-export const CreditCardsExample: Story = {
-  render: () => <CreditCards />,
+export const CreditCards: Story = {
+  render: () => <CreditCardExamples />,
 };
 
 export const GooglePay: Story = {

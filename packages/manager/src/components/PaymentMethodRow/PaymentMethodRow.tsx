@@ -26,6 +26,10 @@ interface Props {
   paymentMethod: PaymentMethod;
 }
 
+/**
+ * The `PaymentMethodRow` displays the given payment method and supports various actions for each payment method. It can be used
+ * for credit cards, Google Pay, and PayPal.
+ */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
   const { onDelete, paymentMethod } = props;
