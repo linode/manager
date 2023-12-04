@@ -42,16 +42,13 @@ export const StyledLParentListItem = styled(ListItem, {
 
 export const StyledListItem = styled(ListItem, {
   label: 'RegionSelectListItem',
-})(({ theme }) => ({
+})(() => ({
+  '&.Mui-disabled': {
+    cursor: 'not-allowed',
+  },
   '&.MuiAutocomplete-option': {
     minHeight: 'auto !important',
     padding: '8px 10px !important',
-  },
-  '&.MuiListItem-root[aria-disabled="true"]': {
-    background: 'transparent !important',
-    color: theme.palette.text.primary,
-    cursor: 'not-allowed !important',
-    pointerEvents: 'inherit !important',
   },
   '&.MuiListItem-root[aria-disabled="true"]:active': {
     pointerEvents: 'none !important',
