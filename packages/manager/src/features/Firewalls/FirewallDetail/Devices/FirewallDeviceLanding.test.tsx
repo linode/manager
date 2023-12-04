@@ -18,7 +18,7 @@ const baseProps = (
   type: FirewallDeviceEntityType
 ): FirewallDeviceLandingProps => ({
   disabled: false,
-  firewallID: 1,
+  firewallId: 1,
   firewallLabel: 'test',
   type,
 });

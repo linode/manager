@@ -148,7 +148,7 @@ export const FirewallDetail = () => {
           <SafeTabPanel index={1}>
             <FirewallDeviceLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
+              firewallId={firewallId}
               firewallLabel={firewall.label}
               type="linode"
             />
@@ -156,7 +156,7 @@ export const FirewallDetail = () => {
           <SafeTabPanel index={2}>
             <FirewallDeviceLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
+              firewallId={firewallId}
               firewallLabel={firewall.label}
               type="nodebalancer"
             />

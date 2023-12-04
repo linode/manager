@@ -20,7 +20,7 @@ import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceLandingProps {
   disabled: boolean;
-  firewallID: number;
+  firewallId: number;
   firewallLabel: string;
   type: FirewallDeviceEntityType;
 }
@@ -32,10 +32,10 @@ export const formattedTypes = {
 
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
-    const { disabled, firewallID, firewallLabel, type } = props;
+    const { disabled, firewallId, firewallLabel, type } = props;
 
     const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
-      firewallID
+      firewallId
     );
 
     const theme = useTheme();
@@ -179,7 +179,7 @@ export const FirewallDeviceLanding = React.memo(
         )}
         <RemoveDeviceDialog
           device={selectedDevice}
-          firewallId={firewallID}
+          firewallId={firewallId}
           firewallLabel={firewallLabel}
           onClose={() => setIsRemoveDeviceDialogOpen(false)}
           open={isRemoveDeviceDialogOpen}
