@@ -4,20 +4,32 @@ import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 
-import PrimaryNav from './PrimaryNav/PrimaryNav';
+import PrimaryNav from './PrimaryNav';
 
 export const SIDEBAR_WIDTH = 190;
 export const SIDEBAR_COLLAPSED_WIDTH = 52;
 
-export interface Props {
+export interface SideMenuProps {
+  /**
+   * Callback to close the menu.
+   */
   closeMenu: () => void;
+  /**
+   * If true, the menu will be collapsed.
+   */
   collapse: boolean;
+  /**
+   * If true, the menu will be open. Has no effect unless the viewport is less than 960px.
+   */
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-export const SideMenu: React.FC<CombinedProps> = (props) => {
+/**
+ * The wrapper for the primary navigation menu.
+ *
+ * - The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
+ */
+export const SideMenu = (props: SideMenuProps) => {
   const { closeMenu, collapse, open } = props;
 
   return (
