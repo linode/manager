@@ -3,7 +3,7 @@ import * as React from 'react';
 
 export interface Props {
   /**
-   * The number of items there are
+   * The number of items there are to display
    */
   count: number;
   /**
@@ -15,11 +15,15 @@ export interface Props {
    */
   page: number;
   /**
-   * The size of the page - how many items to display on each page
+   * The size of the page - specifically, how many items to display on each page
    */
   pageSize: number;
 }
 
+/**
+ * `PaginationControls` allows for pagination, enabling users to select a specific page from a range of pages. Note that this component
+ * only handles pagination and not displaying the relevant data for each page.
+ */
 export const PaginationControls = (props: Props) => {
   const { count, onClickHandler, page, pageSize } = props;
 
