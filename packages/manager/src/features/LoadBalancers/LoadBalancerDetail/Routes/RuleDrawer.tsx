@@ -84,9 +84,19 @@ export const RuleDrawer = (props: Props) => {
       try {
         const existingRules = route?.rules ?? [];
 
+        const normalizedRule: RulePayload = {
+          match_condition: {
+            ...rule.match_condition,
+            hostname: rule.match_condition.hostname
+              ? rule.match_condition.hostname
+              : null,
+          },
+          service_targets: rule.service_targets,
+        };
+
         // If we are editing, update the rule with the form data.
         if (isEditMode) {
-          existingRules[ruleIndexToEdit] = rule;
+          existingRules[ruleIndexToEdit] = normalizedRule;
         }
 
         await updateRoute({
@@ -94,7 +104,9 @@ export const RuleDrawer = (props: Props) => {
           protocol: route?.protocol,
           // If we are editing, send the updated rules, otherwise
           // append a new rule to the end.
-          rules: isEditMode ? existingRules : [...existingRules, rule],
+          rules: isEditMode
+            ? existingRules
+            : [...existingRules, normalizedRule],
         });
         onClose();
       } catch (errors) {

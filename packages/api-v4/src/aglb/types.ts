@@ -131,7 +131,7 @@ export interface RuleCreatePayload {
 }
 
 export interface MatchCondition {
-  hostname: string;
+  hostname: string | null;
   match_field: MatchField;
   match_value: string;
   session_stickiness_cookie: string | null;

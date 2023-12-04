@@ -101,7 +101,7 @@ const RouteServiceTargetSchema = object({
 });
 
 const TCPMatchConditionSchema = object({
-  hostname: string(),
+  hostname: string().nullable(),
 });
 
 const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
