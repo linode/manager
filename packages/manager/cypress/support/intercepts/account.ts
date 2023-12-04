@@ -357,7 +357,7 @@ export const mockCancelAccount = (
 export const mockCancelAccountError = (
   errorMessage: string,
   status: number = 400
-) => {
+): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
     apiMatcher('account/cancel'),
