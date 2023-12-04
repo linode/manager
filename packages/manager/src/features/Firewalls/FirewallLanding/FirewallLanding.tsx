@@ -132,7 +132,7 @@ const FirewallLanding = () => {
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"
       />
-      <Table>
+      <Table aria-label="List of services attached to each firewall">
         <TableHead>
           <TableRow>
             <TableSortCell

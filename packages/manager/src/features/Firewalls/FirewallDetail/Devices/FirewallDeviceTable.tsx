@@ -45,6 +45,8 @@ export const FirewallDeviceTable = React.memo(
         )
       : undefined;
 
+    const ariaLabel = `List of ${formattedTypes[deviceType]}s attached to this firewall`;
+
     return (
       <OrderBy data={devices} order={'asc'} orderBy={'entity:label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -58,7 +60,7 @@ export const FirewallDeviceTable = React.memo(
               pageSize,
             }) => (
               <>
-                <Table aria-label="List of Linodes attached to this Firewall">
+                <Table aria-label={ariaLabel}>
                   <TableHead>
                     <TableRow>
                       <TableSortCell
