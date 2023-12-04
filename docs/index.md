@@ -2,7 +2,7 @@
 
 ## Get Started
 
-To setup cloud manager and get ready for development, process to the [get started docs](GETTING_STARTED.md)
+To setup cloud manager and get ready for development, process to the [get started docs](GETTING_STARTED.md).
 
 ## Contributing
 
