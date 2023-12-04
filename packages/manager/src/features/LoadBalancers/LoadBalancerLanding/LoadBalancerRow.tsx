@@ -3,12 +3,15 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 
+import { regions as alphaRegions } from '../LoadBalancerDetail/LoadBalancerRegions';
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { Ports } from './Ports';
-import { RegionsCell } from './RegionsCell';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
 export interface LoadBalancerHandlers {
   onDelete: () => void;
@@ -20,7 +23,7 @@ interface Props {
 }
 
 export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
-  const { hostname, id, label, regions } = loadBalancer;
+  const { hostname, id, label } = loadBalancer;
 
   return (
     <TableRow
@@ -36,13 +39,25 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        <TableCell>{hostname}</TableCell>
+        <TableCell>
+          <IPAddress
+            ips={[hostname ?? 'dl-aglb-prodMDEE113002.akamaimesh.net']}
+          />
+        </TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell>
-          {regions.map((region) => (
+          <Stack py={1} spacing={0.5}>
+            {alphaRegions.map(({ id, label }) => (
+              <Typography key={id}>
+                {label} ({id})
+              </Typography>
+            ))}
+          </Stack>
+          {/* Uncomment the code below to show the regions returned by the API */}
+          {/* {regions.map((region) => (
             <RegionsCell key={region} region={region} />
-          ))}
+          ))} */}
         </TableCell>
       </Hidden>
       <TableCell actionCell>
