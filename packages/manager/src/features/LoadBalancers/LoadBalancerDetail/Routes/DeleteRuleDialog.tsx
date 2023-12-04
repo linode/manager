@@ -4,8 +4,9 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
-import type { Route } from '@linode/api-v4';
 import { getNormzlizedRulePayload } from './utils';
+
+import type { Route } from '@linode/api-v4';
 
 interface Props {
   loadbalancerId: number;
