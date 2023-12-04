@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
+import sanitize from 'sanitize-html';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -101,7 +102,10 @@ export const AddNodebalancerDrawer = (props: Props) => {
   };
 
   const errorNotice = () => {
-    let errorMsg = localError || '';
+    let errorMsg = sanitize(localError || '', {
+      allowedAttributes: {},
+      allowedTags: [], // Disallow all HTML tags,
+    });
     // match something like: NodeBalancer <nodebalancer_label> (ID <nodebalancer_id>)
 
     const nodebalancer = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);

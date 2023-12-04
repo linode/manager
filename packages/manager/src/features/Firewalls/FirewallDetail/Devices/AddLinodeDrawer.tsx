@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import sanitize from 'sanitize-html';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -94,7 +95,10 @@ export const AddLinodeDrawer = (props: Props) => {
   };
 
   const errorNotice = () => {
-    let errorMsg = localError || '';
+    let errorMsg = sanitize(localError || '', {
+      allowedAttributes: {},
+      allowedTags: [], // Disallow all HTML tags,
+    });
     // match something like: Linode <linode_label> (ID <linode_id>)
 
     const linode = /Linode (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
