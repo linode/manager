@@ -53,21 +53,6 @@ services.forEach((service: FirewallDeviceEntityType) => {
         expect(table).toBeInTheDocument();
       });
 
-      it(`should contain ${
-        prop.disabled ? 'disabled' : 'enabled'
-      } Add ${serviceName} button`, () => {
-        const { getByTestId } = renderWithTheme(
-          <FirewallDeviceLanding {...prop} />
-        );
-        const addButton = getByTestId('add-device-button');
-
-        if (prop.disabled) {
-          expect(addButton).toBeDisabled();
-        } else {
-          expect(addButton).toBeEnabled();
-        }
-      });
-
       if (prop.disabled) {
         it(`should contain a disabled Add ${serviceName} button`, () => {
           const { getByTestId } = renderWithTheme(
