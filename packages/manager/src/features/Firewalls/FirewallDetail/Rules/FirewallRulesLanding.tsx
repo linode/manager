@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -8,8 +9,6 @@ import { Prompt } from 'src/components/Prompt/Prompt';
 import { Typography } from 'src/components/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { useSnackbar } from 'notistack';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { FirewallRuleTable } from './FirewallRuleTable';
@@ -44,6 +43,8 @@ interface Drawer {
   mode: FirewallRuleDrawerMode;
   ruleIdx?: number;
 }
+
+// TODO: Refactor this code - Becoming too large and hard to maintain
 
 export const FirewallRulesLanding = React.memo((props: Props) => {
   const { disabled, firewallID, rules } = props;
