@@ -1,7 +1,7 @@
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
@@ -10,7 +10,7 @@ import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
 import { Grid } from '../Grid';
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     flexWrap: 'nowrap',
     marginTop: theme.spacing(1),
@@ -32,7 +32,7 @@ interface Props {
 
 export const DeletePaymentMethodDialog = React.memo((props: Props) => {
   const { error, loading, onClose, onDelete, open, paymentMethod } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const actions = (
     <ActionsPanel

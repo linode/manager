@@ -2,10 +2,10 @@ import {
   ThirdPartyPayment as _ThirdPartyPayment,
   PaymentMethod,
 } from '@linode/api-v4/lib/account';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
@@ -13,7 +13,7 @@ import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   icon: {
     // https://stackoverflow.com/questions/57516373/image-stretching-in-flexbox-in-safari
     alignItems: 'center',
@@ -72,7 +72,7 @@ export const getIcon = (paymentMethod: _ThirdPartyPayment) => {
 export const ThirdPartyPayment = (props: Props) => {
   const { paymentMethod } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
