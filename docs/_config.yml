@@ -1,2 +1,2 @@
 theme: jekyll-theme-minimal
-include: CONTRIBUTING.md
+include: ['CONTRIBUTING.md']
