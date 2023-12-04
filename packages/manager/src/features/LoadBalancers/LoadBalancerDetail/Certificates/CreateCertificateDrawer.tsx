@@ -14,6 +14,7 @@ import {
   CERTIFICATES_COPY,
   exampleCert,
   exampleKey,
+  initialValues,
   labelMap,
   titleMap,
 } from './constants';
@@ -44,19 +45,7 @@ export const CreateCertificateDrawer = (props: Props) => {
 
   const formik = useFormik<CreateCertificatePayload>({
     enableReinitialize: true,
-    initialValues:
-      type === 'ca'
-        ? {
-            certificate: '',
-            label: '',
-            type,
-          }
-        : {
-            certificate: '',
-            key: '',
-            label: '',
-            type,
-          },
+    initialValues: initialValues[type],
     async onSubmit(values) {
       try {
         await createCertificate(values);

@@ -27,6 +27,7 @@ import {
   defaultServiceTarget,
   defaultTTL,
   getIsSessionStickinessEnabled,
+  getNormzlizedRulePayload,
   initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
@@ -84,15 +85,7 @@ export const RuleDrawer = (props: Props) => {
       try {
         const existingRules = route?.rules ?? [];
 
-        const normalizedRule: RulePayload = {
-          match_condition: {
-            ...rule.match_condition,
-            hostname: rule.match_condition.hostname
-              ? rule.match_condition.hostname
-              : null,
-          },
-          service_targets: rule.service_targets,
-        };
+        const normalizedRule: RulePayload = getNormzlizedRulePayload(rule);
 
         // If we are editing, update the rule with the form data.
         if (isEditMode) {

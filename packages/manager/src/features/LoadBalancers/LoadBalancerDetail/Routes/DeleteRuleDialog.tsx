@@ -5,6 +5,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import type { Route } from '@linode/api-v4';
+import { getNormzlizedRulePayload } from './utils';
 
 interface Props {
   loadbalancerId: number;
@@ -31,15 +32,7 @@ export const DeleteRuleDialog = (props: Props) => {
 
     newRules.splice(ruleIndex, 1);
 
-    const normalizedRules = newRules.map((rule) => ({
-      match_condition: {
-        ...rule.match_condition,
-        hostname: rule.match_condition.hostname
-          ? rule.match_condition.hostname
-          : null,
-      },
-      service_targets: rule.service_targets,
-    }));
+    const normalizedRules = newRules.map(getNormzlizedRulePayload);
 
     await mutateAsync({
       label: route.label,

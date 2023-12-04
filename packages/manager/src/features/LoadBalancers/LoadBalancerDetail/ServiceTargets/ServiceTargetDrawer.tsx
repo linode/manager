@@ -37,6 +37,7 @@ import {
   initialValues,
   protocolOptions,
 } from './constants';
+import { getNormzlizedServiceTargetPayload } from './utils';
 
 interface Props {
   loadbalancerId: number;
@@ -65,19 +66,10 @@ export const ServiceTargetDrawer = (props: Props) => {
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
-    async onSubmit(values: ServiceTargetPayload) {
-      const normalizedValues: ServiceTargetPayload = {
-        ...values,
-        endpoints: values.endpoints.map((e) => ({
-          ...e,
-          host: e.host ? e.host : null,
-        })),
-        healthcheck: {
-          ...values.healthcheck,
-          host: values.healthcheck.host ? values.healthcheck.host : null,
-          path: values.healthcheck.path ? values.healthcheck.path : null,
-        },
-      };
+    async onSubmit(values) {
+      const normalizedValues: ServiceTargetPayload = getNormzlizedServiceTargetPayload(
+        values
+      );
       try {
         if (isEditMode) {
           await updateServiceTarget(normalizedValues);

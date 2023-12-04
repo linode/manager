@@ -40,9 +40,7 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
       </Hidden>
       <Hidden smDown>
         <TableCell>
-          <IPAddress
-            ips={[hostname ?? 'dl-aglb-prodMDEE113002.akamaimesh.net']}
-          />
+          {hostname ? <IPAddress ips={[hostname]} /> : 'None'}
         </TableCell>
       </Hidden>
       <Hidden mdDown>

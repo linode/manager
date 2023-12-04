@@ -23,14 +23,7 @@ export const LoadBalancerSummary = () => {
   const items = [
     {
       title: 'Hostname',
-      value: (
-        <IPAddress
-          ips={[
-            loadbalancer?.hostname ?? 'dl-aglb-prodMDEE113002.akamaimesh.net',
-          ]}
-          isHovered
-        />
-      ),
+      value: <IPAddress ips={[loadbalancer?.hostname ?? 'None']} isHovered />,
     },
     {
       title: 'Load Balancer ID',
