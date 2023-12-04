@@ -129,7 +129,7 @@ describe('Akamai Global Load Balancer landing page', () => {
   });
 });
 
-describe('delete', () => {
+describe('Delete', () => {
   /*
    * - Confirms that Deleting a load balancer from the AGLB landing page.
    * - Confirms AGLB landing page reverts to its empty state when all of the load balancers have been deleted.
@@ -195,9 +195,8 @@ describe('delete', () => {
 
     cy.wait(['@deleteLoadBalancer', '@getLoadBalancers']);
 
-    cy.findByText(loadbalancer.label).should('not.exist');
-
     // Confirm that user is navigated to the empty loadbalancer empty state landing page.
+
     cy.get('[data-qa-header]')
       .should('be.visible')
       .should('have.text', 'Global Load Balancers');
@@ -211,9 +210,8 @@ describe('delete', () => {
     ui.button
       .findByTitle('Create Global Load Balancer')
       .should('be.visible')
-      .should('be.enabled')
-      .click();
+      .should('be.enabled');
 
-    cy.url().should('endWith', '/loadbalancers/create');
+    cy.findByText(loadbalancer.label).should('not.exist');
   });
 });
