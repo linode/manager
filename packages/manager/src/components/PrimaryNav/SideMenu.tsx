@@ -27,7 +27,7 @@ export interface SideMenuProps {
 /**
  * The wrapper for the primary navigation menu.
  *
- * - The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
+ * The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
  */
 export const SideMenu = (props: SideMenuProps) => {
   const { closeMenu, collapse, open } = props;
@@ -39,6 +39,7 @@ export const SideMenu = (props: SideMenuProps) => {
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
+          data-testid="side-menu-mobile"
           onClose={closeMenu}
           open={open}
           variant="temporary"
@@ -47,7 +48,12 @@ export const SideMenu = (props: SideMenuProps) => {
         </StyledDrawer>
       </Hidden>
       <Hidden implementation="css" mdDown>
-        <StyledDrawer collapse={collapse} open variant="permanent">
+        <StyledDrawer
+          collapse={collapse}
+          data-testid="side-menu"
+          open
+          variant="permanent"
+        >
           <PrimaryNav closeMenu={closeMenu} isCollapsed={collapse} />
         </StyledDrawer>
       </Hidden>
