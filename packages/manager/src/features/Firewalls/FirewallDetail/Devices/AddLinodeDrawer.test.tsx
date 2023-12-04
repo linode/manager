@@ -1,40 +1,34 @@
-// import * as React from 'react';
+import * as React from 'react';
 
-// import { firewallDeviceFactory } from 'src/factories';
-// import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-// import { FirewallDeviceTable } from './FirewallDeviceTable';
+import { AddLinodeDrawer } from './AddLinodeDrawer';
 
-// import type { FirewallDeviceTableProps } from './FirewallDeviceTable';
-// import type { FirewallDeviceEntityType } from '@linode/api-v4';
+const helperText = 'helper text';
+const onClose = vi.fn();
 
-// const devices = ['linode', 'nodebalancer'];
+const props = {
+  helperText,
+  onClose,
+  open: true,
+};
 
-// const props = (type: FirewallDeviceEntityType): FirewallDeviceTableProps => ({
-//   deviceType: type,
-//   devices: firewallDeviceFactory.buildList(2),
-//   disabled: false,
-//   error: undefined,
-//   loading: false,
-//   triggerRemoveDevice: vi.fn(),
-// });
+it(`should contain helper text`, () => {
+  const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
+  expect(getByText(helperText)).toBeInTheDocument();
+});
 
-// devices.forEach((device: FirewallDeviceEntityType) => {
-//   describe(`Firewall ${device} table`, () => {
-//     it(`should render`, () => {
-//       const { getByRole } = renderWithTheme(
-//         <FirewallDeviceTable {...props(device)} />
-//       );
-//       const table = getByRole('table');
-//       expect(table).toBeInTheDocument();
-//     });
-//   });
+it(`should contain a Linodes label`, () => {
+  const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
+  expect(getByText('Linodes')).toBeInTheDocument();
+});
 
-//   it(`should contain two rows`, () => {
-//     const { getAllByRole } = renderWithTheme(
-//       <FirewallDeviceTable {...props(device)} />
-//     );
-//     const rows = getAllByRole('row');
-//     expect(rows.length - 1).toBe(2);
-//   });
-// });
+it(`should contain a Linodes input dropdown`, () => {
+  const { getByTestId } = renderWithTheme(<AddLinodeDrawer {...props} />);
+  expect(getByTestId('add-linode-autocomplete')).toBeInTheDocument();
+});
+
+it(`should contain an Add button`, () => {
+  const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
+  expect(getByText('Add')).toBeInTheDocument();
+});

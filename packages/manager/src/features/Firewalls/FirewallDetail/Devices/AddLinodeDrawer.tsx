@@ -186,6 +186,7 @@ export const AddLinodeDrawer = (props: Props) => {
       >
         {localError ? errorNotice() : null}
         <Autocomplete
+          data-testid="add-linode-autocomplete"
           disabled={currentDevicesLoading || linodeIsLoading}
           helperText={helperText}
           label="Linodes"
