@@ -8,7 +8,7 @@ import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/Paymen
 
 import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
 import { Grid } from '../Grid';
-import ThirdPartyPayment from './ThirdPartyPayment';
+import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -30,7 +30,7 @@ interface Props {
   paymentMethod: PaymentMethod | undefined;
 }
 
-export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
+export const DeletePaymentMethodDialog = React.memo((props: Props) => {
   const { error, loading, onClose, onDelete, open, paymentMethod } = props;
   const classes = useStyles();
 
@@ -70,6 +70,4 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
       </Grid>
     </ConfirmationDialog>
   );
-};
-
-export default React.memo(DeletePaymentMethodDialog);
+});

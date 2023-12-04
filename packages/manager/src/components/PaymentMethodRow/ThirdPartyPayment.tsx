@@ -1,5 +1,7 @@
-import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
-import { Box } from 'src/components/Box';
+import {
+  ThirdPartyPayment as _ThirdPartyPayment,
+  PaymentMethod,
+} from '@linode/api-v4/lib/account';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { makeStyles, useTheme } from '@mui/styles';
@@ -7,6 +9,7 @@ import * as React from 'react';
 
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
+import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
@@ -62,18 +65,18 @@ export const renderThirdPartyPaymentBody = (paymentMethod: PaymentMethod) => {
   }
 };
 
-export const getIcon = (paymentMethod: ThirdPartyPayment) => {
+export const getIcon = (paymentMethod: _ThirdPartyPayment) => {
   return thirdPartyPaymentMap[paymentMethod].icon;
 };
 
-export const TPP: React.FC<Props> = (props) => {
+export const ThirdPartyPayment = (props: Props) => {
   const { paymentMethod } = props;
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const Icon = getIcon(paymentMethod.type as ThirdPartyPayment);
+  const Icon = getIcon(paymentMethod.type as _ThirdPartyPayment);
 
   return (
     <>
@@ -91,5 +94,3 @@ export const TPP: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default TPP;

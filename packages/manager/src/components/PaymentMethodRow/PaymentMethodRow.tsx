@@ -13,14 +13,14 @@ import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { queryKey } from 'src/queries/accountPayment';
 
-import ThirdPartyPayment from './ThirdPartyPayment';
+import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 interface Props {
   onDelete: () => void;
   paymentMethod: PaymentMethod;
 }
 
-const PaymentMethodRow = (props: Props) => {
+export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
   const { onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
@@ -125,5 +125,3 @@ const PaymentMethodRow = (props: Props) => {
     </Paper>
   );
 };
-
-export default PaymentMethodRow;
