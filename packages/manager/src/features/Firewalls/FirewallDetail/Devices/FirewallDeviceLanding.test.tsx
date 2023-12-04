@@ -69,6 +69,14 @@ services.forEach((service: FirewallDeviceEntityType) => {
       });
 
       if (prop.disabled) {
+        it(`should contain a disabled Add ${serviceName} button`, () => {
+          const { getByTestId } = renderWithTheme(
+            <FirewallDeviceLanding {...prop} />
+          );
+          const addButton = getByTestId('add-device-button');
+
+          expect(addButton).toBeDisabled();
+        });
         it('should contain permission notice when disabled', () => {
           const { getByRole } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
@@ -79,6 +87,14 @@ services.forEach((service: FirewallDeviceEntityType) => {
       }
 
       if (!prop.disabled) {
+        it(`should contain an enabled Add ${serviceName} button`, () => {
+          const { getByTestId } = renderWithTheme(
+            <FirewallDeviceLanding {...prop} />
+          );
+          const addButton = getByTestId('add-device-button');
+
+          expect(addButton).toBeEnabled();
+        });
         it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, () => {
           const history = createMemoryHistory();
           const { getByTestId } = renderWithTheme(
