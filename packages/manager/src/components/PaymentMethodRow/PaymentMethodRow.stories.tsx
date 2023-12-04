@@ -5,8 +5,9 @@ import { paymentMethodFactory } from 'src/factories';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
-import type { PaymentMethodRowProps } from './PaymentMethodRow';
 import type { Meta, StoryObj } from '@storybook/react';
+
+type Story = StoryObj<typeof PaymentMethodRow>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const onDelete = () => {};
@@ -19,8 +20,8 @@ const supportedCreditCards: CardType[] = [
   'JCB',
 ];
 
-const CreditCards = () =>
-  supportedCreditCards.map((creditCard) => (
+const CreditCards = () => {
+  const paymentMethods = supportedCreditCards.map((creditCard) => (
     <PaymentMethodRow
       paymentMethod={paymentMethodFactory.build({
         data: {
@@ -32,3 +33,45 @@ const CreditCards = () =>
       onDelete={onDelete}
     />
   ));
+
+  return <>{paymentMethods}</>;
+};
+
+export const CreditCardsExample: Story = {
+  render: () => <CreditCards />,
+};
+
+export const GooglePay: Story = {
+  render: (args) => <PaymentMethodRow {...args} />,
+};
+
+export const PayPal: Story = {
+  render: (args) => (
+    <PaymentMethodRow
+      {...args}
+      paymentMethod={paymentMethodFactory.build({
+        data: {
+          email: 'testemail@gmail.com',
+          paypal_id: 'ABCDEFG123',
+        },
+        type: 'paypal',
+      })}
+    />
+  ),
+};
+
+const meta: Meta<typeof PaymentMethodRow> = {
+  args: {
+    onDelete,
+    paymentMethod: paymentMethodFactory.build({
+      data: {
+        card_type: 'Visa',
+      },
+      type: 'google_pay',
+    }),
+  },
+  component: PaymentMethodRow,
+  title: 'Features/Payment Method Row',
+};
+
+export default meta;

@@ -15,7 +15,7 @@ import { queryKey } from 'src/queries/accountPayment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
-export interface PaymentMethodRowProps {
+interface Props {
   /**
    * Function called when a payment method is deleted.
    */
@@ -26,7 +26,7 @@ export interface PaymentMethodRowProps {
   paymentMethod: PaymentMethod;
 }
 
-export const PaymentMethodRow = (props: PaymentMethodRowProps) => {
+export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
   const { onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
