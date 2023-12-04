@@ -133,7 +133,7 @@ export const getRegionOptionAvailability = ({
     | AccountAvailability
     | undefined = accountAvailabilityData.find(
     (regionAvailability: AccountAvailability) =>
-      regionAvailability.id === region.id
+      regionAvailability.dc === region.id
   );
 
   if (!regionWithUnavailability) {

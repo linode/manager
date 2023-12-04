@@ -1040,19 +1040,19 @@ export const handlers = [
   }),
   rest.get('*/account/availability', (req, res, ctx) => {
     const newarkStorage = accountAvailabilityFactory.build({
-      id: 'us-east-0',
+      dc: 'us-east-0',
       unavailable: ['Object Storage'],
     });
     const atlanta = accountAvailabilityFactory.build({
-      id: 'us-southeast',
+      dc: 'us-southeast',
       unavailable: ['Block Storage', 'Managed Databases'],
     });
     const singapore = accountAvailabilityFactory.build({
-      id: 'ap-south',
+      dc: 'ap-south',
       unavailable: ['Linodes', 'Kubernetes', 'NodeBalancers'],
     });
     const tokyo = accountAvailabilityFactory.build({
-      id: 'ap-northeast',
+      dc: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
     return res(

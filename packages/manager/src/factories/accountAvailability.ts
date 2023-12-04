@@ -5,7 +5,7 @@ import { pickRandom } from 'src/utilities/random';
 
 export const accountAvailabilityFactory = Factory.Sync.makeFactory<AccountAvailability>(
   {
-    id: pickRandom(['us-mia', 'ap-south', 'ap-northeast']),
+    dc: pickRandom(['us-mia', 'ap-south', 'ap-northeast']),
     unavailable: pickRandom([
       ['Block Storage'],
       ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
