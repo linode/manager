@@ -66,11 +66,23 @@ export const ServiceTargetDrawer = (props: Props) => {
     enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
     async onSubmit(values: ServiceTargetPayload) {
+      const normalizedValues: ServiceTargetPayload = {
+        ...values,
+        endpoints: values.endpoints.map((e) => ({
+          ...e,
+          host: e.host ?? null,
+        })),
+        healthcheck: {
+          ...values.healthcheck,
+          host: values.healthcheck.host ?? null,
+          path: values.healthcheck.path ?? null,
+        },
+      };
       try {
         if (isEditMode) {
-          await updateServiceTarget(values);
+          await updateServiceTarget(normalizedValues);
         } else {
-          await createServiceTarget(values);
+          await createServiceTarget(normalizedValues);
         }
         onClose();
       } catch (errors) {
