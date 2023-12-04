@@ -31,8 +31,20 @@ export const DeleteRuleDialog = (props: Props) => {
 
     newRules.splice(ruleIndex, 1);
 
+    const normalizedRules = newRules.map((rule) => ({
+      match_condition: {
+        ...rule.match_condition,
+        hostname: rule.match_condition.hostname
+          ? rule.match_condition.hostname
+          : null,
+      },
+      service_targets: rule.service_targets,
+    }));
+
     await mutateAsync({
-      rules: newRules,
+      label: route.label,
+      protocol: route.protocol,
+      rules: normalizedRules,
     });
     onClose();
   };
