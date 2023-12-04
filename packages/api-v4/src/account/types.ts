@@ -73,7 +73,7 @@ export type AccountCapability =
   | 'VPCs';
 
 export interface AccountAvailability {
-  id: string; // will be ID of region
+  region: string; // will be slug of dc (matches id field of region object returned by API)
   unavailable: Capabilities[];
 }
 
