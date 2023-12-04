@@ -13,6 +13,7 @@ import { randomLabel } from 'support/util/random';
 import {
   mockGetLoadBalancer,
   mockGetLoadBalancers,
+  mockDeleteLoadBalancerError,
   mockDeleteLoadBalancer,
 } from 'support/intercepts/load-balancers';
 import type { Loadbalancer } from '@linode/api-v4';
@@ -213,5 +214,68 @@ describe('Delete', () => {
       .should('be.enabled');
 
     cy.findByText(loadbalancer.label).should('not.exist');
+  });
+
+  it('Shows API errors when deleting a load balancer', () => {
+    const chosenRegion = chooseRegion();
+    const loadBalancerConfiguration = configurationFactory.build();
+    const loadbalancerMocks = [
+      loadbalancerFactory.build({
+        id: 1,
+        label: randomLabel(),
+        configurations: [
+          {
+            id: loadBalancerConfiguration.id,
+            label: loadBalancerConfiguration.label,
+          },
+        ],
+        regions: ['us-east', chosenRegion.id],
+      }),
+    ];
+
+    // TODO Delete feature flag mocks when AGLB feature flag goes away.
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
+    mockGetLoadBalancer(loadbalancerMocks[0]);
+
+    const loadbalancer = loadbalancerMocks[0];
+
+    cy.visitWithLogin('/loadbalancers');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getLoadBalancers']);
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Load Balancer ${loadbalancer.label}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+    // Mock the API call for deleting the load balancer.
+    mockDeleteLoadBalancerError(loadbalancer.id, 'Control Plane Error').as(
+      'deleteLoadBalancer'
+    );
+
+    mockGetLoadBalancers([]).as('getLoadBalancers');
+
+    // Handle the delete confirmation dialog.
+    ui.dialog
+      .findByTitle(`Delete ${loadbalancer.label}?`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Load Balancer Label')
+          .should('be.visible')
+          .click()
+          .type(loadbalancer.label);
+
+        ui.buttonGroup.findButtonByTitle('Delete').click();
+
+        cy.wait(['@deleteLoadBalancer']);
+
+        cy.findByText('Control Plane Error').should('be.visible');
+
+        ui.buttonGroup.findButtonByTitle('Cancel').click();
+      });
   });
 });
