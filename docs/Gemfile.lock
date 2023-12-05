@@ -272,7 +272,7 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-  just-the-docs
+  just-the-docs (= 0.7.0)
   webrick (~> 1.7)
 
 BUNDLED WITH

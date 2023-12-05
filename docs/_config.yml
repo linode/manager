@@ -1,5 +1,7 @@
+# CONTRIBUTING is a reserved file name for GitHub, so we need to explicitly include it here
 include: ['CONTRIBUTING.md']
-# theme: just-the-docs
+
+# Our theme and its customizations
 remote_theme: just-the-docs/just-the-docs
 color_scheme: akamai
 favicon_ico: '/assets/images/favicon.ico'

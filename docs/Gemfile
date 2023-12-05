@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'github-pages', group: :jekyll_plugins
-gem "just-the-docs"
+gem "just-the-docs", "0.7.0" # pinned to latest release for security purposes
 
 gem "webrick", "~> 1.7"
