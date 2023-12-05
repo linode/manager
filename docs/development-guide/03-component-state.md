@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Managing State
 
 ## Component State

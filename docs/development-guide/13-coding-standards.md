@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Coding Standards
 
 ## Linting

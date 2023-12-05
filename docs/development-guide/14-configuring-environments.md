@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Configuring Your Environment
 
  Cloud Manager's environment is configured by the `packages/manager/.env` file. The `packages/manager/.env.example` file provides some documentation on the minimal configuration required to run Cloud Manager.

@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Local Dev Tools
 
 To facilitate development and debugging, Cloud Manager includes a "Dev Tools" mode. Currently this mode is used for feature flag toggling, data mocking, and environment switching.

@@ -1,3 +1,7 @@
+---
+nav_order: 1
+---
+
 # Akamai Cloud Manager Documentation
 
 ## Get Started
@@ -10,7 +14,6 @@ If you already have your development environment set up, please read the [contri
 
 To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use [linode.com/feedback](https://www.linode.com/feedback/).
 
-## License
+## Development Guide
 
-All code located in this repository is distributed under the terms of the [APLv2
-license](LICENSE).
+Please consult our [development guide](development-guide/01-repository-structure.md) to start contributing!

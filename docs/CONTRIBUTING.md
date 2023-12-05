@@ -1,3 +1,7 @@
+---
+nav_order: 3
+---
+
 # Contributing
 
 Thanks for your interest in contributing to the Linode Cloud Manager!

@@ -1,2 +1,5 @@
-theme: jekyll-theme-minimal
 include: ['CONTRIBUTING.md']
+theme: just-the-docs
+color_scheme: akamai
+favicon_ico: '/assets/images/favicon.ico'
+logo: '/assets/images/akamai-logo.png'

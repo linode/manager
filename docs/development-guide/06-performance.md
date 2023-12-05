@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Performance
 
 When composing React components, follow community best practices for performance. A few guidelines:

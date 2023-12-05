@@ -1,3 +1,7 @@
+---
+nav_order: 2
+---
+
 # Getting Started
 
 ## Using the getting_started.sh script

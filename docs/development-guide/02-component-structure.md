@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Component Structure
 
 Components are the basic building blocks of the Cloud Manager UI. Many components are atomic and reusable, appearing in many places across the app (e.g. `<Button />`), while others act as layouts or containers, managing state and routes for entire sections of the app (e.g. `<LinodesLanding />`).

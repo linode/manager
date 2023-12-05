@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Mocking Data
 
 This guide covers various methods of mocking data while developing or testing Cloud Manager.

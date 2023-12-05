@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Repository Structure
 
 The linode/manager repository is a monorepo that houses three packages:

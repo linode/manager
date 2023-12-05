@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Fetching Data
 
 Cloud Manager makes requests of the Linode API using the methods imported from the **api-v4** package:

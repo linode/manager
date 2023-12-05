@@ -1,3 +1,7 @@
+---
+parent: Development Guide
+---
+
 # Managing Dependencies
 
 Dependencies are managed with [Yarn](https://yarnpkg.com/).
