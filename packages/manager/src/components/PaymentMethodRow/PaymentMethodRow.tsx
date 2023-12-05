@@ -17,7 +17,7 @@ import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 interface Props {
   /**
-   * Function called when a payment method is deleted.
+   * Function called when the delete button in the Action Menu is pressed.
    */
   onDelete: () => void;
   /**

@@ -1,4 +1,5 @@
 import { CardType } from '@linode/api-v4';
+import { action } from '@storybook/addon-actions';
 import React from 'react';
 
 import { paymentMethodFactory } from 'src/factories';
@@ -9,15 +10,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof PaymentMethodRow>;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const onDelete = () => {};
+const onDelete = action('onDelete');
 
-const supportedCreditCards: CardType[] = [
+const supportedCreditCards: (CardType | undefined)[] = [
   'Visa',
   'MasterCard',
   'American Express',
   'Discover',
   'JCB',
+  undefined,
 ];
 
 const CreditCardExamples = () => {
