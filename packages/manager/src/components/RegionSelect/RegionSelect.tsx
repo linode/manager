@@ -1,3 +1,4 @@
+import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -133,12 +134,25 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             >
               <StyledListItem
                 {...props}
+                className={
+                  isDisabledMenuItem
+                    ? `${props.className} Mui-disabled`
+                    : props.className
+                }
                 componentsProps={{
                   root: {
                     'data-qa-option': option.value,
                     'data-testid': option.value,
                   } as ListItemComponentsPropsOverrides,
                 }}
+                onClick={(e) =>
+                  isDisabledMenuItem
+                    ? e.preventDefault()
+                    : props.onClick
+                    ? props.onClick(e)
+                    : null
+                }
+                aria-disabled={undefined}
               >
                 <>
                   <Box alignItems="center" display="flex" flexGrow={1}>
@@ -146,6 +160,13 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                       <Flag country={option.data.country} />
                     </StyledFlagContainer>
                     {option.label}
+                    {isDisabledMenuItem && (
+                      <Box sx={visuallyHidden}>
+                        Disabled option - There may be limited capacity in this
+                        region. Learn more at
+                        https://www.linode.com/global-infrastructure/availability.
+                      </Box>
+                    )}
                   </Box>
                   {selected && <SelectedIcon visible={selected} />}
                 </>

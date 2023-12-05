@@ -11,7 +11,7 @@ import type { Region } from '@linode/api-v4';
 
 const accountAvailabilityData = [
   accountAvailabilityFactory.build({
-    id: 'ap-south',
+    region: 'ap-south',
     unavailable: ['Linodes'],
   }),
 ];
