@@ -11,6 +11,7 @@ import {
   pathOr,
 } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { Accordion } from 'src/components/Accordion';
@@ -35,6 +36,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { useAddFirewallDeviceMutation } from 'src/queries/firewalls';
 import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -105,6 +107,12 @@ const NodeBalancerCreate = () => {
     nodeBalancerFields,
     setNodeBalancerFields,
   ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+
+  const { mutateAsync: addDevice } = useAddFirewallDeviceMutation(
+    nodeBalancerFields.firewallId ?? -1
+  );
+
+  const queryClient = useQueryClient();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -286,6 +294,16 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
+        addDevice({ id: nodeBalancer.id, type: 'nodebalancer' }).then(
+          (service) => {
+            queryClient.invalidateQueries([
+              'nodebalancers',
+              'nodebalancer',
+              service.id,
+              'firewalls',
+            ]);
+          }
+        );
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
