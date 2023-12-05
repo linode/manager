@@ -507,7 +507,7 @@ const NodeBalancerCreate = () => {
           handleFirewallChange={(firewallId: number) => {
             setNodeBalancerFields((prev) => ({
               ...prev,
-              firewall_id: firewallId > 0 ? firewallId : undefined,
+              firewallId: firewallId > 0 ? firewallId : undefined,
             }));
           }}
           helperText={
