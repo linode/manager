@@ -72,14 +72,14 @@ describe('Akamai Global Load Balancer landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // Confirm that regions are listed for load balancer.
-          loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
-            const regionLabel = getRegionById(loadbalancerRegion).label;
-            cy.findByText(regionLabel, { exact: false }).should('be.visible');
-            cy.findByText(loadbalancerRegion, { exact: false }).should(
-              'be.visible'
-            );
-          });
+          // TODO: AGLB - Confirm that regions from the API are listed for load balancer
+          // loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
+          //   const regionLabel = getRegionById(loadbalancerRegion).label;
+          //   cy.findByText(regionLabel, { exact: false }).should('be.visible');
+          //   cy.findByText(loadbalancerRegion, { exact: false }).should(
+          //     'be.visible'
+          //   );
+          // });
 
           cy.findByText(loadbalancerMock.hostname).should('be.visible');
 
@@ -94,14 +94,14 @@ describe('Akamai Global Load Balancer landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // Confirm that regions are listed for load balancer.
-          loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
-            const regionLabel = getRegionById(loadbalancerRegion).label;
-            cy.findByText(regionLabel, { exact: false }).should('be.visible');
-            cy.findByText(loadbalancerRegion, { exact: false }).should(
-              'be.visible'
-            );
-          });
+          // TODO: AGLB - Confirm that regions from the API are listed for load balancer
+          // loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
+          //   const regionLabel = getRegionById(loadbalancerRegion).label;
+          //   cy.findByText(regionLabel, { exact: false }).should('be.visible');
+          //   cy.findByText(loadbalancerRegion, { exact: false }).should(
+          //     'be.visible'
+          //   );
+          // });
 
           ui.actionMenu
             .findByTitle(

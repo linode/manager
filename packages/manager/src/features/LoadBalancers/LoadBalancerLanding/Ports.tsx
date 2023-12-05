@@ -21,6 +21,10 @@ export const Ports = ({ loadbalancerId }: PortProps) => {
     return <Skeleton sx={{ minWidth: '100px' }} />;
   }
 
+  if (ports?.length === 0) {
+    return <Typography>None</Typography>;
+  }
+
   if (error || !ports) {
     return <Typography>Unknown</Typography>;
   }

@@ -1,5 +1,19 @@
 import type { Certificate } from '@linode/api-v4';
 
+export const initialValues = {
+  ca: {
+    certificate: '',
+    label: '',
+    type: 'ca',
+  },
+  downstream: {
+    certificate: '',
+    key: '',
+    label: '',
+    type: 'downstream',
+  },
+} as const;
+
 export const CERTIFICATES_COPY = {
   Create: {
     ca:

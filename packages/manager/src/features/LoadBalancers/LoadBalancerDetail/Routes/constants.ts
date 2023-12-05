@@ -8,8 +8,12 @@ export const ROUTE_COPY = {
       'TCP rules include the percentage of incoming requests that should be directed to each target.',
   },
   Rule: {
-    Description:
-      'Rules set the conditions that are used for target selection. TCP rules include the percentage of incoming requests that should be directed to each target.',
+    Description: {
+      http:
+        'Rules set the conditions that are used for target selection. HTTP/S rules include Match Rules and the percentage of incoming requests that should be directed to each target.',
+      tcp:
+        'Rules set the conditions that are used for target selection. TCP rules include the percentage of incoming requests that should be directed to each target.',
+    },
     Hostname:
       'The hostname of the target where the rule applies. If a hostname is not specified, the rule applies to all targets. Wildcards (*) are supported.',
     MatchRule: {

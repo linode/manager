@@ -86,7 +86,9 @@ export const RuleRow = (props: RuleRowProps) => {
               }}
               aria-label={`Match value: ${rule.match_condition.match_value}`}
             >
-              {rule.match_condition.match_value}
+              {rule.match_condition.match_value
+                ? rule.match_condition.match_value
+                : 'None'}
             </Box>
 
             <Hidden smDown>
@@ -112,10 +114,8 @@ export const RuleRow = (props: RuleRowProps) => {
                   <TextTooltip
                     tooltipText={
                       <>
-                        {rule.service_targets.map(({ id, label }) => (
-                          <div key={label}>
-                            {label}:{id}
-                          </div>
+                        {rule.service_targets.map(({ label }) => (
+                          <div key={label}>{label}</div>
                         ))}
                       </>
                     }
