@@ -30,7 +30,7 @@ const CreditCardExamples = () => {
         },
         type: 'credit_card',
       })}
-      key={creditCard}
+      key={creditCard ?? 'undefined-credit-card'}
       onDelete={onDelete}
     />
   ));
