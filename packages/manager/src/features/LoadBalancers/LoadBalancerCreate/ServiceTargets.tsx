@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Button } from 'src/components/Button/Button';
@@ -13,10 +13,31 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
+import { ServiceTargetDrawer } from './AddServiceTargetDrawer';
+
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 export const ServiceTargets = () => {
-  const { values } = useFormikContext<LoadBalancerCreateFormData>();
+  const {
+    setFieldValue,
+    values,
+  } = useFormikContext<LoadBalancerCreateFormData>();
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [
+    selectedServiceTargetIndex,
+    setSelectedServiceTargetIndex,
+  ] = useState<number>();
+
+  const handleRemoveServiceTarget = (index: number) => {
+    values.service_targets.splice(index, 1);
+    setFieldValue('service_targets', values.service_targets);
+  };
+
+  const handleEditServiceTarget = (index: number) => {
+    setSelectedServiceTargetIndex(index);
+    setIsDrawerOpen(true);
+  };
 
   return (
     <Stack padding={1} spacing={1}>
@@ -29,7 +50,9 @@ export const ServiceTargets = () => {
           requests.
         </Typography>
         <Stack direction="row" gap={2}>
-          <Button buttonType="outlined">Add Service Target</Button>
+          <Button buttonType="outlined" onClick={() => setIsDrawerOpen(true)}>
+            Add Service Target
+          </Button>
           <TextField hideLabel label="Filter" placeholder="Filter" />
         </Stack>
         <Table sx={{ width: '99%' }}>
@@ -46,19 +69,27 @@ export const ServiceTargets = () => {
             {values.service_targets.length === 0 && (
               <TableRowEmpty colSpan={5} />
             )}
-            {values.service_targets.map((serviceTarget) => (
+            {values.service_targets.map((serviceTarget, index) => (
               <TableRow key={serviceTarget.label}>
                 <TableCell>{serviceTarget.label}</TableCell>
                 <TableCell>{serviceTarget.endpoints.length}</TableCell>
-                <TableCell>{serviceTarget.load_balancing_policy}</TableCell>
+                <TableCell sx={{ textTransform: 'capitalize' }}>
+                  {serviceTarget.load_balancing_policy.replace('_', ' ')}
+                </TableCell>
                 <TableCell>
                   {serviceTarget.healthcheck ? 'Yes' : 'No'}
                 </TableCell>
                 <TableCell actionCell>
                   <ActionMenu
                     actionsList={[
-                      { onClick: () => alert('Edit'), title: 'Edit' },
-                      { onClick: () => alert('Delete'), title: 'Remove' },
+                      {
+                        onClick: () => handleEditServiceTarget(index),
+                        title: 'Edit',
+                      },
+                      {
+                        onClick: () => handleRemoveServiceTarget(index),
+                        title: 'Remove',
+                      },
                     ]}
                     ariaLabel={`Action Menu for Service Target ${serviceTarget.label}`}
                   />
@@ -68,6 +99,14 @@ export const ServiceTargets = () => {
           </TableBody>
         </Table>
       </Stack>
+      <ServiceTargetDrawer
+        onClose={() => {
+          setIsDrawerOpen(false);
+          setSelectedServiceTargetIndex(undefined);
+        }}
+        open={isDrawerOpen}
+        serviceTargetIndex={selectedServiceTargetIndex}
+      />
     </Stack>
   );
 };
