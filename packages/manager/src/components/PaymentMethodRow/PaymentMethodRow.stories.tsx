@@ -72,7 +72,7 @@ const meta: Meta<typeof PaymentMethodRow> = {
     }),
   },
   component: PaymentMethodRow,
-  title: 'Features/Payment Method Row',
+  title: 'Components/Payment Method Row',
 };
 
 export default meta;

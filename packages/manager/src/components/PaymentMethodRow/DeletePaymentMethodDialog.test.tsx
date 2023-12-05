@@ -17,17 +17,22 @@ const props = {
 describe('Delete Payment Method Dialog', () => {
   it('renders the delete payment method dialog', () => {
     const screen = renderWithTheme(<DeletePaymentMethodDialog {...props} />);
+
     const headerText = screen.getByText('Delete Payment Method');
     expect(headerText).toBeVisible();
+
     const deleteText = screen.getByText(
       'Are you sure you want to delete this payment method?'
     );
     expect(deleteText).toBeVisible();
+
     const buttons = screen.getAllByRole('button');
     expect(buttons?.length).toBe(3);
   });
+
   it('calls the corresponding functions when buttons are clicked', () => {
     const screen = renderWithTheme(<DeletePaymentMethodDialog {...props} />);
+
     const deleteButton = screen.getByText('Delete');
     expect(deleteButton).toBeVisible();
     fireEvent.click(deleteButton);
