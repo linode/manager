@@ -228,6 +228,7 @@ export const RuleDrawer = (props: Props) => {
                   name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
+                  optional
                   placeholder="www.example.com"
                   value={formik.values.match_condition.hostname}
                 />
