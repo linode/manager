@@ -81,15 +81,16 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
             <TooltipIcon status="help" text={CONFIGURATION_COPY.Certificates} />
           </Typography>
           <Box sx={{ alignItems: 'center', display: 'flex' }}>
-            <BetaChip
-              sx={(theme) => ({
-                marginLeft: '0 !important',
-                marginRight: `${theme.spacing(1 / 2)} !important`,
-              })}
-            />
             <Typography>
+              <BetaChip
+                sx={(theme) => ({
+                  marginLeft: '0 !important',
+                  marginRight: theme.spacing(),
+                })}
+                component="span"
+              />
               After the load balancer is created, and if the protocol is HTTPS,
-              upload TLS termination certificates.
+              upload TLS termination certificates.{' '}
               <Link to={AGLB_DOCS_TLS_CERTIFICATE}>Learn more.</Link>
             </Typography>
           </Box>
