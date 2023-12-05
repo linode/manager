@@ -24,8 +24,11 @@ export const VPCTopSectionContent = (props: Props) => {
   return (
     <>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
-        {VPC_CREATE_FORM_VPC_HELPER_TEXT}
-        <Link to="#"> Learn more</Link>.{/* @TODO VPC: learn more link here */}
+        {VPC_CREATE_FORM_VPC_HELPER_TEXT}{' '}
+        <Link to="https://www.linode.com/docs/products/networking/vpc/">
+          Learn more
+        </Link>
+        .
       </StyledBodyTypography>
       <RegionSelect
         aria-label="Choose a region"
