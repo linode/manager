@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-import { SIDEBAR_WIDTH } from 'src/components/SideMenu';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 
 const useStyles = makeStyles<void, 'linkItem'>()(
   (theme: Theme, _params, classes) => ({
