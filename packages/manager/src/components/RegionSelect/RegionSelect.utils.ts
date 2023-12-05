@@ -26,7 +26,13 @@ export const getRegionOptions = ({
   currentCapability,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
-  return regions
+  const filteredRegions = currentCapability
+    ? regions.filter((region) =>
+        region.capabilities.includes(currentCapability)
+      )
+    : regions;
+
+  return filteredRegions
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 
@@ -127,7 +133,7 @@ export const getRegionOptionAvailability = ({
     | AccountAvailability
     | undefined = accountAvailabilityData.find(
     (regionAvailability: AccountAvailability) =>
-      regionAvailability.id === region.id
+      regionAvailability.region === region.id
   );
 
   if (!regionWithUnavailability) {

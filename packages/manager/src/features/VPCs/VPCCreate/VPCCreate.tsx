@@ -22,7 +22,7 @@ const VPCCreate = () => {
     isLoadingCreateVPC,
     onChangeField,
     onCreateVPC,
-    regionsWithVPCCapability,
+    regionsData,
     userCannotAddVPC,
   } = useCreateVPC({ pushToVPCPage: true });
 
@@ -57,7 +57,7 @@ const VPCCreate = () => {
               disabled={userCannotAddVPC}
               errors={errors}
               onChangeField={onChangeField}
-              regions={regionsWithVPCCapability}
+              regions={regionsData}
               values={values}
             />
           </Paper>
