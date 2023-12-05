@@ -2,4 +2,4 @@
 "@linode/manager": Upcoming Features
 ---
 
-Firewall NodeBalancer links not working ([#9926](https://github.com/linode/manager/pull/9926))
+Added Firewall documentation links in the Create flows for Linodes, NodeBalancers, and Firewalls and in the Add NodeBalancer to Firewall drawer ([#9926](https://github.com/linode/manager/pull/9926))
