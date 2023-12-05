@@ -5,9 +5,6 @@
 import { linodeTypeFactory } from '@src/factories';
 import { LkePlanDescription } from 'support/api/lke';
 
-/** Notice shown to users when selecting a region. */
-export const dcPricingRegionNotice = /Prices for plans, products, and services in .* may vary from other regions\./;
-
 /** Notice shown to users when selecting a region with a different price structure. */
 export const dcPricingRegionDifferenceNotice =
   'The selected region has a different price structure.';

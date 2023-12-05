@@ -12,8 +12,8 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -21,6 +21,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
   getKubeHighAvailability,
@@ -41,13 +42,19 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_DC_PRICING,
+  LKE_HA_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
-import { useStyles } from './CreateCluster.styles';
+import {
+  StyledDocsLinkContainer,
+  StyledRegionSelectStack,
+  useStyles,
+} from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
@@ -168,11 +175,6 @@ export const CreateCluster = () => {
     return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
-  const showPricingNotice = doesRegionHaveUniquePricing(
-    selectedRegionID,
-    typesData
-  );
-
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
@@ -215,22 +217,30 @@ export const CreateCluster = () => {
             value={label || ''}
           />
           <Divider sx={{ marginTop: 4 }} />
-          <RegionSelect
-            handleSelection={(regionID: string) =>
-              setSelectedRegionID(regionID)
-            }
-            textFieldProps={{
-              helperText: <RegionHelperText mb={2} />,
-              helperTextPosition: 'top',
-            }}
-            currentCapability="Kubernetes"
-            errorText={errorMap.region}
-            regions={regionsData}
-            selectedId={selectedId}
-          />
-          {showPricingNotice && (
-            <DynamicPriceNotice region={selectedRegionID} spacingBottom={16} />
-          )}
+          <StyledRegionSelectStack>
+            <Stack>
+              <RegionSelect
+                handleSelection={(regionID: string) =>
+                  setSelectedRegionID(regionID)
+                }
+                textFieldProps={{
+                  helperText: <RegionHelperText mb={2} />,
+                  helperTextPosition: 'top',
+                }}
+                currentCapability="Kubernetes"
+                errorText={errorMap.region}
+                regions={regionsData}
+                selectedId={selectedId}
+              />
+              <RegionHelperText sx={{ marginTop: 1 }} />
+            </Stack>
+            <StyledDocsLinkContainer>
+              <DocsLink
+                href="https://www.linode.com/pricing"
+                label={DOCS_LINK_LABEL_DC_PRICING}
+              />
+            </StyledDocsLinkContainer>
+          </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
           <Select
             onChange={(selected: Item<string>) => {

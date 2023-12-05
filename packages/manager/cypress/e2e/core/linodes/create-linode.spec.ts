@@ -14,9 +14,10 @@ import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
-  dcPricingRegionNotice,
   dcPricingPlanPlaceholder,
   dcPricingMockLinodeTypes,
+  dcPricingDocsLabel,
+  dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
@@ -209,8 +210,7 @@ describe('create linode', () => {
 
   /*
    * - Confirms DC-specific pricing UI flow works as expected during Linode creation.
-   * - Confirms that pricing notice is shown in "Region" section.
-   * - Confirms that notice is shown when selecting a region with a different price structure.
+   * - Confirms that pricing docs link is shown in "Region" section.
    * - Confirms that backups pricing is correct when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during create flow', () => {
@@ -285,13 +285,10 @@ describe('create linode', () => {
       );
     });
 
-    // Confirms that a notice is shown in the "Region" section of the Linode Create form informing the user of tiered pricing
-    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
-
-    // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
-    // cy.findByText(dcPricingDocsLabel)
-    //   .should('be.visible')
-    //   .should('have.attr', 'href', dcPricingDocsUrl);
+    // Confirm there is a docs link to the pricing page.
+    cy.findByText(dcPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', dcPricingDocsUrl);
 
     ui.regionSelect.find().click().type(`${newRegion.label} {enter}`);
     fbtClick('Shared CPU');
