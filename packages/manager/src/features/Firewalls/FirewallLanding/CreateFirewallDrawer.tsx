@@ -169,7 +169,7 @@ export const CreateFirewallDrawer = React.memo(
 
     const entityName = flags.firewallNodebalancer ? 'services' : 'Linodes';
 
-    const FirewallLabelText = `Assign ${entityName} to the firewall.`;
+    const FirewallLabelText = `Assign ${entityName} to the Firewall`;
     const FirewallHelperText = `Assign one or more ${entityName} to this firewall. You can add ${entityName} later if you want to customize your rules first.`;
 
     React.useEffect(() => {
