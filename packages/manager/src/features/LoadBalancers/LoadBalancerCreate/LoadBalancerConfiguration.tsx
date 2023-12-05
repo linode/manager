@@ -7,6 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
 import { ConfigurationDetails } from './ConfigurationDetails';
+import { ServiceTargets } from './ServiceTargets';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
@@ -23,7 +24,7 @@ export const LoadBalancerConfiguration = ({ index, name }: Props) => {
       label: 'Details',
     },
     {
-      content: <div>TODO: AGLB - Implement Service Targets Configuration.</div>,
+      content: <ServiceTargets />,
       handler: () => null,
       label: 'Service Targets',
     },
@@ -42,7 +43,7 @@ export const LoadBalancerConfiguration = ({ index, name }: Props) => {
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
       >
-        Configuration -{values[name]?.[index]?.label}
+        Configuration - {values[name]?.[index]?.label}
       </Typography>
       <Stack spacing={1}>
         <Typography>

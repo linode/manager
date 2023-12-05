@@ -12,14 +12,22 @@ import { LoadBalancerConfigurations } from './LoadBalancerConfigurations';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import type {
+  CreateLoadbalancerPayload,
+  ServiceTargetPayload,
+} from '@linode/api-v4';
 
-const initialValues: CreateLoadbalancerPayload = {
+export interface LoadBalancerCreateFormData extends CreateLoadbalancerPayload {
+  service_targets: ServiceTargetPayload[];
+}
+
+const initialValues: LoadBalancerCreateFormData = {
   configurations: [
     { certificates: [], label: '', port: 443, protocol: 'https' },
   ],
   label: '',
   regions: [],
+  service_targets: [],
 };
 
 export const LoadBalancerCreate = () => {
