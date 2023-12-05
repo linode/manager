@@ -22,11 +22,13 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import { MatchTypeInfo } from './MatchTypeInfo';
+import { ROUTE_COPY } from './constants';
 import {
   TimeUnit,
   defaultServiceTarget,
   defaultTTL,
   getIsSessionStickinessEnabled,
+  getNormalizedRulePayload,
   initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
@@ -36,7 +38,6 @@ import {
 } from './utils';
 
 import type { Route, RulePayload } from '@linode/api-v4';
-import { ROUTE_COPY } from './constants';
 
 interface Props {
   loadbalancerId: number;
@@ -62,8 +63,9 @@ export const RuleDrawer = (props: Props) => {
 
   const isEditMode = ruleIndexToEdit !== undefined;
 
-  const validationSchema =
-    route?.protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
+  const protocol = route?.protocol ?? 'tcp';
+
+  const validationSchema = protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
 
   const {
     error,
@@ -83,9 +85,11 @@ export const RuleDrawer = (props: Props) => {
       try {
         const existingRules = route?.rules ?? [];
 
+        const normalizedRule: RulePayload = getNormalizedRulePayload(rule);
+
         // If we are editing, update the rule with the form data.
         if (isEditMode) {
-          existingRules[ruleIndexToEdit] = rule;
+          existingRules[ruleIndexToEdit] = normalizedRule;
         }
 
         await updateRoute({
@@ -93,7 +97,9 @@ export const RuleDrawer = (props: Props) => {
           protocol: route?.protocol,
           // If we are editing, send the updated rules, otherwise
           // append a new rule to the end.
-          rules: isEditMode ? existingRules : [...existingRules, rule],
+          rules: isEditMode
+            ? existingRules
+            : [...existingRules, normalizedRule],
         });
         onClose();
       } catch (errors) {
@@ -200,7 +206,7 @@ export const RuleDrawer = (props: Props) => {
     >
       <form onSubmit={formik.handleSubmit}>
         <Typography sx={{ marginBottom: 2 }}>
-          {ROUTE_COPY.Rule.Description}
+          {ROUTE_COPY.Rule.Description[protocol]}
         </Typography>
         {generalErrors && <Notice text={generalErrors} variant="error" />}
         <Stack spacing={2}>
@@ -222,6 +228,7 @@ export const RuleDrawer = (props: Props) => {
                   name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
+                  optional
                   placeholder="www.example.com"
                   value={formik.values.match_condition.hostname}
                 />
@@ -332,10 +339,20 @@ export const RuleDrawer = (props: Props) => {
                       : undefined
                   }
                   onChange={(serviceTarget) => {
-                    formik.setFieldTouched(`service_targets[${index}].id`);
+                    formik.setFieldTouched(
+                      `service_targets[${index}].id`,
+                      true,
+                      false
+                    );
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
-                      serviceTarget?.id ?? -1
+                      serviceTarget?.id ?? -1,
+                      true
+                    );
+                    formik.setFieldValue(
+                      `service_targets[${index}].label`,
+                      serviceTarget?.label ?? '',
+                      false
                     );
                   }}
                   loadbalancerId={loadbalancerId}

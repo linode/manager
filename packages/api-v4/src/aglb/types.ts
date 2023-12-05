@@ -131,7 +131,7 @@ export interface RuleCreatePayload {
 }
 
 export interface MatchCondition {
-  hostname: string;
+  hostname: string | null;
   match_field: MatchField;
   match_value: string;
   session_stickiness_cookie: string | null;
@@ -159,8 +159,8 @@ interface HealthCheck {
   timeout: number;
   unhealthy_threshold: number;
   healthy_threshold: number;
-  path: string;
-  host: string;
+  path?: string | null;
+  host?: string | null;
 }
 
 export interface ServiceTarget extends ServiceTargetPayload {
@@ -169,7 +169,7 @@ export interface ServiceTarget extends ServiceTargetPayload {
 
 export interface Endpoint {
   ip: string;
-  host?: string;
+  host?: string | null;
   port: number;
   rate_capacity: number;
 }
