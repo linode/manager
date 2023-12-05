@@ -1,6 +1,6 @@
 import { getNormalizedServiceTargetPayload } from './utils';
 
-describe('getNormzlizedRulePayload', () => {
+describe('getNormalizedServiceTargetPayload', () => {
   it('should change empty strings to null', () => {
     expect(
       getNormalizedServiceTargetPayload({

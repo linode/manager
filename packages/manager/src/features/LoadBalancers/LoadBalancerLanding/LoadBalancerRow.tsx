@@ -7,11 +7,11 @@ import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
 import { regions as alphaRegions } from '../LoadBalancerDetail/LoadBalancerRegions';
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { Ports } from './Ports';
-import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
 export interface LoadBalancerHandlers {
   onDelete: () => void;

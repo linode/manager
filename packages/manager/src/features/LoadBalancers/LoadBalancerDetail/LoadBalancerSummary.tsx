@@ -23,7 +23,11 @@ export const LoadBalancerSummary = () => {
   const items = [
     {
       title: 'Hostname',
-      value: <IPAddress ips={[loadbalancer?.hostname ?? 'None']} isHovered />,
+      value: loadbalancer?.hostname ? (
+        <IPAddress ips={[loadbalancer.hostname]} isHovered />
+      ) : (
+        <Typography>None</Typography>
+      ),
     },
     {
       title: 'Load Balancer ID',
