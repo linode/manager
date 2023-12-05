@@ -4,7 +4,7 @@ import type { ServiceTargetPayload } from '@linode/api-v4';
  * Replaces empty strings with `null` in ServiceTargetPayload
  * so that the API accepts the request.
  */
-export const getNormzlizedServiceTargetPayload = (
+export const getNormalizedServiceTargetPayload = (
   serviceTarget: ServiceTargetPayload
 ) => ({
   ...serviceTarget,

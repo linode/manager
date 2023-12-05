@@ -37,7 +37,7 @@ import {
   initialValues,
   protocolOptions,
 } from './constants';
-import { getNormzlizedServiceTargetPayload } from './utils';
+import { getNormalizedServiceTargetPayload } from './utils';
 
 interface Props {
   loadbalancerId: number;
@@ -67,7 +67,7 @@ export const ServiceTargetDrawer = (props: Props) => {
     enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
     async onSubmit(values) {
-      const normalizedValues: ServiceTargetPayload = getNormzlizedServiceTargetPayload(
+      const normalizedValues: ServiceTargetPayload = getNormalizedServiceTargetPayload(
         values
       );
       try {

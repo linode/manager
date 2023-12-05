@@ -27,7 +27,7 @@ import {
   defaultServiceTarget,
   defaultTTL,
   getIsSessionStickinessEnabled,
-  getNormzlizedRulePayload,
+  getNormalizedRulePayload,
   initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
@@ -85,7 +85,7 @@ export const RuleDrawer = (props: Props) => {
       try {
         const existingRules = route?.rules ?? [];
 
-        const normalizedRule: RulePayload = getNormzlizedRulePayload(rule);
+        const normalizedRule: RulePayload = getNormalizedRulePayload(rule);
 
         // If we are editing, update the rule with the form data.
         if (isEditMode) {
@@ -339,10 +339,18 @@ export const RuleDrawer = (props: Props) => {
                       : undefined
                   }
                   onChange={(serviceTarget) => {
-                    formik.setFieldTouched(`service_targets[${index}].id`);
+                    formik.setFieldTouched(
+                      `service_targets[${index}].id`,
+                      true
+                    );
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
-                      serviceTarget?.id ?? -1
+                      serviceTarget?.id ?? -1,
+                      true
+                    );
+                    formik.setFieldValue(
+                      `service_targets[${index}].label`,
+                      serviceTarget?.label ?? ''
                     );
                   }}
                   loadbalancerId={loadbalancerId}

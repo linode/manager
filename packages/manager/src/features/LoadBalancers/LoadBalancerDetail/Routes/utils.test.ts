@@ -1,9 +1,9 @@
-import { getNormzlizedRulePayload } from './utils';
+import { getNormalizedRulePayload } from './utils';
 
 describe('getNormzlizedRulePayload', () => {
   it('should change empty strings to null', () => {
     expect(
-      getNormzlizedRulePayload({
+      getNormalizedRulePayload({
         match_condition: {
           hostname: '',
           match_field: 'path_prefix',

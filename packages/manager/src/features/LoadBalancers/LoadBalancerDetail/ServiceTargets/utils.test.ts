@@ -1,9 +1,9 @@
-import { getNormzlizedServiceTargetPayload } from './utils';
+import { getNormalizedServiceTargetPayload } from './utils';
 
 describe('getNormzlizedRulePayload', () => {
   it('should change empty strings to null', () => {
     expect(
-      getNormzlizedServiceTargetPayload({
+      getNormalizedServiceTargetPayload({
         certificate_id: null,
         endpoints: [
           {

@@ -65,7 +65,7 @@ export const getIsSessionStickinessEnabled = (rule: Rule | RulePayload) => {
  * Converts some empty strings to `null` in RulePayload
  * so that the API accept the payload.
  */
-export const getNormzlizedRulePayload = (rule: RulePayload) => ({
+export const getNormalizedRulePayload = (rule: RulePayload) => ({
   match_condition: {
     ...rule.match_condition,
     hostname: rule.match_condition.hostname
