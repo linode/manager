@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { resolve } from 'path';
+import { fileURLToPath } from 'url';
 
 import { CypressPlugin } from './plugin';
 
@@ -14,7 +15,14 @@ export const loadEnvironmentConfig: CypressPlugin = (
   _on,
   config
 ): Cypress.PluginConfigOptions => {
-  const dotenvPath = resolve(__dirname, '..', '..', '..', '.env');
+  const dotenvPath = resolve(
+    fileURLToPath(import.meta.url),
+    '..',
+    '..',
+    '..',
+    '..',
+    '.env'
+  );
   const conf = dotenv.config({
     path: dotenvPath,
   });

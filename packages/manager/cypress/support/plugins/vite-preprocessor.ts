@@ -1,12 +1,14 @@
-import { CypressPlugin } from './plugin';
+import vitePreprocessor from 'cypress-vite';
+import { resolve } from 'path';
 
-// Dependencies used in hooks have to use `require()` syntax.
-const path = require('path'); // eslint-disable-line
-const vitePreprocessor = require('cypress-vite'); // eslint-disable-line
+import { CypressPlugin } from './plugin';
+import { fileURLToPath } from 'url';
 
 export const vitePreprocess: CypressPlugin = (on, _config): void => {
   on(
     'file:preprocessor',
-    vitePreprocessor(path.resolve(__dirname, '..', '..', 'vite.config.ts'))
+    vitePreprocessor(
+      resolve(fileURLToPath(import.meta.url), '..', '..', 'vite.config.ts')
+    )
   );
 };
