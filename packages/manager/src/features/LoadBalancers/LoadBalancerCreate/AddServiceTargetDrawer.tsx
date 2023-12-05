@@ -30,6 +30,9 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/ServiceTargets/constants';
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
+import { Link } from 'src/components/Link';
+import { AGLB_DOCS } from '../constants';
 
 interface Props {
   onClose: () => void;
@@ -41,7 +44,7 @@ interface Props {
  * A Drawer to add Service Targets on the Load Balancer Create Page.
  */
 export const ServiceTargetDrawer = (props: Props) => {
-  const { onClose, open, serviceTargetIndex } = props;
+  const { onClose: _onClose, open, serviceTargetIndex } = props;
 
   const isEditMode = serviceTargetIndex !== undefined;
 
@@ -55,7 +58,7 @@ export const ServiceTargetDrawer = (props: Props) => {
     initialValues: isEditMode
       ? values.service_targets[serviceTargetIndex]
       : initialValues,
-    async onSubmit(serviceTarget, helpers) {
+    async onSubmit(serviceTarget) {
       if (isEditMode) {
         values.service_targets[serviceTargetIndex] = serviceTarget;
         setFieldValue('service_targets', values.service_targets);
@@ -65,21 +68,42 @@ export const ServiceTargetDrawer = (props: Props) => {
           serviceTarget,
         ]);
       }
-      helpers.resetForm();
       onClose();
     },
-    validate(values) {
+    validate(serviceTarget) {
+      const hasOtherServiceTargetWithSameLabel = values.service_targets.reduce(
+        (acc, st, index) => {
+          if (
+            st.label === serviceTarget.label &&
+            index !== serviceTargetIndex
+          ) {
+            acc = true;
+          }
+          return acc;
+        },
+        false
+      );
+      if (hasOtherServiceTargetWithSameLabel) {
+        return { label: 'Label must be unique!' };
+      }
       // We must use `validate` instead of validationSchema because Formik decided to convert
       // "" to undefined before passing the values to yup. This makes it hard to validate `label`.
       // See https://github.com/jaredpalmer/formik/issues/805
       try {
-        UpdateServiceTargetSchema.validateSync(values, { abortEarly: false });
+        UpdateServiceTargetSchema.validateSync(serviceTarget, {
+          abortEarly: false,
+        });
         return {};
       } catch (error) {
         return yupToFormErrors(error);
       }
     },
   });
+
+  const onClose = () => {
+    formik.resetForm();
+    _onClose();
+  };
 
   const onAddEndpoint = (endpoint: Endpoint) => {
     formik.setFieldValue('endpoints', [...formik.values.endpoints, endpoint]);
@@ -165,7 +189,15 @@ export const ServiceTargetDrawer = (props: Props) => {
             text={SERVICE_TARGET_COPY.Tooltips.Certificate}
           />
         </Stack>
-        <Typography>You can't do this during beta.</Typography>
+        <Typography>
+          <BetaChip
+            component="span"
+            sx={{ marginLeft: '0 !important', marginRight: '4px' }}
+          />
+          Upload service target endpoint CA certificates after the load balancer
+          is created and the protocol is HTTPS.{' '}
+          <Link to={AGLB_DOCS.Certificates}>Learn More.</Link>
+        </Typography>
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Health Checks</Typography>
@@ -306,6 +338,7 @@ export const ServiceTargetDrawer = (props: Props) => {
         )}
         <ActionsPanel
           primaryButtonProps={{
+            disabled: !formik.dirty,
             label: isEditMode ? 'Save' : 'Add Service Target',
             type: 'submit',
           }}
