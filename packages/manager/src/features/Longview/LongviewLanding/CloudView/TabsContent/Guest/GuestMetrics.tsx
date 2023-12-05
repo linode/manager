@@ -12,6 +12,9 @@ import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { CloudViewLinodes } from '../../shared/CloudViewLinodes';
 import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { CPUChart } from './CPUChart';
+import { NetworkChart } from './NetworkChart';
+import { DiskChart } from './DiskChart';
 
 export const GuestMetrics = (props: any) => {
   const theme = useTheme();
@@ -108,12 +111,18 @@ export const GuestMetrics = (props: any) => {
             justifyContent="space-between"
             spacing={4}
           >
-            <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <MemoryChart {...graphProps} />
             </Grid>
-            {/* <Grid sx={{ ...itemSpacing }} sm={12} xs={12}>
-              <MemoryChart {...graphProps} />
-            </Grid> */}
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+              <CPUChart {...graphProps} />
+            </Grid>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+              <NetworkChart {...graphProps} />
+            </Grid>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+              <DiskChart {...graphProps} />
+            </Grid>
           </Grid>}
           
         </Paper>

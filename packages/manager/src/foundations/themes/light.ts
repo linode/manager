@@ -1436,6 +1436,30 @@ export const lightTheme: ThemeOptions = {
         reclaimable: `rgba(149, 106, 196, ${graphTransparency})`,
         unreclaimable: `rgba(141, 143, 225, ${graphTransparency})`,
         used: `rgba(147, 115, 203, ${graphTransparency})`,
+      },
+      cpu: {
+        idle: `rgba(15, 10, 222, ${graphTransparency})`,
+        interrupt: `rgba(45, 85, 255, ${graphTransparency})`,
+        nice: `rgba(3, 138, 255, ${graphTransparency})`,
+        softirq: `rgba(72, 113, 247, ${graphTransparency})`,
+        steal: `rgba(54, 131, 220, ${graphTransparency})`,
+        system: `rgba(2, 118, 253, ${graphTransparency})`,
+        user: `rgba(81, 166, 245, ${graphTransparency})`,
+        wait: `rgba(145, 199, 237, ${graphTransparency})`,
+      },
+      network: {
+        eth0_receive: `rgba(16, 162, 29, ${graphTransparency})`,
+        eth0_transmit: `rgba(49, 206, 62, ${graphTransparency})`,
+        lo_receive: `rgba(201, 242, 155, ${graphTransparency})`,
+        lo_transmit: `rgba(210, 238, 130, ${graphTransparency})`,
+      },
+      disk: {
+        loop0_read: `rgba(255, 196, 105, ${graphTransparency})`,
+        loop0_write: `rgba(255, 179, 77, ${graphTransparency})`,
+        sda_read: `rgba(238, 44, 44, ${graphTransparency})`,
+        sda_write: `rgba(230, 126, 34, ${graphTransparency})`,
+        sdb_read: `rgba(242, 121, 53, ${graphTransparency})`,
+        sdb_write: `rgba(235, 149, 50, ${graphTransparency})`,    
       }
     }
   },
