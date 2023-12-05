@@ -22,6 +22,7 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import { MatchTypeInfo } from './MatchTypeInfo';
+import { ROUTE_COPY } from './constants';
 import {
   TimeUnit,
   defaultServiceTarget,
@@ -37,7 +38,6 @@ import {
 } from './utils';
 
 import type { Route, RulePayload } from '@linode/api-v4';
-import { ROUTE_COPY } from './constants';
 
 interface Props {
   loadbalancerId: number;
@@ -341,7 +341,8 @@ export const RuleDrawer = (props: Props) => {
                   onChange={(serviceTarget) => {
                     formik.setFieldTouched(
                       `service_targets[${index}].id`,
-                      true
+                      true,
+                      false
                     );
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
@@ -350,7 +351,8 @@ export const RuleDrawer = (props: Props) => {
                     );
                     formik.setFieldValue(
                       `service_targets[${index}].label`,
-                      serviceTarget?.label ?? ''
+                      serviceTarget?.label ?? '',
+                      false
                     );
                   }}
                   loadbalancerId={loadbalancerId}
