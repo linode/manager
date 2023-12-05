@@ -17,17 +17,43 @@ export interface Tag {
 }
 
 export interface TagsInputProps {
+  /**
+   * If true, the component is disabled.
+   *
+   * @default false
+   */
   disabled?: boolean;
+  /**
+   * If true, the label is hidden, yet still accessible to screen readers.
+   */
   hideLabel?: boolean;
+  /**
+   * The label for the input.
+   */
   label?: string;
+  /**
+   * The placement of the menu, relative to the select input.
+   */
   menuPlacement?: 'auto' | 'bottom' | 'top';
+  /**
+   * The name of the input.
+   */
   name?: string;
+  /**
+   * Callback fired when the value changes.
+   */
   onChange: (selected: Item[]) => void;
+  /**
+   * An error to display beneath the input.
+   */
   tagError?: string;
+  /**
+   * The value of the input.
+   */
   value: Item[];
 }
 
-const TagsInput = (props: TagsInputProps) => {
+export const TagsInput = (props: TagsInputProps) => {
   const {
     disabled,
     hideLabel,
@@ -115,5 +141,3 @@ const TagsInput = (props: TagsInputProps) => {
     />
   );
 };
-
-export { TagsInput };
