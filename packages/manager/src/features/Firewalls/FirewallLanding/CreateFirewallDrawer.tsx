@@ -268,7 +268,7 @@ export const CreateFirewallDrawer = React.memo(
               >
                 {NODEBALANCER_HELPER_TEXT}
                 <br />
-                {learnMoreLink}
+                {learnMoreLink}.
               </Typography>
             )}
           </Box>
