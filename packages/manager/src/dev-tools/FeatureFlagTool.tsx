@@ -20,6 +20,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'vpc', label: 'VPC' },
+  { flag: 'recharts', label: 'Recharts' },
   { flag: 'cloudView', label: 'Cloudview'}
 ];
 
