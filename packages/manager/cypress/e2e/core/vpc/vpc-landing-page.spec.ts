@@ -71,7 +71,6 @@ describe('VPC landing page', () => {
     cy.findByText(VPC_LABEL).should('be.visible');
     cy.findByText('Create a private and isolated network').should('be.visible');
     cy.findByText('Getting Started Guides').should('be.visible');
-    cy.findByText('Video Playlist').should('be.visible');
 
     // Create button exists and navigates user to create page.
     ui.button

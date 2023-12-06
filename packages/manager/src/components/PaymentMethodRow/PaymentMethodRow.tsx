@@ -13,14 +13,24 @@ import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { queryKey } from 'src/queries/accountPayment';
 
-import ThirdPartyPayment from './ThirdPartyPayment';
+import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 interface Props {
+  /**
+   * Function called when the delete button in the Action Menu is pressed.
+   */
   onDelete: () => void;
+  /**
+   * Payment method type and data.
+   */
   paymentMethod: PaymentMethod;
 }
 
-const PaymentMethodRow = (props: Props) => {
+/**
+ * The `PaymentMethodRow` displays the given payment method and supports various actions for each payment method. It can be used
+ * for credit cards, Google Pay, and PayPal.
+ */
+export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
   const { onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
@@ -125,5 +135,3 @@ const PaymentMethodRow = (props: Props) => {
     </Paper>
   );
 };
-
-export default PaymentMethodRow;
