@@ -77,7 +77,8 @@ export const getRegionOptions = ({
       if (region1.label < region2.label) {
         return -1;
       }
-      return 0;
+
+      return 1;
     });
 };
 
