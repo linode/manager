@@ -34,14 +34,14 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-// const FIREWALL_LABEL_TEXT = `Assign services to the firewall.`;
-// const FIREWALL_HELPER_TEXT = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
-const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to NodeBalancers.`;
+import {
+  LINODE_CREATE_FLOW_TEXT,
+  NODEBALANCER_CREATE_FLOW_TEXT,
+} from './constants';
+
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
-
-export const LINODE_CREATE_FLOW_TEXT = 'Additional Linodes';
-export const NODEBALANCER_CREATE_FLOW_TEXT = 'Additional NodeBalancers';
+const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to NodeBalancers.`;
 
 export interface CreateFirewallDrawerProps {
   createFlow: FirewallDeviceEntityType | undefined;

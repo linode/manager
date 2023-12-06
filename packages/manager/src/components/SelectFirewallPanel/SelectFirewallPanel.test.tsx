@@ -5,7 +5,7 @@ import { QueryClient } from 'react-query';
 import {
   LINODE_CREATE_FLOW_TEXT,
   NODEBALANCER_CREATE_FLOW_TEXT,
-} from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+} from 'src/features/Firewalls/FirewallLanding/constants';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectFirewallPanel } from './SelectFirewallPanel';
