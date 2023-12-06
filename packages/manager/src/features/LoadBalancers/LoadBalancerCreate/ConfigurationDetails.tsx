@@ -16,7 +16,7 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/Configurations/constants';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   index: number;
@@ -31,7 +31,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
     setFieldValue,
     touched,
     values,
-  } = useFormikContext<CreateLoadbalancerPayload>();
+  } = useFormikContext<LoadBalancerCreateFormData>();
 
   return (
     <Box padding={1}>

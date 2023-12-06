@@ -13,7 +13,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
-import { ServiceTargetDrawer } from './AddServiceTargetDrawer';
+import { ServiceTargetDrawer } from './ServiceTargetDrawer';
 
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 

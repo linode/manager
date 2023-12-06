@@ -18,6 +18,10 @@ import type {
 } from '@linode/api-v4';
 
 export interface LoadBalancerCreateFormData extends CreateLoadbalancerPayload {
+  /**
+   * A shared array of service targets. This should be removed before we
+   * make our POST to the API.
+   */
   service_targets: ServiceTargetPayload[];
 }
 
@@ -31,7 +35,7 @@ const initialValues: LoadBalancerCreateFormData = {
 };
 
 export const LoadBalancerCreate = () => {
-  const handleSubmit = (values: CreateLoadbalancerPayload) => {
+  const handleSubmit = (values: LoadBalancerCreateFormData) => {
     // console.log('Submitted values:', values);
   };
 

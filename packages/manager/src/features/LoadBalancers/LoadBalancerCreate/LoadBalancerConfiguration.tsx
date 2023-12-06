@@ -9,7 +9,7 @@ import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/Vert
 import { ConfigurationDetails } from './ConfigurationDetails';
 import { ServiceTargets } from './ServiceTargets';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   index: number;
@@ -35,7 +35,7 @@ export const LoadBalancerConfiguration = ({ index, name }: Props) => {
     },
   ];
 
-  const { values } = useFormikContext<CreateLoadbalancerPayload>();
+  const { values } = useFormikContext<LoadBalancerCreateFormData>();
 
   return (
     <Paper>

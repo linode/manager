@@ -6,6 +6,7 @@ import React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
@@ -13,6 +14,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { FormLabel } from 'src/components/FormLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
+import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
@@ -29,10 +31,8 @@ import {
   initialValues,
   protocolOptions,
 } from '../LoadBalancerDetail/ServiceTargets/constants';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import { Link } from 'src/components/Link';
 import { AGLB_DOCS } from '../constants';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   onClose: () => void;
@@ -338,7 +338,7 @@ export const ServiceTargetDrawer = (props: Props) => {
         )}
         <ActionsPanel
           primaryButtonProps={{
-            disabled: !formik.dirty,
+            disabled: isEditMode && !formik.dirty,
             label: isEditMode ? 'Save' : 'Add Service Target',
             type: 'submit',
           }}
