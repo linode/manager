@@ -13,22 +13,26 @@ const props = {
   open: true,
 };
 
-it(`should contain helper text`, () => {
-  const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
-  expect(getByText(helperText)).toBeInTheDocument();
-});
+describe('AddNodeBalancerDrawer', () => {
+  it(`should contain helper text`, () => {
+    const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
+    expect(getByText(helperText)).toBeInTheDocument();
+  });
 
-it(`should contain a NodeBalancers label`, () => {
-  const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
-  expect(getByText('NodeBalancers')).toBeInTheDocument();
-});
+  it(`should contain a NodeBalancers label`, () => {
+    const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
+    expect(getByText('NodeBalancers')).toBeInTheDocument();
+  });
 
-it(`should contain a Nodebalancer input dropdown`, () => {
-  const { getByTestId } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
-  expect(getByTestId('add-nodebalancer-autocomplete')).toBeInTheDocument();
-});
+  it(`should contain a Nodebalancer input dropdown`, () => {
+    const { getByTestId } = renderWithTheme(
+      <AddNodebalancerDrawer {...props} />
+    );
+    expect(getByTestId('add-nodebalancer-autocomplete')).toBeInTheDocument();
+  });
 
-it(`should contain an Add button`, () => {
-  const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
-  expect(getByText('Add')).toBeInTheDocument();
+  it(`should contain an Add button`, () => {
+    const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
+    expect(getByText('Add')).toBeInTheDocument();
+  });
 });
