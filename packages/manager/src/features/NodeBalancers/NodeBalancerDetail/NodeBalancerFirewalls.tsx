@@ -76,8 +76,11 @@ export const NodeBalancerFirewalls = (props: Props) => {
     ));
   };
 
-  // TODO: NBFW - Add Documentation Link
-  const learnMoreLink = <a href="#">Learn more about creating Firewalls.</a>;
+  const learnMoreLink = (
+    <a href="https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/">
+      Learn more about creating Firewalls.
+    </a>
+  );
   const firewallLink = <Link to="/firewalls/">Firewalls</Link>;
 
   return (
@@ -88,7 +91,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
             sx={(theme) => ({
               marginBottom: theme.spacing(),
             })}
-            data-testid="linode-firewalls-table-header"
+            data-testid="nodebalancer-firewalls-table-header"
           >
             If you want to assign a new Firewall to this NodeBalancer, go to{' '}
             {firewallLink}.
