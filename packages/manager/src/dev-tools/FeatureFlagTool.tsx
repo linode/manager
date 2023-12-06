@@ -21,6 +21,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'recharts', label: 'Recharts' },
+  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
