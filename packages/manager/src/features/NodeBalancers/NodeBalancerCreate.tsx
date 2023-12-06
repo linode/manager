@@ -11,7 +11,6 @@ import {
   pathOr,
 } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { Accordion } from 'src/components/Accordion';
@@ -111,8 +110,6 @@ const NodeBalancerCreate = () => {
   const { mutateAsync: addDevice } = useAddFirewallDeviceMutation(
     nodeBalancerFields.firewallId ?? -1
   );
-
-  const queryClient = useQueryClient();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -294,16 +291,7 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        addDevice({ id: nodeBalancer.id, type: 'nodebalancer' }).then(
-          (service) => {
-            queryClient.invalidateQueries([
-              'nodebalancers',
-              'nodebalancer',
-              service.id,
-              'firewalls',
-            ]);
-          }
-        );
+        addDevice({ id: nodeBalancer.id, type: 'nodebalancer' });
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
