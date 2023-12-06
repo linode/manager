@@ -12,7 +12,7 @@ jobs:
   lint:
     strategy:
       matrix:
-        package: [linode-manager, \@linode/api-v4, \@linode/validation]
+        package: ['linode-manager', '@linode/api-v4', '@linode/validation']
     runs-on: ubuntu-latest
     steps:
        - uses: actions/checkout@v3
