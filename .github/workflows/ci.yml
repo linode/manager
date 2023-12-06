@@ -9,6 +9,24 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    strategy:
+      matrix:
+        package: [linode-manager, \@linode/api-v4, \@linode/validation]
+    runs-on: ubuntu-latest
+    steps:
+       - uses: actions/checkout@v3
+       - uses: actions/setup-node@v3
+         with:
+           node-version: "18.14"
+       - uses: actions/cache@v3
+         with:
+           path: |
+             **/node_modules
+           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+       - run: yarn --frozen-lockfile
+       - run: yarn workspace ${{ matrix.package }} run lint
+
   build-validation:
     runs-on: ubuntu-latest
     steps:
@@ -57,21 +75,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON_EMOJI: ":package:"
           MSG_MINIMAL: true
-
-  lint-manager:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18.14"
-      - uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run lint
 
   test-sdk:
     runs-on: ubuntu-latest
