@@ -6,15 +6,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TagsPanel } from './TagsPanel';
 
-vi.mock('src/queries/profile', () => ({
-  useProfile: vi.fn(() => ({ data: { restricted: false } })),
-}));
-
-vi.mock('src/queries/tags', () => ({
-  updateTagsSuggestionsData: vi.fn(),
-  useTagSuggestions: vi.fn(() => ({ data: [], isLoading: false })),
-}));
-
 const queryClient = new QueryClient();
 
 const renderWithQueryClient = (ui: any) => {
@@ -101,14 +92,11 @@ describe('TagsPanel', () => {
     expect(getByText('Tag1')).toBeInTheDocument();
     expect(getByText('Tag2')).toBeInTheDocument();
 
-    // Click on the delete button for Tag1
     const deleteTagButton = getByLabelText("Delete Tag 'Tag1'");
     fireEvent.click(deleteTagButton);
 
-    // Wait for the asynchronous updateTags to complete
     await waitFor(() => expect(updateTagsMock).toHaveBeenCalledWith(['Tag2']));
 
-    // Check if Tag1 is removed
     expect(queryByLabelText("Search for Tag 'tag2'")).toBeNull();
   });
 });
