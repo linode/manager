@@ -1,3 +1,4 @@
+import { useArgs } from '@storybook/client-api';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
@@ -23,14 +24,16 @@ export const Default: StoryObj<TagsInputProps> = {
   },
   render: (args) => {
     const TagsInputWrapper = () => {
-      const [value, setValue] = React.useState<Item[]>(args.value);
+      const [, setTags] = useArgs();
+      const handleUpdateTags = (selected: Item[]) => {
+        return setTags({ value: selected });
+      };
 
       return (
         <Box sx={{ height: 300 }}>
           <TagsInput
             {...args}
-            onChange={(selected) => setValue(selected)}
-            value={value}
+            onChange={(selected) => handleUpdateTags(selected)}
           />
         </Box>
       );
@@ -42,6 +45,6 @@ export const Default: StoryObj<TagsInputProps> = {
 
 const meta: Meta<TagsInputProps> = {
   component: TagsInput,
-  title: 'Components/Tags/Tags Input 2',
+  title: 'Components/Tags/Tags Input',
 };
 export default meta;
