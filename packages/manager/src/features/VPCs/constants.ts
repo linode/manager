@@ -16,7 +16,7 @@ export const SUBNET_UNASSIGN_LINODES_WARNING = `Unassigning Linodes from a subne
 export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
 
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
-  'A VPC IPv4 is the private IP address for this Linode in the VPC.';
+  'Automatically assigns an IPv4 address as the private IP address for this Linode in the VPC.';
 
 export const CANNOT_CREATE_VPC_MESSAGE = `You don't have permissions to create a new VPC. Please contact an account administrator for details`;
 
