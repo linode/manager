@@ -38,7 +38,7 @@ describe('resize linode', () => {
 
       // TODO: Unified Migration: [M3-7115] - Replace with copy from API '../notifications.py'
       cy.contains(
-        'Your Linode will soon be automatically powered off, migrated, and restored to its previous state (booted or powered off).'
+        "Your linode will be warm resized and will automatically attempt to power off and restore to it's previous state."
       ).should('be.visible');
     });
   });
