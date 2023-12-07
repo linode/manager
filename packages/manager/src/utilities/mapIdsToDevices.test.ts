@@ -2,7 +2,7 @@ import { linodeFactory } from 'src/factories';
 
 import { mapIdsToDevices } from './mapIdsToDevices';
 
-describe('mapIdsToLinodes', () => {
+describe('mapIdsToDevices', () => {
   const linodes = linodeFactory.buildList(5);
   it('works with a single id', () => {
     expect(mapIdsToDevices(1, linodes)).toBe(linodes[1]);
