@@ -14,7 +14,7 @@ const props = {
 };
 
 describe('AddNodeBalancerDrawer', () => {
-  it(`should contain helper text`, () => {
+  it('should contain helper text', () => {
     const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
     expect(getByText(helperText)).toBeInTheDocument();
   });
