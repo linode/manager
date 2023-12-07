@@ -6,6 +6,7 @@ import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+import { FileUpload } from 'src/components/Uploaders/FileUpload';
 import {
   StyledCopy,
   StyledDropZoneContentDiv,
@@ -13,7 +14,6 @@ import {
   StyledFileUploadsDiv,
   StyledUploadButton,
 } from 'src/components/Uploaders/FileUploader/FileUploader.styles';
-import { FileUpload } from 'src/components/Uploaders/FileUpload';
 import { onUploadProgressFactory } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import {
   MAX_FILE_SIZE_IN_BYTES,
