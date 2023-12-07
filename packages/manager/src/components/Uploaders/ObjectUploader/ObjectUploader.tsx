@@ -14,12 +14,6 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { uploadObject } from '../../../features/ObjectStorage/requests';
 import { FileUpload } from '../FileUpload';
 import {
-  StyledDropZoneContent,
-  StyledDropZoneCopy,
-  StyledFileUploadsContainer,
-  useStyles,
-} from './ObjectUploader.styles';
-import {
   MAX_FILE_SIZE_IN_BYTES,
   MAX_NUM_UPLOADS,
   MAX_PARALLEL_UPLOADS,
@@ -28,6 +22,12 @@ import {
   defaultState,
   pathOrFileName,
 } from '../reducer';
+import {
+  StyledDropZoneContent,
+  StyledDropZoneCopy,
+  StyledFileUploadsContainer,
+  useStyles,
+} from './ObjectUploader.styles';
 
 interface Props {
   /**
