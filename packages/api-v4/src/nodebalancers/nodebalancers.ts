@@ -17,7 +17,7 @@ import {
   NodeBalancerStats,
 } from './types';
 import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
-import { Firewall } from '../firewalls/types';
+import type { Firewall } from '../firewalls/types';
 
 /**
  * getNodeBalancers
