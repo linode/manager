@@ -117,7 +117,6 @@ export interface NodeBalancerConfigNode {
   nodebalancer_id: number;
   status: 'unknown' | 'UP' | 'DOWN';
   weight: number;
-  firewall_id?: number;
 }
 
 export interface NodeBalancerConfigNodeWithPort extends NodeBalancerConfigNode {
