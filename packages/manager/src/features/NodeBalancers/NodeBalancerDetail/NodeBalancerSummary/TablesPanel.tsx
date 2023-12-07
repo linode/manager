@@ -8,9 +8,10 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   NODEBALANCER_STATS_NOT_READY_API_MESSAGE,
   useNodeBalancerQuery,
@@ -20,6 +21,8 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
+
+import { NodeBalancerConnectionsChart } from './NodeBalancerConnectionsChart';
 
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
@@ -36,6 +39,8 @@ export const TablesPanel = () => {
     nodebalancer?.id ?? -1,
     nodebalancer?.created
   );
+
+  const flags = useFlags();
 
   const statsErrorString = error
     ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason
@@ -80,24 +85,41 @@ export const TablesPanel = () => {
 
     const metrics = getMetrics(data);
 
+    const timeData = data.reduce((acc: any, point: any) => {
+      acc.push({
+        Connections: point[1],
+        t: point[0],
+      });
+      return acc;
+    }, []);
+
     return (
       <React.Fragment>
-        <StyledChart>
-          <LineGraph
-            data={[
-              {
-                backgroundColor: theme.graphs.purple,
-                borderColor: 'transparent',
-                data,
-                label: 'Connections',
-              },
-            ]}
-            accessibleDataTable={{ unit: 'CXN/s' }}
-            ariaLabel="Connections Graph"
-            showToday={true}
+        {flags.recharts ? (
+          <NodeBalancerConnectionsChart
+            aria-label={'Connections Graph'}
+            data={timeData}
             timezone={timezone}
+            unit={'CXN'}
           />
-        </StyledChart>
+        ) : (
+          <StyledChart>
+            <LineGraph
+              data={[
+                {
+                  backgroundColor: theme.graphs.purple,
+                  borderColor: 'transparent',
+                  data,
+                  label: 'Connections',
+                },
+              ]}
+              accessibleDataTable={{ unit: 'CXN/s' }}
+              ariaLabel="Connections Graph"
+              showToday={true}
+              timezone={timezone}
+            />
+          </StyledChart>
+        )}
         <StyledBottomLegend>
           <MetricsDisplay
             rows={[
