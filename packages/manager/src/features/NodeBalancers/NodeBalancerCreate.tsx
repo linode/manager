@@ -35,7 +35,6 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useAddFirewallDeviceMutation } from 'src/queries/firewalls';
 import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -63,7 +62,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 
 interface NodeBalancerFieldsState {
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
-  firewallId?: number;
+  firewall_id?: number;
   label?: string;
   region?: string;
   tags?: string[];
@@ -106,10 +105,6 @@ const NodeBalancerCreate = () => {
     nodeBalancerFields,
     setNodeBalancerFields,
   ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
-
-  const { mutateAsync: addDevice } = useAddFirewallDeviceMutation(
-    nodeBalancerFields.firewallId ?? -1
-  );
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -291,7 +286,6 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        addDevice({ id: nodeBalancer.id, type: 'nodebalancer' });
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
@@ -427,7 +421,7 @@ const NodeBalancerCreate = () => {
     summaryItems.push({ title: regionLabel });
   }
 
-  if (nodeBalancerFields.firewallId) {
+  if (nodeBalancerFields.firewall_id) {
     summaryItems.push({ title: 'Firewall Assigned' });
   }
 
@@ -513,7 +507,7 @@ const NodeBalancerCreate = () => {
           handleFirewallChange={(firewallId: number) => {
             setNodeBalancerFields((prev) => ({
               ...prev,
-              firewallId: firewallId > 0 ? firewallId : undefined,
+              firewall_id: firewallId > 0 ? firewallId : undefined,
             }));
           }}
           helperText={
@@ -527,7 +521,7 @@ const NodeBalancerCreate = () => {
             </Typography>
           }
           entityType="nodebalancer"
-          selectedFirewallId={nodeBalancerFields.firewallId ?? -1}
+          selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
       )}
       <Box marginBottom={2} marginTop={2}>
