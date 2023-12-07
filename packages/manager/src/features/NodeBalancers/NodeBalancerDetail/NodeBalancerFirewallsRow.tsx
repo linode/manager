@@ -12,26 +12,28 @@ import {
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import { LinodeFirewallsActionMenu } from './LinodeFirewallsActionMenu';
+import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
 
-interface LinodeFirewallsRowProps {
+interface Props {
   firewall: Firewall;
-  linodeID: number;
+  nodeBalancerID: number;
   onClickUnassign: (
     device: FirewallDevice | undefined,
     firewall: Firewall
   ) => void;
 }
 
-export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
-  const { firewall, linodeID, onClickUnassign } = props;
+export const NodeBalancerFirewallsRow = (props: Props) => {
+  const { firewall, nodeBalancerID, onClickUnassign } = props;
 
   const { id: firewallID, label, rules, status } = firewall;
 
   const { data: devices } = useAllFirewallDevicesQuery(firewallID);
 
   const firewallDevice = devices?.find(
-    (device) => device.entity.type === 'linode' && device.entity.id === linodeID
+    (device) =>
+      device.entity.type === 'nodebalancer' &&
+      device.entity.id === nodeBalancerID
   );
 
   const count = getCountOfRules(rules);
@@ -53,7 +55,7 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       </TableCell>
       <TableCell data-qa-firewall-rules>{getRuleString(count)}</TableCell>
       <TableCell actionCell>
-        <LinodeFirewallsActionMenu
+        <NodeBalancerFirewallsActionMenu
           firewallID={firewallID}
           onUnassign={() => onClickUnassign(firewallDevice, firewall)}
         />

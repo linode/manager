@@ -1,6 +1,7 @@
 import {
   CreateNodeBalancerConfig,
   CreateNodeBalancerPayload,
+  Firewall,
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerStats,
@@ -10,6 +11,7 @@ import {
   deleteNodeBalancerConfig,
   getNodeBalancer,
   getNodeBalancerConfigs,
+  getNodeBalancerFirewalls,
   getNodeBalancerStats,
   getNodeBalancers,
   updateNodeBalancer,
@@ -33,6 +35,7 @@ import { EventWithStore } from 'src/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
+import { queryPresets } from './base';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
@@ -224,3 +227,10 @@ export const nodebalanacerEventHandler = ({
     }
   }
 };
+
+export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
+  useQuery<ResourcePage<Firewall>, APIError[]>(
+    [queryKey, 'nodebalancer', nodebalancerId, 'firewalls'],
+    () => getNodeBalancerFirewalls(nodebalancerId),
+    queryPresets.oneTimeFetch
+  );

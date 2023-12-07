@@ -46,6 +46,7 @@ export interface Flags {
   databaseBeta: boolean;
   databases: boolean;
   dcGetWell: boolean;
+  firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
   linodeCreateWithFirewall: boolean;
