@@ -23,7 +23,7 @@ describe('AddLinodeDrawer', () => {
     expect(getByText('Linodes')).toBeInTheDocument();
   });
 
-  it(`should contain a Linodes input dropdown`, () => {
+  it('should contain a Linodes input dropdown', () => {
     const { getByTestId } = renderWithTheme(<AddLinodeDrawer {...props} />);
     expect(getByTestId('add-linode-autocomplete')).toBeInTheDocument();
   });
