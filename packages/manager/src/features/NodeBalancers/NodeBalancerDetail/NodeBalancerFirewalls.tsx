@@ -59,7 +59,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
     }
 
     if (error) {
-      return <ErrorState errorText={error?.[0].reason} />;
+      return <TableRowError colSpan={5} message={error?.[0]?.reason} />;
     }
 
     if (attachedFirewalls?.length === 0 || attachedFirewalls === undefined) {
