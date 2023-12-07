@@ -95,7 +95,7 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-      {displayFirewallLink && flags.firewallNodebalancer ? (
+      {displayFirewallLink && flags.firewallNodebalancer && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
             Firewall
@@ -106,7 +106,7 @@ export const SummaryPanel = () => {
             </Link>
           </Typography>
         </StyledSummarySection>
-      ) : null}
+      )}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           IP Addresses
