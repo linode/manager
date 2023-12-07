@@ -29,6 +29,7 @@ import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegion
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
@@ -514,10 +515,7 @@ const NodeBalancerCreate = () => {
             <Typography>
               Assign an existing Firewall to this NodeBalancer to control
               inbound network traffic.{' '}
-              <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/">
-                Learn more
-              </Link>
-              .
+              <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
             </Typography>
           }
           entityType="nodebalancer"

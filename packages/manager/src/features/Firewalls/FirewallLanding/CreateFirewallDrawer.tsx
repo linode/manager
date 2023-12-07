@@ -19,6 +19,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -205,9 +206,7 @@ export const CreateFirewallDrawer = React.memo(
     };
 
     const learnMoreLink = (
-      <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
-        Learn more
-      </Link>
+      <Link to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}>Learn more</Link>
     );
 
     const generalError =

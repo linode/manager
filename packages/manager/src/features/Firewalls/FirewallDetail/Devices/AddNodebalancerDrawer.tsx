@@ -12,6 +12,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
+import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
@@ -194,10 +195,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       <Notice variant={'warning'}>
         Only the Firewall's inbound rules apply to NodeBalancers. Any existing
         outbound rules won't be applied.{' '}
-        <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations">
-          Learn more
-        </Link>
-        .
+        <Link to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}>Learn more</Link>.
       </Notice>
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {

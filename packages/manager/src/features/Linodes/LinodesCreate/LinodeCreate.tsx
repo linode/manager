@@ -27,6 +27,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
+import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import {
   WithAccountProps,
   withAccount,
@@ -638,10 +639,7 @@ export class LinodeCreate extends React.PureComponent<
                 <Typography>
                   Assign an existing Firewall to this Linode to control inbound
                   and outbound network traffic.{' '}
-                  <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/get-started/">
-                    Learn more
-                  </Link>
-                  .
+                  <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
                 </Typography>
               }
               entityType="linode"

@@ -14,6 +14,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
+import { CREATE_FIREWALL_LINK } from 'src/constants';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
@@ -77,9 +78,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
   };
 
   const learnMoreLink = (
-    <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/">
-      Learn more about creating Firewalls.
-    </Link>
+    <Link to={CREATE_FIREWALL_LINK}>Learn more about creating Firewalls.</Link>
   );
   const firewallLink = <Link to="/firewalls/">Firewalls</Link>;
 
