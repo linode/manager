@@ -7,11 +7,26 @@ import { Typography } from 'src/components/Typography';
 
 import { SvgIconProps } from '../SvgIcon';
 
-interface ErrorStateProps {
+export interface ErrorStateProps {
+  /**
+   * An SVG to display in place of the error icon.
+   */
   CustomIcon?: React.ComponentType<SvgIconProps>;
+  /**
+   * CSS properties to apply to the custom icon.
+   */
   CustomIconStyles?: React.CSSProperties;
+  /**
+   * Reduces the padding on the root element.
+   */
   compact?: boolean;
+  /**
+   * Minimal padding on the root element.
+   */
   cozy?: boolean;
+  /**
+   * The error text to display.
+   */
   errorText: JSX.Element | string;
 }
 
