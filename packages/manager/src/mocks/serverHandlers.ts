@@ -521,7 +521,9 @@ export const handlers = [
   }),
   rest.get('*/profile/grants', (req, res, ctx) => {
     return res(
-      ctx.json(grantsFactory.build({ global: { child_account_access: true } }))
+      // Parent/Child: switch out the return statement if you want to mock a restricted parent user with access to child accounts.
+      // ctx.json(grantsFactory.build({ global: { child_account_access: true } }))
+      ctx.json(grantsFactory.build({}))
     );
   }),
   rest.get('*/profile/apps', (req, res, ctx) => {
@@ -1182,7 +1184,6 @@ export const handlers = [
   rest.post('*/account/child-accounts/:euuid/token', (req, res, ctx) => {
     const proxyToken = appTokenFactory.build({
       token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
-      // TODO: Set expiry for 15 minutes from now
     });
     return res(ctx.json(proxyToken));
   }),
@@ -1279,7 +1280,6 @@ export const handlers = [
           firewall: [],
           global: {
             cancel_account: true,
-            child_account_access: true,
           },
           image: [],
           linode: grantFactory.buildList(6000),

@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
@@ -16,11 +15,6 @@ import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import {
-  // useChildAccount,
-  // useChildAccounts,
-  useCreateChildAccountPersonalAccessTokenMutation,
-} from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 
 interface MenuLink {
@@ -54,13 +48,6 @@ export const UserMenu = React.memo(() => {
     profile,
   } = useAccountManagement();
 
-  // Parent/Child - For testing purposes only:
-  // const { data: childAccounts } = useChildAccounts({});
-  // const { data: childAccount } = useChildAccount({ euuid: '1'});
-  const {
-    mutateAsync: fetchProxyToken,
-  } = useCreateChildAccountPersonalAccessTokenMutation({ euuid: '1' });
-
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -71,16 +58,6 @@ export const UserMenu = React.memo(() => {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    // Parent/Child - For testing purposes only:
-    fetchProxyToken({ euuid: '1' })
-      .then((data) => {
-        // console.log({ data });
-      })
-      .catch((errorResponse: APIError[]) => {
-        // console.log({ errorResponse });
-      });
-    // console.log({ childAccounts });
-    // console.log({ childAccount });
   };
 
   const handleClose = () => {
