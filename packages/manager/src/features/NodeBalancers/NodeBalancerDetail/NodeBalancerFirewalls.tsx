@@ -77,9 +77,9 @@ export const NodeBalancerFirewalls = (props: Props) => {
   };
 
   const learnMoreLink = (
-    <a href="https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/">
+    <Link to="https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/">
       Learn more about creating Firewalls.
-    </a>
+    </Link>
   );
   const firewallLink = <Link to="/firewalls/">Firewalls</Link>;
 
