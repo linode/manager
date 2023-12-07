@@ -178,7 +178,7 @@ const getDefaultNoOptionsMessage = (
   loading: boolean
 ) => {
   if (error) {
-    return 'An error occured while fetching your Linodes';
+    return 'An error occurred while fetching your Linodes';
   } else if (loading) {
     return 'Loading your Linodes...';
   } else {

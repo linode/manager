@@ -176,7 +176,7 @@ const getDefaultNoOptionsMessage = (
   loading: boolean
 ) => {
   if (error) {
-    return 'An error occured while fetching your NodeBalancers';
+    return 'An error occurred while fetching your NodeBalancers';
   } else if (loading) {
     return 'Loading your NodeBalancers...';
   } else {
