@@ -28,7 +28,7 @@ describe('AddLinodeDrawer', () => {
     expect(getByTestId('add-linode-autocomplete')).toBeInTheDocument();
   });
 
-  it(`should contain an Add button`, () => {
+  it('should contain an Add button', () => {
     const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
     expect(getByText('Add')).toBeInTheDocument();
   });
