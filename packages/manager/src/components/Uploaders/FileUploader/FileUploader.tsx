@@ -12,17 +12,17 @@ import {
   StyledDropZoneDiv,
   StyledFileUploadsDiv,
   StyledUploadButton,
-} from 'src/components/FileUploader/FileUploader.styles';
-import { uploadImageFile } from 'src/features/Images/requests';
-import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
-import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
+} from 'src/components/Uploaders/FileUploader/FileUploader.styles';
+import { FileUpload } from 'src/components/Uploaders/FileUpload';
+import { onUploadProgressFactory } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import {
   MAX_FILE_SIZE_IN_BYTES,
   MAX_PARALLEL_UPLOADS,
   curriedObjectUploaderReducer,
   defaultState,
   pathOrFileName,
-} from 'src/features/ObjectStorage/ObjectUploader/reducer';
+} from 'src/components/Uploaders/reducer';
+import { uploadImageFile } from 'src/features/Images/requests';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { queryKey, useUploadImageQuery } from 'src/queries/images';
@@ -32,18 +32,48 @@ import { sendImageUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 interface FileUploaderProps {
+  /**
+   * An error to display if an upload error occurred.
+   */
   apiError: string | undefined;
+  /**
+   * The description of the upload that will be sent to the Linode API (used for Image uploads)
+   */
   description?: string;
+  /**
+   * Disables the ability to select file(s) to upload.
+   */
   dropzoneDisabled: boolean;
   isCloudInit?: boolean;
+  /**
+   * The label of the upload that will be sent to the Linode API (used for Image uploads).
+   */
   label: string;
+  /**
+   * A function that is called when an upload is successful.
+   */
   onSuccess?: () => void;
+  /**
+   * The region ID to upload the file to.
+   */
   region: string;
-  // Send a function for canceling the upload back to the parent.
+  /**
+   * Allows you to set a cancel upload function in the parent component.
+   */
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
+  /**
+   * A function that allows you to set an error value in the parent component.
+   */
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
 }
 
+/**
+ * # File Uploader
+ *
+ * This component enables users to attach and upload files from a device.
+ * - Include any file restrictions or limits in the helper text.
+ * - Dragover effect and release capability occurs when a user drags a file or files directly onto the file upload box. This is called the “drop zone”.
+ */
 export const FileUploader = React.memo((props: FileUploaderProps) => {
   const {
     apiError,

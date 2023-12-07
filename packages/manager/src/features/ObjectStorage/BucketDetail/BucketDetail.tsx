@@ -33,7 +33,7 @@ import { sendDownloadObjectEvent } from 'src/utilities/analytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 
-import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
+import { ObjectUploader } from '../../../components/Uploaders/ObjectUploader/ObjectUploader';
 import { deleteObject as _deleteObject } from '../requests';
 import {
   displayName,
