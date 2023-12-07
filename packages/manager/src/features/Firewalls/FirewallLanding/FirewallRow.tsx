@@ -1,7 +1,6 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import clamp from 'clamp-js';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
@@ -13,11 +12,10 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledDivWrapper, StyledSpan } from './FirewallRow.styles';
 
-type CombinedProps = Firewall & ActionHandlers;
+export type Props = Firewall & ActionHandlers;
 
-export const FirewallRow = React.memo((props: CombinedProps) => {
+export const FirewallRow = React.memo((props: Props) => {
   const flags = useFlags();
   const { id, label, rules, status, ...actionHandlers } = props;
 
@@ -32,34 +30,6 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
   }
 
   const count = getCountOfRules(rules);
-
-  const truncateRef = useRef<HTMLDivElement>(null);
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const applyClamp = () => {
-    if (truncateRef.current) {
-      clamp(truncateRef.current, { clamp: 3 });
-    }
-  };
-
-  useEffect(() => {
-    applyClamp();
-  });
-
-  useEffect(() => {
-    applyClamp();
-  }, [windowWidth]);
 
   return (
     <TableRow
@@ -81,7 +51,6 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
           {getDevicesCellString(
             featureFlaggedDevices ?? [],
             isLoading,
-            truncateRef,
             error ?? undefined
           )}
         </TableCell>
@@ -130,7 +99,6 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 const getDevicesCellString = (
   data: FirewallDevice[],
   loading: boolean,
-  ref: React.RefObject<HTMLDivElement>,
   error?: APIError[]
 ): JSX.Element | string => {
   if (loading) {
@@ -145,29 +113,30 @@ const getDevicesCellString = (
     return 'None assigned';
   }
 
-  return getDeviceLinks(data, ref);
+  return getDeviceLinks(data);
 };
 
-export const getDeviceLinks = (
-  data: FirewallDevice[],
-  ref: React.RefObject<HTMLDivElement>
-): JSX.Element => {
+export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
+  const firstThree = data.slice(0, 3);
+
   return (
-    <StyledDivWrapper>
-      <div ref={ref}>
-        {data.map((thisDevice, idx) => (
-          <StyledSpan key={thisDevice.id}>
-            <Link
-              className="link secondaryLink"
-              data-testid="firewall-row-link"
-              to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-            >
-              {thisDevice.entity.label}
-            </Link>
-            {idx !== data.length - 1 && ','}
-          </StyledSpan>
-        ))}
-      </div>
-    </StyledDivWrapper>
+    <>
+      {firstThree.map((thisDevice, idx) => (
+        <Link
+          className="link secondaryLink"
+          data-testid="firewall-row-link"
+          key={thisDevice.id}
+          to={`/linodes/${thisDevice.entity.id}`}
+        >
+          {idx > 0 && `, `}
+          {thisDevice.entity.label}
+        </Link>
+      ))}
+      {data.length > 3 && (
+        <span>
+          {`, `}plus {data.length - 3} more.
+        </span>
+      )}
+    </>
   );
 };
