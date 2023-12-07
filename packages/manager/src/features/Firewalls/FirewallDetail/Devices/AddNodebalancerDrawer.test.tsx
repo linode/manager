@@ -31,7 +31,7 @@ describe('AddNodeBalancerDrawer', () => {
     expect(getByTestId('add-nodebalancer-autocomplete')).toBeInTheDocument();
   });
 
-  it(`should contain an Add button`, () => {
+  it('should contain an Add button', () => {
     const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
     expect(getByText('Add')).toBeInTheDocument();
   });
