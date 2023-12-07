@@ -3,13 +3,13 @@ import { Stack } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
@@ -54,7 +54,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
     }
 
     if (error) {
-      return <ErrorState errorText={error?.[0].reason} />;
+      return <TableRowError colSpan={5} message={error?.[0]?.reason} />;
     }
 
     if (attachedFirewalls?.length === 0 || attachedFirewalls === undefined) {
