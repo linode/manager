@@ -13,7 +13,7 @@ const props = {
   open: true,
 };
 describe('AddLinodeDrawer', () => {
-  it(`should contain helper text`, () => {
+  it('should contain helper text', () => {
     const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
     expect(getByText(helperText)).toBeInTheDocument();
   });
