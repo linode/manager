@@ -21,7 +21,7 @@ const props = (type: FirewallDeviceEntityType): FirewallDeviceTableProps => ({
 
 devices.forEach((device: FirewallDeviceEntityType) => {
   describe(`Firewall ${device} table`, () => {
-    it(`should render`, () => {
+    it('should render', () => {
       const { getByRole } = renderWithTheme(
         <FirewallDeviceTable {...props(device)} />
       );
