@@ -128,4 +128,5 @@ export interface CreateNodeBalancerPayload {
   label?: string;
   client_conn_throttle?: number;
   configs: any;
+  firewall_id?: number;
 }
