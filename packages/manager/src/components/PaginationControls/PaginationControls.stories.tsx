@@ -9,16 +9,27 @@ type Story = StoryObj<typeof PaginationControls>;
 export const PaginationControl: Story = {
   args: {
     count: 250,
+    page: 1,
     pageSize: 25,
   },
-  render: (args, context) => {
-    return (
-      <PaginationControls
-        {...args}
-        onClickHandler={context.setPage}
-        page={context.page}
-      />
-    );
+  render: (args) => {
+    const PaginationControlsWrapper = () => {
+      const [thisPage, setThisPage] = React.useState(args.page);
+
+      const handlePageChange = (pgNum: number) => {
+        setThisPage(pgNum);
+      };
+
+      return (
+        <PaginationControls
+          {...args}
+          onClickHandler={handlePageChange}
+          page={thisPage}
+        />
+      );
+    };
+
+    return <PaginationControlsWrapper />;
   },
 };
 
