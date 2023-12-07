@@ -413,12 +413,12 @@ export const CreateDomain = () => {
               defaultRecordsSetting.value === 'nodebalancer' && (
                 <React.Fragment>
                   <NodeBalancerSelect
-                    onChange={(_, nodebalancer) =>
-                      setSelectedDefaultNodeBalancer(nodebalancer)
+                    onSelectionChange={(value) =>
+                      setSelectedDefaultNodeBalancer(value ?? undefined)
                     }
                     disabled={disabled}
-                    error={errorMap.defaultNodeBalancer}
-                    value={selectedDefaultNodeBalancer?.id}
+                    errorText={errorMap.defaultNodeBalancer}
+                    value={selectedDefaultNodeBalancer?.id ?? null}
                   />
                   {!errorMap.defaultNodeBalancer && (
                     <FormHelperText>
