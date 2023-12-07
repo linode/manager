@@ -183,7 +183,7 @@ const FirewallLanding = () => {
         mode={dialogMode}
         onClose={() => setIsModalOpen(false)}
         open={isModalOpen}
-        selectedFirewallID={selectedFirewallId}
+        selectedFirewallId={selectedFirewallId}
         selectedFirewallLabel={selectedFirewall?.label ?? ''}
       />
     </React.Fragment>
