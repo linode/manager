@@ -50,7 +50,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
 
   const renderTableContent = () => {
     if (isLoading) {
-      return <TableRowLoading columns={5} rows={1} />;
+      return <TableRowLoading columns={4} rows={1} />;
     }
 
     if (error) {
