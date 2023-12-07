@@ -4,7 +4,6 @@ import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import Grid from '@mui/material/Unstable_Grid2';
-import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -23,7 +22,6 @@ import {
   useCreateChildAccountPersonalAccessTokenMutation,
 } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
-import { getStorage } from 'src/utilities/storage';
 
 interface MenuLink {
   display: string;
@@ -57,20 +55,11 @@ export const UserMenu = React.memo(() => {
   } = useAccountManagement();
 
   // Parent/Child - For testing purposes only:
-  const config = {
-    headers: {
-      Authorization: `Bearer ${getStorage('authentication/token')}`,
-    },
-  };
-  const headers = new AxiosHeaders(config.headers);
-
-  // TODO: figure out why this request isn't working when `headers` are removed, even though we're mocking the grants and it includes `child_account_access` as true
-  // const { data: childAccounts } = useChildAccounts({ headers });
-
-  // const { data: childAccount } = useChildAccount({ euuid: '1', headers });
+  // const { data: childAccounts } = useChildAccounts({});
+  // const { data: childAccount } = useChildAccount({ euuid: '1'});
   const {
     mutateAsync: fetchProxyToken,
-  } = useCreateChildAccountPersonalAccessTokenMutation({ euuid: '1', headers });
+  } = useCreateChildAccountPersonalAccessTokenMutation({ euuid: '1' });
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -83,15 +72,15 @@ export const UserMenu = React.memo(() => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     // Parent/Child - For testing purposes only:
-    fetchProxyToken({ euuid: '1', headers })
+    fetchProxyToken({ euuid: '1' })
       .then((data) => {
-        //console.log({ data });
+        // console.log({ data });
       })
       .catch((errorResponse: APIError[]) => {
-        //console.log({ errorResponse });
+        // console.log({ errorResponse });
       });
-    //console.log({ childAccounts });
-    //console.log({ childAccount });
+    // console.log({ childAccounts });
+    // console.log({ childAccount });
   };
 
   const handleClose = () => {
