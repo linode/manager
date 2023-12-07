@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FileUploader } from 'src/components/FileUploader/FileUploader';
+import { FileUploader } from 'src/components/Uploaders/FileUploader/FileUploader';
 import { Link } from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
