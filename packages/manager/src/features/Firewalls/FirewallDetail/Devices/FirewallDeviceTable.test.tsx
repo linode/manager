@@ -30,7 +30,7 @@ devices.forEach((device: FirewallDeviceEntityType) => {
     });
   });
 
-  it(`should contain two rows`, () => {
+  it('should contain two rows', () => {
     const { getAllByRole } = renderWithTheme(
       <FirewallDeviceTable {...props(device)} />
     );
