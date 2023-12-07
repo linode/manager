@@ -1156,28 +1156,24 @@ export const handlers = [
   rest.get('*/account/child-accounts', (req, res, ctx) => {
     const childAccounts = [
       accountFactory.build({
+        company: 'Child Company 0',
         euuid: '0',
-        first_name: 'Child',
-        last_name: 'User 0',
       }),
       accountFactory.build({
+        company: 'Child Company 1',
         euuid: '1',
-        first_name: 'Child',
-        last_name: 'User 1',
       }),
       accountFactory.build({
+        company: 'Child Company 2',
         euuid: '2',
-        first_name: 'Child',
-        last_name: 'User 2',
       }),
     ];
     return res(ctx.json(makeResourcePage(childAccounts)));
   }),
   rest.get('*/account/child-accounts/:euuid', (req, res, ctx) => {
     const childAccount = accountFactory.build({
+      company: 'Child Company 1',
       euuid: '1',
-      first_name: 'Child',
-      last_name: 'User 1',
     });
     return res(ctx.json(childAccount));
   }),
