@@ -84,7 +84,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
 
   return (
     <Stack sx={{ marginTop: '0px' }}>
-      <Box bgcolor={(theme) => theme.color.white} display="flex">
+      <Box display="flex">
         {displayFirewallInfoText ? (
           <Typography
             sx={(theme) => ({
