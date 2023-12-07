@@ -19,7 +19,7 @@ describe('AddNodeBalancerDrawer', () => {
     expect(getByText(helperText)).toBeInTheDocument();
   });
 
-  it(`should contain a NodeBalancers label`, () => {
+  it('should contain a NodeBalancers label', () => {
     const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
     expect(getByText('NodeBalancers')).toBeInTheDocument();
   });
