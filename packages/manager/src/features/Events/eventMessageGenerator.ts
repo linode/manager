@@ -29,15 +29,13 @@ export const safeSecondaryEntityLabel = (
   return label ? `${text} ${label}` : fallback;
 };
 
-type SecondaryEntityType = {
-  linode: string;
-  nodebalancer: string;
-};
-
-const secondaryEntityTypeObj: SecondaryEntityType = {
+const secondaryFirewallEntityNameMap: Record<
+  FirewallDeviceEntityType,
+  string
+> = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
-};
+}
 
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   account_agreement_eu_model: {
