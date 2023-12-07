@@ -523,7 +523,7 @@ export const handlers = [
     return res(
       // Parent/Child: switch out the return statement if you want to mock a restricted parent user with access to child accounts.
       // ctx.json(grantsFactory.build({ global: { child_account_access: true } }))
-      ctx.json(grantsFactory.build({}))
+      ctx.json(grantsFactory.build())
     );
   }),
   rest.get('*/profile/apps', (req, res, ctx) => {
