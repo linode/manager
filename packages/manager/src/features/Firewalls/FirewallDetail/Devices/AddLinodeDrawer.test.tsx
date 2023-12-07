@@ -18,7 +18,7 @@ describe('AddLinodeDrawer', () => {
     expect(getByText(helperText)).toBeInTheDocument();
   });
 
-  it(`should contain a Linodes label`, () => {
+  it('should contain a Linodes label', () => {
     const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
     expect(getByText('Linodes')).toBeInTheDocument();
   });
