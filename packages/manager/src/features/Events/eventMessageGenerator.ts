@@ -29,10 +29,10 @@ export const safeSecondaryEntityLabel = (
   return label ? `${text} ${label}` : fallback;
 };
 
-interface SecondaryEntityType {
+type SecondaryEntityType = {
   linode: string;
   nodebalancer: string;
-}
+};
 
 const secondaryEntityTypeObj: SecondaryEntityType = {
   linode: 'Linode',
