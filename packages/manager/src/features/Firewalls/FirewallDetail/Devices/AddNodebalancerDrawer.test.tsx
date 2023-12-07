@@ -24,7 +24,7 @@ describe('AddNodeBalancerDrawer', () => {
     expect(getByText('NodeBalancers')).toBeInTheDocument();
   });
 
-  it(`should contain a Nodebalancer input dropdown`, () => {
+  it('should contain a Nodebalancer input dropdown', () => {
     const { getByTestId } = renderWithTheme(
       <AddNodebalancerDrawer {...props} />
     );
