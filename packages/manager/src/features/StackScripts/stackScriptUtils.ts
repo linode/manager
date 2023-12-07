@@ -137,7 +137,7 @@ export const baseApps = {
   '1177605': 'Illa Builder',
   '1243759': 'MainConcept FFmpeg Plugins Demo',
   '1243760': 'MainConcept Live Encoder Demo',
-  '1243762': 'MainConcept P2 AVC Ultra Transcoder Demo',
+  '1243762': 'MainConcept P2 AVC ULTRA Transcoder Demo',
   '1243763': 'MainConcept XAVC Transcoder Demo',
   '1243764': 'MainConcept XDCAM Transcoder Demo',
   '1243780': 'SimpleX Chat',
