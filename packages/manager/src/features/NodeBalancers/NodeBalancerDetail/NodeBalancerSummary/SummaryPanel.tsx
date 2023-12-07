@@ -100,9 +100,11 @@ export const SummaryPanel = () => {
           <StyledTitle data-qa-title variant="h3">
             Firewall
           </StyledTitle>
-          <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
-            {linkText}
-          </Link>
+          <Typography data-qa-firewall variant="body1">
+            <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+              {linkText}
+            </Link>
+          </Typography>
         </StyledSummarySection>
       ) : null}
       <StyledSummarySection>
