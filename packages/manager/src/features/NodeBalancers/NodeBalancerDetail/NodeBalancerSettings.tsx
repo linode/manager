@@ -25,9 +25,7 @@ export const NodeBalancerSettings = () => {
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
-  const displayFirewallInfoText = attachedFirewallData?.data?.length
-    ? false
-    : true;
+  const displayFirewallInfoText = Boolean(attachedFirewallData?.data?.length);
 
   const {
     error: labelError,

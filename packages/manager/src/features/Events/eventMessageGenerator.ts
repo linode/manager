@@ -10,6 +10,8 @@ import {
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 export type EventMessageCreator = (e: Event) => string;
 
 export interface CreatorsForStatus {
@@ -35,7 +37,7 @@ const secondaryFirewallEntityNameMap: Record<
 > = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
-}
+};
 
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   account_agreement_eu_model: {
@@ -273,7 +275,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryEntityTypeObj[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[e.secondary_entity.type];
         return `${secondaryEntityName} ${
           e.secondary_entity?.label
         } has been added to Firewall ${e.entity?.label ?? ''}.`;
@@ -285,7 +287,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryEntityTypeObj[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[e.secondary_entity.type];
         return `${secondaryEntityName} ${
           e.secondary_entity?.label
         } has been removed from Firewall ${e.entity?.label ?? ''}.`;
