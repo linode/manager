@@ -1,6 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import FileDownload from 'src/assets/icons/download.svg';
@@ -32,7 +31,7 @@ interface Props {
   text: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   displayText: {
     color: theme.textColors.linkActiveLight,
     marginLeft: 6,
@@ -65,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const DownloadTooltip = (props: Props) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const { className, displayText, fileName, onClickCallback, text } = props;
 
@@ -79,7 +78,7 @@ export const DownloadTooltip = (props: Props) => {
   return (
     <Tooltip data-qa-copied placement="top" title="Download">
       <button
-        className={classNames(className, {
+        className={cx(className, {
           [classes.flex]: Boolean(displayText),
           [classes.root]: true,
         })}

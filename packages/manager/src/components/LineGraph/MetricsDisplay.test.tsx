@@ -6,7 +6,6 @@ import {
   metricsBySection,
 } from 'src/components/LineGraph/MetricsDisplay';
 import { Typography } from 'src/components/Typography';
-import { light } from 'src/foundations/themes';
 import { formatPercentage } from 'src/utilities/statMetrics';
 
 describe('CPUMetrics', () => {
@@ -20,18 +19,6 @@ describe('CPUMetrics', () => {
 
   const wrapper = shallow(
     <MetricsDisplay
-      classes={{
-        blue: 'blue',
-        darkGreen: '',
-        green: '',
-        legend: '',
-        lightGreen: '',
-        red: '',
-        root: '',
-        tableHeadInner: '',
-        text: '',
-        yellow: '',
-      }}
       rows={[
         {
           data: mockMetrics,
@@ -40,7 +27,6 @@ describe('CPUMetrics', () => {
           legendTitle: 'Legend Title',
         },
       ]}
-      theme={light}
     />
   );
 

@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -23,7 +23,7 @@ import { nodeWarning } from '../../kubeUtils';
 
 import type { Region } from '@linode/api-v4';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   boxOuter: {
     [theme.breakpoints.down('md')]: {
       alignItems: 'flex-start',
@@ -84,7 +84,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     open,
     regionsData,
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data: types } = useAllTypes(open);
   const {
     error,

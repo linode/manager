@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
@@ -14,7 +14,7 @@ import { StyledToggleButton } from 'src/features/Linodes/LinodesLanding/DisplayL
 
 import { Entity, HeaderCell } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   groupByTagCell: {
     backgroundColor: theme.bg.tableHeader,
     paddingRight: `0px !important`,
@@ -48,7 +48,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     orderBy,
     toggleGroupByTag,
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const SortCell: React.FC<SortCellProps> = (props) => {
     const { handleOrderChange, order, orderBy, thisCell } = props;

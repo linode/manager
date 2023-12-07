@@ -1,14 +1,14 @@
 import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   bannerOuter: {
     alignItems: 'center',
     backgroundColor: theme.bg.mainContentBanner,
@@ -57,7 +57,7 @@ export const MainContentBanner = React.memo((props: Props) => {
   const { refetch: refetchPrefrences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const dismiss = () => {
     onClose();

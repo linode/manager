@@ -11,9 +11,9 @@
 
 import { Breakpoint } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
 import * as React from 'react';
+import { withStyles } from 'tss-react/mui';
 
 import { breakpoints } from 'src/foundations/breakpoints';
 
@@ -258,6 +258,6 @@ const _Grid = React.forwardRef<any, GridProps>(function Grid(
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore 😣
-export const Grid = withStyles(styles, { name: 'MuiGrid' })(_Grid);
+export const Grid = withStyles(_Grid, styles, { name: 'MuiGrid' });
 
 export type { GridProps };

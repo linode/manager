@@ -2,8 +2,7 @@ import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -27,7 +26,7 @@ interface Props {
   open: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     opacity: 0.5,
   },
@@ -70,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const AutoscalePoolDialog = (props: Props) => {
   const { clusterId, handleOpenResizeDrawer, nodePool, onClose, open } = props;
   const autoscaler = nodePool?.autoscaler;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { error, isLoading, mutateAsync } = useUpdateNodePoolMutation(
@@ -197,7 +196,7 @@ export const AutoscalePoolDialog = (props: Props) => {
             />
           </Grid>
           <Grid
-            className={classNames({
+            className={cx({
               [classes.disabled]: !values.enabled,
               [classes.slash]: true,
             })}
