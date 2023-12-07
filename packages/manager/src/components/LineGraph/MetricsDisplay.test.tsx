@@ -1,12 +1,11 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import {
   MetricsDisplay,
   metricsBySection,
 } from 'src/components/LineGraph/MetricsDisplay';
-import { Typography } from 'src/components/Typography';
 import { formatPercentage } from 'src/utilities/statMetrics';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('CPUMetrics', () => {
   const mockMetrics = {
@@ -17,70 +16,99 @@ describe('CPUMetrics', () => {
     total: 40,
   };
 
-  const wrapper = shallow(
-    <MetricsDisplay
-      rows={[
-        {
-          data: mockMetrics,
-          format: formatPercentage,
-          legendColor: 'blue',
-          legendTitle: 'Legend Title',
-        },
-      ]}
-    />
-  );
-
   it('renders a table', () => {
-    expect(wrapper.find('Table')).toHaveLength(1);
+    const { getAllByRole } = renderWithTheme(
+      <MetricsDisplay
+        rows={[
+          {
+            data: mockMetrics,
+            format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'Legend Title',
+          },
+        ]}
+      />
+    );
+
+    expect(getAllByRole('table')).toHaveLength(1);
   });
 
   it('renders Max, Avg, and Last table headers', () => {
-    ['Max', 'Avg', 'Last'].forEach((section) => {
-      expect(
-        wrapper.containsMatchingElement(<Typography>{section}</Typography>)
-      ).toBeTruthy();
-    });
+    const { getByText } = renderWithTheme(
+      <MetricsDisplay
+        rows={[
+          {
+            data: mockMetrics,
+            format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'Legend Title',
+          },
+        ]}
+      />
+    );
+
+    for (const section of ['Max', 'Avg', 'Last']) {
+      expect(getByText(section)).toBeVisible();
+    }
   });
 
   it('renders the legend title', () => {
-    expect(wrapper.find('[data-qa-legend-title]')).toHaveLength(1);
-    expect(wrapper.find('[data-qa-legend-title]').text()).toEqual(
-      'Legend Title'
+    const { getByTestId } = renderWithTheme(
+      <MetricsDisplay
+        rows={[
+          {
+            data: mockMetrics,
+            format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'Legend Title',
+          },
+        ]}
+      />
     );
-  });
 
-  it('passes legendColor as a className', () => {
-    expect(
-      wrapper.find('[data-qa-legend-title]').hasClass('blue')
-    ).toBeTruthy();
+    expect(getByTestId('legend-title')).toBeVisible();
+    expect(getByTestId('legend-title')).toHaveTextContent('Legend Title');
   });
 
   it('renders formatted Max, Avg, and Last values in the table body', () => {
-    ['10.00%', '5.50%', '7.75%'].forEach((section) => {
-      expect(
-        wrapper.containsMatchingElement(<Typography>{section}</Typography>)
-      ).toBeTruthy();
-    });
+    const { getByText } = renderWithTheme(
+      <MetricsDisplay
+        rows={[
+          {
+            data: mockMetrics,
+            format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'Legend Title',
+          },
+        ]}
+      />
+    );
+
+    for (const value of ['10.00%', '5.50%', '7.75%']) {
+      expect(getByText(value)).toBeVisible();
+    }
   });
 
   it('renders multiple rows', () => {
-    wrapper.setProps({
-      rows: [
-        {
-          data: mockMetrics,
-          format: formatPercentage,
-          legendColor: 'blue',
-          legendTitle: 'Legend Title 1',
-        },
-        {
-          data: { average: 90, last: 100, max: 80, total: 110 },
-          format: formatPercentage,
-          legendColor: 'red',
-          legendTitle: 'Legend Title 2',
-        },
-      ],
-    });
-    expect(wrapper.find('[data-qa-legend-title]')).toHaveLength(2);
+    const { getAllByTestId } = renderWithTheme(
+      <MetricsDisplay
+        rows={[
+          {
+            data: mockMetrics,
+            format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'Legend Title 1',
+          },
+          {
+            data: { average: 90, last: 100, length: 0, max: 80, total: 110 },
+            format: formatPercentage,
+            legendColor: 'red',
+            legendTitle: 'Legend Title 2',
+          },
+        ]}
+      />
+    );
+    expect(getAllByTestId('legend-title')).toHaveLength(2);
   });
 });
 

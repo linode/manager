@@ -55,7 +55,10 @@ export const MetricsDisplay = ({ rows }: Props) => {
           return (
             <TableRow data-qa-metric-row key={legendTitle}>
               <TableCell className={classes.legend}>
-                <div className={classes[legendColor]} data-qa-legend-title>
+                <div
+                  className={classes[legendColor]}
+                  data-testid="legend-title"
+                >
                   <Typography component="span">{legendTitle}</Typography>
                 </div>
               </TableCell>
