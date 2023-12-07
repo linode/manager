@@ -1,9 +1,10 @@
+import { APIError } from '@linode/api-v4';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
+import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,10 +13,17 @@ import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import {
+  // useChildAccount,
+  // useChildAccounts,
+  useCreateChildAccountPersonalAccessTokenMutation,
+} from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
+import { getStorage } from 'src/utilities/storage';
 
 interface MenuLink {
   display: string;
@@ -48,6 +56,22 @@ export const UserMenu = React.memo(() => {
     profile,
   } = useAccountManagement();
 
+  // Parent/Child - For testing purposes only:
+  const config = {
+    headers: {
+      Authorization: `Bearer ${getStorage('authentication/token')}`,
+    },
+  };
+  const headers = new AxiosHeaders(config.headers);
+
+  // TODO: figure out why this request isn't working when `headers` are removed, even though we're mocking the grants and it includes `child_account_access` as true
+  // const { data: childAccounts } = useChildAccounts({ headers });
+
+  // const { data: childAccount } = useChildAccount({ euuid: '1', headers });
+  const {
+    mutateAsync: fetchProxyToken,
+  } = useCreateChildAccountPersonalAccessTokenMutation({ euuid: '1', headers });
+
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -58,6 +82,16 @@ export const UserMenu = React.memo(() => {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    // Parent/Child - For testing purposes only:
+    fetchProxyToken({ euuid: '1', headers })
+      .then((data) => {
+        //console.log({ data });
+      })
+      .catch((errorResponse: APIError[]) => {
+        //console.log({ errorResponse });
+      });
+    //console.log({ childAccounts });
+    //console.log({ childAccount });
   };
 
   const handleClose = () => {
