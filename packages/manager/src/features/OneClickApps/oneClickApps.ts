@@ -1173,19 +1173,19 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept P2 AVC Ultra Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
+    description: `MainConcept P2 AVC ULTRA Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept P2 AVC Ultra Transcoder Demo',
+    name: 'MainConcept P2 AVC ULTRA Transcoder Demo',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra-demo/',
         title:
-          'Deploy MainConcept P2 AVC Ultra Transcoder Demo through the Linode Marketplace',
+          'Deploy MainConcept P2 AVC ULTRA Transcoder Demo through the Linode Marketplace',
       },
     ],
     summary:
-      'MainConcept P2 AVC-ULTRA Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
+      'MainConcept P2 AVC ULTRA Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
     website: 'https://www.mainconcept.com/transcoders',
   },
   {
