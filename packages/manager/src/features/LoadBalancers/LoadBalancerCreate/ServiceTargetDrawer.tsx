@@ -196,7 +196,7 @@ export const ServiceTargetDrawer = (props: Props) => {
           />
           Upload service target endpoint CA certificates after the load balancer
           is created and the protocol is HTTPS.{' '}
-          <Link to={AGLB_DOCS.Certificates}>Learn More.</Link>
+          <Link to={AGLB_DOCS.Certificates}>Learn more.</Link>
         </Typography>
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
