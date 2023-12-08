@@ -4,6 +4,100 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-12-11] - v1.108.0
+
+### Added:
+
+- Ensure EU consent box shows for new European countries ([#9901](https://github.com/linode/manager/pull/9901))
+- Feature flag to Firewall-NodeBalancer ([#9931](https://github.com/linode/manager/pull/9931))
+- NodeBalancer support for Firewalls ([#9760](https://github.com/linode/manager/pull/9760))
+
+### Changed:
+
+- Improve MainConcept Transcoders Marketplace app name, description, and website ([#9858](https://github.com/linode/manager/pull/9858))
+- Move Linode Details Add/Edit Config button alignment to the right ([#9925](https://github.com/linode/manager/pull/9925))
+- Add pricing Docs Link to create/clone flows and remove DC-specific pricing warning notice  ([#9946](https://github.com/linode/manager/pull/9946))
+- Update MainConcept app names to include “Demo” ([#9950](https://github.com/linode/manager/pull/9950))
+
+
+### Fixed:
+
+- Overflow for VPC and StackScript detail descriptions and cut off placeholder text in VPC search bar ([#9887](https://github.com/linode/manager/pull/9887))
+- Add missing region ID param to Linode Detail clone action menu item ([#9888](https://github.com/linode/manager/pull/9888))
+- Linode Network Transfer History graph back button incorrectly appearing to be disabled ([#9900](https://github.com/linode/manager/pull/9900))
+- 'Oh snap' errors from MSW ([#9910](https://github.com/linode/manager/pull/9910))
+- `TableCell` with `ActionMenu` incorrect size and border placement ([#9915](https://github.com/linode/manager/pull/9915))
+- Images landing page guide section title typo ([#9930](https://github.com/linode/manager/pull/9930))
+- Accessibility on disabled SelectRegion menu items ([#9953](https://github.com/linode/manager/pull/9953))
+- `TableCell` styling for `ActionMenu`s ([#9954](https://github.com/linode/manager/pull/9954))
+
+### Removed:
+
+- `dcSpecificPricing` and `objDcSpecificPricing` feature flags ([#9881](https://github.com/linode/manager/pull/9881))
+
+### Tech Stories:
+
+- Refactor `RegionSelect` to use `Autocomplete` ([#9873](https://github.com/linode/manager/pull/9873))
+- Clean up App.tsx ([#9897](https://github.com/linode/manager/pull/9897))
+- Update `axios` to `1.6.1` ([#9911](https://github.com/linode/manager/pull/9911))
+- Removed unused container files ([#9928](https://github.com/linode/manager/pull/9928))
+- MUI v5 Migration - `SRC > Components > Breadcrumb` ([#9877](https://github.com/linode/manager/pull/9877))
+- MUI v5 Migration - `SRC > Features > Support` ([#9882](https://github.com/linode/manager/pull/9882))
+- MUI v5 Migration - `SRC > Components > EditableInput` ([#9884](https://github.com/linode/manager/pull/9884))
+- NodeBalancer Config Node - Remove one-off-styled Chip ([#9883](https://github.com/linode/manager/pull/9883))
+- Toggle v7 story migration ([#9905](https://github.com/linode/manager/pull/9905))
+- EnhancedSelect and RegionSelect stories cleanup ([#9906](https://github.com/linode/manager/pull/9906))
+- Dismissible Banner Storybook v7 story migration ([#9932](https://github.com/linode/manager/pull/9932))
+- Tabs Storybook v7 story migration ([#9937](https://github.com/linode/manager/pull/9937))
+- Tile and ShowMoreExpansion Storybook v7 story migration ([#9913](https://github.com/linode/manager/pull/9913))
+- ActionMenu Storybook v7 story migration ([#9927](https://github.com/linode/manager/pull/9927))
+- TopMenu and TagsList Storybook v7 story migration ([#9948](https://github.com/linode/manager/pull/9948))
+- SideMenu & UserMenu Storybook v7 story migration ([#9956](https://github.com/linode/manager/pull/9956))
+- Payment Method Row Storybook v7 story migration ([#9958](https://github.com/linode/manager/pull/9958))
+- Use `LinodeSelect` and `NodeBalancerSelect` components for Firewall create drawer ([#9886](https://github.com/linode/manager/pull/9886))
+
+### Tests:
+
+- Remove `dcSpecificPricing` and `objDcSpecificPricing` feature flags ([#9881](https://github.com/linode/manager/pull/9881))
+- Update tests for DC-specific pricing docs link ([#9946](https://github.com/linode/manager/pull/9946))
+- Upgrade Cypress from 13.4.0 to 13.5.0 ([#9892](https://github.com/linode/manager/pull/9892))
+- Improve stability for Longview, Rebuild, and Rescue tests ([#9902](https://github.com/linode/manager/pull/9902))
+- Add code coverage implementation ([#9917](https://github.com/linode/manager/pull/9917))
+- Add unit tests and additional integration test for VPC delete dialog ([#9920](https://github.com/linode/manager/pull/9920))
+- Add AGLB Configuration create and delete e2e tests ([#9924](https://github.com/linode/manager/pull/9924))
+- Add maintenance mode integration test ([#9934](https://github.com/linode/manager/pull/9934))
+- Combine billing cypress tests ([#9940](https://github.com/linode/manager/pull/9940))
+- Add account cancellation UI tests ([#9952](https://github.com/linode/manager/pull/9952))
+- Fix warm resize test by updating notice text ([#9972](https://github.com/linode/manager/pull/9972))
+- Add integration tests for VPC assign/unassign flows ([#9818](https://github.com/linode/manager/pull/9818))
+
+### Upcoming Features:
+
+- Add AGLB create flow Stepper details content ([#9849](https://github.com/linode/manager/pull/9849))
+- Add AGLB Configuration Create Flow ([#9870](https://github.com/linode/manager/pull/9870))
+- Add AGLB Feedback Link ([#9885](https://github.com/linode/manager/pull/9885))
+- Add AGLB copy and docs links ([#9908](https://github.com/linode/manager/pull/9908))
+- Add AGLB Service Target `protocol` field in Create/Edit Service Target drawer and "Protocol" column to Service Targets table ([#9891](https://github.com/linode/manager/pull/9891))
+- Add AGLB Configuration e2e tests, improve error handling, and improve UX ([#9941](https://github.com/linode/manager/pull/9941))
+- Add AGLB copy changes and improvements ([#9954](https://github.com/linode/manager/pull/9954))
+- Fix AGLB Configuration creation by fixing port type and other refinement ([#9903](https://github.com/linode/manager/pull/9903))
+- Add react query for `account/availabilities` endpoint using `getAll` ([#9907](https://github.com/linode/manager/pull/9907))
+- Implement DC Get Well disabled regions in RegionSelect ([#9909](https://github.com/linode/manager/pull/9909))
+- Add DC Get Well logic to various user flows pt2 and cleanup logic ([#9945](https://github.com/linode/manager/pull/9945))
+- Add logic to prevent new customers in regions to various user flows for DC Get Well initiative pt1 ([#9943](https://github.com/linode/manager/pull/9943))
+- Add `parentChildAccountAccess` feature flag ([#9919](https://github.com/linode/manager/pull/9919))
+- Update existing user account and grant factories and mocks for Parent/Child account switching ([#9942](https://github.com/linode/manager/pull/9942))
+- Add new grants and React Query queries for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
+- Add `Reboot Needed` status for Linodes assigned to VPCs ([#9893](https://github.com/linode/manager/pull/9893))
+- Indicate unrecommended Linode configurations on VPC Detail page ([#9914](https://github.com/linode/manager/pull/9914))
+- Tweaked VPC landing page empty state copy and added resource links ([#9951](https://github.com/linode/manager/pull/9951))
+- Display warning notices for unrecommended configurations in Linode Add/Edit Config dialog ([#9916](https://github.com/linode/manager/pull/9916))
+- Disable Public IP Address for VPC-only Linodes in the Linode's details page and add warning banner to Linode landing ([#9899](https://github.com/linode/manager/pull/9899))
+- Updated copy on VPC Create page ([#9962](https://github.com/linode/manager/pull/9962))
+- Updated VPC-related copy for Reboot Needed tooltip ([#9966](https://github.com/linode/manager/pull/9966))
+- Create feature flag to support OBJ Multi Cluster UI changes ([#9970](https://github.com/linode/manager/pull/9970))
+- Replace Linode Network Transfer History chart with Recharts ([#9938](https://github.com/linode/manager/pull/9938))
+
 ## [2023-11-13] - v1.107.0
 
 
