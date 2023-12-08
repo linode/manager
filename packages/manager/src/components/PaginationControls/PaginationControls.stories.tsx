@@ -13,23 +13,15 @@ export const PaginationControl: Story = {
     pageSize: 25,
   },
   render: (args) => {
-    const PaginationControlsWrapper = () => {
-      const [thisPage, setThisPage] = React.useState(args.page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, setArgs] = useArgs();
 
-      const handlePageChange = (pgNum: number) => {
-        setThisPage(pgNum);
-      };
-
-      return (
-        <PaginationControls
-          {...args}
-          onClickHandler={handlePageChange}
-          page={thisPage}
-        />
-      );
-    };
-
-    return <PaginationControlsWrapper />;
+    return (
+      <PaginationControls
+        {...args}
+        onClickHandler={(page) => setArgs({ page })}
+      />
+    );
   },
 };
 
