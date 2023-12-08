@@ -17,6 +17,7 @@ import {
   NodeBalancerStats,
 } from './types';
 import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
+import type { Firewall } from '../firewalls/types';
 
 /**
  * getNodeBalancers
@@ -107,3 +108,25 @@ export const getNodeBalancerStats = (nodeBalancerId: number) => {
     setMethod('GET')
   );
 };
+
+/**
+ * getNodeBalancerFirewalls
+ *
+ * View Firewall information for Firewalls associated with this NodeBalancer
+ */
+
+export const getNodeBalancerFirewalls = (
+  nodeBalancerId: number,
+  params?: Params,
+  filter?: Filter
+) =>
+  Request<Page<Firewall>>(
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/firewalls`
+    ),
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
+  );

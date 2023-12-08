@@ -1,8 +1,10 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Firewall, FirewallDevice } from '@linode/api-v4';
 import { Stack } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { Link } from 'src/components/Link';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -12,31 +14,35 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
+import { CREATE_FIREWALL_LINK } from 'src/constants';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
-import { LinodeFirewallsRow } from './LinodeFirewallsRow';
+import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
-interface LinodeFirewallsProps {
-  linodeID: number;
+interface Props {
+  displayFirewallInfoText: boolean;
+  nodeBalancerId: number;
 }
 
-export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
-  const { linodeID } = props;
+export const NodeBalancerFirewalls = (props: Props) => {
+  const { displayFirewallInfoText, nodeBalancerId } = props;
 
   const {
     data: attachedFirewallData,
     error,
     isLoading,
-  } = useLinodeFirewallsQuery(linodeID);
+  } = useNodeBalancersFirewallsQuery(nodeBalancerId);
 
   const attachedFirewalls = attachedFirewallData?.data;
 
   const [selectedFirewall, setSelectedFirewall] = React.useState<Firewall>();
+
   const [
     deviceToBeRemoved,
     setDeviceToBeRemoved,
   ] = React.useState<FirewallDevice>();
+
   const [
     isRemoveDeviceDialogOpen,
     setIsRemoveDeviceDialogOpen,
@@ -62,30 +68,36 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
     }
 
     return attachedFirewalls.map((attachedFirewall) => (
-      <LinodeFirewallsRow
+      <NodeBalancerFirewallsRow
         firewall={attachedFirewall}
         key={`firewall-${attachedFirewall.id}`}
-        linodeID={linodeID}
+        nodeBalancerID={nodeBalancerId}
         onClickUnassign={handleClickUnassign}
       />
     ));
   };
 
+  const learnMoreLink = (
+    <Link to={CREATE_FIREWALL_LINK}>Learn more about creating Firewalls.</Link>
+  );
+  const firewallLink = <Link to="/firewalls/">Firewalls</Link>;
+
   return (
-    <Stack sx={{ marginTop: '20px' }}>
-      <Box bgcolor={(theme) => theme.color.white} display="flex">
-        <Typography
-          sx={(theme) => ({
-            lineHeight: '1.5rem',
-            marginBottom: theme.spacing(),
-            marginLeft: '15px',
-            marginTop: theme.spacing(),
-          })}
-          data-testid="linode-firewalls-table-header"
-          variant="h3"
-        >
-          Firewalls
-        </Typography>
+    <Stack sx={{ marginTop: '0px' }}>
+      <Box display="flex">
+        {displayFirewallInfoText ? (
+          <Typography
+            sx={(theme) => ({
+              marginBottom: theme.spacing(),
+            })}
+            data-testid="nodebalancer-firewalls-table-header"
+          >
+            If you want to assign a new Firewall to this NodeBalancer, go to{' '}
+            {firewallLink}.
+            <br />
+            {learnMoreLink}
+          </Typography>
+        ) : null}
       </Box>
       <Table>
         <TableHead>
