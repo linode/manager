@@ -46,11 +46,13 @@ export interface Flags {
   databaseBeta: boolean;
   databases: boolean;
   dcGetWell: boolean;
+  firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
+  objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   parentChildAccountAccess: boolean;

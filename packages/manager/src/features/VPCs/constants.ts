@@ -30,7 +30,7 @@ export const VPC_FEEDBACK_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
 
 export const VPC_REBOOT_MESSAGE =
-  'The VPC configuration has been updated and the Linode needs to be rebooted.';
+  'The VPC configuration has been updated. Reboot the Linode to reflect configuration changes.';
 
 export const NETWORK_INTERFACES_GUIDE_URL =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
