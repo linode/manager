@@ -376,8 +376,6 @@ describe('Account invoices', () => {
         displayTime: false,
       });
 
-      console.log('Invoice date: ' + invoiceDate);
-
       // Confirms that it can download the PDF from billing landing page
       mockGetInvoices([mockInvoice]).as('getInvoices');
       mockGetInvoiceItems(mockInvoice, mockInvoiceItems);
@@ -410,12 +408,6 @@ describe('Account invoices', () => {
         timezone,
         displayTime: true,
       });
-
-      console.log('Invoice date: ' + invoiceDate);
-      console.log(
-        'Invoice date with time: ' +
-          invoiceDateWithTime.replace(' ', 'T').replace(':', '_')
-      );
 
       // Confirms that it can download the CSV / PDF from invoice details page
       mockGetInvoice(mockInvoice).as('getInvoice');
