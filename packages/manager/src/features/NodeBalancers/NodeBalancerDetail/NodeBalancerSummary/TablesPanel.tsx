@@ -4,6 +4,8 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
+import { AreaChart } from 'src/components/AreaChart';
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
@@ -21,9 +23,6 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
-
-import { NodeBalancerConnectionsChart } from './NodeBalancerConnectionsChart';
-import { NodeBalancerTrafficChart } from './NodeBalancerTrafficChart';
 
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
@@ -101,12 +100,25 @@ export const TablesPanel = () => {
     return (
       <React.Fragment>
         {flags.recharts ? (
-          <NodeBalancerConnectionsChart
-            aria-label={'Connections Graph'}
-            data={timeData}
-            timezone={timezone}
-            unit={'CXN'}
-          />
+          <Box marginLeft={-3}>
+            <AreaChart
+              areas={[
+                {
+                  color: theme.graphs.purple,
+                  dataKey: 'Connections',
+                },
+              ]}
+              xAxis={{
+                tickFormat: 'hh a',
+                tickGap: 60,
+              }}
+              aria-label={'Connections Graph'}
+              data={timeData}
+              height={300}
+              timezone={timezone}
+              unit={'CXN'}
+            />
+          </Box>
         ) : (
           <StyledChart>
             <LineGraph
@@ -192,12 +204,29 @@ export const TablesPanel = () => {
       <React.Fragment>
         <StyledChart>
           {flags.recharts ? (
-            <NodeBalancerTrafficChart
-              aria-label={'Traffic Graph'}
-              data={timeData}
-              timezone={timezone}
-              unit={'bits'}
-            />
+            <Box marginLeft={-4}>
+              <AreaChart
+                areas={[
+                  {
+                    color: theme.graphs.network.inbound,
+                    dataKey: 'Traffic In',
+                  },
+                  {
+                    color: theme.graphs.network.outbound,
+                    dataKey: 'Traffic Out',
+                  },
+                ]}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
+                aria-label={'Traffic Graph'}
+                data={timeData}
+                height={300}
+                timezone={timezone}
+                unit={'bits'}
+              />
+            </Box>
           ) : (
             <LineGraph
               data={[
