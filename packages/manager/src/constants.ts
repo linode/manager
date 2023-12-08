@@ -267,3 +267,11 @@ export const DEVELOPERS_LINK = 'https://developers.linode.com';
 // URL validators
 export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
 export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
+
+// Firewall links
+export const CREATE_FIREWALL_LINK =
+  'https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/';
+export const FIREWALL_GET_STARTED_LINK =
+  'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/';
+export const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
+  'https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations';

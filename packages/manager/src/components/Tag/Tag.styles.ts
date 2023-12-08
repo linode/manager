@@ -17,6 +17,7 @@ export const StyledChip = styled(Chip, {
     },
     borderRadius: 4,
     color: theme.name === 'light' ? '#3a3f46' : '#fff',
+    fontFamily: theme.font.normal,
     maxWidth: 350,
     padding: '7px 10px',
   },
