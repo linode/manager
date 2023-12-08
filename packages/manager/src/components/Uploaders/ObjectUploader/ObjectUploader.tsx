@@ -48,6 +48,9 @@ interface Props {
   prefix: string;
 }
 
+/**
+ * This component enables users to attach and upload files from a device to the specified Object Storage cluster and bucket.
+ */
 export const ObjectUploader = React.memo((props: Props) => {
   const { bucketName, clusterId, prefix } = props;
   const { enqueueSnackbar } = useSnackbar();
