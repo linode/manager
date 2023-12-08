@@ -39,12 +39,6 @@ const regions: Region[] = [
 
 const expectedRegions: RegionSelectOption[] = [
   {
-    data: { country: 'ca', region: 'North America' },
-    label: 'CA Location (ca-1)',
-    unavailable: false,
-    value: 'ca-1',
-  },
-  {
     data: {
       country: 'us',
       region: 'North America',
@@ -52,6 +46,12 @@ const expectedRegions: RegionSelectOption[] = [
     label: 'US Location (us-1)',
     unavailable: false,
     value: 'us-1',
+  },
+  {
+    data: { country: 'ca', region: 'North America' },
+    label: 'CA Location (ca-1)',
+    unavailable: false,
+    value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
