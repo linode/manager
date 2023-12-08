@@ -11,6 +11,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 
 import { ServiceTargetDrawer } from './ServiceTargetDrawer';
@@ -72,7 +73,27 @@ export const ServiceTargets = () => {
             {values.service_targets.map((serviceTarget, index) => (
               <TableRow key={serviceTarget.label}>
                 <TableCell>{serviceTarget.label}</TableCell>
-                <TableCell>{serviceTarget.endpoints.length}</TableCell>
+                <TableCell>
+                  {serviceTarget.endpoints.length === 0 ? (
+                    0
+                  ) : (
+                    <TextTooltip
+                      tooltipText={
+                        <Stack>
+                          {serviceTarget.endpoints.map(
+                            ({ ip, port }, index) => (
+                              <Typography key={`${ip}-${port}-${index}`}>
+                                {ip}:{port}
+                              </Typography>
+                            )
+                          )}
+                        </Stack>
+                      }
+                      displayText={String(serviceTarget.endpoints.length)}
+                      minWidth={100}
+                    />
+                  )}
+                </TableCell>
                 <TableCell sx={{ textTransform: 'capitalize' }}>
                   {serviceTarget.load_balancing_policy.replace('_', ' ')}
                 </TableCell>

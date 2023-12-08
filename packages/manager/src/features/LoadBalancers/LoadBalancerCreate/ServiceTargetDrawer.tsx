@@ -181,23 +181,29 @@ export const ServiceTargetDrawer = (props: Props) => {
           onRemove={onRemoveEndpoint}
         />
         <AddEndpointForm onAdd={onAddEndpoint} />
-        <Divider spacingBottom={12} spacingTop={24} />
-        <Stack alignItems="center" direction="row">
-          <Typography variant="h3">Service Target CA Certificate</Typography>
-          <TooltipIcon
-            status="help"
-            text={SERVICE_TARGET_COPY.Tooltips.Certificate}
-          />
-        </Stack>
-        <Typography>
-          <BetaChip
-            component="span"
-            sx={{ marginLeft: '0 !important', marginRight: '4px' }}
-          />
-          Upload service target endpoint CA certificates after the load balancer
-          is created and the protocol is HTTPS.{' '}
-          <Link to={AGLB_DOCS.Certificates}>Learn more.</Link>
-        </Typography>
+        {formik.values.protocol === 'https' && (
+          <>
+            <Divider spacingBottom={12} spacingTop={24} />
+            <Stack alignItems="center" direction="row">
+              <Typography variant="h3">
+                Service Target CA Certificate
+              </Typography>
+              <TooltipIcon
+                status="help"
+                text={SERVICE_TARGET_COPY.Tooltips.Certificate}
+              />
+            </Stack>
+            <Typography>
+              <BetaChip
+                component="span"
+                sx={{ marginLeft: '0 !important', marginRight: '4px' }}
+              />
+              Upload service target endpoint CA certificates after the load
+              balancer is created and the protocol is HTTPS.{' '}
+              <Link to={AGLB_DOCS.Certificates}>Learn more.</Link>
+            </Typography>
+          </>
+        )}
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Health Checks</Typography>
