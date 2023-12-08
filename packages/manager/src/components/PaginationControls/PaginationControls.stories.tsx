@@ -1,3 +1,4 @@
+import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
 
 import { PaginationControls } from './PaginationControls';
