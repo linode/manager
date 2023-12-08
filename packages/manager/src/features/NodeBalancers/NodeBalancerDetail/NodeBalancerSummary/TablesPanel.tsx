@@ -23,6 +23,7 @@ import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 import { NodeBalancerConnectionsChart } from './NodeBalancerConnectionsChart';
+import { NodeBalancerTrafficChart } from './NodeBalancerTrafficChart';
 
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
@@ -85,13 +86,17 @@ export const TablesPanel = () => {
 
     const metrics = getMetrics(data);
 
-    const timeData = data.reduce((acc: any, point: any) => {
-      acc.push({
-        Connections: point[1],
-        t: point[0],
-      });
-      return acc;
-    }, []);
+    let timeData = [];
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags.recharts) {
+      timeData = data.reduce((acc: any, point: any) => {
+        acc.push({
+          Connections: point[1],
+          t: point[0],
+        });
+        return acc;
+      }, []);
+    }
 
     return (
       <React.Fragment>
@@ -139,6 +144,18 @@ export const TablesPanel = () => {
   const renderTrafficChart = () => {
     const trafficIn = stats?.data.traffic.in ?? [];
     const trafficOut = stats?.data.traffic.out ?? [];
+    const timeData = [];
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags.recharts && trafficIn) {
+      for (let i = 0; i < trafficIn.length; i++) {
+        timeData.push({
+          'Traffic In': trafficIn[i][1],
+          'Traffic Out': trafficOut[i][1],
+          t: trafficIn[i][0],
+        });
+      }
+    }
 
     if (statsNotReadyError) {
       return (
@@ -174,26 +191,35 @@ export const TablesPanel = () => {
     return (
       <React.Fragment>
         <StyledChart>
-          <LineGraph
-            data={[
-              {
-                backgroundColor: theme.graphs.network.inbound,
-                borderColor: 'transparent',
-                data: trafficIn,
-                label: 'Traffic In',
-              },
-              {
-                backgroundColor: theme.graphs.network.outbound,
-                borderColor: 'transparent',
-                data: trafficOut,
-                label: 'Traffic Out',
-              },
-            ]}
-            accessibleDataTable={{ unit: 'bits/s' }}
-            ariaLabel="Traffic Graph"
-            showToday={true}
-            timezone={timezone}
-          />
+          {flags.recharts ? (
+            <NodeBalancerTrafficChart
+              aria-label={'Traffic Graph'}
+              data={timeData}
+              timezone={timezone}
+              unit={'bits'}
+            />
+          ) : (
+            <LineGraph
+              data={[
+                {
+                  backgroundColor: theme.graphs.network.inbound,
+                  borderColor: 'transparent',
+                  data: trafficIn,
+                  label: 'Traffic In',
+                },
+                {
+                  backgroundColor: theme.graphs.network.outbound,
+                  borderColor: 'transparent',
+                  data: trafficOut,
+                  label: 'Traffic Out',
+                },
+              ]}
+              accessibleDataTable={{ unit: 'bits/s' }}
+              ariaLabel="Traffic Graph"
+              showToday={true}
+              timezone={timezone}
+            />
+          )}
         </StyledChart>
         <StyledBottomLegend>
           <MetricsDisplay
