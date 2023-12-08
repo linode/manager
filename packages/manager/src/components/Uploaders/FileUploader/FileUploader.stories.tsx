@@ -25,7 +25,7 @@ export const ImageUploader: StoryObj<typeof FileUploader> = {
 
 const meta: Meta<typeof FileUploader> = {
   component: FileUploader,
-  title: 'Components/File Uploader/Image Uploader',
+  title: 'Components/File Uploaders/File Uploader',
 };
 
 export default meta;
