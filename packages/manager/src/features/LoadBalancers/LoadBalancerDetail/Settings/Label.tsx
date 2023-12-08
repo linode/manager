@@ -1,10 +1,10 @@
-import { Stack } from 'src/components/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
   useLoadBalancerMutation,
@@ -44,7 +44,12 @@ export const Label = ({ loadbalancerId }: Props) => {
             value={formik.values.label}
           />
           <Box>
-            <Button buttonType="primary" loading={isLoading} type="submit">
+            <Button
+              buttonType="primary"
+              disabled={!formik.dirty}
+              loading={isLoading}
+              type="submit"
+            >
               Save
             </Button>
           </Box>

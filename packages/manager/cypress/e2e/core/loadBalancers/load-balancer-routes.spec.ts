@@ -229,7 +229,7 @@ describe('Akamai Global Load Balancer routes page', () => {
           cy.wait('@getServiceTargets');
 
           ui.autocompletePopper
-            .findByTitle(serviceTargets[0].label)
+            .findByTitle(serviceTargets[0].label, { exact: false })
             .should('be.visible')
             .click();
 
@@ -250,7 +250,7 @@ describe('Akamai Global Load Balancer routes page', () => {
           cy.wait('@getServiceTargets');
 
           ui.autocompletePopper
-            .findByTitle(serviceTargets[1].label)
+            .findByTitle(serviceTargets[1].label, { exact: false })
             .should('be.visible')
             .click();
 
@@ -327,7 +327,7 @@ describe('Akamai Global Load Balancer routes page', () => {
           cy.wait('@getServiceTargets');
 
           ui.autocompletePopper
-            .findByTitle(serviceTargets[0].label)
+            .findByTitle(serviceTargets[0].label, { exact: false })
             .should('be.visible')
             .click();
 
@@ -348,7 +348,7 @@ describe('Akamai Global Load Balancer routes page', () => {
           cy.wait('@getServiceTargets');
 
           ui.autocompletePopper
-            .findByTitle(serviceTargets[1].label)
+            .findByTitle(serviceTargets[1].label, { exact: false })
             .should('be.visible')
             .click();
 
@@ -408,7 +408,7 @@ describe('Akamai Global Load Balancer routes page', () => {
           cy.wait('@getServiceTargets');
 
           ui.autocompletePopper
-            .findByTitle(serviceTargets[0].label)
+            .findByTitle(serviceTargets[0].label, { exact: false })
             .should('be.visible')
             .click();
 
@@ -479,7 +479,7 @@ describe('Akamai Global Load Balancer routes page', () => {
           cy.wait('@getServiceTargets');
 
           ui.autocompletePopper
-            .findByTitle(serviceTargets[0].label)
+            .findByTitle(serviceTargets[0].label, { exact: false })
             .should('be.visible')
             .click();
 

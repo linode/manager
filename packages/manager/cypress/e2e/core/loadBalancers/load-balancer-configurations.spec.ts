@@ -112,7 +112,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Route').within(() => {
         cy.findByLabelText('Route').click();
 
-        ui.autocompletePopper.findByTitle(routes[0].label).click();
+        ui.autocompletePopper
+          .findByTitle(routes[0].label, { exact: false })
+          .click();
 
         ui.buttonGroup
           .findButtonByTitle('Add Route')
@@ -180,7 +182,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Route').within(() => {
         cy.findByLabelText('Route').click();
 
-        ui.autocompletePopper.findByTitle(routes[0].label).click();
+        ui.autocompletePopper
+          .findByTitle(routes[0].label, { exact: false })
+          .click();
 
         ui.buttonGroup
           .findButtonByTitle('Add Route')
@@ -248,7 +252,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Route').within(() => {
         cy.findByLabelText('Route').click();
 
-        ui.autocompletePopper.findByTitle(routes[0].label).click();
+        ui.autocompletePopper
+          .findByTitle(routes[0].label, { exact: false })
+          .click();
 
         ui.buttonGroup
           .findButtonByTitle('Add Route')
@@ -333,7 +339,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Route').within(() => {
         cy.findByLabelText('Route').click();
 
-        ui.autocompletePopper.findByTitle(routes[0].label).click();
+        ui.autocompletePopper
+          .findByTitle(routes[0].label, { exact: false })
+          .click();
 
         ui.buttonGroup
           .findButtonByTitle('Add Route')
