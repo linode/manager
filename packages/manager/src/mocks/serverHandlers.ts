@@ -1178,7 +1178,12 @@ export const handlers = [
     return res(ctx.json(childAccount));
   }),
   rest.post('*/account/child-accounts/:euuid/token', (req, res, ctx) => {
+    // Proxy tokens expire in 15 minutes.
+    const now = new Date();
+    const expiry = new Date(now.setMinutes(now.getMinutes() + 15));
+
     const proxyToken = appTokenFactory.build({
+      expiry: expiry.toISOString(),
       token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
     });
     return res(ctx.json(proxyToken));
