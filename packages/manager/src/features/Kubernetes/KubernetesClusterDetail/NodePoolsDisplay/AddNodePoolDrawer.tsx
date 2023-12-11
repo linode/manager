@@ -31,17 +31,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     width: '100%',
   },
-  drawer: {
-    '& .MuiDrawer-paper': {
-      overflowX: 'hidden',
-      [theme.breakpoints.up('md')]: {
-        width: 790,
-      },
-    },
-    '& .MuiGrid-root': {
-      marginBottom: 0,
-    },
-  },
   error: {
     marginBottom: '0 !important',
   },
@@ -160,7 +149,10 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      className={classes.drawer}
+      wide
+      PaperProps={{
+        sx: { maxWidth: '760px !important' },
+      }}
       onClose={onClose}
       open={open}
       title={`Add a Node Pool: ${clusterLabel}`}
