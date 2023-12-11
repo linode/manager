@@ -99,4 +99,28 @@ describe('TagsPanel', () => {
 
     expect(queryByLabelText("Search for Tag 'tag2'")).toBeNull();
   });
+
+  it('prevents creation or deletion of tags when disabled', async () => {
+    const updateTagsMock = vi.fn(() => Promise.resolve());
+
+    const { getByText, queryByLabelText, queryByText } = renderWithQueryClient(
+      <TagsPanel disabled tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+    );
+
+    expect(getByText('Tag1')).toBeInTheDocument();
+    expect(getByText('Tag2')).toBeInTheDocument();
+
+    const addTagButton = getByText('Add a tag');
+    expect(addTagButton).toBeInTheDocument();
+
+    fireEvent.click(addTagButton);
+
+    const tagInput = queryByText('Create or Select a Tag');
+    expect(tagInput).toBeNull();
+
+    const deleteTagButton = queryByLabelText("Delete Tag 'Tag1'");
+    expect(deleteTagButton).toBeNull();
+
+    await waitFor(() => expect(updateTagsMock).not.toHaveBeenCalled());
+  });
 });
