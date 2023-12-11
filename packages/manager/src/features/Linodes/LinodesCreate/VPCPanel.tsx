@@ -152,8 +152,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
     return (
       <>
-        {/* @TODO VPC: Update link */}
-        {copy} <Link to="">Learn more</Link>.
+        {copy}{' '}
+        <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
+          Learn more
+        </Link>
+        .
       </>
     );
   };
@@ -309,7 +312,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                       </Typography>
                       <TooltipIcon
                         text={
-                          'Assign a public IP address for this VPC via 1:1 static NAT.'
+                          'Access the internet through the public IPv4 address using static 1:1 NAT.'
                         }
                         status="help"
                       />
