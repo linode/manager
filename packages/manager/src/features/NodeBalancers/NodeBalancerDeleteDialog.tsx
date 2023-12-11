@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
 
 interface Props {
@@ -24,11 +22,8 @@ export const NodeBalancerDeleteDialog = ({
   const { error, isLoading, mutateAsync } = useNodebalancerDeleteMutation(id);
   const { push } = useHistory();
 
-  const queryClient = useQueryClient();
-
   const onDelete = async () => {
     await mutateAsync();
-    queryClient.invalidateQueries([firewallsQueryKey]);
     onClose();
     push('/nodebalancers');
   };
