@@ -165,8 +165,8 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
-    "@vitest/coverage-v8": "^1.0.1",
-    "@vitest/ui": "^1.0.1",
+    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/ui": "^1.0.4",
     "chai-string": "^1.5.0",
     "chalk": "^5.2.0",
     "css-mediaquery": "^0.1.2",
@@ -205,9 +205,9 @@
     "serve": "^14.0.1",
     "storybook": "~7.5.2",
     "storybook-dark-mode": "^3.0.1",
-    "vite": "^5.0.5",
+    "vite": "^5.0.7",
     "vite-plugin-svgr": "^3.2.0",
-    "vitest": "^1.0.1"
+    "vitest": "^1.0.4"
   },
   "browserslist": [
     ">1%",
