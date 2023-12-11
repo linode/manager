@@ -25,8 +25,6 @@ export const queryKey = 'account';
 
 export const useAccount = ({ headers }: RequestOptions) => {
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
-  const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
   return useQuery<Account, APIError[]>(
@@ -35,10 +33,7 @@ export const useAccount = ({ headers }: RequestOptions) => {
     {
       ...queryPresets.oneTimeFetch,
       ...queryPresets.noRetry,
-      enabled:
-        (Boolean(user?.user_type === 'parent') && !profile?.restricted) ||
-        Boolean(grants?.global?.child_account_access) ||
-        hasExplicitAuthToken,
+      enabled: !profile?.restricted || hasExplicitAuthToken,
     }
   );
 };
