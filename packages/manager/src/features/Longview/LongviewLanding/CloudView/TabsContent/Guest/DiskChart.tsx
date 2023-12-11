@@ -30,7 +30,7 @@ export const DiskChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[1]?.values, props.start, props.end),
+                        seriesDataFormatter(data[0]?.values, props.start, props.end),
                     label: 'loop0 Read',
                 },
                 {
@@ -38,7 +38,7 @@ export const DiskChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[2]?.values, props.start, props.end),
+                        seriesDataFormatter(data[1]?.values, props.start, props.end),
                     label: 'loop0 Write',
                 },
                 {
@@ -46,7 +46,7 @@ export const DiskChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[3]?.values, props.start, props.end),
+                        seriesDataFormatter(data[2]?.values, props.start, props.end),
                     label: 'sda Read',
                 },
                 {
@@ -54,7 +54,7 @@ export const DiskChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[4]?.values, props.start, props.end),
+                        seriesDataFormatter(data[3]?.values, props.start, props.end),
                     label: 'sda Write',
                 },
                 {
@@ -62,7 +62,7 @@ export const DiskChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[5]?.values, props.start, props.end),
+                        seriesDataFormatter(data[4]?.values, props.start, props.end),
                     label: 'sdb Read',
                 },
                 {

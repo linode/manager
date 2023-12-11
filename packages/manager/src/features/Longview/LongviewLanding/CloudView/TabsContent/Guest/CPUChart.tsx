@@ -78,7 +78,7 @@ export const CPUChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[5]?.values, props.start, props.end),
+                        seriesDataFormatter(data[6]?.values, props.start, props.end),
                     label: 'User',
                 },
                 {
@@ -86,7 +86,7 @@ export const CPUChart = (props: any) => {
                     borderColor: 'transparent',
                     data: loading ?
                         seriesDataFormatter([], props.start, props.end) :
-                        seriesDataFormatter(data[5]?.values, props.start, props.end),
+                        seriesDataFormatter(data[7]?.values, props.start, props.end),
                     label: 'Wait',
                 },
                 
