@@ -90,6 +90,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Disable Public IP Address for VPC-only Linodes in the Linode's details page ([#9899](https://github.com/linode/manager/pull/9899))
 - Update copy on VPC Create page ([#9962](https://github.com/linode/manager/pull/9962))
 - Update VPC-related copy for Reboot Needed tooltip ([#9966](https://github.com/linode/manager/pull/9966))
+- Update copy for VPC Panel in Linode Create flow and VPC-related copy in Linode Add/Edit Config dialog ([#9968](https://github.com/linode/manager/pull/9968))
 - Create feature flag to support OBJ Multi Cluster UI changes ([#9970](https://github.com/linode/manager/pull/9970))
 - Replace Linode Network Transfer History chart with Recharts ([#9938](https://github.com/linode/manager/pull/9938))
 
