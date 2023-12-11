@@ -242,7 +242,7 @@ export const LinodeResize = (props: Props) => {
             disabled={tableDisabled}
             onSelect={(type) => formik.setFieldValue('type', type)}
             regionsData={regionsData}
-            selectedID={formik.values.type}
+            selectedId={formik.values.type}
             selectedRegionID={linode?.region}
             types={currentTypes.map(extendType)}
           />

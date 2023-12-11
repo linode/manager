@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { LoadBalancerHandlers } from './LoadBalancerRow';
 import type { Loadbalancer } from '@linode/api-v4';

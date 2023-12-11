@@ -51,8 +51,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
   const { data: regions } = useRegionsQuery();
-  const regionsWithVPCCapability =
-    regions?.filter((region) => region.capabilities.includes('VPCs')) ?? [];
+  const regionsData = regions ?? [];
 
   const [
     generalSubnetErrorsFromAPI,
@@ -218,7 +217,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     isLoadingCreateVPC,
     onChangeField,
     onCreateVPC,
-    regionsWithVPCCapability,
+    regionsData,
     setGeneralAPIError,
     setGeneralSubnetErrorsFromAPI,
     userCannotAddVPC,

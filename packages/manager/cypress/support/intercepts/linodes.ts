@@ -83,22 +83,6 @@ export const interceptGetLinodeDetails = (
 };
 
 /**
- * Intercepts GET request to retrieve Linode configs.
- *
- * @param linodeId - ID of Linode for intercepted request.
- *
- * @returns Cypress chainable.
- */
-export const interceptGetLinodeConfigs = (
-  linodeId: number
-): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'GET',
-    apiMatcher(`linode/instances/${linodeId}/configs*`)
-  );
-};
-
-/**
  * Intercepts GET request to retrieve Linode details and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.

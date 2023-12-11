@@ -85,6 +85,7 @@ const submitRebuild = () => {
   ui.button
     .findByTitle('Rebuild Linode')
     .scrollIntoView()
+    .should('have.attr', 'data-qa-form-data-loading', 'false')
     .should('be.visible')
     .should('be.enabled')
     .click();

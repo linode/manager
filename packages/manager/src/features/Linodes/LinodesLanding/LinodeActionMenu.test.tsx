@@ -21,12 +21,12 @@ const props: LinodeActionMenuProps = {
   linodeRegion: 'us-east',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  onOpenDeleteDialog: jest.fn(),
-  onOpenMigrateDialog: jest.fn(),
-  onOpenPowerDialog: jest.fn(),
-  onOpenRebuildDialog: jest.fn(),
-  onOpenRescueDialog: jest.fn(),
-  onOpenResizeDialog: jest.fn(),
+  onOpenDeleteDialog: vi.fn(),
+  onOpenMigrateDialog: vi.fn(),
+  onOpenPowerDialog: vi.fn(),
+  onOpenRebuildDialog: vi.fn(),
+  onOpenRescueDialog: vi.fn(),
+  onOpenResizeDialog: vi.fn(),
 };
 
 describe('LinodeActionMenu', () => {

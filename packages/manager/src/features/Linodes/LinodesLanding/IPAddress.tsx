@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
+import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import {
@@ -13,6 +14,11 @@ import {
 } from './IPAddress.styles';
 
 export interface IPAddressProps {
+  /**
+   * If true, the copy button will be disabled with a tooltip explanation.
+   * @default false
+   */
+  disabled?: boolean;
   /**
    * Conditional handlers to be applied to the IP wrapper div when `showTooltipOnIpHover` is true.
    * @default undefined
@@ -53,10 +59,11 @@ export const sortIPAddress = (ip1: string, ip2: string) =>
 
 export const IPAddress = (props: IPAddressProps) => {
   const {
+    disabled = false,
     ips,
+    isHovered = false,
     showAll,
     showMore,
-    isHovered = false,
     showTooltipOnIpHover = false,
   } = props;
 
@@ -82,6 +89,10 @@ export const IPAddress = (props: IPAddressProps) => {
   const handleMouseLeave = () => setIsIpTooltipHovered(false);
 
   const renderCopyIcon = (ip: string) => {
+    if (disabled) {
+      return PublicIpsUnassignedTooltip;
+    }
+
     return (
       <StyledIpLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip
@@ -108,7 +119,12 @@ export const IPAddress = (props: IPAddressProps) => {
         {...handlers}
         showTooltipOnIpHover={showTooltipOnIpHover}
       >
-        <CopyTooltip copyableText data-qa-copy-ip-text text={ip} />
+        <CopyTooltip
+          copyableText
+          data-qa-copy-ip-text
+          disabled={disabled}
+          text={ip}
+        />
         {renderCopyIcon(ip)}
       </StyledRenderIPDiv>
     );

@@ -31,6 +31,12 @@ export interface Params {
   page_size?: number;
 }
 
+export interface RequestOptions {
+  params?: Params;
+  filter?: Filter;
+  headers?: RequestHeaders;
+}
+
 interface FilterConditionTypes {
   '+and'?: Filter[];
   '+or'?: Filter[] | string[];
@@ -88,3 +94,24 @@ type LinodeFilter =
 //     },
 //   ],
 // };
+
+type RequestHeaderValue = string | string[] | number | boolean | null;
+
+type RequestContentType =
+  | RequestHeaderValue
+  | 'application/json'
+  | 'application/octet-stream'
+  | 'application/x-www-form-urlencoded'
+  | 'multipart/form-data'
+  | 'text/html'
+  | 'text/plain';
+
+export interface RequestHeaders {
+  [key: string]: RequestHeaderValue | undefined;
+  Accept?: string;
+  Authorization?: string;
+  'Content-Encoding'?: string;
+  'Content-Length'?: number;
+  'User-Agent'?: string;
+  'Content-Type'?: RequestContentType;
+}

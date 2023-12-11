@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import PaymentMethodRow from 'src/components/PaymentMethodRow';
+import { PaymentMethodRow } from 'src/components/PaymentMethodRow/PaymentMethodRow';
 import { Typography } from 'src/components/Typography';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

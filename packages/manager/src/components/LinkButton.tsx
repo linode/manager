@@ -38,7 +38,7 @@ export const LinkButton = (props: Props) => {
     style,
   } = props;
 
-  const Button = () => (
+  const Button = (
     <StyledLinkButton
       className={classNames(
         {
@@ -58,11 +58,11 @@ export const LinkButton = (props: Props) => {
   if (isLoading) {
     return (
       <Box alignItems="center" display="flex">
-        <Button />
+        {Button}
         <CircularProgress className={classes.spinner} size={12} />
       </Box>
     );
   }
 
-  return <Button />;
+  return Button;
 };

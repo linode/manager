@@ -26,7 +26,7 @@ describe('ResizeDiskDrawer', () => {
       <ResizeDiskDrawer
         disk={disk}
         linodeId={1}
-        onClose={jest.fn()}
+        onClose={vi.fn()}
         open={true}
       />
     );
@@ -68,7 +68,7 @@ describe('ResizeDiskDrawer', () => {
       <ResizeDiskDrawer
         disk={diskToResize}
         linodeId={1}
-        onClose={jest.fn()}
+        onClose={vi.fn()}
         open={true}
       />
     );

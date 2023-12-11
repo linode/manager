@@ -1,6 +1,5 @@
-import { Response } from 'support/util/response';
-
 import type { ResourcePage } from '@linode/api-v4/types';
+import type { StaticResponse } from 'cypress/types/net-stubbing';
 
 /**
  * Paginated data.
@@ -87,7 +86,7 @@ export const paginateResponse = (
   statusCode: number = 200,
   page: number = 1,
   totalPages: number = 1
-): Response => {
+): StaticResponse => {
   const dataArray = Array.isArray(data) ? data : [data];
   return {
     body: {

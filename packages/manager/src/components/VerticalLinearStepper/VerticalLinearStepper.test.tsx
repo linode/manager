@@ -10,17 +10,17 @@ import { VerticalLinearStepper } from './VerticalLinearStepper';
 const steps = [
   {
     content: <div>Step 1 Content</div>,
-    handler: jest.fn(), // Mock function for testing
+    handler: vi.fn(), // Mock function for testing
     label: 'Details',
   },
   {
     content: <div>Step 2 Content</div>,
-    handler: jest.fn(),
+    handler: vi.fn(),
     label: 'Summary',
   },
   {
     content: <div>Step 3 Content</div>,
-    handler: jest.fn(),
+    handler: vi.fn(),
     label: 'Next',
   },
 ];

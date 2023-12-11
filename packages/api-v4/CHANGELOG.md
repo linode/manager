@@ -1,3 +1,22 @@
+## [2023-12-11] - v0.106.0
+
+
+### Added:
+
+- Beta flag DC Get Well endpoints ([#9904](https://github.com/linode/manager/pull/9904))
+
+### Tech Stories:
+
+- Update `axios` to `1.6.1` ([#9911](https://github.com/linode/manager/pull/9911))
+
+### Upcoming Features:
+
+- Add validation to AGLB `createLoadbalancerConfiguration` and correct `routes` to `route_ids` ([#9870](https://github.com/linode/manager/pull/9870))
+- Add `protocol` to AGLB `ServiceTargetPayload` ([#9891](https://github.com/linode/manager/pull/9891))
+- Change `ca_certificate` to `certificate_id` in AGLB `ServiceTargetPayload` ([#9891](https://github.com/linode/manager/pull/9891))
+- Add `user_type` and `child_account_access` fields for Parent/Child account switching ([#9942](https://github.com/linode/manager/pull/9942))
+- Add new endpoints for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
+
 ## [2023-11-13] - v0.105.0
 
 

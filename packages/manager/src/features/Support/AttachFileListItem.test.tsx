@@ -12,8 +12,8 @@ import { AttachFileListItem } from './AttachFileListItem';
 
 const props = {
   fileIdx: 1,
-  onClick: jest.fn(),
-  removeFile: jest.fn(),
+  onClick: vi.fn(),
+  removeFile: vi.fn(),
 };
 
 describe('AttachFileListItem component', () => {
@@ -34,7 +34,7 @@ describe('AttachFileListItem component', () => {
     );
 
     fireEvent.click(getByTestId('delete-button'));
-    expect(props.onClick).toHaveBeenCalled();
+    expect(props.removeFile).toHaveBeenCalled();
     expect(queryAllByTestId('delete-button')).toHaveLength(1);
   });
   it('should render a progress bar when a file is uploading', () => {

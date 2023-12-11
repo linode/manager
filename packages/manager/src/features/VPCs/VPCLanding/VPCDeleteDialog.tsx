@@ -15,10 +15,19 @@ interface Props {
 export const VPCDeleteDialog = (props: Props) => {
   const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { error, isLoading, mutateAsync: deleteVPC } = useDeleteVPCMutation(
-    id ?? -1
-  );
+  const {
+    error,
+    isLoading,
+    mutateAsync: deleteVPC,
+    reset,
+  } = useDeleteVPCMutation(id ?? -1);
   const history = useHistory();
+
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open, reset]);
 
   const onDeleteVPC = () => {
     deleteVPC().then(() => {

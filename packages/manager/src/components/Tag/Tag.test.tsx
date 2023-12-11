@@ -32,7 +32,7 @@ describe('Tag Component', () => {
   });
 
   it('calls closeMenu when clicked', () => {
-    const closeMenuMock = jest.fn();
+    const closeMenuMock = vi.fn();
 
     const { getByText } = renderWithTheme(
       <Tag {...defaultProps} closeMenu={closeMenuMock} />

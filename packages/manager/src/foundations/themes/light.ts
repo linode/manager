@@ -3,6 +3,8 @@ import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
+const inputMaxWidth = 416;
+
 export const bg = {
   app: '#f4f5f6',
   bgAccessRow: '#fafafa',
@@ -277,6 +279,14 @@ export const lightTheme: ThemeOptions = {
             },
           },
         },
+        input: {
+          '&::placeholder': {
+            opacity: 1,
+          },
+          '&::selection': {
+            backgroundColor: color.grey7,
+          },
+        },
         inputRoot: {
           paddingLeft: 8,
         },
@@ -314,6 +324,9 @@ export const lightTheme: ThemeOptions = {
               },
             },
           },
+        },
+        root: {
+          maxWidth: inputMaxWidth,
         },
         tag: {
           '&:not(.MuiChip-root)': {
@@ -743,7 +756,7 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
           lineHeight: 1,
-          maxWidth: 416,
+          maxWidth: inputMaxWidth,
           minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
         },
@@ -864,8 +877,8 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.down('xs')]: {
               minWidth: 200,
             },
-            maxWidth: 200,
             maxHeight: 250,
+            maxWidth: 200,
             overflowX: 'hidden',
             overflowY: 'auto',
             padding: 4,

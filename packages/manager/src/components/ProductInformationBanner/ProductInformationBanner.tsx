@@ -6,7 +6,7 @@ import { ProductInformationBannerLocation } from 'src/featureFlags';
 import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';
 
-import { DismissibleBanner } from '../DismissibleBanner';
+import { DismissibleBanner } from '../DismissibleBanner/DismissibleBanner';
 
 import type { NoticeProps } from 'src/components/Notice/Notice';
 

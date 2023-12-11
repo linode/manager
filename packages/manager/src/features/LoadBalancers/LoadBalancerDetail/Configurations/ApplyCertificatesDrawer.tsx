@@ -85,6 +85,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
                 )
               }
               errorText={formik.errors.certificates?.[index]?.['id']}
+              filter={{ type: 'downstream' }}
               loadbalancerId={loadbalancerId}
               value={id}
             />

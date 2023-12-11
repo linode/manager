@@ -9,10 +9,10 @@ import VPCCreate from './VPCCreate';
 
 beforeEach(() => {
   // ignores the console errors in these tests as they're supposed to happen
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
-jest.mock('src/utilities/scrollErrorIntoView');
+vi.mock('src/utilities/scrollErrorIntoView');
 
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {
@@ -20,7 +20,7 @@ describe('VPC create page', () => {
 
     getAllByText('Region');
     getAllByText('VPC Label');
-    getAllByText('Select a Region');
+    getAllByText('Region');
     getAllByText('Description');
     getAllByText('Subnets');
     getAllByText('Subnet Label');
@@ -103,7 +103,7 @@ describe('VPC create page', () => {
   it('should have a default value for the subnet ip address', () => {
     const { getAllByTestId } = renderWithTheme(<VPCCreate />);
     const subnetIP = getAllByTestId('textfield-input');
-    expect(subnetIP[3]).toBeInTheDocument();
-    expect(subnetIP[3]).toHaveValue('10.0.4.0/24');
+    expect(subnetIP[4]).toBeInTheDocument();
+    expect(subnetIP[4]).toHaveValue('10.0.4.0/24');
   });
 });

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`HighlightedMarkdown component should highlight text consistently 1`] = `
+exports[`HighlightedMarkdown component > should highlight text consistently 1`] = `
 <DocumentFragment>
   <p
     class="MuiTypography-root MuiTypography-body1 formatted-text undefined css-10gjgoc-MuiTypography-root"

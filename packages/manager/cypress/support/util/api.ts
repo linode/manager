@@ -3,6 +3,7 @@
  */
 
 import { baseRequest } from '@linode/api-v4';
+import { AxiosHeaders } from 'axios';
 
 // Note: This file is imported by Cypress plugins, and indirectly by Cypress
 // tests. Because Cypress has not been initiated when plugins are executed, we
@@ -26,23 +27,15 @@ export const defaultApiRoot = 'https://api.linode.com/v4';
  */
 export const configureLinodeApi = (accessToken: string, baseUrl?: string) => {
   baseRequest.interceptors.request.use((config) => {
-    // If a base URL is provided, override the request URL
-    // using the given base URL. Otherwise, evaluate to an empty object so
-    // we can still use the spread operator later on.
-    const url = config.url;
-    const urlOverride =
-      !baseUrl || !url ? {} : { url: url.replace(defaultApiRoot, baseUrl) };
+    const headers = new AxiosHeaders(config.headers);
+    headers.set('Authorization', `Bearer ${accessToken}`);
 
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        common: {
-          ...config.headers.common,
-          authorization: `Bearer ${accessToken}`,
-        },
-      },
-      ...urlOverride,
-    };
+    // If a base URL is provided, override the request URL
+    // using the given base URL.
+    if (baseUrl && config.url) {
+      config.url = config.url.replace(defaultApiRoot, baseUrl);
+    }
+
+    return { ...config, headers };
   });
 };

@@ -7,11 +7,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TagsInput } from './TagsInput';
 
-jest.mock('src/components/EnhancedSelect/Select');
-const mockGetTags = jest.spyOn<any, any>(tags, 'getTags');
+vi.mock('src/components/EnhancedSelect/Select');
+const mockGetTags = vi.spyOn<any, any>(tags, 'getTags');
 
 describe('TagsInput', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
 
   it('sets account tags based on API request', async () => {
     const { getByTestId, queryAllByTestId } = renderWithTheme(

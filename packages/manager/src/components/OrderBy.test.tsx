@@ -119,9 +119,9 @@ describe('OrderBy', () => {
 
   describe('component', () => {
     const componentProps = {
-      getUserPreferences: jest.fn(),
+      getUserPreferences: vi.fn(),
       preferences: {},
-      updateUserPreferences: jest.fn(),
+      updateUserPreferences: vi.fn(),
     };
 
     it('re-sorts (previously) sorted data when the order changes', () => {

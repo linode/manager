@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Action } from 'src/components/ActionMenu';
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface ContactsActionMenuProps {

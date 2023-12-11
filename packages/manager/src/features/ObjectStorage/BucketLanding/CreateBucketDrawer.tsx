@@ -6,9 +6,9 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useFlags } from 'src/hooks/useFlags';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
+  reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
@@ -22,7 +22,7 @@ import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
@@ -52,8 +52,9 @@ export const CreateBucketDrawer = (props: Props) => {
   const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
     false
   );
-
-  const flags = useFlags();
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -63,6 +64,11 @@ export const CreateBucketDrawer = (props: Props) => {
     async onSubmit(values) {
       await createBucket(values);
       sendCreateBucketEvent(values.cluster);
+      if (hasSignedAgreement) {
+        updateAccountAgreements({
+          eu_model: true,
+        }).catch(reportAgreementSigningError);
+      }
       onClose();
     },
     validate(values) {
@@ -96,17 +102,18 @@ export const CreateBucketDrawer = (props: Props) => {
     }
   }, [isOpen]);
 
-  const showAgreement = Boolean(
-    !profile?.restricted &&
-      agreements?.eu_model === false &&
-      isEURegion(formik.values.cluster)
-  );
-
   const clusterRegion =
     regions &&
     regions.filter((region) => {
       return formik.values.cluster.includes(region.id);
     });
+
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements,
+    profile,
+    regions,
+    selectedRegionId: clusterRegion?.[0]?.id ?? '',
+  });
 
   const errorMap = getErrorMap(['label', 'cluster'], error);
 
@@ -145,21 +152,21 @@ export const CreateBucketDrawer = (props: Props) => {
           required
           selectedCluster={formik.values.cluster}
         />
-        {flags.objDcSpecificPricing && clusterRegion?.[0]?.id && (
+        {clusterRegion?.[0]?.id && (
           <OveragePricing regionId={clusterRegion?.[0]?.id} />
         )}
-        {showAgreement ? (
+        {showGDPRCheckbox ? (
           <StyledEUAgreementCheckbox
-            onChange={(e) =>
-              updateAccountAgreements({ eu_model: e.target.checked })
-            }
-            checked={Boolean(agreements?.eu_model)}
+            checked={hasSignedAgreement}
+            onChange={(e) => setHasSignedAgreement(e.target.checked)}
           />
         ) : null}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
-            disabled: !formik.values.cluster,
+            disabled:
+              !formik.values.cluster ||
+              (showGDPRCheckbox && !hasSignedAgreement),
             label: 'Create Bucket',
             loading: isLoading,
             type: 'submit',

@@ -7,7 +7,7 @@ import { StackScriptForm } from './StackScriptForm';
 const props = {
   currentUser: 'mmckenna',
   description: {
-    handler: jest.fn(),
+    handler: vi.fn(),
     value: '',
   },
   disableSubmit: false,
@@ -18,19 +18,19 @@ const props = {
   },
   isSubmitting: false,
   label: {
-    handler: jest.fn(),
+    handler: vi.fn(),
     value: '',
   },
   mode: 'create' as any,
-  onCancel: jest.fn(),
-  onSelectChange: jest.fn(),
-  onSubmit: jest.fn(),
+  onCancel: vi.fn(),
+  onSelectChange: vi.fn(),
+  onSubmit: vi.fn(),
   revision: {
-    handler: jest.fn(),
+    handler: vi.fn(),
     value: '',
   },
   script: {
-    handler: jest.fn(),
+    handler: vi.fn(),
     value: '',
   },
 };

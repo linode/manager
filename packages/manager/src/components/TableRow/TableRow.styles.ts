@@ -64,9 +64,13 @@ export const StyledTableRow = styled(_TableRow, {
   }),
   ...(props.disabled && {
     '& td': {
-      color: '#D2D3D4',
+      color:
+        theme.palette.mode === 'dark'
+          ? theme.color.grey6
+          : theme.color.disabledText,
     },
-    backgroundColor: 'rgba(247, 247, 247, 0.25)',
+    backgroundColor:
+      theme.palette.mode === 'dark' ? '#32363c' : 'rgba(247, 247, 247, 0.25)',
   }),
 }));
 

@@ -29,11 +29,11 @@ describe('StackScriptCreate', () => {
     />
   );
 
-  xit('should container <LandingHeader />', () => {
+  it.skip('should container <LandingHeader />', () => {
     expect(component.find('LandingHeader')).toHaveLength(1);
   });
 
-  xit('should render a title that reads "Create StackScript', () => {
+  it.skip('should render a title that reads "Create StackScript', () => {
     const titleText = component
       .find('WithStyles(Typography)')
       .first()
@@ -42,7 +42,7 @@ describe('StackScriptCreate', () => {
     expect(titleText).toBe('Create StackScript');
   });
 
-  xit(`should render a confirmation dialog with the
+  it.skip(`should render a confirmation dialog with the
   title "Clear StackScript Configuration?"`, () => {
     const modalTitle = component
       .find('WithStyles(ConfirmationDialog)')
@@ -50,17 +50,17 @@ describe('StackScriptCreate', () => {
     expect(modalTitle).toBe('Clear StackScript Configuration?');
   });
 
-  xit('should render StackScript Form', () => {
+  it.skip('should render StackScript Form', () => {
     expect(component.find('StackScriptForm')).toHaveLength(1);
   });
 
   describe('Back Arrow Icon Button', () => {
-    xit('should render back array icon button', () => {
+    it.skip('should render back array icon button', () => {
       const backIcon = component.find('WithStyles(IconButton)').first();
       expect(backIcon.find('pure(KeyboardArrowLeft)')).toHaveLength(1);
     });
 
-    xit('back arrow icon should link back to stackscripts landing', () => {
+    it.skip('back arrow icon should link back to stackscripts landing', () => {
       const backIcon = component.find('WithStyles(IconButton)').first();
       const parentLink = backIcon.closest('Link');
       expect(parentLink.prop('to')).toBe('/stackscripts');

@@ -28,9 +28,6 @@ const StyledRoot = styled('div')(() => {
 
 const StyledCheckoutSection = styled('div')(({ theme }) => ({
   padding: '12px 0',
-  [theme.breakpoints.down('lg')]: {
-    paddingBottom: `0px !important`,
-  },
   [theme.breakpoints.down('md')]: {
     '& button': {
       marginLeft: 0,

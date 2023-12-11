@@ -1,7 +1,7 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { attachment1, attachment2 } from 'src/__data__/fileAttachments';
+import { attachment3 } from 'src/__data__/fileAttachments';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AttachFileForm } from './AttachFileForm';
 
@@ -9,17 +9,15 @@ const props = {
   classes: {
     attachFileButton: '',
   },
-  files: [attachment1, attachment2],
-  handleFileSelected: jest.fn(),
-  updateFiles: jest.fn(),
+  files: [attachment3],
+  handleFileSelected: vi.fn(),
+  updateFiles: vi.fn(),
 };
-
-const component = shallow(<AttachFileForm {...props} />);
 
 describe('AttachFileForm component', () => {
   it('should render', () => {
-    expect(component).toBeDefined();
+    const { getByText } = renderWithTheme(<AttachFileForm {...props} />);
+
+    getByText('Attach a file');
   });
-  // @todo test event handlers
-  // @todo test loading/error/empty states
 });

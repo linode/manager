@@ -8,7 +8,7 @@ import { ApiAwarenessModal, ApiAwarenessModalProps } from './ApiAwarenessModal';
 
 const defaultProps: ApiAwarenessModalProps = {
   isOpen: false,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   payLoad: {},
   route: '',
 };

@@ -12,6 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useFirewallsQuery } from 'src/queries/firewalls';
@@ -26,6 +27,7 @@ import { FirewallRow } from './FirewallRow';
 const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
+  const flags = useFlags();
   const location = useLocation();
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
@@ -103,6 +105,7 @@ const FirewallLanding = () => {
       <>
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
+          createFlow={undefined}
           onClose={onCloseCreateDrawer}
           open={isCreateFirewallDrawerOpen}
         />
@@ -129,7 +132,7 @@ const FirewallLanding = () => {
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"
       />
-      <Table>
+      <Table aria-label="List of services attached to each firewall">
         <TableHead>
           <TableRow>
             <TableSortCell
@@ -150,7 +153,9 @@ const FirewallLanding = () => {
             </TableSortCell>
             <Hidden smDown>
               <TableCell>Rules</TableCell>
-              <TableCell>Linodes</TableCell>
+              <TableCell>
+                {flags.firewallNodebalancer ? 'Services' : 'Linodes'}
+              </TableCell>
             </Hidden>
             <TableCell></TableCell>
           </TableRow>
@@ -170,6 +175,7 @@ const FirewallLanding = () => {
         pageSize={pagination.pageSize}
       />
       <CreateFirewallDrawer
+        createFlow={undefined}
         onClose={onCloseCreateDrawer}
         open={isCreateFirewallDrawerOpen}
       />
@@ -177,7 +183,7 @@ const FirewallLanding = () => {
         mode={dialogMode}
         onClose={() => setIsModalOpen(false)}
         open={isModalOpen}
-        selectedFirewallID={selectedFirewallId}
+        selectedFirewallId={selectedFirewallId}
         selectedFirewallLabel={selectedFirewall?.label ?? ''}
       />
     </React.Fragment>

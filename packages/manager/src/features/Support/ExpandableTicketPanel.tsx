@@ -2,7 +2,7 @@ import { SupportReply, SupportTicket } from '@linode/api-v4';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
@@ -10,10 +10,10 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Typography } from 'src/components/Typography';
 
 import { Hively, shouldRenderHively } from './Hively';
-import TicketDetailBody from './TicketDetailText';
+import { TicketDetailText } from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.shape.borderRadius,
     marginRight: theme.spacing(2),
     marginTop: theme.spacing(1),
-    padding: theme.spacing(1),
     width: '100%',
   },
   expert: {
@@ -102,7 +101,7 @@ interface Data {
 }
 
 export const ExpandableTicketPanel = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { open, parentTicket, reply, ticket, ticketUpdated } = props;
 
@@ -164,7 +163,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
   return (
     <Grid container wrap="nowrap">
       <Grid>{renderAvatar(data.gravatar_id)}</Grid>
-      <Grid className={`${classes.content}`}>
+      <Grid className={classes.content}>
         <Grid className={classes.header} container>
           <Grid className={classes.headerInner}>
             <Typography className={classes.userName} component="span">
@@ -184,7 +183,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
             </Typography>
           </Grid>
         </Grid>
-        <TicketDetailBody open={open} text={data.description} />
+        <TicketDetailText open={open} text={data.description} />
         {shouldRenderHively(data.from_linode, data.updated, data.username) && (
           <Hively
             linodeUsername={data.username}

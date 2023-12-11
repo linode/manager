@@ -2,28 +2,33 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { Paper } from 'src/components/Paper';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
+  const flags = useFlags();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
   const { data: regions } = useRegionsQuery();
-
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  const linkText = attachedFirewallData?.data[0]?.label;
+  const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
@@ -90,6 +95,18 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
+      {displayFirewallLink && flags.firewallNodebalancer && (
+        <StyledSummarySection>
+          <StyledTitle data-qa-title variant="h3">
+            Firewall
+          </StyledTitle>
+          <Typography data-qa-firewall variant="body1">
+            <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+              {linkText}
+            </Link>
+          </Typography>
+        </StyledSummarySection>
+      )}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           IP Addresses

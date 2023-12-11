@@ -1,11 +1,11 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import {
-  StyledLink,
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
@@ -43,9 +43,9 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       key={`firewall-${firewallID}`}
     >
       <TableCell data-qa-firewall-label>
-        <StyledLink tabIndex={0} to={`/firewalls/${firewallID}`}>
+        <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
           {label}
-        </StyledLink>
+        </Link>
       </TableCell>
       <TableCell data-qa-firewall-status statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />

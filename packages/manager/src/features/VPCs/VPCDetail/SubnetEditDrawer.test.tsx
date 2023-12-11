@@ -6,7 +6,7 @@ import { SubnetEditDrawer } from './SubnetEditDrawer';
 
 describe('SubnetEditDrawer', () => {
   const props = {
-    onClose: jest.fn(),
+    onClose: vi.fn(),
     open: true,
     vpcId: 1,
   };

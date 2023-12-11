@@ -25,7 +25,6 @@ export const LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE =
   'Select a region, HA choice, and add a Node Pool to view pricing and create a cluster.';
 export const DIFFERENT_PRICE_STRUCTURE_WARNING =
   'The selected region has a different price structure.';
-export const ENABLE_OBJ_ACCESS_KEYS_MESSAGE =
-  'Pricing for monthly rate and overage costs will depend on the data center you select for deployment.';
 export const MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED =
   '2023-10-05 00:00:00Z';
+export const DOCS_LINK_LABEL_DC_PRICING = 'How Data Center Pricing Works';

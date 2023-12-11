@@ -130,31 +130,28 @@ export const isFile = (path: string) => path.split('/').length < 2;
 
 export const firstSubfolder = (path: string) => path.split('/')[0];
 
-export const confirmObjectStorage = <T extends {}>(
+export const confirmObjectStorage = async <T extends {}>(
   object_storage: AccountSettings['object_storage'],
   formikProps: FormikProps<T>,
   openConfirmationDialog: () => void
-) => {
-  // If the user doesn't already have Object Storage enabled, we show
-  // a confirmation modal before letting them create their first bucket.
-  if (object_storage === 'disabled') {
-    // But first, manually validate the form.
-    formikProps.validateForm().then((validationErrors) => {
-      if (Object.keys(validationErrors).length > 0) {
-        // Set `touched` and `error` for each field with an error.
-        // Setting `touched` is necessary because we only display errors
-        // on fields that have been touched (handleSubmit() does this
-        // implicitly).
-        Object.keys(validationErrors).forEach((key) => {
-          formikProps.setFieldTouched(key, validationErrors[key]);
-          formikProps.setFieldError(key, validationErrors[key]);
-        });
-      } else {
-        openConfirmationDialog();
-      }
+): Promise<void> => {
+  if (object_storage !== 'disabled') {
+    formikProps.handleSubmit();
+    return;
+  }
+  // But first, manually validate the form.
+  const validationErrors = await formikProps.validateForm();
+  if (Object.keys(validationErrors).length > 0) {
+    // Set `touched` and `error` for each field with an error.
+    // Setting `touched` is necessary because we only display errors
+    // on fields that have been touched (handleSubmit() does this
+    // implicitly).
+    Object.keys(validationErrors).forEach((key) => {
+      formikProps.setFieldTouched(key, validationErrors[key]);
+      formikProps.setFieldError(key, validationErrors[key]);
     });
   } else {
-    formikProps.handleSubmit();
+    openConfirmationDialog();
   }
 };
 

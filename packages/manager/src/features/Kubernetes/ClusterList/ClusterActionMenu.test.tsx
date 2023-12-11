@@ -7,24 +7,27 @@ import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ClusterActionMenu } from './ClusterActionMenu';
 
-const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
+const mockGetKubeConfig = vi.spyOn<any, any>(kube, 'getKubeConfig');
 
 // Mock snackbar to prevent "Can't perform a React state update on an unmounted component" warning.
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
-  useSnackbar: () => {
-    return {
-      enqueueSnackbar: jest.fn(),
-    };
-  },
-}));
+vi.mock('notistack', async () => {
+  const actual = await vi.importActual<any>('notistack');
+  return {
+    ...actual,
+    useSnackbar: () => {
+      return {
+        enqueueSnackbar: vi.fn(),
+      };
+    },
+  };
+});
 
 const props = {
-  closeSnackbar: jest.fn(),
+  closeSnackbar: vi.fn(),
   clusterId: 123456,
   clusterLabel: 'my-cluster',
-  enqueueSnackbar: jest.fn(),
-  openDialog: jest.fn(),
+  enqueueSnackbar: vi.fn(),
+  openDialog: vi.fn(),
   ...reactRouterProps,
 };
 

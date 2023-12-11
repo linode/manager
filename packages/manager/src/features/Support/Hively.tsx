@@ -8,6 +8,7 @@ import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 
 import { OFFICIAL_USERNAMES } from './ticketUtils';
+import { Box } from 'src/components/Box';
 
 interface Props {
   /** The username of the Linode user who created the ticket. */
@@ -48,7 +49,7 @@ export const Hively = (props: Props) => {
   const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
 
   return (
-    <>
+    <Box sx={{ padding: 1 }}>
       <Divider />
       <Stack alignItems="center" direction="row" pl={1} spacing={1.5}>
         <Typography
@@ -100,6 +101,6 @@ export const Hively = (props: Props) => {
           />
         </Link>
       </Stack>
-    </>
+    </Box>
   );
 };

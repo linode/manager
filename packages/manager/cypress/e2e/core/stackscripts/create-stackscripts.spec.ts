@@ -87,8 +87,7 @@ const fillOutStackscriptForm = (
 const fillOutLinodeForm = (label: string, regionName: string) => {
   const password = randomString(32);
 
-  cy.findByText('Select a Region').should('be.visible').click();
-
+  ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionLabel(regionName).click();
 
   cy.findByText('Linode Label')
@@ -308,11 +307,11 @@ describe('Create stackscripts', () => {
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
 
-    cy.visitWithLogin('/stackscripts/create');
     cy.defer(createLinodeAndImage(), {
       label: 'creating Linode and Image',
       timeout: 360000,
     }).then((privateImage) => {
+      cy.visitWithLogin('/stackscripts/create');
       cy.fixture(stackscriptBasicPath).then((stackscriptBasic) => {
         fillOutStackscriptForm(
           stackscriptLabel,

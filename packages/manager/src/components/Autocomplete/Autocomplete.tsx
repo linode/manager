@@ -31,6 +31,8 @@ export interface EnhancedAutocompleteProps<
   label: string;
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
+  /** Text to show when the Autocomplete search yields no results. */
+  noOptionsText?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
   textFieldProps?: Partial<TextFieldProps>;
@@ -106,6 +108,10 @@ export const Autocomplete = <
           placeholder={placeholder || 'Select an option'}
           {...params}
           {...textFieldProps}
+          InputProps={{
+            ...params.InputProps,
+            ...textFieldProps?.InputProps,
+          }}
         />
       )}
       renderOption={(props, option, state, ownerState) => {
@@ -115,7 +121,7 @@ export const Autocomplete = <
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
-          <ListItem {...props}>
+          <ListItem {...props} data-qa-option>
             <>
               <Box
                 sx={{
@@ -132,6 +138,7 @@ export const Autocomplete = <
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
+      data-qa-autocomplete
       defaultValue={defaultValue}
       disableCloseOnSelect={multiple}
       disablePortal={disablePortal}

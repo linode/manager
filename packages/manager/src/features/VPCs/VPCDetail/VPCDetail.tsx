@@ -4,18 +4,17 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { VPC_LABEL } from 'src/features/VPCs/constants';
+import { VPC_FEEDBACK_FORM_URL, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
-
-import { VPC_FEEDBACK_FORM_URL } from 'src/features/VPCs/constants';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
@@ -99,7 +98,6 @@ const VPCDetail = () => {
     <>
       <DocumentTitleSegment segment={vpc.label} />
       <LandingHeader
-        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
         breadcrumbProps={{
           crumbOverrides: [
             {
@@ -110,6 +108,7 @@ const VPCDetail = () => {
           labelOptions: { noCap: true },
           pathname: `/vpcs/${vpc.label}`,
         }}
+        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
         docsLabel="Docs"
         docsLink="#" // @TODO VPC: Add docs link
       />
@@ -163,15 +162,15 @@ const VPCDetail = () => {
                 Description
               </span>{' '}
             </Typography>
-            <Typography>
+            <Typography sx={{ overflowWrap: 'anywhere', wordBreak: 'normal' }}>
               {description}{' '}
               {description.length > 150 && (
-                <button
+                <StyledLinkButton
                   onClick={() => setShowFullDescription((show) => !show)}
-                  style={{ ...theme.applyLinkStyles, fontSize: '0.875rem' }}
+                  sx={{ fontSize: '0.875rem' }}
                 >
                   Read {showFullDescription ? 'Less' : 'More'}
-                </button>
+                </StyledLinkButton>
               )}
             </Typography>
           </StyledDescriptionBox>
@@ -202,7 +201,7 @@ const VPCDetail = () => {
       </Box>
       {numLinodes > 0 && (
         <DismissibleBanner
-          preferenceKey={`reboot-linodes-warning-banner-${vpc.id}`}
+          preferenceKey={`reboot-linodes-warning-banner`}
           sx={{ marginBottom: theme.spacing(2) }}
           variant="warning"
         >

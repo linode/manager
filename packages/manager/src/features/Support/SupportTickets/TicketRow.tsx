@@ -1,5 +1,4 @@
 import { SupportTicket } from '@linode/api-v4/lib/support';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,12 +9,6 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
-
-const useStyles = makeStyles(() => ({
-  regarding: {
-    lineHeight: 1.1,
-  },
-}));
 
 interface Props {
   ticket: SupportTicket;
@@ -40,8 +33,6 @@ const renderEntityLink = (ticket: SupportTicket) => {
 };
 
 export const TicketRow = ({ ticket }: Props) => {
-  const classes = useStyles();
-
   const ticketSummary = sanitizeHTML({
     disallowedTagsMode: 'discard',
     sanitizingTier: 'none',
@@ -61,7 +52,12 @@ export const TicketRow = ({ ticket }: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
-      <TableCell className={classes.regarding} data-qa-support-entity>
+      <TableCell
+        sx={{
+          lineHeight: 1.1,
+        }}
+        data-qa-support-entity
+      >
         {renderEntityLink(ticket)}
       </TableCell>
       <Hidden smDown>

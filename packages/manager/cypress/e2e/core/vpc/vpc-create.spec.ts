@@ -88,10 +88,7 @@ describe('VPC create flow', () => {
     cy.visitWithLogin('/vpcs/create');
     cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
 
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
-      .type(`${mockVPCRegion.label}{enter}`);
+    ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 
     cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
 
@@ -306,10 +303,7 @@ describe('VPC create flow', () => {
     cy.visitWithLogin('/vpcs/create');
     cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
 
-    cy.findByText('Region')
-      .should('be.visible')
-      .click()
-      .type(`${mockVPCRegion.label}{enter}`);
+    ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 
     cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
 

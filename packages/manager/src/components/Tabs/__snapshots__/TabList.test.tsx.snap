@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TabList component > renders TabList correctly 1`] = `
+<div>
+  <div
+    data-orientation="horizontal"
+    data-reach-tabs=""
+  >
+    <div
+      aria-orientation="horizontal"
+      class="css-bjm66n"
+      data-reach-tab-list=""
+      role="tablist"
+    />
+  </div>
+</div>
+`;

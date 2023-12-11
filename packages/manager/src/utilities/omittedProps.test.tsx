@@ -20,19 +20,21 @@ const MyStyledComponent = styled('div', {
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-test('MyStyledComponent filters out omitted props', () => {
-  render(
-    <MyStyledComponent
-      anotherProp="another"
-      color="red"
-      data-testid="styled-component"
-      extraProp="extra"
-    />
-  );
+describe('omittedProps utility', () => {
+  it('filters out omitted props', () => {
+    render(
+      <MyStyledComponent
+        anotherProp="another"
+        color="red"
+        data-testid="styled-component"
+        extraProp="extra"
+      />
+    );
 
-  const component = screen.getByTestId('styled-component');
+    const component = screen.getByTestId('styled-component');
 
-  expect(component).not.toHaveAttribute('extraProp');
-  expect(component).not.toHaveAttribute('anotherProp');
-  expect(component).toHaveStyle('color: red');
+    expect(component).not.toHaveAttribute('extraProp');
+    expect(component).not.toHaveAttribute('anotherProp');
+    expect(component).toHaveStyle('color: rgb(255, 0, 0)');
+  });
 });

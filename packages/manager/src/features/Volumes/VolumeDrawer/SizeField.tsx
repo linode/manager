@@ -8,7 +8,6 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
 
@@ -47,7 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const SizeField = (props: Props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     error,
@@ -63,13 +61,11 @@ export const SizeField = (props: Props) => {
     ...rest
   } = props;
 
-  const { dcSpecificPricing } = flags;
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
 
   const price = getDynamicVolumePrice({
-    flags,
     regionId,
     size: value,
   });
@@ -110,11 +106,7 @@ export const SizeField = (props: Props) => {
         {...rest}
       />
       <div className={classes.priceDisplay}>
-        {dcSpecificPricing
-          ? hasSelectedRegion
-            ? priceDisplayText
-            : dynamicPricingHelperText
-          : priceDisplayText}
+        {hasSelectedRegion ? priceDisplayText : dynamicPricingHelperText}
       </div>
     </>
   );

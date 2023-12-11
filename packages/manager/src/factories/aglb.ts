@@ -12,6 +12,7 @@ import {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4/lib/aglb/types';
 import * as Factory from 'factory.ts';
+
 import { pickRandom } from 'src/utilities/random';
 
 export const mockCertificate = `
@@ -119,6 +120,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
         routes: [
           {
             label: 'my-route',
+            protocol: 'tcp',
             rules: [
               {
                 match_condition: {
@@ -130,7 +132,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                 },
                 service_targets: [
                   {
-                    ca_certificate: 'my-cms-certificate',
+                    certificate_id: 0,
                     endpoints: [
                       {
                         ip: '192.168.0.100',
@@ -149,6 +151,8 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                     },
                     label: 'my-service-target',
                     load_balancing_policy: 'round_robin',
+                    percentage: 0,
+                    protocol: 'https',
                   },
                 ],
               },
@@ -258,7 +262,7 @@ export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
 // *************************
 
 export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
-  ca_certificate: 'certificate-0',
+  certificate_id: 0,
   endpoints: [
     {
       ip: '192.168.0.100',
@@ -278,11 +282,13 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `service-target-${i}`),
   load_balancing_policy: 'round_robin',
+  percentage: 0,
+  protocol: 'https',
 });
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
   {
-    ca_certificate: 'my-cms-certificate',
+    certificate_id: 0,
     endpoints: [
       {
         ip: '192.168.0.100',
@@ -301,6 +307,8 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     },
     label: 'my-service-target',
     load_balancing_policy: 'least_request',
+    percentage: 0,
+    protocol: 'https',
   }
 );
 
