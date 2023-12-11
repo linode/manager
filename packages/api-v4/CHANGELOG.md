@@ -1,9 +1,9 @@
 ## [2023-12-11] - v0.106.0
 
 
-### Changed:
+### Added:
 
-- Add Beta flag DC Get Well endpoints ([#9904](https://github.com/linode/manager/pull/9904))
+- Beta flag DC Get Well endpoints ([#9904](https://github.com/linode/manager/pull/9904))
 
 ### Tech Stories:
 
