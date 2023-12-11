@@ -27,11 +27,7 @@ interface ActionMeta {
 
 export interface TagsPanelProps {
   /**
-   * Set the alignment of the tags panel.
-   */
-  align?: 'left' | 'right';
-  /**
-   * If true, the component is disabled.
+   * If true, the input will be disabled and no tags can be added or removed.
    */
   disabled?: boolean;
   /**
