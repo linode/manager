@@ -9,8 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added:
 
 - Ensure EU consent box shows for new European countries ([#9901](https://github.com/linode/manager/pull/9901))
-- Feature flag to Firewall-NodeBalancer ([#9931](https://github.com/linode/manager/pull/9931))
 - NodeBalancer support for Firewalls ([#9760](https://github.com/linode/manager/pull/9760))
+- Implement DC Get Well disabled regions in RegionSelect ([#9907](https://github.com/linode/manager/pull/9907), [#9909](https://github.com/linode/manager/pull/9909), [#9943](https://github.com/linode/manager/pull/9943), [#9945](https://github.com/linode/manager/pull/9945), [#9953](https://github.com/linode/manager/pull/9953))
 
 ### Changed:
 
@@ -28,7 +28,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - 'Oh snap' errors from MSW ([#9910](https://github.com/linode/manager/pull/9910))
 - `TableCell` with `ActionMenu` incorrect size and border placement ([#9915](https://github.com/linode/manager/pull/9915))
 - Images landing page guide section title typo ([#9930](https://github.com/linode/manager/pull/9930))
-- Accessibility on disabled SelectRegion menu items ([#9953](https://github.com/linode/manager/pull/9953))
 - `TableCell` styling for `ActionMenu`s ([#9954](https://github.com/linode/manager/pull/9954))
 
 ### Removed:
@@ -62,7 +61,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update tests for DC-specific pricing docs link ([#9946](https://github.com/linode/manager/pull/9946))
 - Upgrade Cypress from 13.4.0 to 13.5.0 ([#9892](https://github.com/linode/manager/pull/9892))
 - Improve stability for Longview, Rebuild, and Rescue tests ([#9902](https://github.com/linode/manager/pull/9902))
-- Add code coverage implementation ([#9917](https://github.com/linode/manager/pull/9917))
+- Code coverage implementation ([#9917](https://github.com/linode/manager/pull/9917))
 - Add unit tests and additional integration test for VPC delete dialog ([#9920](https://github.com/linode/manager/pull/9920))
 - Add AGLB Configuration create and delete e2e tests ([#9924](https://github.com/linode/manager/pull/9924))
 - Add maintenance mode integration test ([#9934](https://github.com/linode/manager/pull/9934))
@@ -81,10 +80,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add AGLB Configuration e2e tests, improve error handling, and improve UX ([#9941](https://github.com/linode/manager/pull/9941))
 - Add AGLB copy changes and improvements ([#9954](https://github.com/linode/manager/pull/9954))
 - Fix AGLB Configuration creation by fixing port type and other refinement ([#9903](https://github.com/linode/manager/pull/9903))
-- Add react query for `account/availabilities` endpoint using `getAll` ([#9907](https://github.com/linode/manager/pull/9907))
-- Implement DC Get Well disabled regions in RegionSelect ([#9909](https://github.com/linode/manager/pull/9909))
-- Add DC Get Well logic to various user flows pt2 and cleanup logic ([#9945](https://github.com/linode/manager/pull/9945))
-- Add logic to prevent new customers in regions to various user flows for DC Get Well initiative pt1 ([#9943](https://github.com/linode/manager/pull/9943))
 - Add `parentChildAccountAccess` feature flag ([#9919](https://github.com/linode/manager/pull/9919))
 - Update existing user account and grant factories and mocks for Parent/Child account switching ([#9942](https://github.com/linode/manager/pull/9942))
 - Add new grants and React Query queries for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
@@ -92,7 +87,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Indicate unrecommended Linode configurations on VPC Detail page ([#9914](https://github.com/linode/manager/pull/9914))
 - Tweaked VPC landing page empty state copy and added resource links ([#9951](https://github.com/linode/manager/pull/9951))
 - Display warning notices for unrecommended configurations in Linode Add/Edit Config dialog ([#9916](https://github.com/linode/manager/pull/9916))
-- Disable Public IP Address for VPC-only Linodes in the Linode's details page and add warning banner to Linode landing ([#9899](https://github.com/linode/manager/pull/9899))
+- Disable Public IP Address for VPC-only Linodes in the Linode's details page ([#9899](https://github.com/linode/manager/pull/9899))
 - Updated copy on VPC Create page ([#9962](https://github.com/linode/manager/pull/9962))
 - Updated VPC-related copy for Reboot Needed tooltip ([#9966](https://github.com/linode/manager/pull/9966))
 - Create feature flag to support OBJ Multi Cluster UI changes ([#9970](https://github.com/linode/manager/pull/9970))

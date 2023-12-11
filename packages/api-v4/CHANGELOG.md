@@ -3,7 +3,7 @@
 
 ### Changed:
 
-- Consolidate Region Types ([#9873](https://github.com/linode/manager/pull/9873))
+- Add Beta flag DC Get Well endpoints ([#9904](https://github.com/linode/manager/pull/9904))
 
 ### Tech Stories:
 
@@ -14,7 +14,6 @@
 - Add validation to AGLB `createLoadbalancerConfiguration` and correct `routes` to `route_ids` ([#9870](https://github.com/linode/manager/pull/9870))
 - Add `protocol` to AGLB `ServiceTargetPayload` ([#9891](https://github.com/linode/manager/pull/9891))
 - Change `ca_certificate` to `certificate_id` in AGLB `ServiceTargetPayload` ([#9891](https://github.com/linode/manager/pull/9891))
-- Add Beta flag DC Get Well endpoints ([#9904](https://github.com/linode/manager/pull/9904))
 - Add `user_type` and `child_account_access` fields for Parent/Child account switching ([#9942](https://github.com/linode/manager/pull/9942))
 - Add new endpoints for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
 
