@@ -1,6 +1,11 @@
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { APIError } from '@linode/api-v4/lib/types';
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import {
+  AxiosError,
+  AxiosHeaders,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 import * as React from 'react';
 
 import { AccountActivationError } from 'src/components/AccountActivation';
@@ -25,7 +30,13 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   return response;
 };
 
-export const handleError = (error: AxiosError, store: ApplicationStore) => {
+// All errors returned by the actual Linode API are in this shape.
+export type LinodeError = { errors: APIError[] };
+
+export const handleError = (
+  error: AxiosError<LinodeError>,
+  store: ApplicationStore
+) => {
   if (error.response && error.response.status === 401) {
     /**
      * this will blow out redux state and the componentDidUpdate in the
@@ -34,8 +45,8 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
     store.dispatch(handleLogout());
   }
 
-  const config = error.response?.config ?? {};
-  const url = config.url ?? '';
+  const config = error.response?.config;
+  const url = config?.url ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
     { reason: DEFAULT_ERROR_MESSAGE },
@@ -181,17 +192,24 @@ export const getXCustomerUuidHeader = (
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use((config) => {
     const state = store.getState();
-    /** Will end up being "Admin: 1234" or "Bearer 1234" */
+    /** Will end up being "Admin 1234" or "Bearer 1234" */
     const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
 
     const url = getURL(config);
 
+    const headers = new AxiosHeaders(config.headers);
+
+    // If headers are explicitly passed to our endpoint via
+    // setHeaders(), we don't want this overridden.
+    const hasExplicitAuthToken = headers.hasAuthorization();
+
+    const bearer = hasExplicitAuthToken ? headers.getAuthorization() : token;
+
+    headers.setAuthorization(bearer);
+
     return {
       ...config,
-      headers: {
-        ...config.headers,
-        ...(token && { Authorization: `${token}` }),
-      },
+      headers,
       url,
     };
   });
@@ -202,8 +220,9 @@ export const setupInterceptors = (store: ApplicationStore) => {
     * displays a Maintenance view if the API is in Maintenance mode
   Also rejects non-error responses if the API is in Maintenance mode
   */
-  baseRequest.interceptors.response.use(handleSuccess, (error: AxiosError) =>
-    handleError(error, store)
+  baseRequest.interceptors.response.use(
+    handleSuccess,
+    (error: AxiosError<LinodeError>) => handleError(error, store)
   );
 
   baseRequest.interceptors.response.use(injectEuuidToProfile);

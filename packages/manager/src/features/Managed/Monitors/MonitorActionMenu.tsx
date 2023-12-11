@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import {
   useDisableMonitorMutation,

@@ -10,7 +10,7 @@ describe('SingleTextFieldForm', () => {
   const props = {
     initialValue: 'jane-doe',
     label: 'Username',
-    submitForm: jest.fn(() => Promise.resolve()),
+    submitForm: vi.fn(() => Promise.resolve()),
   };
 
   it('Renders a TextField with the given label and initial value', () => {
@@ -32,7 +32,7 @@ describe('SingleTextFieldForm', () => {
     renderWithTheme(
       <SingleTextFieldForm
         {...props}
-        submitForm={jest.fn(() =>
+        submitForm={vi.fn(() =>
           Promise.reject([{ reason: 'Error updating username.' }])
         )}
       />

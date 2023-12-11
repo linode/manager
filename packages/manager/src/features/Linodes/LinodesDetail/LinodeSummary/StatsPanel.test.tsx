@@ -8,7 +8,7 @@ const title = 'Stats About My Linode';
 
 describe('StatsPanel component', () => {
   it('should render a loading spinner on loading state', () => {
-    const renderBody = jest.fn();
+    const renderBody = vi.fn();
     const { getByTestId } = renderWithTheme(
       <StatsPanel
         height={300}
@@ -23,7 +23,7 @@ describe('StatsPanel component', () => {
   });
 
   it('should call its renderContent function if neither error or loading', () => {
-    const renderBody = jest.fn();
+    const renderBody = vi.fn();
 
     renderWithTheme(
       <StatsPanel

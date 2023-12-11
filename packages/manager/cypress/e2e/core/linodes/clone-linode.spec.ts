@@ -1,10 +1,6 @@
 import { Linode, createLinode } from '@linode/api-v4';
 import { linodeFactory, createLinodeRequestFactory } from '@src/factories';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import {
   interceptCloneLinode,
   mockGetLinodeDetails,
   mockGetLinodes,
@@ -12,11 +8,11 @@ import {
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
-  dcPricingRegionNotice,
   dcPricingMockLinodeTypes,
   dcPricingRegionDifferenceNotice,
+  dcPricingDocsLabel,
+  dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { randomLabel } from 'support/util/random';
@@ -27,17 +23,13 @@ import { cleanUp } from 'support/util/cleanup';
  * Returns the Cloud Manager URL to clone a given Linode.
  *
  * @param linode - Linode for which to retrieve clone URL.
- * @param withRegion - Whether to append a region query to the URL.
  *
  * @returns Cloud Manager Clone URL for Linode.
  */
-const getLinodeCloneUrl = (
-  linode: Linode,
-  withRegion: boolean = true
-): string => {
-  const regionQuery = withRegion ? `&regionID=${linode.region}` : '';
+const getLinodeCloneUrl = (linode: Linode): string => {
+  const regionQuery = `&regionID=${linode.region}`;
   const typeQuery = `&typeID=${linode.type}`;
-  return `/linodes/create?linodeID=${linode.id}&type=Clone+Linode${typeQuery}${regionQuery}`;
+  return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
 
 authenticate();
@@ -62,13 +54,10 @@ describe('clone linode', () => {
 
     const newLinodeLabel = `${linodePayload.label}-clone`;
 
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks once DC pricing is live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+      const linodeRegion = getRegionById(linodePayload.region);
+      const linodeRegionLabel = `${linodeRegion.label} (${linodeRegion.id})`;
+
       interceptCloneLinode(linode.id).as('cloneLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
@@ -81,16 +70,11 @@ describe('clone linode', () => {
         .click();
 
       ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
-
-      // Cloning from Linode Details page does not pre-select a region.
-      // (Cloning from the Linodes landing does pre-select a region, however.)
-      cy.url().should('endWith', getLinodeCloneUrl(linode, false));
+      cy.url().should('endWith', getLinodeCloneUrl(linode));
 
       // Select clone region and Linode type.
-      cy.findByText('Select a Region')
-        .should('be.visible')
-        .click()
-        .type(`${linodeRegion.label}{enter}`);
+      ui.regionSelect.find().click();
+      ui.regionSelect.findItemByRegionId(linodeRegion.id).click();
 
       cy.findByText('Shared CPU').should('be.visible').click();
 
@@ -123,7 +107,7 @@ describe('clone linode', () => {
 
   /*
    * - Confirms DC-specific pricing UI flow works as expected during Linode clone.
-   * - Confirms that pricing notice is shown in "Region" section.
+   * - Confirms that pricing docs link is shown in "Region" section.
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during clone flow', () => {
@@ -137,10 +121,6 @@ describe('clone linode', () => {
 
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock requests to get all Linode types, and to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
@@ -148,28 +128,20 @@ describe('clone linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
-    cy.wait([
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getLinode',
-      '@getLinodes',
-      '@getLinodeTypes',
-    ]);
+    cy.wait(['@getLinode', '@getLinodes', '@getLinodeTypes']);
 
-    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
-
-    // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
-    // cy.findByText(dcPricingDocsLabel)
-    //   .should('be.visible')
-    //   .should('have.attr', 'href', dcPricingDocsUrl);
+    // Confirm there is a docs link to the pricing page.
+    cy.findByText(dcPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', dcPricingDocsUrl);
 
     // Confirm that DC-specific pricing difference notice is not yet shown.
     cy.findByText(dcPricingRegionDifferenceNotice, { exact: false }).should(
       'not.exist'
     );
 
-    cy.findByText(`${initialRegion.label} (${initialRegion.id})`)
-      .should('be.visible')
+    ui.regionSelect
+      .findBySelectedItem(`${initialRegion.label} (${initialRegion.id})`)
       .click()
       .type(`${newRegion.label}{enter}`);
 

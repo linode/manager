@@ -7,7 +7,7 @@ import { VPCEditDrawer } from './VPCEditDrawer';
 
 describe('Edit VPC Drawer', () => {
   const props = {
-    onClose: jest.fn(),
+    onClose: vi.fn(),
     open: true,
     vpc: vpcFactory.build(),
   };

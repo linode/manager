@@ -72,12 +72,12 @@ interface PrimaryLink {
   prefetchRequestFn?: () => void;
 }
 
-export interface Props {
+export interface PrimaryNavProps {
   closeMenu: () => void;
   isCollapsed: boolean;
 }
 
-export const PrimaryNav = (props: Props) => {
+export const PrimaryNav = (props: PrimaryNavProps) => {
   const { closeMenu, isCollapsed } = props;
   const { classes, cx } = useStyles();
 

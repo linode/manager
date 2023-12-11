@@ -8,10 +8,10 @@ import NodePoolSummary, { Props } from './NodePoolSummary';
 
 const props: Props = {
   nodeCount: 3,
-  onRemove: jest.fn(),
+  onRemove: vi.fn(),
   poolType: extendedTypes[1],
   price: 1000,
-  updateNodeCount: jest.fn(),
+  updateNodeCount: vi.fn(),
 };
 
 describe('Node Pool Summary', () => {

@@ -99,10 +99,12 @@ describe('CPUMetrics', () => {
 });
 
 describe('metrics by section', () => {
-  const metrics = { average: 5, last: 8, length: 10, max: 10, total: 80 };
-  expect(metricsBySection(metrics)).toHaveLength(3);
-  expect(metricsBySection(metrics)).toBeInstanceOf(Array);
-  expect(metricsBySection(metrics)[0]).toEqual(metrics.max);
-  expect(metricsBySection(metrics)[1]).toEqual(metrics.average);
-  expect(metricsBySection(metrics)[2]).toEqual(metrics.last);
+  it('returns expected metric data', () => {
+    const metrics = { average: 5, last: 8, length: 10, max: 10, total: 80 };
+    expect(metricsBySection(metrics)).toHaveLength(3);
+    expect(metricsBySection(metrics)).toBeInstanceOf(Array);
+    expect(metricsBySection(metrics)[0]).toEqual(metrics.max);
+    expect(metricsBySection(metrics)[1]).toEqual(metrics.average);
+    expect(metricsBySection(metrics)[2]).toEqual(metrics.last);
+  });
 });

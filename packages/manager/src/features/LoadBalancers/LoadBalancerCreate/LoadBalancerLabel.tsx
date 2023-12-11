@@ -9,6 +9,7 @@ import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 export const LoadBalancerLabel = () => {
   const {
     errors,
+    handleBlur,
     handleChange,
     touched,
     values,
@@ -23,12 +24,12 @@ export const LoadBalancerLabel = () => {
       data-qa-label-header
     >
       <TextField
-        data-qa-label-input
         disabled={false}
         errorText={touched.label && errors.label ? errors.label : undefined} // Display errors if the field is touched and there's an error
         label="Load Balancer Label"
         name="label"
         noMarginTop
+        onBlur={handleBlur}
         onChange={handleChange}
         placeholder="Enter a label"
         value={values?.label}

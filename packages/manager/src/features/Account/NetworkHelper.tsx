@@ -2,9 +2,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
-import { Toggle } from 'src/components/Toggle';
-import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Toggle } from 'src/components/Toggle/Toggle';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   networkHelperEnabled: boolean;

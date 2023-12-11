@@ -2,6 +2,15 @@ import Enzyme from 'enzyme';
 // @ts-expect-error not a big deal, we can suffer
 import Adapter from 'enzyme-adapter-react-16';
 
+import { expect } from 'vitest';
+import matchers from '@testing-library/jest-dom/matchers';
+
+// // Enzyme React 17 adapter.
+// Enzyme.configure({ adapter: new Adapter() });
+
+// JSDom matchers.
+expect.extend(matchers);
+
 import { server } from './mocks/testServer';
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
@@ -28,13 +37,13 @@ HTMLCanvasElement.prototype.getContext = () => {
  * have Refs.
  */
 
-jest.mock('chart.js', () => ({
+vi.mock('chart.js', () => ({
   _adapters: {
     _date: {
-      override: jest.fn(),
+      override: vi.fn(),
     },
   },
-  Chart: jest.fn(),
+  Chart: vi.fn(),
   defaults: {
     global: {
       defaultFontFamily: '',
@@ -44,10 +53,10 @@ jest.mock('chart.js', () => ({
   },
 }));
 
-jest.mock('highlight.js/lib/highlight', () => ({
+vi.mock('highlight.js/lib/highlight', () => ({
   default: {
-    configure: jest.fn(),
-    highlightBlock: jest.fn(),
-    registerLanguage: jest.fn(),
+    configure: vi.fn(),
+    highlightBlock: vi.fn(),
+    registerLanguage: vi.fn(),
   },
 }));

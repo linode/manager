@@ -1,4 +1,5 @@
 import {
+  Country,
   DNSResolvers,
   Region,
   RegionAvailability,
@@ -14,7 +15,7 @@ export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
   capabilities: ['Block Storage'],
-  country: 'US',
+  country: 'us',
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
   resolvers: resolverFactory.build(),
@@ -33,7 +34,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
       'Vlans',
       'Premium Plans',
     ],
-    country: 'id',
+    country: 'id' as Country,
     id: 'id-cgk',
     label: 'Jakarta, ID',
     resolvers: resolverFactory.build(),

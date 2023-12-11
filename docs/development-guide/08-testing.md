@@ -2,7 +2,7 @@
 
 ## Unit Tests
 
-The unit tests for Cloud Manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with either `.test.tsx` or `.test.ts` file extensions and can be found throughout the codebase.
+The unit tests for Cloud Manager are written in Typescript using the [Vitest](https://vitest.dev/) testing framework. Unit tests end with either `.test.tsx` or `.test.ts` file extensions and can be found throughout the codebase.
 
 To run tests, first build the **api-v4** package:
 
@@ -29,7 +29,7 @@ yarn test myFile.test.tsx
 yarn test src/some-folder
 ```
 
-Jest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
+Vitest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
 
 ```
 yarn test linode
@@ -45,7 +45,7 @@ Test execution will stop at the debugger statement, and you will be able to use 
 
 ### React Testing Library
 
-We have some older tests that still use the Enzyme framework, but for new tests we generally use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). This library provides a set of tools to render React components from within the Jest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
+We have some older tests that still use the Enzyme framework, but for new tests we generally use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). This library provides a set of tools to render React components from within the Vitest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
 
 A simple test using this library will look something like this:
 
@@ -68,7 +68,7 @@ import { fireEvent } from "@testing-library/react";
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
 
-const props = { onClick: jest.fn() };
+const props = { onClick: vi.fn() };
 
 describe("My component", () => {
   it("should have some text", () => {
@@ -92,19 +92,23 @@ await wait(() => fireEvent.click(getByText('Delete')));
 
 ### Mocking
 
-Jest has substantial built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
+Vitest has substantial built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
 
-In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: jest.fn()` and making assertions normally. When that isn't possible, you can do the following:
+In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: vi.fn()` and making assertions normally. When that isn't possible, you can do the following:
 
 ```js
-jest.mock("@linode/api-v4/lib/kubernetes", () => ({
-  getKubeConfig: () => jest.fn(),
-}));
+vi.mock('@linode/api-v4/lib/kubernetes', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/kubernetes');
+  return {
+    ...actual,
+    getKubeConfig: () => vi.fn(),
+  };
+});
 ```
 
-Some components, such as our ActionMenu, don't lend themselves well to unit testing (they often have complex DOM structures from MUI and it's hard to target). We have mocks for most of these components in a `__mocks__` directory adjacent to their respective components. To make use of these, just tell Jest to use the mock:
+Some components, such as our ActionMenu, don't lend themselves well to unit testing (they often have complex DOM structures from MUI and it's hard to target). We have mocks for most of these components in a `__mocks__` directory adjacent to their respective components. To make use of these, just tell Vitest to use the mock:
 
-    jest.mock('src/components/ActionMenu/ActionMenu');
+    vi.mock('src/components/ActionMenu/ActionMenu');
 
 Any `<ActionMenu>`s rendered by the test will be simplified versions that are easier to work with.
 
@@ -140,8 +144,7 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 
 We support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library. See [07-mocking-data](07-mocking-data.md) for more details.
 
-These mocks are automatically enabled for tests (using `beforeAll` and `afterAll` in src/setupTests.ts, which is run when setting up
-the Jest environment).
+These mocks are automatically enabled for tests (using `beforeAll` and `afterAll` in src/setupTests.ts, which is run when setting up the Vitest environment).
 
 ## End-to-End tests
 

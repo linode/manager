@@ -4,6 +4,8 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
+import { getNormalizedRulePayload } from './utils';
+
 import type { Route } from '@linode/api-v4';
 
 interface Props {
@@ -31,8 +33,12 @@ export const DeleteRuleDialog = (props: Props) => {
 
     newRules.splice(ruleIndex, 1);
 
+    const normalizedRules = newRules.map(getNormalizedRulePayload);
+
     await mutateAsync({
-      rules: newRules,
+      label: route.label,
+      protocol: route.protocol,
+      rules: normalizedRules,
     });
     onClose();
   };

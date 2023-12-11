@@ -18,7 +18,7 @@ const modes = [
 const props = {
   classes,
   modes,
-  onChange: jest.fn(),
+  onChange: vi.fn(),
   selected: 'edit',
 };
 

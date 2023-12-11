@@ -4,12 +4,12 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
-import { TabPanels } from 'src/components/ReachTabPanels';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { LinodeCreateProps } from './LinodeCreate';
 
-type StyledLinodeCreateProps = Pick<LinodeCreateProps, 'showAgreement'>;
+type StyledLinodeCreateProps = Pick<LinodeCreateProps, 'showGDPRCheckbox'>;
 
 export const StyledButtonGroupBox = styled(Box, { label: 'StyledButtonGroup' })(
   ({ theme }) => ({
@@ -35,8 +35,8 @@ export const StyledForm = styled('form', { label: 'StyledForm' })({
 
 export const StyledMessageDiv = styled('div', {
   label: 'StyledMessageDiv',
-  shouldForwardProp: omittedProps(['showAgreement']),
-})<StyledLinodeCreateProps>(({ showAgreement, theme }) => ({
+  shouldForwardProp: omittedProps(['showGDPRCheckbox']),
+})<StyledLinodeCreateProps>(({ showGDPRCheckbox, theme }) => ({
   display: 'flex',
   flexDirection: 'column' as const,
   flexGrow: 1,
@@ -46,9 +46,9 @@ export const StyledMessageDiv = styled('div', {
   },
 
   // conditional styling
-  ...(showAgreement
+  ...(showGDPRCheckbox
     ? {
-        maxWidth: '70%',
+        maxWidth: '100%',
         [theme.breakpoints.down('sm')]: {
           maxWidth: 'unset',
         },

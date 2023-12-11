@@ -1,9 +1,9 @@
 import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import * as React from 'react';
 
-import { Toggle } from 'src/components/Toggle';
-import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Toggle } from 'src/components/Toggle/Toggle';
+import { Typography } from 'src/components/Typography';
 
 import { AccessTable } from './AccessTable';
 import { MODE } from './types';

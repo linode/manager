@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { ActionMenu } from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { TextTooltip } from 'src/components/TextTooltip';
 
@@ -86,7 +86,9 @@ export const RuleRow = (props: RuleRowProps) => {
               }}
               aria-label={`Match value: ${rule.match_condition.match_value}`}
             >
-              {rule.match_condition.match_value}
+              {rule.match_condition.match_value
+                ? rule.match_condition.match_value
+                : 'None'}
             </Box>
 
             <Hidden smDown>
@@ -112,10 +114,8 @@ export const RuleRow = (props: RuleRowProps) => {
                   <TextTooltip
                     tooltipText={
                       <>
-                        {rule.service_targets.map(({ id, label }) => (
-                          <div key={label}>
-                            {label}:{id}
-                          </div>
+                        {rule.service_targets.map(({ label }) => (
+                          <div key={label}>{label}</div>
                         ))}
                       </>
                     }

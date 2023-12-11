@@ -1,11 +1,11 @@
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
 
 const axiosInstance = Axios.create({});
 
 export const uploadObject = (
   signedUrl: string,
   file: File,
-  onUploadProgress: (e: ProgressEvent) => void
+  onUploadProgress: (e: AxiosProgressEvent) => void
 ) => {
   const config: AxiosRequestConfig = {
     data: file,

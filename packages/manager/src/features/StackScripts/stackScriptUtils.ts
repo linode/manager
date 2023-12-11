@@ -135,13 +135,12 @@ export const baseApps = {
   '1160820': 'Appwrite',
   '1177225': 'Seatable',
   '1177605': 'Illa Builder',
-  // uncomment after 10/30/23 release
-  // '1243759': 'MainConcept FFmpeg Plugins',
-  // '1243760': 'MainConcept Live Encoder',
-  // '1243762': 'MainConcept P2 AVC Ultra Transcoder',
-  // '1243763': 'MainConcept XAVC Transcoder',
-  // '1243764': 'MainConcept XDCAM Transcoder',
-  // '1243780': 'SimpleX Chat',
+  '1243759': 'MainConcept FFmpeg Plugins Demo',
+  '1243760': 'MainConcept Live Encoder Demo',
+  '1243762': 'MainConcept P2 AVC ULTRA Transcoder Demo',
+  '1243763': 'MainConcept XAVC Transcoder Demo',
+  '1243764': 'MainConcept XDCAM Transcoder Demo',
+  '1243780': 'SimpleX Chat',
 };
 
 const oneClickFilter = [

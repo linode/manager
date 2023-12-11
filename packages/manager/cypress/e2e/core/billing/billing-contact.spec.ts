@@ -61,20 +61,18 @@ const checkAccountContactDisplay = (data) => {
 };
 
 describe('Billing Contact', () => {
-  it('Check Billing Contact Form', () => {
-    // intercept get account request and stub response.
+  it('Edit Contact Info', () => {
+    // mock the user's account data and confirm that it is displayed correctly upon page load
     mockGetAccount(accountData).as('getAccount');
     cy.visitWithLogin('/account/billing');
     checkAccountContactDisplay(accountData);
-  });
-  it('Edit Contact Info', () => {
-    // intercept create account request and stub response
+
+    // edit the billing contact information
     mockUpdateAccount(newAccountData).as('updateAccount');
-    cy.visitWithLogin('/account/billing');
     cy.get('[data-qa-contact-summary]').within((_contact) => {
       cy.findByText('Edit').should('be.visible').click();
     });
-    // checking drawer is visible
+    // check drawer is visible
     cy.findByLabelText('First Name')
       .should('be.visible')
       .click()
@@ -137,5 +135,10 @@ describe('Billing Contact', () => {
           expect(xhr.response?.body).to.eql(newAccountData);
         });
       });
+
+    // check the page updates to reflect the edits
+    cy.get('[data-qa-contact-summary]').within(() => {
+      checkAccountContactDisplay(newAccountData);
+    });
   });
 });

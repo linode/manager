@@ -95,10 +95,7 @@ describe('create a database cluster, mocked data', () => {
           .click()
           .type(`${configuration.engine} v${configuration.version}{enter}`);
 
-        cy.findByText('Region')
-          .should('be.visible')
-          .click()
-          .type(`${configuration.region.label}{enter}`);
+        ui.regionSelect.find().click().type(`${databaseRegionLabel}{enter}`);
 
         // Click either the "Dedicated CPU" or "Shared CPU" tab, according
         // to the type of cluster being created.

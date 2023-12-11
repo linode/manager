@@ -6,14 +6,14 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { RebuildFromImage } from './RebuildFromImage';
 
-jest.mock('src/utilities/scrollErrorIntoView');
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/utilities/scrollErrorIntoView');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const props = {
   disabled: false,
-  handleRebuildError: jest.fn(),
+  handleRebuildError: vi.fn(),
   linodeId: 1234,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   passwordHelperText: '',
   ...reactRouterProps,
 };

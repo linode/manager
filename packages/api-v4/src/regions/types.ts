@@ -1,3 +1,5 @@
+import { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
+
 export type Capabilities =
   | 'Bare Metal'
   | 'Block Storage'
@@ -23,7 +25,7 @@ export type RegionStatus = 'ok' | 'outage';
 export interface Region {
   id: string;
   label: string;
-  country: string;
+  country: Country;
   capabilities: Capabilities[];
   status: RegionStatus;
   resolvers: DNSResolvers;
@@ -34,3 +36,7 @@ export interface RegionAvailability {
   plan: string;
   region: string;
 }
+
+type ContinentCode = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
+
+export type Country = Lowercase<ContinentCode>;

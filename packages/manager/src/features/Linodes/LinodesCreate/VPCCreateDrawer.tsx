@@ -29,7 +29,7 @@ export const VPCCreateDrawer = (props: Props) => {
     isLoadingCreateVPC,
     onChangeField,
     onCreateVPC,
-    regionsWithVPCCapability,
+    regionsData,
     setGeneralAPIError,
     setGeneralSubnetErrorsFromAPI,
     userCannotAddVPC,
@@ -59,7 +59,7 @@ export const VPCCreateDrawer = (props: Props) => {
               errors={errors}
               isDrawer
               onChangeField={onChangeField}
-              regions={regionsWithVPCCapability}
+              regions={regionsData}
               values={values}
             />
           </Box>

@@ -13,7 +13,7 @@ const options = [
 ];
 
 // Mock the selection change callback function for testing
-const handleSelectionChange = jest.fn();
+const handleSelectionChange = vi.fn();
 
 describe('Autocomplete Component', () => {
   it('renders with the correct label', () => {

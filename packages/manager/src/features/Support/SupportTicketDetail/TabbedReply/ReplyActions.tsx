@@ -1,11 +1,11 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { CloseTicketLink } from '../CloseTicketLink';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const ReplyActions = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { closable, isSubmitting, submitForm, ticketId, value } = props;
 

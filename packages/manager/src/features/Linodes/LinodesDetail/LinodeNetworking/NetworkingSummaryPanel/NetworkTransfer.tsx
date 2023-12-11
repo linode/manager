@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -28,7 +27,6 @@ interface Props {
 export const NetworkTransfer = React.memo((props: Props) => {
   const { linodeId, linodeLabel, linodeRegionId, linodeType } = props;
   const theme = useTheme();
-  const { dcSpecificPricing } = useFlags();
 
   const linodeTransfer = useAPIRequest(
     () => getLinodeTransfer(linodeId),
@@ -47,7 +45,6 @@ export const NetworkTransfer = React.memo((props: Props) => {
     (region) => region.id === linodeRegionId
   );
   const dynamicDClinodeTransferData = getDynamicDCNetworkTransferData({
-    dcSpecificPricingFlag: dcSpecificPricing || false,
     networkTransferData: linodeTransfer.data,
     regionId: linodeRegionId,
   });
@@ -55,7 +52,6 @@ export const NetworkTransfer = React.memo((props: Props) => {
     unit: 'GB',
   }).value;
   const dynamicDCPoolData = getDynamicDCNetworkTransferData({
-    dcSpecificPricingFlag: dcSpecificPricing || false,
     networkTransferData: accountTransfer,
     regionId: linodeRegionId,
   });
@@ -73,7 +69,6 @@ export const NetworkTransfer = React.memo((props: Props) => {
       <TransferContent
         accountBillableInGB={accountTransfer?.billable || 0}
         accountQuotaInGB={accountQuotaInGB}
-        dcSpecificPricingFlag={dcSpecificPricing || false}
         error={error}
         isDynamicPricingDC={isDynamicPricingDC}
         linodeLabel={linodeLabel}

@@ -1,19 +1,6 @@
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { TextField } from 'src/components/TextField';
-
-type ClassNames = 'replyField';
-
-const styles = () =>
-  createStyles({
-    replyField: {
-      '& > div': {
-        maxWidth: '100% !important',
-      },
-      marginTop: 0,
-    },
-  });
 
 export interface Props {
   error?: string;
@@ -22,31 +9,23 @@ export interface Props {
   value: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const TicketReply = (props: Props) => {
+  const { error, handleChange, placeholder, value } = props;
 
-class TicketReply extends React.Component<CombinedProps> {
-  render() {
-    const { classes, error, handleChange, placeholder, value } = this.props;
-
-    return (
-      <TextField
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          handleChange(e.target.value)
-        }
-        className={classes.replyField}
-        data-qa-ticket-description
-        errorText={error}
-        hideLabel
-        label="Enter your reply"
-        multiline
-        placeholder={placeholder || 'Enter your reply'}
-        rows={1.8}
-        value={value}
-      />
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default styled(TicketReply);
+  return (
+    <TextField
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        handleChange(e.target.value)
+      }
+      data-qa-ticket-description
+      errorText={error}
+      expand
+      hideLabel
+      label="Enter your reply"
+      multiline
+      placeholder={placeholder || 'Enter your reply'}
+      rows={1.8}
+      value={value}
+    />
+  );
+};
