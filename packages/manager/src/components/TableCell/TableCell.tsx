@@ -10,14 +10,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionCell: {
-    // Prevents Safari from adding margins to the ActionMenu button
-    '& > button': {
-      margin: 0,
-    },
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: 0,
+    textAlign: 'right',
   },
   center: {
     '&:last-child': {

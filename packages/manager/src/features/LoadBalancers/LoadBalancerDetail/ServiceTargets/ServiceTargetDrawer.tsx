@@ -37,6 +37,7 @@ import {
   initialValues,
   protocolOptions,
 } from './constants';
+import { getNormalizedServiceTargetPayload } from './utils';
 
 interface Props {
   loadbalancerId: number;
@@ -65,12 +66,15 @@ export const ServiceTargetDrawer = (props: Props) => {
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
-    async onSubmit(values: ServiceTargetPayload) {
+    async onSubmit(values) {
+      const normalizedValues: ServiceTargetPayload = getNormalizedServiceTargetPayload(
+        values
+      );
       try {
         if (isEditMode) {
-          await updateServiceTarget(values);
+          await updateServiceTarget(normalizedValues);
         } else {
-          await createServiceTarget(values);
+          await createServiceTarget(normalizedValues);
         }
         onClose();
       } catch (errors) {
@@ -148,10 +152,20 @@ export const ServiceTargetDrawer = (props: Props) => {
       )}
       <form onSubmit={formik.handleSubmit}>
         {generalCreateErrors && (
-          <Notice text={generalCreateErrors} variant="error" />
+          <Notice
+            spacingBottom={0}
+            spacingTop={12}
+            text={generalCreateErrors}
+            variant="error"
+          />
         )}
         {generalUpdateErrors && (
-          <Notice text={generalUpdateErrors} variant="error" />
+          <Notice
+            spacingBottom={0}
+            spacingTop={12}
+            text={generalUpdateErrors}
+            variant="error"
+          />
         )}
         <TextField
           errorText={formik.errors.label}

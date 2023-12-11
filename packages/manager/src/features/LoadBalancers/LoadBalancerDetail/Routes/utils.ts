@@ -61,6 +61,20 @@ export const getIsSessionStickinessEnabled = (rule: Rule | RulePayload) => {
   );
 };
 
+/**
+ * Converts some empty strings to `null` in RulePayload
+ * so that the API accepts the payload.
+ */
+export const getNormalizedRulePayload = (rule: RulePayload) => ({
+  match_condition: {
+    ...rule.match_condition,
+    hostname: rule.match_condition.hostname
+      ? rule.match_condition.hostname
+      : null,
+  },
+  service_targets: rule.service_targets,
+});
+
 export const timeUnitFactorMap = {
   millisecond: 1,
   second: 1000,
