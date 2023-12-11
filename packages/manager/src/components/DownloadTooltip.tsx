@@ -78,10 +78,13 @@ export const DownloadTooltip = (props: Props) => {
   return (
     <Tooltip data-qa-copied placement="top" title="Download">
       <button
-        className={cx(className, {
-          [classes.flex]: Boolean(displayText),
-          [classes.root]: true,
-        })}
+        className={cx(
+          {
+            [classes.flex]: Boolean(displayText),
+            [classes.root]: true,
+          },
+          className
+        )}
         aria-label={`Download ${text}`}
         name={text}
         onClick={handleIconClick}
