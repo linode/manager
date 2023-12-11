@@ -9,7 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -31,7 +30,7 @@ export interface KubernetesPlanContainerProps {
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: ExtendedType[];
-  selectedID?: string;
+  selectedId?: string;
   selectedRegionID?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -45,15 +44,12 @@ export const KubernetesPlanContainer = (
     onAdd,
     onSelect,
     plans,
-    selectedID,
+    selectedId,
     selectedRegionID,
     updatePlanCount,
   } = props;
 
-  const flags = useFlags();
-
-  const shouldDisplayNoRegionSelectedMessage =
-    flags.dcSpecificPricing && !selectedRegionID;
+  const shouldDisplayNoRegionSelectedMessage = !selectedRegionID;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => (
@@ -64,7 +60,7 @@ export const KubernetesPlanContainer = (
         key={id}
         onAdd={onAdd}
         onSelect={onSelect}
-        selectedID={selectedID}
+        selectedId={selectedId}
         selectedRegionID={selectedRegionID}
         type={plan}
         updatePlanCount={updatePlanCount}
@@ -76,7 +72,7 @@ export const KubernetesPlanContainer = (
     onAdd,
     onSelect,
     plans,
-    selectedID,
+    selectedId,
     selectedRegionID,
     updatePlanCount,
   ]);

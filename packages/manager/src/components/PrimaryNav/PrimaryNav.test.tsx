@@ -7,10 +7,10 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
 
 const props = {
-  closeMenu: jest.fn(),
+  closeMenu: vi.fn(),
   isCollapsed: false,
-  toggleSpacing: jest.fn(),
-  toggleTheme: jest.fn(),
+  toggleSpacing: vi.fn(),
+  toggleTheme: vi.fn(),
 };
 
 const queryClient = queryClientFactory();

@@ -31,7 +31,7 @@ export interface UpdateLoadbalancerPayload {
   configuration_ids?: number[];
 }
 
-type Protocol = 'tcp' | 'http' | 'https';
+export type Protocol = 'tcp' | 'http' | 'https';
 
 type RouteProtocol = 'tcp' | 'http';
 
@@ -46,6 +46,7 @@ export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
+  protocol: Protocol;
   rules: RuleCreatePayload[];
 }
 
@@ -116,7 +117,7 @@ export type UpdateConfigurationPayload = Partial<{
   port: number;
   protocol: Protocol;
   certificates: CertificateConfig[];
-  routes: number[];
+  route_ids: number[];
 }>;
 
 export interface CertificateConfig {
@@ -130,7 +131,7 @@ export interface RuleCreatePayload {
 }
 
 export interface MatchCondition {
-  hostname: string;
+  hostname: string | null;
   match_field: MatchField;
   match_value: string;
   session_stickiness_cookie: string | null;
@@ -144,8 +145,10 @@ export interface RouteServiceTargetPayload {
 
 export interface ServiceTargetPayload {
   label: string;
+  protocol: Protocol;
+  percentage: number;
   endpoints: Endpoint[];
-  ca_certificate: string;
+  certificate_id: number | null;
   load_balancing_policy: Policy;
   healthcheck: HealthCheck;
 }
@@ -156,8 +159,8 @@ interface HealthCheck {
   timeout: number;
   unhealthy_threshold: number;
   healthy_threshold: number;
-  path: string;
-  host: string;
+  path?: string | null;
+  host?: string | null;
 }
 
 export interface ServiceTarget extends ServiceTargetPayload {
@@ -166,7 +169,7 @@ export interface ServiceTarget extends ServiceTargetPayload {
 
 export interface Endpoint {
   ip: string;
-  host?: string;
+  host?: string | null;
   port: number;
   rate_capacity: number;
 }
@@ -176,7 +179,7 @@ type CertificateType = 'ca' | 'downstream';
 export interface Certificate {
   id: number;
   label: string;
-  certificate: string;
+  certificate?: string; // Not returned for Alpha
   type: CertificateType;
 }
 

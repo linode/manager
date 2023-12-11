@@ -1,20 +1,10 @@
-import { APIWarning } from '../types';
+import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
 
+export type UserType = 'child' | 'parent' | 'proxy';
+
 export interface User {
-  username: string;
   email: string;
-  restricted: boolean;
-  ssh_keys: string[];
-  tfa_enabled: boolean;
-  verified_phone_number: string | null;
-  /**
-   * The date of when a password was set on a user.
-   * `null` if this user has not created a password yet
-   * @example 2022-02-09T16:19:26
-   * @example null
-   */
-  password_created: string | null;
   /**
    * Information for the most recent login attempt for this User.
    * `null` if no login attempts have been made since creation of this User.
@@ -29,6 +19,19 @@ export interface User {
      */
     status: AccountLoginStatus;
   } | null;
+  /**
+   * The date of when a password was set on a user.
+   * `null` if this user has not created a password yet
+   * @example 2022-02-09T16:19:26
+   * @example null
+   */
+  password_created: string | null;
+  restricted: boolean;
+  ssh_keys: string[];
+  tfa_enabled: boolean;
+  username: string;
+  user_type: UserType | null;
+  verified_phone_number: string | null;
 }
 
 export interface Account {
@@ -70,7 +73,7 @@ export type AccountCapability =
   | 'VPCs';
 
 export interface AccountAvailability {
-  id: string; // will be ID of region
+  region: string; // will be slug of dc (matches id field of region object returned by API)
   unavailable: Capabilities[];
 }
 
@@ -165,18 +168,19 @@ export interface Grant {
   label: string;
 }
 export type GlobalGrantTypes =
+  | 'account_access'
+  | 'add_domains'
+  | 'add_firewalls'
+  | 'add_images'
   | 'add_linodes'
   | 'add_longview'
-  | 'longview_subscription'
-  | 'account_access'
-  | 'cancel_account'
-  | 'add_domains'
-  | 'add_stackscripts'
   | 'add_nodebalancers'
-  | 'add_images'
+  | 'add_stackscripts'
   | 'add_volumes'
-  | 'add_firewalls'
-  | 'add_vpcs';
+  | 'add_vpcs'
+  | 'cancel_account'
+  | 'child_account_access'
+  | 'longview_subscription';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -220,6 +224,10 @@ export interface CancelAccount {
 
 export interface CancelAccountPayload {
   comments: string;
+}
+
+export interface ChildAccountPayload extends RequestOptions {
+  euuid: string;
 }
 
 export type AgreementType = 'eu_model' | 'privacy_policy';

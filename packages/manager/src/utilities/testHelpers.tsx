@@ -6,6 +6,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import mediaQuery from 'css-mediaquery';
+import { Formik, FormikConfig, FormikValues } from 'formik';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
@@ -30,13 +31,13 @@ import {
 } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
-  window.matchMedia = jest.fn().mockImplementation((query) => {
+  window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
-      addListener: jest.fn(),
+      addListener: vi.fn(),
       matches,
       media: query,
       onchange: null,
-      removeListener: jest.fn(),
+      removeListener: vi.fn(),
     };
   });
 };
@@ -44,14 +45,14 @@ export const mockMatchMedia = (matches: boolean = true) => {
 const createMatchMedia = (width: number) => {
   return (query: string) => {
     return {
-      addEventListener: () => jest.fn(),
-      addListener: () => jest.fn(),
+      addEventListener: () => vi.fn(),
+      addListener: () => vi.fn(),
       dispatchEvent: () => true,
       matches: mediaQuery.match(query, { width }),
       media: '',
-      onchange: () => jest.fn(),
-      removeEventListener: () => jest.fn(),
-      removeListener: () => jest.fn(),
+      onchange: () => vi.fn(),
+      removeEventListener: () => vi.fn(),
+      removeListener: () => vi.fn(),
     };
   };
 };
@@ -152,10 +153,25 @@ export const renderWithTheme = (ui: any, options: Options = {}) => {
   return render(wrapWithTheme(ui, options));
 };
 
+/**
+ * Renders the given UI component within both the Formik and renderWithTheme.
+ *
+ * @param {React.ReactElement} ui - The React component that you want to render. This component
+ *                                  typically will be a part of or a whole form.
+ * @param {FormikConfig<T>} configObj - Formik configuration object which includes all the necessary
+ *                                      configurations for the Formik context such as initialValues,
+ *                                      validationSchema, and onSubmit.
+ */
+
+export const renderWithThemeAndFormik = <T extends FormikValues>(
+  ui: React.ReactElement,
+  configObj: FormikConfig<T>
+) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
+
 declare global {
-  // export would be better, but i m aligning with how the namespace is declared by jest-axe
+  // export would be better, but i m aligning with how the namespace is declared by vi-axe
   // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
+  namespace vi {
     interface Matchers<R, T> {
       toPassAxeCheck(): R;
     }

@@ -1,4 +1,5 @@
 import {
+  createLoadbalancerConfiguration,
   deleteLoadbalancerConfiguration,
   getLoadbalancerConfigurations,
   updateLoadbalancerConfiguration,
@@ -15,6 +16,7 @@ import { QUERY_KEY } from './loadbalancers';
 import type {
   APIError,
   Configuration,
+  ConfigurationPayload,
   Filter,
   Params,
   ResourcePage,
@@ -71,6 +73,32 @@ export const useLoadBalancerConfigurationMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerConfigurationCreateMutation = (
+  loadbalancerId: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Configuration, APIError[], ConfigurationPayload>(
+    (data) => createLoadbalancerConfiguration(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'configurations',
+        ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );
@@ -92,6 +120,9 @@ export const useLoadBalancerConfigurationDeleteMutation = (
           loadbalancerId,
           'configurations',
         ]);
+        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
       },
     }
   );

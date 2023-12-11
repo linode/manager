@@ -12,24 +12,14 @@ import { useLoadBalancerCertificateMutation } from 'src/queries/aglb/certificate
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import { CERTIFICATES_COPY, labelMap } from './constants';
+
 interface Props {
   certificate: Certificate | undefined;
   loadbalancerId: number;
   onClose: () => void;
   open: boolean;
 }
-
-export const labelMap: Record<Certificate['type'], string> = {
-  ca: 'Server Certificate',
-  downstream: 'TLS Certificate',
-};
-
-/* TODO: AGLB - Update with final copy. */
-const descriptionMap: Record<Certificate['type'], string> = {
-  ca: 'You can edit this cert here. Maybe something about service targets.',
-  downstream:
-    'You can edit this cert here. Perhaps something about the private key and the hos header and what it does.',
-};
 
 export const EditCertificateDrawer = (props: Props) => {
   const { certificate, loadbalancerId, onClose: _onClose, open } = props;
@@ -45,7 +35,7 @@ export const EditCertificateDrawer = (props: Props) => {
   const formik = useFormik<UpdateCertificatePayload>({
     enableReinitialize: true,
     initialValues: {
-      certificate: certificate?.certificate.trim(),
+      certificate: certificate?.certificate?.trim(),
       key: '',
       label: certificate?.label ?? '',
       type: certificate?.type,
@@ -53,7 +43,7 @@ export const EditCertificateDrawer = (props: Props) => {
     async onSubmit(values) {
       // The user has not edited their cert or the private key, so we exclude both cert and key from the request.
       const shouldIgnoreField =
-        certificate?.certificate.trim() === values.certificate &&
+        certificate?.certificate?.trim() === values.certificate &&
         values.key === '';
 
       try {
@@ -99,7 +89,7 @@ export const EditCertificateDrawer = (props: Props) => {
       ) : (
         <form onSubmit={formik.handleSubmit}>
           <Typography sx={{ marginBottom: theme.spacing(2) }}>
-            {descriptionMap[certificate.type]}
+            {CERTIFICATES_COPY.Edit[certificate.type]}
           </Typography>
           <TextField
             errorText={formik.errors.label}
@@ -113,7 +103,7 @@ export const EditCertificateDrawer = (props: Props) => {
             errorText={formik.errors.certificate}
             expand
             label={labelMap[certificate.type]}
-            labelTooltipText="TODO: AGLB"
+            labelTooltipText={CERTIFICATES_COPY.Tooltips.Certificate}
             multiline
             name="certificate"
             onChange={formik.handleChange}
@@ -125,7 +115,7 @@ export const EditCertificateDrawer = (props: Props) => {
               errorText={formik.errors.key}
               expand
               label="Private Key"
-              labelTooltipText="TODO: AGLB"
+              labelTooltipText={CERTIFICATES_COPY.Tooltips.Key}
               multiline
               name="key"
               onChange={formik.handleChange}

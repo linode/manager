@@ -10,17 +10,16 @@ import { useHistory } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -30,7 +29,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -105,8 +104,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const VolumeCreate = () => {
   const theme = useTheme();
   const classes = useStyles();
-  const flags = useFlags();
-  const { dcSpecificPricing } = flags;
   const history = useHistory();
 
   const { data: profile } = useProfile();
@@ -211,13 +208,15 @@ export const VolumeCreate = () => {
 
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
-  const showAgreement =
-    isEURegion(values.region) &&
-    !profile?.restricted &&
-    accountAgreements?.eu_model === false;
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements: accountAgreements,
+    profile,
+    regions,
+    selectedRegionId: values.region,
+  });
 
   const disabled = Boolean(
-    doesNotHavePermission || (showAgreement && !hasSignedAgreement)
+    doesNotHavePermission || (showGDPRCheckbox && !hasSignedAgreement)
   );
 
   const handleLinodeChange = (linode: Linode | null) => {
@@ -253,19 +252,11 @@ export const VolumeCreate = () => {
               data-qa-volume-size-help
               variant="body1"
             >
-              {dcSpecificPricing ? (
-                <span>
-                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                  size. Up to to eight Volumes can be attached to a single
-                  Linode. Select a region to see cost per GB.
-                </span>
-              ) : (
-                <span>
-                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                  size and costs $0.10/GB per month. <br />
-                  Up to eight volumes can be attached to a single Linode.
-                </span>
-              )}
+              <span>
+                A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
+                size. Up to to eight Volumes can be attached to a single Linode.
+                Select a region to see cost per GB.
+              </span>
             </Typography>
             {error && (
               <Notice
@@ -306,20 +297,14 @@ export const VolumeCreate = () => {
                   setFieldValue('region', value);
                   setFieldValue('linode_id', null);
                 }}
-                regions={
-                  regions?.filter((eachRegion) =>
-                    eachRegion.capabilities.some((eachCape) =>
-                      eachCape.match(/block/i)
-                    )
-                  ) ?? []
-                }
+                currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
                 isClearable
                 label="Region"
-                name="region"
                 onBlur={handleBlur}
-                selectedID={values.region}
+                regions={regions ?? []}
+                selectedId={values.region}
                 width={400}
               />
               {renderSelectTooltip(
@@ -397,9 +382,9 @@ export const VolumeCreate = () => {
               className={classes.buttonGroup}
               display="flex"
               flexWrap="wrap"
-              justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+              justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
             >
-              {showAgreement ? (
+              {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
                   centerCheckbox
                   checked={hasSignedAgreement}

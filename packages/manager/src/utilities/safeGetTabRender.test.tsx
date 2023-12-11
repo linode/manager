@@ -1,8 +1,8 @@
 import { Tab, safeGetTabRender } from './safeGetTabRender';
 
-jest.mock('src/exceptionReporting');
+vi.mock('src/exceptionReporting');
 
-const mockFn = jest.fn();
+const mockFn = vi.fn();
 
 const mockTabs: Tab[] = [
   {

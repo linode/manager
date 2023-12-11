@@ -1,26 +1,10 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { Theme, styled } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme: Theme) => ({
-  inputWidth: {
-    '& .react-select__menu': {
-      maxWidth: 440,
-    },
-    maxWidth: 440,
-  },
-  regionSubtitle: {
-    '& .MuiInput-root': {
-      maxWidth: 440,
-    },
-    '& .react-select__menu': {
-      maxWidth: 440,
-    },
-    '& p': {
-      lineHeight: '1.43rem',
-      margin: 0,
-      maxWidth: '100%',
-    },
-  },
+import { Box } from 'src/components/Box';
+import { Stack } from 'src/components/Stack';
+
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     '& .mlMain': {
       flexBasis: '100%',
@@ -54,5 +38,26 @@ export const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       padding: `${theme.spacing()} !important`,
     },
+  },
+}));
+
+export const StyledRegionSelectStack = styled(Stack, {
+  label: 'StyledRegionSelectStack',
+})(({ theme }) => ({
+  flexDirection: 'row',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
+
+export const StyledDocsLinkContainer = styled(Box, {
+  label: 'StyledRegionSelectStack',
+})(({ theme }) => ({
+  alignSelf: 'flex-start',
+  marginLeft: 'auto',
+  marginTop: theme.spacing(2),
+  [theme.breakpoints.down('md')]: {
+    marginLeft: 'unset',
+    marginTop: theme.spacing(2),
   },
 }));

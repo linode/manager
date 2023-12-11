@@ -9,8 +9,8 @@ const props = {
   clientLimit: 5,
   isManaged: false,
   isOpen: true,
-  onClose: jest.fn(),
-  onSubmit: jest.fn(),
+  onClose: vi.fn(),
+  onSubmit: vi.fn(),
 };
 
 describe('Subscription Dialog component', () => {

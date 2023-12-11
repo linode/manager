@@ -1,6 +1,6 @@
 {
   "name": "@linode/validation",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
   "main": "lib/index.cjs",
@@ -28,7 +28,6 @@
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "precommit": "lint-staged"
@@ -51,7 +50,7 @@
     "eslint-plugin-sonarjs": "^0.5.0",
     "lint-staged": "^13.2.2",
     "prettier": "~2.2.1",
-    "tsup": "^6.7.0"
+    "tsup": "^7.2.0"
   },
   "keywords": [
     "linode",

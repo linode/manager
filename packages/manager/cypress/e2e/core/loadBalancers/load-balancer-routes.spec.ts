@@ -263,7 +263,7 @@ describe('Akamai Global Load Balancer routes page', () => {
             .should('be.visible')
             .click();
 
-          cy.findAllByLabelText('Cookie')
+          cy.findByLabelText('Cookie Key')
             .should('be.visible')
             .click()
             .clear()
@@ -539,7 +539,7 @@ describe('Akamai Global Load Balancer routes page', () => {
         .findByTitle('Edit Rule')
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Hostname')
+          cy.findByLabelText('Hostname (optional)')
             .should('have.value', routes[0].rules[0].match_condition.hostname)
             .clear()
             .type('example.com');

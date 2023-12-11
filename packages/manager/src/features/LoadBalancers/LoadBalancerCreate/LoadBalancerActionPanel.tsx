@@ -19,6 +19,7 @@ export const LoadBalancerActionPanel = () => {
         buttonType="primary"
         onClick={submitForm}
         sx={{ marginLeft: 'auto' }}
+        type="submit"
       >
         Review Load Balancer
       </Button>

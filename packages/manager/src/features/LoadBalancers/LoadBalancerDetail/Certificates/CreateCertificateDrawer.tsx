@@ -10,7 +10,14 @@ import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certi
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { labelMap } from './EditCertificateDrawer';
+import {
+  CERTIFICATES_COPY,
+  exampleCert,
+  exampleKey,
+  initialValues,
+  labelMap,
+  titleMap,
+} from './constants';
 
 import type { Certificate, CreateCertificatePayload } from '@linode/api-v4';
 
@@ -20,28 +27,6 @@ interface Props {
   open: boolean;
   type: Certificate['type'];
 }
-
-const titleMap: Record<Certificate['type'], string> = {
-  ca: 'Upload Service Target Certificate',
-  downstream: 'Upload TLS Certificate',
-};
-
-const descriptionMap: Record<Certificate['type'], string> = {
-  ca:
-    'For HTTPS, used by the load balancer to accept responses from your endpoints in your Service Target. This is the certificate installed on your endpoints.',
-  downstream:
-    'Used by your load balancer to terminate the connection and decrypt request from client prior to sending the request to the endpoints in your Service Targets. You can specify a Host Header. Also referred to as ‘SSL Certificate’.',
-};
-
-const exampleCert = `-----BEGIN CERTIFICATE-----
-Paste .pem format
------END CERTIFICATE-----
-`;
-
-const exampleKey = `-----BEGIN PRIVATE KEY-----
-Paste .pem format
------END PRIVATE KEY-----
-`;
 
 export const CreateCertificateDrawer = (props: Props) => {
   const { loadbalancerId, onClose: _onClose, open, type } = props;
@@ -60,12 +45,7 @@ export const CreateCertificateDrawer = (props: Props) => {
 
   const formik = useFormik<CreateCertificatePayload>({
     enableReinitialize: true,
-    initialValues: {
-      certificate: '',
-      key: '',
-      label: '',
-      type,
-    },
+    initialValues: initialValues[type],
     async onSubmit(values) {
       try {
         await createCertificate(values);
@@ -87,7 +67,7 @@ export const CreateCertificateDrawer = (props: Props) => {
     <Drawer onClose={onClose} open={open} title={titleMap[type] ?? ''} wide>
       <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice text={generalError} variant="error" />}
-        <Typography>{descriptionMap[type]}</Typography>
+        <Typography>{CERTIFICATES_COPY.Create[type]}</Typography>
         <TextField
           errorText={formik.errors.label}
           expand
@@ -100,7 +80,7 @@ export const CreateCertificateDrawer = (props: Props) => {
           errorText={formik.errors.certificate}
           expand
           label={labelMap[type]}
-          labelTooltipText="TODO"
+          labelTooltipText={CERTIFICATES_COPY.Tooltips.Certificate}
           multiline
           name="certificate"
           onChange={formik.handleChange}
@@ -113,7 +93,7 @@ export const CreateCertificateDrawer = (props: Props) => {
             errorText={formik.errors.key}
             expand
             label="Private Key"
-            labelTooltipText="TODO"
+            labelTooltipText={CERTIFICATES_COPY.Tooltips.Key}
             multiline
             name="key"
             onChange={formik.handleChange}

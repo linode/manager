@@ -1,4 +1,9 @@
-import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Axios, {
+  AxiosError,
+  AxiosHeaders,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 import { ValidationError, AnySchema } from 'yup';
 import { APIError, Filter, Params } from './types';
 
@@ -14,14 +19,16 @@ export const baseRequest = Axios.create({
 
 baseRequest.interceptors.request.use((config) => {
   const isRunningInNode = typeof process === 'object';
-  const newConfig = {
-    ...config,
-    headers: {
-      ...config.headers,
-      'User-Agent': 'linodejs',
-    },
-  };
-  return isRunningInNode ? newConfig : config;
+
+  if (!isRunningInNode) {
+    return config;
+  }
+
+  const headers = new AxiosHeaders(config.headers);
+
+  headers.set('User-Agent', 'linodejs');
+
+  return { ...config, headers };
 });
 
 /**
@@ -34,13 +41,11 @@ baseRequest.interceptors.request.use((config) => {
  */
 export const setToken = (token: string) => {
   return baseRequest.interceptors.request.use((config) => {
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    const headers = new AxiosHeaders(config.headers);
+
+    headers.set('Authorization', `Bearer ${token}`);
+
+    return { ...config, headers };
   });
 };
 
@@ -205,7 +210,9 @@ export const mockAPIError = (
             status,
             statusText,
             headers: {},
-            config: {},
+            config: {
+              headers: new AxiosHeaders(),
+            },
           })
         ),
       process.env.NODE_ENV === 'test' ? 0 : 250
@@ -258,13 +265,11 @@ export const CancellableRequest = <T>(
  */
 export const setUserAgentPrefix = (prefix: string) => {
   return baseRequest.interceptors.request.use((config) => {
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        'User-Agent': `${prefix}/${config.headers['User-Agent']}`,
-      },
-    };
+    const headers = new AxiosHeaders(config.headers);
+
+    headers.set('User-Agent', `${prefix}/${config.headers['User-Agent']}`);
+
+    return { ...config, headers };
   });
 };
 

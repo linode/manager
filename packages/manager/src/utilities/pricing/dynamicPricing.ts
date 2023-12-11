@@ -1,7 +1,6 @@
 import { UNKNOWN_PRICE } from './constants';
 
 import type { Region } from '@linode/api-v4';
-import type { FlagSet } from 'src/featureFlags';
 
 export interface DataCenterPricingOptions {
   /**
@@ -9,11 +8,6 @@ export interface DataCenterPricingOptions {
    * @example 5 or 5.50
    */
   basePrice: number;
-  /**
-   * Our feature flags so we can determined whether or not to add price increase.
-   * @example { dcSpecificPricing: true }
-   */
-  flags: FlagSet;
   /**
    * The `id` of the region we intended to get the price for.
    * @example us-east
@@ -43,22 +37,16 @@ export const objectStoragePriceIncreaseMap = {
  * @example
  * const price = getDCSpecificPrice({
  *   basePrice: getVolumePrice(20),
- *   flags: { dcSpecificPricing: true },
  *   regionId: 'us-east',
  * });
  * @returns a data center specific price
  */
 export const getDCSpecificPrice = ({
   basePrice,
-  flags,
   regionId,
 }: DataCenterPricingOptions) => {
   if (!regionId || !basePrice) {
     return undefined;
-  }
-
-  if (!flags?.dcSpecificPricing) {
-    return basePrice.toFixed(2);
   }
 
   const increaseFactor = priceIncreaseMap[regionId] as number | undefined;

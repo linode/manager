@@ -10,6 +10,8 @@ import {
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 export type EventMessageCreator = (e: Event) => string;
 
 export interface CreatorsForStatus {
@@ -27,6 +29,14 @@ export const safeSecondaryEntityLabel = (
 ) => {
   const label = e?.secondary_entity?.label;
   return label ? `${text} ${label}` : fallback;
+};
+
+const secondaryFirewallEntityNameMap: Record<
+  FirewallDeviceEntityType,
+  string
+> = {
+  linode: 'Linode',
+  nodebalancer: 'NodeBalancer',
 };
 
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
@@ -262,12 +272,30 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been deleted.`,
   },
   firewall_device_add: {
-    notification: (e) =>
-      `A device has been added to Firewall ${e.entity?.label ?? ''}.`,
+    notification: (e) => {
+      if (e.secondary_entity?.type) {
+        const secondaryEntityName =
+          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+        return `${secondaryEntityName} ${
+          e.secondary_entity?.label
+        } has been added to Firewall ${e.entity?.label ?? ''}.`;
+      }
+      return `A device has been added to Firewall ${e.entity?.label ?? ''}.`;
+    },
   },
   firewall_device_remove: {
-    notification: (e) =>
-      `A device has been removed from Firewall ${e.entity?.label ?? ''}.`,
+    notification: (e) => {
+      if (e.secondary_entity?.type) {
+        const secondaryEntityName =
+          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+        return `${secondaryEntityName} ${
+          e.secondary_entity?.label
+        } has been removed from Firewall ${e.entity?.label ?? ''}.`;
+      }
+      return `A device has been removed from Firewall ${
+        e.entity?.label ?? ''
+      }.`;
+    },
   },
   firewall_disable: {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been disabled.`,
@@ -916,7 +944,13 @@ export function applyBolding(message: string) {
   let newMessage = message;
 
   for (const word of wordsToBold) {
-    newMessage = newMessage.replace(word, `**${word}**`);
+    const regex = new RegExp(`\\b${word}\\b`);
+    newMessage = newMessage.replace(
+      // We use a RegExp with word boundary checks (\\b) to ensure we're replacing the exact word, not just a substring
+      // This avoids situations where we used to get back 're**booted**' instead of **rebooted**, etc
+      regex,
+      `**${word}**`
+    );
   }
 
   return newMessage;

@@ -3,13 +3,13 @@ import * as React from 'react';
 
 import { DEFAULT_DELAY, LandingLoading } from './LandingLoading';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 const LOADING_ICON = 'circle-progress';
 
 describe('LandingLoading', () => {
   afterEach(() => {
-    jest.clearAllTimers();
+    vi.clearAllTimers();
   });
 
   it('renders the loading indicator by default', () => {
@@ -36,7 +36,7 @@ describe('LandingLoading', () => {
     render(<LandingLoading shouldDelay />);
     expect(screen.queryByTestId(LOADING_ICON)).toBeNull();
     act(() => {
-      jest.advanceTimersByTime(DEFAULT_DELAY);
+      vi.advanceTimersByTime(DEFAULT_DELAY);
     });
     expect(screen.getByTestId(LOADING_ICON)).toBeInTheDocument();
   });
@@ -45,7 +45,7 @@ describe('LandingLoading', () => {
     render(<LandingLoading delayInMS={2000} />);
     expect(screen.queryByTestId(LOADING_ICON)).toBeNull();
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     expect(screen.getByTestId(LOADING_ICON)).toBeInTheDocument();
   });

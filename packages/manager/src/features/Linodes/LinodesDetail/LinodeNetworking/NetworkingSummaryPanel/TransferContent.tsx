@@ -16,7 +16,6 @@ import { calculatePercentageWithCeiling } from './utils';
 interface ContentProps {
   accountBillableInGB: number;
   accountQuotaInGB: number;
-  dcSpecificPricingFlag: boolean;
   error: boolean;
   isDynamicPricingDC: boolean;
   linodeLabel: string;
@@ -29,7 +28,6 @@ interface ContentProps {
 export const TransferContent = (props: ContentProps) => {
   const {
     accountQuotaInGB,
-    dcSpecificPricingFlag,
     error,
     isDynamicPricingDC,
     linodeLabel,
@@ -92,45 +90,32 @@ export const TransferContent = (props: ContentProps) => {
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
-      {dcSpecificPricingFlag ? (
-        <>
-          <StyledLinodeUsage>
-            <span>
-              {linodeLabel} ({linodeUsedInGB} GB -{' '}
-              {Math.ceil(linodeUsagePercent)}%)
-            </span>
-          </StyledLinodeUsage>
-          <StyledPoolUsage>
-            <span>
-              {isDynamicPricingDC
-                ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
-                    totalUsagePercent
-                  )}%)`
-                : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
-                    totalUsagePercent
-                  )}%)`}
-            </span>
-          </StyledPoolUsage>
-          <StyledRemainingPoolUsage>
-            <span>
-              {isDynamicPricingDC
-                ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
-                : `Global Pool Remaining (${remainingInGB} GB)`}
-            </span>
-          </StyledRemainingPoolUsage>
-        </>
-      ) : (
-        <>
-          <StyledLinodeUsage>
-            <span>
-              {linodeLabel} ({linodeUsedInGB} GB)
-            </span>
-          </StyledLinodeUsage>
-          <StyledRemainingPoolUsage>
-            <span>Remaining ({remainingInGB} GB)</span>
-          </StyledRemainingPoolUsage>
-        </>
-      )}
+      <>
+        <StyledLinodeUsage>
+          <span>
+            {linodeLabel} ({linodeUsedInGB} GB - {Math.ceil(linodeUsagePercent)}
+            %)
+          </span>
+        </StyledLinodeUsage>
+        <StyledPoolUsage>
+          <span>
+            {isDynamicPricingDC
+              ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
+                  totalUsagePercent
+                )}%)`
+              : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
+                  totalUsagePercent
+                )}%)`}
+          </span>
+        </StyledPoolUsage>
+        <StyledRemainingPoolUsage>
+          <span>
+            {isDynamicPricingDC
+              ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
+              : `Global Pool Remaining (${remainingInGB} GB)`}
+          </span>
+        </StyledRemainingPoolUsage>
+      </>
     </div>
   );
 };

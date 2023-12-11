@@ -8,9 +8,9 @@ import { RebuildFromStackScript } from './RebuildFromStackScript';
 
 const props = {
   disabled: false,
-  handleRebuildError: jest.fn(),
+  handleRebuildError: vi.fn(),
   linodeId: 1234,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   passwordHelperText: '',
   type: 'community' as const,
   ...reactRouterProps,

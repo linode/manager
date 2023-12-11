@@ -6,8 +6,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 const props = {
-  handleSelectVPC: jest.fn(),
-  onClose: jest.fn(),
+  handleSelectVPC: vi.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 
@@ -17,7 +17,7 @@ describe('VPC Create Drawer', () => {
 
     getAllByText('Region');
     getAllByText('VPC Label');
-    getAllByText('Select a Region');
+    getAllByText('Region');
     getAllByText('Description');
     getAllByText('Subnets');
     getAllByText('Subnet Label');
