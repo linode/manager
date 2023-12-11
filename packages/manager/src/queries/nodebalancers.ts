@@ -32,6 +32,7 @@ import {
 } from 'react-query';
 
 import { EventWithStore } from 'src/events';
+import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
@@ -214,6 +215,8 @@ export const nodebalanacerEventHandler = ({
       event.entity!.id,
       'configs',
     ]);
+  } else if (event.action.startsWith('nodebalancer_delete')) {
+    queryClient.invalidateQueries([firewallsQueryKey]);
   } else {
     queryClient.invalidateQueries([queryKey, 'all']);
     queryClient.invalidateQueries([queryKey, 'paginated']);
