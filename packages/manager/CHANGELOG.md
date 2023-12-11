@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Overflow for VPC and StackScript detail descriptions and cut off placeholder text in VPC search bar ([#9887](https://github.com/linode/manager/pull/9887))
-- Add missing region ID param to Linode Detail clone action menu item ([#9888](https://github.com/linode/manager/pull/9888))
+- Missing region ID param in Linode Detail clone action menu item ([#9888](https://github.com/linode/manager/pull/9888))
 - Linode Network Transfer History graph back button incorrectly appearing to be disabled ([#9900](https://github.com/linode/manager/pull/9900))
 - 'Oh snap' errors from MSW ([#9910](https://github.com/linode/manager/pull/9910))
 - `TableCell` with `ActionMenu` incorrect size and border placement ([#9915](https://github.com/linode/manager/pull/9915))
