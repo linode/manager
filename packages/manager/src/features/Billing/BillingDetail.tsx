@@ -29,7 +29,7 @@ export const BillingDetail = () => {
     data: account,
     error: accountError,
     isLoading: accountLoading,
-  } = useAccount();
+  } = useAccount({});
 
   if (accountLoading) {
     return <CircleProgress />;

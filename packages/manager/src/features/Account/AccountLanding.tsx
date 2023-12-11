@@ -41,7 +41,7 @@ const MaintenanceLanding = React.lazy(
 const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
-  const { data: account } = useAccount();
+  const { data: account } = useAccount({});
   const { data: grants } = useGrants();
 
   const accountAccessGrant = grants?.global?.account_access;

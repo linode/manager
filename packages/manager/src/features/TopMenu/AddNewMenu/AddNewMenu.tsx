@@ -40,7 +40,7 @@ interface LinkProps {
 
 export const AddNewMenu = () => {
   const theme = useTheme();
-  const { data: account, error: accountError } = useAccount();
+  const { data: account, error: accountError } = useAccount({});
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const flags = useFlags();
   const open = Boolean(anchorEl);

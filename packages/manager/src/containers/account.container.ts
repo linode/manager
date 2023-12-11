@@ -13,7 +13,7 @@ export const withAccount = <Props>(
   Component: React.ComponentType<Props & WithAccountProps>
 ) => {
   return (props: Props) => {
-    const account = useAccount();
+    const account = useAccount({});
 
     return React.createElement(Component, {
       ...props,

@@ -24,7 +24,7 @@ interface Props {
 const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
 const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
-  const { data: account } = useAccount();
+  const { data: account } = useAccount({});
   const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();

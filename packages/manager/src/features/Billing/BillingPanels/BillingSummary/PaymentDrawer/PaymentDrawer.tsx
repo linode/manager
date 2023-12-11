@@ -1,7 +1,6 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -16,6 +15,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { SupportLink } from 'src/components/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -84,7 +84,7 @@ export const PaymentDrawer = (props: Props) => {
     data: account,
     isLoading: accountLoading,
     refetch: accountRefetch,
-  } = useAccount();
+  } = useAccount({});
 
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();

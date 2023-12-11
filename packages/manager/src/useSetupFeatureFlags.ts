@@ -13,7 +13,7 @@ import { useProfile } from './queries/profile';
  * page while we wait for our feature flags to be setup.
  */
 export const useSetupFeatureFlags = () => {
-  const { data: account, error: accountError } = useAccount();
+  const { data: account, error: accountError } = useAccount({});
   const { data: profile } = useProfile();
 
   const client = useLDClient();

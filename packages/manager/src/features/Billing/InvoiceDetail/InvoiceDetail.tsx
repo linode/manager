@@ -38,7 +38,7 @@ export const InvoiceDetail = () => {
 
   const csvRef = React.useRef<any>();
 
-  const { data: account } = useAccount();
+  const { data: account } = useAccount({});
   const { data: regions } = useRegionsQuery();
 
   const [invoice, setInvoice] = React.useState<Invoice | undefined>(undefined);

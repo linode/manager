@@ -13,7 +13,7 @@ export const TaxCollectionBanner = () => {
   const history = useHistory();
   const flags = useFlags();
 
-  const { data: account } = useAccount();
+  const { data: account } = useAccount({});
 
   const countryDateString = flags.taxCollectionBanner?.date ?? '';
   const bannerHasAction = flags.taxCollectionBanner?.action ?? false;

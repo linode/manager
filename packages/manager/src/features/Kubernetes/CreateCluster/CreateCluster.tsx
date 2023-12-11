@@ -73,7 +73,7 @@ export const CreateCluster = () => {
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
-  const { data: account } = useAccount();
+  const { data: account } = useAccount({});
   const { showHighAvailability } = getKubeHighAvailability(account);
 
   const {

@@ -85,7 +85,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     theme.breakpoints.down(fromAddonsPanel ? 'sm' : 1015)
   );
   const flags = useFlags();
-  const { data: account } = useAccount();
+  const { data: account } = useAccount({});
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
