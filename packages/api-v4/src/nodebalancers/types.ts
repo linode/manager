@@ -106,9 +106,7 @@ export interface CreateNodeBalancerConfigNode {
   weight?: number;
 }
 
-export type UpdateNodeBalancerConfigNode = Partial<
-  CreateNodeBalancerConfigNode
->;
+export type UpdateNodeBalancerConfigNode = Partial<CreateNodeBalancerConfigNode>;
 
 export interface NodeBalancerConfigNode {
   address: string;
@@ -130,4 +128,6 @@ export interface CreateNodeBalancerPayload {
   label?: string;
   client_conn_throttle?: number;
   configs: any;
+  firewall_id?: number;
+  tags?: string[];
 }

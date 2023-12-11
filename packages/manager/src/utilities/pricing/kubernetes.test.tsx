@@ -30,7 +30,6 @@ describe('helper functions', () => {
       expect(
         getKubernetesMonthlyPrice({
           count: mockNodePool.count,
-          flags: { dcSpecificPricing: false },
           region,
           type: mockNodePool.type,
           types,
@@ -42,7 +41,6 @@ describe('helper functions', () => {
       expect(
         getKubernetesMonthlyPrice({
           count: badPool.count,
-          flags: { dcSpecificPricing: false },
           region,
           type: badPool.type,
           types,
@@ -55,7 +53,6 @@ describe('helper functions', () => {
     it('should calculate the total cluster price', () => {
       expect(
         getTotalClusterPrice({
-          flags: { dcSpecificPricing: false },
           pools: [mockNodePool, mockNodePool],
           region,
           types,
@@ -63,10 +60,9 @@ describe('helper functions', () => {
       ).toBe(20);
     });
 
-    it('should calculate the total cluster DC-specific price for a region with a price increase when the DC-Specific pricing feature flag is on', () => {
+    it('should calculate the total cluster DC-specific price for a region with a price increase', () => {
       expect(
         getTotalClusterPrice({
-          flags: { dcSpecificPricing: true },
           pools: [mockNodePool, mockNodePool],
           region: 'id-cgk',
           types,
@@ -74,21 +70,9 @@ describe('helper functions', () => {
       ).toBe(48);
     });
 
-    it('should calculate the total cluster base price for a region with a price increase when the DC-Specific pricing feature flag is off', () => {
-      expect(
-        getTotalClusterPrice({
-          flags: { dcSpecificPricing: false },
-          pools: [mockNodePool, mockNodePool],
-          region: 'id-cgk',
-          types,
-        })
-      ).toBe(20);
-    });
-
     it('should calculate the total cluster price with HA enabled', () => {
       expect(
         getTotalClusterPrice({
-          flags: { dcSpecificPricing: false },
           highAvailabilityPrice: LKE_HA_PRICE,
           pools: [mockNodePool, mockNodePool],
           region,

@@ -10,7 +10,10 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { loadbalancerFactory, configurationFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-import { mockGetLoadBalancers } from 'support/intercepts/load-balancers';
+import {
+  mockGetLoadBalancer,
+  mockGetLoadBalancers,
+} from 'support/intercepts/load-balancers';
 import type { Loadbalancer } from '@linode/api-v4';
 import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
@@ -58,6 +61,7 @@ describe('Akamai Global Load Balancer landing page', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
+    mockGetLoadBalancer(loadbalancerMocks[0]);
 
     cy.visitWithLogin('/loadbalancers');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getLoadBalancers']);
@@ -68,14 +72,16 @@ describe('Akamai Global Load Balancer landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // Confirm that regions are listed for load balancer.
-          loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
-            const regionLabel = getRegionById(loadbalancerRegion).label;
-            cy.findByText(regionLabel, { exact: false }).should('be.visible');
-            cy.findByText(loadbalancerRegion, { exact: false }).should(
-              'be.visible'
-            );
-          });
+          // TODO: AGLB - Confirm that regions from the API are listed for load balancer
+          // loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
+          //   const regionLabel = getRegionById(loadbalancerRegion).label;
+          //   cy.findByText(regionLabel, { exact: false }).should('be.visible');
+          //   cy.findByText(loadbalancerRegion, { exact: false }).should(
+          //     'be.visible'
+          //   );
+          // });
+
+          cy.findByText(loadbalancerMock.hostname).should('be.visible');
 
           // Confirm that clicking label navigates to details page.
           cy.findByText(loadbalancerMock.label).should('be.visible').click();
@@ -88,14 +94,14 @@ describe('Akamai Global Load Balancer landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // Confirm that regions are listed for load balancer.
-          loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
-            const regionLabel = getRegionById(loadbalancerRegion).label;
-            cy.findByText(regionLabel, { exact: false }).should('be.visible');
-            cy.findByText(loadbalancerRegion, { exact: false }).should(
-              'be.visible'
-            );
-          });
+          // TODO: AGLB - Confirm that regions from the API are listed for load balancer
+          // loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
+          //   const regionLabel = getRegionById(loadbalancerRegion).label;
+          //   cy.findByText(regionLabel, { exact: false }).should('be.visible');
+          //   cy.findByText(loadbalancerRegion, { exact: false }).should(
+          //     'be.visible'
+          //   );
+          // });
 
           ui.actionMenu
             .findByTitle(

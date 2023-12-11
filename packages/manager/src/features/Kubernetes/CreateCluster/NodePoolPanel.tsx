@@ -102,7 +102,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
-          selectedID={selectedType}
+          selectedId={selectedType}
           selectedRegionID={selectedRegionId}
           updatePlanCount={updatePlanCount}
         />

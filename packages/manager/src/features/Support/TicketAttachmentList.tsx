@@ -1,44 +1,17 @@
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
-import { compose, withStateHandlers } from 'recompose';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
 
-import TicketAttachmentRow from './TicketAttachmentRow';
-
-type ClassNames = 'attachmentPaperWrapper' | 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    attachmentPaperWrapper: {
-      overflowX: 'auto',
-    },
-    root: {
-      marginLeft: theme.spacing(7),
-      maxWidth: 600,
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: theme.spacing(5),
-        width: 'calc(100% - 32px)',
-      },
-    },
-  });
-
-interface ToggleProps {
-  showMoreAttachments: boolean;
-  toggle: (e: React.MouseEvent<HTMLDivElement>) => (t: boolean) => boolean;
-}
+import { TicketAttachmentRow } from './TicketAttachmentRow';
 
 interface Props {
   attachments: string[];
 }
-
-type CombinedProps = Props & ToggleProps & WithStyles<ClassNames>;
 
 export const addIconsToAttachments = (attachments: string[] = []) => {
   const extensions = ['jpg', 'jpeg', 'png', 'bmp', 'tiff'];
@@ -53,8 +26,12 @@ export const addIconsToAttachments = (attachments: string[] = []) => {
   });
 };
 
-export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
-  const { attachments, classes, showMoreAttachments, toggle } = props;
+export const TicketAttachmentList = ({ attachments }: Props) => {
+  const [showMoreAttachments, setShowMoreAttachments] = React.useState(false);
+
+  const toggle = () => {
+    setShowMoreAttachments((prev) => !prev);
+  };
 
   if (isEmpty(attachments)) {
     return null;
@@ -63,8 +40,24 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid className={classes.root} container justifyContent="flex-start">
-      <Grid className={classes.attachmentPaperWrapper}>
+    <Grid
+      sx={(theme) => ({
+        marginLeft: theme.spacing(6),
+        marginTop: theme.spacing(),
+        maxWidth: 600,
+        [theme.breakpoints.down('sm')]: {
+          marginLeft: theme.spacing(5),
+          width: 'calc(100% - 32px)',
+        },
+      })}
+      container
+      justifyContent="flex-start"
+    >
+      <Grid
+        sx={{
+          overflowX: 'auto',
+        }}
+      >
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow
           attachments={slice(0, 5, attachments)}
@@ -96,19 +89,3 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(
-  withStateHandlers(
-    { showMoreAttachments: false },
-    {
-      toggle: ({ showMoreAttachments }) => () => ({
-        showMoreAttachments: !showMoreAttachments,
-      }),
-    }
-  ),
-  styled
-)(TicketAttachmentList);
-
-export default enhanced;

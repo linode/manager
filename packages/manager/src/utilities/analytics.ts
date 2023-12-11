@@ -8,8 +8,15 @@ declare global {
 }
 
 type DTMSatellite = {
-  track: (eventName: string, eventPayload: AnalyticsEvent) => void;
+  track: (
+    eventName: string,
+    eventPayload: AnalyticsEvent | PageViewEvent
+  ) => void;
 };
+
+interface PageViewEvent {
+  url: string;
+}
 
 interface AnalyticsEvent {
   action: string;

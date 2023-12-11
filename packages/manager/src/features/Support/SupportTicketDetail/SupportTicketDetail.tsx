@@ -17,8 +17,8 @@ import {
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
-import TicketAttachmentList from '../TicketAttachmentList';
-import AttachmentError from './AttachmentError';
+import { TicketAttachmentList } from '../TicketAttachmentList';
+import { AttachmentError } from './AttachmentError';
 import { ReplyContainer } from './TabbedReply/ReplyContainer';
 import { TicketStatus } from './TicketStatus';
 

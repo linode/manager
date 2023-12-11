@@ -7,7 +7,7 @@ import { useLoadBalancerConfigurationDeleteMutation } from 'src/queries/aglb/con
 import type { Configuration } from '@linode/api-v4';
 
 interface Props {
-  configuration: Configuration;
+  configuration: Pick<Configuration, 'id' | 'label'>;
   loadbalancerId: number;
   onClose: () => void;
   open: boolean;

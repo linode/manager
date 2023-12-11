@@ -1,26 +1,36 @@
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { Box } from 'src/components/Box';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { queryKey } from 'src/queries/accountPayment';
 
-import ThirdPartyPayment from './ThirdPartyPayment';
+import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 interface Props {
+  /**
+   * Function called when the delete button in the Action Menu is pressed.
+   */
   onDelete: () => void;
+  /**
+   * Payment method type and data.
+   */
   paymentMethod: PaymentMethod;
 }
 
-const PaymentMethodRow = (props: Props) => {
+/**
+ * The `PaymentMethodRow` displays the given payment method and supports various actions for each payment method. It can be used
+ * for credit cards, Google Pay, and PayPal.
+ */
+export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
   const { onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
@@ -125,5 +135,3 @@ const PaymentMethodRow = (props: Props) => {
     </Paper>
   );
 };
-
-export default PaymentMethodRow;

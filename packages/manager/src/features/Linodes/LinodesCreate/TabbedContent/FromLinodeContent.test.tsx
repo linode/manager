@@ -17,11 +17,11 @@ const mockProps: CombinedProps = {
   linodesData: linodes,
   regionsData: [],
   typesData: [],
-  updateDiskSize: jest.fn(),
-  updateImageID: jest.fn(),
-  updateLinodeID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  updateDiskSize: vi.fn(),
+  updateImageID: vi.fn(),
+  updateLinodeID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateTypeID: vi.fn(),
   userCannotCreateLinode: false,
 };
 

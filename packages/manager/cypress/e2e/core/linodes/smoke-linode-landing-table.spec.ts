@@ -393,7 +393,7 @@ describe('linode landing checks', () => {
         .closest('[data-qa-linode-card]')
         .within(() => {
           cy.findByText('Summary').should('be.visible');
-          cy.findByText('IP Addresses').should('be.visible');
+          cy.findByText('Public IP Addresses').should('be.visible');
           cy.findByText('Access').should('be.visible');
 
           cy.findByText('Plan:').should('be.visible');
@@ -407,7 +407,7 @@ describe('linode landing checks', () => {
     getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
 
     cy.findByText('Summary').should('not.exist');
-    cy.findByText('IP Addresses').should('not.exist');
+    cy.findByText('Public IP Addresses').should('not.exist');
     cy.findByText('Access').should('not.exist');
 
     cy.findByText('Plan:').should('not.exist');

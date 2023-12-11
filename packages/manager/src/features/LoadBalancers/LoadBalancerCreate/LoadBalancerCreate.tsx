@@ -1,24 +1,32 @@
 import { CreateLoadBalancerSchema } from '@linode/validation';
 import Stack from '@mui/material/Stack';
-import { Form, Formik } from 'formik';
+import { Formik, Form as FormikForm } from 'formik';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 
 import { LoadBalancerActionPanel } from './LoadBalancerActionPanel';
-import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
+import { LoadBalancerConfigurations } from './LoadBalancerConfigurations';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
-const initialValues = {
+const initialValues: CreateLoadbalancerPayload = {
+  configurations: [
+    { certificates: [], label: '', port: 443, protocol: 'https' },
+  ],
   label: '',
   regions: [],
 };
 
 export const LoadBalancerCreate = () => {
+  const handleSubmit = (values: CreateLoadbalancerPayload) => {
+    // console.log('Submitted values:', values);
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Create a Load Balancer" />
@@ -32,24 +40,22 @@ export const LoadBalancerCreate = () => {
           ],
           pathname: location.pathname,
         }}
+        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         title="Create"
       />
-      <Formik<CreateLoadbalancerPayload>
-        onSubmit={(values, actions) => {
-          // TODO: AGLB - Implement form submit
-          // console.log('Values ', values);
-        }}
+      <Formik
         initialValues={initialValues}
+        onSubmit={handleSubmit}
         validationSchema={CreateLoadBalancerSchema}
       >
-        <Form>
+        <FormikForm>
           <Stack spacing={3}>
             <LoadBalancerLabel />
             <LoadBalancerRegions />
-            <LoadBalancerConfiguration />
+            <LoadBalancerConfigurations />
             <LoadBalancerActionPanel />
           </Stack>
-        </Form>
+        </FormikForm>
       </Formik>
     </>
   );

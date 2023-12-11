@@ -9,7 +9,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,

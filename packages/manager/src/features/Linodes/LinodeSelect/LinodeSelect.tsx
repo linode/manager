@@ -1,18 +1,13 @@
 import { APIError, Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Autocomplete } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 
-import {
-  CustomPopper,
-  SelectedIcon,
-} from 'src/components/Autocomplete/Autocomplete.styles';
-import { Box } from 'src/components/Box';
-import { TextField } from 'src/components/TextField';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 interface LinodeSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -122,59 +117,37 @@ export const LinodeSelect = (
         renderOptionLabel ? renderOptionLabel(linode) : linode.label
       }
       noOptionsText={
-        noOptionsMessage ?? (
-          <i>{getDefaultNoOptionsMessage(error, isLoading, linodes)}</i>
-        )
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
           ? onSelectionChange(value)
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
-      renderInput={(params) => (
-        <TextField
-          placeholder={
-            placeholder
-              ? placeholder
-              : multiple
-              ? 'Select Linodes'
-              : 'Select a Linode'
-          }
-          errorText={error?.[0].reason ?? errorText}
-          helperText={helperText}
-          inputId={params.id}
-          label={label ? label : multiple ? 'Linodes' : 'Linode'}
-          loading={isLoading}
-          noMarginTop={noMarginTop}
-          {...params}
-        />
-      )}
-      renderOption={(props, option, { selected }) => {
-        return (
-          <li {...props} data-qa-linode-option>
-            {renderOption ? (
-              renderOption(option, selected)
-            ) : (
-              <>
-                <Box
-                  sx={{
-                    flexGrow: 1,
-                  }}
-                >
-                  {option.label}
-                </Box>
-                <SelectedIcon visible={selected} />
-              </>
-            )}
-          </li>
-        );
-      }}
+      placeholder={
+        placeholder
+          ? placeholder
+          : multiple
+          ? 'Select Linodes'
+          : 'Select a Linode'
+      }
+      renderOption={
+        renderOption
+          ? (props, option, { selected }) => {
+              return (
+                <li {...props} data-qa-linode-option>
+                  {renderOption(option, selected)}
+                </li>
+              );
+            }
+          : undefined
+      }
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
             ? linodes?.filter(value) ?? null
             : linodes?.find(value) ?? null
-          : mapIdsToLinodes(value, linodes)
+          : mapIdsToDevices<Linode>(value, linodes)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
@@ -183,10 +156,14 @@ export const LinodeSelect = (
       disableCloseOnSelect={multiple}
       disablePortal={true}
       disabled={disabled}
+      errorText={error?.[0].reason ?? errorText}
+      helperText={helperText}
       id={id}
       inputValue={inputValue}
+      label={label ? label : multiple ? 'Linodes' : 'Linode'}
       loading={isLoading || loading}
       multiple={multiple}
+      noMarginTop={noMarginTop}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
@@ -198,15 +175,12 @@ export const LinodeSelect = (
 
 const getDefaultNoOptionsMessage = (
   error: APIError[] | null,
-  loading: boolean,
-  filteredLinodes: Linode[] | undefined
+  loading: boolean
 ) => {
   if (error) {
-    return 'An error occured while fetching your Linodes';
+    return 'An error occurred while fetching your Linodes';
   } else if (loading) {
     return 'Loading your Linodes...';
-  } else if (!filteredLinodes?.length) {
-    return 'You have no Linodes to choose from';
   } else {
     return 'No options';
   }
