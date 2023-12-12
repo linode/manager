@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { FileUploader } from './FileUploader';
+import { ImageUploader } from './ImageUploader';
 
 const props = {
   apiError: undefined,
@@ -16,7 +16,7 @@ const props = {
 
 describe('File Uploader', () => {
   it('properly renders the File Uploader', () => {
-    const screen = renderWithTheme(<FileUploader {...props} />);
+    const screen = renderWithTheme(<ImageUploader {...props} />);
 
     const browseFiles = screen.getByTestId('upload-button');
     expect(browseFiles).toBeVisible();
@@ -29,7 +29,7 @@ describe('File Uploader', () => {
 
   it('disables the dropzone', () => {
     const screen = renderWithTheme(
-      <FileUploader {...props} dropzoneDisabled={true} />
+      <ImageUploader {...props} dropzoneDisabled={true} />
     );
 
     const browseFiles = screen.getByTestId('upload-button');

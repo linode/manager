@@ -7,8 +7,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<ErrorStateProps> = {
   args: {
-    CustomIcon: undefined,
-    CustomIconStyles: undefined,
     compact: false,
     cozy: false,
     errorText: 'An error has occurred.',

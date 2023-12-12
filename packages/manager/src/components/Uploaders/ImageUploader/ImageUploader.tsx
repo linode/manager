@@ -13,7 +13,7 @@ import {
   StyledDropZoneDiv,
   StyledFileUploadsDiv,
   StyledUploadButton,
-} from 'src/components/Uploaders/FileUploader/FileUploader.styles';
+} from 'src/components/Uploaders/ImageUploader/ImageUploader.styles';
 import { onUploadProgressFactory } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import {
   MAX_FILE_SIZE_IN_BYTES,
@@ -31,7 +31,7 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { sendImageUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-interface FileUploaderProps {
+interface ImageUploaderProps {
   /**
    * An error to display if an upload error occurred.
    */
@@ -41,7 +41,7 @@ interface FileUploaderProps {
    */
   description?: string;
   /**
-   * Disables the ability to select file(s) to upload.
+   * Disables the ability to select image(s) to upload.
    */
   dropzoneDisabled: boolean;
   isCloudInit?: boolean;
@@ -54,7 +54,7 @@ interface FileUploaderProps {
    */
   onSuccess?: () => void;
   /**
-   * The region ID to upload the file to.
+   * The region ID to upload the image to.
    */
   region: string;
   /**
@@ -68,11 +68,9 @@ interface FileUploaderProps {
 }
 
 /**
- * This component enables users to attach and upload files from a device.
- * - Include any file restrictions or limits in the helper text.
- * - Dragover effect and release capability occurs when a user drags a file or files directly onto the file upload box. This is called the “drop zone”.
+ * This component enables users to attach and upload images from a device.
  */
-export const FileUploader = React.memo((props: FileUploaderProps) => {
+export const ImageUploader = React.memo((props: ImageUploaderProps) => {
   const {
     apiError,
     description,
