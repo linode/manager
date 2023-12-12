@@ -1,8 +1,11 @@
+import CloseIcon from '@mui/icons-material/Close';
 import { useFormikContext } from 'formik';
 import React, { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Button } from 'src/components/Button/Button';
+import { IconButton } from 'src/components/IconButton';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -25,6 +28,7 @@ export const ServiceTargets = () => {
   } = useFormikContext<LoadBalancerCreateFormData>();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [query, setQuery] = useState<string>();
   const [
     selectedServiceTargetIndex,
     setSelectedServiceTargetIndex,
@@ -54,7 +58,27 @@ export const ServiceTargets = () => {
           <Button buttonType="outlined" onClick={() => setIsDrawerOpen(true)}>
             Add Service Target
           </Button>
-          <TextField hideLabel label="Filter" placeholder="Filter" />
+          <TextField
+            InputProps={{
+              endAdornment: query && (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="Clear"
+                    onClick={() => setQuery('')}
+                    size="small"
+                    sx={{ padding: 'unset' }}
+                  >
+                    <CloseIcon sx={{ color: '#aaa !important' }} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            hideLabel
+            label="Filter"
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter"
+            value={query}
+          />
         </Stack>
         <Table sx={{ width: '99%' }}>
           <TableHead>
@@ -70,53 +94,60 @@ export const ServiceTargets = () => {
             {values.service_targets.length === 0 && (
               <TableRowEmpty colSpan={5} />
             )}
-            {values.service_targets.map((serviceTarget, index) => (
-              <TableRow key={serviceTarget.label}>
-                <TableCell>{serviceTarget.label}</TableCell>
-                <TableCell>
-                  {serviceTarget.endpoints.length === 0 ? (
-                    0
-                  ) : (
-                    <TextTooltip
-                      tooltipText={
-                        <Stack>
-                          {serviceTarget.endpoints.map(
-                            ({ ip, port }, index) => (
-                              <Typography key={`${ip}-${port}-${index}`}>
-                                {ip}:{port}
-                              </Typography>
-                            )
-                          )}
-                        </Stack>
-                      }
-                      displayText={String(serviceTarget.endpoints.length)}
-                      minWidth={100}
+            {values.service_targets
+              .filter((serviceTarget) => {
+                if (query) {
+                  return serviceTarget.label.includes(query);
+                }
+                return true;
+              })
+              .map((serviceTarget, index) => (
+                <TableRow key={serviceTarget.label}>
+                  <TableCell>{serviceTarget.label}</TableCell>
+                  <TableCell>
+                    {serviceTarget.endpoints.length === 0 ? (
+                      0
+                    ) : (
+                      <TextTooltip
+                        tooltipText={
+                          <Stack>
+                            {serviceTarget.endpoints.map(
+                              ({ ip, port }, index) => (
+                                <Typography key={`${ip}-${port}-${index}`}>
+                                  {ip}:{port}
+                                </Typography>
+                              )
+                            )}
+                          </Stack>
+                        }
+                        displayText={String(serviceTarget.endpoints.length)}
+                        minWidth={100}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ textTransform: 'capitalize' }}>
+                    {serviceTarget.load_balancing_policy.replace('_', ' ')}
+                  </TableCell>
+                  <TableCell>
+                    {serviceTarget.healthcheck ? 'Yes' : 'No'}
+                  </TableCell>
+                  <TableCell actionCell>
+                    <ActionMenu
+                      actionsList={[
+                        {
+                          onClick: () => handleEditServiceTarget(index),
+                          title: 'Edit',
+                        },
+                        {
+                          onClick: () => handleRemoveServiceTarget(index),
+                          title: 'Remove',
+                        },
+                      ]}
+                      ariaLabel={`Action Menu for Service Target ${serviceTarget.label}`}
                     />
-                  )}
-                </TableCell>
-                <TableCell sx={{ textTransform: 'capitalize' }}>
-                  {serviceTarget.load_balancing_policy.replace('_', ' ')}
-                </TableCell>
-                <TableCell>
-                  {serviceTarget.healthcheck ? 'Yes' : 'No'}
-                </TableCell>
-                <TableCell actionCell>
-                  <ActionMenu
-                    actionsList={[
-                      {
-                        onClick: () => handleEditServiceTarget(index),
-                        title: 'Edit',
-                      },
-                      {
-                        onClick: () => handleRemoveServiceTarget(index),
-                        title: 'Remove',
-                      },
-                    ]}
-                    ariaLabel={`Action Menu for Service Target ${serviceTarget.label}`}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </Stack>
