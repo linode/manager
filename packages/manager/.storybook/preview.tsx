@@ -89,7 +89,6 @@ const preview: Preview = {
           <Description />
           <Primary />
           <Controls />
-          <Stories />
         </>
       ),
     },
