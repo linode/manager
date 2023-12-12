@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { EventWithStore } from 'src/events';
 
 import { profileQueries } from './profile';
+import { updateInPaginatedStore } from './base';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
@@ -50,9 +51,12 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Token, APIError[], Partial<TokenRequest>>({
     mutationFn: (data) => updatePersonalAccessToken(id, data),
-    onSuccess() {
-      queryClient.invalidateQueries(
-        profileQueries.personalAccessTokens.queryKey
+    onSuccess(token) {
+      updateInPaginatedStore(
+        profileQueries.personalAccessTokens.queryKey,
+        id,
+        token,
+        queryClient
       );
     },
   });
