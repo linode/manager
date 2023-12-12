@@ -63,7 +63,7 @@ export const VerticalLinearStepper = ({
           orientation="vertical"
         >
           {steps.map((step: VerticalLinearStep, index: number) => (
-            <Step key={step.label}>
+            <Step key={step.label} onClick={() => setActiveStep(index)}>
               <StepLabel
                 icon={
                   <CustomStepIcon
@@ -73,6 +73,7 @@ export const VerticalLinearStepper = ({
                   />
                 }
                 sx={{
+                  cursor: 'pointer !important',
                   '& .MuiStepIcon-text': {
                     display: 'none',
                   },
