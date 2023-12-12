@@ -56,7 +56,6 @@ export const TextTooltip = (props: TextTooltipProps) => {
       enterTouchDelay={0}
       placement={placement ? placement : 'bottom'}
       title={tooltipText}
-      leaveDelay={1000000}
     >
       <Typography component="span" sx={sxTypography} variant={variant}>
         {displayText}
