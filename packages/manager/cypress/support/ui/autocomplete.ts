@@ -1,5 +1,7 @@
 import { getRegionById, getRegionByLabel } from 'support/util/regions';
 
+import type { SelectorMatcherOptions } from '@testing-library/cypress';
+
 export const autocomplete = {
   /**
    * Finds a autocomplete popper that has the given title.
@@ -19,12 +21,15 @@ export const autocompletePopper = {
   /**
    * Finds a autocomplete popper that has the given title.
    */
-  findByTitle: (title: string): Cypress.Chainable => {
+  findByTitle: (
+    title: string,
+    options?: SelectorMatcherOptions
+  ): Cypress.Chainable => {
     return cy
       .document()
       .its('body')
       .find('[data-qa-autocomplete-popper]')
-      .findByText(title);
+      .findByText(title, options);
   },
 };
 
