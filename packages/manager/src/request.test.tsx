@@ -175,10 +175,10 @@ describe('setupInterceptors', () => {
 describe('getAccountInfo', () => {
   it('should set the headers correctly', async () => {
     const proxyAccount = accountFactory.build({
-      first_name: 'Specified token',
+      first_name: 'Proxy',
     });
     const defaultAccount = accountFactory.build({
-      first_name: 'Default token',
+      first_name: 'Default',
     });
     rest.get(`${API_ROOT}/account`, (req, res, ctx) => {
       if (req.headers.get('Authorization') === 'Bearer 1234') {
@@ -194,6 +194,6 @@ describe('getAccountInfo', () => {
 
     const response = await getAccountInfo({ headers });
 
-    expect(response.first_name).toEqual('Specified token');
+    expect(response.first_name).toEqual('Proxy');
   });
 });
