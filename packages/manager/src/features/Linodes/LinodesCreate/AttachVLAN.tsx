@@ -10,13 +10,10 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import { arrayToList } from 'src/utilities/arrayToList';
-import {
-  doesRegionSupportFeature,
-  regionsWithFeature,
-} from 'src/utilities/doesRegionSupportFeature';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { InterfaceSelect } from '../LinodesDetail/LinodeSettings/InterfaceSelect';
+import { VlanAvailabilityNotice } from './VlanAvailabilityNotice';
 
 // @TODO VPC: Delete this file when VPC is released
 
@@ -61,15 +58,6 @@ export const AttachVLAN = React.memo((props: Props) => {
     'Vlans'
   );
 
-  const regionsThatSupportVLANs = regionsWithFeature(regions, 'Vlans').map(
-    (region) => region.label
-  );
-
-  const regionalAvailabilityMessage = `VLANs are currently available in ${arrayToList(
-    regionsThatSupportVLANs,
-    ';'
-  )}.`;
-
   return (
     <Paper
       data-qa-add-ons
@@ -92,7 +80,7 @@ export const AttachVLAN = React.memo((props: Props) => {
       </Typography>
       <Grid container>
         <Grid xs={12}>
-          <Typography>{regionalAvailabilityMessage}</Typography>
+          <VlanAvailabilityNotice />
           <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
             VLANs are used to create a private L2 Virtual Local Area Network
             between Linodes. A VLAN created or attached in this section will be
