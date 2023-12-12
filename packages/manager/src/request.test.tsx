@@ -194,8 +194,10 @@ describe('getAccountInfo', () => {
       Authorization: 'Bearer 1234',
     };
 
-    const response = await getAccountInfo({ headers });
+    const proxyResponse = await getAccountInfo({ headers });
+    expect(proxyResponse.first_name).toEqual('Proxy');
 
-    expect(response.first_name).toEqual('Proxy');
+    const defaultResponse = await getAccountInfo({});
+    expect(defaultResponse.first_name).toEqual('Default');
   });
 });
