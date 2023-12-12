@@ -233,7 +233,6 @@ export const AddNodePoolDrawer = (props: Props) => {
               label: 'Add pool',
               loading: isLoading,
               onClick: handleAdd,
-              sx: { marginTop: '0 !important', paddingTop: 0 },
             }}
           />
         </Box>
