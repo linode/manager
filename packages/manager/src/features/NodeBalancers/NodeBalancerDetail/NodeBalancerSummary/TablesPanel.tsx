@@ -274,9 +274,7 @@ export const TablesPanel = () => {
 
   return (
     <React.Fragment>
-      <StyledgGraphControls>
-        <StyledTitle variant="h2">Graphs</StyledTitle>
-      </StyledgGraphControls>
+      <StyledTitle variant="h2">Graphs</StyledTitle>
       <StyledPanel>
         <StyledHeader variant="h3">
           Connections (CXN/s, 5 min avg.)
@@ -300,8 +298,13 @@ const StyledHeader = styled(Typography, {
 const StyledTitle = styled(Typography, {
   label: 'StyledTitle',
 })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
   [theme.breakpoints.down('lg')]: {
     marginLeft: theme.spacing(),
+  },
+  [theme.breakpoints.up('md')]: {
+    margin: `${theme.spacing(2)} 0`,
   },
 }));
 
@@ -322,16 +325,6 @@ const StyledBottomLegend = styled('div', {
   fontSize: 14,
   margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
   padding: 10,
-}));
-
-const StyledgGraphControls = styled(Typography, {
-  label: 'StyledgGraphControls',
-})(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
-  [theme.breakpoints.up('md')]: {
-    margin: `${theme.spacing(2)} 0`,
-  },
 }));
 
 const StyledPanel = styled(Paper, {
