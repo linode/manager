@@ -64,7 +64,7 @@ export const useInitialRequests = () => {
     const dataFetchingPromises: Promise<any>[] = [
       // Fetch user's account information
       queryClient.prefetchQuery({
-        queryFn: () => getAccountInfo({}),
+        queryFn: () => getAccountInfo(),
         queryKey: accountQueryKey,
       }),
 

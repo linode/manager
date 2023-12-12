@@ -31,7 +31,7 @@ import type { Token } from '../profile';
  * including contact and billing info.
  *
  */
-export const getAccountInfo = ({ headers }: RequestOptions) => {
+export const getAccountInfo = ({ headers }: RequestOptions = {}) => {
   return Request<Account>(
     setURL(`${API_ROOT}/account`),
     setMethod('GET'),
