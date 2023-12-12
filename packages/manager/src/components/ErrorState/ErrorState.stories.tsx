@@ -8,7 +8,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 export const Default: StoryObj<ErrorStateProps> = {
   args: {
     compact: false,
-    cozy: false,
     errorText: 'An error has occurred.',
   },
   render: (args) => {

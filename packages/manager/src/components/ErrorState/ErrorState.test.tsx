@@ -15,11 +15,13 @@ describe('Removable Selections List', () => {
   it('renders the ErrorState with specified text properly', () => {
     const screen = renderWithTheme(<ErrorState errorText={props.errorText} />);
     expect(screen.getByText(errorText)).toBeVisible();
+    expect(screen.getByTestId('ErrorOutlineIcon')).toBeVisible();
   });
 
   it('renders the ErrorState with a custom icon image', () => {
     const screen = renderWithTheme(<ErrorState {...props} />);
     expect(screen.getByText(errorText)).toBeVisible();
+    expect(screen.queryByTestId('ErrorOutlineIcon')).not.toBeInTheDocument();
 
     const icon = screen.container.querySelector('[data-qa-error-icon="true"]');
     expect(icon).toBeVisible();
