@@ -11,7 +11,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import React, { useState } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import {
@@ -19,6 +18,7 @@ import {
   StyledCircleIcon,
   StyledColorlibConnector,
 } from './VerticalLinearStepper.styles';
+import { Button } from '../Button/Button';
 
 type VerticalLinearStep = {
   content: JSX.Element;
@@ -63,7 +63,7 @@ export const VerticalLinearStepper = ({
           orientation="vertical"
         >
           {steps.map((step: VerticalLinearStep, index: number) => (
-            <Step key={step.label}>
+            <Step key={step.label} onClick={() => setActiveStep(index)}>
               <StepLabel
                 icon={
                   <CustomStepIcon
@@ -73,6 +73,7 @@ export const VerticalLinearStepper = ({
                   />
                 }
                 sx={{
+                  cursor: 'pointer !important',
                   '& .MuiStepIcon-text': {
                     display: 'none',
                   },
@@ -124,40 +125,34 @@ export const VerticalLinearStepper = ({
                   >
                     {content}
                   </Box>
-
-                  <Box sx={{ mb: 2 }}>
-                    <ActionsPanel
-                      primaryButtonProps={
-                        index !== 2
-                          ? {
-                              /** Generate a 'data-testid' attribute value based on the label of the next step.
-                               * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
-                               * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
-                               */
-                              'data-testid': convertToKebabCase(
-                                steps[index + 1]?.label
-                              ),
-                              label: `Next: ${steps[index + 1]?.label}`,
-                              onClick: () => {
-                                handleNext();
-                                handler?.();
-                              },
-                              sx: { mr: 1, mt: 1 },
-                            }
-                          : undefined
-                      }
-                      secondaryButtonProps={
-                        index !== 0
-                          ? {
-                              buttonType: 'outlined',
-                              label: `Previous: ${steps[index - 1]?.label}`,
-                              onClick: handleBack,
-                              sx: { mr: 1, mt: 1 },
-                            }
-                          : undefined
-                      }
-                      style={{ justifyContent: 'flex-start' }}
-                    />
+                  <Box sx={{ mt: 1 }}>
+                    {index !== 0 && (
+                      <Button
+                        buttonType={'outlined'}
+                        onClick={handleBack}
+                        sx={{ mr: 1, mt: 1 }}
+                      >
+                        Previous: {steps[index - 1]?.label}
+                      </Button>
+                    )}
+                    {index !== 2 && (
+                      <Button
+                        buttonType="primary"
+                        // Generate a 'data-testid' attribute value based on the label of the next step.
+                        //  * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
+                        //  * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                        data-testid={convertToKebabCase(
+                          steps[index + 1]?.label
+                        )}
+                        onClick={() => {
+                          handleNext();
+                          handler?.();
+                        }}
+                        sx={{ mr: 1, mt: 1 }}
+                      >
+                        Next: {steps[index + 1]?.label}
+                      </Button>
+                    )}
                   </Box>
                 </StepContent>
               ) : null}

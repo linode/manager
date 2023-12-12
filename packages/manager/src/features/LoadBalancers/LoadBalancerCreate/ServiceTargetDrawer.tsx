@@ -1,11 +1,12 @@
-import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
+import { Endpoint, ServiceTargetPayload } from '@linode/api-v4';
 import { UpdateServiceTargetSchema } from '@linode/validation';
-import { useFormik, yupToFormErrors } from 'formik';
+import { useFormik, useFormikContext, yupToFormErrors } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
@@ -13,7 +14,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { FormLabel } from 'src/components/FormLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { Notice } from 'src/components/Notice/Notice';
+import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
@@ -21,86 +22,86 @@ import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import {
-  useServiceTargetCreateMutation,
-  useServiceTargetUpdateMutation,
-} from 'src/queries/aglb/serviceTargets';
-import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { CertificateSelect } from '../Certificates/CertificateSelect';
-import { AddEndpointForm } from './AddEndpointForm';
-import { EndpointTable } from './EndpointTable';
+import { AddEndpointForm } from '../LoadBalancerDetail/ServiceTargets/AddEndpointForm';
+import { EndpointTable } from '../LoadBalancerDetail/ServiceTargets/EndpointTable';
 import {
   SERVICE_TARGET_COPY,
   algorithmOptions,
   initialValues,
   protocolOptions,
-} from './constants';
-import { getNormalizedServiceTargetPayload } from './utils';
+} from '../LoadBalancerDetail/ServiceTargets/constants';
+import { AGLB_DOCS } from '../constants';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
-  loadbalancerId: number;
   onClose: () => void;
   open: boolean;
-  serviceTarget?: ServiceTarget;
+  serviceTargetIndex: number | undefined;
 }
 
+/**
+ * A Drawer to add Service Targets on the Load Balancer Create Page.
+ */
 export const ServiceTargetDrawer = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open, serviceTarget } = props;
+  const { onClose: _onClose, open, serviceTargetIndex } = props;
 
-  const isEditMode = serviceTarget !== undefined;
-
-  const {
-    error: errorCreateServiceTarget,
-    mutateAsync: createServiceTarget,
-    reset: resetCreateServiceTarget,
-  } = useServiceTargetCreateMutation(loadbalancerId);
+  const isEditMode = serviceTargetIndex !== undefined;
 
   const {
-    error: errorUpdateServiceTarget,
-    mutateAsync: updateServiceTarget,
-    reset: resetUpdateServiceTarget,
-  } = useServiceTargetUpdateMutation(loadbalancerId, serviceTarget?.id ?? -1);
+    setFieldValue,
+    values,
+  } = useFormikContext<LoadBalancerCreateFormData>();
 
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
-    initialValues: isEditMode ? serviceTarget : initialValues,
-    async onSubmit(values) {
-      const normalizedValues: ServiceTargetPayload = getNormalizedServiceTargetPayload(
-        values
-      );
-      try {
-        if (isEditMode) {
-          await updateServiceTarget(normalizedValues);
-        } else {
-          await createServiceTarget(normalizedValues);
-        }
-        onClose();
-      } catch (errors) {
-        formik.setErrors(getFormikErrorsFromAPIErrors(errors));
-        scrollErrorIntoView();
+    initialValues: isEditMode
+      ? values.service_targets[serviceTargetIndex]
+      : initialValues,
+    async onSubmit(serviceTarget) {
+      if (isEditMode) {
+        values.service_targets[serviceTargetIndex] = serviceTarget;
+        setFieldValue('service_targets', values.service_targets);
+      } else {
+        setFieldValue('service_targets', [
+          ...values.service_targets,
+          serviceTarget,
+        ]);
       }
+      onClose();
     },
-    validate(values) {
+    validate(serviceTarget) {
+      const hasOtherServiceTargetWithSameLabel = values.service_targets.reduce(
+        (acc, st, index) => {
+          if (
+            st.label === serviceTarget.label &&
+            index !== serviceTargetIndex
+          ) {
+            acc = true;
+          }
+          return acc;
+        },
+        false
+      );
+      if (hasOtherServiceTargetWithSameLabel) {
+        return { label: 'Label must be unique!' };
+      }
       // We must use `validate` instead of validationSchema because Formik decided to convert
       // "" to undefined before passing the values to yup. This makes it hard to validate `label`.
       // See https://github.com/jaredpalmer/formik/issues/805
       try {
-        UpdateServiceTargetSchema.validateSync(values, { abortEarly: false });
+        UpdateServiceTargetSchema.validateSync(serviceTarget, {
+          abortEarly: false,
+        });
         return {};
       } catch (error) {
         return yupToFormErrors(error);
       }
     },
-    validateOnBlur: false,
-    validateOnChange: !errorUpdateServiceTarget || !errorCreateServiceTarget,
   });
 
   const onClose = () => {
     formik.resetForm();
-    resetCreateServiceTarget();
-    resetUpdateServiceTarget();
     _onClose();
   };
 
@@ -115,58 +116,14 @@ export const ServiceTargetDrawer = (props: Props) => {
     );
   };
 
-  const generalCreateErrors = errorCreateServiceTarget
-    ?.filter((error) => {
-      if (!error.field) {
-        return true;
-      }
-      if (error.field?.startsWith('endpoints')) {
-        return true;
-      }
-      return false;
-    })
-    .map((error) => error.reason)
-    .join(', ');
-
-  const generalUpdateErrors = errorUpdateServiceTarget
-    ?.filter((error) => {
-      if (!error.field) {
-        return true;
-      }
-      if (error.field?.startsWith('endpoints')) {
-        return true;
-      }
-      return false;
-    })
-    .map((error) => error.reason)
-    .join(', ');
-
-  const drawerTitle = isEditMode
-    ? `Edit ${serviceTarget.label}`
-    : 'Add a Service Target';
-
   return (
-    <Drawer onClose={onClose} open={open} title={drawerTitle}>
-      {!isEditMode && (
-        <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
-      )}
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={isEditMode ? 'Edit Service Target' : 'Add a Service Target'}
+    >
+      <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
       <form onSubmit={formik.handleSubmit}>
-        {generalCreateErrors && (
-          <Notice
-            spacingBottom={0}
-            spacingTop={12}
-            text={generalCreateErrors}
-            variant="error"
-          />
-        )}
-        {generalUpdateErrors && (
-          <Notice
-            spacingBottom={0}
-            spacingTop={12}
-            text={generalUpdateErrors}
-            variant="error"
-          />
-        )}
         <TextField
           errorText={formik.errors.label}
           label="Service Target Label"
@@ -236,15 +193,15 @@ export const ServiceTargetDrawer = (props: Props) => {
                 text={SERVICE_TARGET_COPY.Tooltips.Certificate}
               />
             </Stack>
-            <CertificateSelect
-              onChange={(cert) =>
-                formik.setFieldValue('certificate_id', cert?.id ?? null)
-              }
-              errorText={formik.errors.certificate_id}
-              filter={{ type: 'ca' }}
-              loadbalancerId={loadbalancerId}
-              value={formik.values.certificate_id}
-            />
+            <Typography>
+              <BetaChip
+                component="span"
+                sx={{ marginLeft: '0 !important', marginRight: '4px' }}
+              />
+              Upload service target endpoint CA certificates after the load
+              balancer is created and the protocol is HTTPS.{' '}
+              <Link to={AGLB_DOCS.Certificates}>Learn more.</Link>
+            </Typography>
           </>
         )}
         <Divider spacingBottom={12} spacingTop={24} />
@@ -387,8 +344,8 @@ export const ServiceTargetDrawer = (props: Props) => {
         )}
         <ActionsPanel
           primaryButtonProps={{
-            label: `${isEditMode ? 'Save' : 'Create'} Service Target`,
-            loading: formik.isSubmitting,
+            disabled: isEditMode && !formik.dirty,
+            label: isEditMode ? 'Save' : 'Add Service Target',
             type: 'submit',
           }}
           secondaryButtonProps={{

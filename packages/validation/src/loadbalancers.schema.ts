@@ -50,10 +50,14 @@ export const EndpointSchema = object({
 
 const HealthCheckSchema = object({
   protocol: string().oneOf(['http', 'tcp']),
-  interval: number().min(0),
-  timeout: number().min(0),
-  unhealthy_threshold: number().min(0),
-  healthy_threshold: number().min(0),
+  interval: number().typeError('Interval must be a number.').min(1, 'Interval must be greater than zero.'),
+  timeout: number().typeError('Timeout must be a number.').min(1, 'Timeout must be greater than zero.'),
+  unhealthy_threshold: number()
+    .typeError('Unhealthy Threshold must be a number.')
+    .min(1, 'Unhealthy Threshold must be greater than zero.'),
+  healthy_threshold: number()
+    .typeError('Healthy Threshold must be a number.')
+    .min(1, 'Healthy Threshold must be greater than zero.'),
   path: string().nullable(),
   host: string().nullable(),
 });
