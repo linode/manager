@@ -1,4 +1,4 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { ScopeObject } from '@linode/api-v4/lib/object-storage/types';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -9,11 +9,11 @@ import { AccessTable } from './AccessTable';
 import { MODE } from './types';
 
 interface Props {
-  bucket_access: Scope[] | null;
+  bucket_access: ScopeObject[] | null;
   checked: boolean;
   handleToggle: () => void;
   mode: MODE;
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ScopeObject[]) => void;
 }
 
 export const LimitedAccessControls = React.memo((props: Props) => {

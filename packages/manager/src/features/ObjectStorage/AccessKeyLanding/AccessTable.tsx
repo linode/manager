@@ -1,4 +1,7 @@
-import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
+import {
+  AccessType,
+  ScopeObject,
+} from '@linode/api-v4/lib/object-storage/types';
 import { update } from 'ramda';
 import * as React from 'react';
 
@@ -20,9 +23,9 @@ import {
 import type { MODE } from './types';
 
 export const getUpdatedScopes = (
-  oldScopes: Scope[],
-  newScope: Scope
-): Scope[] => {
+  oldScopes: ScopeObject[],
+  newScope: ScopeObject
+): ScopeObject[] => {
   // Cluster and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
     (thisScope) =>
@@ -42,10 +45,10 @@ export const SCOPES: Record<string, AccessType> = {
 };
 
 interface TableProps {
-  bucket_access: Scope[] | null;
+  bucket_access: ScopeObject[] | null;
   checked: boolean;
   mode: MODE;
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ScopeObject[]) => void;
 }
 
 export const AccessTable = React.memo((props: TableProps) => {
@@ -55,7 +58,7 @@ export const AccessTable = React.memo((props: TableProps) => {
     return null;
   }
 
-  const updateSingleScope = (newScope: Scope) => {
+  const updateSingleScope = (newScope: ScopeObject) => {
     const newScopes = getUpdatedScopes(bucket_access, newScope);
     updateScopes(newScopes);
   };

@@ -1,33 +1,55 @@
+export interface RegionS3EndpointAndID {
+  id: string;
+  s3_endpoint: string;
+}
+
 export interface ObjectStorageKey {
   access_key: string;
+  bucket_access: ScopeObject[] | null;
   id: number;
   label: string;
-  secret_key: string;
   limited: boolean;
-  bucket_access: Scope[] | null;
+  regions: RegionS3EndpointAndID[];
+  secret_key: string;
 }
 
 export type AccessType = 'read_only' | 'read_write' | 'none';
 export interface Scope {
   bucket_name: string;
-  cluster: string;
   permissions: AccessType;
+}
+
+export interface ScopeRequest extends Scope {
+  cluster?: string;
+  region?: string;
+}
+
+export interface ScopeObject extends Scope {
+  cluster: string;
+  region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
 }
 
 export interface ObjectStorageKeyRequest {
   label: string;
   bucket_access: Scope[] | null;
+  regions?: string[];
 }
 
 export interface UpdateObjectStorageKeyRequest {
-  label: string;
+  label?: string;
+  regions?: string[];
 }
 
 export interface ObjectStorageBucketRequestPayload {
-  label: string;
-  cluster: string;
   acl?: 'private' | 'public-read' | 'authenticated-read' | 'public-read-write';
+  cluster?: string;
   cors_enabled?: boolean;
+  label: string;
+  region?: string;
+  /*
+   The API will accept either cluster or region, or both (provided they are the same value).
+   The payload requires at least one of them though, which will be enforced via validation.
+  */
 }
 
 export interface ObjectStorageDeleteBucketRequestPayload {
@@ -36,12 +58,13 @@ export interface ObjectStorageDeleteBucketRequestPayload {
 }
 
 export interface ObjectStorageBucket {
-  label: string;
-  created: string;
   cluster: string;
+  created: string;
   hostname: string;
-  size: number; // Size of bucket in bytes
+  label: string;
   objects: number;
+  region: string;
+  size: number; // Size of bucket in bytes
 }
 
 export interface ObjectStorageObject {
