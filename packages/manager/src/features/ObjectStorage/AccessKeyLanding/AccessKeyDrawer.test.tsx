@@ -36,6 +36,7 @@ describe('AccessKeyDrawer', () => {
         bucket_name: bucket.label,
         cluster: bucket.cluster,
         permissions: 'none',
+        region: 'us-east',
       });
     });
 
@@ -88,7 +89,7 @@ describe('AccessKeyDrawer', () => {
         bucket_name: 'not-real',
         cluster: 'totally-fake',
         permissions: 'read_only',
-        region: 'totally-fake',
+        region: 'us-east',
       } as ScopeObject;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });
