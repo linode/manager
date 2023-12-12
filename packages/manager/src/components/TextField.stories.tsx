@@ -20,19 +20,6 @@ export const Default: Story = {
   render: (args) => <TextField {...args} />,
 };
 
-/**
-### Overview
-
-Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix it. Users should not have to memorize instructions in order to fix the error.
-
-### Main Principles
-
-- Should be easy to notice and understand.
-- Should give solutions to how to fix the error.
-- Users should not have to memorize instructions in order to fix the error.
-- Long error messages for short text fields can extend beyond the text field.
-- When the user has finished filling in a field and clicks the submit button, an indicator should appear if the field contains an error. Use red to differentiate error fields from normal ones.
- */
 export const Error: Story = {
   args: {
     errorText: 'This input needs further attention!',
@@ -42,11 +29,6 @@ export const Error: Story = {
   render: (args) => <TextField {...args} />,
 };
 
-/**
-### Overview
-
-Number Text Fields are used for strictly numerical input
- */
 export const Number: Story = {
   args: {
     label: 'Label for Number',

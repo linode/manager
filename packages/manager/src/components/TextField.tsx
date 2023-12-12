@@ -74,6 +74,10 @@ interface BaseProps {
    */
   className?: string;
   /**
+   * Props applied to the root element
+   */
+  containerProps?: BoxProps;
+  /**
    * Data attributes are applied to the underlying TextField component for testing purposes
    */
   dataAttrs?: Record<string, any>;
@@ -146,10 +150,6 @@ interface BaseProps {
    */
   trimmed?: boolean;
   value?: Value;
-  /**
-   * Props applied to the root element
-   */
-  containerProps?: BoxProps;
 }
 
 type Value = null | number | string | undefined;
@@ -201,6 +201,25 @@ Text fields allow users to enter text into a UI.
 - Avoid breaking a single form into multiple “papers” unless those sections are truly independent of each other.
 - Consider sizing the input field to the data being entered (ex. the field for a street address should be wider than the field for a zip code). Balance this goal with the visual benefits of fields of the same length. A somewhat outsized input that aligns with the fields above and below it might be the best choice.
 
+## Textfield errors
+
+### Overview
+
+Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix it. Users should not have to memorize instructions in order to fix the error.
+
+### Main Principles
+
+- Should be easy to notice and understand.
+- Should give solutions to how to fix the error.
+- Users should not have to memorize instructions in order to fix the error.
+- Long error messages for short text fields can extend beyond the text field.
+- When the user has finished filling in a field and clicks the submit button, an indicator should appear if the field contains an error. Use red to differentiate error fields from normal ones.
+
+## Number Text Fields
+
+### Overview
+
+Number Text Fields are used for strictly numerical input
  */
 export const TextField = (props: TextFieldProps) => {
   const { classes, cx } = useStyles();
