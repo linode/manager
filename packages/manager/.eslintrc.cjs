@@ -20,6 +20,7 @@ module.exports = {
   ignorePatterns: [
     'node_modules',
     'build',
+    'storybook-static',
     '.storybook',
     'e2e',
     'public',
