@@ -43,6 +43,37 @@ export const mockGetLoadBalancers = (loadBalancers: Loadbalancer[]) => {
 };
 
 /**
+ * Intercepts DELETE requests to delete an AGLB load balancer.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancer = (loadBalancerId: number) => {
+  return cy.intercept('DELETE', apiMatcher(`/aglb/${loadBalancerId}`), {});
+};
+
+/**
+ * Intercepts DELETE requests to delete an AGLB load balancer and mocks HTTP 500 error response.
+ *
+ * @param loadBalancerId - ID of load balancer for which to delete.
+ * @param message - Optional error message with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLoadBalancerError = (
+  loadBalancerId: number,
+  message?: string
+) => {
+  const defaultMessage = 'An error occurred while deleting Load Balancer.';
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/aglb/${loadBalancerId}`),
+    makeErrorResponse(message ?? defaultMessage, 500)
+  );
+};
+
+/**
  * Intercepts GET requests to retrieve AGLB load balancer configurations and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock configurations.
