@@ -5,6 +5,7 @@ import {
   Firewall,
   FirewallDeviceEntityType,
 } from '@linode/api-v4/lib/firewalls';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
@@ -71,6 +72,7 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
+    const { data } = useAllFirewallsQuery();
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
@@ -197,13 +199,42 @@ export const CreateFirewallDrawer = React.memo(
         ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
         : undefined;
 
-    const linodeOptionsFilter = (linode: Linode) => {
-      return !readOnlyLinodeIds.includes(linode.id);
-    };
+    const [linodeOptionsFilter, nodebalancerOptionsFilter] = (() => {
+      // When `firewallNodebalancer` feature flag is disabled, no filtering
+      // occurs. In this case, pass filter callbacks that always returns `true`.
+      if (!flags.firewallNodebalancer) {
+        return [() => true, () => true];
+      }
 
-    const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-      return !readOnlyNodebalancerIds.includes(nodebalancer.id);
-    };
+      const assignedServices = data
+        ?.map((firewall) => firewall.entities)
+        .flat();
+
+      const assignedLinodes = assignedServices?.filter(
+        (service) => service.type === 'linode'
+      );
+      const assignedNodeBalancers = assignedServices?.filter(
+        (service) => service.type === 'nodebalancer'
+      );
+
+      const linodeOptionsFilter = (linode: Linode) => {
+        return (
+          !readOnlyLinodeIds.includes(linode.id) &&
+          !assignedLinodes?.some((service) => service.id === linode.id)
+        );
+      };
+
+      const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
+        return (
+          !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
+          !assignedNodeBalancers?.some(
+            (service) => service.id === nodebalancer.id
+          )
+        );
+      };
+
+      return [linodeOptionsFilter, nodebalancerOptionsFilter];
+    })();
 
     const learnMoreLink = (
       <Link to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}>Learn more</Link>

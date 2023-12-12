@@ -180,6 +180,6 @@ const getDefaultNoOptionsMessage = (
   } else if (loading) {
     return 'Loading your NodeBalancers...';
   } else {
-    return 'No options';
+    return 'No available NodeBalancers';
   }
 };
