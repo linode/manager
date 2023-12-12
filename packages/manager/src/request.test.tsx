@@ -1,7 +1,7 @@
 import { getAccountInfo } from '@linode/api-v4';
 import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
-import { rest } from 'msw';
 
+import { rest, server } from 'src/mocks/testServer';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
 import { API_ROOT } from './constants';
@@ -180,13 +180,15 @@ describe('getAccountInfo', () => {
     const defaultAccount = accountFactory.build({
       first_name: 'Default',
     });
-    rest.get(`${API_ROOT}/account`, (req, res, ctx) => {
-      if (req.headers.get('Authorization') === 'Bearer 1234') {
-        return res(ctx.json(proxyAccount));
-      } else {
-        return res(ctx.json(defaultAccount));
-      }
-    });
+    server.use(
+      rest.get(`${API_ROOT}/account`, (req, res, ctx) => {
+        if (req.headers.get('Authorization') === 'Bearer 1234') {
+          return res(ctx.json(proxyAccount));
+        } else {
+          return res(ctx.json(defaultAccount));
+        }
+      })
+    );
 
     const headers = {
       Authorization: 'Bearer 1234',
