@@ -35,6 +35,16 @@ interface AreaChartProps {
   xAxis: XAxisProps;
 }
 
+const humanizeLargeData = (value: number) => {
+  if (value >= 1000000) {
+    return value / 1000000 + 'M';
+  }
+  if (value >= 1000) {
+    return value / 1000 + 'K';
+  }
+  return `${value}`;
+};
+
 export const AreaChart = (props: AreaChartProps) => {
   const { areas, data, height, timezone, unit, xAxis } = props;
 
@@ -94,7 +104,7 @@ export const AreaChart = (props: AreaChartProps) => {
           tickFormatter={xAxisTickFormatter}
           type="number"
         />
-        <YAxis dataKey={areas[0].dataKey} stroke={theme.color.label} />
+        <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
         <Tooltip
           contentStyle={{
             color: '#606469',
