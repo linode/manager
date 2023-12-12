@@ -58,6 +58,24 @@ describe('Delete', () => {
   // Test case for deleting a load balancer from the Settings tab.
   it('Deletes a loadbalancer from Settings tab', () => {
     const mockLoadBalancer = loadbalancerFactory.build();
+    // Setup additional mock load balancer data.
+    const loadBalancerConfiguration = configurationFactory.build();
+    const loadbalancerMocks = [
+      loadbalancerFactory.build({
+        id: 1,
+        label: randomLabel(),
+        configurations: [
+          {
+            id: loadBalancerConfiguration.id,
+            label: loadBalancerConfiguration.label,
+          },
+        ],
+        regions: ['us-east'],
+      }),
+    ];
+    const loadbalancerMock = loadbalancerMocks[0];
+
+    mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
 
     mockAppendFeatureFlags({
       aglb: makeFeatureFlagData(true),
@@ -81,25 +99,6 @@ describe('Delete', () => {
 
     // Mock the API call for deleting the load balancer.
     mockDeleteLoadBalancer(mockLoadBalancer.id).as('deleteLoadBalancer');
-
-    // Setup additional mock load balancer data.
-    const loadBalancerConfiguration = configurationFactory.build();
-    const loadbalancerMocks = [
-      loadbalancerFactory.build({
-        id: 1,
-        label: randomLabel(),
-        configurations: [
-          {
-            id: loadBalancerConfiguration.id,
-            label: loadBalancerConfiguration.label,
-          },
-        ],
-        regions: ['us-east'],
-      }),
-    ];
-    const loadbalancerMock = loadbalancerMocks[0];
-
-    mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
 
     ui.button.findByTitle('Delete').should('be.visible').click();
 
