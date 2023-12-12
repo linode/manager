@@ -28,7 +28,7 @@ import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 
 import { updateInPaginatedStore } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
 
 export const queryKey = 'volumes';
 
@@ -127,7 +127,7 @@ export const useCreateVolumeMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };

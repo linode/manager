@@ -12,7 +12,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { InputAdornment } from 'src/components/InputAdornment';
 import {
-  queryKey,
+  profileQueries,
   updateProfileData,
   useProfile,
   useSendPhoneVerificationCodeMutation,
@@ -94,7 +94,7 @@ export const PhoneVerification = () => {
       );
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries(profileQueries.profile.queryKey);
     }
 
     // reset form states

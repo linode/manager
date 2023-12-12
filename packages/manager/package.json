@@ -79,6 +79,7 @@
     "tss-react": "^4.8.2",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
+    "@bnussman/query-key": "0.0.7",
     "xterm": "^4.2.0",
     "yup": "^0.32.9",
     "zxcvbn": "^4.4.2"

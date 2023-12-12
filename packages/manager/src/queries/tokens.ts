@@ -2,8 +2,6 @@ import {
   createPersonalAccessToken,
   deleteAppToken,
   deletePersonalAccessToken,
-  getAppTokens,
-  getPersonalAccessTokens,
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
@@ -17,14 +15,12 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { EventWithStore } from 'src/events';
 
-import { updateInPaginatedStore } from './base';
-import { queryKey } from './profile';
+import { profileQueries } from './profile';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     keepPreviousData: true,
-    queryFn: () => getAppTokens(params, filter),
-    queryKey: [queryKey, 'app-tokens', params, filter],
+    ...profileQueries.appTokens(params, filter),
   });
 };
 
@@ -34,8 +30,7 @@ export const usePersonalAccessTokensQuery = (
 ) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     keepPreviousData: true,
-    queryFn: () => getPersonalAccessTokens(params, filter),
-    queryKey: [queryKey, 'personal-access-tokens', params, filter],
+    ...profileQueries.personalAccessTokens(params, filter),
   });
 };
 
@@ -44,8 +39,10 @@ export const useCreatePersonalAccessTokenMutation = () => {
   return useMutation<Token, APIError[], TokenRequest>(
     createPersonalAccessToken,
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+      onSuccess() {
+        queryClient.invalidateQueries(
+          profileQueries.personalAccessTokens.queryKey
+        );
       },
     }
   );
@@ -56,12 +53,9 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
   return useMutation<Token, APIError[], Partial<TokenRequest>>(
     (data) => updatePersonalAccessToken(id, data),
     {
-      onSuccess: (token) => {
-        updateInPaginatedStore(
-          [queryKey, 'personal-access-tokens'],
-          id,
-          token,
-          queryClient
+      onSuccess() {
+        queryClient.invalidateQueries(
+          profileQueries.personalAccessTokens.queryKey
         );
       },
     }
@@ -75,7 +69,9 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
         () =>
-          queryClient.invalidateQueries([queryKey, 'personal-access-tokens']),
+          queryClient.invalidateQueries(
+            profileQueries.personalAccessTokens.queryKey
+          ),
         1000
       );
     },
@@ -88,7 +84,7 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
-        () => queryClient.invalidateQueries([queryKey, 'app-tokens']),
+        () => queryClient.invalidateQueries(profileQueries.appTokens.queryKey),
         1000
       );
     },
@@ -96,5 +92,5 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
 };
 
 export function tokenEventHandler({ queryClient }: EventWithStore) {
-  queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+  queryClient.invalidateQueries(profileQueries.personalAccessTokens.queryKey);
 }
