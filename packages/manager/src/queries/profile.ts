@@ -73,10 +73,10 @@ export const useProfile = (givenProfile?: Profile) =>
 
 export const useMutateProfile = () => {
   const queryClient = useQueryClient();
-  return useMutation<Profile, APIError[], Partial<Profile>>(
-    (data) => updateProfile(data),
-    { onSuccess: (newData) => updateProfileData(newData, queryClient) }
-  );
+  return useMutation<Profile, APIError[], Partial<Profile>>({
+    mutationFn: (data) => updateProfile(data),
+    onSuccess: (newData) => updateProfileData(newData, queryClient),
+  });
 };
 
 export const updateProfileData = (
@@ -109,7 +109,8 @@ export const getGrantData = (queryClient: QueryClient) =>
 
 export const useSMSOptOutMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(smsOptOut, {
+  return useMutation<{}, APIError[]>({
+    mutationFn: smsOptOut,
     onSuccess: () => {
       updateProfileData({ verified_phone_number: null }, queryClient);
     },
@@ -117,14 +118,14 @@ export const useSMSOptOutMutation = () => {
 };
 
 export const useSendPhoneVerificationCodeMutation = () =>
-  useMutation<{}, APIError[], SendPhoneVerificationCodePayload>(
-    sendCodeToPhoneNumber
-  );
+  useMutation<{}, APIError[], SendPhoneVerificationCodePayload>({
+    mutationFn: sendCodeToPhoneNumber,
+  });
 
 export const useVerifyPhoneVerificationCodeMutation = () =>
-  useMutation<{}, APIError[], VerifyVerificationCodePayload>(
-    verifyPhoneNumberCode
-  );
+  useMutation<{}, APIError[], VerifyVerificationCodePayload>({
+    mutationFn: verifyPhoneNumberCode,
+  });
 
 export const useSSHKeysQuery = (
   params?: Params,
@@ -139,35 +140,32 @@ export const useSSHKeysQuery = (
 
 export const useCreateSSHKeyMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>(
-    createSSHKey,
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
-        // also invalidate the /account/users data because that endpoint returns some SSH key data
-        queryClient.invalidateQueries([accountQueryKey, 'users']);
-      },
-    }
-  );
+  return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>({
+    mutationFn: createSSHKey,
+    onSuccess() {
+      queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
+      // also invalidate the /account/users data because that endpoint returns some SSH key data
+      queryClient.invalidateQueries([accountQueryKey, 'users']);
+    },
+  });
 };
 
 export const useUpdateSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<SSHKey, APIError[], { label: string }>(
-    (data) => updateSSHKey(id, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
-        // also invalidate the /account/users data because that endpoint returns some SSH key data
-        queryClient.invalidateQueries([accountQueryKey, 'users']);
-      },
-    }
-  );
+  return useMutation<SSHKey, APIError[], { label: string }>({
+    mutationFn: (data) => updateSSHKey(id, data),
+    onSuccess() {
+      queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
+      // also invalidate the /account/users data because that endpoint returns some SSH key data
+      queryClient.invalidateQueries([accountQueryKey, 'users']);
+    },
+  });
 };
 
 export const useDeleteSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteSSHKey(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteSSHKey(id),
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
@@ -193,7 +191,8 @@ export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
 
 export const useRevokeTrustedDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteTrustedDevice(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteTrustedDevice(id),
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.trustedDevices.queryKey);
     },
@@ -202,7 +201,8 @@ export const useRevokeTrustedDeviceMutation = (id: number) => {
 
 export const useDisableTwoFactorMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(disableTwoFactor, {
+  return useMutation<{}, APIError[]>({
+    mutationFn: disableTwoFactor,
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.profile.queryKey);
       // also invalidate the /account/users data because that endpoint returns 2FA data

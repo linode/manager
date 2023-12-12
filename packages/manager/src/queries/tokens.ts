@@ -36,35 +36,32 @@ export const usePersonalAccessTokensQuery = (
 
 export const useCreatePersonalAccessTokenMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Token, APIError[], TokenRequest>(
-    createPersonalAccessToken,
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(
-          profileQueries.personalAccessTokens.queryKey
-        );
-      },
-    }
-  );
+  return useMutation<Token, APIError[], TokenRequest>({
+    mutationFn: createPersonalAccessToken,
+    onSuccess() {
+      queryClient.invalidateQueries(
+        profileQueries.personalAccessTokens.queryKey
+      );
+    },
+  });
 };
 
 export const useUpdatePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Token, APIError[], Partial<TokenRequest>>(
-    (data) => updatePersonalAccessToken(id, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(
-          profileQueries.personalAccessTokens.queryKey
-        );
-      },
-    }
-  );
+  return useMutation<Token, APIError[], Partial<TokenRequest>>({
+    mutationFn: (data) => updatePersonalAccessToken(id, data),
+    onSuccess() {
+      queryClient.invalidateQueries(
+        profileQueries.personalAccessTokens.queryKey
+      );
+    },
+  });
 };
 
 export const useRevokePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deletePersonalAccessToken(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deletePersonalAccessToken(id),
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
@@ -80,7 +77,8 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
 
 export const useRevokeAppAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteAppToken(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteAppToken(id),
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
