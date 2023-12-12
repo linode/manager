@@ -84,7 +84,7 @@ export const PaymentDrawer = (props: Props) => {
     data: account,
     isLoading: accountLoading,
     refetch: accountRefetch,
-  } = useAccount({});
+  } = useAccount();
 
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();

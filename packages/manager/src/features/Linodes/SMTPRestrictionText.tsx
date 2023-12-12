@@ -17,7 +17,7 @@ export interface SMTPRestrictionTextProps {
 
 export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
   const { supportLink } = props;
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
 
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.

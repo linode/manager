@@ -21,7 +21,7 @@ import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 export const KubernetesClusterDetail = () => {
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();

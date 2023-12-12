@@ -186,7 +186,7 @@ export const BillingActivityPanel = (props: Props) => {
   const { accountActiveSince } = props;
 
   const { data: profile } = useProfile();
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
 
   const isAkamaiCustomer = account?.billing_source === 'akamai';

@@ -81,7 +81,7 @@ export const GooglePayButton = (props: Props) => {
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
   );
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
 
   const {
     disabled: disabledDueToProcessing,

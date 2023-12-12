@@ -63,7 +63,7 @@ export const PayPalButton = (props: Props) => {
     isLoading: clientTokenLoading,
   } = useClientToken();
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
   const queryClient = useQueryClient();
 
   const {

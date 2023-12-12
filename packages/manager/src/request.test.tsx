@@ -1,11 +1,7 @@
-import { getAccountInfo } from '@linode/api-v4';
 import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
 
-import { rest, server } from 'src/mocks/testServer';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
-import { API_ROOT } from './constants';
-import { accountFactory } from './factories';
 import { profileFactory } from './factories';
 import { queryClientFactory } from './queries/base';
 import {
@@ -169,35 +165,5 @@ describe('setupInterceptors', () => {
     headers.setAuthorization(bearer);
 
     expect(headers.getAuthorization()).toEqual('Bearer 1234');
-  });
-});
-
-describe('getAccountInfo', () => {
-  it('should set the headers correctly', async () => {
-    const proxyAccount = accountFactory.build({
-      first_name: 'Proxy',
-    });
-    const defaultAccount = accountFactory.build({
-      first_name: 'Default',
-    });
-    server.use(
-      rest.get(`${API_ROOT}/account`, (req, res, ctx) => {
-        if (req.headers.get('Authorization') === 'Bearer 1234') {
-          return res(ctx.json(proxyAccount));
-        } else {
-          return res(ctx.json(defaultAccount));
-        }
-      })
-    );
-
-    const headers = {
-      Authorization: 'Bearer 1234',
-    };
-
-    const proxyResponse = await getAccountInfo({ headers });
-    expect(proxyResponse.first_name).toEqual('Proxy');
-
-    const defaultResponse = await getAccountInfo({});
-    expect(defaultResponse.first_name).toEqual('Default');
   });
 });

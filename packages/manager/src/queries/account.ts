@@ -23,7 +23,7 @@ import type {
 
 export const queryKey = 'account';
 
-export const useAccount = ({ headers }: RequestOptions) => {
+export const useAccount = ({ headers }: RequestOptions = {}) => {
   const { data: profile } = useProfile();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
 

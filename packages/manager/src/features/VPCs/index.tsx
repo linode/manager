@@ -14,7 +14,7 @@ const VPCLanding = React.lazy(() => import('./VPCLanding/VPCLanding'));
 
 const VPC = () => {
   const flags = useFlags();
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
 
   const showVPCs = isFeatureEnabled(
     'VPCs',

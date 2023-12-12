@@ -74,7 +74,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   const theme = useTheme();
   const flags = useFlags();
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
 
   const { data: image } = useImageQuery(
     selectedImageID ?? '',

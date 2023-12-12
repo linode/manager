@@ -18,7 +18,7 @@ import { StyledGrid } from './EmailBounce.styles';
 // <EmailBounceNotificationSection />
 // =============================================================================
 export const EmailBounceNotificationSection = React.memo(() => {
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
   const { mutateAsync: updateAccount } = useMutateAccount();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();

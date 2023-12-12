@@ -172,7 +172,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
 
   const valuesFromStorage = storage.supportText.get();
 

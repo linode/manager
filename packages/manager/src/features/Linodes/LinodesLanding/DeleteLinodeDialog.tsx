@@ -27,7 +27,7 @@ interface Props {
 export const DeleteLinodeDialog = (props: Props) => {
   const queryClient = useQueryClient();
   const flags = useFlags();
-  const { data: account } = useAccount({});
+  const { data: account } = useAccount();
 
   const enableVPCActions = isFeatureEnabled(
     'VPCs',
