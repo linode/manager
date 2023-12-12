@@ -6,9 +6,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TagsPanel } from './TagsPanel';
 
+import type { TagsPanelProps } from './TagsPanel';
+
 const queryClient = new QueryClient();
 
-const renderWithQueryClient = (ui: any) => {
+const renderWithQueryClient = (ui: React.ReactElement<TagsPanelProps>) => {
   return renderWithTheme(
     <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
   );
