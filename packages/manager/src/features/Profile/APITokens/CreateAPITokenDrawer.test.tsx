@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories/accountUsers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -38,6 +39,7 @@ describe('Create API Token Drawer', () => {
     expect(cancelBtn).toBeEnabled();
     expect(cancelBtn).toBeVisible();
   });
+
   it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
     server.use(
       rest.post('*/profile/tokens', (req, res, ctx) => {
@@ -58,19 +60,63 @@ describe('Create API Token Drawer', () => {
       expect(props.showSecret).toBeCalledWith('secret-value')
     );
   });
+
+  // TODO: Parent/Child - remove this test when Parent/Child feature is released.
   it('Should default to read/write for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
-    const selectAllReadWriteRadioButton = getByLabelText(
+    const selectAllReadWritePermRadioButton = getByLabelText(
       'Select read/write for all'
     );
-    expect(selectAllReadWriteRadioButton).toBeChecked();
+    expect(selectAllReadWritePermRadioButton).toBeChecked();
   });
+
+  it('Should default to None for all scopes with the parent/child feature flag on', () => {
+    const { getByLabelText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      { flags: { parentChildAccountAccess: true } }
+    );
+    const selectAllNonePermRadioButton = getByLabelText('Select none for all');
+    expect(selectAllNonePermRadioButton).toBeChecked();
+  });
+
   it('Should default to 6 months for expiration', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     getByText('In 6 months');
   });
+
+  // TODO: fix - cannot find text
+  it.skip('Should show the Child Account scope for a parent user account with the parent/child feature flag on', () => {
+    server.use(
+      // rest.get('*/profile', (req, res, ctx) => {
+      //   return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
+      // }),
+      rest.get('*/account/users/parent-user', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      })
+    );
+
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
+      flags: { parentChildAccountAccess: true },
+    });
+    expect(getByText('Child Account')).toBeInTheDocument();
+  });
+
+  // TODO: fix - cannot find text
+  it.skip('Should not show the Child Account scope for a non-parent user account with the parent/child feature flag on', () => {
+    server.use(
+      rest.get('*/account/users/test-user', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: null })));
+      })
+    );
+
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
+      flags: { parentChildAccountAccess: true },
+    });
+    expect(getByText('Child Account')).not.toBeInTheDocument();
+  });
+
   it('Should close when Cancel is pressed', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);

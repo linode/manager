@@ -13,6 +13,7 @@ export const appTokenFactory = Factory.Sync.makeFactory<Token>({
 
 export interface Access {
   Account: number;
+  // 'Child Account': number;
   Databases: number;
   Domains: number;
   Events: number;
@@ -30,6 +31,7 @@ export interface Access {
 
 export const accessFactory = Factory.Sync.makeFactory<Access>({
   Account: 0,
+  // 'Child Account': 0,
   Databases: 0,
   Domains: 0,
   Events: 0,
