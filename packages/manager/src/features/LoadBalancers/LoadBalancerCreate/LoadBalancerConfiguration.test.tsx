@@ -20,7 +20,7 @@ const initialValues: LoadBalancerCreateFormData = {
 describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+      <LoadBalancerConfiguration index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
 
@@ -51,7 +51,7 @@ describe('LoadBalancerConfiguration', () => {
   });
   test('Should navigate to Service Targets content', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+      <LoadBalancerConfiguration index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
@@ -68,7 +68,7 @@ describe('LoadBalancerConfiguration', () => {
   });
   test('Should navigate to Routes content', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+      <LoadBalancerConfiguration index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
@@ -88,7 +88,7 @@ describe('LoadBalancerConfiguration', () => {
   });
   test('Should be able to go previous step', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+      <LoadBalancerConfiguration index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));

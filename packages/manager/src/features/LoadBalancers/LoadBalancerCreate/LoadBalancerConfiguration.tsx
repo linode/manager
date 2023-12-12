@@ -13,13 +13,12 @@ import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   index: number;
-  name: string;
 }
 
-export const LoadBalancerConfiguration = ({ index, name }: Props) => {
+export const LoadBalancerConfiguration = ({ index }: Props) => {
   const configurationSteps = [
     {
-      content: <ConfigurationDetails index={index} name={name} />,
+      content: <ConfigurationDetails index={index} />,
       handler: () => null,
       label: 'Details',
     },
@@ -43,7 +42,7 @@ export const LoadBalancerConfiguration = ({ index, name }: Props) => {
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
       >
-        Configuration - {values[name]?.[index]?.label}
+        Configuration - {values.configurations?.[index]?.label}
       </Typography>
       <Stack spacing={1}>
         <Typography>
