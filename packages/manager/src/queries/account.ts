@@ -23,14 +23,13 @@ import type {
 
 export const queryKey = 'account';
 
-export const useAccount = ({ headers }: RequestOptions = {}) => {
+export const useAccount = () => {
   const { data: profile } = useProfile();
-  const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
-  return useQuery<Account, APIError[]>(queryKey, () => getAccountInfo(), {
+  return useQuery<Account, APIError[]>(queryKey, getAccountInfo, {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
-    enabled: !profile?.restricted || hasExplicitAuthToken,
+    enabled: !profile?.restricted,
   });
 };
 
