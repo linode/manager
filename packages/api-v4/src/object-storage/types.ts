@@ -14,6 +14,7 @@ export interface ObjectStorageKey {
 }
 
 export type AccessType = 'read_only' | 'read_write' | 'none';
+
 export interface Scope {
   bucket_name: string;
   permissions: AccessType;
