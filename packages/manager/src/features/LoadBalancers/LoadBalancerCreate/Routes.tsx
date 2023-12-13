@@ -37,11 +37,13 @@ export const Routes = ({ configurationIndex }: Props) => {
 
   const [query, setQuery] = useState<string>();
 
+  const configuration = values.configurations![configurationIndex];
+
   const handleRemoveRoute = (index: number) => {
-    values.configurations![configurationIndex].routes!.splice(index, 1);
+    configuration.routes!.splice(index, 1);
     setFieldValue(
       `configurations[${configurationIndex}].routes`,
-      values.configurations?.[configurationIndex].routes
+      configuration.routes
     );
   };
 
@@ -96,9 +98,10 @@ export const Routes = ({ configurationIndex }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {values.configurations![configurationIndex].routes!.length ===
-              0 && <TableRowEmpty colSpan={5} />}
-            {values.configurations?.[configurationIndex].routes
+            {configuration.routes!.length === 0 && (
+              <TableRowEmpty colSpan={5} />
+            )}
+            {configuration.routes
               ?.filter((route) => {
                 if (query) {
                   return route.label.includes(query);
@@ -133,7 +136,7 @@ export const Routes = ({ configurationIndex }: Props) => {
         configurationIndex={configurationIndex}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
-        protocol={values.configurations![configurationIndex].protocol}
+        protocol={configuration.protocol}
       />
       <EditRouteDrawer
         configurationIndex={configurationIndex}
