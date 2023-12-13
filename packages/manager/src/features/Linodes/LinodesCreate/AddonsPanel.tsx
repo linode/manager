@@ -250,8 +250,8 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             data-testid="private-ip-contextual-copy"
             variant="body1"
           >
-            Use this for a backend node to a NodeBalancer. Use VPC instead for
-            private communication between your Linodes.
+            Use Private IP for a backend node to a NodeBalancer. Use VPC instead
+            for private communication between your Linodes.
           </StyledTypography>
         )}
       </Paper>
