@@ -13,25 +13,31 @@ import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
 import type {
+  ConfigurationPayload,
   CreateLoadbalancerPayload,
   ServiceTargetPayload,
 } from '@linode/api-v4';
 
-export interface LoadBalancerCreateFormData extends CreateLoadbalancerPayload {
-  /**
-   * A shared array of service targets. This should be removed before we
-   * make our POST to the API.
-   */
-  service_targets: ServiceTargetPayload[];
+export interface LoadBalancerCreateFormData
+  extends Omit<CreateLoadbalancerPayload, 'configurations'> {
+  configurations: (ConfigurationPayload & {
+    service_targets: ServiceTargetPayload[];
+  })[];
 }
 
 export const initialValues: LoadBalancerCreateFormData = {
   configurations: [
-    { certificates: [], label: '', port: 443, protocol: 'https', routes: [] },
+    {
+      certificates: [],
+      label: '',
+      port: 443,
+      protocol: 'https',
+      routes: [],
+      service_targets: [],
+    },
   ],
   label: '',
   regions: [],
-  service_targets: [],
 };
 
 export const LoadBalancerCreate = () => {

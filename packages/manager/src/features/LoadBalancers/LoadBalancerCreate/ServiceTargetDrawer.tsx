@@ -35,6 +35,7 @@ import { AGLB_DOCS } from '../constants';
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
+  configurationIndex: number;
   onClose: () => void;
   open: boolean;
   serviceTargetIndex: number | undefined;
@@ -44,7 +45,12 @@ interface Props {
  * A Drawer to add Service Targets on the Load Balancer Create Page.
  */
 export const ServiceTargetDrawer = (props: Props) => {
-  const { onClose: _onClose, open, serviceTargetIndex } = props;
+  const {
+    onClose: _onClose,
+    open,
+    serviceTargetIndex,
+    configurationIndex,
+  } = props;
 
   const isEditMode = serviceTargetIndex !== undefined;
 
@@ -53,37 +59,47 @@ export const ServiceTargetDrawer = (props: Props) => {
     values,
   } = useFormikContext<LoadBalancerCreateFormData>();
 
+  const configuration = values.configurations[configurationIndex];
+
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
     initialValues: isEditMode
-      ? values.service_targets[serviceTargetIndex]
+      ? configuration.service_targets[serviceTargetIndex]
       : initialValues,
     async onSubmit(serviceTarget) {
       if (isEditMode) {
-        values.service_targets[serviceTargetIndex] = serviceTarget;
-        setFieldValue('service_targets', values.service_targets);
+        configuration.service_targets[serviceTargetIndex] = serviceTarget;
+        setFieldValue(
+          `configurations[${configurationIndex}]service_targets`,
+          configuration.service_targets
+        );
       } else {
-        setFieldValue('service_targets', [
-          ...values.service_targets,
+        setFieldValue(`configurations[${configurationIndex}]service_targets`, [
+          ...configuration.service_targets,
           serviceTarget,
         ]);
       }
       onClose();
     },
     validate(serviceTarget) {
-      const hasOtherServiceTargetWithSameLabel = values.service_targets.reduce(
-        (acc, st, index) => {
-          if (
-            st.label === serviceTarget.label &&
-            index !== serviceTargetIndex
-          ) {
-            acc = true;
+      const allServiceTargets = values.configurations.reduce<
+        ServiceTargetPayload[]
+      >((acc, configurations, configIndex) => {
+        const otherServiceTargets = configurations.service_targets.filter(
+          (st, stIndex) => {
+            if (
+              isEditMode &&
+              configIndex === configurationIndex &&
+              stIndex === serviceTargetIndex
+            ) {
+              return false;
+            }
+            return true;
           }
-          return acc;
-        },
-        false
-      );
-      if (hasOtherServiceTargetWithSameLabel) {
+        );
+        return [...acc, ...otherServiceTargets];
+      }, []);
+      if (allServiceTargets.some((st) => st.label === serviceTarget.label)) {
         return { label: 'Label must be unique!' };
       }
       // We must use `validate` instead of validationSchema because Formik decided to convert

@@ -28,6 +28,7 @@ describe('EditRouteDrawer (AGLB full create flow)', () => {
       ...initialValues,
       configurations: [
         {
+          service_targets: [],
           certificates: [],
           label: 'test',
           port: 8080,

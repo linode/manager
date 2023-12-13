@@ -21,7 +21,11 @@ import { ServiceTargetDrawer } from './ServiceTargetDrawer';
 
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
-export const ServiceTargets = () => {
+interface Props {
+  configurationIndex: number;
+}
+
+export const ServiceTargets = ({ configurationIndex }: Props) => {
   const {
     setFieldValue,
     values,
@@ -34,9 +38,14 @@ export const ServiceTargets = () => {
     setSelectedServiceTargetIndex,
   ] = useState<number>();
 
+  const configuration = values.configurations![configurationIndex];
+
   const handleRemoveServiceTarget = (index: number) => {
-    values.service_targets.splice(index, 1);
-    setFieldValue('service_targets', values.service_targets);
+    configuration.service_targets.splice(index, 1);
+    setFieldValue(
+      `configuration[${configurationIndex}].service_targets`,
+      configuration.service_targets
+    );
   };
 
   const handleEditServiceTarget = (index: number) => {
@@ -91,10 +100,10 @@ export const ServiceTargets = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {values.service_targets.length === 0 && (
+            {configuration.service_targets.length === 0 && (
               <TableRowEmpty colSpan={5} />
             )}
-            {values.service_targets
+            {configuration.service_targets
               .filter((serviceTarget) => {
                 if (query) {
                   return serviceTarget.label.includes(query);
@@ -156,6 +165,7 @@ export const ServiceTargets = () => {
           setIsDrawerOpen(false);
           setSelectedServiceTargetIndex(undefined);
         }}
+        configurationIndex={configurationIndex}
         open={isDrawerOpen}
         serviceTargetIndex={selectedServiceTargetIndex}
       />

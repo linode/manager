@@ -23,7 +23,7 @@ export const LoadBalancerConfiguration = ({ index }: Props) => {
       label: 'Details',
     },
     {
-      content: <ServiceTargets />,
+      content: <ServiceTargets configurationIndex={index} />,
       label: 'Service Targets',
     },
     {
