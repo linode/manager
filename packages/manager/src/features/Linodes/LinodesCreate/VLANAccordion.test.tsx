@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+// import { fireEvent } from '@testing-library/react';
 import React from 'react'; // for better assertion messages
 import { queryClientFactory } from 'src/queries/base';
 
