@@ -22,9 +22,11 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { CreateBucketDrawerObjMultiCluster } from './BucketLanding/CreateBucketDrawerObjMultiCluster';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -45,7 +47,11 @@ export const ObjectStorageLanding = () => {
     tab?: 'access-keys' | 'buckets';
   }>();
   const isCreateBucketOpen = tab === 'buckets' && action === 'create';
-  const { _isRestrictedUser, accountSettings } = useAccountManagement();
+  const {
+    _isRestrictedUser,
+    account,
+    accountSettings,
+  } = useAccountManagement();
   const { data: objectStorageClusters } = useObjectStorageClusters();
   const {
     data: objectStorageBucketsResponse,
@@ -79,6 +85,12 @@ export const ObjectStorageLanding = () => {
   };
 
   const flags = useFlags();
+
+  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   const objPromotionalOffers = (
     flags.promotionalOffers ?? []
@@ -159,10 +171,17 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-        <CreateBucketDrawer
-          isOpen={isCreateBucketOpen}
-          onClose={() => history.replace('/object-storage/buckets')}
-        />
+        {isObjMultiClusterFlagEnabled ? (
+          <CreateBucketDrawerObjMultiCluster
+            isOpen={isCreateBucketOpen}
+            onClose={() => history.replace('/object-storage/buckets')}
+          />
+        ) : (
+          <CreateBucketDrawer
+            isOpen={isCreateBucketOpen}
+            onClose={() => history.replace('/object-storage/buckets')}
+          />
+        )}
       </Tabs>
     </React.Fragment>
   );
