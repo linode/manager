@@ -68,6 +68,7 @@ export const profileQueries = getQueryKeys({
 export const useProfile = (givenProfile?: Profile) =>
   useQuery<Profile, APIError[]>({
     ...profileQueries.profile,
+    ...queryPresets.oneTimeFetch,
     initialData: givenProfile,
   });
 
