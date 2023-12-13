@@ -27,15 +27,11 @@ export const useAccount = ({ headers }: RequestOptions = {}) => {
   const { data: profile } = useProfile();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
-  return useQuery<Account, APIError[]>(
-    queryKey,
-    () => getAccountInfo({ headers }),
-    {
-      ...queryPresets.oneTimeFetch,
-      ...queryPresets.noRetry,
-      enabled: !profile?.restricted || hasExplicitAuthToken,
-    }
-  );
+  return useQuery<Account, APIError[]>(queryKey, () => getAccountInfo(), {
+    ...queryPresets.oneTimeFetch,
+    ...queryPresets.noRetry,
+    enabled: !profile?.restricted || hasExplicitAuthToken,
+  });
 };
 
 export const useMutateAccount = () => {

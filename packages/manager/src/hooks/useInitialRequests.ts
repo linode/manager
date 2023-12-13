@@ -64,13 +64,13 @@ export const useInitialRequests = () => {
     const dataFetchingPromises: Promise<any>[] = [
       // Fetch user's account information
       queryClient.prefetchQuery({
-        queryFn: () => getAccountInfo(),
+        queryFn: getAccountInfo,
         queryKey: accountQueryKey,
       }),
 
       // Username and whether a user is restricted
       queryClient.prefetchQuery({
-        queryFn: getProfile,
+        queryFn: () => getProfile(),
         queryKey: 'profile',
       }),
 

@@ -37,13 +37,20 @@ import { Grants } from '../../../api-v4/lib';
 import { queryKey as accountQueryKey } from './account';
 import { queryPresets } from './base';
 
+import type { RequestOptions } from '@linode/api-v4';
+
 export const queryKey = 'profile';
 
-export const useProfile = (givenProfile?: Profile) =>
-  useQuery<Profile, APIError[]>(queryKey, getProfile, {
+export const useProfile = (
+  givenProfile?: Profile,
+  { headers }: RequestOptions = {}
+) => {
+  const key = [queryKey, headers];
+  return useQuery<Profile, APIError[]>(key, () => getProfile({ headers }), {
     ...queryPresets.oneTimeFetch,
     initialData: givenProfile,
   });
+};
 
 export const useMutateProfile = () => {
   const queryClient = useQueryClient();
