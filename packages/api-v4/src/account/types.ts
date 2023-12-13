@@ -70,7 +70,8 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Vlans'
-  | 'VPCs';
+  | 'VPCs'
+  | 'Object Storage Access Key Regions';
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
