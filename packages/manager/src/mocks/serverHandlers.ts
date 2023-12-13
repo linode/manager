@@ -907,7 +907,7 @@ export const handlers = [
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(0);
+    const buckets = objectStorageBucketFactory.buildList(1);
 
     return res(
       ctx.json({
@@ -1409,7 +1409,7 @@ export const handlers = [
         longview_subscription: 'longview-100',
         managed: true,
         network_helper: true,
-        object_storage: 'disabled',
+        object_storage: 'active',
       })
     );
   }),
