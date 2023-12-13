@@ -27,7 +27,7 @@ export interface LoadBalancerCreateFormData extends CreateLoadbalancerPayload {
 
 export const initialValues: LoadBalancerCreateFormData = {
   configurations: [
-    { certificates: [], label: '', port: 443, protocol: 'https' },
+    { certificates: [], label: '', port: 443, protocol: 'https', routes: [] },
   ],
   label: '',
   regions: [],
