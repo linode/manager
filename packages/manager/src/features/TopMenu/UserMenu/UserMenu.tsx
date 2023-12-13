@@ -3,6 +3,7 @@ import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import Grid from '@mui/material/Unstable_Grid2';
+import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -15,6 +16,7 @@ import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useProfile } from 'src/queries/profile';
 import { useGrants } from 'src/queries/profile';
 
 interface MenuLink {
@@ -47,6 +49,24 @@ export const UserMenu = React.memo(() => {
     _isRestrictedUser,
     profile,
   } = useAccountManagement();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
+    },
+  };
+  const headers = new AxiosHeaders(config.headers);
+
+  const { data: currentProfile } = useProfile();
+  console.log(
+    'Proxy Account: ',
+    currentProfile?.username ?? 'No username found'
+  );
+  const { data: parentProfile } = useProfile(undefined, { headers });
+  console.log(
+    'Proxy Account: ',
+    parentProfile?.username ?? 'No username found'
+  );
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
