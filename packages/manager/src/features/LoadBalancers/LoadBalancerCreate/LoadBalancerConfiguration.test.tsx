@@ -5,17 +5,10 @@ import React from 'react';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-
-// Define your initial values based on your form structure
-const initialValues: LoadBalancerCreateFormData = {
-  configurations: [
-    { certificates: [], label: '', port: 80, protocol: 'https' },
-  ],
-  label: '',
-  regions: [],
-  service_targets: [],
-};
+import {
+  LoadBalancerCreateFormData,
+  initialValues,
+} from './LoadBalancerCreate';
 
 describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
@@ -38,14 +31,6 @@ describe('LoadBalancerConfiguration', () => {
     expect(ConfigurationPort).toHaveValue(90);
 
     expect(screen.getByText('Protocol')).toBeInTheDocument();
-    expect(
-      screen.queryByText(
-        'TODO: AGLB - Implement Service Targets Configuration.'
-      )
-    ).toBeNull();
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Routes Configuration.')
-    ).toBeNull();
     expect(screen.getByText('Next: Service Targets')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Details')).toBeNull();
   });
@@ -56,12 +41,6 @@ describe('LoadBalancerConfiguration', () => {
     );
     userEvent.click(screen.getByTestId('service-targets'));
     expect(screen.getByText('Add Service Target')).toBeInTheDocument();
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Details step content.')
-    ).toBeNull();
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Routes Configuration.')
-    ).toBeNull();
     expect(screen.getByText('Next: Routes')).toBeInTheDocument();
     expect(screen.getByText('Previous: Details')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Service Targets')).toBeNull();
@@ -73,17 +52,7 @@ describe('LoadBalancerConfiguration', () => {
     );
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByTestId('routes'));
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Details step content.')
-    ).toBeNull();
-    expect(
-      screen.queryByText(
-        'TODO: AGLB - Implement Service Targets Configuration.'
-      )
-    ).toBeNull();
-    expect(
-      screen.getByText('TODO: AGLB - Implement Routes Configuration.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Routes', { selector: 'h2' })).toBeVisible();
     expect(screen.getByText('Previous: Service Targets')).toBeInTheDocument();
   });
   test('Should be able to go previous step', () => {
