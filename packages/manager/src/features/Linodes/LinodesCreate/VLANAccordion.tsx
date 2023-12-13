@@ -14,7 +14,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { InterfaceSelect } from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
 
-interface Props {
+export interface VLANAccordionProps {
   handleVLANChange: (updatedInterface: Interface) => void;
   helperText?: string;
   ipamAddress: string;
@@ -25,7 +25,7 @@ interface Props {
   vlanLabel: string;
 }
 
-export const VLANAccordion = React.memo((props: Props) => {
+export const VLANAccordion = React.memo((props: VLANAccordionProps) => {
   const {
     handleVLANChange,
     helperText,
