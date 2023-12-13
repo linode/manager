@@ -21,8 +21,8 @@ export const VLANAvailabilityNotice = () => {
   const VLANsTooltipList = React.useCallback(() => {
     return (
       <StyledFormattedRegionList>
-        {regionsThatSupportVLANs.map((region) => (
-          <ListItem disablePadding key={`vlan-${region}`}>
+        {regionsThatSupportVLANs.map((region, idx) => (
+          <ListItem disablePadding key={`vlan-${idx}`}>
             {region.label} ({region.id})
           </ListItem>
         ))}
