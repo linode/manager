@@ -249,12 +249,13 @@ export const CreateAPITokenDrawer = (props: Props) => {
               return null;
             }
             return (
-              // When the feature flag is on, display the Child Account scope for parent user accounts only.
+              // When the feature flag is on, display the Child Account Access scope for parent user accounts only.
               (!flags.parentChildAccountAccess &&
-                basePermNameMap[scopeTup[0]] === 'Child Account') ||
+                basePermNameMap[scopeTup[0]] === 'Child Account Access') ||
                 (flags.parentChildAccountAccess &&
                   user?.user_type !== 'parent' &&
-                  basePermNameMap[scopeTup[0]] === 'Child Account') ? null : (
+                  basePermNameMap[scopeTup[0]] ===
+                    'Child Account Access') ? null : (
                 <TableRow
                   data-qa-row={basePermNameMap[scopeTup[0]]}
                   key={scopeTup[0]}

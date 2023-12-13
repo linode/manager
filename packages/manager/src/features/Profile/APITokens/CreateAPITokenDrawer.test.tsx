@@ -87,7 +87,7 @@ describe('Create API Token Drawer', () => {
   });
 
   // TODO: fix - cannot find text
-  it.skip('Should show the Child Account scope for a parent user account with the parent/child feature flag on', () => {
+  it.skip('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', () => {
     server.use(
       // rest.get('*/profile', (req, res, ctx) => {
       //   return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
@@ -100,11 +100,11 @@ describe('Create API Token Drawer', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
       flags: { parentChildAccountAccess: true },
     });
-    expect(getByText('Child Account')).toBeInTheDocument();
+    expect(getByText('Child Account Access')).toBeInTheDocument();
   });
 
   // TODO: fix - cannot find text
-  it.skip('Should not show the Child Account scope for a non-parent user account with the parent/child feature flag on', () => {
+  it.skip('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
     server.use(
       rest.get('*/account/users/test-user', (req, res, ctx) => {
         return res(ctx.json(accountUserFactory.build({ user_type: null })));
@@ -114,7 +114,7 @@ describe('Create API Token Drawer', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
       flags: { parentChildAccountAccess: true },
     });
-    expect(getByText('Child Account')).not.toBeInTheDocument();
+    expect(getByText('Child Account Access')).not.toBeInTheDocument();
   });
 
   it('Should close when Cancel is pressed', () => {
