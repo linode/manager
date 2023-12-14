@@ -1,4 +1,6 @@
 import { getEvents, markEventSeen } from '@linode/api-v4';
+import { DateTime } from 'luxon';
+import { useState } from 'react';
 import {
   InfiniteData,
   QueryClient,
@@ -9,7 +11,11 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
+import {
+  DISABLE_EVENT_THROTTLE,
+  INTERVAL,
+  ISO_DATETIME_NO_TZ_FORMAT,
+} from 'src/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
 import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
@@ -57,7 +63,16 @@ export const useEventsPoller = () => {
 
   const { events } = useEventsInfiniteQuery();
 
-  const latestEventTime = events ? events[0].created : '';
+  const [mountTimestamp] = useState<string>(() =>
+    DateTime.fromMillis(Date.now(), { zone: 'utc' }).toFormat(
+      ISO_DATETIME_NO_TZ_FORMAT
+    )
+  );
+
+  // If the user has events, poll for new events based on the most recent event's created time.
+  // If the user has no events, poll events from the time the app mounted.
+  const latestEventTime =
+    events && events.length > 0 ? events[0].created : mountTimestamp;
 
   const {
     eventsThatAlreadyHappenedAtTheFilterTime,
@@ -103,7 +118,7 @@ export const useEventsPoller = () => {
       }
     },
     queryFn: () => getEvents({}, filter).then((data) => data.data),
-    queryKey: ['events', 'poller'],
+    queryKey: ['events', 'poller', hasFetchedInitialEvents],
     refetchInterval: pollingInterval,
   });
 
