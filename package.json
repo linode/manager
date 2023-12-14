@@ -43,7 +43,8 @@
     "changeset": "node scripts/changelog/changeset.mjs",
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",
     "coverage": "yarn workspace linode-manager coverage",
-    "coverage:summary": "yarn workspace linode-manager coverage:summary"
+    "coverage:summary": "yarn workspace linode-manager coverage:summary",
+    "docs": "yarn workspace @linode/docs docs:dev"
   },
   "resolutions": {
     "minimist": "^1.2.3",

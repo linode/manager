@@ -40,7 +40,7 @@
    ```
 
 10. Navigate to the root directory of the repository, then start Cloud Manager and the JS client with `yarn up`.
-11. After installation, Cloud Manager should be running at http://localhost:3000.
+11. After installation, Cloud Manager should be running at `http://localhost:3000`.
 
 ## Serving a production build of Cloud Manager
 

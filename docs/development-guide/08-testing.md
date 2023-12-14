@@ -142,7 +142,7 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 
 #### Mocking with Mock Service Worker
 
-We support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library. See [07-mocking-data](07-mocking-data.md) for more details.
+We support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library. See [09-mocking-data](./09-mocking-data) for more details.
 
 These mocks are automatically enabled for tests (using `beforeAll` and `afterAll` in src/setupTests.ts, which is run when setting up the Vitest environment).
 
