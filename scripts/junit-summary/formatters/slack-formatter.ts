@@ -88,8 +88,12 @@ export const slackFormatter: Formatter = (
 
   // Display test run details (author, PR number, run number, etc.) when applicable.
   const footer = (() => {
+    const authorIdentifier = (metadata.authorSlack ? `@${metadata.authorSlack}` : null)
+      || (metadata.authorGitHub ? `<${metadata.authorGitHub}|https://github.com/${metadata.authorGitHub}>` : null);
+      || (metadata.authorName ? metadata.authorName : null);
+
     return [
-      metadata.authorSlack ? `Authored by ${metadata.authorSlack}` : null,
+      authorIdentifier ? `Authored by ${authorIdentifier}` : null,
       metadata.changeId && metadata.changeUrl ? `PR <#${metadata.changeId}|${metadata.changeUrl}>` : null,
       metadata.runId && metadata.runUrl ? `Run <#${metadata.runId}|${metadata.runUrl}>` : null,
       metadata.branchName ? `\`${metadata.branchName}\`` : null,
