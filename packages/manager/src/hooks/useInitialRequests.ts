@@ -84,9 +84,6 @@ export const useInitialRequests = () => {
       }),
     ];
 
-    // Start events polling
-    // startEventsInterval(store, queryClient);
-
     try {
       await Promise.all(dataFetchingPromises);
     } finally {
