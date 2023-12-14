@@ -29,9 +29,6 @@ export const useMetricsDiaplyStyles = makeStyles()((theme: Theme) => ({
       alignItems: 'center',
       display: 'flex',
     },
-    [theme.breakpoints.up('md')]: {
-      width: '38%',
-    },
   },
   lightGreen: {
     '&:before': {
@@ -49,56 +46,7 @@ export const useMetricsDiaplyStyles = makeStyles()((theme: Theme) => ({
     },
   },
   root: {
-    '& *': {
-      backgroundColor: 'transparent',
-      border: 'none',
-      height: 'auto',
-    },
-    '& .data': {
-      minWidth: 100,
-    },
-    '& td:first-of-type': {
-      backgroundColor: 'transparent !important',
-    },
-    maxWidth: 600,
-    [theme.breakpoints.down('md')]: {
-      '& td': {
-        justifyContent: 'normal',
-        minHeight: 'auto',
-      },
-      maxWidth: '100%',
-    },
-    [theme.breakpoints.down('xl')]: {
-      '& th, & td': {
-        padding: '4px !important',
-      },
-    },
-    [theme.breakpoints.only('sm')]: {
-      '& tbody': {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-      },
-      '& tr': {
-        flexBasis: '45%',
-      },
-      '& tr:not(:nth-last-child(n+3)) td:first-of-type': {
-        marginTop: theme.spacing(2),
-      },
-    },
-    [theme.breakpoints.only('xs')]: {
-      '& tr:not(:first-of-type) td': {
-        '&:first-of-type': {
-          marginTop: theme.spacing(2),
-        },
-      },
-    },
-  },
-  tableHeadInner: {
-    paddingBottom: 4,
-  },
-  text: {
-    color: theme.color.black,
+    border: `1px solid ${theme.borderColors.borderTable}`,
   },
   yellow: {
     '&:before': {

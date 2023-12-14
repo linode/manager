@@ -32,19 +32,17 @@ export const MetricsDisplay = ({ rows }: Props) => {
   const { classes } = useMetricsDiaplyStyles();
 
   return (
-    <Table aria-label="Stats and metrics" className={classes.root} noBorder>
-      <TableHead>
-        <TableRow>
-          <TableCell>{''}</TableCell>
+    <Table aria-label="Stats and metrics" className={classes.root}>
+      <TableHead sx={{ borderTop: 'none !important' }}>
+        <TableRow sx={{ borderTop: 'none !important' }}>
+          <TableCell sx={{ borderTop: 'none !important' }}>{''}</TableCell>
           {rowHeaders.map((section, idx) => (
             <TableCell
-              className={classes.tableHeadInner}
               data-qa-header-cell
               key={idx}
+              sx={{ borderTop: 'none !important' }}
             >
-              <Typography className={classes.text} variant="body1">
-                {section}
-              </Typography>
+              {section}
             </TableCell>
           ))}
         </TableRow>
@@ -69,9 +67,7 @@ export const MetricsDisplay = ({ rows }: Props) => {
                     key={idx}
                     parentColumn={rowHeaders[idx]}
                   >
-                    <Typography className={classes.text} variant="body1">
-                      {format(section)}
-                    </Typography>
+                    {format(section)}
                   </TableCell>
                 );
               })}
