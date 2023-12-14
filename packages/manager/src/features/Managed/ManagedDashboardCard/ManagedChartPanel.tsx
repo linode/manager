@@ -95,7 +95,7 @@ const createTabs = (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
             {flags.recharts ? (
-              <Box marginLeft={-3}>
+              <Box marginLeft={-4} marginTop={3}>
                 <AreaChart
                   areas={[
                     {
@@ -144,7 +144,7 @@ const createTabs = (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
             {flags.recharts ? (
-              <Box marginLeft={-3}>
+              <Box marginLeft={-4} marginTop={3}>
                 <AreaChart
                   areas={[
                     {
@@ -206,23 +206,45 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <StyledCanvasContainerDiv>
-              <LineGraph
-                data={[
-                  {
-                    backgroundColor: theme.graphs.yellow,
-                    borderColor: 'transparent',
-                    data: formatData(data.disk),
-                    label: 'Disk I/O',
-                  },
-                ]}
-                accessibleDataTable={{ unit: 'op/s' }}
-                ariaLabel="Disk I/O Graph"
-                chartHeight={chartHeight}
-                showToday={true}
-                timezone={timezone}
-              />
-            </StyledCanvasContainerDiv>
+            {flags.recharts ? (
+              <Box marginLeft={-4} marginTop={3}>
+                <AreaChart
+                  areas={[
+                    {
+                      color: theme.graphs.yellow,
+                      dataKey: 'Disk I/O',
+                    },
+                  ]}
+                  xAxis={{
+                    tickFormat: 'hh a',
+                    tickGap: 60,
+                  }}
+                  aria-label={'Disk I/O Graph'}
+                  data={formatData2(data.disk, 'Disk I/O')}
+                  height={chartHeight}
+                  timezone={timezone}
+                  unit={' op/s'}
+                />
+              </Box>
+            ) : (
+              <StyledCanvasContainerDiv>
+                <LineGraph
+                  data={[
+                    {
+                      backgroundColor: theme.graphs.yellow,
+                      borderColor: 'transparent',
+                      data: formatData(data.disk),
+                      label: 'Disk I/O',
+                    },
+                  ]}
+                  accessibleDataTable={{ unit: 'op/s' }}
+                  ariaLabel="Disk I/O Graph"
+                  chartHeight={chartHeight}
+                  showToday={true}
+                  timezone={timezone}
+                />
+              </StyledCanvasContainerDiv>
+            )}
           </StyledRootDiv>
         );
       },
