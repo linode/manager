@@ -2,8 +2,9 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.107.0",
+  "version": "1.108.0",
   "private": true,
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },
@@ -65,6 +66,7 @@
     "react-select": "~3.1.0",
     "react-vnc": "^0.5.3",
     "react-waypoint": "~9.0.2",
+    "recharts": "^2.9.3",
     "recompose": "^0.30.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
@@ -97,7 +99,9 @@
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "coverage": "vitest run --coverage && open coverage/index.html",
+    "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
@@ -159,8 +163,9 @@
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
-    "@vitejs/plugin-react-swc": "^3.4.0",
-    "@vitest/ui": "^0.34.6",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/ui": "^1.0.4",
     "chai-string": "^1.5.0",
     "chalk": "^5.2.0",
     "css-mediaquery": "^0.1.2",
@@ -168,7 +173,7 @@
     "cypress-axe": "^1.0.0",
     "cypress-file-upload": "^5.0.7",
     "cypress-real-events": "^1.11.0",
-    "cypress-vite": "^1.4.2",
+    "cypress-vite": "^1.5.0",
     "dotenv": "^16.0.3",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -199,9 +204,9 @@
     "serve": "^14.0.1",
     "storybook": "~7.5.2",
     "storybook-dark-mode": "^3.0.1",
-    "vite": "^4.5.0",
+    "vite": "^5.0.7",
     "vite-plugin-svgr": "^3.2.0",
-    "vitest": "^0.34.6"
+    "vitest": "^1.0.4"
   },
   "browserslist": [
     ">1%",

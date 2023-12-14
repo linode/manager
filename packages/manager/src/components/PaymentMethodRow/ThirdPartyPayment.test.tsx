@@ -3,7 +3,7 @@ import * as React from 'react';
 import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ThirdPartyPayment from './ThirdPartyPayment';
+import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 it('Displays credit card type and last four digits when payment method is Google Pay', () => {
   const googlePayPaymentMethod = paymentMethodFactory.build({

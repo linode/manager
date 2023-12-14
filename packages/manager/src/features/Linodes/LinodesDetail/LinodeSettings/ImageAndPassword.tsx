@@ -5,7 +5,7 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useGrants } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -34,6 +34,7 @@ export const ImageAndPassword = (props: Props) => {
   } = props;
 
   const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
 
   const { data: imagesData, error: imagesError } = useAllImagesQuery();
   const _imagesError = imagesError
@@ -41,8 +42,8 @@ export const ImageAndPassword = (props: Props) => {
     : undefined;
 
   const disabled =
-    grants !== undefined &&
-    grants.linode.find((g) => g.id === linodeId)?.permissions === 'read_only';
+    profile?.restricted &&
+    grants?.linode.find((g) => g.id === linodeId)?.permissions !== 'read_write';
 
   return (
     <React.Fragment>

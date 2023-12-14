@@ -488,20 +488,20 @@ const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
 
-const proxyAccount = accountUserFactory.build({
+const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
   last_login: null,
   user_type: 'proxy',
   username: 'ParentCompany_a1b2c3d4e5',
 });
-const parentAccount = accountUserFactory.build({
+const parentAccountUser = accountUserFactory.build({
   email: 'parent@acme.com',
   last_login: null,
   restricted: false,
   user_type: 'parent',
   username: 'ParentUser',
 });
-const childAccount = accountUserFactory.build({
+const childAccountUser = accountUserFactory.build({
   email: 'child@linode.com',
   last_login: null,
   restricted: false,
@@ -520,7 +520,11 @@ export const handlers = [
     return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
   }),
   rest.get('*/profile/grants', (req, res, ctx) => {
-    return res(ctx.json(grantsFactory.build()));
+    return res(
+      // Parent/Child: switch out the return statement if you want to mock a restricted parent user with access to child accounts.
+      // ctx.json(grantsFactory.build({ global: { child_account_access: true } }))
+      ctx.json(grantsFactory.build())
+    );
   }),
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);
@@ -1040,19 +1044,19 @@ export const handlers = [
   }),
   rest.get('*/account/availability', (req, res, ctx) => {
     const newarkStorage = accountAvailabilityFactory.build({
-      id: 'us-east-0',
+      region: 'us-east-0',
       unavailable: ['Object Storage'],
     });
     const atlanta = accountAvailabilityFactory.build({
-      id: 'us-southeast',
+      region: 'us-southeast',
       unavailable: ['Block Storage', 'Managed Databases'],
     });
     const singapore = accountAvailabilityFactory.build({
-      id: 'ap-south',
+      region: 'ap-south',
       unavailable: ['Linodes', 'Kubernetes', 'NodeBalancers'],
     });
     const tokyo = accountAvailabilityFactory.build({
-      id: 'ap-northeast',
+      region: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
     return res(
@@ -1149,6 +1153,41 @@ export const handlers = [
 
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
+  rest.get('*/account/child-accounts', (req, res, ctx) => {
+    const childAccounts = [
+      accountFactory.build({
+        company: 'Child Company 0',
+        euuid: '0',
+      }),
+      accountFactory.build({
+        company: 'Child Company 1',
+        euuid: '1',
+      }),
+      accountFactory.build({
+        company: 'Child Company 2',
+        euuid: '2',
+      }),
+    ];
+    return res(ctx.json(makeResourcePage(childAccounts)));
+  }),
+  rest.get('*/account/child-accounts/:euuid', (req, res, ctx) => {
+    const childAccount = accountFactory.build({
+      company: 'Child Company 1',
+      euuid: '1',
+    });
+    return res(ctx.json(childAccount));
+  }),
+  rest.post('*/account/child-accounts/:euuid/token', (req, res, ctx) => {
+    // Proxy tokens expire in 15 minutes.
+    const now = new Date();
+    const expiry = new Date(now.setMinutes(now.getMinutes() + 15));
+
+    const proxyToken = appTokenFactory.build({
+      expiry: expiry.toISOString(),
+      token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
+    });
+    return res(ctx.json(proxyToken));
+  }),
   rest.get('*/account/users', (req, res, ctx) => {
     const accountUsers = [
       accountUserFactory.build({
@@ -1162,26 +1201,27 @@ export const handlers = [
         },
       }),
       accountUserFactory.build({ last_login: null }),
-      childAccount,
-      parentAccount,
-      proxyAccount,
+      childAccountUser,
+      parentAccountUser,
+      proxyAccountUser,
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
-  rest.get(`*/account/users/${childAccount.username}`, (req, res, ctx) => {
-    return res(ctx.json(childAccount));
+  rest.get(`*/account/users/${childAccountUser.username}`, (req, res, ctx) => {
+    return res(ctx.json(childAccountUser));
   }),
-  rest.get(`*/account/users/${proxyAccount.username}`, (req, res, ctx) => {
-    return res(ctx.json(proxyAccount));
+  rest.get(`*/account/users/${proxyAccountUser.username}`, (req, res, ctx) => {
+    return res(ctx.json(proxyAccountUser));
   }),
-  rest.get(`*/account/users/${parentAccount.username}`, (req, res, ctx) => {
-    return res(ctx.json(parentAccount));
+  rest.get(`*/account/users/${parentAccountUser.username}`, (req, res, ctx) => {
+    return res(ctx.json(parentAccountUser));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
-    return res(ctx.json(accountUserFactory.build()));
+    // Parent/Child: switch the `user_type` depending on what account view you need to mock.
+    return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
   }),
   rest.get(
-    `*/account/users/${childAccount.username}/grants`,
+    `*/account/users/${childAccountUser.username}/grants`,
     (req, res, ctx) => {
       return res(
         ctx.json(
@@ -1195,7 +1235,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    `*/account/users/${proxyAccount.username}/grants`,
+    `*/account/users/${proxyAccountUser.username}/grants`,
     (req, res, ctx) => {
       return res(
         ctx.json(
@@ -1219,7 +1259,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    `*/account/users/${parentAccount.username}/grants`,
+    `*/account/users/${parentAccountUser.username}/grants`,
     (req, res, ctx) => {
       return res(
         ctx.json(

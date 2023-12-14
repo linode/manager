@@ -399,14 +399,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
           label: 'Cancel',
           onClick: close,
         }}
-        updateFor={[
-          requirementsMet,
-          classes,
-          submitting,
-          mode,
-          label,
-          description,
-        ]}
         style={{ marginTop: 16 }}
       />
     </Drawer>

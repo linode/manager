@@ -17,9 +17,12 @@ export const LoadBalancerRegions = () => {
             Where this Load Balancer instance will be deployed.
           </Typography>
           <Typography>
-            <BetaChip sx={{ marginLeft: '0 !important' }} /> Load Balancers will
-            be automatically provisioned in these 5 Regions. No charges with be
-            incurred.
+            <BetaChip
+              component="span"
+              sx={{ marginLeft: '0 !important', marginRight: '8px !important' }}
+            />
+            Load Balancers will be automatically provisioned in these 5 Regions.
+            No charges with be incurred.
           </Typography>
         </Stack>
         <Regions />
