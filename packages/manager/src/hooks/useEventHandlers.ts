@@ -1,3 +1,5 @@
+import { useQueryClient } from 'react-query';
+
 import { oauthClientsEventHandler } from 'src/queries/accountOAuth';
 import { databaseEventsHandler } from 'src/queries/databases';
 import { domainEventsHandler } from 'src/queries/domains';
@@ -75,3 +77,22 @@ export const eventHandlers: {
     handler: diskEventHandler,
   },
 ];
+
+export const useEventHandlers = () => {
+  const queryClient = useQueryClient();
+
+  /**
+   * Given an event, this function finds the corresponding
+   * event handler and invokes it.
+   */
+  const handleEvent = (event: Event) => {
+    for (const eventHandler of eventHandlers) {
+      if (eventHandler.filter(event)) {
+        eventHandler.handler({ event, queryClient });
+        return;
+      }
+    }
+  };
+
+  return { handleEvent };
+};

@@ -10,7 +10,7 @@ import {
 } from 'react-query';
 
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
-import { eventHandlers } from 'src/hooks/useEventHandlers';
+import { useEventHandlers } from 'src/hooks/useEventHandlers';
 import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
@@ -20,15 +20,14 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     ['events', 'infinite', filter],
-    ({ pageParam }) =>
-      getEvents({}, { ...filter, created: { '+lt': pageParam } }),
+    ({ pageParam }) => getEvents({}, { ...filter, id: { '+lt': pageParam } }),
     {
       cacheTime: Infinity,
       getNextPageParam: ({ data, results }) => {
         if (results === data.length) {
           return undefined;
         }
-        return data[data.length - 1].created;
+        return data[data.length - 1].id;
       },
       staleTime: Infinity,
     }
@@ -52,6 +51,8 @@ export const useEventsPoller = () => {
   const { incrementPollingInterval, pollingInterval } = usePollingInterval();
 
   const { handleGlobalToast } = useToastNotifications();
+  const { handleEvent } = useEventHandlers();
+
   const queryClient = useQueryClient();
 
   const { events } = useEventsInfiniteQuery();
@@ -92,15 +93,13 @@ export const useEventsPoller = () => {
     onSuccess(events) {
       incrementPollingInterval();
 
-      updateEventsQueries(events, queryClient);
+      if (events.length > 0) {
+        updateEventsQueries(events, queryClient);
 
-      for (const event of events) {
-        for (const eventHandler of eventHandlers) {
-          if (eventHandler.filter(event)) {
-            eventHandler.handler({ event, queryClient });
-          }
+        for (const event of events) {
+          handleGlobalToast(event);
+          handleEvent(event);
         }
-        handleGlobalToast(event);
       }
     },
     queryFn: () => getEvents({}, filter).then((data) => data.data),
