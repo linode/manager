@@ -24,7 +24,7 @@ export const slackFormatter: Formatter = (
 ) => {
   const indicator = runInfo.failing ? ':x-mark:' : ':check-mark:';
   const headline = (metadata.runId && metadata.runUrl)
-    ? `${indicator} *Cypress test results for run [#${metadata.runId}](${metadata.runUrl})* ${indicator}\n`
+    ? `${indicator} *Cypress test results for run <#${metadata.runId}|${metadata.runUrl}>* ${indicator}\n`
     : `${indicator} *Cypress test results* ${indicator}\n`;
 
   const breakdown = `:small_red_triangle: ${runInfo.failing} Failing | :thumbs_up_green: ${runInfo.passing} Passing | :small_blue_diamond: ${runInfo.skipped} Skipped\n\n`;
@@ -36,7 +36,7 @@ export const slackFormatter: Formatter = (
      : `> ${runInfo.failing} failed ${pluralize(runInfo.failing, 'test', 'tests')}`;
 
     const prInfo = (metadata.changeId && metadata.changeUrl)
-      ? ` on PR [#${metadata.changeId}](${metadata.changeUrl})${metadata.changeTitle ? ` - _${metadata.changeTitle}_` : ''}`
+      ? ` on PR <#${metadata.changeId}|${metadata.changeUrl}>${metadata.changeTitle ? ` - _${metadata.changeTitle}_` : ''}`
       : '';
 
     const runLength = `(${secondsToTimeString(runInfo.time)})`;
@@ -56,9 +56,9 @@ export const slackFormatter: Formatter = (
 
     // When applicable, display actions that can be taken by the user.
     const failedTestActions = [
-      metadata.resultsUrl ? `[View results](${metadata.resultsUrl})` : '',
-      metadata.artifactsUrl ? `[View artifacts](${metadata.artifactsUrl})` : '',
-      metadata.rerunUrl ? `[Replay tests](${metadata.rerunUrl})` : '',
+      metadata.resultsUrl ? `<View results|${metadata.resultsUrl}>` : '',
+      metadata.artifactsUrl ? `<View artifacts|${metadata.artifactsUrl}>` : '',
+      metadata.rerunUrl ? `<Replay tests|${metadata.rerunUrl}>` : '',
     ]
       .filter((item) => item !== '')
       .join(' | ');
@@ -89,9 +89,9 @@ export const slackFormatter: Formatter = (
   // Display test run details (author, PR number, run number, etc.) when applicable.
   const footer = (() => {
     return [
-      metadata.authorSlack ? `Authored by @${metadata.authorSlack}` : null,
-      metadata.changeId && metadata.changeUrl ? `PR [#${metadata.changeId}](${metadata.changeUrl})` : null,
-      metadata.runId && metadata.runUrl ? `Run [#${metadata.runId}](${metadata.runUrl})` : null,
+      metadata.authorSlack ? `Authored by ${metadata.authorSlack}` : null,
+      metadata.changeId && metadata.changeUrl ? `PR <#${metadata.changeId}|${metadata.changeUrl}>` : null,
+      metadata.runId && metadata.runUrl ? `Run <#${metadata.runId}|${metadata.runUrl}>` : null,
       metadata.branchName ? `\`${metadata.branchName}\`` : null,
     ]
     .filter((item) => item !== null)
