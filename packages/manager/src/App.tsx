@@ -14,10 +14,8 @@ import { GoTo } from './GoTo';
 import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
-import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
-import { useToastNotifications } from './hooks/useToastNotifications';
 import { useEventsPoller } from './queries/events';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
@@ -30,14 +28,6 @@ const BaseApp = withDocumentTitleProvider(
       const { isLoading } = useInitialRequests();
 
       const { areFeatureFlagsLoading } = useSetupFeatureFlags();
-
-      const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
-
-      useEventsPoller();
-      useToastNotifications();
-
-      useAdobeAnalytics();
-      useNewRelic();
 
       if (isLoading || areFeatureFlagsLoading) {
         return <SplashScreen />;
@@ -56,11 +46,19 @@ const BaseApp = withDocumentTitleProvider(
               Opens an external site in a new window
             </span>
           </div>
-          <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
+          <GoTo />
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
           <MainContent />
+          <GlobalListeners />
         </ErrorBoundary>
       );
     })
   )
 );
+
+const GlobalListeners = () => {
+  useEventsPoller();
+  useAdobeAnalytics();
+  useNewRelic();
+  return null;
+};

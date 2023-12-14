@@ -106,6 +106,8 @@ export const useEventsPoller = () => {
     queryKey: ['events', 'poller'],
     refetchInterval: pollingInterval,
   });
+
+  return null;
 };
 
 export const usePollingInterval = () => {
