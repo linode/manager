@@ -62,8 +62,7 @@ export const AreaChart = (props: AreaChartProps) => {
     );
   };
 
-  const tooltipValueFormatter = (value: number) =>
-    `${roundTo(value)} ${unit}/s`;
+  const tooltipValueFormatter = (value: number) => `${roundTo(value)}${unit}`;
 
   const CustomTooltip = ({
     active,

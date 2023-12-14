@@ -116,7 +116,7 @@ export const TablesPanel = () => {
               data={timeData}
               height={300}
               timezone={timezone}
-              unit={'CXN'}
+              unit={' CXN/s'}
             />
           </Box>
         ) : (
@@ -224,7 +224,7 @@ export const TablesPanel = () => {
                 data={timeData}
                 height={300}
                 timezone={timezone}
-                unit={'bits'}
+                unit={' bits/s'}
               />
             </Box>
           ) : (

@@ -3,16 +3,20 @@ import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { AreaChart } from 'src/components/AreaChart';
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { Typography } from 'src/components/Typography';
+import { FlagSet } from 'src/featureFlags';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -26,8 +30,12 @@ import {
 
 const chartHeight = 300;
 
+// @TODO recharts remove old format function
 const formatData = (value: DataSeries[]): [number, number][] =>
   value.map((thisPoint) => [thisPoint.x, thisPoint.y]);
+
+const formatData2 = (value: DataSeries[]) =>
+  value.map((thisPoint) => ({ CPU: thisPoint.y, t: thisPoint.x }));
 
 const _formatTooltip = (valueInBytes: number) =>
   formatNetworkTooltip(valueInBytes / 8);
@@ -35,7 +43,8 @@ const _formatTooltip = (valueInBytes: number) =>
 const createTabs = (
   data: ManagedStatsData | undefined,
   timezone: string,
-  theme: Theme
+  theme: Theme,
+  flags: FlagSet
 ) => {
   const summaryCopy = (
     <Typography variant="body1">
@@ -60,29 +69,52 @@ const createTabs = (
     return convertNetworkToUnit(value, unit as any);
   };
 
+  // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
   return [
     {
       render: () => {
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <StyledCanvasContainerDiv>
-              <LineGraph
-                data={[
-                  {
-                    backgroundColor: theme.graphs.cpu.percent,
-                    borderColor: 'transparent',
-                    data: formatData(data.cpu),
-                    label: 'CPU %',
-                  },
-                ]}
-                accessibleDataTable={{ unit: '%' }}
-                ariaLabel="CPU Usage Graph"
-                chartHeight={chartHeight}
-                showToday={true}
-                timezone={timezone}
-              />
-            </StyledCanvasContainerDiv>
+            {flags.recharts ? (
+              <Box marginLeft={-3}>
+                <AreaChart
+                  areas={[
+                    {
+                      color: theme.graphs.cpu.percent,
+                      dataKey: 'CPU',
+                    },
+                  ]}
+                  xAxis={{
+                    tickFormat: 'hh a',
+                    tickGap: 60,
+                  }}
+                  aria-label={'CPU Usage Graph'}
+                  data={formatData2(data.cpu)}
+                  height={chartHeight}
+                  timezone={timezone}
+                  unit={'%'}
+                />
+              </Box>
+            ) : (
+              <StyledCanvasContainerDiv>
+                <LineGraph
+                  data={[
+                    {
+                      backgroundColor: theme.graphs.cpu.percent,
+                      borderColor: 'transparent',
+                      data: formatData(data.cpu),
+                      label: 'CPU %',
+                    },
+                  ]}
+                  accessibleDataTable={{ unit: '%' }}
+                  ariaLabel="CPU Usage Graph"
+                  chartHeight={chartHeight}
+                  showToday={true}
+                  timezone={timezone}
+                />
+              </StyledCanvasContainerDiv>
+            )}
           </StyledRootDiv>
         );
       },
@@ -157,6 +189,7 @@ const createTabs = (
 
 export const ManagedChartPanel = () => {
   const theme = useTheme();
+  const flags = useFlags();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
   const { data, error, isLoading } = useManagedStatsQuery();
@@ -182,7 +215,7 @@ export const ManagedChartPanel = () => {
     return null;
   }
 
-  const tabs = createTabs(data.data, timezone, theme);
+  const tabs = createTabs(data.data, timezone, theme, flags);
 
   const initialTab = 0;
 

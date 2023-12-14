@@ -183,7 +183,7 @@ export const TransferHistory = React.memo((props: Props) => {
             data={timeData}
             height={190}
             timezone={profile?.timezone ?? 'UTC'}
-            unit={unit}
+            unit={` ${unit}/s`}
           />
         </Box>
       );
