@@ -93,7 +93,7 @@ export const ServiceTargetForm = (props: Props) => {
         return [...acc, ...otherServiceTargets];
       }, []);
       if (allServiceTargets.some((st) => st.label === serviceTarget.label)) {
-        return { label: 'Label must be unique!' };
+        return { label: 'Label must be unique across all configurations.' };
       }
       // We must use `validate` instead of validationSchema because Formik decided to convert
       // "" to undefined before passing the values to yup. This makes it hard to validate `label`.

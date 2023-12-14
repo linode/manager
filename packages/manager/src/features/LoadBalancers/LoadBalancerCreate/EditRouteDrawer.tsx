@@ -24,9 +24,16 @@ export const EditRouteDrawer = (props: Props) => {
     values,
   } = useFormikContext<LoadBalancerCreateFormData>();
 
-  const allRoutes = values.configurations.reduce<RoutePayload[]>(
-    (acc, configuration) => {
-      return [...acc, ...configuration.routes!];
+  const allOtherRoutes = values.configurations.reduce<RoutePayload[]>(
+    (acc, configuration, configIndex) => {
+      const otherRoutes = configuration.routes!.filter((r, index) => {
+        // Exclude this route
+        if (configIndex === configurationIndex && index === routeIndex) {
+          return false;
+        }
+        return true;
+      });
+      return [...acc, ...otherRoutes];
     },
     []
   );
@@ -47,9 +54,9 @@ export const EditRouteDrawer = (props: Props) => {
       onClose();
     },
     validate(values) {
-      if (allRoutes.some((route) => route.label === values.label)) {
+      if (allOtherRoutes.some((route) => route.label === values.label)) {
         return {
-          label: 'Routes must have unique labels within each configuration.',
+          label: 'Routes must have unique labels across all configurations.',
         };
       }
       // We must use `validate` insted of validationSchema because Formik decided to convert
