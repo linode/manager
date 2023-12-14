@@ -3,6 +3,7 @@ name: Deploy Cloud Manager Docs
 on:
   push:
     branches: [develop]
+  # clean up these before merging
   workflow_dispatch:
   pull_request:
 
