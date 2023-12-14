@@ -1,0 +1,45 @@
+name: Deploy Cloud Manager Docs
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Install dependencies
+        run: yarn install
+      - name: Build with VitePress
+        run: |
+          yarn workspace @linode/docs docs:build
+          touch docs/.vitepress/dist/.nojekyll
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: packages/docs/.vitepress/dist
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

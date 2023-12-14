@@ -1,10 +1,12 @@
 {
   "name": "@linode/docs",
   "version": "0.0.0",
+  "license": "Apache-2.0",
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:preview": "vitepress preview",
+    "precommit": "echo 'omg'"
   },
   "devDependencies": {
     "vitepress": "1.0.0-rc.31",
