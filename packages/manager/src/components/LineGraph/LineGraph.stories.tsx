@@ -1,13 +1,10 @@
 import * as React from 'react';
 
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
+import { formatPercentage, getMetrics } from 'src/utilities/statMetrics';
 
 import type { DataSet, LineGraphProps } from './LineGraph';
 import type { Meta, StoryObj } from '@storybook/react';
-
-export const Default: StoryObj<LineGraphProps> = {
-  render: (args) => <LineGraph {...args} />,
-};
 
 const data: DataSet['data'] = [
   [1644330600000, 0.45],
@@ -45,6 +42,28 @@ const data: DataSet['data'] = [
   [1644340200000, 0.46],
   [1644340500000, 0.45],
 ];
+
+const metrics = getMetrics(data as number[][]);
+
+export const Default: StoryObj<LineGraphProps> = {
+  render: (args) => <LineGraph {...args} />,
+};
+
+export const WithLegend: StoryObj<LineGraphProps> = {
+  render: (args) => (
+    <LineGraph
+      {...args}
+      legendRows={[
+        {
+          data: metrics,
+          format: formatPercentage,
+          legendColor: 'blue',
+          legendTitle: 'CPU %',
+        },
+      ]}
+    />
+  ),
+};
 
 const meta: Meta<LineGraphProps> = {
   args: {
