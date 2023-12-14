@@ -123,6 +123,7 @@ describe('Billing Activity Feed', () => {
    * - Confirms that clicking on an invoice's label directs the user to the invoice details page.
    */
   it('lists invoices and payments', () => {
+    throw new Error('This is a fake error for testing purposes.');
     const invoiceMocks = buildArray(
       10,
       (i: number): Invoice => {
