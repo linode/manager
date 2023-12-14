@@ -30,12 +30,18 @@ import {
 
 const chartHeight = 300;
 
+interface NetworkTransferProps {
+  'Network Traffic In': number;
+  'Network Traffic Out': number;
+  t: number;
+}
+
 // @TODO recharts remove old format function
 const formatData = (value: DataSeries[]): [number, number][] =>
   value.map((thisPoint) => [thisPoint.x, thisPoint.y]);
 
-const formatData2 = (value: DataSeries[]) =>
-  value.map((thisPoint) => ({ CPU: thisPoint.y, t: thisPoint.x }));
+const formatData2 = (value: DataSeries[], label: string) =>
+  value.map((thisPoint) => ({ [label]: thisPoint.y, t: thisPoint.x }));
 
 const _formatTooltip = (valueInBytes: number) =>
   formatNetworkTooltip(valueInBytes / 8);
@@ -69,6 +75,18 @@ const createTabs = (
     return convertNetworkToUnit(value, unit as any);
   };
 
+  const timeData: NetworkTransferProps[] = [];
+  // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+  if (flags.recharts) {
+    for (let i = 0; i < data.net_in.length; i++) {
+      timeData.push({
+        'Network Traffic In': convertNetworkData(data.net_in[i].y),
+        'Network Traffic Out': convertNetworkData(data.net_out[i].y),
+        t: data.net_in[i].x,
+      });
+    }
+  }
+
   // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
   return [
     {
@@ -90,7 +108,7 @@ const createTabs = (
                     tickGap: 60,
                   }}
                   aria-label={'CPU Usage Graph'}
-                  data={formatData2(data.cpu)}
+                  data={formatData2(data.cpu, 'CPU')}
                   height={chartHeight}
                   timezone={timezone}
                   unit={'%'}
@@ -125,33 +143,59 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <StyledCanvasContainerDiv>
-              <LineGraph
-                data={[
-                  {
-                    backgroundColor: theme.graphs.network.inbound,
-                    borderColor: 'transparent',
-                    data: formatData(data.net_in),
-                    label: 'Network Traffic In',
-                  },
-                  {
-                    backgroundColor: theme.graphs.network.outbound,
-                    borderColor: 'transparent',
-                    data: formatData(data.net_out),
-                    label: 'Network Traffic Out',
-                  },
-                ]}
-                accessibleDataTable={{ unit: 'Kb/s"' }}
-                ariaLabel="Network Transfer Graph"
-                chartHeight={chartHeight}
-                formatData={convertNetworkData}
-                formatTooltip={_formatTooltip}
-                nativeLegend
-                showToday={true}
-                timezone={timezone}
-                unit="/s"
-              />
-            </StyledCanvasContainerDiv>
+            {flags.recharts ? (
+              <Box marginLeft={-3}>
+                <AreaChart
+                  areas={[
+                    {
+                      color: theme.graphs.network.inbound,
+                      dataKey: 'Network Traffic In',
+                    },
+                    {
+                      color: theme.graphs.network.outbound,
+                      dataKey: 'Network Traffic Out',
+                    },
+                  ]}
+                  xAxis={{
+                    tickFormat: 'hh a',
+                    tickGap: 60,
+                  }}
+                  aria-label={'Network Transfer Graph'}
+                  data={timeData}
+                  height={chartHeight}
+                  timezone={timezone}
+                  unit={' Kb/s'}
+                />
+              </Box>
+            ) : (
+              <StyledCanvasContainerDiv>
+                <LineGraph
+                  data={[
+                    {
+                      backgroundColor: theme.graphs.network.inbound,
+                      borderColor: 'transparent',
+                      data: formatData(data.net_in),
+                      label: 'Network Traffic In',
+                    },
+                    {
+                      backgroundColor: theme.graphs.network.outbound,
+                      borderColor: 'transparent',
+                      data: formatData(data.net_out),
+                      label: 'Network Traffic Out',
+                    },
+                  ]}
+                  accessibleDataTable={{ unit: 'Kb/s"' }}
+                  ariaLabel="Network Transfer Graph"
+                  chartHeight={chartHeight}
+                  formatData={convertNetworkData}
+                  formatTooltip={_formatTooltip}
+                  nativeLegend
+                  showToday={true}
+                  timezone={timezone}
+                  unit="/s"
+                />
+              </StyledCanvasContainerDiv>
+            )}
           </StyledRootDiv>
         );
       },
