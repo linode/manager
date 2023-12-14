@@ -10,6 +10,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
+import { getNumberAtEnd, removeNumberAtEnd } from 'src/utilities/stringUtils';
 
 import { SERVICE_TARGET_COPY } from '../LoadBalancerDetail/ServiceTargets/constants';
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
@@ -72,6 +73,31 @@ export const ServiceTargetDrawer = (props: Props) => {
   );
 };
 
+function getNextServiceTargetLabel(
+  selectedServiceTarget: ServiceTargetPayload,
+  serviceTargets: ServiceTargetPayload[]
+): string {
+  const numberAtEnd = getNumberAtEnd(selectedServiceTarget.label);
+
+  let labelToReturn = '';
+
+  if (numberAtEnd === null) {
+    labelToReturn = `${selectedServiceTarget.label}-1`;
+  } else {
+    labelToReturn = `${removeNumberAtEnd(selectedServiceTarget.label)}${
+      numberAtEnd + 1
+    }`;
+  }
+
+  if (serviceTargets.some((r) => r.label === labelToReturn)) {
+    return getNextServiceTargetLabel(
+      { ...selectedServiceTarget, label: labelToReturn },
+      serviceTargets
+    );
+  }
+  return labelToReturn;
+}
+
 interface AddExistingServiceTargetFormProps {
   configurationIndex: number;
   onClose: () => void;
@@ -101,16 +127,14 @@ const AddExistingServiceTargetForm = (
       }
       setFieldValue(`configurations[${configurationIndex}]service_targets`, [
         ...values.configurations[configurationIndex].service_targets,
-        serviceTarget,
+        {
+          ...serviceTarget,
+          label: getNextServiceTargetLabel(serviceTarget, serviceTargets),
+        },
       ]);
       onClose();
     },
     validate(values) {
-      if (
-        serviceTargets.some((st) => st.label === values.serviceTarget?.label)
-      ) {
-        return { serviceTarget: 'Service Targets must have unique labels.' };
-      }
       if (!values.serviceTarget) {
         return { serviceTarget: 'Please select an existing service target.' };
       }

@@ -35,3 +35,19 @@ export const convertForAria = (str: string) => {
     .toLowerCase()
     .replace(/([^A-Z0-9]+)(.)/gi, (match, p1, p2) => p2.toUpperCase());
 };
+
+export function getNumberAtEnd(str: string) {
+  // Use a regular expression to match one or more digits at the end of the string
+  const match = str.match(/\d+$/);
+
+  // If there is a match, return the matched number; otherwise, return null
+  return match ? parseInt(match[0], 10) : null;
+}
+
+export function removeNumberAtEnd(str: string) {
+  // Use a regular expression to match one or more digits at the end of the string
+  const regex = /\d+$/;
+
+  // Use the replace() method to remove the matched portion
+  return str.replace(regex, '');
+}
