@@ -14,6 +14,7 @@ import * as path from 'path';
 import { githubFormatter } from './formatters/github-formatter';
 import { jsonFormatter } from './formatters/json-formatter';
 import { slackFormatter } from './formatters/slack-formatter';
+import { statusFormatter } from './formatters/status-formatter';
 import { RunInfo } from './results/run-info';
 import { getSkippedTestCount, getTestLength, getTestResults } from './util';
 
@@ -128,6 +129,9 @@ const main = async (junitPath: string) => {
 
       case 'github':
         return githubFormatter;
+
+      case 'status':
+        return statusFormatter;
 
       default:
         throw new Error(`Unknown formatter '${summaryFormat}'.`);
