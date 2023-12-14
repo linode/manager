@@ -27,7 +27,7 @@ jobs:
       - name: Build with VitePress
         run: |
           yarn workspace @linode/docs docs:build
-          touch docs/.vitepress/dist/.nojekyll
+          touch packages/docs/.vitepress/dist/.nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
