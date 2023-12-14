@@ -20,6 +20,6 @@ const meta: Meta<GaugePercentProps> = {
     width: 150,
   },
   component: GaugePercent,
-  title: 'Components/Analytics & Graphs/GaugesPercent',
+  title: 'Components/Graphs/GaugesPercent',
 };
 export default meta;

@@ -27,7 +27,7 @@ describe('GaugePercent Component', () => {
     value: 50,
   };
 
-  it('renders without crashing', () => {
+  it('renders', () => {
     const { getByTestId } = renderWithTheme(<GaugePercent {...defaultProps} />);
     const gaugeWrapper = getByTestId('gauge-wrapper');
 
