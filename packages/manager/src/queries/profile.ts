@@ -41,14 +41,10 @@ import type { RequestOptions } from '@linode/api-v4';
 
 export const queryKey = 'profile';
 
-export const useProfile = (
-  givenProfile?: Profile,
-  { headers }: RequestOptions = {}
-) => {
+export const useProfile = ({ headers }: RequestOptions = {}) => {
   const key = [queryKey, headers];
   return useQuery<Profile, APIError[]>(key, () => getProfile({ headers }), {
     ...queryPresets.oneTimeFetch,
-    initialData: givenProfile,
   });
 };
 
