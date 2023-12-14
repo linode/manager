@@ -24,16 +24,16 @@ export const slackFormatter: Formatter = (
 ) => {
   const indicator = runInfo.failing ? ':x-mark:' : ':check-mark:';
   const headline = (metadata.runId && metadata.runUrl)
-    ? `${indicator} *Cypress test results for run <${metadata.runUrl}|#${metadata.runId}>* ${indicator}\n`
-    : `${indicator} *Cypress test results* ${indicator}\n`;
+    ? `*Cypress test results for run <${metadata.runUrl}|#${metadata.runId}>*\n`
+    : `*Cypress test results*\n`;
 
   const breakdown = `:small_red_triangle: ${runInfo.failing} Failing | :thumbs_up_green: ${runInfo.passing} Passing | :small_blue_diamond: ${runInfo.skipped} Skipped\n\n`;
 
   // Show a human-readable summary of what was tested and whether it succeeded.
   const summary = (() => {
     const info = !runInfo.failing
-     ? `> ${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')}`
-     : `> ${runInfo.failing} failed ${pluralize(runInfo.failing, 'test', 'tests')}`;
+     ? `> ${indicator} ${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')}`
+     : `> ${indicator} ${runInfo.failing} failed ${pluralize(runInfo.failing, 'test', 'tests')}`;
 
     const prInfo = (metadata.changeId && metadata.changeUrl)
       ? ` on PR <${metadata.changeUrl}|#${metadata.changeId}>${metadata.changeTitle ? ` - _${metadata.changeTitle}_` : ''}`
