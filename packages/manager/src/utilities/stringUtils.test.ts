@@ -1,4 +1,9 @@
-import { isNumeric, truncateAndJoinList } from './stringUtils';
+import {
+  getNumberAtEnd,
+  isNumeric,
+  removeNumberAtEnd,
+  truncateAndJoinList,
+} from './stringUtils';
 
 describe('truncateAndJoinList', () => {
   const strList = ['a', 'b', 'c'];
@@ -47,5 +52,35 @@ describe('isNumeric', () => {
   });
   it('should return false for text', () => {
     expect(isNumeric('my-linode')).toBe(false);
+  });
+});
+
+describe('getNumberAtEnd', () => {
+  it('should return 1 when given test-1', () => {
+    expect(getNumberAtEnd('test-1')).toBe(1);
+  });
+  it('should return null if there is no number in the string', () => {
+    expect(getNumberAtEnd('test')).toBe(null);
+  });
+  it('should get the last number in the string', () => {
+    expect(getNumberAtEnd('test-1-2-3')).toBe(3);
+  });
+  it('should handle a string that only contains numbers', () => {
+    expect(getNumberAtEnd('123')).toBe(123);
+  });
+});
+
+describe('removeNumberAtEnd', () => {
+  it('should return 1 in "test-1"', () => {
+    expect(removeNumberAtEnd('test-1')).toBe('test-');
+  });
+  it('should return the same string if there is no number at the end', () => {
+    expect(removeNumberAtEnd('test')).toBe('test');
+  });
+  it('should return an empty string if the input is just a number', () => {
+    expect(removeNumberAtEnd('123')).toBe('');
+  });
+  it('should not remove the first number', () => {
+    expect(removeNumberAtEnd('1-2-3')).toBe('1-2-');
   });
 });
