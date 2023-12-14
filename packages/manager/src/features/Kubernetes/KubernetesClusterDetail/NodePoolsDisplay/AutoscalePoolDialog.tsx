@@ -166,7 +166,7 @@ export const AutoscalePoolDialog = (props: Props) => {
         cluster automatically based on resource demand and overall usage.
         Maximum limit is 100 nodes.{' '}
         <Link to="https://www.linode.com/docs/products/compute/kubernetes/guides/enable-cluster-autoscaling">
-          Learn More.
+          Learn more.
         </Link>
       </Typography>
       <form onSubmit={handleSubmit}>
