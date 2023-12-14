@@ -5,6 +5,7 @@ export default defineConfig({
   title: "Cloud Manager Docs",
   description: "Linode Cloud Manger Documentation",
   srcDir: '../../docs',
+  base: '/manager/',
   themeConfig: {
     logo: 'akamai-wave.svg',
     nav: [
