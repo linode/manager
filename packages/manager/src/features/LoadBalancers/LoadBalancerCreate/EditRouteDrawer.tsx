@@ -24,9 +24,12 @@ export const EditRouteDrawer = (props: Props) => {
     values,
   } = useFormikContext<LoadBalancerCreateFormData>();
 
-  const existingRoutesInThisConfiguration = values.configurations![
-    configurationIndex
-  ].routes!;
+  const allRoutes = values.configurations.reduce<RoutePayload[]>(
+    (acc, configuration) => {
+      return [...acc, ...configuration.routes!];
+    },
+    []
+  );
 
   const formik = useFormik<RoutePayload>({
     enableReinitialize: true,
@@ -44,11 +47,7 @@ export const EditRouteDrawer = (props: Props) => {
       onClose();
     },
     validate(values) {
-      if (
-        existingRoutesInThisConfiguration.some(
-          (route) => route.label === values.label
-        )
-      ) {
+      if (allRoutes.some((route) => route.label === values.label)) {
         return {
           label: 'Routes must have unique labels within each configuration.',
         };

@@ -39,9 +39,12 @@ export const AddRouteDrawer = (props: Props) => {
 
   const routeProtocol = getRouteProtocolFromConfigurationProtocol(protocol);
 
-  const existingRoutesInThisConfiguration = values.configurations![
-    configurationIndex
-  ].routes!;
+  const allRoutes = values.configurations.reduce<RoutePayload[]>(
+    (acc, configuration) => {
+      return [...acc, ...configuration.routes!];
+    },
+    []
+  );
 
   const onAdd = (route: RoutePayload) => {
     setFieldValue(`configurations[${configurationIndex}].routes`, [
@@ -71,13 +74,13 @@ export const AddRouteDrawer = (props: Props) => {
       </RadioGroup>
       {mode === 'existing' ? (
         <AddExistingRouteForm
-          existingRoutes={existingRoutesInThisConfiguration}
+          existingRoutes={allRoutes}
           onAdd={onAdd}
           onClose={onClose}
         />
       ) : (
         <AddNewRouteForm
-          existingRoutes={existingRoutesInThisConfiguration}
+          existingRoutes={allRoutes}
           onAdd={onAdd}
           onClose={onClose}
           protocol={routeProtocol}
@@ -93,26 +96,8 @@ interface AddExistingRouteFormProps {
   onClose: () => void;
 }
 
-interface RouteWithConfig extends RoutePayload {
-  configurationIndex: number;
-}
-
 const AddExistingRouteForm = (props: AddExistingRouteFormProps) => {
   const { existingRoutes, onAdd, onClose } = props;
-
-  const { values } = useFormikContext<LoadBalancerCreateFormData>();
-
-  const allRoutesAcrossConfurations = values.configurations!.reduce<
-    RouteWithConfig[]
-  >((acc, configuration, index) => {
-    return [
-      ...acc,
-      ...configuration.routes!.map((r) => ({
-        ...r,
-        configurationIndex: index,
-      })),
-    ];
-  }, []);
 
   const formik = useFormik<{ route: RoutePayload | null }>({
     initialValues: {
@@ -122,20 +107,13 @@ const AddExistingRouteForm = (props: AddExistingRouteFormProps) => {
       if (!route) {
         throw new Error('No route selected');
       }
-      const hasRouteWithSameLabelInConfigration = existingRoutes.some(
-        (r) => r.label === route.label
-      );
-      if (hasRouteWithSameLabelInConfigration) {
-        onAdd({
-          ...route,
-          label: `${route.label}-clone`,
-        });
-      } else {
-        onAdd(route);
-      }
+      onAdd(route);
       onClose();
     },
     validate(values) {
+      if (existingRoutes.some((r) => r.label === values.route?.label)) {
+        return { route: 'Routes must have unique labels.' };
+      }
       if (!values.route) {
         return { route: 'Please select an existing route.' };
       }
@@ -146,18 +124,11 @@ const AddExistingRouteForm = (props: AddExistingRouteFormProps) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Autocomplete
-        getOptionLabel={(option) =>
-          `${option.label} (Configuration ${
-            values.configurations![option.configurationIndex].label
-              ? values.configurations![option.configurationIndex].label
-              : option.configurationIndex
-          })`
-        }
         errorText={formik.errors.route}
         label="Route"
         noMarginTop
         onChange={(_, route) => formik.setFieldValue('route', route)}
-        options={allRoutesAcrossConfurations}
+        options={existingRoutes}
       />
       <ActionsPanel
         primaryButtonProps={{
@@ -195,7 +166,7 @@ const AddNewRouteForm = (props: AddNewRouteFormProps) => {
     validate(values) {
       if (existingRoutes.some((route) => route.label === values.label)) {
         return {
-          label: 'Routes must have unique labels within each configuration.',
+          label: 'Routes must have unique labels.',
         };
       }
 
