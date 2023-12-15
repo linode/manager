@@ -4,7 +4,7 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -26,7 +26,7 @@ interface Props {
   typeLabel: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   autoscaleText: {
     alignSelf: 'center',
     paddingRight: theme.spacing(2),
@@ -54,7 +54,7 @@ const NodePool: React.FC<Props> = (props) => {
     typeLabel,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Grid

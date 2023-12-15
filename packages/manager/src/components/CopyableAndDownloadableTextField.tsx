@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import snakeCase from 'lodash/snakeCase';
 import * as React from 'react';
 
@@ -7,7 +7,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DownloadTooltip } from 'src/components/DownloadTooltip';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copyIcon: {
     '& svg': {
       height: 14,
@@ -32,7 +32,7 @@ type Props = TextFieldProps & {
 };
 
 export const CopyableAndDownloadableTextField = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { className, hideIcon, value, ...restProps } = props;
 
   const fileName = props.fileName ?? snakeCase(props.label);
