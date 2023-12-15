@@ -23,6 +23,14 @@ import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 
+/**
+ * Gets an infinitly scrollable list of all Events
+ *
+ * This query is kept up to date by `useEventsPoller`.
+ *
+ * @param filter an optional filter can be passed to filter out events. If you use a filter,
+ * you must make sure `filteredEvents` implements the same filtering so the cache is updated correctly.
+ */
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     ['events', 'infinite', filter],
@@ -47,12 +55,36 @@ export const useEventsInfiniteQuery = (filter?: Filter) => {
   return { ...query, events };
 };
 
+/**
+ * A hook that allows you to access an `Event[]` of all in progress events.
+ *
+ * The benefit to using this hook is that it only returns in-progress events,
+ * which is generally a small number of items. This is good for performantly
+ * finding and rendering the status of an in-progress event.
+ *
+ * @example
+ * const { data: events } = useInProgressEvents();
+ *
+ * const mostRecentLinodeEvent = events?.find(
+ *   (e) => e.entity?.type === 'linode' && e.entity.id === id
+ * );
+ *
+ * return (
+ *   <p>Linode In Progress Event: {event.percent_complete}</p>
+ * );
+ */
 export const useInProgressEvents = () => {
   return useQuery<Event[], APIError[]>({
     queryKey: ['events', 'poller', true],
   });
 };
 
+/**
+ * Mounting this hook will start polling the events endpoint and
+ * update our cache as new events come in.
+ *
+ * *Warning* This hook should only be mounted once!
+ */
 export const useEventsPoller = () => {
   const { incrementPollingInterval, pollingInterval } = usePollingInterval();
 
@@ -125,6 +157,9 @@ export const useEventsPoller = () => {
   return null;
 };
 
+/**
+ * Manages the events polling interval.
+ */
 export const usePollingInterval = () => {
   const queryKey = ['events', 'interval'];
   const queryClient = useQueryClient();
@@ -185,6 +220,13 @@ export const useMarkEventsAsSeen = () => {
   );
 };
 
+/**
+ * For all infinite event queries (with any filter), update each infinite query in
+ * the cache.
+ *
+ * The catch here is that we must mimic the API filtering if we update an infinite query
+ * with an API filter.
+ */
 export const updateEventsQueries = (
   events: Event[],
   queryClient: QueryClient
@@ -221,6 +263,13 @@ export const updateEventsQueries = (
     });
 };
 
+/**
+ * Updates a events infinite query with incoming events from our polling
+ *
+ * This method should do two things with incomming events
+ * - If the events is already in the cache, update it
+ * - If the event is new, append it to the top of the first page.
+ */
 export const updateEventsQuery = (
   events: Event[],
   queryKey: QueryKey,
