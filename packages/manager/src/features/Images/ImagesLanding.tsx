@@ -1,7 +1,7 @@
 import { Event, Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -47,7 +47,7 @@ import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import { DrawerMode, ImagesDrawer } from './ImagesDrawer';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
     marginBottom: theme.spacing(3),
     padding: 0,
@@ -99,7 +99,7 @@ const defaultDialogState = {
 };
 
 export const ImagesLanding: React.FC<CombinedProps> = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 

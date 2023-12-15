@@ -2,7 +2,7 @@ import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -27,44 +27,46 @@ import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import NodeActionMenu from './NodeActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  copy: {
-    '& svg': {
-      height: `12px`,
-      opacity: 0,
-      width: `12px`,
+const useStyles = makeStyles<void, 'copy'>()(
+  (theme: Theme, _params, classes) => ({
+    copy: {
+      '& svg': {
+        height: `12px`,
+        opacity: 0,
+        width: `12px`,
+      },
+      marginLeft: 4,
+      top: 1,
     },
-    marginLeft: 4,
-    top: 1,
-  },
-  error: {
-    color: theme.color.red,
-  },
-  ipCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '35%',
-  },
-  labelCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '35%',
-  },
-  row: {
-    '&:hover': {
-      backgroundColor: theme.bg.lightBlue1,
+    error: {
+      color: theme.color.red,
     },
-    '&:hover $copy > svg, & $copy:focus > svg': {
-      opacity: 1,
+    ipCell: {
+      ...theme.applyTableHeaderStyles,
+      width: '35%',
     },
-  },
-  statusCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '15%',
-  },
-  table: {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
-  },
-}));
+    labelCell: {
+      ...theme.applyTableHeaderStyles,
+      width: '35%',
+    },
+    row: {
+      '&:hover': {
+        backgroundColor: theme.bg.lightBlue1,
+      },
+      [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
+        opacity: 1,
+      },
+    },
+    statusCell: {
+      ...theme.applyTableHeaderStyles,
+      width: '15%',
+    },
+    table: {
+      borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+      borderRight: `1px solid ${theme.borderColors.borderTable}`,
+    },
+  })
+);
 
 // =============================================================================
 // NodeTable
@@ -79,7 +81,7 @@ export interface Props {
 export const NodeTable: React.FC<Props> = (props) => {
   const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
@@ -215,7 +217,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
     typeLabel,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: events } = useInProgressEvents();
 

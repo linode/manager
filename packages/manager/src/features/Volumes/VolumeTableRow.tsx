@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 
 import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles()({
   chipWrapper: {
     alignSelf: 'center',
   },
@@ -64,7 +64,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
 };
 
 export const VolumeTableRow = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
   const { handlers, isDetailsPageRow, volume } = props;
 

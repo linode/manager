@@ -1,8 +1,7 @@
 import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -25,7 +24,7 @@ interface Props {
   setResetKubeConfigDialogOpen: (open: boolean) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     '& g': {
       stroke: theme.palette.text.secondary,
@@ -95,7 +94,7 @@ export const KubeConfigDisplay = (props: Props) => {
   } = props;
 
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const { refetch } = useKubenetesKubeConfigQuery(clusterId);
 
@@ -171,13 +170,13 @@ export const KubeConfigDisplay = (props: Props) => {
             onClick={() => setResetKubeConfigDialogOpen(true)}
           >
             <ResetIcon
-              className={classNames({
+              className={cx({
                 [classes.disabled]: isResettingKubeConfig,
                 [classes.kubeconfigIcons]: true,
               })}
             />
             <Typography
-              className={classNames({
+              className={cx({
                 [classes.disabled]: isResettingKubeConfig,
                 [classes.kubeconfigFileText]: true,
               })}
