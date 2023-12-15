@@ -4,11 +4,11 @@ import {
   StepContent,
   StepLabel,
   Stepper,
+  useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';

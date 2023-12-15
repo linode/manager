@@ -320,11 +320,9 @@ const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
 })(({ theme }) => ({
   backgroundColor: theme.bg.offWhite,
-  border: `1px solid ${theme.color.border3}`,
   color: '#777',
   fontSize: 14,
   margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
-  padding: 10,
 }));
 
 const StyledPanel = styled(Paper, {
