@@ -151,7 +151,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     <Drawer
       wide
       PaperProps={{
-        sx: { maxWidth: '760px !important' },
+        sx: { maxWidth: '790px !important' },
       }}
       onClose={onClose}
       open={open}
