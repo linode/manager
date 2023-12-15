@@ -3,7 +3,7 @@ import { Theme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Grid } from '../Grid';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { Paper } from '../Paper';
 import { Typography } from '../Typography';
 import { SummaryItem } from './SummaryItem';
@@ -62,7 +62,7 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-const StyledSummary = styled(Grid)(({ theme }) => ({
+const StyledSummary = styled(Grid2)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     '& > div': {
       '&:last-child': {
