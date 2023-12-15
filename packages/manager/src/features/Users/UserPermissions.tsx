@@ -380,43 +380,45 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
-        <Grid
-          alignItems="center"
-          container
-          spacing={2}
-          style={{ width: 'auto' }}
-        >
-          <Grid>
-            <Typography
-              sx={(theme) => ({
-                [theme.breakpoints.down('md')]: {
-                  paddingLeft: theme.spacing(),
-                },
-              })}
-              data-qa-restrict-access={restricted}
-              variant="h2"
-            >
-              Full Account Access:
-            </Typography>
+        <Paper>
+          <Grid
+            alignItems="center"
+            container
+            spacing={2}
+            style={{ width: 'auto' }}
+          >
+            <Grid>
+              <Typography
+                sx={(theme) => ({
+                  [theme.breakpoints.down('md')]: {
+                    paddingLeft: theme.spacing(),
+                  },
+                })}
+                data-qa-restrict-access={restricted}
+                variant="h2"
+              >
+                General Permissions
+              </Typography>
+            </Grid>
+            <Grid>
+              <Toggle
+                tooltipText={
+                  username === currentUser
+                    ? 'You cannot restrict the current active user.'
+                    : ''
+                }
+                checked={!restricted}
+                disabled={username === currentUser}
+                onChange={this.onChangeRestricted}
+                sx={{ marginRight: '3px' }}
+              />
+            </Grid>
+            <Grid>
+              <Typography variant="subtitle2">Full Account Access</Typography>
+            </Grid>
           </Grid>
-          <Grid>
-            <Typography variant="h2">{!restricted ? 'On' : 'Off'}</Typography>
-          </Grid>
-          <Grid>
-            <Toggle
-              tooltipText={
-                username === currentUser
-                  ? 'You cannot restrict the current active user.'
-                  : ''
-              }
-              checked={!restricted}
-              disabled={username === currentUser}
-              onChange={this.onChangeRestricted}
-              sx={{ marginRight: '3px' }}
-            />
-          </Grid>
-        </Grid>
-        {restricted ? this.renderPermissions() : this.renderUnrestricted()}
+        </Paper>
+        {restricted && this.renderPermissions()}
       </React.Fragment>
     );
   };
@@ -433,6 +435,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_stackscripts: 'Can create StackScripts under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
       cancel_account: 'Can cancel the entire account',
+      child_account_access: 'Enable child account access',
       longview_subscription:
         'Can modify this account\u{2019}s Longview subscription ($)',
     };
@@ -464,17 +467,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderGlobalPerms = () => {
     const { grants, isSavingGlobal } = this.state;
     return (
-      <Paper
-        sx={(theme) => ({
-          marginTop: theme.spacing(2),
-        })}
-        data-qa-global-section
-      >
+      <Paper data-qa-global-section>
         <Typography
           data-qa-permissions-header="Global Permissions"
-          variant="h2"
+          variant="subtitle2"
         >
-          Global Permissions
+          Configure the specific rights and privileges this user has within the
+          account. Remember that permissions related to actions with the '$'
+          symbol may incur additional charges.
         </Typography>
         <Grid
           sx={(theme) => ({
