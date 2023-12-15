@@ -1,8 +1,8 @@
 import { Grant } from '@linode/api-v4/lib/account';
+import { default as Grid } from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { default as Grid } from '@mui/material/Unstable_Grid2/Grid2';
 import { Paper } from 'src/components/Paper';
 import withLongviewClients, {
   DispatchProps,
@@ -19,7 +19,7 @@ import { NetworkGauge } from './Gauges/Network';
 import { RAMGauge } from './Gauges/RAM';
 import { StorageGauge } from './Gauges/Storage';
 import { SwapGauge } from './Gauges/Swap';
-import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
+import { ActionHandlers, LongviewActionMenu } from './LongviewActionMenu';
 import { LongviewClientHeader } from './LongviewClientHeader';
 import { LongviewClientInstructions } from './LongviewClientInstructions';
 
@@ -83,16 +83,23 @@ const LongviewClientRow = (props: CombinedProps) => {
   }
 
   return (
-    <Paper data-testid={clientID}>
+    <Paper
+      sx={(theme) => {
+        return {
+          marginBottom: theme.spacing(4),
+        };
+      }}
+      data-testid={clientID}
+    >
       <Grid
         alignItems="flex-start"
         aria-label="List of Your Longview Clients"
         container
         data-testid="longview-client-row"
         justifyContent="space-between"
+        padding={1}
         spacing={2}
         wrap="nowrap"
-        padding={1}
       >
         <Grid container xs={11}>
           <Grid container md={3} xs={12}>
@@ -107,13 +114,13 @@ const LongviewClientRow = (props: CombinedProps) => {
             />
           </Grid>
           <Grid
-            mt={-4}
-            md={9}
-            xs={12}
             alignItems="center"
             container
             direction="row"
+            md={9}
+            mt={-4}
             spacing={2}
+            xs={12}
           >
             <Grid sm={2} xs={4}>
               <CPUGauge
@@ -153,7 +160,7 @@ const LongviewClientRow = (props: CombinedProps) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={1} container justifyContent="flex-end">
+        <Grid container justifyContent="flex-end" xs={1}>
           <LongviewActionMenu
             longviewClientID={clientID}
             longviewClientLabel={clientLabel}
