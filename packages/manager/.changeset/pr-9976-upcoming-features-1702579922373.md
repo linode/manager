@@ -2,4 +2,4 @@
 "@linode/manager": Upcoming Features
 ---
 
-Create Bucket flow - Able to choose a single Compute Region ID eg ('us-east') ([#9976](https://github.com/linode/manager/pull/9976))
+Ability to choose a single Compute Region ID (e.g., us-east) in Create Object Storage Bucket drawer ([#9976](https://github.com/linode/manager/pull/9976))
