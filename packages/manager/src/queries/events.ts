@@ -29,7 +29,7 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
  * This query is kept up to date by `useEventsPoller`.
  *
  * @param filter an optional filter can be passed to filter out events. If you use a filter,
- * you must make sure `filteredEvents` implements the same filtering so the cache is updated correctly.
+ * you must make sure `doesEventMatchAPIFilter` implements the same filtering so the cache is updated correctly.
  */
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
@@ -243,24 +243,37 @@ export const updateEventsQueries = (
       }
 
       const filteredEvents = events.filter((event) => {
-        // @ts-expect-error todo fix filter type
-        const notEqualItems = apiFilter.action?.['+neq'];
-        if (notEqualItems && notEqualItems.includes(event.action)) {
-          return false;
-        }
-        if (
-          apiFilter?.['entity.id'] &&
-          apiFilter?.['entity.type'] &&
-          apiFilter['entity.id'] !== event.entity?.id &&
-          apiFilter['entity.type'] !== event.entity?.type
-        ) {
-          return false;
-        }
-        return true;
+        return doesEventMatchAPIFilter(event, apiFilter);
       });
 
       updateEventsQuery(filteredEvents, queryKey, queryClient);
     });
+};
+
+/**
+ * Because we using one polling instance (without any API filter) and have many possible event infinite queires
+ * with various filters, we must make sure that we filter out API-filtered events when we update our filtered
+ * infinite queries.
+ *
+ * @returns This function return true if the API filter `filter` would match the given `event`. We are basiclly
+ * mimicing the API's filtering for the sake of updating our different events infinite queries.
+ */
+export const doesEventMatchAPIFilter = (event: Event, filter: Filter) => {
+  // @ts-expect-error todo fix filter type
+  const notEqualItems = filter.action?.['+neq'];
+  if (notEqualItems && notEqualItems.includes(event.action)) {
+    return false;
+  }
+
+  if (filter?.['entity.id'] && filter['entity.id'] !== event.entity?.id) {
+    return false;
+  }
+
+  if (filter?.['entity.type'] && filter['entity.type'] !== event.entity?.type) {
+    return false;
+  }
+
+  return true;
 };
 
 /**
