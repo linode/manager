@@ -38,7 +38,7 @@ export const CreateBucketDrawerObjMultiCluster = (props: Props) => {
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
   const { data: regions } = useRegionsQuery();
-  // TODO: OBJ-MULTI-CLUSTER - clusters will likely to be replaced with regions and will be taken care in future tickets.
+  // @TODO OBJ Multicluster - clusters will likely to be replaced with regions and will be taken care in future tickets.
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets(clusters);
 
