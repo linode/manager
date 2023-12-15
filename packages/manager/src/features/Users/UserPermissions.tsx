@@ -15,8 +15,8 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -241,6 +241,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_firewalls',
     'add_databases',
     'cancel_account',
+    'child_account_access',
   ];
 
   globalPermOnChange = (perm: string) => (
@@ -376,11 +377,16 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <React.Fragment>
+      <Box sx={{ marginTop: (theme) => theme.spacing(4) }}>
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
-        <Paper>
+        <Paper
+          sx={{
+            paddingBottom: 0,
+            paddingTop: 0,
+          }}
+        >
           <Grid
             alignItems="center"
             container
@@ -388,15 +394,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             style={{ width: 'auto' }}
           >
             <Grid>
-              <Typography
-                sx={(theme) => ({
-                  [theme.breakpoints.down('md')]: {
-                    paddingLeft: theme.spacing(),
-                  },
-                })}
-                data-qa-restrict-access={restricted}
-                variant="h2"
-              >
+              <Typography data-qa-restrict-access={restricted} variant="h2">
                 General Permissions
               </Typography>
             </Grid>
@@ -414,12 +412,17 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               />
             </Grid>
             <Grid>
-              <Typography variant="subtitle2">Full Account Access</Typography>
+              <Typography
+                sx={{ fontFamily: (theme) => theme.font.bold }}
+                variant="subtitle2"
+              >
+                Full Account Access
+              </Typography>
             </Grid>
           </Grid>
         </Paper>
         {restricted && this.renderPermissions()}
-      </React.Fragment>
+      </Box>
     );
   };
 
@@ -459,7 +462,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           })}
           label={permDescriptionMap[perm]}
         />
-        <Divider />
       </Grid>
     );
   };
