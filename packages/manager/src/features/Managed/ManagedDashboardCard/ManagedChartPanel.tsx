@@ -75,11 +75,11 @@ const createTabs = (
     return convertNetworkToUnit(value, unit as any);
   };
 
-  const timeData: NetworkTransferProps[] = [];
+  const networkTransferData: NetworkTransferProps[] = [];
   // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
   if (flags.recharts) {
     for (let i = 0; i < data.net_in.length; i++) {
-      timeData.push({
+      networkTransferData.push({
         'Network Traffic In': convertNetworkData(data.net_in[i].y),
         'Network Traffic Out': convertNetworkData(data.net_out[i].y),
         t: data.net_in[i].x,
@@ -161,8 +161,9 @@ const createTabs = (
                     tickGap: 60,
                   }}
                   aria-label={'Network Transfer Graph'}
-                  data={timeData}
+                  data={networkTransferData}
                   height={chartHeight}
+                  showLegend
                   timezone={timezone}
                   unit={' Kb/s'}
                 />

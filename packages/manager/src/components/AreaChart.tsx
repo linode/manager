@@ -6,6 +6,7 @@ import {
   AreaChart as _AreaChart,
   Area,
   CartesianGrid,
+  Legend,
   ResponsiveContainer,
   Tooltip,
   TooltipProps,
@@ -30,6 +31,7 @@ interface AreaChartProps {
   areas: AreaProps[];
   data: any;
   height: number;
+  showLegend?: boolean;
   timezone: string;
   unit: string;
   xAxis: XAxisProps;
@@ -46,9 +48,18 @@ const humanizeLargeData = (value: number) => {
 };
 
 export const AreaChart = (props: AreaChartProps) => {
-  const { areas, data, height, timezone, unit, xAxis } = props;
+  const { areas, data, height, showLegend, timezone, unit, xAxis } = props;
 
   const theme = useTheme();
+
+  const [activeSeries, setActiveSeries] = React.useState<Array<string>>([]);
+  const handleLegendClick = (dataKey: string) => {
+    if (activeSeries.includes(dataKey)) {
+      setActiveSeries(activeSeries.filter((el) => el !== dataKey));
+    } else {
+      setActiveSeries((prev) => [...prev, dataKey]);
+    }
+  };
 
   const xAxisTickFormatter = (t: number) => {
     return DateTime.fromMillis(t, { zone: timezone }).toFormat(
@@ -114,10 +125,21 @@ export const AreaChart = (props: AreaChartProps) => {
           }}
           content={<CustomTooltip />}
         />
+        {showLegend && (
+          <Legend
+            formatter={(value) => (
+              <span style={{ color: theme.color.label }}>{value}</span>
+            )}
+            iconType="square"
+            onClick={(props) => handleLegendClick(props.dataKey)}
+            wrapperStyle={{ left: 25 }}
+          />
+        )}
         {areas.map(({ color, dataKey }) => (
           <Area
             dataKey={dataKey}
             fill={color}
+            hide={activeSeries.includes(dataKey)}
             isAnimationActive={false}
             key={dataKey}
             stroke={color}
