@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme, Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -11,6 +11,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
+
 import { StyledGrid } from './EmailBounce.styles';
 
 // =============================================================================
