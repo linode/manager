@@ -404,6 +404,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid>
             <Toggle
+              aria-label="Toggle Full Account Access"
               tooltipText={
                 username === currentUser
                   ? 'You cannot restrict the current active user.'
