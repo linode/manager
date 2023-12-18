@@ -4,6 +4,7 @@ import {
   GrantType,
   Grants,
   getGrants,
+  getUser,
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
@@ -58,6 +59,7 @@ interface TabInfo {
 }
 
 interface State {
+  childAccountAccessEnabled: boolean;
   errors?: APIError[];
   grants?: Grants;
   isSavingEntity: boolean;
@@ -83,6 +85,7 @@ type CombinedProps = Props &
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.getUserGrants();
+    this.checkAndEnableChildAccountAccess();
 
     if (this.props.flags.vpc) {
       this.setState({ vpcEnabled: true });
@@ -94,6 +97,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.username !== this.props.username) {
       this.getUserGrants();
+      this.checkAndEnableChildAccountAccess();
     }
   }
 
@@ -134,6 +138,33 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       /* apply all of them at once */
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
+      }
+    }
+  };
+
+  checkAndEnableChildAccountAccess = async () => {
+    const currentUsername = this.props.currentUser;
+    const selectedUsername = this.props.username;
+    if (currentUsername && selectedUsername) {
+      try {
+        const currentUser = await getUser(currentUsername);
+        const selectedUser = await getUser(selectedUsername);
+
+        const isParentAccount = currentUser.user_type === 'parent';
+        const isSelectedAccountValid =
+          selectedUser.user_type !== 'child' &&
+          selectedUser.user_type !== 'proxy';
+        const isFeatureFlagOn = this.props.flags.parentChildAccountAccess;
+
+        if (isParentAccount && isSelectedAccountValid && isFeatureFlagOn) {
+          this.setState({ childAccountAccessEnabled: true });
+        } else {
+          this.setState({ childAccountAccessEnabled: false });
+        }
+      } catch (error) {
+        this.setState((prevState) => ({
+          errors: [...(prevState.errors || []), error],
+        }));
       }
     }
   };
@@ -241,7 +272,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_firewalls',
     'add_databases',
     'cancel_account',
-    'child_account_access',
   ];
 
   globalPermOnChange = (perm: string) => (
@@ -438,13 +468,17 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_stackscripts: 'Can create StackScripts under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
       cancel_account: 'Can cancel the entire account',
-      child_account_access: 'Enable child account access',
       longview_subscription:
         'Can modify this account\u{2019}s Longview subscription ($)',
     };
 
     if (this.state.vpcEnabled) {
       permDescriptionMap['add_vpcs'] = 'Can add VPCs to this account';
+    }
+
+    if (this.state.childAccountAccessEnabled) {
+      permDescriptionMap['enable_parent_child_access'] =
+        'Can access child accounts';
     }
 
     return (
@@ -468,6 +502,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   renderGlobalPerms = () => {
     const { grants, isSavingGlobal } = this.state;
+    if (this.state.childAccountAccessEnabled) {
+      this.globalBooleanPerms.push('enable_parent_child_access');
+    }
     return (
       <Paper data-qa-global-section>
         <Typography
@@ -735,6 +772,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
+    childAccountAccessEnabled: false,
     isSavingEntity: false,
     isSavingGlobal: false,
     loading: true,
