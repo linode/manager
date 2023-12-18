@@ -96,7 +96,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme={options.theme}>
-          <LDProvider clientSideID={''} flags={options.flags ?? {}}>
+          <LDProvider flags={options.flags ?? {}} options={{ bootstrap: options.flags }} clientSideID={''}>
             <SnackbarProvider>
               <MemoryRouter {...options.MemoryRouter}>
                 {ui.children ?? ui}

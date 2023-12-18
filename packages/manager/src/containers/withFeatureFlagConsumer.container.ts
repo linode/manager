@@ -1,6 +1,5 @@
 import { LDClient as _LDClient } from 'launchdarkly-js-client-sdk';
 import { withLDConsumer } from 'launchdarkly-react-client-sdk';
-import { LDProps } from 'launchdarkly-react-client-sdk/lib/withLDConsumer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -22,7 +21,9 @@ export interface FeatureFlagConsumerProps {
 export const withFeatureFlagConsumer = (
   Component: React.ComponentType<any>
 ) => {
-  class WrappedComponent extends React.Component<StateProps & LDProps> {
+  class WrappedComponent extends React.Component<
+    StateProps & FeatureFlagConsumerProps
+  > {
     render() {
       return React.createElement(Component, {
         ...this.props,

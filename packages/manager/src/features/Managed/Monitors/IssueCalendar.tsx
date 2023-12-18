@@ -52,7 +52,7 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
     );
 
     days.push({
-      day: day.toISO(),
+      day: day.toISO()!,
       issues: relevantIssues,
     });
   }

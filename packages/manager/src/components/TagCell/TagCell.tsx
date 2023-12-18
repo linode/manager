@@ -40,7 +40,7 @@ const TagCell = (props: TagCellProps) => {
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const overflowRef = React.useCallback(
+  const overflowRef = React.useCallback<(node: any) => void>(
     (node) => {
       if (node !== null) {
         setOverflow(checkOverflow(node));

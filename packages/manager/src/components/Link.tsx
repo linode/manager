@@ -72,7 +72,7 @@ export const Link = (props: LinkProps) => {
     to,
   } = props;
   const { classes, cx } = useStyles();
-  const sanitizedUrl = () => sanitizeUrl(to);
+  const sanitizedUrl = () => sanitizeUrl(to.toString());
   const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
   const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
   const externalNotice = '- link opens in a new tab';

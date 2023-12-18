@@ -33,6 +33,11 @@ export interface EnhancedAutocompleteProps<
   noMarginTop?: boolean;
   /** Text to show when the Autocomplete search yields no results. */
   noOptionsText?: string;
+  /**
+   * Placeholder text that shows in the TextField when no item is selected
+   * @default 'Select an option'
+   */
+  placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
   textFieldProps?: Partial<TextFieldProps>;

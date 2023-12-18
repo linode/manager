@@ -167,7 +167,7 @@ describe('paymentToActivityFeedItem', () => {
         },
         { zone: 'utc' }
       );
-      const testDateISO = testDate.toISO();
+      const testDateISO = testDate.toISO()!;
       expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
         testDate.minus({ days: 30 }).toISO()
       );

@@ -59,7 +59,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
     }
   }, [inputtedUsername, profile]);
 
-  const inputRef = React.useCallback(
+  const inputRef = React.useCallback<(node: any) => void>(
     (node) => {
       /**
        * focus on first textfield when modal is opened

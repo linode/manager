@@ -623,7 +623,7 @@ export const getCutoffFromDateRange = (
       outputDate = DateTime.fromMillis(0, { zone: 'utc' });
       break;
   }
-  return outputDate.startOf('day').toISO();
+  return outputDate.startOf('day').toISO()!;
 };
 
 /**

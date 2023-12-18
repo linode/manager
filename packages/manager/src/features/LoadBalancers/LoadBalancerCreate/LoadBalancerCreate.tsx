@@ -60,7 +60,7 @@ export const LoadBalancerCreate = () => {
         onSubmit={handleSubmit}
         validationSchema={CreateLoadBalancerSchema}
       >
-        <FormikForm>
+        <FormikForm placeholder={undefined}>
           <Stack spacing={3}>
             <LoadBalancerLabel />
             <LoadBalancerRegions />

@@ -7,6 +7,7 @@ interface State {
 }
 
 interface Props {
+  children: JSX.Element;
   renderError: (errorMsg: string) => JSX.Element;
 }
 

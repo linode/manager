@@ -304,7 +304,7 @@ export const getEstimatedCloneTime = (
     minutes: estimatedTimeInMinutes,
     seconds: estimatedTimeInMinutes > 0 ? 1 : 0, // in case less than 1 min
   });
-  let humanizedEstimate = then.toRelative(now.toObject());
+  let humanizedEstimate = then.toRelative();
   const prefixHumanized = 'in ';
   if (humanizedEstimate?.startsWith(prefixHumanized)) {
     humanizedEstimate = humanizedEstimate?.substring(prefixHumanized.length);

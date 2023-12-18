@@ -75,6 +75,7 @@ describe('childrenContainsNoText', () => {
   it('should return true if children are not valid React elements', () => {
     const invalidChildren = {};
     const emptyArray: React.ReactNode[] = [];
+    // @ts-expect-error passing invalid type for testing
     expect(childrenContainsNoText(invalidChildren)).toBe(true);
     expect(childrenContainsNoText(emptyArray)).toBe(true);
   });
