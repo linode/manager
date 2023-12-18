@@ -88,7 +88,7 @@ describe('Create API Token Drawer', () => {
 
   it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', async () => {
     server.use(
-      rest.get('*/account/users/parent-user', (req, res, ctx) => {
+      rest.get('*/account/users/*', (req, res, ctx) => {
         return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
       })
     );
@@ -103,21 +103,20 @@ describe('Create API Token Drawer', () => {
     expect(childScope).toBeInTheDocument();
   });
 
-  // TODO: fix failing test
-  it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', async () => {
+  it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
     server.use(
-      rest.get('*/account/users/test-user', (req, res, ctx) => {
+      rest.get('*/account/users/*', (req, res, ctx) => {
         return res(ctx.json(accountUserFactory.build({ user_type: null })));
       })
     );
 
-    const { findByText } = renderWithTheme(
+    const { queryByText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />,
       {
         flags: { parentChildAccountAccess: true },
       }
     );
-    const childScope = await findByText('Child Account Access');
+    const childScope = queryByText('Child Account Access');
     expect(childScope).not.toBeInTheDocument();
   });
 
