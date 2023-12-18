@@ -12,7 +12,7 @@ interface Props {
   selectedRegion: string;
 }
 
-export const BucketRegions: React.FC<Props> = (props) => {
+export const BucketRegions = (props: Props) => {
   const { disabled, error, onBlur, onChange, required, selectedRegion } = props;
 
   const { data: regions, error: regionsError } = useRegionsQuery();
