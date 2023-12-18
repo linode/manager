@@ -4,23 +4,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { GaugePercent, GaugePercentProps } from './GaugePercent';
 
-vi.mock('@mui/material/styles', async () => {
-  const actual = await vi.importActual('@mui/material/styles');
-  return {
-    ...actual,
-    useTheme: () => ({
-      color: {
-        grey2: '#f4f4f4',
-      },
-      palette: {
-        primary: {
-          main: '#3683dc',
-        },
-      },
-    }),
-  };
-});
-
 describe('GaugePercent Component', () => {
   const defaultProps: GaugePercentProps = {
     max: 100,
