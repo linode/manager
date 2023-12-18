@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 import Select from 'src/components/EnhancedSelect/Select';
+import { Typography } from 'src/components/Typography';
 
 export const StyledSelect = styled(Select, {
   label: 'StyledSelect',
@@ -29,4 +30,23 @@ export const StyledDivWrapper = styled('div', {
 })(({ theme }) => ({
   marginTop: theme.spacing(2),
   paddingBottom: 0,
+}));
+
+export const StyledHeaderGrid = styled(Typography, {
+  label: 'StyledHeaderGrid',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(2),
+    width: '100%',
+  },
+}));
+
+export const StyledSubHeaderGrid = styled(Typography, {
+  label: 'StyledSubHeaderGrid',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    marginLeft: 0,
+    marginTop: theme.spacing(),
+  },
 }));

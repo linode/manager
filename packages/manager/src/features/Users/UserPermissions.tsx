@@ -43,7 +43,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { StyledDivWrapper, StyledSelect } from './UserPermissions.styles';
+import {
+  StyledDivWrapper,
+  StyledHeaderGrid,
+  StyledSelect,
+  StyledSubHeaderGrid,
+} from './UserPermissions.styles';
 import {
   UserPermissionsEntitySection,
   entityNameMap,
@@ -423,15 +428,16 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <Grid
             alignItems="center"
             container
+            // direction="column"
             spacing={2}
             style={{ width: 'auto' }}
           >
-            <Grid>
+            <StyledHeaderGrid>
               <Typography data-qa-restrict-access={restricted} variant="h2">
                 General Permissions
               </Typography>
-            </Grid>
-            <Grid>
+            </StyledHeaderGrid>
+            <StyledSubHeaderGrid>
               <Toggle
                 tooltipText={
                   username === currentUser
@@ -441,9 +447,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 checked={!restricted}
                 disabled={username === currentUser}
                 onChange={this.onChangeRestricted}
-                sx={{ marginRight: '3px' }}
               />
-            </Grid>
+            </StyledSubHeaderGrid>
             <Grid>
               <Typography
                 sx={{ fontFamily: (theme) => theme.font.bold }}
