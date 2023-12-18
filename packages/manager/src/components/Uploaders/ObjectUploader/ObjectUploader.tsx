@@ -1,4 +1,5 @@
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
+import { AxiosProgressEvent } from 'axios';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
@@ -10,14 +11,8 @@ import { updateBucket } from 'src/queries/objectStorage';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import { uploadObject } from '../requests';
-import { FileUpload } from './FileUpload';
-import {
-  StyledDropZoneContent,
-  StyledDropZoneCopy,
-  StyledFileUploadsContainer,
-  useStyles,
-} from './ObjectUploader.styles';
+import { uploadObject } from '../../../features/ObjectStorage/requests';
+import { FileUpload } from '../FileUpload';
 import {
   MAX_FILE_SIZE_IN_BYTES,
   MAX_NUM_UPLOADS,
@@ -26,16 +21,36 @@ import {
   curriedObjectUploaderReducer,
   defaultState,
   pathOrFileName,
-} from './reducer';
-import { AxiosProgressEvent } from 'axios';
+} from '../reducer';
+import {
+  StyledDropZoneContent,
+  StyledDropZoneCopy,
+  StyledFileUploadsContainer,
+  useStyles,
+} from './ObjectUploader.styles';
 
 interface Props {
+  /**
+   * The Object Storage bucket to upload to.
+   */
   bucketName: string;
+  /**
+   * The Object Storage cluster to upload to.
+   */
   clusterId: string;
+  /**
+   * A function that is called when an Object is uploaded successfully so we can manually update our local store to reflect the upload
+   */
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
+  /**
+   * The Object Storage prefix (path) to upload to.
+   */
   prefix: string;
 }
 
+/**
+ * This component enables users to attach and upload files from a device to the specified Object Storage cluster and bucket.
+ */
 export const ObjectUploader = React.memo((props: Props) => {
   const { bucketName, clusterId, prefix } = props;
   const { enqueueSnackbar } = useSnackbar();

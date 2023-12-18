@@ -56,7 +56,7 @@ const LinodePubKey = () => {
     const errorMessage = getErrorStringOrDefault(error);
     return (
       <StyledErrorStatePaper>
-        <ErrorState cozy errorText={errorMessage} />
+        <ErrorState errorText={errorMessage} />
       </StyledErrorStatePaper>
     );
   }

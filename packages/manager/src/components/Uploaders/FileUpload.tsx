@@ -32,6 +32,11 @@ export interface FileUploadProps {
   url?: string;
 }
 
+/**
+ * This component enables users to attach and upload files from a device.
+ * - Include any file restrictions or limits in the helper text.
+ * - Dragover effect and release capability occurs when a user drags a file or files directly onto the file upload box. This is called the “drop zone”.
+ */
 export const FileUpload = React.memo((props: FileUploadProps) => {
   const { classes, cx } = useStyles();
 

@@ -6,23 +6,23 @@ import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+import { FileUpload } from 'src/components/Uploaders/FileUpload';
 import {
   StyledCopy,
   StyledDropZoneContentDiv,
   StyledDropZoneDiv,
   StyledFileUploadsDiv,
   StyledUploadButton,
-} from 'src/components/FileUploader/FileUploader.styles';
-import { uploadImageFile } from 'src/features/Images/requests';
-import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
-import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
+} from 'src/components/Uploaders/ImageUploader/ImageUploader.styles';
+import { onUploadProgressFactory } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import {
   MAX_FILE_SIZE_IN_BYTES,
   MAX_PARALLEL_UPLOADS,
   curriedObjectUploaderReducer,
   defaultState,
   pathOrFileName,
-} from 'src/features/ObjectStorage/ObjectUploader/reducer';
+} from 'src/components/Uploaders/reducer';
+import { uploadImageFile } from 'src/features/Images/requests';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { queryKey, useUploadImageQuery } from 'src/queries/images';
@@ -31,20 +31,46 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { sendImageUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-interface FileUploaderProps {
+interface ImageUploaderProps {
+  /**
+   * An error to display if an upload error occurred.
+   */
   apiError: string | undefined;
+  /**
+   * The description of the upload that will be sent to the Linode API (used for Image uploads)
+   */
   description?: string;
+  /**
+   * Disables the ability to select image(s) to upload.
+   */
   dropzoneDisabled: boolean;
   isCloudInit?: boolean;
+  /**
+   * The label of the upload that will be sent to the Linode API (used for Image uploads).
+   */
   label: string;
+  /**
+   * A function that is called when an upload is successful.
+   */
   onSuccess?: () => void;
+  /**
+   * The region ID to upload the image to.
+   */
   region: string;
-  // Send a function for canceling the upload back to the parent.
+  /**
+   * Allows you to set a cancel upload function in the parent component.
+   */
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
+  /**
+   * A function that allows you to set an error value in the parent component.
+   */
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
 }
 
-export const FileUploader = React.memo((props: FileUploaderProps) => {
+/**
+ * This component enables users to attach and upload images from a device.
+ */
+export const ImageUploader = React.memo((props: ImageUploaderProps) => {
   const {
     apiError,
     description,
@@ -344,6 +370,7 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
         {!hideDropzoneBrowseBtn ? (
           <StyledUploadButton
             buttonType="primary"
+            data-testid="upload-button"
             disabled={dropzoneDisabled}
             onClick={open}
           >
