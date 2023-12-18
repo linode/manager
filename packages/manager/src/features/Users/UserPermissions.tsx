@@ -13,6 +13,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -50,6 +51,7 @@ import {
 interface Props {
   clearNewUser: () => void;
   currentUser?: string;
+  queryClient: QueryClient;
   username?: string;
 }
 
@@ -283,6 +285,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   onChangeRestricted = () => {
     const { username } = this.props;
+    this.props.queryClient.invalidateQueries(['account', 'users']);
     this.setState({
       errors: [],
       loadingGrants: true,
