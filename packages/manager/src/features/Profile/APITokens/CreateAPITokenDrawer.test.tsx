@@ -86,35 +86,39 @@ describe('Create API Token Drawer', () => {
     getByText('In 6 months');
   });
 
-  // TODO: fix - cannot find text
-  it.skip('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', () => {
+  it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', async () => {
     server.use(
-      // rest.get('*/profile', (req, res, ctx) => {
-      //   return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
-      // }),
       rest.get('*/account/users/parent-user', (req, res, ctx) => {
         return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
       })
     );
 
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
-    expect(getByText('Child Account Access')).toBeInTheDocument();
+    const { findByText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
+    const childScope = await findByText('Child Account Access');
+    expect(childScope).toBeInTheDocument();
   });
 
   // TODO: fix - cannot find text
-  it.skip('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
+  it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', async () => {
     server.use(
       rest.get('*/account/users/test-user', (req, res, ctx) => {
         return res(ctx.json(accountUserFactory.build({ user_type: null })));
       })
     );
 
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
-    expect(getByText('Child Account Access')).not.toBeInTheDocument();
+    const { findByText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
+    const childScope = await findByText('Child Account Access');
+    expect(childScope).not.toBeInTheDocument();
   });
 
   it('Should close when Cancel is pressed', () => {
