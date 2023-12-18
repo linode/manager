@@ -68,10 +68,10 @@ export type AccountCapability =
   | 'Machine Images'
   | 'Managed Databases'
   | 'NodeBalancers'
+  | 'Object Storage Access Key Regions'
   | 'Object Storage'
   | 'Vlans'
-  | 'VPCs'
-  | 'Object Storage Access Key Regions';
+  | 'VPCs';
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
