@@ -64,7 +64,7 @@
     "react-router-hash-link": "^2.3.1",
     "react-select": "~3.1.0",
     "react-vnc": "^0.5.3",
-    "react-waypoint": "~9.0.2",
+    "react-waypoint": "^10.3.0",
     "recharts": "^2.9.3",
     "recompose": "^0.30.0",
     "redux": "^4.0.4",
