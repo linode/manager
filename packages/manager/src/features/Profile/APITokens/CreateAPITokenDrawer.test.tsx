@@ -99,18 +99,15 @@ describe('Create API Token Drawer', () => {
     getByText('In 6 months');
   });
 
-  it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', async () => {
+  it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', () => {
     queryMocks.useAccountUser.mockReturnValue({
       data: accountUserFactory.build({ user_type: 'parent' }),
     });
 
-    const { findByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
-    );
-    const childScope = await findByText('Child Account Access');
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
+      flags: { parentChildAccountAccess: true },
+    });
+    const childScope = getByText('Child Account Access');
     expect(childScope).toBeInTheDocument();
   });
 

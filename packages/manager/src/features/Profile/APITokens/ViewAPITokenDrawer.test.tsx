@@ -42,10 +42,7 @@ describe('View API Token Drawer', () => {
   });
 
   it('should show all permissions as read/write with wildcard scopes', () => {
-    const { getByTestId } = renderWithTheme(
-      <ViewAPITokenDrawer {...props} />,
-      {}
-    );
+    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
     for (const permissionName of nonParentPerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
         'aria-label',
@@ -121,12 +118,12 @@ describe('View API Token Drawer', () => {
     }
   });
 
-  it('should show Child Account Access scope with read/write perms for a parent user account with the parent/child feature flag on', async () => {
+  it('should show Child Account Access scope with read/write perms for a parent user account with the parent/child feature flag on', () => {
     queryMocks.useAccountUser.mockReturnValue({
       data: accountUserFactory.build({ user_type: 'parent' }),
     });
 
-    const { findByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <ViewAPITokenDrawer
         {...props}
         token={appTokenFactory.build({
@@ -138,7 +135,7 @@ describe('View API Token Drawer', () => {
       }
     );
 
-    const childScope = await findByText('Child Account Access');
+    const childScope = getByText('Child Account Access');
     const expectedScopeLevels = {
       child_account: 2,
     } as const;
