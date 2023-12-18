@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import 'font-logos/assets/font-logos.css';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider as ReduxStoreProvider } from 'react-redux';
@@ -97,7 +97,9 @@ async function loadApp() {
     // This ensures the MSW is setup before we start making API calls.
     await loadDevTools(store);
   }
-  ReactDOM.render(<Main />, document.getElementById('root'));
+  const container = document.getElementById('root')!;
+  const root = createRoot(container);
+  root.render(<Main />);
 }
 
 loadApp();
