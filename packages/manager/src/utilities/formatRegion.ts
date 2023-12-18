@@ -34,7 +34,7 @@ export const getSelectedRegion = (
   regions: Region[],
   selectedRegionId: string
 ): Region | undefined => {
-  return regions.find((thisRegion) => selectedRegionId === thisRegion?.id);
+  return regions.find((thisRegion) => selectedRegionId === thisRegion.id);
 };
 
 export const getSelectedRegionGroup = (
