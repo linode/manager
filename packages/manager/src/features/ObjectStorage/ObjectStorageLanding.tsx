@@ -26,7 +26,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
-import { CreateBucketDrawerObjMultiCluster } from './BucketLanding/CreateBucketDrawerObjMultiCluster';
+import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -172,7 +172,7 @@ export const ObjectStorageLanding = () => {
           </TabPanels>
         </React.Suspense>
         {isObjMultiClusterFlagEnabled ? (
-          <CreateBucketDrawerObjMultiCluster
+          <OMC_CreateBucketDrawer
             isOpen={isCreateBucketOpen}
             onClose={() => history.replace('/object-storage/buckets')}
           />

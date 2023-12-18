@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -6,7 +5,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -26,6 +24,7 @@ import { getGDPRDetails } from 'src/utilities/formatRegion';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { BucketRegions } from './BucketRegions';
+import { StyledEUAgreementCheckbox } from './OMC_CreateBucketDrawer.styles';
 import { OveragePricing } from './OveragePricing';
 
 interface Props {
@@ -33,7 +32,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const CreateBucketDrawerObjMultiCluster = (props: Props) => {
+export const OMC_CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
@@ -179,10 +178,3 @@ export const CreateBucketDrawerObjMultiCluster = (props: Props) => {
     </Drawer>
   );
 };
-
-const StyledEUAgreementCheckbox = styled(EUAgreementCheckbox, {
-  label: 'StyledEUAgreementCheckbox',
-})(({ theme }) => ({
-  marginButton: theme.spacing(3),
-  marginTop: theme.spacing(3),
-}));
