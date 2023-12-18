@@ -11,7 +11,7 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { getNumberAtEnd, removeNumberAtEnd } from 'src/utilities/stringUtils';
+import { getNextLabel } from 'src/utilities/stringUtils';
 
 import { ROUTE_COPY } from '../LoadBalancerDetail/Routes/constants';
 import { getRouteProtocolFromConfigurationProtocol } from '../LoadBalancerDetail/Routes/utils';
@@ -97,31 +97,6 @@ interface AddExistingRouteFormProps {
   onClose: () => void;
 }
 
-function getNextRouteLabel(
-  selectedRoute: RoutePayload,
-  routes: RoutePayload[]
-): string {
-  const numberAtEnd = getNumberAtEnd(selectedRoute.label);
-
-  let labelToReturn = '';
-
-  if (numberAtEnd === null) {
-    labelToReturn = `${selectedRoute.label}-1`;
-  } else {
-    labelToReturn = `${removeNumberAtEnd(selectedRoute.label)}${
-      numberAtEnd + 1
-    }`;
-  }
-
-  if (routes.some((r) => r.label === labelToReturn)) {
-    return getNextRouteLabel(
-      { ...selectedRoute, label: labelToReturn },
-      routes
-    );
-  }
-  return labelToReturn;
-}
-
 const AddExistingRouteForm = (props: AddExistingRouteFormProps) => {
   const { existingRoutes, onAdd, onClose } = props;
 
@@ -133,7 +108,7 @@ const AddExistingRouteForm = (props: AddExistingRouteFormProps) => {
       if (!route) {
         throw new Error('No route selected');
       }
-      onAdd({ ...route, label: getNextRouteLabel(route, existingRoutes) });
+      onAdd({ ...route, label: getNextLabel(route, existingRoutes) });
       onClose();
     },
     validate(values) {

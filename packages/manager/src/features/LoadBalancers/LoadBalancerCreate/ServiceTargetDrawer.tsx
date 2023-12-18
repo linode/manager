@@ -10,7 +10,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
-import { getNumberAtEnd, removeNumberAtEnd } from 'src/utilities/stringUtils';
+import { getNextLabel } from 'src/utilities/stringUtils';
 
 import { SERVICE_TARGET_COPY } from '../LoadBalancerDetail/ServiceTargets/constants';
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
@@ -73,31 +73,6 @@ export const ServiceTargetDrawer = (props: Props) => {
   );
 };
 
-function getNextServiceTargetLabel(
-  selectedServiceTarget: ServiceTargetPayload,
-  serviceTargets: ServiceTargetPayload[]
-): string {
-  const numberAtEnd = getNumberAtEnd(selectedServiceTarget.label);
-
-  let labelToReturn = '';
-
-  if (numberAtEnd === null) {
-    labelToReturn = `${selectedServiceTarget.label}-1`;
-  } else {
-    labelToReturn = `${removeNumberAtEnd(selectedServiceTarget.label)}${
-      numberAtEnd + 1
-    }`;
-  }
-
-  if (serviceTargets.some((r) => r.label === labelToReturn)) {
-    return getNextServiceTargetLabel(
-      { ...selectedServiceTarget, label: labelToReturn },
-      serviceTargets
-    );
-  }
-  return labelToReturn;
-}
-
 interface AddExistingServiceTargetFormProps {
   configurationIndex: number;
   onClose: () => void;
@@ -129,7 +104,7 @@ const AddExistingServiceTargetForm = (
         ...values.configurations[configurationIndex].service_targets,
         {
           ...serviceTarget,
-          label: getNextServiceTargetLabel(serviceTarget, serviceTargets),
+          label: getNextLabel(serviceTarget, serviceTargets),
         },
       ]);
       onClose();

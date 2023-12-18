@@ -51,3 +51,31 @@ export function removeNumberAtEnd(str: string) {
   // Use the replace() method to remove the matched portion
   return str.replace(regex, '');
 }
+
+/**
+ * Gets the next available unique entity label
+ */
+export function getNextLabel<T extends { label: string }>(
+  selectedEntity: T,
+  allEntities: T[]
+): string {
+  const numberAtEnd = getNumberAtEnd(selectedEntity.label);
+
+  let labelToReturn = '';
+
+  if (numberAtEnd === null) {
+    labelToReturn = `${selectedEntity.label}-1`;
+  } else {
+    labelToReturn = `${removeNumberAtEnd(selectedEntity.label)}${
+      numberAtEnd + 1
+    }`;
+  }
+
+  if (allEntities.some((r) => r.label === labelToReturn)) {
+    return getNextLabel(
+      { ...selectedEntity, label: labelToReturn },
+      allEntities
+    );
+  }
+  return labelToReturn;
+}

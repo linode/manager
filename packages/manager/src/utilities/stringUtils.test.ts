@@ -1,4 +1,5 @@
 import {
+  getNextLabel,
   getNumberAtEnd,
   isNumeric,
   removeNumberAtEnd,
@@ -82,5 +83,16 @@ describe('removeNumberAtEnd', () => {
   });
   it('should not remove the first number', () => {
     expect(removeNumberAtEnd('1-2-3')).toBe('1-2-');
+  });
+});
+
+describe('getNextLabel', () => {
+  it('should append a number to get the next label', () => {
+    expect(getNextLabel({ label: 'test' }, [{ label: 'test' }])).toBe('test-1');
+  });
+  it('should not duplicate labels so that the returned label is unique', () => {
+    expect(getNextLabel({ label: 'test' }, [{ label: 'test-1' }])).toBe(
+      'test-2'
+    );
   });
 });
