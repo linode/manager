@@ -1,7 +1,8 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 
 import Select from 'src/components/EnhancedSelect/Select';
-import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
 
 export const StyledSelect = styled(Select, {
   label: 'StyledSelect',
@@ -32,21 +33,29 @@ export const StyledDivWrapper = styled('div', {
   paddingBottom: 0,
 }));
 
-export const StyledHeaderGrid = styled(Typography, {
+export const StyledHeaderGrid = styled(Grid, {
   label: 'StyledHeaderGrid',
 })(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    marginLeft: theme.spacing(1),
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
     width: '100%',
   },
 }));
 
-export const StyledSubHeaderGrid = styled(Typography, {
+export const StyledSubHeaderGrid = styled(Grid, {
   label: 'StyledSubHeaderGrid',
 })(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    marginLeft: 0,
-    marginTop: theme.spacing(),
+    padding: 0,
+  },
+}));
+
+export const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
+  paddingBottom: 0,
+  paddingTop: 0,
+  [theme.breakpoints.down('sm')]: {
+    paddingBottom: theme.spacing(2),
   },
 }));

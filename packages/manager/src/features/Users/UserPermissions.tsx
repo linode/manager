@@ -46,6 +46,7 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import {
   StyledDivWrapper,
   StyledHeaderGrid,
+  StyledPaper,
   StyledSelect,
   StyledSubHeaderGrid,
 } from './UserPermissions.styles';
@@ -419,18 +420,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
-        <Paper
-          sx={{
-            paddingBottom: 0,
-            paddingTop: 0,
-          }}
-        >
+        <StyledPaper>
           <Grid
             alignItems="center"
             container
-            // direction="column"
             spacing={2}
-            style={{ width: 'auto' }}
+            sx={{ width: 'auto' }}
           >
             <StyledHeaderGrid>
               <Typography data-qa-restrict-access={restricted} variant="h2">
@@ -449,7 +444,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 onChange={this.onChangeRestricted}
               />
             </StyledSubHeaderGrid>
-            <Grid>
+            <Grid sx={{ padding: 0 }}>
               <Typography
                 sx={{ fontFamily: (theme) => theme.font.bold }}
                 variant="subtitle2"
@@ -458,7 +453,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
           </Grid>
-        </Paper>
+        </StyledPaper>
         {restricted && this.renderPermissions()}
       </Box>
     );
