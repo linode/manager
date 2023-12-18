@@ -35,7 +35,7 @@ export const Routes = ({ configurationIndex }: Props) => {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState<number>();
 
-  const [query, setQuery] = useState<string>();
+  const [query, setQuery] = useState<string>('');
 
   const configuration = values.configurations![configurationIndex];
 

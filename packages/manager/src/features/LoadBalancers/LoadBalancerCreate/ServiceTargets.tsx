@@ -32,7 +32,7 @@ export const ServiceTargets = ({ configurationIndex }: Props) => {
   } = useFormikContext<LoadBalancerCreateFormData>();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [query, setQuery] = useState<string>();
+  const [query, setQuery] = useState<string>('');
   const [
     selectedServiceTargetIndex,
     setSelectedServiceTargetIndex,
