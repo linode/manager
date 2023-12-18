@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -47,6 +46,46 @@ export const EventsLanding = (props: Props) => {
     isLoading,
   } = useEventsInfiniteQuery(filter);
 
+  const renderTableBody = () => {
+    if (isLoading) {
+      return (
+        <TableRowLoading
+          columns={4}
+          responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
+          rows={5}
+        />
+      );
+    } else if (error) {
+      return <TableRowError colSpan={12} message={error[0].reason} />;
+    } else if (events && events.length === 0) {
+      return (
+        <TableRowEmpty
+          colSpan={12}
+          message={emptyMessage ?? "You don't have any events on your account."}
+        />
+      );
+    } else {
+      return (
+        <>
+          {events?.map((event) => (
+            <EventRow
+              entityId={entityId}
+              event={event}
+              key={`event-${event.id}`}
+            />
+          ))}
+          {isFetchingNextPage && (
+            <TableRowLoading
+              columns={4}
+              responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
+              rows={5}
+            />
+          )}
+        </>
+      );
+    }
+  };
+
   return (
     <>
       {/* Only display this title on the main Events landing page */}
@@ -57,9 +96,7 @@ export const EventsLanding = (props: Props) => {
             <Hidden smDown>
               <TableCell style={{ padding: 0, width: '1%' }} />
             </Hidden>
-            <StyledLabelTableCell data-qa-events-subject-header>
-              Event
-            </StyledLabelTableCell>
+            <StyledLabelTableCell>Event</StyledLabelTableCell>
             <StyledTableCell>Relative Date</StyledTableCell>
             <Hidden mdDown>
               <StyledTableCell data-qa-events-time-header>
@@ -68,16 +105,7 @@ export const EventsLanding = (props: Props) => {
             </Hidden>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {renderTableBody(
-            isLoading,
-            isFetchingNextPage,
-            entityId,
-            error?.[0].reason,
-            events,
-            emptyMessage
-          )}
-        </TableBody>
+        <TableBody>{renderTableBody()}</TableBody>
       </Table>
       {hasNextPage ? (
         <Waypoint onEnter={() => fetchNextPage()}>
@@ -92,56 +120,3 @@ export const EventsLanding = (props: Props) => {
     </>
   );
 };
-
-export const renderTableBody = (
-  loading: boolean,
-  isRequesting: boolean,
-  entityId?: number,
-  error?: string,
-  events?: Event[],
-  emptyMessage = "You don't have any events on your account."
-) => {
-  if (loading) {
-    return (
-      <TableRowLoading
-        columns={4}
-        responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
-        rows={5}
-      />
-    );
-  } else if (error) {
-    return (
-      <TableRowError colSpan={12} data-qa-events-table-error message={error} />
-    );
-  } else if (events && events.length === 0) {
-    return (
-      <TableRowEmpty
-        colSpan={12}
-        data-qa-events-table-empty
-        message={emptyMessage}
-      />
-    );
-  } else {
-    return (
-      <>
-        {events?.map((thisEvent, idx) => (
-          <EventRow
-            entityId={entityId}
-            event={thisEvent}
-            key={`event-list-item-${idx}`}
-          />
-        ))}
-        {isRequesting && (
-          <TableRowLoading
-            columns={4}
-            responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
-            rows={5}
-          />
-        )}
-      </>
-    );
-  }
-};
-
-
-export default EventsLanding;
