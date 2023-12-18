@@ -317,14 +317,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <StyledDivWrapper>
+      <StyledDivWrapper data-qa-billing-section>
         <Grid
           sx={(theme) => ({
             marginTop: theme.spacing(2),
             paddingBottom: 0,
           })}
           container
-          data-qa-billing-section
           spacing={2}
         >
           <Grid>
