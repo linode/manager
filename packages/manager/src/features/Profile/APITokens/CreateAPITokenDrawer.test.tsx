@@ -103,7 +103,7 @@ describe('Create API Token Drawer', () => {
     expect(childScope).toBeInTheDocument();
   });
 
-  // TODO: fix - cannot find text
+  // TODO: fix failing test
   it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', async () => {
     server.use(
       rest.get('*/account/users/test-user', (req, res, ctx) => {
