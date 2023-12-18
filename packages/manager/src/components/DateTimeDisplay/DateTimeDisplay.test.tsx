@@ -10,6 +10,38 @@ vi.mock('../../utilities/getUserTimezone');
 const APIDate = '2018-07-20T04:23:17';
 
 describe('DateTimeDisplay component', () => {
+  it('should not display the time', () => {
+    const props = { displayTime: false, value: APIDate };
+    const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
+
+    getByText('2018-07-20');
+  });
+
+  it('should display the time', () => {
+    const props = { displayTime: true, value: APIDate };
+    const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
+
+    getByText('2018-07-20 04:23');
+  });
+
+  it('should format the time based on the specified format only', () => {
+    const props = {
+      displayTime: false,
+      format: 'MM-dd-yyyy HH:mm',
+      value: APIDate,
+    };
+    const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
+
+    getByText('07-20-2018 04:23');
+  });
+
+  it('should format the time based on the specified format only pt2', () => {
+    const props = { displayTime: true, format: 'MM-dd-yyyy', value: APIDate };
+    const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
+
+    getByText('07-20-2018');
+  });
+
   describe('Non-humanized dates', () => {
     it('should be displayed in 24-hour ISO format', () => {
       const props = { humanizeCutoff: undefined, value: APIDate };
