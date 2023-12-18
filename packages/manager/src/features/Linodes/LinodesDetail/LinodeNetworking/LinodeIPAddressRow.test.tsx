@@ -62,7 +62,7 @@ describe('LinodeIPAddressRow', () => {
     expect(deleteBtn).toBeDisabled();
     const deleteBtnTooltip = buttons[2];
     fireEvent.mouseEnter(deleteBtnTooltip);
-    const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
+    const publicIpsUnassignedTooltip = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
     );
@@ -71,7 +71,7 @@ describe('LinodeIPAddressRow', () => {
     expect(editRDNSBtn).toBeDisabled();
     const editRDNSBtnTooltip = buttons[4];
     fireEvent.mouseEnter(editRDNSBtnTooltip);
-    const publicIpsUnassignedTooltip2 = await findByRole(/tooltip/);
+    const publicIpsUnassignedTooltip2 = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip2).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
     );

@@ -1,8 +1,6 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
-import { usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -49,27 +47,6 @@ vi.mock('react-router-dom', async () => {
 const queryClient = queryClientFactory();
 
 describe('useOrder hook', () => {
-  // wait for preferences to load
-  beforeEach(async () => {
-    await act(async () => {
-      server.use(
-        rest.get('*/profile/preferences', (_, res, ctx) => {
-          return res(
-            ctx.json({
-              sortKeys: {
-                'account-maintenance-order': preferenceOrder,
-              },
-            })
-          );
-        })
-      );
-
-      await renderHook(() => usePreferences(), {
-        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
-      }).waitForNextUpdate();
-    });
-  });
-
   it('should use default sort options when there are no query params or preference', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
       wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
@@ -97,7 +74,7 @@ describe('useOrder hook', () => {
   });
 
   it('use preferences are used when there are no query params', async () => {
-    const { result, waitFor } = renderHook(
+    const { result } = renderHook(
       () => useOrder(defaultOrder, 'account-maintenance-order'),
       {
         wrapper: (ui) => wrapWithTheme(ui, { queryClient }),

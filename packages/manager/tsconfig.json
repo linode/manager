@@ -34,7 +34,7 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "types": ["vitest/globals"],
 
     /* Completeness */
     "skipLibCheck": true,

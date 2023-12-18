@@ -16,12 +16,12 @@ describe('TextTooltip', () => {
       <TextTooltip {...props} />
     );
 
-    expect(queryByRole(/tooltip/)).not.toBeInTheDocument();
+    expect(queryByRole('tooltip')).not.toBeInTheDocument();
     expect(getByText(props.displayText)).toBeInTheDocument();
 
     fireEvent.mouseEnter(getByText(props.displayText));
 
-    const tooltip = await findByRole(/tooltip/);
+    const tooltip = await findByRole('tooltip');
 
     expect(tooltip).toBeInTheDocument();
   });
@@ -37,7 +37,7 @@ describe('TextTooltip', () => {
     );
     fireEvent.mouseEnter(getByText(props.displayText));
 
-    const tooltip = await findByRole(/tooltip/);
+    const tooltip = await findByRole('tooltip');
 
     expect(tooltip).toHaveAttribute('data-popper-placement', 'bottom');
   });

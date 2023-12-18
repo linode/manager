@@ -1,23 +1,16 @@
+import '@testing-library/jest-dom/vitest';
 import Enzyme from 'enzyme';
 // @ts-expect-error not a big deal, we can suffer
 import Adapter from 'enzyme-adapter-react-16';
 
-import { expect } from 'vitest';
-import matchers from '@testing-library/jest-dom/matchers';
-
 // // Enzyme React 17 adapter.
 // Enzyme.configure({ adapter: new Adapter() });
-
-// JSDom matchers.
-expect.extend(matchers);
 
 import { server } from './mocks/testServer';
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
-
-require('@testing-library/jest-dom/extend-expect');
 
 Enzyme.configure({ adapter: new Adapter() });
 

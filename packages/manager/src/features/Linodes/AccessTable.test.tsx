@@ -25,7 +25,7 @@ describe('AccessTable', () => {
 
     fireEvent.mouseEnter(helpIconButton);
 
-    const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
+    const publicIpsUnassignedTooltip = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
     );
