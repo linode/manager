@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
+import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { Typography } from 'src/components/Typography';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { queryKey } from 'src/queries/accountPayment';

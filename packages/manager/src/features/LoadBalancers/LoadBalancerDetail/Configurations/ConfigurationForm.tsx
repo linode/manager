@@ -2,7 +2,7 @@ import {
   CreateConfigurationSchema,
   UpdateConfigurationSchema,
 } from '@linode/validation';
-import { useFormik } from 'formik';
+import { useFormik, yupToFormErrors } from 'formik';
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -28,9 +28,11 @@ import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 import {
+  CONFIGURATION_COPY,
   getConfigurationPayloadFromConfiguration,
   initialValues,
-} from './utils';
+  protocolOptions,
+} from './constants';
 
 import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
 
@@ -72,7 +74,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       ? useLoadBalancerConfigurationMutation
       : useLoadBalancerConfigurationCreateMutation;
 
-  const { error, isLoading, mutateAsync } = useMutation(
+  const { error, isLoading, mutateAsync, reset } = useMutation(
     loadbalancerId,
     configuration?.id ?? -1
   );
@@ -100,16 +102,24 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         helpers.setErrors(getFormikErrorsFromAPIErrors(error));
       }
     },
-    validationSchema,
+    validate(values) {
+      // We must use `validate` insted of validationSchema because Formik decided to convert
+      // "" to undefined before passing the values to yup. This makes it hard to validate `label`.
+      // See https://github.com/jaredpalmer/formik/issues/805
+      try {
+        validationSchema.validateSync(values, { abortEarly: false });
+        return {};
+      } catch (error) {
+        return yupToFormErrors(error);
+      }
+    },
+    // Prevent errors from being cleared when we show API errors
+    validateOnBlur: !error,
+    validateOnChange: !error,
   });
 
-  const protocolOptions = [
-    { label: 'HTTPS', value: 'https' },
-    { label: 'HTTP', value: 'http' },
-    { label: 'TCP', value: 'tcp' },
-  ];
-
   const handleRemoveCert = (index: number) => {
+    formik.setFieldTouched('certificates');
     formik.values.certificates.splice(index, 1);
     formik.setFieldValue('certificates', formik.values.certificates);
   };
@@ -123,14 +133,23 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   };
 
   const handleAddCerts = (certificates: Configuration['certificates']) => {
+    formik.setFieldTouched('certificates');
     formik.setFieldValue('certificates', [
       ...formik.values.certificates,
       ...certificates,
     ]);
   };
 
+  const handleReset = () => {
+    formik.resetForm();
+    reset();
+  };
+
   const generalErrors = error?.reduce((acc, { field, reason }) => {
-    if (!field || !['label', 'port', 'protocol'].includes(field)) {
+    if (
+      !field ||
+      (formik.values.protocol !== 'https' && field.startsWith('certificates'))
+    ) {
       return acc ? `${acc}, ${reason}` : reason;
     }
     return acc;
@@ -158,7 +177,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         <Stack direction="row" spacing={2}>
           <Autocomplete
             textFieldProps={{
-              labelTooltipText: 'TODO: AGLB',
+              labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
             value={protocolOptions.find(
               (option) => option.value === formik.values.protocol
@@ -172,7 +191,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
           <TextField
             errorText={formik.errors.port}
             label="Port"
-            labelTooltipText="TODO: AGLB"
+            labelTooltipText={CONFIGURATION_COPY.Port}
             name="port"
             onChange={formik.handleChange}
             type="number"
@@ -183,7 +202,10 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
           <Stack maxWidth="600px">
             <Stack alignItems="center" direction="row">
               <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
-              <TooltipIcon status="help" text="TODO: AGLB" />
+              <TooltipIcon
+                status="help"
+                text={CONFIGURATION_COPY.Certificates}
+              />
             </Stack>
             {formik.touched.certificates &&
               typeof formik.errors.certificates === 'string' && (
@@ -195,6 +217,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
                 />
               )}
             <CertificateTable
+              errors={
+                Array.isArray(formik.errors.certificates)
+                  ? formik.errors.certificates
+                  : []
+              }
               certificates={formik.values.certificates}
               loadbalancerId={loadbalancerId}
               onRemove={handleRemoveCert}
@@ -202,7 +229,6 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             <Box mt={2}>
               <Button
                 onClick={() => {
-                  formik.setFieldTouched('certificates');
                   setIsApplyCertDialogOpen(true);
                 }}
                 buttonType="outlined"
@@ -217,6 +243,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       <Divider spacingBottom={16} spacingTop={16} />
       <Stack spacing={2}>
         <Typography variant="h2">Routes</Typography>
+        {formik.errors.route_ids && (
+          <Notice text={formik.errors.route_ids} variant="error" />
+        )}
         <Stack direction="row" flexWrap="wrap" gap={2}>
           <Button
             buttonType="outlined"
@@ -239,15 +268,30 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       </Stack>
       <Divider spacingBottom={16} spacingTop={16} />
       <Stack direction="row" flexWrap="wrap" gap={2} justifyContent="flex-end">
+        {mode === 'edit' && formik.dirty && (
+          <Button buttonType="secondary" onClick={handleReset}>
+            Reset
+          </Button>
+        )}
+        {mode === 'edit' && (
+          <Button
+            buttonType="secondary"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
+            Delete
+          </Button>
+        )}
+        {mode === 'create' && (
+          <Button buttonType="secondary" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
         <Button
-          onClick={
-            mode === 'edit' ? () => setIsDeleteDialogOpen(true) : onCancel
-          }
-          buttonType="secondary"
+          buttonType="primary"
+          disabled={mode === 'edit' && !formik.dirty}
+          loading={isLoading}
+          type="submit"
         >
-          {mode === 'edit' ? 'Delete' : 'Cancel'}
-        </Button>
-        <Button buttonType="primary" loading={isLoading} type="submit">
           {mode == 'edit' ? 'Save' : 'Create'} Configuration
         </Button>
       </Stack>

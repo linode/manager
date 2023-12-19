@@ -1,7 +1,7 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
@@ -25,7 +25,7 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { useImageAndLinodeGrantCheck } from './utils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionPanel: {
     marginTop: theme.spacing(2),
   },
@@ -94,7 +94,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
     selectedLinode,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   const {
@@ -397,14 +397,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
           label: 'Cancel',
           onClick: close,
         }}
-        updateFor={[
-          requirementsMet,
-          classes,
-          submitting,
-          mode,
-          label,
-          description,
-        ]}
         style={{ marginTop: 16 }}
       />
     </Drawer>

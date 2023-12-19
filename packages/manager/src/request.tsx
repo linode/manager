@@ -192,14 +192,20 @@ export const getXCustomerUuidHeader = (
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use((config) => {
     const state = store.getState();
-    /** Will end up being "Admin: 1234" or "Bearer 1234" */
+    /** Will end up being "Admin 1234" or "Bearer 1234" */
     const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
 
     const url = getURL(config);
 
     const headers = new AxiosHeaders(config.headers);
 
-    headers.setAuthorization(token);
+    // If headers are explicitly passed to our endpoint via
+    // setHeaders(), we don't want this overridden.
+    const hasExplicitAuthToken = headers.hasAuthorization();
+
+    const bearer = hasExplicitAuthToken ? headers.getAuthorization() : token;
+
+    headers.setAuthorization(bearer);
 
     return {
       ...config,

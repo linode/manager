@@ -1,6 +1,6 @@
 import Dialog from '@mui/material/Dialog';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useFlags } from './hooks/useFlags';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   input: {
     width: '100%',
   },
@@ -59,7 +59,7 @@ interface Props {
 }
 
 export const GoTo = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
   const flags = useFlags();

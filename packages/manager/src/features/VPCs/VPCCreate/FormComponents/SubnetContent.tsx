@@ -30,9 +30,11 @@ export const SubnetContent = (props: Props) => {
         Subnets
       </StyledHeaderTypography>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
-        {VPC_CREATE_FORM_SUBNET_HELPER_TEXT}
-        <Link to="#"> Learn more</Link>.
-        {/* @TODO VPC: subnet learn more link here */}
+        {VPC_CREATE_FORM_SUBNET_HELPER_TEXT}{' '}
+        <Link to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/">
+          Learn more
+        </Link>
+        .
       </StyledBodyTypography>
       {subnetErrors
         ? subnetErrors.map((apiError: APIError) => (

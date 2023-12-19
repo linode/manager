@@ -3,29 +3,32 @@ import cx from 'classnames';
 import * as React from 'react';
 
 import { Button, ButtonProps } from 'src/components/Button/Button';
-import { RenderGuard } from 'src/components/RenderGuard';
 
 import { Box, BoxProps } from '../Box';
 
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
   'data-testid'?: string;
+  'data-qa-form-data-loading'?: boolean;
   label: string;
 }
 
-interface ActionPanelProps extends BoxProps {
+export interface ActionPanelProps extends BoxProps {
   /**
    * primary type actionable button custom aria descripton.
    */
   primaryButtonProps?: ActionButtonsProps;
-
   /**
    * secondary type actionable button custom aria descripton.
    */
   secondaryButtonProps?: ActionButtonsProps;
 }
 
-const ActionsPanelComponent = (props: ActionPanelProps) => {
+/**
+ * `ActionPanel` is a container for primary and secondary actions (ex: "Cancel" & "Save")
+ * It can also be used to render a single action within modals or drawers for styling and layout consistency.
+ */
+export const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
     primaryButtonProps,
@@ -82,7 +85,3 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   paddingBottom: spacing(1),
   paddingTop: spacing(1),
 }));
-
-const ActionsPanel = RenderGuard(ActionsPanelComponent);
-
-export { ActionsPanel };

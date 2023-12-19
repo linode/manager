@@ -8,6 +8,7 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 
 import { LinodeOrIPSelect } from './LinodeOrIPSelect';
+import { SERVICE_TARGET_COPY } from './constants';
 
 import type { Endpoint } from '@linode/api-v4';
 
@@ -38,6 +39,9 @@ export const AddEndpointForm = (props: Props) => {
     <>
       <Box>
         <LinodeOrIPSelect
+          textFieldProps={{
+            labelTooltipText: SERVICE_TARGET_COPY.Tooltips.Endpoints.IP,
+          }}
           errorText={formik.errors.ip}
           onChange={(ip) => formik.setFieldValue(`ip`, ip)}
           value={formik.values.ip}
@@ -45,7 +49,7 @@ export const AddEndpointForm = (props: Props) => {
         <TextField
           errorText={formik.errors.port}
           label="Port"
-          labelTooltipText="TODO"
+          labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Endpoints.Port}
           name="port"
           onChange={formik.handleChange}
           sx={{ maxWidth: '100px' }}
@@ -55,7 +59,7 @@ export const AddEndpointForm = (props: Props) => {
         <TextField
           errorText={formik.errors.host}
           label="Host"
-          labelTooltipText="TODO"
+          labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Endpoints.Host}
           name="host"
           onChange={formik.handleChange}
           optional
@@ -71,7 +75,7 @@ export const AddEndpointForm = (props: Props) => {
           }}
           errorText={formik.errors.rate_capacity}
           label="Rate Capacity"
-          labelTooltipText="TODO"
+          labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Endpoints.Capacity}
           name="rate_capacity"
           onChange={formik.handleChange}
           sx={{ maxWidth: '275px' }}

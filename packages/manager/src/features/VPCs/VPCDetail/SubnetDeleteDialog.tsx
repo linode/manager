@@ -19,7 +19,14 @@ export const SubnetDeleteDialog = (props: Props) => {
     error,
     isLoading,
     mutateAsync: deleteSubnet,
+    reset,
   } = useDeleteSubnetMutation(vpcId, subnet?.id ?? -1);
+
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open, reset]);
 
   const onDeleteSubnet = async () => {
     await deleteSubnet();

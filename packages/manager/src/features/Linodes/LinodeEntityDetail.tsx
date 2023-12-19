@@ -1,8 +1,10 @@
+import { Config, VPC } from '@linode/api-v4/lib';
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
@@ -12,6 +14,7 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
@@ -20,7 +23,10 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
+import {
+  queryKey as linodesQueryKey,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -32,6 +38,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import {
   StyledBodyGrid,
   StyledBox,
@@ -55,7 +62,11 @@ import {
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
 
-import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type {
+  Interface,
+  Linode,
+  LinodeType,
+} from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 
 interface LinodeEntityDetailProps {
@@ -87,6 +98,14 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
+  const {
+    configInterfaceWithVPC,
+    configs,
+    isVPCOnlyLinode,
+    showVPCs,
+    vpcLinodeIsAssignedTo,
+  } = useVPCConfigInterface(linode.id);
+
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
@@ -109,15 +128,19 @@ export const LinodeEntityDetail = (props: Props) => {
     <EntityDetail
       body={
         <Body
+          configInterfaceWithVPC={configInterfaceWithVPC}
+          displayVPCSection={showVPCs}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
           ipv4={linode.ipv4}
           ipv6={trimmedIPv6}
+          isVPCOnlyLinode={isVPCOnlyLinode}
           linodeId={linode.id}
           linodeLabel={linode.label}
           numCPUs={linode.specs.vcpus}
           numVolumes={numberOfVolumes}
           region={linode.region}
+          vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
         />
       }
       footer={
@@ -134,6 +157,8 @@ export const LinodeEntityDetail = (props: Props) => {
       header={
         <Header
           backups={linode.backups}
+          configs={configs}
+          enableVPCLogic={showVPCs}
           handlers={handlers}
           image={linode.image ?? 'Unknown Image'}
           imageVendor={imageVendor}
@@ -158,6 +183,8 @@ export const LinodeEntityDetail = (props: Props) => {
 // =============================================================================
 export interface HeaderProps {
   backups: LinodeBackups;
+  configs?: Config[];
+  enableVPCLogic?: boolean;
   image: string;
   imageVendor: null | string;
   isSummaryView?: boolean;
@@ -174,9 +201,12 @@ export interface HeaderProps {
 
 const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const {
     backups,
+    configs,
+    enableVPCLogic,
     handlers,
     isSummaryView,
     linodeId,
@@ -199,7 +229,32 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     lishLaunch(id);
   };
 
-  const formattedStatus = linodeStatus.replace('_', ' ').toUpperCase();
+  const isRebootNeeded =
+    enableVPCLogic &&
+    isRunning &&
+    configs?.some((config) =>
+      config.interfaces.some(
+        (linodeInterface) =>
+          linodeInterface.purpose === 'vpc' && !linodeInterface.active
+      )
+    );
+
+  // If the Linode is running, we want to check the active status of its interfaces to determine whether it needs to
+  // be rebooted or not. So, we need to invalidate the linode configs query to get the most up to date information.
+  React.useEffect(() => {
+    if (isRunning && enableVPCLogic) {
+      queryClient.invalidateQueries([
+        linodesQueryKey,
+        'linode',
+        linodeId,
+        'configs',
+      ]);
+    }
+  }, [linodeId, enableVPCLogic, isRunning, queryClient]);
+
+  const formattedStatus = isRebootNeeded
+    ? 'REBOOT NEEDED'
+    : linodeStatus.replace('_', ' ').toUpperCase();
   const formattedTransitionText = (transitionText ?? '').toUpperCase();
 
   const hasSecondaryStatus =
@@ -234,6 +289,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     >
       <Box sx={sxBoxFlex}>
         <StyledChip
+          aria-label={`Linode status ${linodeStatus}`}
           component="span"
           data-qa-linode-status
           hasSecondaryStatus={hasSecondaryStatus}
@@ -244,6 +300,13 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
           label={formattedStatus}
           pill={true}
         />
+        {isRebootNeeded && (
+          <TooltipIcon
+            status="help"
+            sxTooltipIcon={{ padding: 0 }}
+            text={VPC_REBOOT_MESSAGE}
+          />
+        )}
         {hasSecondaryStatus ? (
           <Button
             buttonType="secondary"
@@ -288,7 +351,6 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
             Launch LISH Console
           </Button>
         </Hidden>
-
         <LinodeActionMenu
           linodeBackups={backups}
           linodeId={linodeId}
@@ -307,41 +369,42 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 // Body
 // =============================================================================
 export interface BodyProps {
+  configInterfaceWithVPC?: Interface;
+  displayVPCSection: boolean;
   gbRAM: number;
   gbStorage: number;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
+  isVPCOnlyLinode: boolean;
   linodeId: number;
   linodeLabel: string;
   numCPUs: number;
   numVolumes: number;
   region: string;
+  vpcLinodeIsAssignedTo?: VPC;
 }
 
 export const Body = React.memo((props: BodyProps) => {
   const {
+    configInterfaceWithVPC,
+    displayVPCSection,
     gbRAM,
     gbStorage,
     ipv4,
     ipv6,
+    isVPCOnlyLinode,
     linodeId,
     linodeLabel,
     numCPUs,
     numVolumes,
     region,
+    vpcLinodeIsAssignedTo,
   } = props;
 
   const { data: profile } = useProfile();
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
-
-  const {
-    configInterfaceWithVPC,
-    displayVPCSection,
-    isVPCOnlyLinode,
-    vpcLinodeIsAssignedTo,
-  } = useVPCConfigInterface(linodeId);
 
   // Filter and retrieve subnets associated with a specific Linode ID
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(

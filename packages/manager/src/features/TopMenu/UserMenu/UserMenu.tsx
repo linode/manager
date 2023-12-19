@@ -2,7 +2,6 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -12,6 +11,7 @@ import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';

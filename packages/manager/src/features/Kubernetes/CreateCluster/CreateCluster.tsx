@@ -12,8 +12,8 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -21,6 +21,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
   getKubeHighAvailability,
@@ -41,18 +42,24 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_DC_PRICING,
+  LKE_HA_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
-import { useStyles } from './CreateCluster.styles';
+import {
+  StyledDocsLinkContainer,
+  StyledRegionSelectStack,
+  useStyles,
+} from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
 export const CreateCluster = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
@@ -82,15 +89,6 @@ export const CreateCluster = () => {
     mutateAsync: createKubernetesCluster,
   } = useCreateKubernetesClusterMutation();
 
-  // Only include regions that have LKE capability
-  const filteredRegions = React.useMemo(() => {
-    return regionsData
-      ? regionsData.filter((thisRegion) =>
-          thisRegion.capabilities.includes('Kubernetes')
-        )
-      : [];
-  }, [regionsData]);
-
   const {
     data: versionData,
     isError: versionLoadError,
@@ -100,12 +98,6 @@ export const CreateCluster = () => {
     label: thisVersion.id,
     value: thisVersion.id,
   }));
-
-  React.useEffect(() => {
-    if (filteredRegions.length === 1 && !selectedRegionID) {
-      setSelectedRegionID(filteredRegions[0].id);
-    }
-  }, [filteredRegions, selectedRegionID]);
 
   React.useEffect(() => {
     if (versions.length > 0) {
@@ -183,11 +175,6 @@ export const CreateCluster = () => {
     return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
-  const showPricingNotice = doesRegionHaveUniquePricing(
-    selectedRegionID,
-    typesData
-  );
-
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
@@ -224,35 +211,41 @@ export const CreateCluster = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               updateLabel(e.target.value)
             }
-            className={classes.inputWidth}
             data-qa-label-input
             errorText={errorMap.label}
             label="Cluster Label"
             value={label || ''}
           />
           <Divider sx={{ marginTop: 4 }} />
-          <RegionSelect
-            handleSelection={(regionID: string) =>
-              setSelectedRegionID(regionID)
-            }
-            textFieldProps={{
-              helperText: <RegionHelperText mb={2} />,
-              helperTextPosition: 'top',
-            }}
-            className={classes.regionSubtitle}
-            errorText={errorMap.region}
-            regions={filteredRegions}
-            selectedId={selectedId}
-          />
-          {showPricingNotice && (
-            <DynamicPriceNotice region={selectedRegionID} spacingBottom={16} />
-          )}
+          <StyledRegionSelectStack>
+            <Stack>
+              <RegionSelect
+                handleSelection={(regionID: string) =>
+                  setSelectedRegionID(regionID)
+                }
+                textFieldProps={{
+                  helperText: <RegionHelperText mb={2} />,
+                  helperTextPosition: 'top',
+                }}
+                currentCapability="Kubernetes"
+                errorText={errorMap.region}
+                regions={regionsData}
+                selectedId={selectedId}
+              />
+              <RegionHelperText sx={{ marginTop: 1 }} />
+            </Stack>
+            <StyledDocsLinkContainer>
+              <DocsLink
+                href="https://www.linode.com/pricing"
+                label={DOCS_LINK_LABEL_DC_PRICING}
+              />
+            </StyledDocsLinkContainer>
+          </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
           <Select
             onChange={(selected: Item<string>) => {
               setVersion(selected);
             }}
-            className={classes.inputWidth}
             errorText={errorMap.k8s_version}
             isClearable={false}
             label="Kubernetes Version"
@@ -314,6 +307,7 @@ export const CreateCluster = () => {
           highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
           pools={nodePools}
           region={selectedRegionID}
+          regionsData={regionsData}
           removePool={removePool}
           showHighAvailability={showHighAvailability}
           submitting={submitting}
