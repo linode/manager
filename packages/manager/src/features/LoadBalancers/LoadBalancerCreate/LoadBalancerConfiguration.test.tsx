@@ -10,10 +10,20 @@ import {
   initialValues,
 } from './LoadBalancerCreate';
 
+import type { Handlers } from './LoadBalancerConfigurations';
+
+export const handlers: Handlers = {
+  handleAddRoute: vi.fn(),
+  handleAddServiceTraget: vi.fn(),
+  handleCloseServiceTargetDrawer: vi.fn(),
+  handleEditRoute: vi.fn(),
+  handleEditServiceTraget: vi.fn(),
+};
+
 describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} />,
+      <LoadBalancerConfiguration handlers={handlers} index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
 
@@ -36,7 +46,7 @@ describe('LoadBalancerConfiguration', () => {
   });
   test('Should navigate to Service Targets content', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} />,
+      <LoadBalancerConfiguration handlers={handlers} index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
@@ -47,7 +57,7 @@ describe('LoadBalancerConfiguration', () => {
   });
   test('Should navigate to Routes content', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} />,
+      <LoadBalancerConfiguration index={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
@@ -57,7 +67,7 @@ describe('LoadBalancerConfiguration', () => {
   });
   test('Should be able to go previous step', () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <LoadBalancerConfiguration index={0} />,
+      <LoadBalancerConfiguration index={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));

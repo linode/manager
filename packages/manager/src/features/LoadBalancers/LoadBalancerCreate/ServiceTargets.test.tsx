@@ -6,6 +6,7 @@ import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 import { ServiceTargets } from './ServiceTargets';
+import { handlers } from './LoadBalancerConfiguration.test';
 
 const formikContext = {
   initialValues: {
@@ -27,7 +28,7 @@ const formikContext = {
 describe('ServiceTargets', () => {
   it('renders service targets stored in the form context', () => {
     const { getByText } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <ServiceTargets configurationIndex={0} />,
+      <ServiceTargets configurationIndex={0} handlers={handlers} />,
       formikContext
     );
 
@@ -36,9 +37,9 @@ describe('ServiceTargets', () => {
       getByText(serviceTarget.label);
     }
   });
-  it('can open and close the Add Service Target Drawer', () => {
+  it('can open the Add Service Target Drawer', async () => {
     const { getByText } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <ServiceTargets configurationIndex={0} />,
+      <ServiceTargets configurationIndex={0} handlers={handlers} />,
       formikContext
     );
 
@@ -48,10 +49,6 @@ describe('ServiceTargets', () => {
 
     userEvent.click(addServiceTargetButton!);
 
-    expect(getByText('Add a Service Target')).toBeVisible();
-
-    const cancelButton = getByText('Cancel').closest('button');
-
-    userEvent.click(cancelButton!);
+    expect(handlers.handleAddServiceTraget).toHaveBeenCalled();
   });
 });

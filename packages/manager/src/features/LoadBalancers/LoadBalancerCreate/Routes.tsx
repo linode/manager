@@ -16,24 +16,19 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
-import { AddRouteDrawer } from './AddRouteDrawer';
-import { EditRouteDrawer } from './EditRouteDrawer';
-
+import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   configurationIndex: number;
+  handlers: Handlers;
 }
 
-export const Routes = ({ configurationIndex }: Props) => {
+export const Routes = ({ configurationIndex, handlers }: Props) => {
   const {
     setFieldValue,
     values,
   } = useFormikContext<LoadBalancerCreateFormData>();
-
-  const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-  const [selectedRouteIndex, setSelectedRouteIndex] = useState<number>();
 
   const [query, setQuery] = useState<string>('');
 
@@ -47,11 +42,6 @@ export const Routes = ({ configurationIndex }: Props) => {
     );
   };
 
-  const handleEditRoute = (index: number) => {
-    setSelectedRouteIndex(index);
-    setIsEditDrawerOpen(true);
-  };
-
   return (
     <Stack padding={1} spacing={1}>
       <Typography variant="h2">Routes</Typography>
@@ -63,7 +53,7 @@ export const Routes = ({ configurationIndex }: Props) => {
         <Stack direction="row" gap={2}>
           <Button
             buttonType="outlined"
-            onClick={() => setIsAddDrawerOpen(true)}
+            onClick={() => handlers.handleAddRoute(configurationIndex)}
           >
             Add Route
           </Button>
@@ -83,6 +73,7 @@ export const Routes = ({ configurationIndex }: Props) => {
               ),
             }}
             hideLabel
+            inputId={`configuration-${configurationIndex}-route-filter`}
             label="Filter"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter"
@@ -116,7 +107,8 @@ export const Routes = ({ configurationIndex }: Props) => {
                     <ActionMenu
                       actionsList={[
                         {
-                          onClick: () => handleEditRoute(index),
+                          onClick: () =>
+                            handlers.handleEditRoute(index, configurationIndex),
                           title: 'Edit Label',
                         },
                         {
@@ -132,18 +124,6 @@ export const Routes = ({ configurationIndex }: Props) => {
           </TableBody>
         </Table>
       </Stack>
-      <AddRouteDrawer
-        configurationIndex={configurationIndex}
-        onClose={() => setIsAddDrawerOpen(false)}
-        open={isAddDrawerOpen}
-        protocol={configuration.protocol}
-      />
-      <EditRouteDrawer
-        configurationIndex={configurationIndex}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
-        routeIndex={selectedRouteIndex}
-      />
     </Stack>
   );
 };

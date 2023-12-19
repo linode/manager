@@ -17,26 +17,21 @@ import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 
-import { ServiceTargetDrawer } from './ServiceTargetDrawer';
-
+import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   configurationIndex: number;
+  handlers: Handlers;
 }
 
-export const ServiceTargets = ({ configurationIndex }: Props) => {
+export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
   const {
     setFieldValue,
     values,
   } = useFormikContext<LoadBalancerCreateFormData>();
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>('');
-  const [
-    selectedServiceTargetIndex,
-    setSelectedServiceTargetIndex,
-  ] = useState<number>();
 
   const configuration = values.configurations![configurationIndex];
 
@@ -46,11 +41,6 @@ export const ServiceTargets = ({ configurationIndex }: Props) => {
       `configuration[${configurationIndex}].service_targets`,
       configuration.service_targets
     );
-  };
-
-  const handleEditServiceTarget = (index: number) => {
-    setSelectedServiceTargetIndex(index);
-    setIsDrawerOpen(true);
   };
 
   return (
@@ -64,7 +54,10 @@ export const ServiceTargets = ({ configurationIndex }: Props) => {
           requests.
         </Typography>
         <Stack direction="row" gap={2}>
-          <Button buttonType="outlined" onClick={() => setIsDrawerOpen(true)}>
+          <Button
+            buttonType="outlined"
+            onClick={() => handlers.handleAddServiceTraget(configurationIndex)}
+          >
             Add Service Target
           </Button>
           <TextField
@@ -83,6 +76,7 @@ export const ServiceTargets = ({ configurationIndex }: Props) => {
               ),
             }}
             hideLabel
+            inputId={`configuration-${configurationIndex}-service-target-filter`}
             label="Filter"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter"
@@ -144,7 +138,11 @@ export const ServiceTargets = ({ configurationIndex }: Props) => {
                     <ActionMenu
                       actionsList={[
                         {
-                          onClick: () => handleEditServiceTarget(index),
+                          onClick: () =>
+                            handlers.handleEditServiceTraget(
+                              index,
+                              configurationIndex
+                            ),
                           title: 'Edit',
                         },
                         {
@@ -160,15 +158,6 @@ export const ServiceTargets = ({ configurationIndex }: Props) => {
           </TableBody>
         </Table>
       </Stack>
-      <ServiceTargetDrawer
-        onClose={() => {
-          setIsDrawerOpen(false);
-          setSelectedServiceTargetIndex(undefined);
-        }}
-        configurationIndex={configurationIndex}
-        open={isDrawerOpen}
-        serviceTargetIndex={selectedServiceTargetIndex}
-      />
     </Stack>
   );
 };

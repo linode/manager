@@ -9,11 +9,12 @@ import {
   initialValues,
 } from './LoadBalancerCreate';
 import { Routes } from './Routes';
+import { handlers } from './LoadBalancerConfiguration.test';
 
 describe('Routes (AGLB full create flow)', () => {
   it('renders a title and an add button', () => {
     const { getByText } = renderWithThemeAndFormik(
-      <Routes configurationIndex={0} />,
+      <Routes configurationIndex={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
 
@@ -39,7 +40,7 @@ describe('Routes (AGLB full create flow)', () => {
       ],
     };
     const { getByText } = renderWithThemeAndFormik(
-      <Routes configurationIndex={0} />,
+      <Routes configurationIndex={0} handlers={handlers} />,
       { initialValues: values, onSubmit: vi.fn() }
     );
 
@@ -69,7 +70,7 @@ describe('Routes (AGLB full create flow)', () => {
     };
 
     const { getByLabelText, getByText, queryByText } = renderWithThemeAndFormik(
-      <Routes configurationIndex={0} />,
+      <Routes configurationIndex={0} handlers={handlers} />,
       {
         initialValues: values,
         onSubmit: vi.fn(),
