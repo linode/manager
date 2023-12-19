@@ -1,6 +1,6 @@
 import { determineIPType } from '@linode/validation';
 
-export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.4.0/24';
+export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
 export const SUBNET_LINODE_CSV_HEADERS = [
@@ -10,7 +10,7 @@ export const SUBNET_LINODE_CSV_HEADERS = [
 ];
 
 // @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
-interface SubnetIPState {
+export interface SubnetIPState {
   availIPv4s?: number;
   ipv4?: string;
   ipv4Error?: string;
@@ -102,3 +102,49 @@ export const calculateAvailableIPv4sRFC1918 = (
 
   return SubnetMaskToAvailIPv4s[mask];
 };
+
+/**
+ * Calculates the next subnet IPv4 address to recommend when creating a subnet, based off of the last recommended ipv4 and the rest of the other subnets.
+ * @param lastRecommendedIPv4 the current IPv4 address to base our recommended IPv4 address off of
+ * @param allSubnets the subnets to check the IPs of
+ * @returns the next recommended subnet IPv4 address to use
+ *
+ * Assumption: if the inputted ipv4 is valid and in x.x.x.x/x format, then the outputted ipv4 valid and in x.x.x.x/x format
+ */
+export function getRecommendedSubnetIPv4<
+  T extends { ip?: SubnetIPState; ipv4?: string }
+>(lastRecommendedIPv4: string, allSubnets: T[]): string {
+  const [
+    firstOctet,
+    secondOctet,
+    thirdOctet,
+    fourthOctet,
+  ] = lastRecommendedIPv4.split('.');
+  const parsedThirdOctet = parseInt(thirdOctet, 10);
+  let ipv4ToReturn = '';
+
+  /**
+   * Return DEFAULT_SUBNET_IPV4_VALUE (10.0.0.0/24) if parsedThirdOctet + 1 would result in a nonsense ipv4 (ex. 10.0.256.0/24 is not an IPv4)
+   * Realistically this case will rarely be reached and acts mainly as a safety check: a) when creating a VPC, the first recommended address is
+   * always 10.0.0.0/24, and most people will be allowed a max of 10 subnets in their VPC and
+   *
+   * b) when creating a new subnet, we will suffer...
+   */
+  if (isNaN(parsedThirdOctet) || parsedThirdOctet + 1 > 255) {
+    return DEFAULT_SUBNET_IPV4_VALUE;
+  } else {
+    ipv4ToReturn = `${firstOctet}.${secondOctet}.${
+      parsedThirdOctet + 1
+    }.${fourthOctet}`;
+  }
+
+  if (
+    allSubnets.some(
+      (subnet) => subnet.ip === ipv4ToReturn || subnet.ip?.ipv4 === ipv4ToReturn
+    )
+  ) {
+    return getRecommendedSubnetIPv4(ipv4ToReturn, allSubnets);
+  }
+
+  return ipv4ToReturn;
+}

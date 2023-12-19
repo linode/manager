@@ -6,6 +6,7 @@ import { Divider } from 'src/components/Divider';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,
+  getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
 import { SubnetNode } from './SubnetNode';
@@ -20,11 +21,20 @@ interface Props {
 export const MultipleSubnetInput = (props: Props) => {
   const { disabled, isDrawer, onChange, subnets } = props;
 
+  const [lastRecommendedIPv4, setLastRecommendedIPv4] = React.useState(
+    DEFAULT_SUBNET_IPV4_VALUE
+  );
+
   const addSubnet = () => {
+    const recommendedIPv4 = getRecommendedSubnetIPv4(
+      lastRecommendedIPv4,
+      subnets
+    );
+    setLastRecommendedIPv4(recommendedIPv4);
     onChange([
       ...subnets,
       {
-        ip: { availIPv4s: 256, ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
+        ip: { availIPv4s: 256, ipv4: recommendedIPv4, ipv4Error: '' },
         label: '',
         labelError: '',
       },
