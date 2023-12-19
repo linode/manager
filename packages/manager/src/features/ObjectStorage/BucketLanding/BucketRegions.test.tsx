@@ -51,7 +51,7 @@ describe('BucketRegions', () => {
         error="Some error message"
         onBlur={vi.fn()}
         onChange={vi.fn()}
-        selectedRegion={''}
+        selectedRegion="us-1"
       />
     );
 
