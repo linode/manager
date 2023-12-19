@@ -9,7 +9,5 @@ import type { RunInfo } from '../results/run-info';
 export const statusFormatter: Formatter = (
   info: RunInfo,
 ) => {
-  return info.passing
-    ? 'passing'
-    : 'failing';
+  return info.failing ? 'failing' : 'passing';
 };
