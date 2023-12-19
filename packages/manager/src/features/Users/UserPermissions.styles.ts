@@ -36,7 +36,9 @@ export const StyledDivWrapper = styled('div', {
 export const StyledHeaderGrid = styled(Grid, {
   label: 'StyledHeaderGrid',
 })(({ theme }) => ({
+  padding: 0,
   [theme.breakpoints.down('sm')]: {
+    marginLeft: theme.spacing(2),
     marginTop: theme.spacing(1),
     width: '100%',
   },
@@ -46,6 +48,7 @@ export const StyledSubHeaderGrid = styled(Grid, {
   label: 'StyledSubHeaderGrid',
 })(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
+    margin: theme.spacing(0.5),
     padding: 0,
   },
 }));
@@ -56,6 +59,14 @@ export const StyledPaper = styled(Paper, {
   paddingBottom: 0,
   paddingTop: 0,
   [theme.breakpoints.down('sm')]: {
-    paddingBottom: theme.spacing(2),
+    padding: 0,
+  },
+}));
+
+export const StyledPermPaper = styled(Paper, {
+  label: 'StyledPermPaper',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
   },
 }));

@@ -23,7 +23,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
@@ -47,6 +46,7 @@ import {
   StyledDivWrapper,
   StyledHeaderGrid,
   StyledPaper,
+  StyledPermPaper,
   StyledSelect,
   StyledSubHeaderGrid,
 } from './UserPermissions.styles';
@@ -110,13 +110,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { loading } = this.state;
     const { username } = this.props;
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${username} - Permissions`} />
-        {loading ? <CircleProgress /> : this.renderBody()}
+        {this.renderBody()}
       </React.Fragment>
     );
   }
@@ -291,7 +290,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   onChangeRestricted = () => {
     const { username } = this.props;
-    this.props.queryClient.invalidateQueries(['account', 'users']);
     this.setState({
       errors: [],
       loadingGrants: true,
@@ -302,6 +300,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState({
             restricted: user.restricted,
           });
+          this.props.queryClient.invalidateQueries(['account', 'users']);
         })
         .then(() => {
           // unconditionally sets this.state.loadingGrants to false
@@ -425,7 +424,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             alignItems="center"
             container
             spacing={2}
-            sx={{ width: 'auto' }}
+            sx={{ margin: 0, width: 'auto' }}
           >
             <StyledHeaderGrid>
               <Typography data-qa-restrict-access={restricted} variant="h2">
@@ -505,11 +504,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   renderGlobalPerms = () => {
     const { grants, isSavingGlobal } = this.state;
-    if (this.state.childAccountAccessEnabled) {
+    if (
+      this.state.childAccountAccessEnabled &&
+      !this.globalBooleanPerms.includes('enable_parent_child_access')
+    ) {
       this.globalBooleanPerms.push('enable_parent_child_access');
     }
     return (
-      <Paper data-qa-global-section>
+      <StyledPermPaper data-qa-global-section>
         <Typography
           data-qa-permissions-header="Global Permissions"
           variant="subtitle2"
@@ -545,13 +547,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.cancelPermsType('global'),
           isSavingGlobal
         )}
-      </Paper>
+      </StyledPermPaper>
     );
   };
 
   renderPermissions = () => {
-    const { loadingGrants } = this.state;
-    if (loadingGrants) {
+    const { loading, loadingGrants } = this.state;
+    if (loadingGrants || loading) {
       return <CircleProgress />;
     } else {
       return (
@@ -577,7 +579,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <Paper
+      <StyledPermPaper
         sx={(theme) => ({
           marginTop: theme.spacing(2),
         })}
@@ -649,7 +651,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.cancelPermsType('entity'),
           isSavingEntity
         )}
-      </Paper>
+      </StyledPermPaper>
     );
   };
 
