@@ -35,6 +35,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 
 import {
   LINODE_CREATE_FLOW_TEXT,
@@ -119,6 +120,7 @@ export const CreateFirewallDrawer = React.memo(
         mutateAsync(payload)
           .then((response) => {
             setSubmitting(false);
+            queryClient.invalidateQueries([firewallQueryKey]);
             enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
               variant: 'success',
             });
