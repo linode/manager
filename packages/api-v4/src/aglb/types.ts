@@ -196,3 +196,10 @@ export interface UpdateCertificatePayload {
   label?: string;
   type?: CertificateType;
 }
+
+export interface LoadBalancerEndpointHealth {
+  id: number;
+  healthy_endpoints: number;
+  total_endpoints: number;
+  timestamp: string;
+}
