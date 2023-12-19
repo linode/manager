@@ -56,7 +56,7 @@ export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
         <Stack direction="row" gap={2}>
           <Button
             buttonType="outlined"
-            onClick={() => handlers.handleAddServiceTraget(configurationIndex)}
+            onClick={() => handlers.handleAddServiceTarget(configurationIndex)}
           >
             Add Service Target
           </Button>
@@ -139,7 +139,7 @@ export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
                       actionsList={[
                         {
                           onClick: () =>
-                            handlers.handleEditServiceTraget(
+                            handlers.handleEditServiceTarget(
                               index,
                               configurationIndex
                             ),

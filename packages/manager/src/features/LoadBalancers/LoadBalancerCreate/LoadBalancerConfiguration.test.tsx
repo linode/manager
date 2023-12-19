@@ -14,10 +14,10 @@ import type { Handlers } from './LoadBalancerConfigurations';
 
 export const handlers: Handlers = {
   handleAddRoute: vi.fn(),
-  handleAddServiceTraget: vi.fn(),
+  handleAddServiceTarget: vi.fn(),
   handleCloseServiceTargetDrawer: vi.fn(),
   handleEditRoute: vi.fn(),
-  handleEditServiceTraget: vi.fn(),
+  handleEditServiceTarget: vi.fn(),
 };
 
 describe('LoadBalancerConfiguration', () => {

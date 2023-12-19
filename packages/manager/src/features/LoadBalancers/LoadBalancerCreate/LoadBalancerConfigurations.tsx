@@ -11,10 +11,10 @@ import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 export interface Handlers {
   handleAddRoute: (configurationIndex: number) => void;
-  handleAddServiceTraget: (configurationIndex: number) => void;
+  handleAddServiceTarget: (configurationIndex: number) => void;
   handleCloseServiceTargetDrawer: () => void;
   handleEditRoute: (index: number, configurationIndex: number) => void;
-  handleEditServiceTraget: (index: number, configurationIndex: number) => void;
+  handleEditServiceTarget: (index: number, configurationIndex: number) => void;
 }
 
 export const LoadBalancerConfigurations = () => {
@@ -36,7 +36,7 @@ export const LoadBalancerConfigurations = () => {
     setSelectedConfigurationIndex,
   ] = useState<number>(0);
 
-  const handleEditServiceTraget = (
+  const handleEditServiceTarget = (
     index: number,
     configurationIndex: number
   ) => {
@@ -45,7 +45,7 @@ export const LoadBalancerConfigurations = () => {
     setIsServiceTargetDrawerOpen(true);
   };
 
-  const handleAddServiceTraget = (configurationIndex: number) => {
+  const handleAddServiceTarget = (configurationIndex: number) => {
     setSelectedConfigurationIndex(configurationIndex);
     setIsServiceTargetDrawerOpen(true);
   };
@@ -68,10 +68,10 @@ export const LoadBalancerConfigurations = () => {
 
   const handlers: Handlers = {
     handleAddRoute,
-    handleAddServiceTraget,
+    handleAddServiceTarget,
     handleCloseServiceTargetDrawer,
     handleEditRoute,
-    handleEditServiceTraget,
+    handleEditServiceTarget,
   };
 
   return (
