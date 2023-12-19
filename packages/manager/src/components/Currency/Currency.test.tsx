@@ -61,4 +61,16 @@ describe('Currency Component', () => {
     rerender(<Currency quantity={100000} />);
     getByText('$100,000.00');
   });
+
+  it('displays --.-- when passed in as a quantity', () => {
+    const { getByText } = renderWithTheme(<Currency quantity={'--.--'} />);
+    getByText('$--.--');
+  });
+
+  it('applies the passed in data attributes', () => {
+    const { getByTestId } = renderWithTheme(
+      <Currency dataAttrs={{ 'data-testid': 'currency-test' }} quantity={3} />
+    );
+    getByTestId('currency-test');
+  });
 });
