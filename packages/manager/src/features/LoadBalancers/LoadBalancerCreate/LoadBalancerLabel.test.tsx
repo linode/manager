@@ -11,9 +11,9 @@ const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
 
 const initialValues: LoadBalancerCreateFormData = {
+  configurations: [],
   label: loadBalancerLabelValue,
   regions: [],
-  service_targets: [],
 };
 
 describe('LoadBalancerLabel', () => {
