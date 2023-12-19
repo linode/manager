@@ -1,7 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -16,7 +16,7 @@ import { mapStackScriptLabelToOCA } from './utils';
 
 import type { OCA } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
     color: '#fff !important',
     fontFamily: theme.font.bold,
@@ -84,7 +84,7 @@ interface Props {
 
 export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   const { onClose, open, stackScriptLabel } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { oneClickAppsDocsOverride } = useFlags();
 
   const [selectedApp, setSelectedApp] = React.useState<OCA | null>(null);
