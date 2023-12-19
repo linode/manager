@@ -5,6 +5,7 @@ import {
   CreateLoadbalancerPayload,
   CreateRoutePayload,
   Endpoint,
+  LoadBalancerEndpointHealth,
   Loadbalancer,
   Route,
   ServiceTarget,
@@ -337,3 +338,12 @@ export const endpointFactory = Factory.Sync.makeFactory<Endpoint>({
   port: 80,
   rate_capacity: 10_000,
 });
+
+export const loadbalancerEndpointHealthFactory = Factory.Sync.makeFactory<LoadBalancerEndpointHealth>(
+  {
+    healthy_endpoints: 4,
+    id: Factory.each((i) => i),
+    timestamp: '2020-01-31T12:00:00',
+    total_endpoints: 6,
+  }
+);
