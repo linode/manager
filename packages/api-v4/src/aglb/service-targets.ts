@@ -7,7 +7,11 @@ import Request, {
 } from '../request';
 import { Filter, Params, ResourcePage } from '../types';
 import { BETA_API_ROOT } from '../constants';
-import type { ServiceTarget, ServiceTargetPayload } from './types';
+import type {
+  ServiceTarget,
+  ServiceTargetPayload,
+  ServiceTargetsEndpointHealth,
+} from './types';
 import {
   CreateServiceTargetSchema,
   UpdateServiceTargetSchema,
@@ -48,6 +52,21 @@ export const getServiceTarget = (
       `${BETA_API_ROOT}/aglb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets/${encodeURIComponent(serviceTargetId)}`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * getServiceTargetsEndpointHealth
+ *
+ * Returns an Akamai Global Load Balancer service target
+ */
+export const getServiceTargetsEndpointHealth = (loadbalancerId: number) =>
+  Request<ServiceTargetsEndpointHealth>(
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets/endpoints-health`
     ),
     setMethod('GET')
   );

@@ -204,7 +204,7 @@ export interface LoadBalancerEndpointHealth {
   timestamp: string;
 }
 
-export interface ConfigurationEndpointHealth {
+export interface EndpointHealth {
   id: number;
   label: string;
   url: string;
@@ -220,7 +220,18 @@ export interface ConfigurationsEndpointHealth {
    */
   id: number;
   /**
-   * An array of all of the configurations on the AGLB
+   * An array of health data for each configuration on the AGLB
    */
-  configurations: ConfigurationEndpointHealth[];
+  configurations: EndpointHealth[];
+}
+
+export interface ServiceTargetsEndpointHealth {
+  /**
+   * The id of the AGLB
+   */
+  id: number;
+  /**
+   * An array of health data for each service target on the AGLB
+   */
+  service_targets: EndpointHealth[];
 }

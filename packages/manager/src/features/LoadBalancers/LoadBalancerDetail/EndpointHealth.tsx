@@ -14,7 +14,7 @@ export const EndpointHealth = (props: Props) => {
 
   return (
     <Stack alignItems="center" direction="row" spacing={1}>
-      <StatusIcon status="active" />
+      <StatusIcon status={up === 0 ? 'inactive' : 'active'} />
       <Typography noWrap>{up} up</Typography>
       <Typography>-</Typography>
       <StatusIcon status={down === 0 ? 'inactive' : 'error'} />

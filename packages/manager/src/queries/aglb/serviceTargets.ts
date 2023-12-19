@@ -2,6 +2,7 @@ import {
   createLoadbalancerServiceTarget,
   deleteLoadbalancerServiceTarget,
   getLoadbalancerServiceTargets,
+  getServiceTargetsEndpointHealth,
   updateLoadbalancerServiceTarget,
 } from '@linode/api-v4';
 import {
@@ -20,6 +21,7 @@ import type {
   ResourcePage,
   ServiceTarget,
   ServiceTargetPayload,
+  ServiceTargetsEndpointHealth,
 } from '@linode/api-v4';
 
 export const useLoadBalancerServiceTargetsQuery = (
@@ -32,6 +34,22 @@ export const useLoadBalancerServiceTargetsQuery = (
     () => getLoadbalancerServiceTargets(loadbalancerId, params, filter),
     { keepPreviousData: true }
   );
+};
+
+export const useLoadBalancerServiceTargetsEndpointHealthQuery = (
+  loadbalancerId: number
+) => {
+  return useQuery<ServiceTargetsEndpointHealth, APIError[]>({
+    queryFn: () => getServiceTargetsEndpointHealth(loadbalancerId),
+    queryKey: [
+      QUERY_KEY,
+      'aglb',
+      loadbalancerId,
+      'service-targets',
+      'endpoint-health',
+    ],
+    refetchInterval: 10_000,
+  });
 };
 
 export const useServiceTargetCreateMutation = (loadbalancerId: number) => {
