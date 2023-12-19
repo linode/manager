@@ -59,7 +59,7 @@ export const getServiceTarget = (
 /**
  * getServiceTargetsEndpointHealth
  *
- * Returns an Akamai Global Load Balancer service target
+ * Returns endpoint health data for each service targets on an Akamai Global Load Balancer
  */
 export const getServiceTargetsEndpointHealth = (loadbalancerId: number) =>
   Request<ServiceTargetsEndpointHealth>(

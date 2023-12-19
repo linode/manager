@@ -355,7 +355,7 @@ export const endpointHealthFactory = Factory.Sync.makeFactory<EndpointHealth>({
   healthy_endpoints: 4,
   id: Factory.each((i) => i),
   label: Factory.each((i) => `endpoint-${i}`),
-  timestamp: '',
+  timestamp: '2020-01-31T12:00:00',
   total_endpoints: 6,
   type: '',
   url: '',
