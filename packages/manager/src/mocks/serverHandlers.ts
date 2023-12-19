@@ -1803,7 +1803,14 @@ export const handlers = [
   }),
   rest.get('*regions/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(makeResourcePage(regionAvailabilityFactory.buildList(10)))
+      ctx.json(
+        makeResourcePage([
+          regionAvailabilityFactory.build(),
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-6',
+          }),
+        ])
+      )
     );
   }),
   rest.get('*regions/:regionId/availability', (_req, res, ctx) => {

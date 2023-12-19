@@ -21,16 +21,16 @@ import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
-import type { PriceObject, Region } from '@linode/api-v4';
-import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 
-interface Props {
+export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   header?: string;
   idx: number;
   isCreate?: boolean;
+  isPlanSoldOut?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   selectedDiskSize?: number;
@@ -47,13 +47,14 @@ const getDisabledClass = (
   return disabledClasses.includes(typeClass);
 };
 
-export const PlanSelection = (props: Props) => {
+export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
     disabled,
     disabledClasses,
     idx,
     isCreate,
+    isPlanSoldOut,
     linodeID,
     onSelect,
     selectedDiskSize,
@@ -133,7 +134,7 @@ export const PlanSelection = (props: Props) => {
             )}
           </StyledRadioCell>
           <TableCell data-qa-plan-name>
-            {type.heading}{' '}
+            {type.heading} {isPlanSoldOut && '(Sold Out)'}
             {(isSamePlan || type.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"

@@ -9,6 +9,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useRegionsAvailabilitiesQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -16,7 +17,7 @@ import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionType } from './types';
-import type { Region } from '@linode/api-v4';
+import type { Region, RegionAvailability } from '@linode/api-v4';
 
 const tableCells = [
   { cellName: '', center: false, noWrap: false, testId: '' },
@@ -65,6 +66,8 @@ export const PlanContainer = (props: Props) => {
   } = props;
   const location = useLocation();
 
+  const { data: regionAvailabilities } = useRegionsAvailabilitiesQuery(true);
+
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
@@ -79,23 +82,44 @@ export const PlanContainer = (props: Props) => {
     !selectedRegionId && !isDatabaseCreateFlow;
 
   const renderPlanSelection = React.useCallback(() => {
-    return plans.map((plan, id) => (
-      <PlanSelection
-        currentPlanHeading={currentPlanHeading}
-        disabled={disabled}
-        disabledClasses={disabledClasses}
-        idx={id}
-        isCreate={isCreate}
-        key={id}
-        linodeID={linodeID}
-        onSelect={onSelect}
-        selectedDiskSize={selectedDiskSize}
-        selectedId={selectedId}
-        selectedRegionId={selectedRegionId}
-        showTransfer={showTransfer}
-        type={plan}
-      />
-    ));
+    return plans.map((plan, id) => {
+      const isPlanSoldOut:
+        | RegionAvailability
+        | undefined = regionAvailabilities?.find(
+        (regionAvailability: RegionAvailability) => {
+          const regionMatch = regionAvailability.region === selectedRegionId;
+
+          if (!regionMatch) {
+            return false;
+          }
+
+          if (regionAvailability.plan === plan.id) {
+            return regionAvailability.available === false;
+          }
+
+          return false;
+        }
+      );
+
+      return (
+        <PlanSelection
+          currentPlanHeading={currentPlanHeading}
+          disabled={disabled}
+          disabledClasses={disabledClasses}
+          idx={id}
+          isCreate={isCreate}
+          isPlanSoldOut={!!isPlanSoldOut}
+          key={id}
+          linodeID={linodeID}
+          onSelect={onSelect}
+          selectedDiskSize={selectedDiskSize}
+          selectedId={selectedId}
+          selectedRegionId={selectedRegionId}
+          showTransfer={showTransfer}
+          type={plan}
+        />
+      );
+    });
   }, [
     currentPlanHeading,
     disabled,
@@ -108,6 +132,7 @@ export const PlanContainer = (props: Props) => {
     selectedId,
     selectedRegionId,
     showTransfer,
+    regionAvailabilities,
   ]);
 
   return (
