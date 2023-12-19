@@ -1,15 +1,17 @@
+import type { Grant, Grants } from '@linode/api-v4';
+import { accountUserFactory } from '@src/factories/accountUsers';
+import { grantsFactory } from '@src/factories/grants';
+import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
   mockGetUser,
-  mockUpdateUser,
   mockGetUserGrants,
-  mockUpdateUserGrants,
   mockGetUsers,
+  mockUpdateUser,
+  mockUpdateUserGrants,
 } from 'support/intercepts/account';
-import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory, grantFactory } from '@src/factories/grants';
-import { randomLabel } from 'support/util/random';
-import { shuffleArray } from 'support/util/arrays';
 import { ui } from 'support/ui';
+import { shuffleArray } from 'support/util/arrays';
+import { randomLabel } from 'support/util/random';
 
 // Message shown when user has unrestricted account acess.
 const unrestrictedAccessMessage =
@@ -43,6 +45,83 @@ const specificPermissionsTypes = [
   'Databases',
   'VPCs',
 ];
+
+/**
+ * Returns a copy of a Grants object with its entity-specific permissions set to a new value.
+ *
+ * @param grants - Grants that should be copied with new permissions applied.
+ * @param newPermissions - New permissions to apply to Grants.
+ *
+ * @returns Clone of `grants` with new permissions applied.
+ */
+const updateGrantMockPermissions = (
+  grants: Grants,
+  newPermissions: 'read_only' | 'read_write' | null
+) => {
+  return {
+    ...grants,
+    database: grants.database.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    domain: grants.domain.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    firewall: grants.firewall.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    image: grants.image.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    linode: grants.linode.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    longview: grants.longview.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    nodebalancer: grants.nodebalancer.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    stackscript: grants.stackscript.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    volume: grants.volume.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+    vpc: grants.vpc.map((grant: Grant) => ({
+      ...grant,
+      permissions: newPermissions,
+    })),
+  };
+};
+
+/**
+ * Returns an array of entity labels belonging to the given Grants object.
+ *
+ * @returns Array of entity labels.
+ */
+const entityLabelsFromGrants = (grants: Grants) => {
+  return [
+    ...grants.database,
+    ...grants.domain,
+    ...grants.firewall,
+    ...grants.image,
+    ...grants.linode,
+    ...grants.longview,
+    ...grants.nodebalancer,
+    ...grants.stackscript,
+    ...grants.volume,
+    ...grants.vpc,
+  ].map((grant: Grant) => grant.label);
+};
 
 /**
  * Assert whether all global permissions are enabled or disabled.
@@ -180,119 +259,22 @@ describe('User permission management', () => {
    * - Confirms that global and specific user permissions can be updated using mock API data.
    * - Confirms that toast notification is shown when updating global and specific permissions.
    */
-  it.only('can update global and specific permissions', () => {
+  it('can update global and specific permissions', () => {
     const mockUser = accountUserFactory.build({
       username: randomLabel(),
       restricted: true,
     });
 
-    const initialGrants = {
-      database: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      domain: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      firewall: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      image: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      linode: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      longview: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      nodebalancer: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      stackscript: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      volume: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-      vpc: grantFactory.buildList(1, {
-        label: randomLabel(),
-        permissions: null,
-      }),
-    };
+    const mockUserGrants = { ...userPermissionsGrants };
+    const grantEntities = entityLabelsFromGrants(mockUserGrants);
 
-    const updatedGrants = {
-      database: initialGrants.database.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      domain: initialGrants.domain.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      firewall: initialGrants.firewall.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      image: initialGrants.image.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      linode: initialGrants.linode.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      longview: initialGrants.longview.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      nodebalancer: initialGrants.nodebalancer.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      stackscript: initialGrants.stackscript.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      volume: initialGrants.volume.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-      vpc: initialGrants.vpc.map((grant) => ({
-        ...grant,
-        permissions: 'read_write',
-      })),
-    };
-
-    const mockUserGrants = grantsFactory.build({
-      global: {
-        account_access: null,
-        add_domains: false,
-        add_firewalls: false,
-        add_images: false,
-        add_linodes: false,
-        add_longview: false,
-        add_nodebalancers: false,
-        add_stackscripts: false,
-        add_volumes: false,
-        add_vpcs: false,
-        longview_subscription: false,
-      },
-      ...initialGrants,
-    });
-
-    const mockUserGrantsUpdatedGlobal = {
+    // Mock grants after global permissions changes have been applied.
+    const mockUserGrantsUpdatedGlobal: Grants = {
       ...mockUserGrants,
       global: {
         account_access: 'read_only',
+        cancel_account: true,
+        child_account_access: true,
         add_domains: true,
         add_firewalls: true,
         add_images: true,
@@ -306,12 +288,11 @@ describe('User permission management', () => {
       },
     };
 
+    // Mock grants after entity-specific permissions changes have been applied.
     const mockUserGrantsUpdatedSpecific = {
       ...mockUserGrantsUpdatedGlobal,
-      ...updatedGrants,
+      ...updateGrantMockPermissions(mockUserGrantsUpdatedGlobal, 'read_write'),
     };
-
-    console.log(mockUserGrants);
 
     mockGetUser(mockUser).as('getUser');
     mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
@@ -346,13 +327,53 @@ describe('User permission management', () => {
     // Confirm that toast notification appears when updating global permissions.
     ui.toast.assertMessage('Successfully saved global permissions');
 
+    // Update entity-specific user permissions.
+    mockUpdateUserGrants(mockUser.username, mockUserGrantsUpdatedSpecific).as(
+      'updateUserGrants'
+    );
     cy.get('[data-qa-entity-section]')
       .should('be.visible')
-      .within(() => {});
+      .within(() => {
+        grantEntities.forEach((entityLabel: string) => {
+          cy.findByText(entityLabel)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              // Confirm that "None" radio button is selected.
+              cy.get('[data-qa-permission="None"]')
+                .should('have.attr', 'data-qa-radio', 'true')
+                .should('be.visible');
+
+              // Click "Read-Write" radio button, confirm selection changes.
+              cy.get('[data-qa-permission="Read-Write"]')
+                .should('have.attr', 'data-qa-radio', 'false')
+                .should('be.visible')
+                .click();
+
+              cy.get('[data-qa-permission="Read-Write"]').should(
+                'have.attr',
+                'data-qa-radio',
+                'true'
+              );
+            });
+        });
+
+        // Save changes and confirm that toast notification appears.
+        ui.button
+          .findByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.wait('@updateUserGrants');
+      });
+
+    ui.toast.assertMessage('Successfully saved entity-specific permissions');
   });
 
   /*
-   * - Confirms that global and specific permissions can be reset to their initial state.
+   * - Confirms that users can discard changes to their global permissions using "Reset" button.
+   * - Confirms that users can discard changes to their entity-specific permissions using "Reset" button.
    */
   it('can reset user permissions changes', () => {
     const mockUser = accountUserFactory.build({
@@ -360,25 +381,14 @@ describe('User permission management', () => {
       restricted: true,
     });
 
-    const mockUserGrants = grantsFactory.build({
-      global: {
-        account_access: null,
-        add_domains: false,
-        add_firewalls: false,
-        add_images: false,
-        add_linodes: false,
-        add_longview: false,
-        add_nodebalancers: false,
-        add_stackscripts: false,
-        add_volumes: false,
-        add_vpcs: false,
-        longview_subscription: false,
-      },
-    });
+    const mockUserGrants = { ...userPermissionsGrants };
+    const grantEntities = entityLabelsFromGrants(mockUserGrants);
 
     mockGetUser(mockUser);
     mockGetUserGrants(mockUser.username, mockUserGrants);
     cy.visitWithLogin(`/account/users/${mockUser.username}/permissions`);
+
+    // Test reset in Global Permissions section.
     cy.get('[data-qa-global-section]')
       .should('be.visible')
       .within(() => {
@@ -406,6 +416,54 @@ describe('User permission management', () => {
 
         assertAllGlobalPermissions(false);
         assertBillingAccessSelected('None');
+      });
+
+    // Test reset in Specific Permissions section.
+    cy.get('[data-qa-entity-section]')
+      .should('be.visible')
+      .within(() => {
+        grantEntities.forEach((entityLabel: string) => {
+          cy.findByText(entityLabel)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              // Confirm that "None" radio button is selected.
+              cy.get('[data-qa-permission="None"]')
+                .should('have.attr', 'data-qa-radio', 'true')
+                .should('be.visible');
+
+              // Click "Read Only" radio button, confirm selection changes.
+              cy.get('[data-qa-permission="Read Only"]')
+                .should('have.attr', 'data-qa-radio', 'false')
+                .should('be.visible')
+                .click();
+
+              cy.get('[data-qa-permission="Read Only"]').should(
+                'have.attr',
+                'data-qa-radio',
+                'true'
+              );
+            });
+        });
+
+        // Reset changes and confirm that permissions revert to initial state.
+        ui.button
+          .findByTitle('Reset')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        grantEntities.forEach((entityLabel: string) => {
+          cy.findByText(entityLabel)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              // Confirm that "None" radio button is selected.
+              cy.get('[data-qa-permission="None"]')
+                .should('have.attr', 'data-qa-radio', 'true')
+                .should('be.visible');
+            });
+        });
       });
   });
 });
