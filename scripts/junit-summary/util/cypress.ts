@@ -7,5 +7,5 @@
  */
 export const cypressRunCommand = (testFiles: string[]): string => {
   const testFilesList = testFiles.join(',');
-  return `yarn cy:run -s "${testFilesList}`;
+  return `yarn cy:run -s "${testFilesList}"`;
 };
