@@ -51,7 +51,7 @@ export const slackFormatter: Formatter = (
       .filter((result: TestResult) => result.failing)
       .map((result: TestResult) => {
         const specFile = path.basename(result.testFilename);
-        return `* \`${specFile}\` — _${result.groupName}_ » _${result.testName}_`;
+        return `• \`${specFile}\` — _${result.groupName}_ » _${result.testName}_`;
       });
 
     // When applicable, display actions that can be taken by the user.
@@ -64,8 +64,8 @@ export const slackFormatter: Formatter = (
       .join(' | ');
 
     return [
-      ...failedTestLines,
       '',
+      ...failedTestLines,
       '',
       failedTestActions ? `${failedTestActions}` : null,
     ]
