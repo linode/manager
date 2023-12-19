@@ -18,7 +18,6 @@ import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -43,6 +42,7 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
+  StyledCircleProgress,
   StyledDivWrapper,
   StyledHeaderGrid,
   StyledPaper,
@@ -554,7 +554,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderPermissions = () => {
     const { loading, loadingGrants } = this.state;
     if (loadingGrants || loading) {
-      return <CircleProgress />;
+      return <StyledCircleProgress />;
     } else {
       return (
         <React.Fragment>

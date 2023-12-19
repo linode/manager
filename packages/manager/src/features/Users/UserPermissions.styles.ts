@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Paper } from 'src/components/Paper';
 
@@ -69,4 +70,10 @@ export const StyledPermPaper = styled(Paper, {
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2),
   },
+}));
+
+export const StyledCircleProgress = styled(CircleProgress, {
+  label: 'StyledCircleProgress',
+})(({ theme }) => ({
+  marginTop: theme.spacing(2),
 }));
