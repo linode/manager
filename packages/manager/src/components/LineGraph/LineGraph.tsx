@@ -59,7 +59,7 @@ export interface LineGraphProps {
    */
   ariaLabel?: string;
   /**
-   * The height in `px` of the chart\n`number`.
+   * The height in `px` of the chart.
    */
   chartHeight?: number;
   /**
@@ -91,11 +91,11 @@ export interface LineGraphProps {
    */
   showToday: boolean;
   /**
-   * The suggested maximum y-axis value passed to **Chart,js**\n`number`.
+   * The suggested maximum y-axis value passed to **Chart,js**.
    */
   suggestedMax?: number;
   /**
-   * The suggested maximum y-axis value passed to **Chart,js**\n`number`.
+   * The suggested maximum y-axis value passed to **Chart,js**.
    */
   tabIndex?: number;
   /**
