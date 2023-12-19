@@ -160,6 +160,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
     return { label: expiryTup[0], value: expiryTup[1] };
   });
 
+  // Filter permissions for all users except parent user accounts.
+  const allPermissions = form.values.scopes;
+  const showFilteredPermissions =
+    (flags.parentChildAccountAccess && user?.user_type !== 'parent') ||
+    Boolean(!flags.parentChildAccountAccess);
+  const filteredPermissions = allPermissions.filter(
+    (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
+  );
+
   return (
     <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
@@ -244,18 +253,12 @@ export const CreateAPITokenDrawer = (props: Props) => {
               />
             </StyledPermissionsCell>
           </TableRow>
-          {form.values.scopes.map((scopeTup) => {
-            if (!basePermNameMap[scopeTup[0]]) {
-              return null;
-            }
-            return (
-              // When the feature flag is on, display the Child Account Access scope for parent user accounts only.
-              (!flags.parentChildAccountAccess &&
-                basePermNameMap[scopeTup[0]] === 'Child Account Access') ||
-                (flags.parentChildAccountAccess &&
-                  user?.user_type !== 'parent' &&
-                  basePermNameMap[scopeTup[0]] ===
-                    'Child Account Access') ? null : (
+          {(showFilteredPermissions ? filteredPermissions : allPermissions).map(
+            (scopeTup) => {
+              if (!basePermNameMap[scopeTup[0]]) {
+                return null;
+              }
+              return (
                 <TableRow
                   data-qa-row={basePermNameMap[scopeTup[0]]}
                   key={scopeTup[0]}
@@ -300,9 +303,9 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     />
                   </StyledPermissionsCell>
                 </TableRow>
-              )
-            );
-          })}
+              );
+            }
+          )}
         </TableBody>
       </StyledPermsTable>
       {errorMap.scopes && (

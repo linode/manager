@@ -32,7 +32,15 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: user } = useAccountUser(profile?.username ?? '');
 
-  const permissions = scopeStringToPermTuples(token?.scopes ?? '');
+  const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
+
+  // Filter permissions for all users except parent user accounts.
+  const showFilteredPermissions =
+    (flags.parentChildAccountAccess && user?.user_type !== 'parent') ||
+    Boolean(!flags.parentChildAccountAccess);
+  const filteredPermissions = allPermissions.filter(
+    (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
+  );
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
@@ -56,18 +64,12 @@ export const ViewAPITokenDrawer = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {permissions.map((scopeTup) => {
-            if (!basePermNameMap[scopeTup[0]]) {
-              return null;
-            }
-            return (
-              // When the feature flag is on, display the Child Account Access scope for parent user accounts only.
-              (!flags.parentChildAccountAccess &&
-                basePermNameMap[scopeTup[0]] === 'Child Account Access') ||
-                (flags.parentChildAccountAccess &&
-                  user?.user_type !== 'parent' &&
-                  basePermNameMap[scopeTup[0]] ===
-                    'Child Account Access') ? null : (
+          {(showFilteredPermissions ? filteredPermissions : allPermissions).map(
+            (scopeTup) => {
+              if (!basePermNameMap[scopeTup[0]]) {
+                return null;
+              }
+              return (
                 <TableRow
                   data-qa-row={basePermNameMap[scopeTup[0]]}
                   key={scopeTup[0]}
@@ -109,9 +111,9 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     />
                   </TableCell>
                 </TableRow>
-              )
-            );
-          })}
+              );
+            }
+          )}
         </TableBody>
       </StyledPermsTable>
     </Drawer>
