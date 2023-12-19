@@ -1805,9 +1805,21 @@ export const handlers = [
     return res(
       ctx.json(
         makeResourcePage([
-          regionAvailabilityFactory.build(),
           regionAvailabilityFactory.build({
             plan: 'g6-standard-6',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-7',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-5',
+            region: 'us-central',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-6',
+            region: 'us-central',
           }),
         ])
       )

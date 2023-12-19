@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
@@ -22,6 +23,9 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+
+const PLAN_IS_SOLD_OUT_COPY =
+  'This plan has no availability for the selected region. Please select a smaller plan or the same plan in another region.';
 
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
@@ -99,17 +103,22 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
+
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
+          aria-disabled={
+            isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
+          }
+          disabled={
+            isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
+          }
           onClick={() =>
-            !isSamePlan && !disabled && !isDisabledClass
+            !isSamePlan && !disabled && !isPlanSoldOut && !isDisabledClass
               ? onSelect(type.id)
               : undefined
           }
-          aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
-          disabled={isSamePlan || planTooSmall || isDisabledClass}
           key={type.id}
         >
           <StyledRadioCell>
@@ -122,7 +131,12 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                       !planTooSmall &&
                       type.id === String(selectedId)
                     }
-                    disabled={planTooSmall || disabled || isDisabledClass}
+                    disabled={
+                      planTooSmall ||
+                      disabled ||
+                      isPlanSoldOut ||
+                      isDisabledClass
+                    }
                     id={type.id}
                     onChange={() => onSelect(type.id)}
                   />
@@ -134,7 +148,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             )}
           </StyledRadioCell>
           <TableCell data-qa-plan-name>
-            {type.heading} {isPlanSoldOut && '(Sold Out)'}
+            {type.heading}{' '}
+            {isPlanSoldOut && (
+              <TooltipIcon
+                icon={<Chip label="Sold Out" />}
+                status="other"
+                text={PLAN_IS_SOLD_OUT_COPY}
+              />
+            )}
             {(isSamePlan || type.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"
@@ -200,12 +221,29 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       {/* Displays SelectionCard for small screens */}
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
+          disabled={
+            planTooSmall ||
+            isSamePlan ||
+            disabled ||
+            isPlanSoldOut ||
+            isDisabledClass
+          }
+          subheadings={[
+            ...type.subHeadings,
+            isPlanSoldOut ? (
+              <TooltipIcon
+                icon={<Chip label="Sold Out" sx={{ ml: -1.5 }} />}
+                status="other"
+                text={PLAN_IS_SOLD_OUT_COPY}
+              />
+            ) : (
+              ''
+            ),
+          ]}
           checked={type.id === String(selectedId)}
-          disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
-          subheadings={type.subHeadings}
           tooltip={tooltip}
         />
       </Hidden>
