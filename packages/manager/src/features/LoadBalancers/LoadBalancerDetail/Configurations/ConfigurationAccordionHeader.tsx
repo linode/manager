@@ -2,15 +2,24 @@ import React from 'react';
 
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { useLoadBalancerConfigurationsEndpointsHealth } from 'src/queries/aglb/configurations';
 import { pluralize } from 'src/utilities/pluralize';
+
+import { EndpointHealth } from '../EndpointHealth';
 
 import type { Configuration } from '@linode/api-v4';
 
 interface Props {
   configuration: Configuration;
+  loadbalancerId: number;
 }
 
-export const ConfigurationAccordionHeader = ({ configuration }: Props) => {
+export const ConfigurationAccordionHeader = (props: Props) => {
+  const { configuration, loadbalancerId } = props;
+  const { data } = useLoadBalancerConfigurationsEndpointsHealth(loadbalancerId);
+
+  const health = data?.configurations.find((c) => c.id === configuration.id);
+
   return (
     <Stack
       alignItems="center"
@@ -28,7 +37,18 @@ export const ConfigurationAccordionHeader = ({ configuration }: Props) => {
           {pluralize('Route', 'Routes', configuration.routes.length)}
         </Typography>
       </Stack>
-      <Typography>ID: {configuration.id}</Typography>
+      <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={1}>
+          <Typography>Endpoints:</Typography>
+          {health && (
+            <EndpointHealth
+              down={health.total_endpoints - health.healthy_endpoints}
+              up={health.healthy_endpoints}
+            />
+          )}
+        </Stack>
+        <Typography>ID: {configuration.id}</Typography>
+      </Stack>
     </Stack>
   );
 };

@@ -20,6 +20,7 @@ import {
   betaFactory,
   certificateFactory,
   configurationFactory,
+  configurationsEndpointHealthFactory,
   contactFactory,
   createRouteFactory,
   createServiceTargetFactory,
@@ -318,6 +319,15 @@ const aglb = [
     });
     return res(ctx.json(health));
   }),
+  rest.get(
+    '*/v4beta/aglb/:id/configurations/endpoints-health',
+    (req, res, ctx) => {
+      const health = configurationsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
   rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),

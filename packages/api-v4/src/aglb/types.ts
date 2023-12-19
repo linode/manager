@@ -203,3 +203,24 @@ export interface LoadBalancerEndpointHealth {
   total_endpoints: number;
   timestamp: string;
 }
+
+export interface ConfigurationEndpointHealth {
+  id: number;
+  label: string;
+  url: string;
+  type: string;
+  healthy_endpoints: number;
+  total_endpoints: number;
+  timestamp: string;
+}
+
+export interface ConfigurationsEndpointHealth {
+  /**
+   * The id of the AGLB
+   */
+  id: number;
+  /**
+   * An array of all of the configurations on the AGLB
+   */
+  configurations: ConfigurationEndpointHealth[];
+}

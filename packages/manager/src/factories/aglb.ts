@@ -1,6 +1,8 @@
 import {
   Certificate,
   Configuration,
+  ConfigurationEndpointHealth,
+  ConfigurationsEndpointHealth,
   CreateCertificatePayload,
   CreateLoadbalancerPayload,
   CreateRoutePayload,
@@ -345,5 +347,24 @@ export const loadbalancerEndpointHealthFactory = Factory.Sync.makeFactory<LoadBa
     id: Factory.each((i) => i),
     timestamp: '2020-01-31T12:00:00',
     total_endpoints: 6,
+  }
+);
+
+export const configurationEndpointHealthFactory = Factory.Sync.makeFactory<ConfigurationEndpointHealth>(
+  {
+    healthy_endpoints: 4,
+    id: Factory.each((i) => i),
+    label: Factory.each((i) => `configuration-${i}`),
+    timestamp: '',
+    total_endpoints: 6,
+    type: '',
+    url: '',
+  }
+);
+
+export const configurationsEndpointHealthFactory = Factory.Sync.makeFactory<ConfigurationsEndpointHealth>(
+  {
+    configurations: configurationEndpointHealthFactory.buildList(5),
+    id: Factory.each((i) => i),
   }
 );
