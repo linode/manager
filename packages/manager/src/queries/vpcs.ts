@@ -24,6 +24,8 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { getAll } from 'src/utilities/getAll';
+
 export const vpcQueryKey = 'vpcs';
 export const subnetQueryKey = 'subnets';
 
@@ -95,6 +97,18 @@ export const useSubnetsQuery = (
     { enabled, keepPreviousData: true }
   );
 };
+
+export const useAllSubnetsQuery = (vpcID: number, enabled: boolean = true) =>
+  useQuery<Subnet[], APIError[]>(
+    [vpcQueryKey, 'vpc', vpcID, subnetQueryKey, 'unpaginated'],
+    () => getAllSubnetsRequest(vpcID),
+    { enabled, keepPreviousData: true }
+  );
+
+const getAllSubnetsRequest = (vpcID: number) =>
+  getAll<Subnet>((params, filters) =>
+    getSubnets(vpcID, params, filters)
+  )().then((data) => data.data);
 
 export const useSubnetQuery = (vpcID: number, subnetID: number) => {
   return useQuery<Subnet, APIError[]>(

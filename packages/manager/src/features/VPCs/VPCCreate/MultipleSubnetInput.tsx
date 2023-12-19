@@ -28,7 +28,7 @@ export const MultipleSubnetInput = (props: Props) => {
   const addSubnet = () => {
     const recommendedIPv4 = getRecommendedSubnetIPv4(
       lastRecommendedIPv4,
-      subnets
+      subnets.map((subnet) => subnet.ip.ipv4 ?? '')
     );
     setLastRecommendedIPv4(recommendedIPv4);
     onChange([

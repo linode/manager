@@ -104,16 +104,18 @@ export const calculateAvailableIPv4sRFC1918 = (
 };
 
 /**
- * Calculates the next subnet IPv4 address to recommend when creating a subnet, based off of the last recommended ipv4 and the rest of the other subnets.
+ * Calculates the next subnet IPv4 address to recommend when creating a subnet, based off of the last recommended ipv4 and already existing IPv4s.
  * @param lastRecommendedIPv4 the current IPv4 address to base our recommended IPv4 address off of
- * @param allSubnets the subnets to check the IPs of
+ * @param otherIPv4s the other IPv4s to check against
  * @returns the next recommended subnet IPv4 address to use
  *
- * Assumption: if the inputted ipv4 is valid and in x.x.x.x/x format, then the outputted ipv4 valid and in x.x.x.x/x format
+ * Assumption: if the inputted ipv4 is valid and in x.x.x.x/x format, then the outputted ipv4 valid and in x.x.x.x/x format not already in
+ * otherIPv4s (excluding the default case -- see comments below)
  */
-export function getRecommendedSubnetIPv4<
-  T extends { ip?: SubnetIPState; ipv4?: string }
->(lastRecommendedIPv4: string, allSubnets: T[]): string {
+export const getRecommendedSubnetIPv4 = (
+  lastRecommendedIPv4: string,
+  otherIPv4s: string[]
+): string => {
   const [
     firstOctet,
     secondOctet,
@@ -126,9 +128,7 @@ export function getRecommendedSubnetIPv4<
   /**
    * Return DEFAULT_SUBNET_IPV4_VALUE (10.0.0.0/24) if parsedThirdOctet + 1 would result in a nonsense ipv4 (ex. 10.0.256.0/24 is not an IPv4)
    * Realistically this case will rarely be reached and acts mainly as a safety check: a) when creating a VPC, the first recommended address is
-   * always 10.0.0.0/24, and most people will be allowed a max of 10 subnets in their VPC and
-   *
-   * b) when creating a new subnet, we will suffer...
+   * always 10.0.0.0/24, and b) most people will be allowed a max of 10 subnets in their VPC, so there are plenty of subnets to recommend
    */
   if (isNaN(parsedThirdOctet) || parsedThirdOctet + 1 > 255) {
     return DEFAULT_SUBNET_IPV4_VALUE;
@@ -138,13 +138,9 @@ export function getRecommendedSubnetIPv4<
     }.${fourthOctet}`;
   }
 
-  if (
-    allSubnets.some(
-      (subnet) => subnet.ip === ipv4ToReturn || subnet.ip?.ipv4 === ipv4ToReturn
-    )
-  ) {
-    return getRecommendedSubnetIPv4(ipv4ToReturn, allSubnets);
+  if (otherIPv4s.some((ip) => ip === ipv4ToReturn)) {
+    return getRecommendedSubnetIPv4(ipv4ToReturn, otherIPv4s);
   }
 
   return ipv4ToReturn;
-}
+};
