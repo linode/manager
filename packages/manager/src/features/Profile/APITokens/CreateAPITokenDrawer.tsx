@@ -90,7 +90,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const initialValues = {
     expiry: expiryTups[0][1],
     label: '',
-    scopes: scopeStringToPermTuples(flags.parentChildAccountAccess ? '' : '*'),
+    scopes: scopeStringToPermTuples(''),
   };
 
   const { data: profile } = useProfile();

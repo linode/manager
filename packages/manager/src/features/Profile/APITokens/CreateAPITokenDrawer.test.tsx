@@ -74,21 +74,9 @@ describe('Create API Token Drawer', () => {
     );
   });
 
-  // TODO: Parent/Child - remove this test when Parent/Child feature is released.
-  it('Should default to read/write for all scopes', () => {
+  it('Should default to None for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
-    );
-    const selectAllReadWritePermRadioButton = getByLabelText(
-      'Select read/write for all'
-    );
-    expect(selectAllReadWritePermRadioButton).toBeChecked();
-  });
-
-  it('Should default to None for all scopes with the parent/child feature flag on', () => {
-    const { getByLabelText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      { flags: { parentChildAccountAccess: true } }
     );
     const selectAllNonePermRadioButton = getByLabelText('Select none for all');
     expect(selectAllNonePermRadioButton).toBeChecked();
