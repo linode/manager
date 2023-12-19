@@ -11,10 +11,13 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Tabs } from 'src/components/ReachTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import {
+  AGLB_DOCS,
+  AGLB_FEEDBACK_FORM_URL,
+} from 'src/features/LoadBalancers/constants';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
 const LoadBalancerSummary = React.lazy(() =>
@@ -59,7 +62,7 @@ export const LoadBalancerDetail = () => {
 
   const id = Number(loadbalancerId);
 
-  const { data: loadbalancer, isLoading, error } = useLoadBalancerQuery(id);
+  const { data: loadbalancer, error, isLoading } = useLoadBalancerQuery(id);
 
   const tabs = [
     {
@@ -116,7 +119,7 @@ export const LoadBalancerDetail = () => {
         }}
         betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
         docsLabel="Docs"
-        docsLink="" // TODO: AGLB - Add docs link
+        docsLink={AGLB_DOCS.GettingStarted}
       />
       <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={() => null}>
         <TabLinkList

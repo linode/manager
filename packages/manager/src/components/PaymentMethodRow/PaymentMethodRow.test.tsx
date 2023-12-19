@@ -8,7 +8,7 @@ import { paymentMethodFactory } from 'src/factories';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import PaymentMethodRow from './PaymentMethodRow';
+import { PaymentMethodRow } from './PaymentMethodRow';
 
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual<any>('@linode/api-v4/lib/account');

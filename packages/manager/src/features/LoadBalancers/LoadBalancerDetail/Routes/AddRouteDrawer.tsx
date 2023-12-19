@@ -9,11 +9,14 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { RouteSelect } from './RouteSelect';
+import { ROUTE_COPY } from './constants';
 import { getRouteProtocolFromConfigurationProtocol } from './utils';
 
 import type { Configuration, CreateRoutePayload } from '@linode/api-v4';
@@ -35,14 +38,18 @@ export const AddRouteDrawer = (props: Props) => {
 
   const routeProtocol = getRouteProtocolFromConfigurationProtocol(
     configuration.protocol
-  ).toLocaleUpperCase();
+  );
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Route">
+      <Stack spacing={1}>
+        <Typography>{ROUTE_COPY.Description.main}</Typography>
+        <Typography>{ROUTE_COPY.Description[routeProtocol]}</Typography>
+      </Stack>
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>
         <FormControlLabel
           control={<Radio />}
-          label={`Create New ${routeProtocol} Route`}
+          label={`Create New ${routeProtocol.toUpperCase()} Route`}
           value="new"
         />
         <FormControlLabel

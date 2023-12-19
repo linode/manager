@@ -41,7 +41,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     text: 'View additional Images guides',
     to: 'https://www.linode.com/docs/products/tools/images/guides/',
   },
-  title: 'DNS Manager Guides',
+  title: 'Getting Started Guides',
 };
 
 export const youtubeLinkData: ResourcesLinkSection = {

@@ -1,39 +1,30 @@
 import { fireEvent } from '@testing-library/react';
-import { Formik } from 'formik';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerLabel } from './LoadBalancerLabel';
+
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
-
-type MockFormikContext = {
-  initialErrors?: {};
-  initialTouched?: {};
-  initialValues: CreateLoadbalancerPayload;
-};
-
-const initialValues = {
+const initialValues: LoadBalancerCreateFormData = {
   label: loadBalancerLabelValue,
   regions: [],
+  service_targets: [],
 };
-
-const renderWithFormikWrapper = (mockFormikContext: MockFormikContext) =>
-  renderWithTheme(
-    <Formik {...mockFormikContext} onSubmit={vi.fn()}>
-      <LoadBalancerLabel />
-    </Formik>
-  );
 
 describe('LoadBalancerLabel', () => {
   it('should render the component with a label and no error', () => {
-    const { getByTestId, queryByText } = renderWithFormikWrapper({
-      initialValues,
-    });
+    const { getByTestId, queryByText } = renderWithThemeAndFormik(
+      <LoadBalancerLabel />,
+      {
+        initialValues,
+        onSubmit: vi.fn(),
+      }
+    );
 
     const labelInput = getByTestId(loadBalancerTestId);
     const errorNotice = queryByText('Error Text');
@@ -45,11 +36,15 @@ describe('LoadBalancerLabel', () => {
   });
 
   it('should render the component with an error message', () => {
-    const { getByTestId, getByText } = renderWithFormikWrapper({
-      initialErrors: { label: 'This is an error' },
-      initialTouched: { label: true },
-      initialValues,
-    });
+    const { getByTestId, getByText } = renderWithThemeAndFormik(
+      <LoadBalancerLabel />,
+      {
+        initialErrors: { label: 'This is an error' },
+        initialTouched: { label: true },
+        initialValues,
+        onSubmit: vi.fn(),
+      }
+    );
 
     const labelInput = getByTestId(loadBalancerTestId);
     const errorNotice = getByText('This is an error');
@@ -59,8 +54,9 @@ describe('LoadBalancerLabel', () => {
   });
 
   it('should update formik values on input change', () => {
-    const { getByTestId } = renderWithFormikWrapper({
+    const { getByTestId } = renderWithThemeAndFormik(<LoadBalancerLabel />, {
       initialValues,
+      onSubmit: vi.fn(),
     });
 
     const labelInput = getByTestId(loadBalancerTestId);

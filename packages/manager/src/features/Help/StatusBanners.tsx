@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { DismissibleBanner } from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import {

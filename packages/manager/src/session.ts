@@ -14,6 +14,7 @@ import {
  * @param redirectUri {string}
  * @param scope {[string=*]}
  * @param nonce {string}
+ * @returns {string} - OAuth authorization endpoint URL
  */
 export const genOAuthEndpoint = (
   redirectUri: string,
@@ -48,6 +49,7 @@ export const genOAuthEndpoint = (
  *
  * @param redirectUri {string}
  * @param scope {string}
+ * @returns {string} - OAuth authorization endpoint URL
  */
 export const prepareOAuthEndpoint = (redirectUri: string, scope = '*') => {
   const nonce = v4();

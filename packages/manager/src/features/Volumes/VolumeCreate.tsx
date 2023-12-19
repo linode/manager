@@ -1,7 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -18,7 +18,7 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,
@@ -29,7 +29,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -42,7 +42,7 @@ import { SizeField } from './VolumeDrawer/SizeField';
 
 export const SIZE_FIELD_WIDTH = 160;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   agreement: {
     maxWidth: '70%',
     [theme.breakpoints.down('sm')]: {
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const VolumeCreate = () => {
   const theme = useTheme();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
 
   const { data: profile } = useProfile();
@@ -208,13 +208,15 @@ export const VolumeCreate = () => {
 
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
-  const showAgreement =
-    isEURegion(values.region) &&
-    !profile?.restricted &&
-    accountAgreements?.eu_model === false;
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements: accountAgreements,
+    profile,
+    regions,
+    selectedRegionId: values.region,
+  });
 
   const disabled = Boolean(
-    doesNotHavePermission || (showAgreement && !hasSignedAgreement)
+    doesNotHavePermission || (showGDPRCheckbox && !hasSignedAgreement)
   );
 
   const handleLinodeChange = (linode: Linode | null) => {
@@ -295,18 +297,13 @@ export const VolumeCreate = () => {
                   setFieldValue('region', value);
                   setFieldValue('linode_id', null);
                 }}
-                regions={
-                  regions?.filter((eachRegion) =>
-                    eachRegion.capabilities.some((eachCape) =>
-                      eachCape.match(/block/i)
-                    )
-                  ) ?? []
-                }
+                currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
                 isClearable
                 label="Region"
                 onBlur={handleBlur}
+                regions={regions ?? []}
                 selectedId={values.region}
                 width={400}
               />
@@ -385,9 +382,9 @@ export const VolumeCreate = () => {
               className={classes.buttonGroup}
               display="flex"
               flexWrap="wrap"
-              justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+              justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
             >
-              {showAgreement ? (
+              {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
                   centerCheckbox
                   checked={hasSignedAgreement}

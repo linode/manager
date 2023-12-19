@@ -17,7 +17,8 @@ import {
   dcPricingLkeClusterPlans,
   dcPricingMockLinodeTypes,
   dcPricingPlanPlaceholder,
-  dcPricingRegionNotice,
+  dcPricingDocsLabel,
+  dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 
@@ -210,11 +211,11 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
   });
 
   /*
-   * - Confirms that DC-specific pricing notices and prices are present in the LKE create form when the feature flag is on.
+   * - Confirms that DC-specific prices are present in the LKE create form.
+   * - Confirms that pricing docs link is shown in "Region" section.
    * - Confirms that the plan table shows a message in place of plans when a region is not selected.
    * - Confirms that the cluster summary create button is disabled until a plan and region selection are made.
    * - Confirms that HA helper text updates dynamically to display pricing when a region is selected.
-   * - Confirms that the pricing warning notice is visible for a region with DC-specific pricing and not visible otherwise.
    */
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
     const clusterRegion = getRegionById('us-southeast');
@@ -252,21 +253,18 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     // Confirm that HA pricing displays helper text instead of price.
     cy.contains(dcPricingLkeHAPlaceholder).should('be.visible');
 
+    // Confirm docs link to pricing page is visible.
+    cy.findByText(dcPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', dcPricingDocsUrl);
+
     // Fill out LKE creation form label, region, and Kubernetes version fields.
     cy.findByLabelText('Cluster Label')
       .should('be.visible')
       .click()
       .type(`${clusterLabel}{enter}`);
 
-    // Confirm pricing warning notice is visible for a region with DC-specific pricing and not visible otherwise.
-    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
-    cy.findByText(dcPricingRegionNotice).should('not.exist');
-
-    ui.regionSelect
-      .find()
-      .clear()
-      .type(`${dcSpecificPricingRegion.label}{enter}`);
-    cy.findByText(dcPricingRegionNotice).should('be.visible');
+    ui.regionSelect.find().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
     cy.contains(/\(\$.*\/month\)/).should('be.visible');

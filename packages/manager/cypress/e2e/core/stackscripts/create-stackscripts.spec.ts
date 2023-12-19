@@ -307,11 +307,11 @@ describe('Create stackscripts', () => {
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
 
-    cy.visitWithLogin('/stackscripts/create');
     cy.defer(createLinodeAndImage(), {
       label: 'creating Linode and Image',
       timeout: 360000,
     }).then((privateImage) => {
+      cy.visitWithLogin('/stackscripts/create');
       cy.fixture(stackscriptBasicPath).then((stackscriptBasic) => {
         fillOutStackscriptForm(
           stackscriptLabel,

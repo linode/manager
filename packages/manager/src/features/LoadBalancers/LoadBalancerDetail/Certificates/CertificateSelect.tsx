@@ -4,6 +4,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useLoadBalancerCertificatesInfiniteQuery } from 'src/queries/aglb/certificates';
 
 import type { Certificate, Filter } from '@linode/api-v4';
+import type { TextFieldProps } from 'src/components/TextField';
 
 interface Props {
   /**
@@ -28,13 +29,24 @@ interface Props {
    */
   onChange: (certificate: Certificate | null) => void;
   /**
+   * Optional Textfield Props
+   */
+  textFieldProps?: Partial<TextFieldProps>;
+  /**
    * The id of the selected certificate
    */
   value: null | number;
 }
 
 export const CertificateSelect = (props: Props) => {
-  const { errorText, label, loadbalancerId, onChange, value } = props;
+  const {
+    errorText,
+    label,
+    loadbalancerId,
+    onChange,
+    textFieldProps,
+    value,
+  } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
@@ -85,6 +97,7 @@ export const CertificateSelect = (props: Props) => {
       onChange={(e, value) => onChange(value)}
       options={certificates ?? []}
       placeholder="Select a Certificate"
+      textFieldProps={textFieldProps}
       value={selectedCertificate}
     />
   );

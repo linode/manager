@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { Tab } from 'src/components/ReachTab';
-import { TabList } from 'src/components/ReachTabList';
-import { TabPanel } from 'src/components/ReachTabPanel';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
+import { TabPanel } from 'src/components/Tabs/TabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 
 import { Box } from '../Box';
@@ -86,11 +86,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </Notice>
         )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
-        <Tabs
-          index={tabIndex}
-          onChange={tabChangeHandler}
-          sx={{ position: 'relative' }}
-        >
+        <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
               <StyledTab key={`tabs-${tab.title}-${idx}`}>
@@ -105,7 +101,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
               </TabPanel>
             ))}
           </TabPanels>
-        </Tabs>
+        </StyledTabs>
       </div>
     </Paper>
   );
@@ -132,6 +128,12 @@ const StyledTabList = styled(TabList)(({ theme }) => ({
     marginBottom: theme.spacing(3),
     marginTop: theme.spacing(1),
   },
+}));
+
+const StyledTabs = styled(Tabs, {
+  label: 'StyledTabs',
+})(() => ({
+  position: 'relative',
 }));
 
 const StyledTab = styled(Tab)(({ theme }) => ({

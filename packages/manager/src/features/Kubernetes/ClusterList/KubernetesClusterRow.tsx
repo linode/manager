@@ -1,6 +1,6 @@
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ import {
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   clusterRow: {
     '&:before': {
       display: 'none',
@@ -62,7 +62,7 @@ export interface Props {
 
 export const KubernetesClusterRow = (props: Props) => {
   const { cluster, openDeleteDialog, openUpgradeDialog } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);

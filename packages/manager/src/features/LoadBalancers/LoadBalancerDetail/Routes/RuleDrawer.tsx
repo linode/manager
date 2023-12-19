@@ -22,11 +22,14 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import { MatchTypeInfo } from './MatchTypeInfo';
+import { ROUTE_COPY } from './constants';
 import {
   TimeUnit,
   defaultServiceTarget,
   defaultTTL,
+  defaultTTLUnit,
   getIsSessionStickinessEnabled,
+  getNormalizedRulePayload,
   initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
@@ -61,8 +64,9 @@ export const RuleDrawer = (props: Props) => {
 
   const isEditMode = ruleIndexToEdit !== undefined;
 
-  const validationSchema =
-    route?.protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
+  const protocol = route?.protocol ?? 'tcp';
+
+  const validationSchema = protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
 
   const {
     error,
@@ -71,7 +75,7 @@ export const RuleDrawer = (props: Props) => {
     reset,
   } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
 
-  const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
+  const [ttlUnit, setTTLUnit] = useState<TimeUnit>(defaultTTLUnit);
 
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
@@ -82,16 +86,21 @@ export const RuleDrawer = (props: Props) => {
       try {
         const existingRules = route?.rules ?? [];
 
+        const normalizedRule: RulePayload = getNormalizedRulePayload(rule);
+
         // If we are editing, update the rule with the form data.
         if (isEditMode) {
-          existingRules[ruleIndexToEdit] = rule;
+          existingRules[ruleIndexToEdit] = normalizedRule;
         }
 
         await updateRoute({
+          label: route?.label,
           protocol: route?.protocol,
           // If we are editing, send the updated rules, otherwise
           // append a new rule to the end.
-          rules: isEditMode ? existingRules : [...existingRules, rule],
+          rules: isEditMode
+            ? existingRules
+            : [...existingRules, normalizedRule],
         });
         onClose();
       } catch (errors) {
@@ -113,7 +122,7 @@ export const RuleDrawer = (props: Props) => {
     _onClose();
     formik.resetForm();
     reset();
-    setTTLUnit('hour');
+    setTTLUnit(defaultTTLUnit);
   };
 
   const onAddServiceTarget = () => {
@@ -197,27 +206,16 @@ export const RuleDrawer = (props: Props) => {
       wide
     >
       <form onSubmit={formik.handleSubmit}>
-        {/**
-         * @todo: AGLB update copy
-         */}
         <Typography sx={{ marginBottom: 2 }}>
-          This is how you create a rule and more about how it works.
+          {ROUTE_COPY.Rule.Description[protocol]}
         </Typography>
         {generalErrors && <Notice text={generalErrors} variant="error" />}
         <Stack spacing={2}>
           <Stack bgcolor={(theme) => theme.bg.app} p={2.5} spacing={1.5}>
             <Typography variant="h3">Match Rule</Typography>
-            {route?.protocol === 'tcp' ? (
-              <Typography>
-                A TCP rule consists a percent allocation to a Service Target.
-              </Typography>
-            ) : (
-              <Typography>
-                A rule consists of a match type, and a pattern to match on
-                called a match value. Each rule can specify only one field or
-                pattern pair.
-              </Typography>
-            )}
+            <Typography>
+              {ROUTE_COPY.Rule.MatchRule[route?.protocol ?? 'tcp']}
+            </Typography>
             {route?.protocol !== 'tcp' && (
               <>
                 <TextField
@@ -227,10 +225,11 @@ export const RuleDrawer = (props: Props) => {
                       : undefined
                   }
                   label="Hostname"
-                  labelTooltipText="TODO: AGLB"
+                  labelTooltipText={ROUTE_COPY.Rule.Hostname}
                   name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
+                  optional
                   placeholder="www.example.com"
                   value={formik.values.match_condition.hostname}
                 />
@@ -269,6 +268,11 @@ export const RuleDrawer = (props: Props) => {
                         ? formik.errors.match_condition?.match_value
                         : undefined
                     }
+                    labelTooltipText={
+                      ROUTE_COPY.Rule.MatchValue[
+                        formik.values.match_condition.match_field
+                      ]
+                    }
                     placeholder={
                       matchValuePlaceholder[
                         formik.values.match_condition.match_field
@@ -276,7 +280,6 @@ export const RuleDrawer = (props: Props) => {
                     }
                     containerProps={{ sx: { flexGrow: 1 } }}
                     label="Match Value"
-                    labelTooltipText="TODO: AGLB"
                     name="match_condition.match_value"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -337,10 +340,20 @@ export const RuleDrawer = (props: Props) => {
                       : undefined
                   }
                   onChange={(serviceTarget) => {
-                    formik.setFieldTouched(`service_targets[${index}].id`);
+                    formik.setFieldTouched(
+                      `service_targets[${index}].id`,
+                      true,
+                      false
+                    );
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
-                      serviceTarget?.id ?? -1
+                      serviceTarget?.id ?? -1,
+                      true
+                    );
+                    formik.setFieldValue(
+                      `service_targets[${index}].label`,
+                      serviceTarget?.label ?? '',
+                      false
                     );
                   }}
                   loadbalancerId={loadbalancerId}
@@ -370,11 +383,7 @@ export const RuleDrawer = (props: Props) => {
           {route?.protocol !== 'tcp' && (
             <Stack spacing={1.5}>
               <Typography variant="h3">Session Stickiness</Typography>
-              <Typography>
-                Controls how subsequent requests from the same client are routed
-                when selecting a backend target. When disabled, no session
-                information is saved.
-              </Typography>
+              <Typography>{ROUTE_COPY.Rule.Stickiness.Description}</Typography>
               <FormControlLabel
                 control={
                   <Toggle
@@ -400,10 +409,12 @@ export const RuleDrawer = (props: Props) => {
                         option?.label === 'Load Balancer Generated' ? null : ''
                       );
                     }}
+                    textFieldProps={{
+                      labelTooltipText: ROUTE_COPY.Rule.Stickiness.CookieType,
+                    }}
                     disableClearable
                     label="Cookie type"
                     options={stickyOptions}
-                    textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
                     value={cookieType}
                   />
                   <TextField
@@ -417,8 +428,8 @@ export const RuleDrawer = (props: Props) => {
                       formik.values.match_condition.session_stickiness_cookie ??
                       ''
                     }
-                    label="Cookie"
-                    labelTooltipText="TODO: AGLB"
+                    label="Cookie Key"
+                    labelTooltipText={ROUTE_COPY.Rule.Stickiness.Cookie}
                     name="match_condition.session_stickiness_cookie"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -446,18 +457,16 @@ export const RuleDrawer = (props: Props) => {
                           timeUnitFactorMap[ttlUnit]
                         }
                         label="Stickiness TTL"
-                        labelTooltipText="TODO: AGLB"
+                        labelTooltipText={ROUTE_COPY.Rule.Stickiness.TTL}
                         name="match_condition.session_stickiness_ttl"
                         onBlur={formik.handleBlur}
                         type="number"
                       />
                       <Autocomplete
                         onChange={(_, option) => {
-                          const currentTTLUnit = ttlUnit;
-
                           const factor =
                             timeUnitFactorMap[option.key] /
-                            timeUnitFactorMap[currentTTLUnit];
+                            timeUnitFactorMap[ttlUnit];
 
                           setTTLUnit(option.key);
 
@@ -494,6 +503,7 @@ export const RuleDrawer = (props: Props) => {
           primaryButtonProps={{
             label: isEditMode ? 'Save' : 'Add Rule',
             loading: formik.isSubmitting || isLoading,
+            disabled: isEditMode && !formik.dirty,
             type: 'submit',
           }}
           secondaryButtonProps={{

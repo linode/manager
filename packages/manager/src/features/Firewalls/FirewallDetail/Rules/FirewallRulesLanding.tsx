@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -8,8 +9,6 @@ import { Prompt } from 'src/components/Prompt/Prompt';
 import { Typography } from 'src/components/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { useSnackbar } from 'notistack';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { FirewallRuleTable } from './FirewallRuleTable';
@@ -45,7 +44,9 @@ interface Drawer {
   ruleIdx?: number;
 }
 
-const FirewallRulesLanding = (props: Props) => {
+// TODO: Refactor this code - Becoming too large and hard to maintain
+
+export const FirewallRulesLanding = React.memo((props: Props) => {
   const { disabled, firewallID, rules } = props;
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID
@@ -383,7 +384,7 @@ const FirewallRulesLanding = (props: Props) => {
       />
     </>
   );
-};
+});
 
 const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',
@@ -395,8 +396,6 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   marginBottom: theme.spacing(4),
   marginTop: theme.spacing(2),
 }));
-
-export default React.memo(FirewallRulesLanding);
 
 interface DiscardChangesDialogProps {
   handleClose: () => void;

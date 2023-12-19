@@ -16,6 +16,8 @@ import { themes } from '@storybook/theming';
 import { worker } from '../src/mocks/testBrowser';
 
 import '../src/index.css';
+// TODO: M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
+import '@reach/tabs/styles.css';
 
 MINIMAL_VIEWPORTS.mobile1.styles = {
   height: '667px',
@@ -87,7 +89,6 @@ const preview: Preview = {
           <Description />
           <Primary />
           <Controls />
-          <Stories />
         </>
       ),
     },

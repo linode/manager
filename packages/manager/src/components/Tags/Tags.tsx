@@ -5,10 +5,13 @@ import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { Tag } from 'src/components/Tag/Tag';
 
 export interface TagsProps {
+  /**
+   * An array of tags to be displayed.
+   */
   tags: string[];
 }
 
-const Tags = (props: TagsProps) => {
+export const Tags = (props: TagsProps) => {
   const { tags } = props;
 
   const renderTags = (tags: string[]) => {
@@ -40,5 +43,3 @@ const Tags = (props: TagsProps) => {
     </>
   );
 };
-
-export { Tags };

@@ -3,10 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import {
-  gettingStartedGuides,
-  youtubeLinkData,
-} from 'src/features/Linodes/LinodesLanding/LinodesLandingEmptyStateData';
+import { gettingStartedGuides } from 'src/features/VPCs/VPCLanding/VPCLandingEmptyStateData';
 import { sendEvent } from 'src/utilities/analytics';
 
 import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
@@ -33,7 +30,6 @@ export const VPCEmptyState = () => {
       headers={headers}
       icon={VPC}
       linkAnalyticsEvent={linkAnalyticsEvent}
-      youtubeLinkData={youtubeLinkData}
     />
   );
 };

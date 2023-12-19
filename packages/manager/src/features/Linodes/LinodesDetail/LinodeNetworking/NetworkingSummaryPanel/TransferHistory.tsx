@@ -7,6 +7,7 @@ import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
+import { AreaChart } from 'src/components/AreaChart';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -17,6 +18,7 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
@@ -36,6 +38,7 @@ export const TransferHistory = React.memo((props: Props) => {
   const { linodeCreated, linodeID } = props;
 
   const theme = useTheme();
+  const flags = useFlags();
 
   // Needed to see the user's timezone.
   const { data: profile } = useProfile();
@@ -148,6 +151,41 @@ export const TransferHistory = React.memo((props: Props) => {
           CustomIcon={areStatsNotReady ? PendingIcon : undefined}
           compact
         />
+      );
+    }
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags?.recharts) {
+      const timeData = combinedData.reduce((acc: any, point: any) => {
+        acc.push({
+          'Public Outbound Traffic': convertNetworkData
+            ? convertNetworkData(point[1])
+            : point[1],
+          t: point[0],
+        });
+        return acc;
+      }, []);
+
+      return (
+        <Box marginLeft={-5}>
+          <AreaChart
+            areas={[
+              {
+                color: '#1CB35C',
+                dataKey: 'Public Outbound Traffic',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'LLL dd',
+              tickGap: 15,
+            }}
+            aria-label={graphAriaLabel}
+            data={timeData}
+            height={190}
+            timezone={profile?.timezone ?? 'UTC'}
+            unit={unit}
+          />
+        </Box>
       );
     }
 

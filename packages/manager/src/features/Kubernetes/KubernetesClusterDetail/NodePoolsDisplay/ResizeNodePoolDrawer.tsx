@@ -1,6 +1,6 @@
 import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -20,7 +20,7 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {
     paddingBottom: `calc(${theme.spacing(2)} + 1px)`,
   },
@@ -52,7 +52,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     onClose,
     open,
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
   const isLoadingTypes = typesQuery[0]?.isLoading ?? false;

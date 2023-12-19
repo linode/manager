@@ -17,13 +17,17 @@ import SearchBar from './SearchBar/SearchBar';
 import { TopMenuIcon } from './TopMenuIcon';
 import { UserMenu } from './UserMenu';
 
-interface TopMenuProps {
+export interface TopMenuProps {
   desktopMenuToggle: () => void;
   isSideMenuOpen: boolean;
   openSideMenu: () => void;
   username: string;
 }
 
+/**
+ * - Items presented in the top navigation are considered universally important and should be available regardless of any particular task.
+ * - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
+ */
 export const TopMenu = React.memo((props: TopMenuProps) => {
   const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
 

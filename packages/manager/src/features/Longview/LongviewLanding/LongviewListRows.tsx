@@ -24,17 +24,21 @@ export const LongviewListRows = React.memo((props: Props) => {
     <React.Fragment>
       {longviewClientsData.map((eachClient) => {
         return (
-          <ClientRow
-            openPackageDrawer={() =>
-              openPackageDrawer(eachClient.id, eachClient.label)
-            }
-            clientAPIKey={eachClient.api_key}
-            clientID={eachClient.id}
-            clientInstallKey={eachClient.install_code}
-            clientLabel={eachClient.label}
+          <div
+            data-qa-longview-client={eachClient.id}
             key={`longview-client-${eachClient.label}`}
-            triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-          />
+          >
+            <ClientRow
+              openPackageDrawer={() =>
+                openPackageDrawer(eachClient.id, eachClient.label)
+              }
+              clientAPIKey={eachClient.api_key}
+              clientID={eachClient.id}
+              clientInstallKey={eachClient.install_code}
+              clientLabel={eachClient.label}
+              triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+            />
+          </div>
         );
       })}
     </React.Fragment>

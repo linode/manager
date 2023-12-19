@@ -22,7 +22,6 @@ import { enableJunitReport } from './cypress/support/plugins/junit-report';
  */
 export default defineConfig({
   trashAssetsBeforeRuns: false,
-  projectId: '5rhsif',
 
   // Browser configuration.
   chromeWebSecurity: false,
@@ -34,6 +33,11 @@ export default defineConfig({
   responseTimeout: 80000,
   defaultCommandTimeout: 80000,
   pageLoadTimeout: 60000,
+
+  // Recording and test troubleshooting.
+  projectId: '5rhsif',
+  screenshotOnRunFailure: true,
+  video: true,
 
   // Only retry test when running via CI.
   retries: process.env['CI'] ? 2 : 0,

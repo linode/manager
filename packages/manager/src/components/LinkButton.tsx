@@ -1,13 +1,12 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from './Box';
 import { StyledLinkButton } from './Button/StyledLinkButton';
 import { CircularProgress } from './CircularProgress';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     color: theme.palette.text.primary,
     cursor: 'default',
@@ -28,7 +27,7 @@ interface Props {
 }
 
 export const LinkButton = (props: Props) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const {
     children,
     className,
@@ -40,7 +39,7 @@ export const LinkButton = (props: Props) => {
 
   const Button = (
     <StyledLinkButton
-      className={classNames(
+      className={cx(
         {
           [classes.disabled]: isDisabled,
         },

@@ -127,6 +127,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             textFieldProps={{
               helperText,
             }}
+            currentCapability="Linodes"
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"

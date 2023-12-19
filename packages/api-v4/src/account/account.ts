@@ -5,6 +5,7 @@ import {
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
+  setHeaders,
   setMethod,
   setURL,
   setParams,
@@ -18,8 +19,10 @@ import {
   CancelAccountPayload,
   Agreements,
   RegionalNetworkUtilization,
+  ChildAccountPayload,
 } from './types';
-import { Filter, ResourcePage as Page, Params } from '../types';
+import type { Filter, ResourcePage, Params, RequestOptions } from '../types';
+import type { Token } from '../profile';
 
 /**
  * getAccountInfo
@@ -115,7 +118,7 @@ export const getAccountAgreements = () =>
  *
  */
 export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
-  Request<Page<AccountAvailability>>(
+  Request<ResourcePage<AccountAvailability>>(
     setURL(`${BETA_API_ROOT}/account/availability`),
     setMethod('GET'),
     setParams(params),
@@ -149,3 +152,55 @@ export const signAgreement = (data: Partial<Agreements>) => {
     setData(data)
   );
 };
+
+/**
+ * getChildAccounts
+ *
+ * This endpoint will return a paginated list of all Child Accounts with a Parent Account.
+ * The response will be similar to /account, except that it will list details for multiple accounts.
+ */
+export const getChildAccounts = ({ filter, params, headers }: RequestOptions) =>
+  Request<ResourcePage<Account>>(
+    setURL(`${API_ROOT}/account/child-accounts`),
+    setMethod('GET'),
+    setHeaders(headers),
+    setParams(params),
+    setXFilter(filter)
+  );
+
+/**
+ * getChildAccount
+ *
+ * This endpoint will function similarly to /account/child-accounts,
+ * except that it will return account details for only a specific euuid.
+ */
+export const getChildAccount = ({ euuid, headers }: ChildAccountPayload) =>
+  Request<Account>(
+    setURL(`${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}`),
+    setMethod('GET'),
+    setHeaders(headers)
+  );
+
+/**
+ * createChildAccountPersonalAccessToken
+ *
+ * This endpoint will allow Parent Account Users with the "child_account_access" grant to
+ * create an ephemeral token for their proxy user on a child account, using the euuid of
+ * that child account. As noted in previous sections, this Token will inherit the
+ * permissions of the Proxy User, and the token itself will not be subject to additional
+ * restrictions.
+ *
+ * setHeaders() will be used for creating tokens from within the proxy account.
+ */
+export const createChildAccountPersonalAccessToken = ({
+  euuid,
+  headers,
+}: ChildAccountPayload) =>
+  Request<Token>(
+    setURL(
+      `${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}/token`
+    ),
+    setMethod('POST'),
+    setHeaders(headers),
+    setData(euuid)
+  );

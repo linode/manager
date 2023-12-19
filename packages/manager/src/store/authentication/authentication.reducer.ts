@@ -20,6 +20,9 @@ const {
 
 const defaultToken = tokenInLocalStorage.get();
 
+/**
+ * Tokens will either be "Admin 1234" or "Bearer 1234"
+ */
 function getIsLoggedInAsCustomer(token: string) {
   if (!token) {
     return false;
@@ -84,7 +87,6 @@ const reducer = reducerWithInitialState(defaultState)
       redirectToLogin(location.pathname, location.search);
     }
 
-    /** token will either be "Admin: 1234" or "Bearer: 1234" */
     const isLoggedInAsCustomer = getIsLoggedInAsCustomer(token);
 
     return {

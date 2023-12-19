@@ -31,7 +31,13 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { CertificateSelect } from '../Certificates/CertificateSelect';
 import { AddEndpointForm } from './AddEndpointForm';
 import { EndpointTable } from './EndpointTable';
-import { algorithmOptions, initialValues, protocolOptions } from './utils';
+import {
+  SERVICE_TARGET_COPY,
+  algorithmOptions,
+  initialValues,
+  protocolOptions,
+} from './constants';
+import { getNormalizedServiceTargetPayload } from './utils';
 
 interface Props {
   loadbalancerId: number;
@@ -60,12 +66,15 @@ export const ServiceTargetDrawer = (props: Props) => {
   const formik = useFormik<ServiceTargetPayload>({
     enableReinitialize: true,
     initialValues: isEditMode ? serviceTarget : initialValues,
-    async onSubmit(values: ServiceTargetPayload) {
+    async onSubmit(values) {
+      const normalizedValues: ServiceTargetPayload = getNormalizedServiceTargetPayload(
+        values
+      );
       try {
         if (isEditMode) {
-          await updateServiceTarget(values);
+          await updateServiceTarget(normalizedValues);
         } else {
-          await createServiceTarget(values);
+          await createServiceTarget(normalizedValues);
         }
         onClose();
       } catch (errors) {
@@ -138,12 +147,25 @@ export const ServiceTargetDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>
+      {!isEditMode && (
+        <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
+      )}
       <form onSubmit={formik.handleSubmit}>
         {generalCreateErrors && (
-          <Notice text={generalCreateErrors} variant="error" />
+          <Notice
+            spacingBottom={0}
+            spacingTop={12}
+            text={generalCreateErrors}
+            variant="error"
+          />
         )}
         {generalUpdateErrors && (
-          <Notice text={generalUpdateErrors} variant="error" />
+          <Notice
+            spacingBottom={0}
+            spacingTop={12}
+            text={generalUpdateErrors}
+            variant="error"
+          />
         )}
         <TextField
           errorText={formik.errors.label}
@@ -153,6 +175,9 @@ export const ServiceTargetDrawer = (props: Props) => {
           value={formik.values.label}
         />
         <Autocomplete
+          textFieldProps={{
+            labelTooltipText: SERVICE_TARGET_COPY.Tooltips.Protocol,
+          }}
           value={protocolOptions.find(
             (option) => option.value === formik.values.protocol
           )}
@@ -179,6 +204,9 @@ export const ServiceTargetDrawer = (props: Props) => {
               </li>
             );
           }}
+          textFieldProps={{
+            labelTooltipText: SERVICE_TARGET_COPY.Tooltips.Algorithm,
+          }}
           value={algorithmOptions.find(
             (option) => option.value === formik.values.load_balancing_policy
           )}
@@ -196,24 +224,36 @@ export const ServiceTargetDrawer = (props: Props) => {
           onRemove={onRemoveEndpoint}
         />
         <AddEndpointForm onAdd={onAddEndpoint} />
-        <Divider spacingBottom={12} spacingTop={24} />
-        <Stack alignItems="center" direction="row">
-          <Typography variant="h3">Service Target CA Certificate</Typography>
-          <TooltipIcon status="help" text="TODO: AGLB" />
-        </Stack>
-        <CertificateSelect
-          onChange={(cert) =>
-            formik.setFieldValue('certificate_id', cert?.id ?? null)
-          }
-          errorText={formik.errors.certificate_id}
-          filter={{ type: 'ca' }}
-          loadbalancerId={loadbalancerId}
-          value={formik.values.certificate_id}
-        />
+        {formik.values.protocol === 'https' && (
+          <>
+            <Divider spacingBottom={12} spacingTop={24} />
+            <Stack alignItems="center" direction="row">
+              <Typography variant="h3">
+                Service Target CA Certificate
+              </Typography>
+              <TooltipIcon
+                status="help"
+                text={SERVICE_TARGET_COPY.Tooltips.Certificate}
+              />
+            </Stack>
+            <CertificateSelect
+              onChange={(cert) =>
+                formik.setFieldValue('certificate_id', cert?.id ?? null)
+              }
+              errorText={formik.errors.certificate_id}
+              filter={{ type: 'ca' }}
+              loadbalancerId={loadbalancerId}
+              value={formik.values.certificate_id}
+            />
+          </>
+        )}
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Health Checks</Typography>
-          <TooltipIcon status="help" text="TODO: AGLB" />
+          <TooltipIcon
+            status="help"
+            text={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Description}
+          />
         </Stack>
         <FormControlLabel
           control={
@@ -235,7 +275,14 @@ export const ServiceTargetDrawer = (props: Props) => {
               sx={{ marginBottom: '0px !important' }}
               value={formik.values.healthcheck.protocol}
             >
-              <FormLabel>Protocol</FormLabel>
+              <FormLabel>
+                Protocol
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{ marginLeft: 1.5, padding: 0 }}
+                  text={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Protocol}
+                />
+              </FormLabel>
               <FormControlLabel control={<Radio />} label="HTTP" value="http" />
               <FormControlLabel control={<Radio />} label="TCP" value="tcp" />
               <FormHelperText>
@@ -249,9 +296,11 @@ export const ServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">seconds</InputAdornment>
                   ),
                 }}
+                labelTooltipText={
+                  SERVICE_TARGET_COPY.Tooltips.Healthcheck.Interval
+                }
                 errorText={formik.errors.healthcheck?.interval}
                 label="Interval"
-                labelTooltipText="TODO: AGLB"
                 name="healthcheck.interval"
                 onChange={formik.handleChange}
                 type="number"
@@ -263,9 +312,11 @@ export const ServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">checks</InputAdornment>
                   ),
                 }}
+                labelTooltipText={
+                  SERVICE_TARGET_COPY.Tooltips.Healthcheck.Healthy
+                }
                 errorText={formik.errors.healthcheck?.healthy_threshold}
                 label="Healthy Threshold"
-                labelTooltipText="TODO: AGLB"
                 name="healthcheck.healthy_threshold"
                 onChange={formik.handleChange}
                 type="number"
@@ -279,9 +330,11 @@ export const ServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">seconds</InputAdornment>
                   ),
                 }}
+                labelTooltipText={
+                  SERVICE_TARGET_COPY.Tooltips.Healthcheck.Timeout
+                }
                 errorText={formik.errors.healthcheck?.timeout}
                 label="Timeout"
-                labelTooltipText="TODO: AGLB"
                 name="healthcheck.timeout"
                 onChange={formik.handleChange}
                 type="number"
@@ -293,9 +346,11 @@ export const ServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">checks</InputAdornment>
                   ),
                 }}
+                labelTooltipText={
+                  SERVICE_TARGET_COPY.Tooltips.Healthcheck.Unhealthy
+                }
                 errorText={formik.errors.healthcheck?.unhealthy_threshold}
                 label="Unhealthy Threshold"
-                labelTooltipText="TODO: AGLB"
                 name="healthcheck.unhealthy_threshold"
                 onChange={formik.handleChange}
                 type="number"
@@ -305,18 +360,22 @@ export const ServiceTargetDrawer = (props: Props) => {
             {formik.values.healthcheck.protocol === 'http' && (
               <>
                 <TextField
-                  errorText={formik.errors.healthcheck?.protocol}
+                  labelTooltipText={
+                    SERVICE_TARGET_COPY.Tooltips.Healthcheck.Path
+                  }
+                  errorText={formik.errors.healthcheck?.path}
                   label="Health Check Path"
-                  labelTooltipText="TODO: AGLB"
                   name="healthcheck.path"
                   onChange={formik.handleChange}
                   optional
                   value={formik.values.healthcheck.path}
                 />
                 <TextField
+                  labelTooltipText={
+                    SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host
+                  }
                   errorText={formik.errors.healthcheck?.host}
                   label="Health Check Host"
-                  labelTooltipText="TODO: AGLB"
                   name="healthcheck.host"
                   onChange={formik.handleChange}
                   optional

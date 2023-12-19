@@ -2,12 +2,15 @@
  * @files Cypress intercepts and mocks for VPC API requests.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
 import type { Subnet, VPC } from '@linode/api-v4';
-import { makeResponse } from 'support/util/response';
-import { makeErrorResponse } from 'support/util/errors';
+
+export const MOCK_DELETE_VPC_ERROR =
+  'Before deleting this VPC, you must remove all of its Linodes';
 
 /**
  * Intercepts GET request to fetch a VPC and mocks response.
@@ -87,6 +90,27 @@ export const mockUpdateVPC = (
  */
 export const mockDeleteVPC = (vpcId: number): Cypress.Chainable<null> => {
   return cy.intercept('DELETE', apiMatcher(`vpcs/${vpcId}`), {});
+};
+
+/**
+ * Intercepts DELETE request to delete a VPC and mocks an HTTP error response.
+ *
+ * @param vpcId - ID of deleted VPC for which to mock response.
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param errorCode - Optional error code with which to mock response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteVPCError = (
+  vpcId: number,
+  errorMessage: string = MOCK_DELETE_VPC_ERROR,
+  errorCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/vpcs/${vpcId}`),
+    makeErrorResponse(errorMessage, errorCode)
+  );
 };
 
 /**

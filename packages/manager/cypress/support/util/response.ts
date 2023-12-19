@@ -2,13 +2,7 @@
  * @file Utility functions to easily create HTTP response objects for Cypress tests.
  */
 
-/**
- * Object describing an HTTP response.
- */
-export interface Response {
-  body: any;
-  statusCode: number;
-}
+import type { StaticResponse } from 'cypress/types/net-stubbing';
 
 /**
  * Creates an HTTP response object with the given body data.
@@ -21,7 +15,7 @@ export interface Response {
 export const makeResponse = (
   body: any = {},
   statusCode: number = 200
-): Response => {
+): Partial<StaticResponse> => {
   return {
     body,
     statusCode,

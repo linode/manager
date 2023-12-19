@@ -1,4 +1,4 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Typography, styled } from '@mui/material';
 import * as React from 'react';
 
@@ -9,12 +9,12 @@ import { displayPrice } from 'src/components/DisplayPrice';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
@@ -30,7 +30,8 @@ export interface Props {
   highAvailability?: boolean;
   highAvailabilityPrice: number | undefined;
   pools: KubeNodePoolResponse[];
-  region: string | undefined;
+  region: string;
+  regionsData: Region[];
   removePool: (poolIdx: number) => void;
   showHighAvailability: boolean | undefined;
   submitting: boolean;
@@ -46,6 +47,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     highAvailabilityPrice,
     pools,
     region,
+    regionsData,
     removePool,
     showHighAvailability,
     submitting,
@@ -62,10 +64,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const types = extendTypesQueryResult(typesQuery);
   const isLoading = typesQuery.some((query) => query.isLoading);
 
-  const showGDPRCheckbox =
-    isEURegion(region) &&
-    !profile?.restricted &&
-    agreements?.eu_model === false;
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements,
+    profile,
+    regions: regionsData,
+    selectedRegionId: region,
+  });
 
   const needsAPool = pools.length < 1;
 

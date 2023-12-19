@@ -21,7 +21,7 @@ export const BareMetalRescue = (props: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { enqueueSnackbar } = useSnackbar();
-  const { data: linode } = useLinodeQuery(
+  const { data: linode, isLoading: isLoadingLinodes } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined && isOpen
   );
@@ -57,6 +57,7 @@ export const BareMetalRescue = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         label: 'Reboot into Rescue Mode',
+        'data-qa-form-data-loading': loading || isLoadingLinodes,
         loading,
         onClick: handleSubmit,
       }}

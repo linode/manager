@@ -6,9 +6,11 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   mockGetVPCs,
   mockDeleteVPC,
+  mockDeleteVPCError,
   mockUpdateVPC,
+  MOCK_DELETE_VPC_ERROR,
 } from 'support/intercepts/vpc';
-import { vpcFactory } from '@src/factories';
+import { subnetFactory, vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
@@ -69,7 +71,6 @@ describe('VPC landing page', () => {
     cy.findByText(VPC_LABEL).should('be.visible');
     cy.findByText('Create a private and isolated network').should('be.visible');
     cy.findByText('Getting Started Guides').should('be.visible');
-    cy.findByText('Video Playlist').should('be.visible');
 
     // Create button exists and navigates user to create page.
     ui.button
@@ -268,6 +269,92 @@ describe('VPC landing page', () => {
     ui.toast.assertMessage('VPC deleted successfully.');
     cy.findByText(mockVPCs[1].label).should('not.exist');
     cy.findByText('Create a private and isolated network').should('be.visible');
+  });
+
+  /**
+   * Confirms UI handles errors gracefully when attempting to delete a VPC
+   */
+  it('cannot delete a VPC with linodes assigned to it', () => {
+    const subnet = subnetFactory.build();
+    const mockVPCs = [
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+        subnets: [subnet],
+      }),
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+      }),
+    ];
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetVPCs(mockVPCs).as('getVPCs');
+    mockDeleteVPCError(mockVPCs[0].id).as('deleteVPCError');
+
+    cy.visitWithLogin('/vpcs');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+
+    // Try to delete VPC
+    cy.findByText(mockVPCs[0].label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Complete type-to-confirm dialog.
+    ui.dialog
+      .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('VPC Label')
+          .should('be.visible')
+          .click()
+          .type(mockVPCs[0].label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that VPC doesn't get deleted and that an error appears
+    cy.wait(['@deleteVPCError']);
+    cy.findByText(MOCK_DELETE_VPC_ERROR).should('be.visible');
+
+    // close Delete dialog for this VPC and open it up for the second VPC to confirm that error message does not persist
+    ui.dialog
+      .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.findByText(mockVPCs[1].label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.findByText(MOCK_DELETE_VPC_ERROR).should('not.exist');
   });
 
   /*

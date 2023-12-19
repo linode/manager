@@ -1,10 +1,12 @@
+import { Capabilities } from '@linode/api-v4';
 import React from 'react';
+
 import { regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { SelectRegionPanel } from './SelectRegionPanel';
 
 const pricingMocks = vi.hoisted(() => ({
-  doesRegionHaveUniquePricing: vi.fn().mockReturnValue(false),
   isLinodeTypeDifferentPriceInSelectedRegion: vi.fn().mockReturnValue(false),
 }));
 
@@ -13,7 +15,6 @@ const queryParamMocks = vi.hoisted(() => ({
 }));
 
 vi.mock('src/utilities/pricing/linodes', () => ({
-  doesRegionHaveUniquePricing: pricingMocks.doesRegionHaveUniquePricing,
   isLinodeTypeDifferentPriceInSelectedRegion:
     pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion,
 }));
@@ -24,39 +25,8 @@ vi.mock('src/utilities/queryParams', () => ({
 
 const createPath = '/linodes/create';
 
-describe('SelectRegionPanel in Create Flow', () => {
-  beforeEach(() => {
-    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
-  });
-
-  it('should render a notice when the selected region has unique pricing', async () => {
-    const regions = regionFactory.buildList(1, {
-      id: 'id-cgk',
-      label: 'Jakarta, ID',
-    });
-
-    const { findByText } = renderWithTheme(
-      <SelectRegionPanel
-        handleSelection={vi.fn()}
-        regions={regions}
-        selectedId="id-cgk"
-      />,
-
-      {
-        MemoryRouter: { initialEntries: [createPath] },
-      }
-    );
-
-    await findByText(
-      `Prices for plans, products, and services in ${regions[0].label} may vary from other regions.`,
-      { exact: false }
-    );
-  });
-});
-
 describe('SelectRegionPanel on the Clone Flow', () => {
   beforeEach(() => {
-    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(false);
     queryParamMocks.getQueryParamsFromQueryString.mockReturnValue({
       regionID: 'us-east',
       type: 'Clone+Linode',
@@ -65,20 +35,24 @@ describe('SelectRegionPanel on the Clone Flow', () => {
 
   const regions = [...regionFactory.buildList(3)];
   const mockedProps = {
+    currentCapability: 'Linodes' as Capabilities,
     handleSelection: () => vi.fn(),
     regions,
     selectedLinodeTypeId: 'g6-standard-2',
   };
 
   it('renders expected content on initial render', () => {
-    const { container, getAllByRole, getByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} />,
-      {
-        MemoryRouter: {
-          initialEntries: [createPath],
-        },
-      }
-    );
+    const {
+      container,
+      getAllByRole,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(<SelectRegionPanel {...mockedProps} />, {
+      MemoryRouter: {
+        initialEntries: [createPath],
+      },
+    });
 
     // Header
     expect(getByRole('heading')).toHaveTextContent('Region');
@@ -90,8 +64,10 @@ describe('SelectRegionPanel on the Clone Flow', () => {
 
     // Links
     const links = getAllByRole('link');
-    expect(links).toHaveLength(1);
-    expect(links[0]).toHaveAttribute(
+    expect(links).toHaveLength(2);
+    expect(getByText('How Data Center Pricing Works')).toBeInTheDocument();
+    expect(links[0]).toHaveAttribute('href', 'https://www.linode.com/pricing');
+    expect(links[1]).toHaveAttribute(
       'href',
       'https://www.linode.com/speed-test/'
     );
@@ -146,7 +122,6 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion.mockReturnValue(
       true
     );
-    pricingMocks.doesRegionHaveUniquePricing.mockReturnValue(true);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
       <SelectRegionPanel {...mockedProps} selectedId="br-gru" />,

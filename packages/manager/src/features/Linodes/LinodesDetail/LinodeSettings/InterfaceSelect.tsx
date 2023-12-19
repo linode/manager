@@ -11,15 +11,16 @@ import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-import { Typography } from 'src/components/Typography';
 
 interface Props {
+  errors: VPCInterfaceErrors & OtherInterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;
@@ -27,13 +28,11 @@ interface Props {
   purpose: ExtendedPurpose;
   readOnly: boolean;
   region?: string;
-  slotNumber: number;
   regionHasVLANs?: boolean;
   regionHasVPCs?: boolean;
+  slotNumber: number;
 }
-
-interface VPCStateErrors {
-  ipamError?: string;
+interface VPCInterfaceErrors {
   labelError?: string;
   publicIPv4Error?: string;
   subnetError?: string;
@@ -41,8 +40,12 @@ interface VPCStateErrors {
   vpcIPv4Error?: string;
 }
 
+interface OtherInterfaceErrors {
+  ipamError?: string;
+  primaryError?: string;
+}
+
 interface VPCState {
-  errors: VPCStateErrors;
   nattedIPv4Address?: string;
   subnetId?: null | number;
   vpcIPv4?: string;
@@ -69,12 +72,12 @@ export const InterfaceSelect = (props: CombinedProps) => {
     purpose,
     readOnly,
     region,
+    regionHasVLANs,
+    regionHasVPCs,
     slotNumber,
     subnetId,
     vpcIPv4,
     vpcId,
-    regionHasVLANs,
-    regionHasVPCs,
   } = props;
 
   const theme = useTheme();

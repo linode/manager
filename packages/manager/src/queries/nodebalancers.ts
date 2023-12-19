@@ -1,6 +1,7 @@
 import {
   CreateNodeBalancerConfig,
   CreateNodeBalancerPayload,
+  Firewall,
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerStats,
@@ -10,6 +11,7 @@ import {
   deleteNodeBalancerConfig,
   getNodeBalancer,
   getNodeBalancerConfigs,
+  getNodeBalancerFirewalls,
   getNodeBalancerStats,
   getNodeBalancers,
   updateNodeBalancer,
@@ -30,9 +32,11 @@ import {
 } from 'react-query';
 
 import { EventWithStore } from 'src/events';
+import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
+import { queryPresets } from './base';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
@@ -211,6 +215,8 @@ export const nodebalanacerEventHandler = ({
       event.entity!.id,
       'configs',
     ]);
+  } else if (event.action.startsWith('nodebalancer_delete')) {
+    queryClient.invalidateQueries([firewallsQueryKey]);
   } else {
     queryClient.invalidateQueries([queryKey, 'all']);
     queryClient.invalidateQueries([queryKey, 'paginated']);
@@ -224,3 +230,10 @@ export const nodebalanacerEventHandler = ({
     }
   }
 };
+
+export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
+  useQuery<ResourcePage<Firewall>, APIError[]>(
+    [queryKey, 'nodebalancer', nodebalancerId, 'firewalls'],
+    () => getNodeBalancerFirewalls(nodebalancerId),
+    queryPresets.oneTimeFetch
+  );

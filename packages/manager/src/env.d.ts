@@ -27,6 +27,7 @@ interface ImportMetaEnv {
   REACT_APP_MOCK_SERVICE_WORKER?: string;
   REACT_APP_PAYPAL_CLIENT_ID?: string;
   REACT_APP_PAYPAL_ENV?: string;
+  REACT_APP_PROXY_PAT?: string;
   REACT_APP_SENTRY_URL?: string;
   REACT_APP_STATUS_PAGE_URL?: string;
   SSR: boolean;

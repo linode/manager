@@ -10,13 +10,13 @@ export const useVPCConfigInterface = (linodeId: number) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const displayVPCSection = isFeatureEnabled(
+  const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
 
-  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
+  const { data: vpcData } = useVPCsQuery({}, {}, showVPCs);
   const vpcsList = vpcData?.data ?? [];
 
   const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
@@ -54,8 +54,9 @@ export const useVPCConfigInterface = (linodeId: number) => {
 
   return {
     configInterfaceWithVPC,
-    displayVPCSection,
+    configs,
     isVPCOnlyLinode,
+    showVPCs,
     vpcLinodeIsAssignedTo,
   };
 };

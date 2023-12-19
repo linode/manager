@@ -72,9 +72,21 @@ describe('Object Storage enrollment', () => {
     };
 
     const mockRegions: Region[] = [
-      regionFactory.build({ label: 'Newark, NJ', id: 'us-east' }),
-      regionFactory.build({ label: 'Sao Paulo, BR', id: 'br-gru' }),
-      regionFactory.build({ label: 'Jakarta, ID', id: 'id-cgk' }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        label: 'Newark, NJ',
+        id: 'us-east',
+      }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        label: 'Sao Paulo, BR',
+        id: 'br-gru',
+      }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        label: 'Jakarta, ID',
+        id: 'id-cgk',
+      }),
     ];
 
     // Clusters with special pricing are currently hardcoded rather than
