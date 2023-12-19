@@ -15,10 +15,10 @@ export const EndpointHealth = (props: Props) => {
   return (
     <Stack alignItems="center" direction="row" spacing={1}>
       <StatusIcon status="active" />
-      <Typography>{up} up</Typography>
+      <Typography noWrap>{up} up</Typography>
       <Typography>-</Typography>
       <StatusIcon status="inactive" />
-      <Typography>{down} down</Typography>
+      <Typography noWrap>{down} down</Typography>
     </Stack>
   );
 };
