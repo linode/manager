@@ -479,8 +479,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     if (this.state.childAccountAccessEnabled) {
-      permDescriptionMap['enable_parent_child_access'] =
-        'Can access child accounts';
+      permDescriptionMap['child_account_access'] = 'Can access child accounts';
     }
 
     return (
@@ -506,9 +505,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { grants, isSavingGlobal } = this.state;
     if (
       this.state.childAccountAccessEnabled &&
-      !this.globalBooleanPerms.includes('enable_parent_child_access')
+      !this.globalBooleanPerms.includes('child_account_access')
     ) {
-      this.globalBooleanPerms.push('enable_parent_child_access');
+      this.globalBooleanPerms.push('child_account_access');
     }
     return (
       <StyledPermPaper data-qa-global-section>
