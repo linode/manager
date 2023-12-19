@@ -479,7 +479,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     if (this.state.childAccountAccessEnabled) {
-      permDescriptionMap['child_account_access'] = 'Can access child accounts';
+      permDescriptionMap['child_account_access'] =
+        'Enable child account access';
     }
 
     return (
