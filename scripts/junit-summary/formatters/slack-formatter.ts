@@ -67,7 +67,7 @@ export const slackFormatter: Formatter = (
       '',
       ...failedTestLines,
       '',
-      failedTestActions ? `${failedTestActions}` : null,
+      failedTestActions ? failedTestActions : null,
     ]
       .filter((item) => item !== null)
       .map((item) => `> ${item}`)
