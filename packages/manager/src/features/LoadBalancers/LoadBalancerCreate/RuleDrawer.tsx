@@ -33,7 +33,7 @@ import {
 } from '../LoadBalancerDetail/Routes/utils';
 
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-import type { RuleCreatePayload } from '@linode/api-v4';
+import type { RuleCreatePayload, ServiceTargetPayload } from '@linode/api-v4';
 
 interface Props {
   configurationIndex: number | undefined;
@@ -43,7 +43,7 @@ interface Props {
   ruleIndexToEdit: number | undefined;
 }
 
-const initialValues = {
+const initialValues: RuleCreatePayload = {
   match_condition: {
     hostname: '',
     match_field: 'path_prefix' as const,
@@ -51,7 +51,23 @@ const initialValues = {
     session_stickiness_cookie: null,
     session_stickiness_ttl: null,
   },
-  service_targets: [],
+  service_targets: [
+    {
+      certificate_id: null,
+      endpoints: [],
+      healthcheck: {
+        healthy_threshold: 0,
+        interval: 0,
+        protocol: 'http',
+        timeout: 0,
+        unhealthy_threshold: 0,
+      },
+      label: '',
+      load_balancing_policy: 'round_robin',
+      percentage: 100,
+      protocol: 'http',
+    },
+  ],
 };
 
 export const RuleDrawer = (props: Props) => {
@@ -98,6 +114,10 @@ export const RuleDrawer = (props: Props) => {
       onClose();
     },
   });
+
+  const allServiceTargets = values.configurations.reduce<ServiceTargetPayload[]>((acc, configuration) => {
+    return acc.concat(configuration.service_targets);
+  }, []);
 
   const onClose = () => {
     _onClose();
@@ -291,14 +311,14 @@ export const RuleDrawer = (props: Props) => {
                   textFieldProps={{
                     hideLabel: index !== 0,
                   }}
-                  value={configuration.service_targets.find(
+                  value={allServiceTargets.find(
                     (st) =>
                       st.label === formik.values.service_targets[index].label
                   )}
                   fullWidth
                   label="Service Target"
                   noMarginTop={index === 0}
-                  options={configuration.service_targets}
+                  options={allServiceTargets}
                 />
                 <IconButton
                   sx={{

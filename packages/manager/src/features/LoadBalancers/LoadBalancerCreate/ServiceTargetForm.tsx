@@ -1,4 +1,4 @@
-import { Endpoint, ServiceTargetPayload } from '@linode/api-v4';
+import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
 import { UpdateServiceTargetSchema } from '@linode/validation';
 import { useFormik, useFormikContext, yupToFormErrors } from 'formik';
 import React from 'react';
@@ -50,6 +50,7 @@ export const ServiceTargetForm = (props: Props) => {
   const {
     setFieldValue,
     values,
+    setValues,
   } = useFormikContext<LoadBalancerCreateFormData>();
 
   const configuration = values.configurations[configurationIndex];
