@@ -69,38 +69,43 @@ export const SubnetMaskToAvailIPv4s = {
   32: 1,
 };
 
-export const calculateAvailableIPv4sRFC1918 = (
-  address: string
-): number | undefined => {
+/**
+ * Determines if the given IPv4 is an RFC1918 IP address.
+ */
+const isValidRFC1918IPv4 = (address: string) => {
   const [ip, mask] = address.split('/');
   const ipType = determineIPType(address);
   if (ipType !== 'ipv4' || mask === '' || mask === undefined) {
-    return undefined;
+    return false;
   }
 
   const [firstOctet, secondOctet] = ip.split('.');
   const parsedMask = parseInt(mask, 10);
   const parsedSecondOctet = parseInt(secondOctet, 10);
 
-  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs. The ranges are:
   // 10.x.x.x (10/8 prefix)
   // 172.16.x.x-172.31.x.x (172/12 prefix)
   // 192.168.x.x (192.168/16 prefix)
-  if (
-    (firstOctet !== '10' && firstOctet !== '172' && firstOctet !== '192') ||
-    // Check for invalid 10.x IPs
-    (firstOctet === '10' && parsedMask < 8) ||
-    // check for invalid 172.x IPs
+  return (
+    // check for valid 10.x IPs
+    (firstOctet === '10' && parsedMask >= 8) ||
+    // check for valid 172.x IPs
     (firstOctet === '172' &&
-      (parsedSecondOctet < 16 || parsedSecondOctet > 31 || parsedMask < 12)) ||
-    // check for invalid 192.x IPs
-    (firstOctet === '192' &&
-      (secondOctet !== '168' || (secondOctet === '168' && parsedMask < 16)))
-  ) {
-    return undefined;
-  }
+      parsedSecondOctet >= 16 &&
+      parsedSecondOctet <= 31 &&
+      parsedMask >= 12) ||
+    // check for valid 192.x IPs
+    (firstOctet === '192' && secondOctet === '168' && parsedMask >= 16)
+  );
+};
 
-  return SubnetMaskToAvailIPv4s[mask];
+export const calculateAvailableIPv4sRFC1918 = (
+  address: string
+): number | undefined => {
+  const [, mask] = address.split('/');
+
+  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs
+  return isValidRFC1918IPv4(address) ? SubnetMaskToAvailIPv4s[mask] : undefined;
 };
 
 /**
@@ -109,8 +114,8 @@ export const calculateAvailableIPv4sRFC1918 = (
  * @param otherIPv4s the other IPv4s to check against
  * @returns the next recommended subnet IPv4 address to use
  *
- * Assumption: if the inputted ipv4 is valid and in x.x.x.x/x format, then the outputted ipv4 valid and in x.x.x.x/x format not already in
- * otherIPv4s (excluding the default case -- see comments below)
+ * Assumption: if @param lastRecommendedIPv4 is a valid RFC1918 IPv4 and in x.x.x.x/x format, then the output is a valid RFC1918 IPv4 in x.x.x.x/x
+ * format and not already in @param otherIPv4s (excluding the default IPv4 case -- see comments below).
  */
 export const getRecommendedSubnetIPv4 = (
   lastRecommendedIPv4: string,
@@ -120,22 +125,29 @@ export const getRecommendedSubnetIPv4 = (
     firstOctet,
     secondOctet,
     thirdOctet,
-    fourthOctet,
+    fourthOctetAndMask,
   ] = lastRecommendedIPv4.split('.');
+  const [fourthOctet] = fourthOctetAndMask.split('/');
   const parsedThirdOctet = parseInt(thirdOctet, 10);
   let ipv4ToReturn = '';
 
   /**
    * Return DEFAULT_SUBNET_IPV4_VALUE (10.0.0.0/24) if parsedThirdOctet + 1 would result in a nonsense ipv4 (ex. 10.0.256.0/24 is not an IPv4)
    * Realistically this case will rarely be reached and acts mainly as a safety check: a) when creating a VPC, the first recommended address is
-   * always 10.0.0.0/24, and b) most people will be allowed a max of 10 subnets in their VPC, so there are plenty of subnets to recommend
+   * always 10.0.0.0/24, and b) most people will be allowed a max of 10 subnets in their VPC, so there *should be* plenty of subnets to recommend
    */
-  if (isNaN(parsedThirdOctet) || parsedThirdOctet + 1 > 255) {
+  if (
+    !isValidRFC1918IPv4(lastRecommendedIPv4) ||
+    isNaN(parsedThirdOctet) ||
+    parsedThirdOctet + 1 > 255
+  ) {
     return DEFAULT_SUBNET_IPV4_VALUE;
   } else {
+    // Automatically adding on a /24 mask to avoid situations where an invalid IP is recommended
+    // For example: 172.16.0.0/
     ipv4ToReturn = `${firstOctet}.${secondOctet}.${
       parsedThirdOctet + 1
-    }.${fourthOctet}`;
+    }.${fourthOctet}/24`;
   }
 
   if (otherIPv4s.some((ip) => ip === ipv4ToReturn)) {
