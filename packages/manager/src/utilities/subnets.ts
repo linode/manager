@@ -109,13 +109,16 @@ export const calculateAvailableIPv4sRFC1918 = (
 };
 
 /**
- * Calculates the next subnet IPv4 address to recommend when creating a subnet, based off of the last recommended ipv4 and already existing IPv4s.
+ * Calculates the next subnet IPv4 address to recommend when creating a subnet, based off of the last recommended ipv4 and already existing IPv4s,
+ * by incrementing the third octet by one.
+ *
  * @param lastRecommendedIPv4 the current IPv4 address to base our recommended IPv4 address off of
  * @param otherIPv4s the other IPv4s to check against
  * @returns the next recommended subnet IPv4 address to use
  *
  * Assumption: if @param lastRecommendedIPv4 is a valid RFC1918 IPv4 and in x.x.x.x/x format, then the output is a valid RFC1918 IPv4 in x.x.x.x/x
- * format and not already in @param otherIPv4s (excluding the default IPv4 case -- see comments below).
+ * format and not already in @param otherIPv4s (excluding the default IPv4 case -- see comments below). HOWEVER, a recommended IP may still cover
+ * the same range as an existing IPv4 (ex 172.16.0.0/16 and 172.16.1.0/16 cover parts of the same range) and therefore not be accepted by the backend.
  */
 export const getRecommendedSubnetIPv4 = (
   lastRecommendedIPv4: string,
@@ -125,9 +128,8 @@ export const getRecommendedSubnetIPv4 = (
     firstOctet,
     secondOctet,
     thirdOctet,
-    fourthOctetAndMask,
+    fourthOctet,
   ] = lastRecommendedIPv4.split('.');
-  const [fourthOctet] = fourthOctetAndMask.split('/');
   const parsedThirdOctet = parseInt(thirdOctet, 10);
   let ipv4ToReturn = '';
 
@@ -143,11 +145,9 @@ export const getRecommendedSubnetIPv4 = (
   ) {
     return DEFAULT_SUBNET_IPV4_VALUE;
   } else {
-    // Automatically adding on a /24 mask to avoid situations where an invalid IP is recommended
-    // For example: 172.16.0.0/
     ipv4ToReturn = `${firstOctet}.${secondOctet}.${
       parsedThirdOctet + 1
-    }.${fourthOctet}/24`;
+    }.${fourthOctet}`;
   }
 
   if (otherIPv4s.some((ip) => ip === ipv4ToReturn)) {

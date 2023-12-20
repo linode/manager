@@ -121,8 +121,8 @@ describe('getRecommendedSubnetIPv4', () => {
     expect(recommendedIP).toEqual('10.0.7.0/24');
   });
 
-  it('recommends IPs with a /24 mask', () => {
+  it('may recommend valid IPs that cover the same range', () => {
     const recommendedIP = getRecommendedSubnetIPv4('172.16.0.0/16', []);
-    expect(recommendedIP).toEqual('172.16.1.0/24');
+    expect(recommendedIP).toEqual('172.16.1.0/16');
   });
 });
