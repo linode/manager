@@ -6,6 +6,7 @@ export type Permission = [string, number];
 
 export const basePerms = [
   'account',
+  'child_account',
   'databases',
   'domains',
   'events',
@@ -23,6 +24,7 @@ export const basePerms = [
 
 export const basePermNameMap: Record<string, string> = {
   account: 'Account',
+  child_account: 'Child Account Access',
   databases: 'Databases',
   domains: 'Domains',
   events: 'Events',
