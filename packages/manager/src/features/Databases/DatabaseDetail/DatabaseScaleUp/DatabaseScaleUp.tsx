@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -21,6 +22,7 @@ import { Typography } from 'src/components/Typography';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import { getPlanSelectionsByPlanType } from 'src/features/components/PlansPanel/utils';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -111,7 +113,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   const scaleUpDescription = (
     <>
       <Typography variant="h2">Scaling up a Database Cluster</Typography>
-      <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
+      <Typography sx={{ lineHeight: '20px', marginTop: '4px' }}>
         Adapt the cluster to your needs by scaling it up. Clusters cannot be
         scaled down.
       </Typography>
@@ -121,19 +123,25 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   const summaryPanel = (
     <>
       <Typography variant="h2">Summary</Typography>
-      <div data-testid="summary" style={{ lineHeight: '20px', marginTop: 16 }}>
+      <Box
+        sx={(theme) => ({
+          lineHeight: theme.spacing(2.5),
+          marginTop: theme.spacing(2),
+        })}
+        data-testid="summary"
+      >
         {summaryText ? (
-          <span>
+          <>
             <span className={classes.selectedPlanTitle}>
               {summaryText.plan}
             </span>{' '}
             {summaryText.numberOfNodes} Node
             {summaryText.numberOfNodes > 1 ? 's' : ''}: {summaryText.price}
-          </span>
+          </>
         ) : (
           'Please choose your plan.'
         )}
-      </div>
+      </Box>
     </>
   );
 
@@ -141,7 +149,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'button-confirm',
-        label: 'Continue',
+        label: 'Scale Up',
         loading: submitInProgress,
         onClick: onScaleUp,
       }}
@@ -229,7 +237,18 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   }, [database.cluster_size, dbtypes, selectedEngine]);
 
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
-
+  // create an array of different class of types.
+  const typeClasses: string[] = Object.keys(
+    getPlanSelectionsByPlanType(displayTypes)
+  );
+  const currentPlanClass = currentPlan?.class ?? 'dedicated';
+  // We don't have a "Nanodes" tab anymore, so use `shared`
+  const selectedTypeClass =
+    currentPlanClass === 'nanode' ? 'shared' : currentPlanClass;
+  // User cannot switch to different plan type apart from current plan while scaling up a DB cluster. So disable rest of the tabs.
+  const tabsToBeDisabled = typeClasses.filter(
+    (typeClass) => typeClass !== selectedTypeClass
+  );
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -251,6 +270,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
           className={classes.selectPlanPanel}
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
+          disabledTabs={tabsToBeDisabled}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedDiskSize={currentPlan?.disk}
@@ -279,6 +299,10 @@ export const DatabaseScaleUp = ({ database }: Props) => {
         open={isScaleUpConfirmationDialogOpen}
         title={`Scale up ${database.label}?`}
       >
+        <Typography
+          sx={{ marginBottom: '10px' }}
+          variant="h3"
+        >{`The cost of the scaled-up database is ${summaryText?.price}`}</Typography>
         {confirmationPopUpMessage}
       </ConfirmationDialog>
     </>

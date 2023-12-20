@@ -20,6 +20,7 @@ interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
   header?: string;
@@ -68,6 +69,7 @@ export const PlansPanel = (props: Props) => {
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
+      disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
       render: () => {
         return (
           <>

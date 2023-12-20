@@ -86,7 +86,7 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // DC Dynamic price logic - DB creation flow is out of scope
+  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
   const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(type, selectedRegionId)

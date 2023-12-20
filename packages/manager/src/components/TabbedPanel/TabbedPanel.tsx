@@ -14,6 +14,7 @@ import { Typography } from 'src/components/Typography';
 import { Box } from '../Box';
 
 export interface Tab {
+  disabled?: boolean;
   render: (props: any) => JSX.Element | null;
   title: string;
 }
@@ -89,7 +90,10 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
         <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
-              <StyledTab key={`tabs-${tab.title}-${idx}`}>
+              <StyledTab
+                disabled={tab.disabled}
+                key={`tabs-${tab.title}-${idx}`}
+              >
                 {tab.title}
               </StyledTab>
             ))}
