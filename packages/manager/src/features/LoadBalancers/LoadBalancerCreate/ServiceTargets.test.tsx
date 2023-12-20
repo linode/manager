@@ -6,12 +6,21 @@ import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 import { ServiceTargets } from './ServiceTargets';
+import { handlers } from './LoadBalancerConfiguration.test';
 
 const formikContext = {
   initialValues: {
+    configurations: [
+      {
+        certificates: [],
+        label: 'test',
+        port: 1,
+        protocol: 'http' as const,
+        service_targets: serviceTargetFactory.buildList(1),
+      },
+    ],
     label: '',
     regions: [],
-    service_targets: serviceTargetFactory.buildList(5),
   },
   onSubmit: vi.fn(),
 };
@@ -19,17 +28,18 @@ const formikContext = {
 describe('ServiceTargets', () => {
   it('renders service targets stored in the form context', () => {
     const { getByText } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <ServiceTargets />,
+      <ServiceTargets configurationIndex={0} handlers={handlers} />,
       formikContext
     );
 
-    for (const serviceTarget of formikContext.initialValues.service_targets) {
+    for (const serviceTarget of formikContext.initialValues.configurations[0]
+      .service_targets) {
       getByText(serviceTarget.label);
     }
   });
-  it('can open and close the Add Service Target Drawer', () => {
+  it('can open the Add Service Target Drawer', async () => {
     const { getByText } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
-      <ServiceTargets />,
+      <ServiceTargets configurationIndex={0} handlers={handlers} />,
       formikContext
     );
 
@@ -39,10 +49,6 @@ describe('ServiceTargets', () => {
 
     userEvent.click(addServiceTargetButton!);
 
-    expect(getByText('Add a Service Target')).toBeVisible();
-
-    const cancelButton = getByText('Cancel').closest('button');
-
-    userEvent.click(cancelButton!);
+    expect(handlers.handleAddServiceTarget).toHaveBeenCalled();
   });
 });

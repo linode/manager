@@ -1,24 +1,56 @@
-import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Chart } from 'chart.js';
+import * as React from 'react';
+
 import {
-  StyledSubTitleDiv,
-  StyledInnerTextDiv,
   StyledGaugeWrapperDiv,
+  StyledInnerTextDiv,
+  StyledSubTitleDiv,
 } from './GaugePercent.styles';
 
 export interface GaugePercentProps {
-  width?: number | string;
-  height?: number;
+  /**
+   * The color for the filled in portion of the gauge.
+   */
   filledInColor?: string;
-  nonFilledInColor?: string;
-  value: number;
-  max: number;
+  /**
+   * The height of the gauge.
+   */
+  height?: number;
+  /**
+   * Text that shows up inside (in the middle) of the gauge.
+   */
   innerText?: string;
+  /**
+   * The font size in `px` of the inner text.
+   */
   innerTextFontSize?: number;
-  subTitle?: string | JSX.Element | null;
+  /**
+   * The max value of the gauge.
+   */
+  max: number;
+  /**
+   * The color for the non-filled in portion of the gauge.
+   */
+  nonFilledInColor?: string;
+  /**
+   * A subtitle that appears below the gauge.
+   */
+  subTitle?: JSX.Element | null | string;
+  /**
+   * The value that is displayed by the gauge. This value should be <= `max`.
+   */
+  value: number;
+  /**
+   * The width of the gauge.
+   */
+  width?: number | string;
 }
 
+/**
+ * - **Chart.js** is the charting tool we use for gauges
+ * - Best used to show percentages
+ */
 export const GaugePercent = React.memo((props: GaugePercentProps) => {
   const theme = useTheme();
   const width = props.width || 300;
@@ -37,14 +69,14 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
 
   const graphDatasets = [
     {
-      borderWidth: 0,
-      hoverBackgroundColor: [
+      backgroundColor: [
         props.filledInColor || theme.palette.primary.main,
         props.nonFilledInColor || theme.color.grey2,
       ],
+      borderWidth: 0,
       /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
       data: [props.value, finalMax],
-      backgroundColor: [
+      hoverBackgroundColor: [
         props.filledInColor || theme.palette.primary.main,
         props.nonFilledInColor || theme.color.grey2,
       ],
@@ -55,16 +87,16 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
       animateRotate: false,
       animateScale: false,
     },
-    maintainAspectRatio: false,
-    rotation: -1.25 * Math.PI,
     circumference: 1.5 * Math.PI,
     cutoutPercentage: 70,
-    responsive: true,
     /** get rid of all hover events with events: [] */
     events: [],
     legend: {
       display: false,
     },
+    maintainAspectRatio: false,
+    responsive: true,
+    rotation: -1.25 * Math.PI,
   };
 
   const graphRef: React.RefObject<any> = React.useRef(null);
@@ -75,22 +107,26 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
     // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (graphRef.current) {
       new Chart(graphRef.current.getContext('2d'), {
-        type: 'doughnut',
         data: {
           datasets: graphDatasets,
         },
         options: graphOptions,
+        type: 'doughnut',
       });
     }
   });
   return (
-    <StyledGaugeWrapperDiv width={width} height={height}>
+    <StyledGaugeWrapperDiv
+      data-testid="gauge-wrapper"
+      height={height}
+      width={width}
+    >
       <canvas height={height} ref={graphRef} />
       {props.innerText && (
         <StyledInnerTextDiv
           data-testid="gauge-innertext"
-          width={width}
           height={height}
+          width={width}
         >
           {props.innerText}
         </StyledInnerTextDiv>
@@ -98,9 +134,9 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
       {props.subTitle && (
         <StyledSubTitleDiv
           data-testid="gauge-subtext"
-          width={width}
           height={height}
           innerTextFontSize={props.innerTextFontSize}
+          width={width}
         >
           {props.subTitle}
         </StyledSubTitleDiv>

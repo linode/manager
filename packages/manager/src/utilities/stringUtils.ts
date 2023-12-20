@@ -35,3 +35,47 @@ export const convertForAria = (str: string) => {
     .toLowerCase()
     .replace(/([^A-Z0-9]+)(.)/gi, (match, p1, p2) => p2.toUpperCase());
 };
+
+export function getNumberAtEnd(str: string) {
+  // Use a regular expression to match one or more digits at the end of the string
+  const match = str.match(/\d+$/);
+
+  // If there is a match, return the matched number; otherwise, return null
+  return match ? parseInt(match[0], 10) : null;
+}
+
+export function removeNumberAtEnd(str: string) {
+  // Use a regular expression to match one or more digits at the end of the string
+  const regex = /\d+$/;
+
+  // Use the replace() method to remove the matched portion
+  return str.replace(regex, '');
+}
+
+/**
+ * Gets the next available unique entity label
+ */
+export function getNextLabel<T extends { label: string }>(
+  selectedEntity: T,
+  allEntities: T[]
+): string {
+  const numberAtEnd = getNumberAtEnd(selectedEntity.label);
+
+  let labelToReturn = '';
+
+  if (numberAtEnd === null) {
+    labelToReturn = `${selectedEntity.label}-1`;
+  } else {
+    labelToReturn = `${removeNumberAtEnd(selectedEntity.label)}${
+      numberAtEnd + 1
+    }`;
+  }
+
+  if (allEntities.some((r) => r.label === labelToReturn)) {
+    return getNextLabel(
+      { ...selectedEntity, label: labelToReturn },
+      allEntities
+    );
+  }
+  return labelToReturn;
+}

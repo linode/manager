@@ -1,17 +1,42 @@
 import React from 'react';
 
-import { serviceTargetFactory } from 'src/factories';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 import { ServiceTargetDrawer } from './ServiceTargetDrawer';
 
+const initialValues: LoadBalancerCreateFormData = {
+  configurations: [
+    {
+      certificates: [],
+      label: '',
+      port: 8080,
+      protocol: 'http' as const,
+      service_targets: [
+        {
+          certificate_id: null,
+          endpoints: [],
+          healthcheck: {
+            protocol: 'tcp',
+            interval: 0,
+            timeout: 0,
+            unhealthy_threshold: 0,
+            healthy_threshold: 0,
+          },
+          label: 'test',
+          load_balancing_policy: 'least_request',
+          percentage: 100,
+          protocol: 'http',
+        },
+      ],
+    },
+  ],
+  label: '',
+  regions: [],
+};
+
 const formikContext = {
-  initialValues: {
-    label: '',
-    regions: [],
-    service_targets: serviceTargetFactory.buildList(1),
-  },
+  initialValues,
   onSubmit: vi.fn(),
 };
 
@@ -19,6 +44,7 @@ describe('ServiceTargetDrawer', () => {
   it('renders the drawer in create mode if service target index is undefined', () => {
     const { getByText } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <ServiceTargetDrawer
+        configurationIndex={0}
         onClose={vi.fn()}
         open={true}
         serviceTargetIndex={undefined}
@@ -34,6 +60,7 @@ describe('ServiceTargetDrawer', () => {
         onClose={vi.fn()}
         open={true}
         serviceTargetIndex={0}
+        configurationIndex={0}
       />,
       formikContext
     );
@@ -45,6 +72,7 @@ describe('ServiceTargetDrawer', () => {
       getByLabelText,
     } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <ServiceTargetDrawer
+        configurationIndex={0}
         onClose={vi.fn()}
         open={true}
         serviceTargetIndex={0}
@@ -55,7 +83,7 @@ describe('ServiceTargetDrawer', () => {
     const labelTextField = getByLabelText('Service Target Label');
 
     expect(labelTextField).toHaveDisplayValue(
-      formikContext.initialValues.service_targets[0].label
+      formikContext.initialValues.configurations[0].service_targets[0].label
     );
   });
 });

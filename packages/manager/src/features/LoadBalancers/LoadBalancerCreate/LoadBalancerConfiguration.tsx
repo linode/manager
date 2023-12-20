@@ -7,29 +7,31 @@ import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
 import { ConfigurationDetails } from './ConfigurationDetails';
+import { Handlers } from './LoadBalancerConfigurations';
+import { Routes } from './Routes';
 import { ServiceTargets } from './ServiceTargets';
 
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
+  handlers: Handlers;
   index: number;
 }
 
-export const LoadBalancerConfiguration = ({ index }: Props) => {
+export const LoadBalancerConfiguration = ({ handlers, index }: Props) => {
   const configurationSteps = [
     {
-      content: <ConfigurationDetails index={index} />,
-      handler: () => null,
+      content: <ConfigurationDetails handlers={handlers} index={index} />,
       label: 'Details',
     },
     {
-      content: <ServiceTargets />,
-      handler: () => null,
+      content: (
+        <ServiceTargets configurationIndex={index} handlers={handlers} />
+      ),
       label: 'Service Targets',
     },
     {
-      content: <div>TODO: AGLB - Implement Routes Configuration.</div>,
-      handler: () => null,
+      content: <Routes configurationIndex={index} handlers={handlers} />,
       label: 'Routes',
     },
   ];
