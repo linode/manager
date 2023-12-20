@@ -13,10 +13,7 @@ import { IconButton } from 'src/components/IconButton';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
@@ -53,49 +50,54 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
       return [];
     }
 
-    return configuration.routes!.map((route, index) => {
-      const OuterTableCells = (
-        <>
-          <Hidden mdDown>
-            <TableCell>{route.rules.length}</TableCell>
-          </Hidden>
-          <Hidden smDown>
-            <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>
-          </Hidden>
-          <TableCell actionCell>
-            <InlineMenuAction
-              actionText="Add Rule"
-              onClick={() => alert(route)}
-            />
-            <ActionMenu
-              actionsList={[
-                {
-                  onClick: () =>
-                    handlers.handleEditRoute(index, configurationIndex),
-                  title: 'Edit Label',
-                },
-                {
-                  onClick: () => handleRemoveRoute(index),
-                  title: 'Remove',
-                },
-              ]}
-              ariaLabel={`Action Menu for Route ${route.label}`}
-            />
-          </TableCell>
-        </>
-      );
+    return configuration
+      .routes!.filter((route) => {
+        if (query) {
+          return route.label.includes(query);
+        }
+        return true;
+      })
+      .map((route, index) => {
+        const OuterTableCells = (
+          <>
+            <Hidden mdDown>
+              <TableCell>{route.rules.length}</TableCell>
+            </Hidden>
+            <Hidden smDown>
+              <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>
+            </Hidden>
+            <TableCell actionCell>
+              <InlineMenuAction
+                actionText="Add Rule"
+                onClick={() => alert(route)}
+              />
+              <ActionMenu
+                actionsList={[
+                  {
+                    onClick: () =>
+                      handlers.handleEditRoute(index, configurationIndex),
+                    title: 'Edit Label',
+                  },
+                  {
+                    onClick: () => handleRemoveRoute(index),
+                    title: 'Remove',
+                  },
+                ]}
+                ariaLabel={`Action Menu for Route ${route.label}`}
+              />
+            </TableCell>
+          </>
+        );
 
-      const InnerTable = (
-         <p>idk</p>
-      );
+        const InnerTable = <p>idk</p>;
 
-      return {
-        InnerTable,
-        OuterTableCells,
-        id: index,
-        label: route.label,
-      };
-    });
+        return {
+          InnerTable,
+          OuterTableCells,
+          id: index,
+          label: route.label,
+        };
+      });
   };
 
   const RoutesTableRowHead = (
@@ -149,35 +151,6 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
             value={query}
           />
         </Stack>
-        <Table sx={{ width: '99%' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Route Label</TableCell>
-              <TableCell>Rules</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {configuration.routes!.length === 0 && (
-              <TableRowEmpty colSpan={5} />
-            )}
-            {configuration.routes
-              ?.filter((route) => {
-                if (query) {
-                  return route.label.includes(query);
-                }
-                return true;
-              })
-              .map((route, index) => (
-                <TableRow key={route.label}>
-                  <TableCell>{route.label}</TableCell>
-                  <TableCell>{route.rules.length}</TableCell>
-                  <TableCell actionCell>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
         <CollapsibleTable
           TableItems={getTableItems()}
           TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Routes'} />}
