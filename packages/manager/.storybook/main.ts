@@ -13,6 +13,7 @@ const config: StorybookConfig = {
     '@storybook/addon-measure',
     '@storybook/addon-actions',
     'storybook-dark-mode',
+    '@storybook/addon-storysource',
   ],
   staticDirs: ['../public'],
   framework: {
