@@ -75,7 +75,7 @@ export const KubernetesPlanContainer = (
           onAdd={onAdd}
           onSelect={onSelect}
           selectedId={selectedId}
-          selectedRegionID={selectedRegionId}
+          selectedRegionId={selectedRegionId}
           type={plan}
           updatePlanCount={updatePlanCount}
         />

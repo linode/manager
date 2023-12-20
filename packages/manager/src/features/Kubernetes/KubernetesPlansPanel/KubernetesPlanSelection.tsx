@@ -30,7 +30,7 @@ export interface KubernetesPlanSelectionProps {
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   selectedId?: string;
-  selectedRegionID?: Region['id'];
+  selectedRegionId?: Region['id'];
   type: ExtendedType;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -46,7 +46,7 @@ export const KubernetesPlanSelection = (
     onAdd,
     onSelect,
     selectedId,
-    selectedRegionID,
+    selectedRegionId,
     type,
     updatePlanCount,
   } = props;
@@ -55,7 +55,7 @@ export const KubernetesPlanSelection = (
 
   const price: PriceObject | undefined = getLinodeRegionPrice(
     type,
-    selectedRegionID
+    selectedRegionId
   );
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
