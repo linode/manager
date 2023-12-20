@@ -218,7 +218,7 @@ const CreateLoadBalancerServiceTargetSchema = object({
   percentage: number().integer().required(),
   label: string().required(),
   endpoints: array().of(CreateLoadBalancerEndpointSchema).required(),
-  certificate_id: number().integer(),
+  certificate_id: number().integer().nullable(),
   load_balancing_policy: string()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
     .required(),
@@ -228,13 +228,13 @@ const CreateLoadBalancerServiceTargetSchema = object({
 // Rule Schema
 const CreateLoadBalancerRuleSchema = object({
   match_condition: object().shape({
-    hostname: string().required(),
+    hostname: string().nullable(),
     match_field: string()
       .oneOf(['path_prefix', 'host', 'query', 'hostname', 'header', 'method'])
       .required(),
     match_value: string().required(),
-    session_stickiness_cookie: string(),
-    session_stickiness_ttl: number().integer(),
+    session_stickiness_cookie: string().nullable(),
+    session_stickiness_ttl: number().integer().nullable(),
   }),
   service_targets: array().of(CreateLoadBalancerServiceTargetSchema).required(),
 });

@@ -42,7 +42,7 @@ export const initialValues: LoadBalancerCreateFormData = {
 
 export const LoadBalancerCreate = () => {
   const handleSubmit = (values: LoadBalancerCreateFormData) => {
-    // console.log('Submitted values:', values);
+    alert(JSON.stringify(values, null, 2));
   };
 
   return (

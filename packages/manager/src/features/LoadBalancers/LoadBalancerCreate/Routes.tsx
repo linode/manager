@@ -68,8 +68,10 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
             </Hidden>
             <TableCell actionCell>
               <InlineMenuAction
+                onClick={() =>
+                  handlers.handleAddRule(configurationIndex, index)
+                }
                 actionText="Add Rule"
-                onClick={() => alert(route)}
               />
               <ActionMenu
                 actionsList={[

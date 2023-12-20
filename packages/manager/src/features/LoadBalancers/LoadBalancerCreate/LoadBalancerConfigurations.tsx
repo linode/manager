@@ -1,10 +1,11 @@
 import { useFormikContext } from 'formik';
-import * as React from 'react';
 import { useState } from 'react';
+import * as React from 'react';
 
 import { AddRouteDrawer } from './AddRouteDrawer';
 import { EditRouteDrawer } from './EditRouteDrawer';
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
+import { RuleDrawer } from './RuleDrawer';
 import { ServiceTargetDrawer } from './ServiceTargetDrawer';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
@@ -25,7 +26,9 @@ export interface Handlers {
 }
 
 export const LoadBalancerConfigurations = () => {
-  const { values } = useFormikContext<CreateLoadbalancerPayload>();
+  const { values, errors } = useFormikContext<CreateLoadbalancerPayload>();
+
+  console.log(errors)
 
   const [isServiceTargetDrawerOpen, setIsServiceTargetDrawerOpen] = useState(
     false
@@ -139,6 +142,13 @@ export const LoadBalancerConfigurations = () => {
         onClose={() => setIsEditRouteDrawerOpen(false)}
         open={isEditRouteDrawerOpen}
         routeIndex={selectedRouteIndex}
+      />
+      <RuleDrawer
+        configurationIndex={selectedConfigurationIndex}
+        onClose={handleCloseRuleDrawer}
+        open={isRuleDrawerOpen}
+        routeIndex={selectedRouteIndex}
+        ruleIndexToEdit={selectedRuleIndex}
       />
     </>
   );
