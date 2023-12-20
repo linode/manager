@@ -150,11 +150,12 @@ export const getRecommendedSubnetIPv4 = (
     }.${fourthOctet}`;
   }
 
+  // if the IPv4 we've recommended already exists, we recommend a new IP
   if (
     otherIPv4s.some((ip) => {
       const [_ip] = ip.split('/');
       const [_ipv4ToReturn] = ipv4ToReturn.split('/');
-      return ip === ipv4ToReturn || _ip === _ipv4ToReturn;
+      return _ip === _ipv4ToReturn;
     })
   ) {
     return getRecommendedSubnetIPv4(ipv4ToReturn, otherIPv4s);
