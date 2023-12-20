@@ -16,6 +16,7 @@ import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
 
@@ -64,6 +65,7 @@ export const UserMenu = React.memo(() => {
 
   const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
+  const flags = useFlags();
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -85,16 +87,23 @@ export const UserMenu = React.memo(() => {
    * Use the current profile's username for all accounts but a proxy user account, for which we display the parent's username.
    */
   const getUserNameBasedOnUserType = (
-    userType: UserType | null | undefined
+    userType: UserType | null | undefined,
+    isParentChildFeatureEnabled: boolean
   ) => {
-    return userType === 'proxy' ? parentProfile?.username : profile?.username;
+    return isParentChildFeatureEnabled && userType === 'proxy'
+      ? parentProfile?.username
+      : profile?.username;
   };
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
   const companyName =
     user?.user_type && account?.company ? account?.company : undefined;
-  const userName = getUserNameBasedOnUserType(user?.user_type) ?? '';
+  const userName =
+    getUserNameBasedOnUserType(
+      user?.user_type,
+      Boolean(flags.parentChildAccountAccess)
+    ) ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
   //console.log({companyName}, {userName}, {parentProfile})
@@ -189,7 +198,7 @@ export const UserMenu = React.memo(() => {
         >
           <Hidden mdDown>
             <Stack>
-              {user?.user_type && (
+              {flags.parentChildAccountAccess && user?.user_type && (
                 <Typography sx={{ fontSize: '0.775rem' }}>
                   {companyName ?? ''}
                 </Typography>
