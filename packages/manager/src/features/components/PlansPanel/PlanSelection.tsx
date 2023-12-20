@@ -8,6 +8,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
@@ -23,10 +24,6 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
-
-export const PLAN_IS_SOLD_OUT_COPY =
-  'This plan has no availability for the selected region. Please select a smaller plan or the same plan in another region.';
-
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;

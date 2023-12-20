@@ -1,13 +1,13 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { planSelectionTypeFactory } from 'src/factories/types';
 import { breakpoints } from 'src/foundations/breakpoints';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 
-import { PLAN_IS_SOLD_OUT_COPY } from './PlanSelection';
 import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionProps } from './PlanSelection';

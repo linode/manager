@@ -5,10 +5,13 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
+import { Chip } from 'src/components/Chip';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -23,6 +26,7 @@ export interface KubernetesPlanSelectionProps {
   disabled?: boolean;
   getTypeCount: (planId: string) => number;
   idx: number;
+  isPlanSoldOut: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   selectedId?: string;
@@ -38,6 +42,7 @@ export const KubernetesPlanSelection = (
     disabled,
     getTypeCount,
     idx,
+    isPlanSoldOut,
     onAdd,
     onSelect,
     selectedId,
@@ -88,10 +93,20 @@ export const KubernetesPlanSelection = (
       <Hidden mdDown>
         <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
-          disabled={disabled}
+          disabled={disabled || isPlanSoldOut}
           key={type.id}
         >
-          <TableCell data-qa-plan-name>{type.heading}</TableCell>
+          <TableCell data-qa-plan-name>
+            {type.heading}{' '}
+            {isPlanSoldOut && (
+              <TooltipIcon
+                data-testid="sold-out-chip"
+                icon={<Chip label="Sold Out" />}
+                status="other"
+                text={PLAN_IS_SOLD_OUT_COPY}
+              />
+            )}
+          </TableCell>
           <TableCell
             data-qa-monthly
             errorCell={!price?.monthly}
@@ -149,13 +164,24 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
+          subheadings={[
+            ...subHeadings,
+            isPlanSoldOut ? (
+              <TooltipIcon
+                icon={<Chip label="Sold Out" sx={{ ml: -1.5 }} />}
+                status="other"
+                text={PLAN_IS_SOLD_OUT_COPY}
+              />
+            ) : (
+              ''
+            ),
+          ]}
           checked={type.id === String(selectedId)}
-          disabled={disabled}
+          disabled={disabled || isPlanSoldOut}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
-          subheadings={subHeadings}
         />
       </Hidden>
     </React.Fragment>

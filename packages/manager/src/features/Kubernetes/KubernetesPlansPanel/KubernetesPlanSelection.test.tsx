@@ -28,6 +28,7 @@ const extendedType = extendedTypeFactory.build();
 const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
   idx: 0,
+  isPlanSoldOut: false,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
   selectedRegionID: 'us-east',
