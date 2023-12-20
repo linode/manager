@@ -31,15 +31,10 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
 
-  const recommendedIPv4 =
-    allSubnets && allSubnets.length > 0
-      ? getRecommendedSubnetIPv4(
-          // for simplicity purposes, we take the IPv4 of the last subnet in allSubnets, as
-          // getRecommendedSubnetIPv4 will iterate through potential IPv4s to recommend anyway
-          allSubnets[allSubnets.length - 1].ipv4 ?? '',
-          allSubnets.map((subnet) => subnet.ipv4 ?? '')
-        )
-      : DEFAULT_SUBNET_IPV4_VALUE;
+  const recommendedIPv4 = getRecommendedSubnetIPv4(
+    DEFAULT_SUBNET_IPV4_VALUE,
+    allSubnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
+  );
 
   const [errorMap, setErrorMap] = React.useState<
     Record<string, string | undefined>
