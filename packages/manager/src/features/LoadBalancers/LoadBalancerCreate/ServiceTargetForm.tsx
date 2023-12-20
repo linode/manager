@@ -1,4 +1,4 @@
-import { Endpoint, ServiceTarget, ServiceTargetPayload } from '@linode/api-v4';
+import { Endpoint, ServiceTargetPayload } from '@linode/api-v4';
 import { UpdateServiceTargetSchema } from '@linode/validation';
 import { useFormik, useFormikContext, yupToFormErrors } from 'formik';
 import React from 'react';
@@ -39,6 +39,45 @@ interface Props {
   serviceTargetIndex: number | undefined;
 }
 
+function getUpdatedValuesFromServiceTargetEdit(
+  values: LoadBalancerCreateFormData,
+  previousValue: ServiceTargetPayload,
+  serviceTarget: ServiceTargetPayload
+) {
+  for (let i = 0; i < values.configurations.length; i++) {
+    const stIndex = values.configurations[i].service_targets.findIndex(
+      (st) => st.label === previousValue.label
+    );
+
+    values.configurations[i].service_targets[stIndex] = serviceTarget;
+
+    for (let j = 0; j < values.configurations[i].routes!.length; j++) {
+      for (
+        let k = 0;
+        k < values.configurations[i].routes![j].rules.length;
+        k++
+      ) {
+        for (
+          let l = 0;
+          l <
+          values.configurations[i].routes![j].rules[k].service_targets.length;
+          l++
+        ) {
+          if (
+            values.configurations[i].routes![j].rules[k].service_targets[l]
+              .label === previousValue.label
+          ) {
+            values.configurations[i].routes![j].rules[k].service_targets[
+              l
+            ] = serviceTarget;
+          }
+        }
+      }
+    }
+  }
+  return values;
+}
+
 /**
  * A Drawer to add Service Targets on the Load Balancer Create Page.
  */
@@ -62,10 +101,12 @@ export const ServiceTargetForm = (props: Props) => {
       : initialValues,
     async onSubmit(serviceTarget) {
       if (isEditMode) {
-        configuration.service_targets[serviceTargetIndex] = serviceTarget;
-        setFieldValue(
-          `configurations[${configurationIndex}]service_targets`,
-          configuration.service_targets
+        setValues(
+          getUpdatedValuesFromServiceTargetEdit(
+            values,
+            configuration.service_targets[serviceTargetIndex],
+            serviceTarget
+          )
         );
       } else {
         setFieldValue(`configurations[${configurationIndex}]service_targets`, [

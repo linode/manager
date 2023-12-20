@@ -2,12 +2,10 @@ import { Hidden } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useFormikContext } from 'formik';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import { Box } from 'src/components/Box';
-import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import { RuleRow } from '../LoadBalancerDetail/RuleRow';
 import {
@@ -17,8 +15,6 @@ import {
   sxItemSpacing,
 } from '../LoadBalancerDetail/RulesTable.styles';
 import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-
-import type { Route } from '@linode/api-v4';
 
 interface Props {
   configurationIndex: number;
