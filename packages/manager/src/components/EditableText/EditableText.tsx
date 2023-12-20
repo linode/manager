@@ -115,7 +115,7 @@ interface Props {
    */
   onCancel: () => void;
   /**
-   * The function to handle editing text
+   * The function to handle saving edited text
    */
   onEdit: (text: string) => Promise<any>;
   /**
