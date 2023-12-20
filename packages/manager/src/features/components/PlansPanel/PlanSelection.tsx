@@ -24,7 +24,7 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 
-const PLAN_IS_SOLD_OUT_COPY =
+export const PLAN_IS_SOLD_OUT_COPY =
   'This plan has no availability for the selected region. Please select a smaller plan or the same plan in another region.';
 
 export interface PlanSelectionProps {
@@ -34,7 +34,7 @@ export interface PlanSelectionProps {
   header?: string;
   idx: number;
   isCreate?: boolean;
-  isPlanSoldOut?: boolean;
+  isPlanSoldOut: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   selectedDiskSize?: number;
@@ -103,7 +103,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
-
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
           aria-disabled={
@@ -151,6 +150,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {type.heading}{' '}
             {isPlanSoldOut && (
               <TooltipIcon
+                data-testid="sold-out-chip"
                 icon={<Chip label="Sold Out" />}
                 status="other"
                 text={PLAN_IS_SOLD_OUT_COPY}

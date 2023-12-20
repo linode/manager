@@ -9,15 +9,17 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsAvailabilitiesQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
+import { getPlanSoldOutStatus } from './utils';
 
 import type { PlanSelectionType } from './types';
-import type { Region, RegionAvailability } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4';
 
 const tableCells = [
   { cellName: '', center: false, noWrap: false, testId: '' },
@@ -65,8 +67,11 @@ export const PlanContainer = (props: Props) => {
     showTransfer,
   } = props;
   const location = useLocation();
+  const flags = useFlags();
 
-  const { data: regionAvailabilities } = useRegionsAvailabilitiesQuery(true);
+  const { data: regionAvailabilities } = useRegionsAvailabilitiesQuery(
+    Boolean(flags.soldOutChips)
+  );
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
@@ -83,23 +88,11 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut:
-        | RegionAvailability
-        | undefined = regionAvailabilities?.find(
-        (regionAvailability: RegionAvailability) => {
-          const regionMatch = regionAvailability.region === selectedRegionId;
-
-          if (!regionMatch) {
-            return false;
-          }
-
-          if (regionAvailability.plan === plan.id) {
-            return regionAvailability.available === false;
-          }
-
-          return false;
-        }
-      );
+      const isPlanSoldOut = getPlanSoldOutStatus({
+        plan,
+        regionAvailabilities,
+        selectedRegionId,
+      });
 
       return (
         <PlanSelection
@@ -108,7 +101,7 @@ export const PlanContainer = (props: Props) => {
           disabledClasses={disabledClasses}
           idx={id}
           isCreate={isCreate}
-          isPlanSoldOut={!!isPlanSoldOut}
+          isPlanSoldOut={isPlanSoldOut}
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
