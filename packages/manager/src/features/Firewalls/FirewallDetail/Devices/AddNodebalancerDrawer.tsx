@@ -211,6 +211,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
           onSelectionChange={(nodebalancers) =>
             setSelectedNodebalancers(nodebalancers)
           }
+          data-testid="add-nodebalancer-autocomplete"
           disabled={isLoading}
           helperText={helperText}
           multiple
