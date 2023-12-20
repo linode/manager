@@ -63,7 +63,10 @@ export const RuleDrawer = (props: Props) => {
     ruleIndexToEdit,
   } = props;
 
-  const { values, setFieldValue } = useFormikContext<LoadBalancerCreateFormData>();
+  const {
+    values,
+    setFieldValue,
+  } = useFormikContext<LoadBalancerCreateFormData>();
 
   const configuration = values.configurations![configurationIndex ?? 0];
 
@@ -271,12 +274,27 @@ export const RuleDrawer = (props: Props) => {
                   value={formik.values.service_targets[index].percentage}
                 />
                 <Autocomplete
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
                   onChange={(_, value) =>
-                    formik.setFieldValue(`service_targets[${index}]`, value)
+                    formik.setFieldValue(
+                      `service_targets[${index}]`,
+                      {
+                        ...value,
+                        percentage:
+                          formik.values.service_targets[index].percentage,
+                      },
+                      true
+                    )
                   }
                   textFieldProps={{
                     hideLabel: index !== 0,
                   }}
+                  value={configuration.service_targets.find(
+                    (st) =>
+                      st.label === formik.values.service_targets[index].label
+                  )}
                   fullWidth
                   label="Service Target"
                   noMarginTop={index === 0}

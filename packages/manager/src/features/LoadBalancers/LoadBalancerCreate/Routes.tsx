@@ -21,6 +21,7 @@ import { Typography } from 'src/components/Typography';
 
 import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { RulesTable } from './RulesTable';
 
 interface Props {
   configurationIndex: number;
@@ -91,7 +92,15 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
           </>
         );
 
-        const InnerTable = <p>idk</p>;
+        const InnerTable = (
+          <RulesTable
+            configurationIndex={configurationIndex}
+            onEditRule={(ruleIndex) =>
+              handlers.handleEditRule(configurationIndex, index, ruleIndex)
+            }
+            routeIndex={index}
+          />
+        );
 
         return {
           InnerTable,
