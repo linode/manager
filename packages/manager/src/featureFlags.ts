@@ -44,6 +44,7 @@ export interface Flags {
   aglbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
+  databaseScaleUp: boolean;
   databases: boolean;
   dcGetWell: boolean;
   firewallNodebalancer: boolean;

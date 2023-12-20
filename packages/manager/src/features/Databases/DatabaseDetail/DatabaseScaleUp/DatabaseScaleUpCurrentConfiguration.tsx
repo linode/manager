@@ -1,4 +1,5 @@
 import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -6,7 +7,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Grid } from 'src/components/Grid';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -100,7 +100,7 @@ export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
         data-qa-cluster-config
         spacing={5}
       >
-        <Grid item md={3} sm={6} xs={12}>
+        <Grid md={3} sm={6} xs={12}>
           <Box display="flex" sx={{ marginBottom: '12px' }}>
             <Typography className={classes.label}>Status</Typography>
             <span className={classes.status}>
@@ -117,7 +117,7 @@ export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
             {configuration}
           </Box>
         </Grid>
-        <Grid item md={3} sm={6} xs={12}>
+        <Grid md={3} sm={6} xs={12}>
           <Box display="flex" sx={{ marginBottom: '12px' }}>
             <Typography className={classes.label}>Region</Typography>
             {region?.label ?? database.region}
@@ -127,7 +127,7 @@ export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
             {formatStorageUnits(type.label)}
           </Box>
         </Grid>
-        <Grid item md={3} sm={6} xs={12}>
+        <Grid md={3} sm={6} xs={12}>
           <Box display="flex" sx={{ marginBottom: '12px' }}>
             <Typography className={classes.label}>RAM</Typography>
             {type.memory / 1024} GB
@@ -137,7 +137,7 @@ export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
             {type.vcpus}
           </Box>
         </Grid>
-        <Grid item md={3} sm={6} xs={12}>
+        <Grid md={3} sm={6} xs={12}>
           {database.total_disk_size_gb ? (
             <>
               <Box display="flex" sx={{ marginBottom: '12px' }}>
