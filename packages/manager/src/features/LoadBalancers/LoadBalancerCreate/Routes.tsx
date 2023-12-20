@@ -4,7 +4,13 @@ import React, { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Button } from 'src/components/Button/Button';
+import {
+  CollapsibleTable,
+  TableItem,
+} from 'src/components/CollapsibleTable/CollapsibleTable';
+import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
@@ -41,6 +47,69 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
       configuration.routes
     );
   };
+
+  const getTableItems = (): TableItem[] => {
+    if (configuration.routes?.length === 0) {
+      return [];
+    }
+
+    return configuration.routes!.map((route, index) => {
+      const OuterTableCells = (
+        <>
+          <Hidden mdDown>
+            <TableCell>{route.rules.length}</TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>
+          </Hidden>
+          <TableCell actionCell>
+            <InlineMenuAction
+              actionText="Add Rule"
+              onClick={() => alert(route)}
+            />
+            <ActionMenu
+              actionsList={[
+                {
+                  onClick: () =>
+                    handlers.handleEditRoute(index, configurationIndex),
+                  title: 'Edit Label',
+                },
+                {
+                  onClick: () => handleRemoveRoute(index),
+                  title: 'Remove',
+                },
+              ]}
+              ariaLabel={`Action Menu for Route ${route.label}`}
+            />
+          </TableCell>
+        </>
+      );
+
+      const InnerTable = (
+         <p>idk</p>
+      );
+
+      return {
+        InnerTable,
+        OuterTableCells,
+        id: index,
+        label: route.label,
+      };
+    });
+  };
+
+  const RoutesTableRowHead = (
+    <TableRow>
+      <TableCell>Route Label</TableCell>
+      <Hidden mdDown>
+        <TableCell>Rules</TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>Protocol</TableCell>
+      </Hidden>
+      <TableCell></TableCell>
+    </TableRow>
+  );
 
   return (
     <Stack padding={1} spacing={1}>
@@ -104,25 +173,16 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
                   <TableCell>{route.label}</TableCell>
                   <TableCell>{route.rules.length}</TableCell>
                   <TableCell actionCell>
-                    <ActionMenu
-                      actionsList={[
-                        {
-                          onClick: () =>
-                            handlers.handleEditRoute(index, configurationIndex),
-                          title: 'Edit Label',
-                        },
-                        {
-                          onClick: () => handleRemoveRoute(index),
-                          title: 'Remove',
-                        },
-                      ]}
-                      ariaLabel={`Action Menu for Route ${route.label}`}
-                    />
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
+        <CollapsibleTable
+          TableItems={getTableItems()}
+          TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Routes'} />}
+          TableRowHead={RoutesTableRowHead}
+        />
       </Stack>
     </Stack>
   );
