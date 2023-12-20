@@ -17,31 +17,30 @@ import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 
-import { ServiceTargetDrawer } from './ServiceTargetDrawer';
-
+import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
-export const ServiceTargets = () => {
+interface Props {
+  configurationIndex: number;
+  handlers: Handlers;
+}
+
+export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
   const {
     setFieldValue,
     values,
   } = useFormikContext<LoadBalancerCreateFormData>();
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [query, setQuery] = useState<string>();
-  const [
-    selectedServiceTargetIndex,
-    setSelectedServiceTargetIndex,
-  ] = useState<number>();
+  const [query, setQuery] = useState<string>('');
+
+  const configuration = values.configurations![configurationIndex];
 
   const handleRemoveServiceTarget = (index: number) => {
-    values.service_targets.splice(index, 1);
-    setFieldValue('service_targets', values.service_targets);
-  };
-
-  const handleEditServiceTarget = (index: number) => {
-    setSelectedServiceTargetIndex(index);
-    setIsDrawerOpen(true);
+    configuration.service_targets.splice(index, 1);
+    setFieldValue(
+      `configuration[${configurationIndex}].service_targets`,
+      configuration.service_targets
+    );
   };
 
   return (
@@ -55,7 +54,10 @@ export const ServiceTargets = () => {
           requests.
         </Typography>
         <Stack direction="row" gap={2}>
-          <Button buttonType="outlined" onClick={() => setIsDrawerOpen(true)}>
+          <Button
+            buttonType="outlined"
+            onClick={() => handlers.handleAddServiceTarget(configurationIndex)}
+          >
             Add Service Target
           </Button>
           <TextField
@@ -74,6 +76,7 @@ export const ServiceTargets = () => {
               ),
             }}
             hideLabel
+            inputId={`configuration-${configurationIndex}-service-target-filter`}
             label="Filter"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter"
@@ -91,10 +94,10 @@ export const ServiceTargets = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {values.service_targets.length === 0 && (
+            {configuration.service_targets.length === 0 && (
               <TableRowEmpty colSpan={5} />
             )}
-            {values.service_targets
+            {configuration.service_targets
               .filter((serviceTarget) => {
                 if (query) {
                   return serviceTarget.label.includes(query);
@@ -135,7 +138,11 @@ export const ServiceTargets = () => {
                     <ActionMenu
                       actionsList={[
                         {
-                          onClick: () => handleEditServiceTarget(index),
+                          onClick: () =>
+                            handlers.handleEditServiceTarget(
+                              index,
+                              configurationIndex
+                            ),
                           title: 'Edit',
                         },
                         {
@@ -151,14 +158,6 @@ export const ServiceTargets = () => {
           </TableBody>
         </Table>
       </Stack>
-      <ServiceTargetDrawer
-        onClose={() => {
-          setIsDrawerOpen(false);
-          setSelectedServiceTargetIndex(undefined);
-        }}
-        open={isDrawerOpen}
-        serviceTargetIndex={selectedServiceTargetIndex}
-      />
     </Stack>
   );
 };
