@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { ClickAwayListener } from 'src/components/ClickAwayListener';
+import { H1Header } from 'src/components/H1Header/H1Header';
 import { fadeIn } from 'src/styles/keyframes';
 
 import { TextField, TextFieldProps } from '../TextField';
@@ -106,9 +106,21 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 interface Props {
   className?: string;
   errorText?: string;
+  /**
+   * Optional link for the text when it is not in editing mode
+   */
   labelLink?: string;
+  /**
+   * Function to cancel editing and restore text to previous text
+   */
   onCancel: () => void;
+  /**
+   * The function to handle editing text
+   */
   onEdit: (text: string) => Promise<any>;
+  /**
+   * The text inside the textbox
+   */
   text: string;
 }
 
