@@ -14,6 +14,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
@@ -24,6 +25,7 @@ import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
 
 export const UsersLanding = () => {
+  const flags = useFlags();
   const { data: profile } = useProfile();
 
   const pagination = usePagination(1, 'account-users');
@@ -115,6 +117,9 @@ export const UsersLanding = () => {
               </TableSortCell>
             </Hidden>
             <TableCell>Account Access</TableCell>
+            {flags.parentChildAccountAccess && (
+              <TableCell>Child Account Access</TableCell>
+            )}
             <Hidden lgDown>
               <TableCell>Last Login</TableCell>
             </Hidden>

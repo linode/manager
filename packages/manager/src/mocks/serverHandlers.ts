@@ -1228,6 +1228,7 @@ export const handlers = [
           grantsFactory.build({
             global: {
               cancel_account: false,
+              child_account_access: true,
             },
           })
         )
