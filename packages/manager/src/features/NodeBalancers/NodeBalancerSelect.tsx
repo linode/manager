@@ -150,6 +150,7 @@ export const NodeBalancerSelect = (
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
+      data-testid="add-nodebalancer-autocomplete"
       disableClearable={!clearable}
       disableCloseOnSelect={multiple}
       disablePortal={true}

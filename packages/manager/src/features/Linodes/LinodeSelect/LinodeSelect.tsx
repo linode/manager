@@ -152,6 +152,7 @@ export const LinodeSelect = (
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
+      data-testid="add-linode-autocomplete"
       disableClearable={!clearable}
       disableCloseOnSelect={multiple}
       disablePortal={true}
