@@ -5,7 +5,13 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 
 interface Props {
+  /**
+   * The number of unhealthy / down endpoints
+   */
   down: number;
+  /**
+   * The number of healthy / up endpoints
+   */
   up: number;
 }
 
