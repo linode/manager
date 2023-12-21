@@ -319,21 +319,20 @@ export const ServiceTargetForm = (props: Props) => {
           {formik.values.healthcheck.protocol === 'http' && (
             <>
               <TextField
-                labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Path}
                 errorText={formik.errors.healthcheck?.path}
                 label="Health Check Path"
+                labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Path}
                 name="healthcheck.path"
                 onChange={formik.handleChange}
                 optional
                 value={formik.values.healthcheck.path}
               />
               <TextField
-                labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host}
                 errorText={formik.errors.healthcheck?.host}
                 label="Health Check Host"
+                labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host}
                 name="healthcheck.host"
                 onChange={formik.handleChange}
-                optional
                 value={formik.values.healthcheck.host}
               />
             </>

@@ -378,7 +378,6 @@ export const ServiceTargetDrawer = (props: Props) => {
                   label="Health Check Host"
                   name="healthcheck.host"
                   onChange={formik.handleChange}
-                  optional
                   value={formik.values.healthcheck.host}
                 />
               </>

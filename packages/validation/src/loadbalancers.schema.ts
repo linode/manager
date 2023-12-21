@@ -50,8 +50,12 @@ export const EndpointSchema = object({
 
 const HealthCheckSchema = object({
   protocol: string().oneOf(['http', 'tcp']),
-  interval: number().typeError('Interval must be a number.').min(1, 'Interval must be greater than zero.'),
-  timeout: number().typeError('Timeout must be a number.').min(1, 'Timeout must be greater than zero.'),
+  interval: number()
+    .typeError('Interval must be a number.')
+    .min(1, 'Interval must be greater than zero.'),
+  timeout: number()
+    .typeError('Timeout must be a number.')
+    .min(1, 'Timeout must be greater than zero.'),
   unhealthy_threshold: number()
     .typeError('Unhealthy Threshold must be a number.')
     .min(1, 'Unhealthy Threshold must be greater than zero.'),
@@ -59,7 +63,11 @@ const HealthCheckSchema = object({
     .typeError('Healthy Threshold must be a number.')
     .min(1, 'Healthy Threshold must be greater than zero.'),
   path: string().nullable(),
-  host: string().nullable(),
+  host: string().when('protocol', {
+    is: 'tcp',
+    then: (o) => o.nullable(),
+    otherwise: (o) => o.required(),
+  }),
 });
 
 export const CreateServiceTargetSchema = object({
