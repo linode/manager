@@ -374,6 +374,7 @@ export const ServiceTargetDrawer = (props: Props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   optional
+                  placeholder="/"
                   value={formik.values.healthcheck.path}
                 />
                 <TextField
@@ -389,6 +390,7 @@ export const ServiceTargetDrawer = (props: Props) => {
                   name="healthcheck.host"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
+                  placeholder="example.org"
                   value={formik.values.healthcheck.host}
                 />
               </>
@@ -397,6 +399,7 @@ export const ServiceTargetDrawer = (props: Props) => {
         )}
         <ActionsPanel
           primaryButtonProps={{
+            disabled: isEditMode && !formik.dirty,
             label: `${isEditMode ? 'Save' : 'Create'} Service Target`,
             loading: formik.isSubmitting,
             type: 'submit',
