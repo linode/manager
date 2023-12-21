@@ -211,6 +211,11 @@ describe('Akamai Global Load Balancer service targets', () => {
           .should('be.visible')
           .click();
 
+        cy.findByLabelText('Health Check Host')
+          .scrollIntoView()
+          .should('be.visible')
+          .type('example.com');
+
         cy.get('[data-qa-healthcheck-options]')
           .scrollIntoView()
           .should('be.visible');
