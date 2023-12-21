@@ -7,12 +7,21 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { usePrevious } from 'src/hooks/usePrevious';
 
-interface DebouncedSearchProps extends TextFieldProps {
+export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;
+  /**
+   * Interaval of time that passes before search queries are accepted. Default is 400
+   */
   debounceTime?: number;
   defaultValue?: string;
   hideLabel?: boolean;
+  /**
+   * Determines if the textbox is currently searching for inputted query
+   */
   isSearching?: boolean;
+  /**
+   * Function to perform when searching for query
+   */
   onSearch: (query: string) => void;
   placeholder?: string;
 }
