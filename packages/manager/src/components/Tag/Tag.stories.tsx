@@ -21,6 +21,6 @@ const meta: Meta<TagProps> = {
     label: 'Tag',
   },
   component: Tag,
-  title: 'Components/Chip/Tag',
+  title: 'Components/Tags/Tag',
 };
 export default meta;

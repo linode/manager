@@ -2,7 +2,7 @@ import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -25,7 +25,7 @@ import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionRow: {
     '& button': {
       alignItems: 'flex-start',
@@ -102,7 +102,7 @@ interface Props {
 
 export const KubeSummaryPanel = (props: Props) => {
   const { cluster } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);

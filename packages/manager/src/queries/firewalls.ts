@@ -123,7 +123,7 @@ export const useCreateFirewall = () => {
         queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.setQueryData([queryKey, 'firewall', firewall.id], firewall);
         // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries(profileQueries.grants.queryKey);
+        queryClient.invalidateQueries(profileQueries.profile().grants.queryKey);
       },
     }
   );

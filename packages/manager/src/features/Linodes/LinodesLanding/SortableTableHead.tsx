@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
-import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
+import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
 import { Hidden } from 'src/components/Hidden';
 import { OrderByProps } from 'src/components/OrderBy';
 import { TableCell } from 'src/components/TableCell';

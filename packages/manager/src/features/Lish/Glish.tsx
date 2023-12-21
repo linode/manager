@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { VncScreen, VncScreenHandle } from 'react-vnc';
 
@@ -9,7 +9,7 @@ import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     '& canvas': {
       display: 'block',
@@ -32,7 +32,7 @@ interface Props {
 let monitor: WebSocket;
 
 const Glish = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { linode, refreshToken, token } = props;
   const ref = React.useRef<VncScreenHandle>(null);
   const region = linode.region;

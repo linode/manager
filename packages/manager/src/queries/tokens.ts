@@ -15,13 +15,13 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { EventWithStore } from 'src/events';
 
-import { profileQueries } from './profile';
 import { updateInPaginatedStore } from './base';
+import { profileQueries } from './profile';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     keepPreviousData: true,
-    ...profileQueries.appTokens(params, filter),
+    ...profileQueries.profile().appTokens(params, filter),
   });
 };
 
@@ -31,7 +31,7 @@ export const usePersonalAccessTokensQuery = (
 ) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     keepPreviousData: true,
-    ...profileQueries.personalAccessTokens(params, filter),
+    ...profileQueries.profile().personalAccessTokens(params, filter),
   });
 };
 
@@ -41,7 +41,7 @@ export const useCreatePersonalAccessTokenMutation = () => {
     mutationFn: createPersonalAccessToken,
     onSuccess() {
       queryClient.invalidateQueries(
-        profileQueries.personalAccessTokens.queryKey
+        profileQueries.profile().personalAccessTokens.queryKey
       );
     },
   });
@@ -53,7 +53,7 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
     mutationFn: (data) => updatePersonalAccessToken(id, data),
     onSuccess(token) {
       updateInPaginatedStore(
-        profileQueries.personalAccessTokens.queryKey,
+        profileQueries.profile().personalAccessTokens.queryKey,
         id,
         token,
         queryClient
@@ -71,7 +71,7 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
       setTimeout(
         () =>
           queryClient.invalidateQueries(
-            profileQueries.personalAccessTokens.queryKey
+            profileQueries.profile().personalAccessTokens.queryKey
           ),
         1000
       );
@@ -86,7 +86,10 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
-        () => queryClient.invalidateQueries(profileQueries.appTokens.queryKey),
+        () =>
+          queryClient.invalidateQueries(
+            profileQueries.profile().appTokens.queryKey
+          ),
         1000
       );
     },
@@ -94,5 +97,7 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
 };
 
 export function tokenEventHandler({ queryClient }: EventWithStore) {
-  queryClient.invalidateQueries(profileQueries.personalAccessTokens.queryKey);
+  queryClient.invalidateQueries(
+    profileQueries.profile().personalAccessTokens.queryKey
+  );
 }
