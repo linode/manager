@@ -1,4 +1,6 @@
 import Stack from '@mui/material/Stack';
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
@@ -7,9 +9,13 @@ import { Typography } from 'src/components/Typography';
 
 import { LoadBalancerRegions as Regions } from '../LoadBalancerDetail/LoadBalancerRegions';
 
-export const LoadBalancerRegions = () => {
+interface Props {
+  sx?: SxProps<Theme>;
+}
+
+export const LoadBalancerRegions = ({ sx }: Props) => {
   return (
-    <Paper>
+    <Paper sx={sx}>
       <Stack spacing={2}>
         <Typography variant="h2">Regions</Typography>
         <Stack spacing={1}>
