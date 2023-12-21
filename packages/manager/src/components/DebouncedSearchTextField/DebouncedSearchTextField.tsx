@@ -10,7 +10,8 @@ import { usePrevious } from 'src/hooks/usePrevious';
 export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;
   /**
-   * Interaval of time that passes before search queries are accepted. Default is 400
+   * Interval in milliseconds of time that passes before search queries are accepted.
+   * @default 400
    */
   debounceTime?: number;
   defaultValue?: string;
