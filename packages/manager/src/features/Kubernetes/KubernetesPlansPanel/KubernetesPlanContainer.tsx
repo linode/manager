@@ -65,12 +65,13 @@ export const KubernetesPlanContainer = (
         regionAvailabilities,
         selectedRegionId,
       });
+
       return (
         <KubernetesPlanSelection
           disabled={disabled}
           getTypeCount={getTypeCount}
           idx={id}
-          isPlanSoldOut={isPlanSoldOut}
+          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add sold out chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
