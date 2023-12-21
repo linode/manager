@@ -26,9 +26,7 @@ export interface Handlers {
 }
 
 export const LoadBalancerConfigurations = () => {
-  const { values, errors } = useFormikContext<CreateLoadbalancerPayload>();
-
-  console.log(errors)
+  const { values } = useFormikContext<CreateLoadbalancerPayload>();
 
   const [isServiceTargetDrawerOpen, setIsServiceTargetDrawerOpen] = useState(
     false

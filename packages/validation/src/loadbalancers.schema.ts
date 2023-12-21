@@ -226,7 +226,7 @@ const CreateLoadBalancerServiceTargetSchema = object({
 });
 
 // Rule Schema
-const CreateLoadBalancerRuleSchema = object({
+export const CreateLoadBalancerRuleSchema = object({
   match_condition: object().shape({
     hostname: string().nullable(),
     match_field: string()

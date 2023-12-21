@@ -34,6 +34,7 @@ import {
 
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 import type { RuleCreatePayload, ServiceTargetPayload } from '@linode/api-v4';
+import { ConfigurationSchema, CreateLoadBalancerRuleSchema } from '@linode/validation';
 
 interface Props {
   configurationIndex: number | undefined;
@@ -113,6 +114,7 @@ export const RuleDrawer = (props: Props) => {
       }
       onClose();
     },
+    validationSchema: CreateLoadBalancerRuleSchema,
   });
 
   const allServiceTargets = values.configurations.reduce<ServiceTargetPayload[]>((acc, configuration) => {

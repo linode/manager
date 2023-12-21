@@ -1,11 +1,13 @@
 import { CreateLoadBalancerSchema } from '@linode/validation';
 import Stack from '@mui/material/Stack';
-import { Formik, Form as FormikForm } from 'formik';
+import { Formik, Form as FormikForm, FormikHelpers } from 'formik';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
+import { useLoadBalancerCreateMutation } from 'src/queries/aglb/loadbalancers';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LoadBalancerActionPanel } from './LoadBalancerActionPanel';
 import { LoadBalancerConfigurations } from './LoadBalancerConfigurations';
@@ -41,8 +43,17 @@ export const initialValues: LoadBalancerCreateFormData = {
 };
 
 export const LoadBalancerCreate = () => {
-  const handleSubmit = (values: LoadBalancerCreateFormData) => {
-    alert(JSON.stringify(values, null, 2));
+  const { mutateAsync } = useLoadBalancerCreateMutation();
+
+  const handleSubmit = async (
+    values: LoadBalancerCreateFormData,
+    helpers: FormikHelpers<LoadBalancerCreateFormData>
+  ) => {
+    try {
+      await mutateAsync(values);
+    } catch (error) {
+      helpers.setErrors(getFormikErrorsFromAPIErrors(error));
+    }
   };
 
   return (
