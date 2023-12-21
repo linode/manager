@@ -75,7 +75,7 @@ describe('create linode', () => {
 
     cy.visitWithLogin('linodes/create');
 
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getRegions']);
+    cy.wait(['@getRegions']);
 
     // Confirm that region select dropdown is visible and interactive.
     ui.regionSelect.find().click();
