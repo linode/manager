@@ -168,9 +168,10 @@ export const ServiceTargetDrawer = (props: Props) => {
           />
         )}
         <TextField
-          errorText={formik.errors.label}
+          errorText={formik.touched.label ? formik.errors.label : undefined}
           label="Service Target Label"
           name="label"
+          onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           value={formik.values.label}
         />
@@ -360,23 +361,33 @@ export const ServiceTargetDrawer = (props: Props) => {
             {formik.values.healthcheck.protocol === 'http' && (
               <>
                 <TextField
+                  errorText={
+                    formik.touched.healthcheck?.path
+                      ? formik.errors.healthcheck?.path
+                      : undefined
+                  }
                   labelTooltipText={
                     SERVICE_TARGET_COPY.Tooltips.Healthcheck.Path
                   }
-                  errorText={formik.errors.healthcheck?.path}
                   label="Health Check Path"
                   name="healthcheck.path"
+                  onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   optional
                   value={formik.values.healthcheck.path}
                 />
                 <TextField
+                  errorText={
+                    formik.touched.healthcheck?.host
+                      ? formik.errors.healthcheck?.host
+                      : undefined
+                  }
                   labelTooltipText={
                     SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host
                   }
-                  errorText={formik.errors.healthcheck?.host}
                   label="Health Check Host"
                   name="healthcheck.host"
+                  onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   value={formik.values.healthcheck.host}
                 />

@@ -65,8 +65,8 @@ const HealthCheckSchema = object({
   path: string().nullable(),
   host: string().when('protocol', {
     is: 'tcp',
-    then: (o) => o.nullable(),
-    otherwise: (o) => o.required(),
+    then: (o) => o.notRequired(),
+    otherwise: (o) => o.required('Health Check host is required.'),
   }),
 });
 

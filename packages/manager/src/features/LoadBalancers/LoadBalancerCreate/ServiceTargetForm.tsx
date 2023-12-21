@@ -128,10 +128,11 @@ export const ServiceTargetForm = (props: Props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <TextField
-        errorText={formik.errors.label}
+        errorText={formik.touched.label ? formik.errors.label : undefined}
         label="Service Target Label"
         name="label"
         noMarginTop={!isEditMode}
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value={formik.values.label}
       />
@@ -319,19 +320,29 @@ export const ServiceTargetForm = (props: Props) => {
           {formik.values.healthcheck.protocol === 'http' && (
             <>
               <TextField
-                errorText={formik.errors.healthcheck?.path}
+                errorText={
+                  formik.touched.healthcheck?.path
+                    ? formik.errors.healthcheck?.path
+                    : undefined
+                }
                 label="Health Check Path"
                 labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Path}
                 name="healthcheck.path"
+                onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 optional
                 value={formik.values.healthcheck.path}
               />
               <TextField
-                errorText={formik.errors.healthcheck?.host}
+                errorText={
+                  formik.touched.healthcheck?.host
+                    ? formik.errors.healthcheck?.host
+                    : undefined
+                }
                 label="Health Check Host"
                 labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host}
                 name="healthcheck.host"
+                onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.healthcheck.host}
               />
