@@ -14,18 +14,17 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
-import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 
 import type { Handlers } from './LoadBalancerConfigurations';
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
   configurationIndex: number;
   handlers: Handlers;
 }
 
-export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
+export const Routes = ({ configurationIndex, handlers }: Props) => {
   const {
     setFieldValue,
     values,
@@ -35,30 +34,28 @@ export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
 
   const configuration = values.configurations![configurationIndex];
 
-  const handleRemoveServiceTarget = (index: number) => {
-    configuration.service_targets.splice(index, 1);
+  const handleRemoveRoute = (index: number) => {
+    configuration.routes!.splice(index, 1);
     setFieldValue(
-      `configuration[${configurationIndex}].service_targets`,
-      configuration.service_targets
+      `configurations[${configurationIndex}].routes`,
+      configuration.routes
     );
   };
 
   return (
     <Stack padding={1} spacing={1}>
-      <Typography variant="h2">Service Targets</Typography>
+      <Typography variant="h2">Routes</Typography>
       <Stack spacing={2}>
         <Typography>
-          Service targets are a collection of endpoints. The load balancer uses
-          policies and routes to direct incoming requests to specific healthy
-          endpoints. At least one service target is required to start serving
-          requests.
+          Load balancer uses traffic routing rules to select the service target
+          for the incoming request.
         </Typography>
         <Stack direction="row" gap={2}>
           <Button
             buttonType="outlined"
-            onClick={() => handlers.handleAddServiceTarget(configurationIndex)}
+            onClick={() => handlers.handleAddRoute(configurationIndex)}
           >
-            Add Service Target
+            Add Route
           </Button>
           <TextField
             InputProps={{
@@ -76,7 +73,7 @@ export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
               ),
             }}
             hideLabel
-            inputId={`configuration-${configurationIndex}-service-target-filter`}
+            inputId={`configuration-${configurationIndex}-route-filter`}
             label="Filter"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter"
@@ -86,71 +83,40 @@ export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
         <Table sx={{ width: '99%' }}>
           <TableHead>
             <TableRow>
-              <TableCell>Service Target Label</TableCell>
-              <TableCell>Endpoints</TableCell>
-              <TableCell>Algorithm</TableCell>
-              <TableCell>Health Checks</TableCell>
+              <TableCell>Route Label</TableCell>
+              <TableCell>Rules</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {configuration.service_targets.length === 0 && (
+            {configuration.routes!.length === 0 && (
               <TableRowEmpty colSpan={5} />
             )}
-            {configuration.service_targets
-              .filter((serviceTarget) => {
+            {configuration.routes
+              ?.filter((route) => {
                 if (query) {
-                  return serviceTarget.label.includes(query);
+                  return route.label.includes(query);
                 }
                 return true;
               })
-              .map((serviceTarget, index) => (
-                <TableRow key={serviceTarget.label}>
-                  <TableCell>{serviceTarget.label}</TableCell>
-                  <TableCell>
-                    {serviceTarget.endpoints.length === 0 ? (
-                      0
-                    ) : (
-                      <TextTooltip
-                        tooltipText={
-                          <Stack>
-                            {serviceTarget.endpoints.map(
-                              ({ ip, port }, index) => (
-                                <Typography key={`${ip}-${port}-${index}`}>
-                                  {ip}:{port}
-                                </Typography>
-                              )
-                            )}
-                          </Stack>
-                        }
-                        displayText={String(serviceTarget.endpoints.length)}
-                        minWidth={100}
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ textTransform: 'capitalize' }}>
-                    {serviceTarget.load_balancing_policy.replace('_', ' ')}
-                  </TableCell>
-                  <TableCell>
-                    {serviceTarget.healthcheck ? 'Yes' : 'No'}
-                  </TableCell>
+              .map((route, index) => (
+                <TableRow key={route.label}>
+                  <TableCell>{route.label}</TableCell>
+                  <TableCell>{route.rules.length}</TableCell>
                   <TableCell actionCell>
                     <ActionMenu
                       actionsList={[
                         {
                           onClick: () =>
-                            handlers.handleEditServiceTarget(
-                              index,
-                              configurationIndex
-                            ),
-                          title: 'Edit',
+                            handlers.handleEditRoute(index, configurationIndex),
+                          title: 'Edit Label',
                         },
                         {
-                          onClick: () => handleRemoveServiceTarget(index),
+                          onClick: () => handleRemoveRoute(index),
                           title: 'Remove',
                         },
                       ]}
-                      ariaLabel={`Action Menu for Service Target ${serviceTarget.label}`}
+                      ariaLabel={`Action Menu for Route ${route.label}`}
                     />
                   </TableCell>
                 </TableRow>

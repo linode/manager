@@ -16,9 +16,11 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/Configurations/constants';
 
+import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
+  handlers: Handlers;
   index: number;
 }
 
@@ -67,6 +69,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
                 ? getIn(errors, `configurations[${index}].port`)
                 : ''
             }
+            inputId={`configuration-${index}-port`}
             label="Port"
             labelTooltipText={CONFIGURATION_COPY.Port}
             name={`configurations[${index}].port`}
@@ -104,6 +107,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
             ? getIn(errors, `configurations[${index}].label`)
             : ''
         }
+        inputId={`configuration-${index}-label`}
         label="Configuration Label"
         labelTooltipText={CONFIGURATION_COPY.configuration}
         name={`configurations[${index}].label`}
