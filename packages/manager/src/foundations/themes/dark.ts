@@ -443,9 +443,6 @@ export const darkTheme: ThemeOptions = {
               color: '#ccc',
               opacity: 0.15,
             },
-            '&.Mui-checked': {
-              color: theme.palette.primary.main,
-            },
           },
           '&:hover': {
             color: theme.palette.primary.main,
