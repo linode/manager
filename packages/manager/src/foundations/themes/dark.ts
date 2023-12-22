@@ -436,7 +436,7 @@ export const darkTheme: ThemeOptions = {
               color: '#ccc',
             },
             color: '#55595c',
-            fill: 'none',
+            fill: '#53575a',
           },
           '&.Mui-disabled': {
             '& .defaultFill': {
