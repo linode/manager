@@ -10,6 +10,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof EntityDetail>;
 
+/**
+ * Barebone, no frills example
+ */
 export const Default: Story = {
   args: {
     body: <div>this is a body</div>,
