@@ -9,7 +9,7 @@ import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/Vert
 import { ConfigurationDetails } from './ConfigurationDetails';
 import { ServiceTargets } from './ServiceTargets';
 
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   index: number;

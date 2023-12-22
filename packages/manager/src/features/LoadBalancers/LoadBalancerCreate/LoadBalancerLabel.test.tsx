@@ -5,7 +5,7 @@ import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
