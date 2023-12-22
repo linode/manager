@@ -9,6 +9,7 @@ import {
   updateUser,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
@@ -18,6 +19,7 @@ import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
+// import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -49,6 +51,7 @@ import {
   StyledPermPaper,
   StyledSelect,
   StyledSubHeaderGrid,
+  StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
 import {
   UserPermissionsEntitySection,
@@ -155,19 +158,15 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (currentUsername && selectedUsername) {
       try {
         const currentUser = await getUser(currentUsername);
-        const selectedUser = await getUser(selectedUsername);
 
         const isParentAccount = currentUser.user_type === 'parent';
-        const isSelectedAccountValid =
-          selectedUser.user_type !== 'child' &&
-          selectedUser.user_type !== 'proxy';
         const isFeatureFlagOn = this.props.flags.parentChildAccountAccess;
 
-        if (isParentAccount && isSelectedAccountValid && isFeatureFlagOn) {
-          this.setState({ childAccountAccessEnabled: true });
-        } else {
-          this.setState({ childAccountAccessEnabled: false });
-        }
+        this.setState({
+          childAccountAccessEnabled: Boolean(
+            isParentAccount && isFeatureFlagOn
+          ),
+        });
       } catch (error) {
         this.setState((prevState) => ({
           errors: [...(prevState.errors || []), error],
@@ -453,7 +452,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </StyledPaper>
-        {restricted && this.renderPermissions()}
+        {restricted ? this.renderPermissions() : this.renderUnrestricted()}
       </Box>
     );
   };
@@ -517,8 +516,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           variant="subtitle2"
         >
           Configure the specific rights and privileges this user has within the
-          account. Remember that permissions related to actions with the '$'
-          symbol may incur additional charges.
+          account.{<br />}Remember that permissions related to actions with the
+          '$' symbol may incur additional charges.
         </Typography>
         <Grid
           sx={(theme) => ({
@@ -652,6 +651,21 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           isSavingEntity
         )}
       </StyledPermPaper>
+    );
+  };
+
+  renderUnrestricted = () => {
+    return (
+      <Paper>
+        <StyledUnrestrictedGrid>
+          <Typography>
+            This user has unrestricted access to the account.
+          </Typography>
+          {/* <Button buttonType="primary" onClick={this.onChangeRestricted}>
+          Save
+        </Button> */}
+        </StyledUnrestrictedGrid>
+      </Paper>
     );
   };
 
