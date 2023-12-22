@@ -32,7 +32,7 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/ServiceTargets/constants';
 import { AGLB_DOCS } from '../constants';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   onClose: () => void;

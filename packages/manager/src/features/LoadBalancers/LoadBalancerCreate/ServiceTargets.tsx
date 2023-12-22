@@ -19,7 +19,7 @@ import { Typography } from 'src/components/Typography';
 
 import { ServiceTargetDrawer } from './ServiceTargetDrawer';
 
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 export const ServiceTargets = () => {
   const {

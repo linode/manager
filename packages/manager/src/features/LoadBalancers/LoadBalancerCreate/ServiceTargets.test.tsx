@@ -4,7 +4,7 @@ import React from 'react';
 import { serviceTargetFactory } from 'src/factories';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 import { ServiceTargets } from './ServiceTargets';
 
 const formikContext = {

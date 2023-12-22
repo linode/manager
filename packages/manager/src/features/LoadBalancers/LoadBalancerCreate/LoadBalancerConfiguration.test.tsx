@@ -5,7 +5,7 @@ import React from 'react';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 // Define your initial values based on your form structure
 const initialValues: LoadBalancerCreateFormData = {

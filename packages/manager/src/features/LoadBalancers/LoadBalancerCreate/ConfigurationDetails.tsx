@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import { useFormikContext, getIn } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -16,7 +16,7 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/Configurations/constants';
 
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   index: number;
