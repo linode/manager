@@ -17,11 +17,11 @@ const initialValues: LoadBalancerCreateFormData = {
           certificate_id: null,
           endpoints: [],
           healthcheck: {
-            protocol: 'tcp',
+            healthy_threshold: 0,
             interval: 0,
+            protocol: 'tcp',
             timeout: 0,
             unhealthy_threshold: 0,
-            healthy_threshold: 0,
           },
           label: 'test',
           load_balancing_policy: 'least_request',
@@ -57,10 +57,10 @@ describe('ServiceTargetDrawer', () => {
   it('renders the drawer in edit mode if service target index is defined', () => {
     const { getByText } = renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <ServiceTargetDrawer
+        configurationIndex={0}
         onClose={vi.fn()}
         open={true}
         serviceTargetIndex={0}
-        configurationIndex={0}
       />,
       formikContext
     );

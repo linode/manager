@@ -4,12 +4,12 @@ import React from 'react';
 
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
+import { handlers } from './LoadBalancerConfiguration.test';
 import {
   LoadBalancerCreateFormData,
   initialValues,
-} from './LoadBalancerCreate';
+} from './LoadBalancerCreateFormWrapper';
 import { Routes } from './Routes';
-import { handlers } from './LoadBalancerConfiguration.test';
 
 describe('Routes (AGLB full create flow)', () => {
   it('renders a title and an add button', () => {
@@ -26,7 +26,6 @@ describe('Routes (AGLB full create flow)', () => {
       ...initialValues,
       configurations: [
         {
-          service_targets: [],
           certificates: [],
           label: 'test',
           port: 8080,
@@ -36,6 +35,7 @@ describe('Routes (AGLB full create flow)', () => {
             { label: 'test-2', protocol: 'http', rules: [] },
             { label: 'test-3', protocol: 'http', rules: [] },
           ],
+          service_targets: [],
         },
       ],
     };
@@ -59,12 +59,12 @@ describe('Routes (AGLB full create flow)', () => {
       ...initialValues,
       configurations: [
         {
-          service_targets: [],
           certificates: [],
           label: 'test',
           port: 8080,
           protocol: 'http',
           routes,
+          service_targets: [],
         },
       ],
     };

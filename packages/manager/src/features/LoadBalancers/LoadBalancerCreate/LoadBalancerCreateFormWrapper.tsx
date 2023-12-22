@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type {
+  ConfigurationPayload,
   CreateLoadbalancerPayload,
   ServiceTargetPayload,
 } from '@linode/api-v4';
@@ -28,21 +29,26 @@ const LoadBalancerSummary = React.lazy(() =>
   }))
 );
 
-export interface LoadBalancerCreateFormData extends CreateLoadbalancerPayload {
-  /**
-   * A shared array of service targets. This should be removed before we
-   * make our POST to the API.
-   */
-  service_targets: ServiceTargetPayload[];
+export interface LoadBalancerCreateFormData
+  extends Omit<CreateLoadbalancerPayload, 'configurations'> {
+  configurations: (ConfigurationPayload & {
+    service_targets: ServiceTargetPayload[];
+  })[];
 }
 
 export const initialValues: LoadBalancerCreateFormData = {
   configurations: [
-    { certificates: [], label: '', port: 443, protocol: 'https' },
+    {
+      certificates: [],
+      label: '',
+      port: 443,
+      protocol: 'https',
+      routes: [],
+      service_targets: [],
+    },
   ],
   label: '',
   regions: [],
-  service_targets: [],
 };
 
 export const LoadBalancerCreateFormWrapper = () => {
