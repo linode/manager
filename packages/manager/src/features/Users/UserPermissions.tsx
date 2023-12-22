@@ -268,6 +268,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
           this.props.queryClient.invalidateQueries('account-users');
+          this.props.enqueueSnackbar('User permissions successfully saved.', {
+            variant: 'success',
+          });
         })
         .catch((errResponse) => {
           this.setState({
@@ -658,9 +661,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const { tabs } = this.getTabInformation(grantsResponse);
           this.setState({ isSavingGlobal: false, tabs });
 
-          this.props.enqueueSnackbar('User permissions successfully saved.', {
-            variant: 'success',
-          });
+          this.props.enqueueSnackbar(
+            'General user permissions successfully saved.',
+            {
+              variant: 'success',
+            }
+          );
         })
         .catch((errResponse) => {
           this.setState({
@@ -710,9 +716,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         if (updateFns.length) {
           this.setState((compose as any)(...updateFns));
         }
-        this.props.enqueueSnackbar('User permissions successfully saved.', {
-          variant: 'success',
-        });
+        this.props.enqueueSnackbar(
+          'Entity-specific user permissions successfully saved.',
+          {
+            variant: 'success',
+          }
+        );
         // In the chance a new type entity was added to the account, re-calculate what tabs need to be shown.
         const { tabs } = this.getTabInformation(grantsResponse);
         this.setState({ isSavingEntity: false, tabs });
