@@ -3,7 +3,7 @@ import React from 'react';
 
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
-import { EditLoadBalancerLabel } from './EditLoadBalancerLabel';
+import { EditLoadBalancerLabel } from '.';
 
 const initialFormikValues = {
   label: 'Test Label',
