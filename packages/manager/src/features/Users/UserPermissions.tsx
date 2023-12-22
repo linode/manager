@@ -153,14 +153,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   checkAndEnableChildAccountAccess = async () => {
-    const currentUsername = this.props.currentUser;
-    const selectedUsername = this.props.username;
-    if (currentUsername && selectedUsername) {
+    const { currentUser: currentUsername, flags } = this.props;
+    if (currentUsername) {
       try {
         const currentUser = await getUser(currentUsername);
 
         const isParentAccount = currentUser.user_type === 'parent';
-        const isFeatureFlagOn = this.props.flags.parentChildAccountAccess;
+        const isFeatureFlagOn = flags.parentChildAccountAccess;
 
         this.setState({
           childAccountAccessEnabled: Boolean(
@@ -168,9 +167,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           ),
         });
       } catch (error) {
-        this.setState((prevState) => ({
-          errors: [...(prevState.errors || []), error],
-        }));
+        this.setState({
+          errors: getAPIErrorOrDefault(
+            error,
+            'Unknown error occurred while fetching user permissions. Try again later.'
+          ),
+        });
+        scrollErrorIntoView();
       }
     }
   };
