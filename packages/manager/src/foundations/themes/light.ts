@@ -979,6 +979,7 @@ export const lightTheme: ThemeOptions = {
             },
             color: '#ccc !important',
             fill: '#f4f4f4 !important',
+            opacity: 0.75,
             pointerEvents: 'none',
           },
           '&:hover': {

@@ -416,6 +416,43 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiRadio: {
+      styleOverrides: {
+        colorSecondary: {
+          '&$checked': {
+            '&:hover': {
+              backgroundColor: 'rgba(36, 83, 233, 0.04)',
+            },
+            color: primaryColors.main,
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(36, 83, 233, 0.04)',
+          },
+          color: primaryColors.main,
+        },
+        root: ({ theme }) => ({
+          '& .defaultFill': {
+            '& circle': {
+              color: '#ccc',
+            },
+            color: '#55595c',
+            fill: 'none',
+          },
+          '&.Mui-disabled': {
+            '& .defaultFill': {
+              color: '#ccc',
+              opacity: 0.15,
+            },
+            '&.Mui-checked': {
+              color: theme.palette.primary.main,
+            },
+          },
+          '&:hover': {
+            color: theme.palette.primary.main,
+          },
+        }),
+      },
+    },
     MuiSelect: {
       styleOverrides: {},
     },
@@ -425,6 +462,13 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: '#32363c',
           boxShadow: '0 0 5px #222',
           color: primaryColors.text,
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        track: {
+          backgroundColor: '#55595c',
         },
       },
     },

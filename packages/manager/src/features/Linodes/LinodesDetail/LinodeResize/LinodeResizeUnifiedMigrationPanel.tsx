@@ -66,6 +66,11 @@ export const UnifiedMigrationPanel = (props: Props) => {
                   <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/resize/">
                     Learn more.
                   </Link>
+                  {isLinodeOffline && (
+                    <Typography fontFamily={theme.font.bold} sx={{ mt: 1 }}>
+                      Your Linode must be powered on to select a warm resize.
+                    </Typography>
+                  )}
                 </>
               }
               interactive
