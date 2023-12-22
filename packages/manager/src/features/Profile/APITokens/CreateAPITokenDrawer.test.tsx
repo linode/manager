@@ -3,10 +3,24 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories/accountUsers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
+
+// Mock the useAccountUser hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+const queryMocks = vi.hoisted(() => ({
+  useAccountUser: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/accountUsers', async () => {
+  const actual = await vi.importActual<any>('src/queries/accountUsers');
+  return {
+    ...actual,
+    useAccountUser: queryMocks.useAccountUser,
+  };
+});
 
 const props = {
   onClose: vi.fn(),
@@ -38,6 +52,7 @@ describe('Create API Token Drawer', () => {
     expect(cancelBtn).toBeEnabled();
     expect(cancelBtn).toBeVisible();
   });
+
   it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
     server.use(
       rest.post('*/profile/tokens', (req, res, ctx) => {
@@ -58,19 +73,48 @@ describe('Create API Token Drawer', () => {
       expect(props.showSecret).toBeCalledWith('secret-value')
     );
   });
-  it('Should default to read/write for all scopes', () => {
+
+  it('Should default to None for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
-    const selectAllReadWriteRadioButton = getByLabelText(
-      'Select read/write for all'
-    );
-    expect(selectAllReadWriteRadioButton).toBeChecked();
+    const selectAllNonePermRadioButton = getByLabelText('Select none for all');
+    expect(selectAllNonePermRadioButton).toBeChecked();
   });
+
   it('Should default to 6 months for expiration', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     getByText('In 6 months');
   });
+
+  it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', () => {
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'parent' }),
+    });
+
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
+      flags: { parentChildAccountAccess: true },
+    });
+    const childScope = getByText('Child Account Access');
+    expect(childScope).toBeInTheDocument();
+  });
+
+  it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: null }),
+    });
+
+    const { queryByText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
+
+    const childScope = queryByText('Child Account Access');
+    expect(childScope).not.toBeInTheDocument();
+  });
+
   it('Should close when Cancel is pressed', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
