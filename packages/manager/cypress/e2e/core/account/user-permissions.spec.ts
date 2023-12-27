@@ -220,6 +220,8 @@ describe('User permission management', () => {
       .should('be.visible')
       .click();
 
+    ui.toast.assertMessage('User permissions successfully saved.');
+
     // Smoke tests to confirm that "Global Permissions" and "Specific Permissions"
     // sections are visible.
     cy.findByText(unrestrictedAccessMessage).should('not.exist');
@@ -325,7 +327,7 @@ describe('User permission management', () => {
       });
 
     // Confirm that toast notification appears when updating global permissions.
-    ui.toast.assertMessage('Successfully saved global permissions');
+    ui.toast.assertMessage('General user permissions successfully saved.');
 
     // Update entity-specific user permissions.
     mockUpdateUserGrants(mockUser.username, mockUserGrantsUpdatedSpecific).as(
@@ -368,7 +370,9 @@ describe('User permission management', () => {
         cy.wait('@updateUserGrants');
       });
 
-    ui.toast.assertMessage('Successfully saved entity-specific permissions');
+    ui.toast.assertMessage(
+      'Entity-specific user permissions successfully saved.'
+    );
   });
 
   /*
