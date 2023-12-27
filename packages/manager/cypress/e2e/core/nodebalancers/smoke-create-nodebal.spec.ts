@@ -10,12 +10,10 @@ import {
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
-import { dcPricingRegionNotice } from 'support/constants/dc-specific-pricing';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+  dcPricingDocsLabel,
+  dcPricingDocsUrl,
+} from 'support/constants/dc-specific-pricing';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
@@ -34,8 +32,6 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
 
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
-
     // Confirms that the price will not display when the region is not selected
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText('/month').should('not.exist');
@@ -47,19 +43,16 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
       cy.findByText(`$10/month`).should('be.visible');
     });
 
-    // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
-    // cy.findByText(dcPricingDocsLabel)
-    //   .should('be.visible')
-    //   .should('have.attr', 'href', dcPricingDocsUrl);
+    // Confirm there is a docs link to the pricing page
+    cy.findByText(dcPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', dcPricingDocsUrl);
 
     // Confirms that the summary updates to reflect price changes if the user changes their region.
     ui.regionSelect.find().click().clear().type(`${newRegion.label}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$14/month`).should('be.visible');
     });
-
-    // Confirms that a notice is shown in the "Region" section of the NodeBalancer Create form informing the user of DC-specific pricing
-    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
   }
   // this will create the NB in newark, where the default Linode was created
   ui.regionSelect.find().click().clear().type(`${regionName}{enter}`);
@@ -145,8 +138,7 @@ describe('create NodeBalancer', () => {
 
   /*
    * - Confirms DC-specific pricing UI flow works as expected during NodeBalancer creation.
-   * - Confirms that pricing notice is shown in "Region" section.
-   * - Confirms that notice is shown when selecting a region with a different price structure.
+   * - Confirms that pricing docs link is shown in "Region" section.
    */
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     const initialRegion = getRegionById('us-west');
@@ -161,11 +153,6 @@ describe('create NodeBalancer', () => {
       cy.intercept('POST', apiMatcher('nodebalancers')).as(
         'createNodeBalancer'
       );
-
-      mockAppendFeatureFlags({
-        dcSpecificPricing: makeFeatureFlagData(true),
-      }).as('getFeatureFlags');
-      mockGetFeatureFlagClientstream().as('getClientStream');
 
       createNodeBalancerWithUI(nodeBal, true);
     });

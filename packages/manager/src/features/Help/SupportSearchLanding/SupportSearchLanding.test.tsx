@@ -9,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import SupportSearchLanding from './SupportSearchLanding';
 
 const props = {
-  searchAlgolia: jest.fn(),
+  searchAlgolia: vi.fn(),
   searchEnabled: true,
   searchResults: [[], []],
   ...reactRouterProps,

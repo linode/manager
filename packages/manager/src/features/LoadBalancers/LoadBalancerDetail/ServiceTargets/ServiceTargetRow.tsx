@@ -1,15 +1,12 @@
 import React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import { Stack } from 'src/components/Stack';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
+import { useLoadbalancerCertificateQuery } from 'src/queries/aglb/certificates';
 
 import type { ServiceTarget } from '@linode/api-v4';
-import { useLoadbalancerCertificateQuery } from 'src/queries/aglb/certificates';
 
 interface Props {
   loadbalancerId: number;
@@ -30,15 +27,6 @@ export const ServiceTargetRow = (props: Props) => {
   return (
     <TableRow key={serviceTarget.label}>
       <TableCell>{serviceTarget.label}</TableCell>
-      <TableCell>
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <StatusIcon status="active" />
-          <Typography noWrap>4 up</Typography>
-          <Typography>&mdash;</Typography>
-          <StatusIcon status="error" />
-          <Typography noWrap>6 down</Typography>
-        </Stack>
-      </TableCell>
       <TableCell>{serviceTarget.protocol.toUpperCase()}</TableCell>
       <Hidden smDown>
         <TableCell sx={{ textTransform: 'capitalize' }}>

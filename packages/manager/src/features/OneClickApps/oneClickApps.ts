@@ -1130,18 +1130,19 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept FFmpeg Plugins are suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
+    description: `MainConcept FFmpeg Plugins Demo is suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept FFmpeg Plugins',
+    name: 'MainConcept FFmpeg Plugins Demo',
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins-demo/',
         title:
-          'Deploy MainConcept FFmpeg Plugins through the Linode Marketplace',
+          'Deploy MainConcept FFmpeg Plugins Demo through the Linode Marketplace',
       },
     ],
-    summary: 'MainConcept FFmpeg Plugins are advanced video encoding tools.',
+    summary:
+      'MainConcept FFmpeg Plugins Demo contains advanced video encoding tools.',
     website: 'https://www.mainconcept.com/ffmpeg',
   },
   {
@@ -1152,14 +1153,15 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept Live Encoder is a powerful all-in-one encoding engine designed to simplify common broadcast and OTT video workflows.`,
+    description: `MainConcept Live Encoder Demo is a powerful all-in-one encoding engine designed to simplify common broadcast and OTT video workflows.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept Live Encoder',
+    name: 'MainConcept Live Encoder Demo',
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder/',
-        title: 'Deploy MainConcept Live Encoder through the Linode Marketplace',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder-demo/',
+        title:
+          'Deploy MainConcept Live Encoder Demo through the Linode Marketplace',
       },
     ],
     summary: 'MainConcept Live Encoder is a real time video encoding engine.',
@@ -1173,20 +1175,20 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept P2 AVC Ultra Transcoder is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
+    description: `MainConcept P2 AVC ULTRA Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept P2 AVC Ultra Transcoder',
+    name: 'MainConcept P2 AVC ULTRA Transcoder Demo',
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra-demo/',
         title:
-          'Deploy MainConcept P2 AVC Ultra Transcoder through the Linode Marketplace',
+          'Deploy MainConcept P2 AVC ULTRA Transcoder Demo through the Linode Marketplace',
       },
     ],
     summary:
-      'MainConcept P2 AVC Ultra Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+      'MainConcept P2 AVC ULTRA Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Sony camera format encoder.',
@@ -1196,20 +1198,20 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept XAVC Transcoder is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XAVC-Intra, XAVC Long GOP and XAVC-S.`,
+    description: `MainConcept XAVC Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XAVC-Intra, XAVC Long GOP and XAVC-S.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept XAVC Transcoder',
+    name: 'MainConcept XAVC Transcoder Demo',
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder-demo/',
         title:
-          'Deploy MainConcept XAVC Transcoder through the Linode Marketplace',
+          'Deploy MainConcept XAVC Transcoder Demo through the Linode Marketplace',
       },
     ],
     summary:
       'MainConcept XAVC Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Sony XDCAM format encoder.',
@@ -1219,20 +1221,20 @@ export const oneClickApps: OCA[] = [
       end: '041125',
       start: '6DBA98',
     },
-    description: `MainConcept XDCAM Transcoder is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XDCAM HD, XDCAM EX, XDCAM IMX and DVCAM (XDCAM DV).`,
+    description: `MainConcept XDCAM Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XDCAM HD, XDCAM EX, XDCAM IMX and DVCAM (XDCAM DV).`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept XDCAM Transcoder',
+    name: 'MainConcept XDCAM Transcoder Demo',
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder-demo/',
         title:
-          'Deploy MainConcept XDCAM Transcoder through the Linode Marketplace',
+          'Deploy MainConcept XDCAM Transcoder Demo through the Linode Marketplace',
       },
     ],
     summary:
       'MainConcept XDCAM Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/mc2go',
+    website: 'https://www.mainconcept.com/transcoders',
   },
   {
     alt_description: 'Open source Twitter alternative.',

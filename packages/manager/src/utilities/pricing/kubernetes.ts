@@ -1,19 +1,15 @@
-import { getPrice } from 'src/utilities/pricing/linodes';
-
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4/lib';
-import type { FlagSet } from 'src/featureFlags';
 import type { ExtendedType } from 'src/utilities/extendType';
+import { getLinodeRegionPrice } from './linodes';
 
 interface MonthlyPriceOptions {
   count: number;
-  flags: FlagSet;
   region: Region['id'] | undefined;
   type: ExtendedType | string;
   types: ExtendedType[];
 }
 
 interface TotalClusterPriceOptions {
-  flags: FlagSet;
   highAvailabilityPrice?: number;
   pools: KubeNodePoolResponse[];
   region: Region['id'] | undefined;
@@ -26,7 +22,6 @@ interface TotalClusterPriceOptions {
  */
 export const getKubernetesMonthlyPrice = ({
   count,
-  flags,
   region,
   type,
   types,
@@ -36,8 +31,7 @@ export const getKubernetesMonthlyPrice = ({
   }
   const thisType = types.find((t: ExtendedType) => t.id === type);
 
-  const monthlyPrice = getPrice(thisType, region, flags.dcSpecificPricing)
-    ?.monthly;
+  const monthlyPrice = getLinodeRegionPrice(thisType, region)?.monthly;
 
   return monthlyPrice ? monthlyPrice * count : monthlyPrice;
 };
@@ -47,7 +41,6 @@ export const getKubernetesMonthlyPrice = ({
  * @returns The total monthly cluster price
  */
 export const getTotalClusterPrice = ({
-  flags,
   highAvailabilityPrice,
   pools,
   region,
@@ -56,7 +49,6 @@ export const getTotalClusterPrice = ({
   const price = pools.reduce((accumulator, node) => {
     const kubernetesMonthlyPrice = getKubernetesMonthlyPrice({
       count: node.count,
-      flags,
       region,
       type: node.type,
       types,

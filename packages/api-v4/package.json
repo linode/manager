@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.104.0",
+  "version": "0.106.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -41,15 +41,14 @@
   "unpkg": "./lib/index.global.js",
   "dependencies": {
     "@linode/validation": "*",
-    "axios": "~0.21.4",
+    "axios": "~1.6.1",
     "ipaddr.js": "^2.0.0",
     "yup": "^0.32.9"
   },
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test": "jest",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test": "yarn vitest run",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "precommit": "lint-staged"
@@ -58,19 +57,17 @@
     "lib"
   ],
   "devDependencies": {
-    "@swc/jest": "^0.2.22",
-    "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "@types/yup": "^0.29.13",
-    "axios-mock-adapter": "^1.18.1",
+    "axios-mock-adapter": "^1.22.0",
     "concurrently": "^4.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "jest": "~26.4.2",
     "lint-staged": "^13.2.2",
     "prettier": "~2.2.1",
-    "tsup": "^6.7.0"
+    "tsup": "^7.2.0",
+    "vitest": "^1.0.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
@@ -79,20 +76,6 @@
     ],
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
-    ]
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.(t)sx?$": "@swc/jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
     ]
   }
 }

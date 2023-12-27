@@ -1,3 +1,23 @@
+## [2023-12-11] - v0.36.0
+
+
+### Upcoming Features:
+
+- Improve `UpdateConfigurationSchema` ([#9870](https://github.com/linode/manager/pull/9870))
+- Update `CreateServiceTargetSchema` and `UpdateServiceTargetSchema` to include `protocol` ([#9891](https://github.com/linode/manager/pull/9891))
+- Change `ca_certificate` to `certificate_id` in `CreateServiceTargetSchema` and `UpdateServiceTargetSchema` ([#9891](https://github.com/linode/manager/pull/9891))
+- Require certificates for AGLB HTTPS configurations ([#9903](https://github.com/linode/manager/pull/9903))
+
+## [2023-11-13] - v0.35.0
+
+
+### Upcoming Features:
+
+- Add `CreateLoadBalancerEndpointSchema`, `CreateLoadBalancerServiceTargetSchema`, `CreateLoadBalancerRuleSchema`, `ConfigurationSchema`, and `CreateLoadBalancerSchema` for AGLB ([#9848](https://github.com/linode/manager/pull/9848))
+- Add `UpdateConfigurationSchema` for AGLB ([#9853](https://github.com/linode/manager/pull/9853))
+- Add missing label validation to `UpdateCertificateSchema` for AGLB ([#9880](https://github.com/linode/manager/pull/9880))
+
+
 ## [2023-10-30] - v0.34.0
 
 ### Changed:

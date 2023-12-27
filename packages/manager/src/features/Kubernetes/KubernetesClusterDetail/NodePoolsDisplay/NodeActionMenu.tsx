@@ -1,9 +1,9 @@
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
@@ -12,18 +12,9 @@ interface Props {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-const useStyles = makeStyles(() => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-}));
-
-export const NodeActionMenu: React.FC<Props> = (props) => {
+export const NodeActionMenu = (props: Props) => {
   const { instanceLabel, nodeId, openRecycleNodeDialog } = props;
   const theme = useTheme<Theme>();
-  const classes = useStyles();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
@@ -40,7 +31,7 @@ export const NodeActionMenu: React.FC<Props> = (props) => {
   ];
 
   return (
-    <div className={classes.root}>
+    <Box alignItems="center" display="flex" justifyContent="flex-end">
       {!matchesSmDown ? (
         actions.map((action) => (
           <InlineMenuAction
@@ -56,7 +47,7 @@ export const NodeActionMenu: React.FC<Props> = (props) => {
           ariaLabel={`Action menu for Node ${instanceLabel}`}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

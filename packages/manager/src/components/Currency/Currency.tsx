@@ -2,9 +2,21 @@ import { isNumber } from 'lodash';
 import * as React from 'react';
 
 interface CurrencyFormatterProps {
+  /**
+   * Additional data attributes to pass in. For example, a data-testid
+   */
   dataAttrs?: Record<string, any>;
+  /**
+   * The number of decimal places to display.
+   */
   decimalPlaces?: number;
+  /**
+   * The amount (of money) to display in a currency format.
+   */
   quantity: '--.--' | number;
+  /**
+   * A boolean used to wrap the currency in parenthesis. This is normally done to indicate a negative amount or balance.
+   */
   wrapInParentheses?: boolean;
 }
 

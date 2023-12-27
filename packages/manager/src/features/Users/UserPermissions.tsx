@@ -22,13 +22,13 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { Tab } from 'src/components/ReachTab';
-import { TabList } from 'src/components/ReachTabList';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { Toggle } from 'src/components/Toggle';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import withFlags, {
   FeatureFlagConsumerProps,
@@ -268,6 +268,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
           this.props.queryClient.invalidateQueries('account-users');
+          this.props.enqueueSnackbar('User permissions successfully saved.', {
+            variant: 'success',
+          });
         })
         .catch((errResponse) => {
           this.setState({
@@ -317,14 +320,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <StyledDivWrapper>
+      <StyledDivWrapper data-qa-billing-section>
         <Grid
           sx={(theme) => ({
             marginTop: theme.spacing(2),
             paddingBottom: 0,
           })}
           container
-          data-qa-billing-section
           spacing={2}
         >
           <Grid>
@@ -404,6 +406,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid>
             <Toggle
+              aria-label="Toggle Full Account Access"
               tooltipText={
                 username === currentUser
                   ? 'You cannot restrict the current active user.'
@@ -658,9 +661,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const { tabs } = this.getTabInformation(grantsResponse);
           this.setState({ isSavingGlobal: false, tabs });
 
-          this.props.enqueueSnackbar('Successfully saved global permissions', {
-            variant: 'success',
-          });
+          this.props.enqueueSnackbar(
+            'General user permissions successfully saved.',
+            {
+              variant: 'success',
+            }
+          );
         })
         .catch((errResponse) => {
           this.setState({
@@ -711,8 +717,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState((compose as any)(...updateFns));
         }
         this.props.enqueueSnackbar(
-          'Successfully saved entity-specific permissions',
-          { variant: 'success' }
+          'Entity-specific user permissions successfully saved.',
+          {
+            variant: 'success',
+          }
         );
         // In the chance a new type entity was added to the account, re-calculate what tabs need to be shown.
         const { tabs } = this.getTabInformation(grantsResponse);

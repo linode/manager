@@ -12,15 +12,17 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'metadata', label: 'Metadata' },
-  { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
   { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
-  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'dcGetWell', label: 'DC Get Well' },
-  { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
-  { flag: 'objDcSpecificPricing', label: 'OBJ Storage DC-Specific Pricing' },
+  { flag: 'metadata', label: 'Metadata' },
+  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
+  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
+  { flag: 'vpc', label: 'VPC' },
+  { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
+  { flag: 'recharts', label: 'Recharts' },
+  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

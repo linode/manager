@@ -33,11 +33,14 @@ export const Region = ({ loadbalancerId }: Props) => {
   return (
     <Paper>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={1}>
+        <Stack spacing={1.5}>
           <Typography variant="h2">Regions</Typography>
           <Typography>
-            <BetaChip sx={{ marginLeft: '0 !important' }} /> Load Balancer
-            regions can not be changed during beta.
+            <BetaChip
+              component="span"
+              sx={{ marginLeft: '0 !important', marginRight: '8px !important' }}
+            />{' '}
+            Load Balancer regions can not be changed during beta.
           </Typography>
           <LoadBalancerRegions />
         </Stack>

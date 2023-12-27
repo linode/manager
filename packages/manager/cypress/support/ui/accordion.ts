@@ -19,6 +19,6 @@ export const accordion = {
    * @returns Cypress chainable.
    */
   findByTitle: (title: string) => {
-    return cy.get(`[data-qa-panel="${title}"]`);
+    return cy.get(`[data-qa-panel="${title}"]`).find('[data-qa-panel-details]');
   },
 };

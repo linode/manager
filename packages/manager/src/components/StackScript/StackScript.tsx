@@ -1,10 +1,10 @@
 import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
-import { Box } from 'src/components/Box';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -49,7 +49,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   description: {
+    overflowWrap: 'anywhere',
     whiteSpace: 'pre-wrap',
+    wordBreak: 'normal',
   },
   descriptionText: {
     marginBottom: theme.spacing(2),
@@ -85,7 +87,7 @@ interface StackScriptImages {
   deprecated: JSX.Element[];
 }
 
-export const StackScript = (props: StackScriptProps) => {
+export const StackScript = React.memo((props: StackScriptProps) => {
   const {
     data: {
       deployments_active,
@@ -275,6 +277,4 @@ export const StackScript = (props: StackScriptProps) => {
       <ScriptCode script={script} />
     </div>
   );
-};
-
-export default React.memo(StackScript);
+});

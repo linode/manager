@@ -3,6 +3,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
 import { useLoadBalancerServiceTargetsInfiniteQuery } from 'src/queries/aglb/serviceTargets';
+import { pluralize } from 'src/utilities/pluralize';
 
 import type { Filter, ServiceTarget } from '@linode/api-v4';
 import type { SxProps } from '@mui/material';
@@ -87,6 +88,13 @@ export const ServiceTargetSelect = (props: Props) => {
       ListboxProps={{
         onScroll,
       }}
+      getOptionLabel={({ endpoints, label, protocol }) =>
+        `${label} (${protocol.toUpperCase()} - ${pluralize(
+          'endpoint',
+          'endpoints',
+          endpoints.length
+        )})`
+      }
       inputValue={
         selectedServiceTarget ? selectedServiceTarget.label : inputValue
       }
@@ -96,6 +104,7 @@ export const ServiceTargetSelect = (props: Props) => {
         }
       }}
       errorText={error?.[0].reason ?? errorText}
+      filterOptions={(x) => x}
       label={label ?? 'Service Target'}
       loading={isLoading}
       noMarginTop

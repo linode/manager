@@ -1,11 +1,10 @@
 import { KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
@@ -21,7 +20,7 @@ interface Props {
   cluster: KubernetesCluster;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115,
@@ -50,15 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const KubeClusterSpecs = (props: Props) => {
   const { cluster } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
 
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
 
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
-
-  const flags = useFlags();
 
   const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
@@ -72,7 +69,6 @@ export const KubeClusterSpecs = (props: Props) => {
   const dcSpecificPrice = cluster.control_plane.high_availability
     ? getDCSpecificPrice({
         basePrice: LKE_HA_PRICE,
-        flags,
         regionId: region?.id,
       })
     : undefined;
@@ -85,7 +81,6 @@ export const KubeClusterSpecs = (props: Props) => {
     `Version ${cluster.k8s_version}`,
     displayRegion,
     `$${getTotalClusterPrice({
-      flags,
       highAvailabilityPrice,
       pools: pools ?? [],
       region: region?.id,

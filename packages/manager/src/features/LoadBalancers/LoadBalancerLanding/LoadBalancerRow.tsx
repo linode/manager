@@ -1,31 +1,29 @@
 import { Loadbalancer } from '@linode/api-v4';
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurations';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
+import { regions as alphaRegions } from '../LoadBalancerDetail/LoadBalancerRegions';
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
-import { RegionsCell } from './RegionsCell';
+import { Ports } from './Ports';
 
 export interface LoadBalancerHandlers {
   onDelete: () => void;
 }
 
 interface Props {
-  loadBalancer: Loadbalancer;
   handlers: LoadBalancerHandlers;
+  loadBalancer: Loadbalancer;
 }
 
-export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
-  const { id, label, regions } = loadBalancer;
-  const { data: configurations } = useLoadBalancerConfigurationsQuery(id);
-  const ports = configurations?.data.map((config) => config.port);
+export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
+  const { hostname, id, label } = loadBalancer;
 
   return (
     <TableRow
@@ -35,24 +33,29 @@ export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
       <TableCell>
         <Link to={`/loadbalancers/${id}`}>{label}</Link>
       </TableCell>
-      <TableCell>
-        {/* TODO: AGLB - These are stub values for now*/}
-        <Stack alignItems="center" direction="row">
-          <StatusIcon status="active" />
-          <Typography>4 up</Typography>
-          <Typography mx={1}>&mdash;</Typography>
-          <StatusIcon status="error" />
-          <Typography>6 down</Typography>
-        </Stack>
-      </TableCell>
       <Hidden smDown>
-        <TableCell>{ports?.join(', ')}</TableCell>
+        <TableCell>
+          <Ports loadbalancerId={id} />
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>
+          {hostname ? <IPAddress ips={[hostname]} /> : 'None'}
+        </TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell>
-          {regions.map((region) => (
+          <Stack py={1} spacing={0.5}>
+            {alphaRegions.map(({ id, label }) => (
+              <Typography key={id}>
+                {label} ({id})
+              </Typography>
+            ))}
+          </Stack>
+          {/* Uncomment the code below to show the regions returned by the API */}
+          {/* {regions.map((region) => (
             <RegionsCell key={region} region={region} />
-          ))}
+          ))} */}
         </TableCell>
       </Hidden>
       <TableCell actionCell>

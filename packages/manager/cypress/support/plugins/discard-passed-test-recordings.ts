@@ -1,7 +1,7 @@
-import { CypressPlugin } from './plugin';
+// @ts-expect-error for some reason, @node/types is v12 and it probably doesn't have this.
+import fs from 'fs/promises';
 
-// Dependencies used in hooks have to use `require()` syntax.
-const fs = require('fs/promises'); // eslint-disable-line
+import { CypressPlugin } from './plugin';
 
 /**
  * Delete recordings for any specs that passed without requiring any

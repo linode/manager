@@ -18,7 +18,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useAccountSettings,
   useMutateAccountSettings,
@@ -45,8 +44,6 @@ interface Props {
 export const BackupDrawer = (props: Props) => {
   const { onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-
-  const flags = useFlags();
 
   const {
     data: linodes,
@@ -89,13 +86,6 @@ export const BackupDrawer = (props: Props) => {
     linodes?.filter((linode) => !linode.backups.enabled) ?? [];
 
   const linodeCount = linodesWithoutBackups.length;
-
-  const backupsConfirmationHelperText = (
-    <>
-      Confirm to add backups to{' '}
-      <strong>{pluralize('Linode', 'Linodes', linodeCount)}</strong>.
-    </>
-  );
 
   const renderBackupsTable = () => {
     if (linodesLoading || typesLoading || accountSettingsLoading) {
@@ -150,18 +140,12 @@ all new Linodes will automatically be backed up.`
   };
 
   const totalBackupsPrice = getTotalBackupsPrice({
-    flags,
     linodes: linodesWithoutBackups,
     types: types ?? [],
   });
 
   return (
-    <Drawer
-      onClose={onClose}
-      open={open}
-      title="Enable All Backups"
-      wide={flags.dcSpecificPricing}
-    >
+    <Drawer onClose={onClose} open={open} title="Enable All Backups" wide>
       <Stack spacing={2}>
         <Typography variant="body1">
           Three backup slots are executed and rotated automatically: a daily
@@ -171,7 +155,6 @@ all new Linodes will automatically be backed up.`
             guide on Backups
           </Link>{' '}
           for more information on features and limitations.{' '}
-          {!flags.dcSpecificPricing && backupsConfirmationHelperText}
         </Typography>
         {failedEnableBackupsCount > 0 && (
           <Box>
@@ -192,11 +175,9 @@ all new Linodes will automatically be backed up.`
           />
         )}
         <StyledPricingBox>
-          {flags.dcSpecificPricing && (
-            <StyledTypography variant="h2">
-              Total for {pluralize('Linode', 'Linodes', linodeCount)}:
-            </StyledTypography>
-          )}
+          <StyledTypography variant="h2">
+            Total for {pluralize('Linode', 'Linodes', linodeCount)}:
+          </StyledTypography>
           &nbsp;
           <DisplayPrice
             price={
@@ -224,7 +205,7 @@ all new Linodes will automatically be backed up.`
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell>Plan</TableCell>
-              {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
+              <TableCell>Region</TableCell>
               <TableCell>Price</TableCell>
             </TableRow>
           </TableHead>

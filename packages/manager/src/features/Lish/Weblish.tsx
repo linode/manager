@@ -1,24 +1,13 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { Terminal } from 'xterm';
 
+import { Box } from 'src/components/Box';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
-
-type ClassNames = 'errorState';
-
-const styles = () =>
-  createStyles({
-    errorState: {
-      '& *': {
-        color: '#f4f4f4 !important',
-      },
-    },
-  });
 
 interface Props {
   linode: Linode;
@@ -31,16 +20,14 @@ interface State {
   renderingLish: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export class Weblish extends React.Component<CombinedProps, State> {
+export class Weblish extends React.Component<Props, State> {
   componentDidMount() {
     this.mounted = true;
     resizeViewPort(1080, 730);
     this.connect();
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     /*
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
@@ -73,13 +60,18 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   render() {
     const { error } = this.state;
-    const { classes } = this.props;
 
     if (error) {
       return (
-        <div className={classes.errorState}>
+        <Box
+          sx={{
+            '& *': {
+              color: '#f4f4f4 !important',
+            },
+          }}
+        >
           <ErrorState errorText={error} />
-        </div>
+        </Box>
       );
     }
 
@@ -179,6 +171,4 @@ export class Weblish extends React.Component<CombinedProps, State> {
   terminal: Terminal;
 }
 
-const styled = withStyles(styles);
-
-export default styled(Weblish);
+export default Weblish;

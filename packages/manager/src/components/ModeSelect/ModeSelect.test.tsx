@@ -1,9 +1,9 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ModeSelect } from './ModeSelect';
 
-const classes = { root: '' };
 const modes = [
   {
     label: 'Edit',
@@ -16,19 +16,27 @@ const modes = [
 ];
 
 const props = {
-  classes,
   modes,
-  onChange: jest.fn(),
+  onChange: vi.fn(),
   selected: 'edit',
 };
 
-const component = shallow(<ModeSelect {...props} />);
+describe('ModeSelect', () => {
+  it('should render Mode labels', () => {
+    const { getByText } = renderWithTheme(<ModeSelect {...props} />);
 
-describe('Component', () => {
-  it('should render', () => {
-    expect(component).toBeDefined();
+    for (const mode of modes) {
+      expect(getByText(mode.label)).toBeVisible();
+    }
   });
-  it('should render a radio button for each mode', () => {
-    expect(component.find('[data-qa-radio]')).toHaveLength(2);
+  it('should render one radio for each mode option', () => {
+    const { getAllByRole } = renderWithTheme(<ModeSelect {...props} />);
+
+    expect(getAllByRole('radio')).toHaveLength(modes.length);
+  });
+  it('should render one radio group', () => {
+    const { getAllByRole } = renderWithTheme(<ModeSelect {...props} />);
+
+    expect(getAllByRole('radiogroup')).toHaveLength(1);
   });
 });

@@ -12,17 +12,13 @@ import { randomLabel, randomNumber, randomItem } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
   dcPricingLkeCheckoutSummaryPlaceholder,
   dcPricingLkeHAPlaceholder,
   dcPricingLkeClusterPlans,
   dcPricingMockLinodeTypes,
   dcPricingPlanPlaceholder,
-  dcPricingRegionNotice,
+  dcPricingDocsLabel,
+  dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 
@@ -91,11 +87,6 @@ describe('LKE Cluster Creation', () => {
       .fill(null)
       .map(() => randomItem(lkeClusterPlans));
 
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
@@ -107,10 +98,6 @@ describe('LKE Cluster Creation', () => {
       .click();
 
     cy.url().should('endWith', '/kubernetes/create');
-
-    // Confirm that visibility of HA price does not depend on region selection.
-    // TODO: DC Pricing - M3-7073: Update when feature flag is removed.
-    cy.contains('$60.00/month').should('be.visible');
 
     // Fill out LKE creation form label, region, and Kubernetes version fields.
     cy.findByLabelText('Cluster Label')
@@ -218,18 +205,17 @@ describe('LKE Cluster Creation', () => {
   });
 });
 
-// TODO: DC Pricing - M3-7073: Delete test and add commented pieces of it above.
 describe('LKE Cluster Creation with DC-specific pricing', () => {
   before(() => {
     cleanUp('lke-clusters');
   });
 
   /*
-   * - Confirms that DC-specific pricing notices and prices are present in the LKE create form when the feature flag is on.
+   * - Confirms that DC-specific prices are present in the LKE create form.
+   * - Confirms that pricing docs link is shown in "Region" section.
    * - Confirms that the plan table shows a message in place of plans when a region is not selected.
    * - Confirms that the cluster summary create button is disabled until a plan and region selection are made.
    * - Confirms that HA helper text updates dynamically to display pricing when a region is selected.
-   * - Confirms that the pricing warning notice is visible for a region with DC-specific pricing and not visible otherwise.
    */
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
     const clusterRegion = getRegionById('us-southeast');
@@ -239,12 +225,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(dcPricingLkeClusterPlans));
-
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-    interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
 
@@ -259,7 +239,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
     cy.wait(['@getLinodeTypes']);
 
-    // TODO: DC Pricing - M3-7073: Add to test above.
     // Confirm that, without a region selected, no pricing information is displayed.
 
     // Confirm checkout summary displays helper text and disabled create button.
@@ -274,23 +253,19 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     // Confirm that HA pricing displays helper text instead of price.
     cy.contains(dcPricingLkeHAPlaceholder).should('be.visible');
 
+    // Confirm docs link to pricing page is visible.
+    cy.findByText(dcPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', dcPricingDocsUrl);
+
     // Fill out LKE creation form label, region, and Kubernetes version fields.
     cy.findByLabelText('Cluster Label')
       .should('be.visible')
       .click()
       .type(`${clusterLabel}{enter}`);
 
-    // Confirm pricing warning notice is visible for a region with DC-specific pricing and not visible otherwise.
-    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
-    cy.findByText(dcPricingRegionNotice).should('not.exist');
+    ui.regionSelect.find().type(`${dcSpecificPricingRegion.label}{enter}`);
 
-    ui.regionSelect
-      .find()
-      .clear()
-      .type(`${dcSpecificPricingRegion.label}{enter}`);
-    cy.findByText(dcPricingRegionNotice).should('be.visible');
-
-    // TODO: DC Pricing - M3-7073: Add to test above.
     // Confirm that HA price updates dynamically once region selection is made.
     cy.contains(/\(\$.*\/month\)/).should('be.visible');
 
@@ -301,7 +276,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
       .click()
       .type(`${clusterVersion}{enter}`);
 
-    // TODO: DC Pricing - M3-7073: Add to test above.
     // Confirm that with region and HA selections, create button is still disabled until plan selection is made.
     cy.get('[data-qa-deploy-linode]')
       .should('contain.text', 'Create Cluster')

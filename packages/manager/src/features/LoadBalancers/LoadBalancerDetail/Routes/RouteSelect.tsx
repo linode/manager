@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useLoadBalancerRoutesInfiniteQuery } from 'src/queries/aglb/routes';
+import { pluralize } from 'src/utilities/pluralize';
 
 import type { Filter, Route } from '@linode/api-v4';
 
@@ -68,6 +69,13 @@ export const RouteSelect = (props: Props) => {
       ListboxProps={{
         onScroll,
       }}
+      getOptionLabel={({ label, protocol, rules }) =>
+        `${label} (${protocol.toUpperCase()} - ${pluralize(
+          'rule',
+          'rules',
+          rules.length
+        )})`
+      }
       onInputChange={(_, value, reason) => {
         if (reason === 'input') {
           setInputValue(value);

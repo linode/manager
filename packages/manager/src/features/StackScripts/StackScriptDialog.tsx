@@ -6,7 +6,7 @@ import { MapDispatchToProps, connect } from 'react-redux';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
-import _StackScript from 'src/components/StackScript';
+import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
 import { ApplicationState } from 'src/store';
 import { closeStackScriptDialog } from 'src/store/stackScriptDialog';
 import { MapState } from 'src/store/types';

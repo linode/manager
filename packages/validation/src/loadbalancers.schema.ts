@@ -40,7 +40,7 @@ export const CertificateConfigSchema = object({
 
 export const EndpointSchema = object({
   ip: string().required('IP is required.'),
-  host: string(),
+  host: string().nullable(),
   port: number()
     .required('Port is required.')
     .min(1, 'Port must be greater than 0.')
@@ -50,12 +50,16 @@ export const EndpointSchema = object({
 
 const HealthCheckSchema = object({
   protocol: string().oneOf(['http', 'tcp']),
-  interval: number().min(0),
-  timeout: number().min(0),
-  unhealthy_threshold: number().min(0),
-  healthy_threshold: number().min(0),
-  path: string(),
-  host: string(),
+  interval: number().typeError('Interval must be a number.').min(1, 'Interval must be greater than zero.'),
+  timeout: number().typeError('Timeout must be a number.').min(1, 'Timeout must be greater than zero.'),
+  unhealthy_threshold: number()
+    .typeError('Unhealthy Threshold must be a number.')
+    .min(1, 'Unhealthy Threshold must be greater than zero.'),
+  healthy_threshold: number()
+    .typeError('Healthy Threshold must be a number.')
+    .min(1, 'Healthy Threshold must be greater than zero.'),
+  path: string().nullable(),
+  host: string().nullable(),
 });
 
 export const CreateServiceTargetSchema = object({
@@ -101,7 +105,7 @@ const RouteServiceTargetSchema = object({
 });
 
 const TCPMatchConditionSchema = object({
-  hostname: string(),
+  hostname: string().nullable(),
 });
 
 const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
@@ -134,6 +138,7 @@ const BaseRuleSchema = object({
         return sum === 100;
       }
     )
+    .min(1, 'Rules must have at least 1 Service Target.')
     .required(),
 });
 
@@ -168,7 +173,11 @@ export const UpdateConfigurationSchema = object({
   protocol: string().oneOf(['tcp', 'http', 'https']),
   certificates: array().when('protocol', {
     is: 'https',
-    then: (o) => o.of(CertificateEntrySchema),
+    then: (o) =>
+      o
+        .of(CertificateEntrySchema)
+        .min(1, 'Certificates must not be empty for HTTPS configurations.')
+        .required(),
     otherwise: (o) => o.notRequired(),
   }),
   route_ids: array().of(number()),
@@ -186,7 +195,11 @@ export const CreateConfigurationSchema = object({
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: array().when('protocol', {
     is: 'https',
-    then: (o) => o.of(CertificateEntrySchema),
+    then: (o) =>
+      o
+        .of(CertificateEntrySchema)
+        .min(1, 'Certificates must not be empty for HTTPS configurations.')
+        .required(),
     otherwise: (o) => o.notRequired(),
   }),
   route_ids: array().of(number()),
@@ -228,44 +241,41 @@ const CreateLoadBalancerRuleSchema = object({
 
 export const ConfigurationSchema = object({
   label: string().required(LABEL_REQUIRED),
-  port: number().required('Port is required.').min(1).max(65535),
+  port: number()
+    .min(1, 'Port must be greater than 0.')
+    .max(65535, 'Port must be less than or equal to 65535.')
+    .typeError('Port must be a number.')
+    .required('Port is required.'),
   protocol: string().oneOf(['tcp', 'http', 'https']).required(),
   certificates: array().when('protocol', {
     is: (val: string) => val === 'https',
     then: (o) => o.of(CertificateEntrySchema).required(),
     otherwise: (o) => o.notRequired(),
   }),
-  routes: string().when('protocol', {
+  routes: array().when('protocol', {
     is: 'tcp',
-    then: array()
-      .of(
+    then: (o) =>
+      o.of(
         object({
           label: string().required(),
           protocol: string().oneOf(['tcp']).required(),
           rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
-      )
-      .required(),
-    otherwise: array()
-      .of(
-        object().shape({
+      ),
+    otherwise: (o) =>
+      o.of(
+        object({
           label: string().required(),
           protocol: string().oneOf(['http']).required(),
           rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
-      )
-      .required(),
+      ),
   }),
 });
 
 export const CreateLoadBalancerSchema = object({
-  label: string()
-    .matches(
-      /^[a-zA-Z0-9.\-_]+$/,
-      'Label may only contain letters, numbers, periods, dashes, and underscores.'
-    )
-    .required(LABEL_REQUIRED),
-  tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
+  label: string().min(1, 'Label must not be empty.').required(LABEL_REQUIRED),
+  // tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
   configurations: array().of(ConfigurationSchema),
 });
