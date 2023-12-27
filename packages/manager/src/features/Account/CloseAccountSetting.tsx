@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
+import { useFlags } from 'src/hooks/useFlags';
 import { useChildAccounts } from 'src/queries/account';
 
 import CloseAccountDialog from './CloseAccountDialog';
@@ -12,20 +13,24 @@ const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const { data: childAccounts } = useChildAccounts({});
+  const flags = useFlags();
+  const closeAccountDisabled = flags.parentChildAccountAccess
+    ? Boolean(childAccounts?.data?.length)
+    : false;
 
   return (
     <>
       <Accordion defaultExpanded={true} heading="Close Account">
         <Grid container direction="column">
           <Grid>
-            {Boolean(childAccounts?.data?.length) && (
+            {closeAccountDisabled && (
               <Notice spacingBottom={20} variant="info">
                 Remove child accounts before closing the account.
               </Notice>
             )}
             <Button
               buttonType="outlined"
-              disabled={Boolean(childAccounts?.data?.length)}
+              disabled={closeAccountDisabled}
               onClick={() => setDialogOpen(true)}
             >
               Close Account
