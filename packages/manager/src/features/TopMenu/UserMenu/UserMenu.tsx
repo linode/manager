@@ -63,7 +63,7 @@ export const UserMenu = React.memo(() => {
   // For proxy accounts: configure request headers using a parent's token to fetch the parent's username from /profile.
   const config = {
     headers: {
-      Authorization: authentication.token.get(), // TODO: Parent/Child - M3-7425: replace this token with the parent token in local storage.
+      Authorization: authentication.token.get(), // TODO: Parent/Child - M3-7430: replace this token with the parent token in local storage.
     },
   };
   const headers =
