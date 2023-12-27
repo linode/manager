@@ -2,66 +2,31 @@ import * as React from 'react';
 
 import { accountFactory, profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { rest, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserMenu } from './UserMenu';
 
-// Mock the hooks to immediately return the expected data, circumventing the HTTP request and loading state.
-const queryMocks = vi.hoisted(() => ({
-  // useAccount: vi.fn().mockReturnValue({}),
-  useAccountManagement: vi.fn().mockReturnValue({}),
-  useAccountUser: vi.fn().mockReturnValue({}),
-  useProfile: vi.fn().mockReturnValue({}),
-}));
-
-// vi.mock('src/queries/account', async () => {
-//   const actual = await vi.importActual<any>('src/queries/account');
-//   return {
-//     ...actual,
-//     useAccount: queryMocks.useAccount,
-//   };
-// });
-
-vi.mock('src/queries/accountManagement', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountManagement');
-  return {
-    ...actual,
-    useAccountManagement: queryMocks.useAccountManagement,
-  };
-});
-
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
-  return {
-    ...actual,
-    useAccountUser: queryMocks.useAccountUser,
-  };
-});
-
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
-  return {
-    ...actual,
-    useProfile: queryMocks.useProfile,
-  };
-});
+// We have to do this because if we don't, the <Hidden /> username doesn't render.
+beforeAll(() => mockMatchMedia());
 
 it('renders without crashing', () => {
   const { getByRole } = renderWithTheme(<UserMenu />);
   expect(getByRole('button')).toBeInTheDocument();
 });
 
-// TODO:
-it.skip("shows a parent user's username and company name for a parent user", async () => {
-  queryMocks.useAccountManagement.mockReturnValue({
-    _hasAccountAccess: true,
-    _isRestricted: false,
-    account: accountFactory.build({ company: 'Parent Company' }),
-    profile: profileFactory.build({ username: 'parent-user' }),
-  });
-  queryMocks.useAccountUser.mockReturnValue({
-    data: accountUserFactory.build({ user_type: 'parent' }),
-  });
+it("shows a parent user's username and company name for a parent user", async () => {
+  server.use(
+    rest.get('*/account', (req, res, ctx) => {
+      return res(ctx.json(accountFactory.build({ company: 'Parent Company' })));
+    }),
+    rest.get('*/profile', (req, res, ctx) => {
+      return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
+    }),
+    rest.get('*/account/users/*', (req, res, ctx) => {
+      return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+    })
+  );
 
   const { findByText } = renderWithTheme(<UserMenu />, {
     flags: { parentChildAccountAccess: true },
@@ -71,23 +36,65 @@ it.skip("shows a parent user's username and company name for a parent user", asy
   expect(await findByText('Parent Company')).toBeInTheDocument();
 });
 
-// TODO:
-it("shows the parent user's username and child company name for a proxy user", () => {
-  const { getByRole } = renderWithTheme(<UserMenu />);
+it("shows the parent user's username and child company name for a proxy user", async () => {
+  server.use(
+    rest.get('*/account', (req, res, ctx) => {
+      return res(ctx.json(accountFactory.build({ company: 'Child Company' })));
+    }),
+    rest.get('*/profile', (req, res, ctx) => {
+      return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
+    }),
+    rest.get('*/account/users/*', (req, res, ctx) => {
+      return res(ctx.json(accountUserFactory.build({ user_type: 'proxy' })));
+    })
+  );
 
-  expect(getByRole('button')).toBeInTheDocument();
+  const { findByText } = renderWithTheme(<UserMenu />, {
+    flags: { parentChildAccountAccess: true },
+  });
+
+  expect(await findByText('parent-user')).toBeInTheDocument();
+  expect(await findByText('Child Company')).toBeInTheDocument();
 });
 
-// TODO:
-it("shows the child user's username and company name for a child user", () => {
-  const { getByRole } = renderWithTheme(<UserMenu />);
+it("shows the child user's username and company name for a child user", async () => {
+  server.use(
+    rest.get('*/account', (req, res, ctx) => {
+      return res(ctx.json(accountFactory.build({ company: 'Child Company' })));
+    }),
+    rest.get('*/profile', (req, res, ctx) => {
+      return res(ctx.json(profileFactory.build({ username: 'child-user' })));
+    }),
+    rest.get('*/account/users/*', (req, res, ctx) => {
+      return res(ctx.json(accountUserFactory.build({ user_type: 'child' })));
+    })
+  );
 
-  expect(getByRole('button')).toBeInTheDocument();
+  const { findByText } = renderWithTheme(<UserMenu />, {
+    flags: { parentChildAccountAccess: true },
+  });
+
+  expect(await findByText('child-user')).toBeInTheDocument();
+  expect(await findByText('Child Company')).toBeInTheDocument();
 });
 
-// TODO:
-it("shows the user's username and no company name for a regular user", () => {
-  const { getByRole } = renderWithTheme(<UserMenu />);
+it("shows the user's username and no company name for a regular user", async () => {
+  server.use(
+    rest.get('*/account', (req, res, ctx) => {
+      return res(ctx.json(accountFactory.build({ company: 'Test Company' })));
+    }),
+    rest.get('*/profile', (req, res, ctx) => {
+      return res(ctx.json(profileFactory.build({ username: 'regular-user' })));
+    }),
+    rest.get('*/account/users/*', (req, res, ctx) => {
+      return res(ctx.json(accountUserFactory.build({ user_type: null })));
+    })
+  );
 
-  expect(getByRole('button')).toBeInTheDocument();
+  const { findByText, queryByText } = renderWithTheme(<UserMenu />, {
+    flags: { parentChildAccountAccess: true },
+  });
+
+  expect(await findByText('regular-user')).toBeInTheDocument();
+  expect(queryByText('Test Company')).not.toBeInTheDocument();
 });
