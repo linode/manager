@@ -19,6 +19,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { authentication } from 'src/utilities/storage';
 
 import type { UserType } from '@linode/api-v4';
 
@@ -54,18 +55,23 @@ export const UserMenu = React.memo(() => {
     profile,
   } = useAccountManagement();
 
-  // To test proxy user:
-  const config = {
-    headers: {
-      Authorization: `Bearer ${import.meta.env.REACT_APP_PARENT_PAT}`,
-    },
-  };
-  const headers = new AxiosHeaders(config.headers);
-  const { data: parentProfile } = useProfile({ headers });
+  const flags = useFlags();
 
   const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
-  const flags = useFlags();
+
+  // For proxy accounts: configure request headers using a parent's token to fetch the parent's username from /profile.
+  const config = {
+    headers: {
+      Authorization: authentication.token.get(), // TODO: Parent/Child - M3-7425: replace this token with the parent token in local storage.
+    },
+  };
+  const headers =
+    flags.parentChildAccountAccess && user?.user_type === 'proxy'
+      ? new AxiosHeaders(config.headers)
+      : undefined;
+
+  const { data: parentProfile } = useProfile({ headers });
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -106,7 +112,6 @@ export const UserMenu = React.memo(() => {
     ) ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
-  //console.log({companyName}, {userName}, {parentProfile})
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
