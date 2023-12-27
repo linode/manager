@@ -202,13 +202,27 @@ export const UserMenu = React.memo(() => {
           startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
           <Hidden mdDown>
-            <Stack>
+            <Stack alignItems={'flex-start'}>
+              <Typography
+                sx={{
+                  fontSize:
+                    flags.parentChildAccountAccess && user?.user_type !== null
+                      ? '0.775rem'
+                      : '0.875rem',
+                }}
+              >
+                {userName}
+              </Typography>
               {flags.parentChildAccountAccess && user?.user_type && (
-                <Typography sx={{ fontSize: '0.775rem' }}>
+                <Typography
+                  sx={(theme) => ({
+                    fontFamily: theme.font.bold,
+                    fontSize: '0.875rem',
+                  })}
+                >
                   {companyName ?? ''}
                 </Typography>
               )}
-              <Typography sx={{ fontSize: '0.875rem' }}>{userName}</Typography>
             </Stack>
           </Hidden>
         </Button>
