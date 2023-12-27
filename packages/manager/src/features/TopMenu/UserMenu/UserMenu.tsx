@@ -104,7 +104,7 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
   const companyName =
-    user?.user_type && account?.company ? account?.company : undefined;
+    user?.user_type && account?.company ? account?.company : '';
   const userName =
     getUserNameBasedOnUserType(
       user?.user_type,
@@ -112,6 +112,8 @@ export const UserMenu = React.memo(() => {
     ) ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
+  const showCompanyName =
+    flags.parentChildAccountAccess && user?.user_type !== null && companyName;
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -205,22 +207,19 @@ export const UserMenu = React.memo(() => {
             <Stack alignItems={'flex-start'}>
               <Typography
                 sx={{
-                  fontSize:
-                    flags.parentChildAccountAccess && user?.user_type !== null
-                      ? '0.775rem'
-                      : '0.875rem',
+                  fontSize: showCompanyName ? '0.775rem' : '0.875rem',
                 }}
               >
                 {userName}
               </Typography>
-              {flags.parentChildAccountAccess && user?.user_type && (
+              {showCompanyName && (
                 <Typography
                   sx={(theme) => ({
                     fontFamily: theme.font.bold,
                     fontSize: '0.875rem',
                   })}
                 >
-                  {companyName ?? ''}
+                  {companyName}
                 </Typography>
               )}
             </Stack>
