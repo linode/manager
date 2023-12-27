@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
+import { Notice } from 'src/components/Notice/Notice';
 import { useChildAccounts } from 'src/queries/account';
 
 import CloseAccountDialog from './CloseAccountDialog';
@@ -17,6 +18,11 @@ const CloseAccountSetting = () => {
       <Accordion defaultExpanded={true} heading="Close Account">
         <Grid container direction="column">
           <Grid>
+            {Boolean(childAccounts?.data?.length) && (
+              <Notice spacingBottom={20} variant="info">
+                Remove child accounts before closing the account.
+              </Notice>
+            )}
             <Button
               buttonType="outlined"
               disabled={Boolean(childAccounts?.data?.length)}
