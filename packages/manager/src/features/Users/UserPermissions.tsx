@@ -664,7 +664,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <Paper>
         <StyledUnrestrictedGrid>
-          <Typography>
+          <Typography data-qa-unrestricted-msg>
             This user has unrestricted access to the account.
           </Typography>
           {/* <Button buttonType="primary" onClick={this.onChangeRestricted}>
