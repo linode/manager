@@ -1,13 +1,16 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CloseAccountSetting from './CloseAccountSetting';
 
 beforeAll(() => {
   const queryMocks = {
-    useChildAccounts: vi.fn().mockReturnValue(accountFactory.buildList(1)),
+    useChildAccounts: vi
+      .fn()
+      .mockReturnValue(makeResourcePage(accountFactory.buildList(1))),
   };
 
   vi.mock('src/queries/accounts', async () => {
