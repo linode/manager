@@ -309,6 +309,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
           this.props.queryClient.invalidateQueries('account-users');
+          this.props.enqueueSnackbar('User permissions successfully saved.', {
+            variant: 'success',
+          });
         })
         .catch((errResponse) => {
           this.setState({
@@ -358,14 +361,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <StyledDivWrapper>
+      <StyledDivWrapper data-qa-billing-section>
         <Grid
           sx={(theme) => ({
             marginTop: theme.spacing(2),
             paddingBottom: 0,
           })}
           container
-          data-qa-billing-section
           spacing={2}
         >
           <Grid>
@@ -440,6 +442,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     ? 'You cannot restrict the current active user.'
                     : ''
                 }
+                aria-label="Toggle Full Account Access"
                 checked={!restricted}
                 disabled={username === currentUser}
                 onChange={this.onChangeRestricted}
@@ -703,9 +706,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const { tabs } = this.getTabInformation(grantsResponse);
           this.setState({ isSavingGlobal: false, tabs });
 
-          this.props.enqueueSnackbar('Successfully saved global permissions', {
-            variant: 'success',
-          });
+          this.props.enqueueSnackbar(
+            'General user permissions successfully saved.',
+            {
+              variant: 'success',
+            }
+          );
         })
         .catch((errResponse) => {
           this.setState({
@@ -756,8 +762,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState((compose as any)(...updateFns));
         }
         this.props.enqueueSnackbar(
-          'Successfully saved entity-specific permissions',
-          { variant: 'success' }
+          'Entity-specific user permissions successfully saved.',
+          {
+            variant: 'success',
+          }
         );
         // In the chance a new type entity was added to the account, re-calculate what tabs need to be shown.
         const { tabs } = this.getTabInformation(grantsResponse);
