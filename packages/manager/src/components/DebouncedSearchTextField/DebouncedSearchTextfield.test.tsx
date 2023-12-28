@@ -21,13 +21,14 @@ describe('Debounced Search Text Field', () => {
     const screen = renderWithTheme(<DebouncedSearchTextField {...props} />);
 
     const label = screen.getByText(labelVal);
-    expect(label).toBeVisible();
     const textfield = screen.getByTestId(textfieldId);
+    const searchIcon = screen.getByTestId('SearchIcon');
+
+    expect(label).toBeVisible();
     expect(textfield).toBeVisible();
     expect(textfield).toEqual(
       screen.container.querySelector('[placeholder="Filter by query"]')
     );
-    const searchIcon = screen.getByTestId('SearchIcon');
     expect(searchIcon).toBeVisible();
 
     // circle icon is not visible

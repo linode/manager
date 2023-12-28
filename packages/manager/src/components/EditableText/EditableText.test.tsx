@@ -13,6 +13,8 @@ const props = {
 };
 
 const BUTTON_LABEL = 'Edit Edit this';
+const CLOSE_BUTTON_ICON = 'CloseIcon';
+const SAVE_BUTTON_ICON = 'CheckIcon';
 
 describe('Editable Text', () => {
   it('renders an Editable Text input', () => {
@@ -22,6 +24,7 @@ describe('Editable Text', () => {
 
     const text = getByText('Edit this');
     expect(text).toBeVisible();
+
     const button = getByLabelText(BUTTON_LABEL);
     expect(button).toBeInTheDocument();
   });
@@ -45,22 +48,22 @@ describe('Editable Text', () => {
 
     fireEvent.click(button);
     expect(button).not.toBeInTheDocument();
+
     const textfield = getByTestId('textfield-input');
+    const saveButton = getByTestId(SAVE_BUTTON_ICON);
+    const closeButton = getByTestId(CLOSE_BUTTON_ICON);
+
     expect(textfield).toHaveValue('Edit this');
-    const saveButton = getByTestId('CheckIcon');
     expect(saveButton).toBeVisible();
-    const closeButton = getByTestId('CloseIcon');
     expect(closeButton).toBeVisible();
+
     fireEvent.click(closeButton);
     expect(props.onCancel).toHaveBeenCalled();
 
     // after clicking the cancel icon
-    const closeButtonAfter = queryByTestId('CloseIcon');
-    expect(closeButtonAfter).not.toBeInTheDocument();
-    const saveButtonAfter = queryByTestId('CheckIcon');
-    expect(saveButtonAfter).not.toBeInTheDocument();
-    const editButton2 = getByLabelText(BUTTON_LABEL);
-    expect(editButton2).toBeInTheDocument();
+    expect(queryByTestId(CLOSE_BUTTON_ICON)).not.toBeInTheDocument();
+    expect(queryByTestId(SAVE_BUTTON_ICON)).not.toBeInTheDocument();
+    expect(getByLabelText(BUTTON_LABEL)).toBeInTheDocument();
   });
 
   it('does not call onEdit if there are no changes to the text', () => {
@@ -71,18 +74,16 @@ describe('Editable Text', () => {
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
-    const saveButton = getByTestId('CheckIcon');
+
+    const saveButton = getByTestId(SAVE_BUTTON_ICON);
     expect(saveButton).toBeVisible();
     fireEvent.click(saveButton);
     expect(props.onEdit).not.toHaveBeenCalled();
 
     // after clicking the save button
-    const closeButtonAfter = queryByTestId('CloseIcon');
-    expect(closeButtonAfter).not.toBeInTheDocument();
-    const saveButtonAfter = queryByTestId('CheckIcon');
-    expect(saveButtonAfter).not.toBeInTheDocument();
-    const editButton2 = getByLabelText(BUTTON_LABEL);
-    expect(editButton2).toBeInTheDocument();
+    expect(queryByTestId(CLOSE_BUTTON_ICON)).not.toBeInTheDocument();
+    expect(queryByTestId(SAVE_BUTTON_ICON)).not.toBeInTheDocument();
+    expect(getByLabelText(BUTTON_LABEL)).toBeInTheDocument();
   });
 
   it('calls onEdit if the text has been changed', () => {
@@ -93,7 +94,8 @@ describe('Editable Text', () => {
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
-    const saveButton = getByTestId('CheckIcon');
+
+    const saveButton = getByTestId(SAVE_BUTTON_ICON);
     expect(saveButton).toBeVisible();
 
     // editing text
