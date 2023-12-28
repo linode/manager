@@ -30,6 +30,7 @@ const CloseAccountSetting = () => {
             )}
             <Button
               buttonType="outlined"
+              data-testid="close-account-button"
               disabled={closeAccountDisabled}
               onClick={() => setDialogOpen(true)}
             >
