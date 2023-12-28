@@ -1,4 +1,4 @@
-import { Button, Colors } from '@linode/design-language-system';
+import { Button, Color } from '@linode/design-language-system';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { breakpoints } from 'src/foundations/breakpoints';
@@ -7,75 +7,75 @@ import { latoWeb } from 'src/foundations/fonts';
 const inputMaxWidth = 416;
 
 export const bg = {
-  app: Colors.Neutrals[5],
-  bgAccessRow: Colors.Neutrals[5],
+  app: Color.Neutrals[5],
+  bgAccessRow: Color.Neutrals[5],
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-  bgPaper: Colors.Neutrals.White,
-  lightBlue1: Colors.Brand[10],
-  lightBlue2: Colors.Brand[40],
-  main: Colors.Neutrals[5],
-  mainContentBanner: Colors.Neutrals[100],
-  offWhite: Colors.Neutrals[5],
-  primaryNavPaper: Colors.Neutrals[100],
-  tableHeader: Colors.Neutrals[10],
-  white: Colors.Neutrals.White,
+  bgPaper: Color.Neutrals.White,
+  lightBlue1: Color.Brand[10],
+  lightBlue2: Color.Brand[40],
+  main: Color.Neutrals[5],
+  mainContentBanner: Color.Neutrals[100],
+  offWhite: Color.Neutrals[5],
+  primaryNavPaper: Color.Neutrals[100],
+  tableHeader: Color.Neutrals[10],
+  white: Color.Neutrals.White,
 } as const;
 
 const primaryColors = {
-  dark: Colors.Brand[90],
-  divider: Colors.Neutrals[5],
-  headline: Colors.Neutrals[100],
-  light: Colors.Brand[60],
-  main: Colors.Brand[80],
-  text: Colors.Neutrals[70],
-  white: Colors.Neutrals.White,
+  dark: Color.Brand[90],
+  divider: Color.Neutrals[5],
+  headline: Color.Neutrals[100],
+  light: Color.Brand[60],
+  main: Color.Brand[80],
+  text: Color.Neutrals[70],
+  white: Color.Neutrals.White,
 };
 
 export const color = {
-  black: Colors.Neutrals.Black,
-  blue: Colors.Brand[80],
-  blueDTwhite: Colors.Brand[80],
-  border2: Colors.Neutrals[40],
-  border3: Colors.Neutrals[20],
-  boxShadow: Colors.Neutrals[30],
-  boxShadowDark: Colors.Neutrals[50],
-  disabledText: Colors.Neutrals[40],
+  black: Color.Neutrals.Black,
+  blue: Color.Brand[80],
+  blueDTwhite: Color.Brand[80],
+  border2: Color.Neutrals[40],
+  border3: Color.Neutrals[20],
+  boxShadow: Color.Neutrals[30],
+  boxShadowDark: Color.Neutrals[50],
+  disabledText: Color.Neutrals[40],
   drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
-  green: Colors.Green[70],
-  grey1: Colors.Neutrals[50],
-  grey2: Colors.Neutrals[30],
-  grey3: Colors.Neutrals[40],
-  grey4: Colors.Neutrals[60],
-  grey5: Colors.Neutrals[5],
-  grey6: Colors.Neutrals[30],
-  grey7: Colors.Neutrals[20],
-  grey8: Colors.Neutrals[30],
-  grey9: Colors.Neutrals[5],
+  green: Color.Green[70],
+  grey1: Color.Neutrals[50],
+  grey2: Color.Neutrals[30],
+  grey3: Color.Neutrals[40],
+  grey4: Color.Neutrals[60],
+  grey5: Color.Neutrals[5],
+  grey6: Color.Neutrals[30],
+  grey7: Color.Neutrals[20],
+  grey8: Color.Neutrals[30],
+  grey9: Color.Neutrals[5],
   headline: primaryColors.headline,
-  label: Colors.Neutrals[70],
-  offBlack: Colors.Neutrals[90],
-  orange: Colors.Amber[70],
-  red: Colors.Red[70],
+  label: Color.Neutrals[70],
+  offBlack: Color.Neutrals[90],
+  orange: Color.Amber[70],
+  red: Color.Red[70],
   tableHeaderText: 'rgba(0, 0, 0, 0.54)',
-  tagButton: Colors.Brand[10],
-  tagIcon: Colors.Brand[60],
-  teal: Colors.Teal[70],
-  white: Colors.Neutrals.White,
-  yellow: Colors.Yellow[70],
+  tagButton: Color.Brand[10],
+  tagIcon: Color.Brand[60],
+  teal: Color.Teal[70],
+  white: Color.Neutrals.White,
+  yellow: Color.Yellow[70],
 } as const;
 
 export const textColors = {
-  headlineStatic: Colors.Neutrals[100],
-  linkActiveLight: Colors.Brand[80],
-  tableHeader: Colors.Neutrals[60],
-  tableStatic: Colors.Neutrals[70],
-  textAccessTable: Colors.Neutrals[70],
+  headlineStatic: Color.Neutrals[100],
+  linkActiveLight: Color.Brand[80],
+  tableHeader: Color.Neutrals[60],
+  tableStatic: Color.Neutrals[70],
+  textAccessTable: Color.Neutrals[70],
 } as const;
 
 export const borderColors = {
-  borderTable: Colors.Neutrals[5],
-  borderTypography: Colors.Neutrals[30],
-  divider: Colors.Neutrals[30],
+  borderTable: Color.Neutrals[5],
+  borderTypography: Color.Neutrals[30],
+  divider: Color.Neutrals[30],
 } as const;
 
 const iconCircleAnimation = {
@@ -223,8 +223,8 @@ export const lightTheme: ThemeOptions = {
             transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           },
           '& svg': {
-            fill: Colors.Brand[80],
-            stroke: Colors.Brand[80],
+            fill: Color.Brand[80],
+            stroke: Color.Brand[80],
           },
           '&.Mui-expanded': {
             '& .caret': {
@@ -269,7 +269,7 @@ export const lightTheme: ThemeOptions = {
           },
           paddingRight: 4,
           svg: {
-            color: Colors.Neutrals[40],
+            color: Color.Neutrals[40],
           },
           top: 'unset',
         },
@@ -354,7 +354,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         colorDefault: {
           backgroundColor: 'unset',
-          color: Colors.Neutrals[40], // TODO: This was the closest color according to our palette
+          color: Color.Neutrals[40], // TODO: This was the closest color according to our palette
         },
       },
     },
@@ -413,9 +413,9 @@ export const lightTheme: ThemeOptions = {
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: Colors.Neutrals[5], // TODO: This was the closest color according to our palette
-            border: `1px solid ${Colors.Neutrals[30]}`, // TODO: This was the closest color according to our palette
-            color: Colors.Brand[80],
+            backgroundColor: Color.Neutrals[5], // TODO: This was the closest color according to our palette
+            border: `1px solid ${Color.Neutrals[30]}`, // TODO: This was the closest color according to our palette
+            color: Color.Brand[80],
           },
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
@@ -450,14 +450,14 @@ export const lightTheme: ThemeOptions = {
           minWidth: 0,
         },
         root: {
-          backgroundColor: Colors.Neutrals[5],
+          backgroundColor: Color.Neutrals[5],
         },
       },
     },
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: Colors.Neutrals[40],
+          color: Color.Neutrals[40],
         },
       },
     },
@@ -465,12 +465,12 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         clickable: {
           '&:focus': {
-            bbackgroundColor: Colors.Brand[40], // TODO: This was the closest color according to our palette
+            bbackgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
           },
           '&:hover': {
-            bbackgroundColor: Colors.Brand[40], // TODO: This was the closest color according to our palette
+            bbackgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
           },
-          backgroundColor: Colors.Brand[10], // TODO: This was the closest color according to our palette
+          backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
         },
         colorError: {
           color: color.white,
@@ -508,7 +508,7 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           '&:focus': {
-            outline: `1px dotted ${Colors.Neutrals[60]}`, // TODO: This was the closest color according to our palette
+            outline: `1px dotted ${Color.Neutrals[60]}`, // TODO: This was the closest color according to our palette
           },
           '&:last-child': {
             marginRight: 0,
@@ -548,7 +548,7 @@ export const lightTheme: ThemeOptions = {
     MuiDialog: {
       styleOverrides: {
         paper: {
-          boxShadow: `0 0 5px ${Colors.Neutrals[50]}`, // TODO: This was the closest color according to our palette
+          boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
           [breakpoints.down('sm')]: {
             margin: 24,
             maxHeight: 'calc(100% - 48px)',
@@ -585,7 +585,7 @@ export const lightTheme: ThemeOptions = {
           '& h2': {
             lineHeight: 1.2,
           },
-          borderBottom: `1px solid ${Colors.Neutrals[20]}`,
+          borderBottom: `1px solid ${Color.Neutrals[20]}`,
           color: primaryColors.headline,
           marginBottom: 20,
           padding: '16px 24px',
@@ -604,7 +604,7 @@ export const lightTheme: ThemeOptions = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          boxShadow: `0 0 5px ${Colors.Neutrals[50]}`, // TODO: This was the closest color according to our palette
+          boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
           /** @todo This is breaking typing. */
           // overflowY: 'overlay',
           display: 'block',
@@ -618,7 +618,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.copy > div': {
-            backgroundColor: Colors.Neutrals[5],
+            backgroundColor: Color.Neutrals[5],
           },
           [breakpoints.down('xs')]: {
             width: '100%',
@@ -652,7 +652,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$error': {
-            color: Colors.Red[70],
+            color: Color.Red[70],
           },
           fontSize: '0.875rem',
           lineHeight: 1.25,
@@ -664,16 +664,16 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$disabled': {
-            color: Colors.Neutrals[70],
+            color: Color.Neutrals[70],
             opacity: 0.5,
           },
           '&$error': {
-            color: Colors.Neutrals[70],
+            color: Color.Neutrals[70],
           },
           '&.Mui-focused': {
-            color: Colors.Neutrals[70],
+            color: Color.Neutrals[70],
           },
-          color: Colors.Neutrals[70],
+          color: Color.Neutrals[70],
           fontFamily: latoWeb.bold,
           fontSize: '.875rem',
           marginBottom: 8,
@@ -725,32 +725,32 @@ export const lightTheme: ThemeOptions = {
         root: {
           '& svg': {
             '&:hover': {
-              color: Colors.Brand[60],
+              color: Color.Brand[60],
             },
             color: primaryColors.main,
             fontSize: 18,
           },
           '&$disabled': {
-            borderColor: Colors.Neutrals[40],
+            borderColor: Color.Neutrals[40],
             color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5,
           },
           '&.Mui-error': {
-            borderColor: Colors.Red[70],
+            borderColor: Color.Red[70],
           },
           '&.Mui-focused': {
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
             borderColor: primaryColors.main,
-            boxShadow: `0 0 2px 1px ${Colors.Neutrals[30]}`,
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
           '&.affirmative': {
-            borderColor: Colors.Green[70],
+            borderColor: Color.Green[70],
           },
           alignItems: 'center',
-          backgroundColor: Colors.Neutrals.White,
-          border: `1px solid ${Colors.Neutrals[40]}`,
+          backgroundColor: Color.Neutrals.White,
+          border: `1px solid ${Color.Neutrals[40]}`,
           boxSizing: 'border-box',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -774,13 +774,13 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.only('xs')]: {
               fontSize: '1rem',
             },
-            color: Colors.Neutrals[70],
+            color: Color.Neutrals[70],
             fontSize: '0.9rem',
           },
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
-          color: Colors.Neutrals[70],
+          color: Color.Neutrals[70],
           fontSize: '0.9rem',
           whiteSpace: 'nowrap',
         },
@@ -809,7 +809,7 @@ export const lightTheme: ThemeOptions = {
     MuiLinearProgress: {
       styleOverrides: {
         colorPrimary: {
-          backgroundColor: Colors.Brand[40], // TODO: This was the closest color according to our palette
+          backgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
         },
       },
     },
@@ -930,7 +930,7 @@ export const lightTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         outlined: {
-          border: `1px solid ${Colors.Neutrals[30]}`,
+          border: `1px solid ${Color.Neutrals[30]}`,
         },
         root: {},
         rounded: {
@@ -942,7 +942,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         paper: {
           borderRadius: 0,
-          boxShadow: `0 0 5px ${Colors.Neutrals[30]}`,
+          boxShadow: `0 0 5px ${Color.Neutrals[30]}`,
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },
@@ -977,10 +977,10 @@ export const lightTheme: ThemeOptions = {
           },
           '&.Mui-disabled': {
             '& .defaultFill': {
-              fill: Colors.Neutrals[5],
+              fill: Color.Neutrals[5],
             },
-            color: `${Colors.Neutrals[40]} !important`,
-            fill: `${Colors.Neutrals[5]} !important`,
+            color: `${Color.Neutrals[40]} !important`,
+            fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
           },
           '&:hover': {
@@ -990,7 +990,7 @@ export const lightTheme: ThemeOptions = {
             color: theme.palette.primary.main,
             fill: theme.color.white,
           },
-          color: Colors.Neutrals[40],
+          color: Color.Neutrals[40],
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
         }),
@@ -1000,7 +1000,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         disabled: {},
         icon: {
-          color: `${Colors.Neutrals[50]} !important`,
+          color: `${Color.Neutrals[50]} !important`,
           height: 28,
           marginRight: 4,
           marginTop: -2,
@@ -1034,8 +1034,8 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'white',
           borderLeft: `6px solid transparent`,
           borderRadius: 4,
-          boxShadow: `0 0 5px ${Colors.Neutrals[30]}`,
-          color: Colors.Neutrals[70],
+          boxShadow: `0 0 5px ${Color.Neutrals[30]}`,
+          color: Color.Neutrals[70],
         },
       },
     },
@@ -1068,8 +1068,8 @@ export const lightTheme: ThemeOptions = {
           '& $disabled': {
             '&$switchBase': {
               '& + $track': {
-                backgroundColor: Colors.Neutrals[30],
-                borderColor: Colors.Neutrals[40],
+                backgroundColor: Color.Neutrals[30],
+                borderColor: Color.Neutrals[40],
               },
               '& .square': {
                 fill: 'white',
@@ -1107,15 +1107,15 @@ export const lightTheme: ThemeOptions = {
           },
           '&.Mui-disabled': {
             '& +.MuiSwitch-track': {
-              backgroundColor: Colors.Neutrals[30],
-              borderColor: Colors.Neutrals[40],
+              backgroundColor: Color.Neutrals[30],
+              borderColor: Color.Neutrals[40],
             },
           },
           color: primaryColors.main,
           padding: 16,
         },
         track: {
-          backgroundColor: Colors.Neutrals[40],
+          backgroundColor: Color.Neutrals[40],
           borderRadius: 1,
           boxSizing: 'content-box',
           height: 24,
@@ -1163,7 +1163,7 @@ export const lightTheme: ThemeOptions = {
         selected: {},
         textColorPrimary: {
           '&$selected': {
-            color: Colors.Neutrals[100],
+            color: Color.Neutrals[100],
           },
         },
       },
@@ -1195,7 +1195,7 @@ export const lightTheme: ThemeOptions = {
     MuiTableRow: {
       styleOverrides: {
         head: {
-          backgroundColor: Colors.Neutrals[5],
+          backgroundColor: Color.Neutrals[5],
           height: 'auto',
         },
         hover: {
@@ -1213,7 +1213,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '&:hover, &:focus': {
             '&$hover': {
-              backgroundColor: Colors.Neutrals[5],
+              backgroundColor: Color.Neutrals[5],
               [breakpoints.up('md')]: {
                 boxShadow: `inset 5px 0 0 ${primaryColors.main}`,
               },
@@ -1245,7 +1245,7 @@ export const lightTheme: ThemeOptions = {
             color: textColors.tableHeader,
           },
           '&:focus': {
-            outline: `1px dotted ${Colors.Neutrals[60]}`, // TODO: This was the closest color according to our palette
+            outline: `1px dotted ${Color.Neutrals[60]}`, // TODO: This was the closest color according to our palette
           },
           '&:hover': {
             color: primaryColors.main,
@@ -1292,7 +1292,7 @@ export const lightTheme: ThemeOptions = {
               width: 38,
             },
           },
-          boxShadow: `inset 0 -1px 0 ${Colors.Neutrals[40]}`,
+          boxShadow: `inset 0 -1px 0 ${Color.Neutrals[40]}`,
           margin: '16px 0',
           minHeight: 48,
           position: 'relative',
@@ -1310,12 +1310,12 @@ export const lightTheme: ThemeOptions = {
         tooltip: {
           backgroundColor: 'white',
           borderRadius: 0,
-          boxShadow: `0 0 5px ${Colors.Neutrals[50]}`, // TODO: This was the closest color according to our palette
+          boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
           [breakpoints.up('sm')]: {
             fontSize: '.9rem',
             padding: '8px 10px',
           },
-          color: Colors.Neutrals[70],
+          color: Color.Neutrals[70],
           maxWidth: 200,
           textAlign: 'left',
         },
@@ -1350,7 +1350,7 @@ export const lightTheme: ThemeOptions = {
             maxHeight: 34,
             minWidth: 100,
           },
-          color: Colors.Neutrals.White,
+          color: Color.Neutrals.White,
           cursor: 'pointer',
           fontFamily: latoWeb.bold,
           fontSize: '1rem',
@@ -1438,30 +1438,30 @@ export const lightTheme: ThemeOptions = {
     },
     divider: primaryColors.divider,
     error: {
-      dark: Colors.Red[70],
-      light: Colors.Red[10],
-      main: Colors.Red[40],
+      dark: Color.Red[70],
+      light: Color.Red[10],
+      main: Color.Red[40],
     },
     info: {
-      dark: Colors.Ultramarine[70],
-      light: Colors.Ultramarine[10],
-      main: Colors.Ultramarine[40],
+      dark: Color.Ultramarine[70],
+      light: Color.Ultramarine[10],
+      main: Color.Ultramarine[40],
     },
     mode: 'light',
     primary: primaryColors,
     secondary: primaryColors,
     success: {
-      dark: Colors.Green[70],
-      light: Colors.Green[10],
-      main: Colors.Green[40],
+      dark: Color.Green[70],
+      light: Color.Green[10],
+      main: Color.Green[40],
     },
     text: {
       primary: primaryColors.text,
     },
     warning: {
-      dark: Colors.Amber[70],
-      light: Colors.Amber[10],
-      main: Colors.Amber[40],
+      dark: Color.Amber[70],
+      light: Color.Amber[10],
+      main: Color.Amber[40],
     },
   },
   shadows: [

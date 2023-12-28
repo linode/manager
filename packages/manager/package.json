@@ -17,7 +17,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@linode/api-v4": "*",
-    "@linode/design-language-system": "^1.0.0",
+    "@linode/design-language-system": "^1.1.0",
     "@linode/validation": "*",
     "@mui/icons-material": "^5.14.7",
     "@mui/material": "^5.14.7",
