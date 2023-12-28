@@ -6,20 +6,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CloseAccountSetting from './CloseAccountSetting';
 
-beforeAll(() => {
-  const queryMocks = {
-    useChildAccounts: vi
-      .fn()
-      .mockReturnValue(makeResourcePage(accountFactory.buildList(1))),
-  };
+// Mock the useChildAccounts hook to immediately return the expected data, circumventing the HTTP request and loading state.
+const queryMocks = vi.hoisted(() => ({
+  useChildAccounts: vi.fn().mockReturnValue({}),
+}));
 
-  vi.mock('src/queries/accounts', async () => {
-    const actual = await vi.importActual<any>('src/queries/account');
-    return {
-      ...actual,
-      useChildAccounts: queryMocks.useChildAccounts,
-    };
-  });
+vi.mock('src/queries/account', async () => {
+  const actual = await vi.importActual<any>('src/queries/account');
+  return {
+    ...actual,
+    useChildAccounts: queryMocks.useChildAccounts,
+  };
 });
 
 describe('Close Account Settings', () => {
@@ -40,15 +37,22 @@ describe('Close Account Settings', () => {
     expect(span).toHaveTextContent('Close Account');
   });
 
-  it('should render a disabled Close Account button when there are child account', () => {
-    const { getByText } = renderWithTheme(<CloseAccountSetting />, {
-      flags: { parentChildAccountAccess: true },
+  it('should render a disabled Close Account button and helper text when there are child account', () => {
+    queryMocks.useChildAccounts.mockReturnValue({
+      data: makeResourcePage(accountFactory.buildList(1)),
     });
+
+    const { getByTestId, getByText } = renderWithTheme(
+      <CloseAccountSetting />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
     const notice = getByText(
       'Remove child accounts before closing the account.'
     );
     expect(notice).toBeInTheDocument();
-    // const button = getByTestId('close-account-button');
-    // expect(button).toBeDisabled();
+    const button = getByTestId('close-account-button');
+    expect(button).toBeDisabled();
   });
 });
