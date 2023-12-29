@@ -12,8 +12,8 @@ describe('Placeholder', () => {
     );
 
     const title = getByText('This is a title');
-    expect(title).toHaveClass('MuiTypography-h1');
     const icon = getByTestId('placeholder-icon');
+    expect(title).toHaveClass('MuiTypography-h1');
     expect(container.querySelector('[height="50"]')).toEqual(icon);
   });
 
