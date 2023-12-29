@@ -2,6 +2,7 @@ import {
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
+  User,
   VolumeStatus,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
@@ -507,6 +508,12 @@ const childAccountUser = accountUserFactory.build({
   restricted: false,
   user_type: 'child',
   username: 'ChildUser',
+});
+const parentAccountNonAdminUser = accountUserFactory.build({
+  email: 'account@linode.com',
+  last_login: null,
+  restricted: false,
+  username: 'NonAdminUser',
 });
 
 export const handlers = [
@@ -1204,6 +1211,7 @@ export const handlers = [
       childAccountUser,
       parentAccountUser,
       proxyAccountUser,
+      parentAccountNonAdminUser,
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
@@ -1216,10 +1224,26 @@ export const handlers = [
   rest.get(`*/account/users/${parentAccountUser.username}`, (req, res, ctx) => {
     return res(ctx.json(parentAccountUser));
   }),
+  rest.get(
+    `*/account/users/${parentAccountNonAdminUser.username}`,
+    (req, res, ctx) => {
+      return res(ctx.json(parentAccountNonAdminUser));
+    }
+  ),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     // Parent/Child: switch the `user_type` depending on what account view you need to mock.
     return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
   }),
+  rest.put(
+    `*/account/users/${parentAccountNonAdminUser.username}`,
+    (req, res, ctx) => {
+      const { restricted } = req.body as Partial<User>;
+      if (restricted !== undefined) {
+        parentAccountNonAdminUser.restricted = restricted;
+      }
+      return res(ctx.json(parentAccountNonAdminUser));
+    }
+  ),
   rest.get(
     `*/account/users/${childAccountUser.username}/grants`,
     (req, res, ctx) => {
@@ -1271,6 +1295,20 @@ export const handlers = [
           })
         )
       );
+    }
+  ),
+  rest.get(
+    `*/account/users/${parentAccountNonAdminUser.username}/grants`,
+    (req, res, ctx) => {
+      const grantsResponse = grantsFactory.build({
+        global: parentAccountNonAdminUser.restricted
+          ? {
+              cancel_account: false,
+              child_account_access: true,
+            }
+          : undefined,
+      });
+      return res(ctx.json(grantsResponse));
     }
   ),
   rest.get('*/account/users/:user/grants', (req, res, ctx) => {

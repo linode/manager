@@ -228,7 +228,9 @@ describe('User permission management', () => {
     cy.get('[data-qa-global-section]')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Global Permissions').should('be.visible');
+        cy.contains(
+          'Configure the specific rights and privileges this user has within the account.'
+        ).should('be.visible');
         cy.findByText('Billing Access').should('be.visible');
         globalPermissionsLabels.forEach((permissionLabel: string) => {
           cy.findByText(permissionLabel).should('be.visible');
