@@ -16,17 +16,17 @@ import { UserRow } from './UserRow';
 // we must use this.
 beforeAll(() => mockMatchMedia());
 
-// const queryMocks = vi.hoisted(() => ({
-//   useAccountUserGrants: vi.fn().mockReturnValue({}),
-// }));
+const queryMocks = vi.hoisted(() => ({
+  useAccountUserGrants: vi.fn().mockReturnValue({}),
+}));
 
-// vi.mock('src/queries/account', async () => {
-//   const actual = await vi.importActual<any>('src/queries/accountUsers');
-//   return {
-//     ...actual,
-//     useAccountUserGrants: queryMocks.useAccountUserGrants,
-//   };
-// });
+vi.mock('src/queries/accountUsers', async () => {
+  const actual = await vi.importActual<any>('src/queries/accountUsers');
+  return {
+    ...actual,
+    useAccountUserGrants: queryMocks.useAccountUserGrants,
+  };
+});
 
 describe('UserRow', () => {
   it('renders a username and email', () => {
@@ -57,19 +57,13 @@ describe('UserRow', () => {
 
     expect(getByText('Limited')).toBeVisible();
   });
-  it.only('renders "Enabled" if the user is has Account Access', () => {
-    server.use(
-      rest.get('*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({
-              global: { child_account_access: true },
-            })
-          )
-        );
-      })
-    );
+  it('renders "Enabled" if the user is has Account Access', () => {
     const user = accountUserFactory.build();
+    queryMocks.useAccountUserGrants.mockReturnValue({
+      data: grantsFactory.build({
+        global: { child_account_access: true },
+      }),
+    });
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
         flags: { parentChildAccountAccess: true },
@@ -78,9 +72,22 @@ describe('UserRow', () => {
     const enabled = getByText('Enabled');
     expect(enabled).toBeVisible();
   });
-  // it('renders "Disabled" if the user does not have Account Access', () => {
 
-  // });
+  it('renders "Disabled" if the user does not have Account Access', () => {
+    const user = accountUserFactory.build();
+    queryMocks.useAccountUserGrants.mockReturnValue({
+      data: grantsFactory.build({
+        global: { child_account_access: false },
+      }),
+    });
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+    const enabled = getByText('Disabled');
+    expect(enabled).toBeVisible();
+  });
   it('renders "Never" if last_login is null', () => {
     const user = accountUserFactory.build({ last_login: null });
 
