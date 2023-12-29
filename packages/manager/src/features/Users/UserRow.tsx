@@ -10,6 +10,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { grantsFactory } from 'src/factories/grants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUserGrants } from 'src/queries/accountUsers';
 import { capitalize } from 'src/utilities/capitalize';
@@ -26,6 +27,22 @@ interface Props {
 export const UserRow = ({ onDelete, user }: Props) => {
   const flags = useFlags();
   const { data: grants } = useAccountUserGrants(user.username);
+  // console.log('Grants:');
+  // console.log(grants);
+  // React.useEffect(() => {
+  //   if (grants) {
+  //     console.log('Grants returned:');
+  //     console.log(grants);
+  //   }
+  // }, [grants]);
+  // console.log('Grants factory:');
+  // console.log(
+  //   JSON.stringify(
+  //     grantsFactory.build({
+  //       global: { child_account_access: true },
+  //     })
+  //   )
+  // );
   return (
     <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
       <TableCell>

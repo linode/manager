@@ -2,6 +2,7 @@ import React from 'react';
 
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
+import { grantsFactory } from 'src/factories/grants';
 import { rest, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
@@ -14,6 +15,18 @@ import { UserRow } from './UserRow';
 // Because the table row hides certain columns on small viewport sizes,
 // we must use this.
 beforeAll(() => mockMatchMedia());
+
+// const queryMocks = vi.hoisted(() => ({
+//   useAccountUserGrants: vi.fn().mockReturnValue({}),
+// }));
+
+// vi.mock('src/queries/account', async () => {
+//   const actual = await vi.importActual<any>('src/queries/accountUsers');
+//   return {
+//     ...actual,
+//     useAccountUserGrants: queryMocks.useAccountUserGrants,
+//   };
+// });
 
 describe('UserRow', () => {
   it('renders a username and email', () => {
@@ -44,6 +57,30 @@ describe('UserRow', () => {
 
     expect(getByText('Limited')).toBeVisible();
   });
+  it.only('renders "Enabled" if the user is has Account Access', () => {
+    server.use(
+      rest.get('*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({
+              global: { child_account_access: true },
+            })
+          )
+        );
+      })
+    );
+    const user = accountUserFactory.build();
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+    const enabled = getByText('Enabled');
+    expect(enabled).toBeVisible();
+  });
+  // it('renders "Disabled" if the user does not have Account Access', () => {
+
+  // });
   it('renders "Never" if last_login is null', () => {
     const user = accountUserFactory.build({ last_login: null });
 
