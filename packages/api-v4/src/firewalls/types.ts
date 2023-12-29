@@ -14,6 +14,12 @@ export interface Firewall {
   rules: FirewallRules;
   created_dt: string;
   updated_dt: string;
+  entities: {
+    id: number;
+    type: FirewallDeviceEntityType;
+    label: string;
+    url: string;
+  }[];
 }
 
 export interface FirewallRules {
