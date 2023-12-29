@@ -14,6 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 
+import { AccessibleAreaChart } from 'src/components/AccessibleAreaChart';
 import { Paper } from 'src/components/Paper';
 import { roundTo } from 'src/utilities/roundTo';
 
@@ -29,6 +30,7 @@ interface XAxisProps {
 
 interface AreaChartProps {
   areas: AreaProps[];
+  ariaLabel: string;
   data: any;
   height: number;
   showLegend?: boolean;
@@ -48,7 +50,16 @@ const humanizeLargeData = (value: number) => {
 };
 
 export const AreaChart = (props: AreaChartProps) => {
-  const { areas, data, height, showLegend, timezone, unit, xAxis } = props;
+  const {
+    areas,
+    ariaLabel,
+    data,
+    height,
+    showLegend,
+    timezone,
+    unit,
+    xAxis,
+  } = props;
 
   const theme = useTheme();
 
@@ -61,14 +72,14 @@ export const AreaChart = (props: AreaChartProps) => {
     }
   };
 
-  const xAxisTickFormatter = (t: number) => {
-    return DateTime.fromMillis(t, { zone: timezone }).toFormat(
+  const xAxisTickFormatter = (timestamp: number) => {
+    return DateTime.fromMillis(timestamp, { zone: timezone }).toFormat(
       xAxis.tickFormat
     );
   };
 
-  const tooltipLabelFormatter = (t: number) => {
-    return DateTime.fromMillis(t, { zone: timezone }).toFormat(
+  const tooltipLabelFormatter = (timestamp: number) => {
+    return DateTime.fromMillis(timestamp, { zone: timezone }).toFormat(
       'LLL dd, yyyy, h:mm a'
     );
   };
@@ -96,58 +107,68 @@ export const AreaChart = (props: AreaChartProps) => {
     return null;
   };
 
+  const accessibleDataKeys = areas.map((area) => area.dataKey);
+
   return (
-    <ResponsiveContainer height={height} width="100%">
-      <_AreaChart data={data}>
-        <CartesianGrid
-          stroke={theme.color.grey7}
-          strokeDasharray="3 3"
-          vertical={false}
-        />
-        <XAxis
-          dataKey="t"
-          domain={['dataMin', 'dataMax']}
-          interval="preserveEnd"
-          minTickGap={xAxis.tickGap}
-          scale="time"
-          stroke={theme.color.label}
-          tickFormatter={xAxisTickFormatter}
-          type="number"
-        />
-        <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
-        <Tooltip
-          contentStyle={{
-            color: '#606469',
-          }}
-          itemStyle={{
-            color: '#606469',
-            fontFamily: theme.font.bold,
-          }}
-          content={<CustomTooltip />}
-        />
-        {showLegend && (
-          <Legend
-            formatter={(value) => (
-              <span style={{ color: theme.color.label }}>{value}</span>
-            )}
-            iconType="square"
-            onClick={(props) => handleLegendClick(props.dataKey)}
-            wrapperStyle={{ left: 25 }}
+    <>
+      <ResponsiveContainer height={height} width="100%">
+        <_AreaChart aria-label={ariaLabel} data={data}>
+          <CartesianGrid
+            stroke={theme.color.grey7}
+            strokeDasharray="3 3"
+            vertical={false}
           />
-        )}
-        {areas.map(({ color, dataKey }) => (
-          <Area
-            dataKey={dataKey}
-            fill={color}
-            hide={activeSeries.includes(dataKey)}
-            isAnimationActive={false}
-            key={dataKey}
-            stroke={color}
-            type="monotone"
+          <XAxis
+            dataKey="timestamp"
+            domain={['dataMin', 'dataMax']}
+            interval="preserveEnd"
+            minTickGap={xAxis.tickGap}
+            scale="time"
+            stroke={theme.color.label}
+            tickFormatter={xAxisTickFormatter}
+            type="number"
           />
-        ))}
-      </_AreaChart>
-    </ResponsiveContainer>
+          <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
+          <Tooltip
+            contentStyle={{
+              color: '#606469',
+            }}
+            itemStyle={{
+              color: '#606469',
+              fontFamily: theme.font.bold,
+            }}
+            content={<CustomTooltip />}
+          />
+          {showLegend && (
+            <Legend
+              formatter={(value) => (
+                <span style={{ color: theme.color.label }}>{value}</span>
+              )}
+              iconType="square"
+              onClick={(props) => handleLegendClick(props.dataKey)}
+              wrapperStyle={{ left: 25 }}
+            />
+          )}
+          {areas.map(({ color, dataKey }) => (
+            <Area
+              dataKey={dataKey}
+              fill={color}
+              hide={activeSeries.includes(dataKey)}
+              isAnimationActive={false}
+              key={dataKey}
+              stroke={color}
+              type="monotone"
+            />
+          ))}
+        </_AreaChart>
+      </ResponsiveContainer>
+      <AccessibleAreaChart
+        ariaLabel={ariaLabel}
+        data={data}
+        dataKeys={accessibleDataKeys}
+        unit={unit}
+      />
+    </>
   );
 };
 

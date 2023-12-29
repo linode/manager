@@ -33,7 +33,7 @@ const chartHeight = 300;
 interface NetworkTransferProps {
   'Network Traffic In': number;
   'Network Traffic Out': number;
-  t: number;
+  timestamp: number;
 }
 
 // @TODO recharts remove old format function
@@ -41,7 +41,7 @@ const formatData = (value: DataSeries[]): [number, number][] =>
   value.map((thisPoint) => [thisPoint.x, thisPoint.y]);
 
 const formatData2 = (value: DataSeries[], label: string) =>
-  value.map((thisPoint) => ({ [label]: thisPoint.y, t: thisPoint.x }));
+  value.map((thisPoint) => ({ [label]: thisPoint.y, timestamp: thisPoint.x }));
 
 const _formatTooltip = (valueInBytes: number) =>
   formatNetworkTooltip(valueInBytes / 8);
@@ -82,7 +82,7 @@ const createTabs = (
       networkTransferData.push({
         'Network Traffic In': convertNetworkData(data.net_in[i].y),
         'Network Traffic Out': convertNetworkData(data.net_out[i].y),
-        t: data.net_in[i].x,
+        timestamp: data.net_in[i].x,
       });
     }
   }
@@ -100,15 +100,15 @@ const createTabs = (
                   areas={[
                     {
                       color: theme.graphs.cpu.percent,
-                      dataKey: 'CPU',
+                      dataKey: 'CPU %',
                     },
                   ]}
                   xAxis={{
                     tickFormat: 'hh a',
                     tickGap: 60,
                   }}
-                  aria-label={'CPU Usage Graph'}
-                  data={formatData2(data.cpu, 'CPU')}
+                  ariaLabel="CPU Usage Graph"
+                  data={formatData2(data.cpu, 'CPU %')}
                   height={chartHeight}
                   timezone={timezone}
                   unit={'%'}
@@ -160,7 +160,7 @@ const createTabs = (
                     tickFormat: 'hh a',
                     tickGap: 60,
                   }}
-                  aria-label={'Network Transfer Graph'}
+                  ariaLabel="Network Transfer Graph"
                   data={networkTransferData}
                   height={chartHeight}
                   showLegend
@@ -220,7 +220,7 @@ const createTabs = (
                     tickFormat: 'hh a',
                     tickGap: 60,
                   }}
-                  aria-label={'Disk I/O Graph'}
+                  ariaLabel="Disk I/O Graph"
                   data={formatData2(data.disk, 'Disk I/O')}
                   height={chartHeight}
                   timezone={timezone}

@@ -161,7 +161,7 @@ export const TransferHistory = React.memo((props: Props) => {
           'Public Outbound Traffic': convertNetworkData
             ? convertNetworkData(point[1])
             : point[1],
-          t: point[0],
+          timestamp: point[0],
         });
         return acc;
       }, []);
@@ -179,7 +179,7 @@ export const TransferHistory = React.memo((props: Props) => {
               tickFormat: 'LLL dd',
               tickGap: 15,
             }}
-            aria-label={graphAriaLabel}
+            ariaLabel={graphAriaLabel}
             data={timeData}
             height={190}
             timezone={profile?.timezone ?? 'UTC'}

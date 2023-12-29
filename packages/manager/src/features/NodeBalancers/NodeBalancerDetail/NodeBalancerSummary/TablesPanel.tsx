@@ -91,7 +91,7 @@ export const TablesPanel = () => {
       timeData = data.reduce((acc: any, point: any) => {
         acc.push({
           Connections: point[1],
-          t: point[0],
+          timestamp: point[0],
         });
         return acc;
       }, []);
@@ -112,7 +112,7 @@ export const TablesPanel = () => {
                 tickFormat: 'hh a',
                 tickGap: 60,
               }}
-              aria-label={'Connections Graph'}
+              ariaLabel="Connections Graph"
               data={timeData}
               height={300}
               timezone={timezone}
@@ -164,7 +164,7 @@ export const TablesPanel = () => {
         timeData.push({
           'Traffic In': trafficIn[i][1],
           'Traffic Out': trafficOut[i][1],
-          t: trafficIn[i][0],
+          timestamp: trafficIn[i][0],
         });
       }
     }
@@ -220,7 +220,7 @@ export const TablesPanel = () => {
                   tickFormat: 'hh a',
                   tickGap: 60,
                 }}
-                aria-label={'Traffic Graph'}
+                ariaLabel="Traffic Graph"
                 data={timeData}
                 height={300}
                 timezone={timezone}
