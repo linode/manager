@@ -152,6 +152,7 @@ export const LinodeSelect = (
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
+      data-testid="add-linode-autocomplete"
       disableClearable={!clearable}
       disableCloseOnSelect={multiple}
       disablePortal={true}
@@ -182,6 +183,6 @@ const getDefaultNoOptionsMessage = (
   } else if (loading) {
     return 'Loading your Linodes...';
   } else {
-    return 'No options';
+    return 'No available Linodes';
   }
 };
