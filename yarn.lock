@@ -2528,12 +2528,14 @@
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@linode/design-language-system@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-1.0.0.tgz#df3617d140ede6190faaae47c2df310c5141594a"
-  integrity sha512-vNj2HGFttyrBEExvyWsv82xCoRUHjRcLNo4XSfJfSSLU9hgZDWI4cDXWslCdzZbAqyM4ODqltYGdrC/eu5vApQ==
+"@linode/design-language-system@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-1.2.0.tgz#e4ed25791744fd067c83129d9ae14a85ed27bb77"
+  integrity sha512-A9PMEYsy83sghAKw041VtRMGaJzCXrqXwgD12kT20mgzQtJACG04PFSWYxD86E/7PMYbXcbmKgF33bgbkppkYw==
   dependencies:
     "@tokens-studio/sd-transforms" "^0.12.2"
+    react "^17.0.2"
+    react-dom "^17.0.2"
     style-dictionary "^3.7.2"
 
 "@linode/eslint-plugin-cloud-manager@^0.0.3":
