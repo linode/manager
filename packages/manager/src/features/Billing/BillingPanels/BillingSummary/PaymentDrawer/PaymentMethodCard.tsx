@@ -10,7 +10,7 @@ import {
 } from 'src/components/PaymentMethodRow/ThirdPartyPayment';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { formatExpiry, hasExpirationPassedFor } from 'src/utilities/creditCard';
+import { formatExpiry, isCreditCardExpired } from 'src/utilities/creditCard';
 
 interface Props {
   handlePaymentMethodChange: (id: number, cardExpired: boolean) => void;
@@ -23,8 +23,7 @@ const getIsCardExpired = (paymentMethod: PaymentMethod) => {
     return false;
   }
   return Boolean(
-    paymentMethod.data.expiry &&
-      hasExpirationPassedFor(paymentMethod.data.expiry)
+    paymentMethod.data.expiry && isCreditCardExpired(paymentMethod.data.expiry)
   );
 };
 

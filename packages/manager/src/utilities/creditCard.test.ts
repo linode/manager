@@ -4,7 +4,7 @@ import { take, takeLast } from 'ramda';
 
 import {
   formatExpiry,
-  hasExpirationPassedFor,
+  isCreditCardExpired,
   parseExpiryYear,
 } from './creditCard';
 
@@ -12,9 +12,9 @@ const currentYear = new Date().getFullYear();
 const currentYearFirstTwoDigits = take(2, String(currentYear));
 
 describe('isCreditCardExpired', () => {
-  describe('give today is 01/01/2019', () => {
-    // Mock that the current date
-    Settings.now = () => new Date(2019, 1, 1).valueOf();
+  describe('given today is 01/01/2019', () => {
+    // Mock that the current date is 1/1/2019
+    Settings.now = () => new Date(2019, 0, 1).valueOf();
 
     [
       ['01/2018', true],
@@ -29,7 +29,7 @@ describe('isCreditCardExpired', () => {
       ['10/2018', true],
       ['11/2018', true],
       ['12/2018', true],
-      ['01/2019', true],
+      ['01/2019', false], // A card is still valid until the end of the month
       ['02/2019', false],
       ['03/2019', false],
       ['04/2019', false],
@@ -44,7 +44,7 @@ describe('isCreditCardExpired', () => {
     ].forEach(([expiration, result]: [string, boolean]) => {
       describe(`and a expiration date of ${expiration}`, () => {
         it(`should return ${result}`, () => {
-          expect(hasExpirationPassedFor(expiration)).toBe(result);
+          expect(isCreditCardExpired(expiration)).toBe(result);
         });
       });
     });

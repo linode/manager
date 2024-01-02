@@ -30,7 +30,7 @@ import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import { SetSuccess } from './types';
-import { hasExpirationPassedFor } from 'src/utilities/creditCard';
+import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -130,7 +130,7 @@ export const PaymentDrawer = (props: Props) => {
         setSelectedCardExpired(
           Boolean(
             selectedPaymentMethod.data.expiry &&
-              hasExpirationPassedFor(selectedPaymentMethod.data.expiry)
+              isCreditCardExpired(selectedPaymentMethod.data.expiry)
           )
         );
       }

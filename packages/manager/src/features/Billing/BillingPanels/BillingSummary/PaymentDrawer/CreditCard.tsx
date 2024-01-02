@@ -11,7 +11,7 @@ import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
-import { formatExpiry, hasExpirationPassedFor } from 'src/utilities/creditCard';
+import { formatExpiry, isCreditCardExpired } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   card: {
@@ -87,7 +87,7 @@ export const CreditCard = (props: Props) => {
           {`${type || 'Card ending in'} ****${lastFour}`}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
-          {expiry && hasExpirationPassedFor(expiry) ? (
+          {expiry && isCreditCardExpired(expiry) ? (
             <span className={classes.expired}>{`Expired ${formatExpiry(
               expiry
             )}`}</span>
