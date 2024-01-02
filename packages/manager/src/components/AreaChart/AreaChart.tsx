@@ -14,7 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { AccessibleAreaChart } from 'src/components/AccessibleAreaChart';
+import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
 import { Paper } from 'src/components/Paper';
 import { roundTo } from 'src/utilities/roundTo';
 

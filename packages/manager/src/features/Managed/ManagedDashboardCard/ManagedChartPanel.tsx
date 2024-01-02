@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { AreaChart } from 'src/components/AreaChart';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
