@@ -6,7 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useAllSubnetsQuery, useCreateSubnetMutation } from 'src/queries/vpcs';
+import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -27,13 +27,13 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: allSubnets } = useAllSubnetsQuery(vpcId);
+  const { data: vpc } = useVPCQuery(vpcId, open);
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
 
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
-    allSubnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
+    vpc?.subnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
   );
 
   const [errorMap, setErrorMap] = React.useState<
