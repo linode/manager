@@ -11,7 +11,7 @@ const props = {
   errorText,
 };
 
-describe('Removable Selections List', () => {
+describe('Error State', () => {
   it('renders the ErrorState with specified text properly', () => {
     const screen = renderWithTheme(<ErrorState errorText={props.errorText} />);
     expect(screen.getByText(errorText)).toBeVisible();
