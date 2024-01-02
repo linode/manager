@@ -28,7 +28,7 @@ export interface ToggleProps extends SwitchProps {
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { interactive = false, tooltipText, ...rest } = props;
+  const { interactive, tooltipText, ...rest } = props;
 
   return (
     <React.Fragment>
