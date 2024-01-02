@@ -464,6 +464,14 @@ export const darkTheme: ThemeOptions = {
     },
     MuiSwitch: {
       styleOverrides: {
+        root: {
+          '& .Mui-disabled': {
+            '& + .MuiSwitch-track': {
+              opacity: '.5 !important',
+            },
+            opacity: 0.5,
+          },
+        },
         track: {
           backgroundColor: '#55595c',
         },
