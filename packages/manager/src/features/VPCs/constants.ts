@@ -41,8 +41,7 @@ export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
 export const WARNING_ICON_UNRECOMMENDED_CONFIG =
   'warning-icon-for-unrecommended-config';
 
-export const VPC_READ_ONLY_HELPER_TEXT =
-  'VPC does not support Read Only access';
+export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
 
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =

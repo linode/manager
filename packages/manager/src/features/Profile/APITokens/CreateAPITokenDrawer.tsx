@@ -16,7 +16,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TextField } from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { VPC_READ_ONLY_HELPER_TEXT } from 'src/features/VPCs/constants';
+import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
@@ -286,7 +286,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                   >
                     <AccessCell
                       tooltipText={
-                        scopeIsForVPC ? VPC_READ_ONLY_HELPER_TEXT : undefined
+                        scopeIsForVPC ? VPC_READ_ONLY_TOOLTIP : undefined
                       }
                       active={scopeTup[1] === 1}
                       disabled={scopeIsForVPC} // "Read Only" is not a valid scope for VPC
