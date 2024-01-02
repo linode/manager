@@ -261,7 +261,7 @@ export const ServiceTargetDrawer = (props: Props) => {
           sx={{ marginBottom: '0px !important' }}
           value={formik.values.healthcheck.protocol}
         >
-          <FormLabel>
+          <FormLabel sx={{ alignItems: 'center', display: 'flex' }}>
             Protocol
             <TooltipIcon
               status="help"
