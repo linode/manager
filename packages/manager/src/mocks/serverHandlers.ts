@@ -1046,6 +1046,7 @@ export const handlers = [
       active_promotions: promoFactory.buildList(1),
       active_since: '2022-11-30',
       balance: 50,
+      company: 'Mock Company',
     });
     return res(ctx.json(account));
   }),
