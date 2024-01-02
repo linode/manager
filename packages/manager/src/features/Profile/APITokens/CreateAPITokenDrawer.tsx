@@ -282,7 +282,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                   >
                     <AccessCell
                       active={scopeTup[1] === 1}
-                      disabled={false}
+                      disabled={scopeTup[0] === 'vpc'} // "Read Only" is not a valid scope for VPC
                       onChange={handleScopeChange}
                       scope="1"
                       scopeDisplay={scopeTup[0]}
