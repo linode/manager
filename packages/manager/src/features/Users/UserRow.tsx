@@ -11,7 +11,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountUserGrants } from 'src/queries/accountUsers';
+import { useAccountUser, useAccountUserGrants } from 'src/queries/accountUsers';
+import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { UsersActionMenu } from './UsersActionMenu';
@@ -26,6 +27,12 @@ interface Props {
 export const UserRow = ({ onDelete, user }: Props) => {
   const flags = useFlags();
   const { data: grants } = useAccountUserGrants(user.username);
+  const { data: profile } = useProfile();
+  const { data: currentUser } = useAccountUser(profile?.username ?? '');
+
+  const showChildAccountAccessCol =
+    flags.parentChildAccountAccess && currentUser?.user_type === 'parent';
+
   return (
     <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
       <TableCell>
@@ -40,10 +47,12 @@ export const UserRow = ({ onDelete, user }: Props) => {
         <TableCell>{user.email}</TableCell>
       </Hidden>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
-      {flags.parentChildAccountAccess && (
-        <TableCell>
-          {grants?.global.child_account_access ? 'Enabled' : 'Disabled'}
-        </TableCell>
+      {showChildAccountAccessCol && (
+        <Hidden lgDown>
+          <TableCell>
+            {grants?.global.child_account_access ? 'Enabled' : 'Disabled'}
+          </TableCell>
+        </Hidden>
       )}
       <Hidden lgDown>
         <TableCell>

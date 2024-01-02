@@ -14,9 +14,8 @@ const CloseAccountSetting = () => {
 
   const { data: childAccounts } = useChildAccounts({});
   const flags = useFlags();
-  const closeAccountDisabled = flags.parentChildAccountAccess
-    ? Boolean(childAccounts?.data?.length)
-    : false;
+  const closeAccountDisabled =
+    flags.parentChildAccountAccess && Boolean(childAccounts?.data?.length);
 
   return (
     <>
