@@ -159,7 +159,19 @@ describe('getPlanSoldOutStatus', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false if plan or selectedRegionId is falsy', () => {
+  it('should return false if no matching regionAvailability is found (based on planId)', () => {
+    const result = getPlanSoldOutStatus({
+      plan: mockPlan,
+      regionAvailabilities: [
+        { available: true, plan: 'fakeplan', region: 'us-east-1' },
+      ],
+      selectedRegionId: mockSelectedRegionId,
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false if selectedRegionId is falsy', () => {
     const result = getPlanSoldOutStatus({
       plan: mockPlan,
       regionAvailabilities: [

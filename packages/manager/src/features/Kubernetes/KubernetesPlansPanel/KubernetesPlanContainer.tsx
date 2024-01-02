@@ -88,6 +88,7 @@ export const KubernetesPlanContainer = (
     onAdd,
     onSelect,
     plans,
+    regionAvailabilities,
     selectedId,
     selectedRegionId,
     updatePlanCount,
