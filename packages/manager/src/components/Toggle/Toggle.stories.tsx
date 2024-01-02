@@ -11,22 +11,17 @@ export const Default: StoryObj<ToggleProps> = {
   render: (args) => <Toggle {...args} />,
 };
 
-/**
- * Example of a Toggle with a non-interactable tooltip
- */
-export const TooltipToggle: StoryObj<ToggleProps> = {
-  render: () => <Toggle tooltipText={EXAMPLE_TEXT} />,
-};
-
-/**
- * Example of a Toggle with an interactable tooltip
- */
-export const InteractableTooltipToggle: StoryObj<ToggleProps> = {
-  render: () => <Toggle interactive={true} tooltipText={EXAMPLE_TEXT} />,
+export const WithTooltip: StoryObj<ToggleProps> = {
+  render: (args) => (
+    <Toggle {...args} interactive={true} tooltipText={EXAMPLE_TEXT} />
+  ),
 };
 
 const meta: Meta<ToggleProps> = {
-  args: { interactive: undefined, tooltipText: undefined },
+  args: {
+    disabled: false,
+    interactive: false,
+  },
   component: Toggle,
   title: 'Components/Toggle',
 };

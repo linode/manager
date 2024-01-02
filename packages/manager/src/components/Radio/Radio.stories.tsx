@@ -11,7 +11,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<RadioProps> = {
   args: {
-    checked: false,
     defaultChecked: false,
     disableFocusRipple: false,
     disableRipple: false,
