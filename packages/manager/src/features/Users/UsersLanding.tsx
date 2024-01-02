@@ -27,7 +27,7 @@ import { UserRow } from './UserRow';
 export const UsersLanding = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
+  const { data: activeUser } = useAccountUser(profile?.username ?? '');
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
@@ -45,7 +45,7 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
   const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && user?.user_type === 'parent';
+    flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
   const numCols = showChildAccountAccessCol ? 6 : 5;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(

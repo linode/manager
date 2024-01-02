@@ -28,10 +28,10 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const flags = useFlags();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
-  const { data: currentUser } = useAccountUser(profile?.username ?? '');
+  const { data: activeUser } = useAccountUser(profile?.username ?? '');
 
   const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && currentUser?.user_type === 'parent';
+    flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
 
   return (
     <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
