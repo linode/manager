@@ -41,6 +41,9 @@ export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
 export const WARNING_ICON_UNRECOMMENDED_CONFIG =
   'warning-icon-for-unrecommended-config';
 
+export const VPC_READ_ONLY_HELPER_TEXT =
+  'VPC does not support Read Only access';
+
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
