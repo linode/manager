@@ -57,7 +57,7 @@ describe('UserRow', () => {
 
     expect(getByText('Limited')).toBeVisible();
   });
-  it('renders "Enabled" if the user is has Account Access', () => {
+  it('renders "Enabled" if the user has Child Account Access', () => {
     const user = accountUserFactory.build();
     queryMocks.useAccountUserGrants.mockReturnValue({
       data: grantsFactory.build({
@@ -69,11 +69,10 @@ describe('UserRow', () => {
         flags: { parentChildAccountAccess: true },
       })
     );
-    const enabled = getByText('Enabled');
-    expect(enabled).toBeVisible();
+    expect(getByText('Enabled')).toBeVisible();
   });
 
-  it('renders "Disabled" if the user does not have Account Access', () => {
+  it('renders "Disabled" if the user does not have Child Account Access', () => {
     const user = accountUserFactory.build();
     queryMocks.useAccountUserGrants.mockReturnValue({
       data: grantsFactory.build({
@@ -85,8 +84,7 @@ describe('UserRow', () => {
         flags: { parentChildAccountAccess: true },
       })
     );
-    const enabled = getByText('Disabled');
-    expect(enabled).toBeVisible();
+    expect(getByText('Disabled')).toBeVisible();
   });
   it('renders "Never" if last_login is null', () => {
     const user = accountUserFactory.build({ last_login: null });
