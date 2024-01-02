@@ -200,25 +200,10 @@ describe('Akamai Global Load Balancer service targets', () => {
           .should('be.visible')
           .click();
 
-        // Confirm that health check options are hidden when health check is disabled.
-        cy.findByText('Use Health Checks').should('be.visible').click();
-
-        cy.get('[data-qa-healthcheck-options]').should('not.exist');
-
-        // Re-enable health check, fill out form.
-        cy.findByText('Use Health Checks')
-          .scrollIntoView()
-          .should('be.visible')
-          .click();
-
         cy.findByLabelText('Health Check Host')
           .scrollIntoView()
           .should('be.visible')
           .type('example.com');
-
-        cy.get('[data-qa-healthcheck-options]')
-          .scrollIntoView()
-          .should('be.visible');
 
         ui.button
           .findByTitle('Create Service Target')
@@ -386,30 +371,6 @@ describe('Akamai Global Load Balancer service targets', () => {
           'have.value',
           mockServiceTarget.healthcheck.unhealthy_threshold
         );
-
-        // Confirm that health check options are hidden when health check is disabled.
-        cy.findByText('Use Health Checks').should('be.visible').click();
-
-        cy.get('[data-qa-healthcheck-options]').should('not.exist');
-
-        // Re-enable health check, fill out form.
-        cy.findByText('Use Health Checks')
-          .scrollIntoView()
-          .should('be.visible')
-          .click();
-
-        cy.get('[data-qa-healthcheck-options]')
-          .scrollIntoView()
-          .should('be.visible');
-
-        // Confirm that health check options are restored to defaults after toggle.
-        cy.findByLabelText('Interval').should('have.value', 10);
-
-        cy.findByLabelText('Timeout').should('have.value', 5000);
-
-        cy.findByLabelText('Healthy Threshold').should('have.value', 5);
-
-        cy.findByLabelText('Unhealthy Threshold').should('have.value', 5);
 
         //Confirm that health check path and host match service target data.
         cy.findByLabelText('Health Check Path', { exact: false }).should(
