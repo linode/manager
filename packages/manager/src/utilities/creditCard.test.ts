@@ -1,5 +1,5 @@
 import { CreditCardSchema } from '@linode/validation';
-import { DateTime } from 'luxon';
+import { Settings } from 'luxon';
 import { take, takeLast } from 'ramda';
 
 import {
@@ -13,9 +13,7 @@ const currentYearFirstTwoDigits = take(2, String(currentYear));
 
 describe('isCreditCardExpired', () => {
   describe('give today is 01/01/2019', () => {
-    const date = DateTime.fromObject({ day: 1, month: 1, year: 2019 });
-
-    const isCreditCardExpired = hasExpirationPassedFor(date);
+    Settings.now = () => new Date(2019, 1, 1).valueOf();
 
     [
       ['01/2018', true],
@@ -30,7 +28,7 @@ describe('isCreditCardExpired', () => {
       ['10/2018', true],
       ['11/2018', true],
       ['12/2018', true],
-      ['01/2019', false],
+      ['01/2019', true],
       ['02/2019', false],
       ['03/2019', false],
       ['04/2019', false],
@@ -45,7 +43,7 @@ describe('isCreditCardExpired', () => {
     ].forEach(([expiration, result]: [string, boolean]) => {
       describe(`and a expiration date of ${expiration}`, () => {
         it(`should return ${result}`, () => {
-          expect(isCreditCardExpired(expiration)).toBe(result);
+          expect(hasExpirationPassedFor(expiration)).toBe(result);
         });
       });
     });

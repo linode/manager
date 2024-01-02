@@ -17,10 +17,8 @@ const expirationDateFromString = (expDate: string /* MM/YYYY */) => {
   return DateTime.fromObject({ day: 1, month, year }).endOf('month');
 };
 
-export const hasExpirationPassedFor = (today: DateTime = DateTime.local()) => (
-  expDate: string /** MM/YYYY */
-) => {
-  return today > expirationDateFromString(expDate);
+export const hasExpirationPassedFor = (expDate: string /** MM/YYYY */) => {
+  return DateTime.local() > expirationDateFromString(expDate);
 };
 
 /**
@@ -48,5 +46,3 @@ export const parseExpiryYear = (
 
   return take(2, String(new Date().getFullYear())) + expiryYear;
 };
-
-export default hasExpirationPassedFor();

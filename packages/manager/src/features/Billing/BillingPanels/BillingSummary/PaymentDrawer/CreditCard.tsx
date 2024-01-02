@@ -1,5 +1,4 @@
 import { CardType, CreditCardData } from '@linode/api-v4/lib/account/types';
-import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -10,8 +9,9 @@ import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
+import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
-import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import { formatExpiry, hasExpirationPassedFor } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   card: {
@@ -87,7 +87,7 @@ export const CreditCard = (props: Props) => {
           {`${type || 'Card ending in'} ****${lastFour}`}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
-          {expiry && isCreditCardExpired(expiry) ? (
+          {expiry && hasExpirationPassedFor(expiry) ? (
             <span className={classes.expired}>{`Expired ${formatExpiry(
               expiry
             )}`}</span>

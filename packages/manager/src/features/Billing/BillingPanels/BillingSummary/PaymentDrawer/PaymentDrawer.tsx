@@ -22,7 +22,6 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
-import isCreditCardExpired from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PayPalErrorBoundary } from '../../PaymentInfoPanel/PayPalErrorBoundary';
@@ -31,6 +30,7 @@ import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import { SetSuccess } from './types';
+import { hasExpirationPassedFor } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -130,7 +130,7 @@ export const PaymentDrawer = (props: Props) => {
         setSelectedCardExpired(
           Boolean(
             selectedPaymentMethod.data.expiry &&
-              isCreditCardExpired(selectedPaymentMethod.data.expiry)
+              hasExpirationPassedFor(selectedPaymentMethod.data.expiry)
           )
         );
       }
