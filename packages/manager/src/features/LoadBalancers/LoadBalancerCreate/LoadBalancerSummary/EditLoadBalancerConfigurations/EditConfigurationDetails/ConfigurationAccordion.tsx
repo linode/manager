@@ -4,9 +4,9 @@ import { Accordion } from 'src/components/Accordion';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
-import { EditRouteAccordion } from '../EditRouteAccordion';
 import { ConfigurationAccordionHeader } from './ConfigurationAccordionHeader';
 import { ConfigurationDrawer } from './ConfigurationDrawer';
+import { RouteAccordion } from './EditRoutes/RouteAccordion';
 
 import type { LoadBalancerCreateFormData } from '../../../LoadBalancerCreateFormWrapper';
 
@@ -22,7 +22,6 @@ export const ConfigurationAccordion = ({ configuration, index }: Props) => {
   ] = useState(false);
 
   const handleEditClick = () => {
-    debugger;
     setShowEditConfigurationDrawer(true);
   };
 
@@ -53,8 +52,13 @@ export const ConfigurationAccordion = ({ configuration, index }: Props) => {
         </Stack>
         <Stack marginTop={1.5} spacing={1}>
           <Typography variant="h3">Routes</Typography>
-          {configuration.routes?.map((route, index) => (
-            <EditRouteAccordion key={index} route={route} />
+          {configuration.routes?.map((route, routeIndex) => (
+            <RouteAccordion
+              configIndex={index}
+              key={routeIndex}
+              route={route}
+              routeIndex={routeIndex}
+            />
           ))}
         </Stack>
       </Accordion>

@@ -50,8 +50,12 @@ export const EndpointSchema = object({
 
 const HealthCheckSchema = object({
   protocol: string().oneOf(['http', 'tcp']),
-  interval: number().typeError('Interval must be a number.').min(1, 'Interval must be greater than zero.'),
-  timeout: number().typeError('Timeout must be a number.').min(1, 'Timeout must be greater than zero.'),
+  interval: number()
+    .typeError('Interval must be a number.')
+    .min(1, 'Interval must be greater than zero.'),
+  timeout: number()
+    .typeError('Timeout must be a number.')
+    .min(1, 'Timeout must be greater than zero.'),
   unhealthy_threshold: number()
     .typeError('Unhealthy Threshold must be a number.')
     .min(1, 'Unhealthy Threshold must be greater than zero.'),
@@ -257,7 +261,7 @@ export const ConfigurationSchema = object({
     then: (o) =>
       o.of(
         object({
-          label: string().required(),
+          label: string().required(LABEL_REQUIRED),
           protocol: string().oneOf(['tcp']).required(),
           rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
