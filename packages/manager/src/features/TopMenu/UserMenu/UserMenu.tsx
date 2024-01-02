@@ -61,14 +61,9 @@ export const UserMenu = React.memo(() => {
   const { data: grants } = useGrants();
 
   // For proxy accounts: configure request headers using a parent's token to fetch the parent's username from /profile.
-  const config = {
-    headers: {
-      Authorization: authentication.token.get(), // TODO: Parent/Child - M3-7430: replace this token with the parent token in local storage.
-    },
-  };
   const headers =
     flags.parentChildAccountAccess && user?.user_type === 'proxy'
-      ? new AxiosHeaders(config.headers)
+      ? new AxiosHeaders({ Authorization: authentication.token.get() }) // TODO: Parent/Child - M3-7430: replace this token with the parent token in local storage.
       : undefined;
 
   const { data: parentProfile } = useProfile({ headers });
