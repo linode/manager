@@ -11,7 +11,6 @@ export const LoadBalancerLabel = () => {
     errors,
     handleBlur,
     handleChange,
-    touched,
     values,
   } = useFormikContext<CreateLoadbalancerPayload>();
 
@@ -25,7 +24,7 @@ export const LoadBalancerLabel = () => {
     >
       <TextField
         disabled={false}
-        errorText={touched.label && errors.label ? errors.label : undefined} // Display errors if the field is touched and there's an error
+        errorText={errors.label ? errors.label : undefined} // Display errors if the field has an error
         label="Load Balancer Label"
         name="label"
         noMarginTop

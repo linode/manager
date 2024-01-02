@@ -1,5 +1,6 @@
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
@@ -19,7 +20,11 @@ import {
   StyledSidebarGridItem,
 } from './LoadBalancerSummary.styles';
 
+import type { LoadBalancerCreateFormData } from '../LoadBalancerCreateFormWrapper';
+
 export const LoadBalancerSummary = () => {
+  const { errors } = useFormikContext<LoadBalancerCreateFormData>();
+
   return (
     <div>
       <DocumentTitleSegment segment="Load Balancer Summary" />
@@ -72,7 +77,7 @@ export const LoadBalancerSummary = () => {
           </Stack>
           <StyledButton
             buttonType="primary"
-            disabled={false}
+            disabled={Object.keys(errors)?.length > 0}
             onClick={() => null}
           >
             Create Load Balancer

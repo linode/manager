@@ -1,4 +1,4 @@
-import { FieldArray } from 'formik';
+import { FieldArray, useFormikContext } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -7,11 +7,27 @@ import { Button } from 'src/components/Button/Button';
 
 import { initialValues } from './LoadBalancerCreateFormWrapper';
 
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
+
 export const LoadBalancerActionPanel = () => {
   const history = useHistory<{
     contactDrawerOpen?: boolean;
     focusEmail?: boolean;
   }>();
+
+  const {
+    errors,
+    validateForm,
+  } = useFormikContext<LoadBalancerCreateFormData>();
+
+  const handleButtonClick = async () => {
+    const errors = await validateForm();
+    if (Object.keys(errors).length === 0) {
+      // No errors, proceed with the action
+      history.push('/loadbalancers/create/summary');
+    }
+  };
+
   return (
     <Box
       columnGap={1}
@@ -32,10 +48,9 @@ export const LoadBalancerActionPanel = () => {
         name="configurations"
       />
       <Button
-        onClick={() => {
-          history.push('/loadbalancers/create/summary');
-        }}
         buttonType="primary"
+        disabled={Object.keys(errors)?.length > 0}
+        onClick={handleButtonClick}
         sx={{ marginLeft: 'auto' }}
         type="button"
       >
