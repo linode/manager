@@ -32,8 +32,8 @@ describe('Close Account Settings', () => {
   it('should render a Close Account Button', () => {
     const { getByTestId } = renderWithTheme(<CloseAccountSetting />);
     const button = getByTestId('close-account-button');
-    expect(button).toBeInTheDocument();
     const span = button.querySelector('span');
+    expect(button).toBeInTheDocument();
     expect(span).toHaveTextContent('Close Account');
   });
 
@@ -49,10 +49,10 @@ describe('Close Account Settings', () => {
       }
     );
     const notice = getByText(
-      'Remove child accounts before closing the account.'
+      'Remove indirect customers before closing the account.'
     );
-    expect(notice).toBeInTheDocument();
     const button = getByTestId('close-account-button');
+    expect(notice).toBeInTheDocument();
     expect(button).toBeDisabled();
   });
 });

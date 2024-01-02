@@ -25,7 +25,7 @@ const CloseAccountSetting = () => {
           <Grid>
             {closeAccountDisabled && (
               <Notice spacingBottom={20} variant="info">
-                Remove child accounts before closing the account.
+                Remove indirect customers before closing the account.
               </Notice>
             )}
             <Button
