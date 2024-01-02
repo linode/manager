@@ -18,6 +18,7 @@ import type {
   Payment,
   PaymentMethod,
   User,
+  Grants,
 } from '@linode/api-v4';
 
 /**
@@ -49,6 +50,21 @@ export const mockUpdateAccount = (
 };
 
 /**
+ * Intercepts GET request to fetch account users and mocks response.
+ *
+ * @param users - User objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetUsers = (users: User[]): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/users*'),
+    paginateResponse(users)
+  );
+};
+
+/**
  * Intercepts GET request to fetch account user information.
  *
  * @param username - Username of user whose info is being fetched.
@@ -57,6 +73,77 @@ export const mockUpdateAccount = (
  */
 export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher(`account/users/${username}`));
+};
+
+/**
+ * Intercepts GET request to fetch account user information and mocks response.
+ *
+ * @param username - Username of user whose info is being fetched.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetUser = (user: User): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/users/${user.username}`),
+    makeResponse(user)
+  );
+};
+
+/**
+ * Intercepts PUT request to update account user information and mocks response.
+ *
+ * @param username - Username of user to update.
+ * @param updatedUser - Updated user account info with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateUser = (
+  username: string,
+  updatedUser: User
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`account/users/${username}`),
+    makeResponse(updatedUser)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch account user grants and mocks response.
+ *
+ * @param username - Username of user for which to fetch grants.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetUserGrants = (
+  username: string,
+  grants: Grants
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/users/${username}/grants`),
+    makeResponse(grants)
+  );
+};
+
+/**
+ * Intercepts PUT request to update account user grants and mocks response.
+ *
+ * @param username - Username of user for which to update grants.
+ * @param grants - Updated grants with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateUserGrants = (
+  username: string,
+  grants: Grants
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`account/users/${username}/grants`),
+    makeResponse(grants)
+  );
 };
 
 /**
