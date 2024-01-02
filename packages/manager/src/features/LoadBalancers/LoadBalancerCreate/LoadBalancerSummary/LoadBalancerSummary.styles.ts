@@ -35,7 +35,18 @@ export const StyledMainGridItem = styled(Grid, {
 export const StyledSidebarGridItem = styled(Grid, {
   label: 'StyledSidebarGridItem',
 })(({ theme }) => ({
+  backgroundColor: theme.bg.white,
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(1),
+  padding: theme.spacing(3),
   [theme.breakpoints.up('md')]: {
     order: 2,
+  },
+}));
+
+export const StyledButton = styled(Button)(({ theme }) => ({
+  marginTop: 18,
+  [theme.breakpoints.up('lg')]: {
+    width: '100%',
   },
 }));
