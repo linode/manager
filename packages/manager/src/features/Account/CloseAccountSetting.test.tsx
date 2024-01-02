@@ -37,7 +37,7 @@ describe('Close Account Settings', () => {
     expect(span).toHaveTextContent('Close Account');
   });
 
-  it('should render a disabled Close Account button and helper text when there are child account', () => {
+  it('should render a disabled Close Account button and helper text when there is at least one child account', () => {
     queryMocks.useChildAccounts.mockReturnValue({
       data: makeResourcePage(accountFactory.buildList(1)),
     });
