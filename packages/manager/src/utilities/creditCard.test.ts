@@ -13,6 +13,7 @@ const currentYearFirstTwoDigits = take(2, String(currentYear));
 
 describe('isCreditCardExpired', () => {
   describe('give today is 01/01/2019', () => {
+    // Mock that the current date
     Settings.now = () => new Date(2019, 1, 1).valueOf();
 
     [
