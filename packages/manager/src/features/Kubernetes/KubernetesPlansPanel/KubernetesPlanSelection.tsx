@@ -103,6 +103,7 @@ export const KubernetesPlanSelection = (
                 data-testid="sold-out-chip"
                 icon={<Chip label="Sold Out" />}
                 status="other"
+                sxTooltipIcon={{ padding: 0 }}
                 text={PLAN_IS_SOLD_OUT_COPY}
               />
             )}
@@ -139,7 +140,8 @@ export const KubernetesPlanSelection = (
                   // or there was a pricing data error.
                   (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
                   disabled ||
-                  !price?.monthly
+                  !price?.monthly ||
+                  isPlanSoldOut
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(type.id, newCount)
@@ -149,8 +151,10 @@ export const KubernetesPlanSelection = (
               />
               {onAdd && (
                 <Button
+                  disabled={
+                    count < 1 || disabled || !price?.monthly || isPlanSoldOut
+                  }
                   buttonType="primary"
-                  disabled={count < 1 || disabled || !price?.monthly}
                   onClick={() => onAdd(type.id, count)}
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >

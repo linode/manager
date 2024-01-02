@@ -145,11 +145,7 @@ export const PlanContainer = (props: Props) => {
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          <StyledTable
-            aria-label="List of Linode Plans"
-            isDisabled={disabled}
-            spacingBottom={16}
-          >
+          <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
             <TableHead>
               <TableRow>
                 {tableCells.map(({ cellName, center, noWrap, testId }) => {
