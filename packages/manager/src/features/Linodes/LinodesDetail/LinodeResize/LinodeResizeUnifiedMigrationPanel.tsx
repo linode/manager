@@ -55,7 +55,15 @@ export const UnifiedMigrationPanel = (props: Props) => {
                 marginLeft: '-10px',
               }}
             >
-              <strong>(Recommended)</strong>
+              <Typography
+                sx={(theme) => ({
+                  fontFamily: theme.font.bold,
+                  fontSize: '0.85rem',
+                  opacity: isLinodeOffline ? 0.5 : 1,
+                })}
+              >
+                (Recommended)
+              </Typography>
             </Box>
             <TooltipIcon
               text={
