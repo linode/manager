@@ -16,7 +16,8 @@ import {
 
 import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
 import { Paper } from 'src/components/Paper';
-import { roundTo } from 'src/utilities/roundTo';
+
+import { tooltipLabelFormatter, tooltipValueFormatter } from './utils';
 
 interface AreaProps {
   color: string;
@@ -78,14 +79,6 @@ export const AreaChart = (props: AreaChartProps) => {
     );
   };
 
-  const tooltipLabelFormatter = (timestamp: number) => {
-    return DateTime.fromMillis(timestamp, { zone: timezone }).toFormat(
-      'LLL dd, yyyy, h:mm a'
-    );
-  };
-
-  const tooltipValueFormatter = (value: number) => `${roundTo(value)}${unit}`;
-
   const CustomTooltip = ({
     active,
     label,
@@ -94,10 +87,10 @@ export const AreaChart = (props: AreaChartProps) => {
     if (active && payload && payload.length) {
       return (
         <StyledTooltipPaper>
-          <Typography>{tooltipLabelFormatter(label)}</Typography>
+          <Typography>{tooltipLabelFormatter(label, timezone)}</Typography>
           {payload.map((item) => (
             <Typography fontFamily={theme.font.bold} key={item.dataKey}>
-              {item.dataKey}: {tooltipValueFormatter(item.value)}
+              {item.dataKey}: {tooltipValueFormatter(item.value, unit)}
             </Typography>
           ))}
         </StyledTooltipPaper>

@@ -1,3 +1,7 @@
+import { DateTime } from 'luxon';
+
+import { roundTo } from 'src/utilities/roundTo';
+
 export const timeData = [
   {
     'Public Outbound Traffic': 5.434939999999999,
@@ -504,3 +508,14 @@ export const timeData = [
     timestamp: 1704204000000,
   },
 ];
+
+export const getAccessibleTimestamp = (timestamp: number) =>
+  DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT);
+
+export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
+  DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(
+    DateTime.DATETIME_MED
+  );
+
+export const tooltipValueFormatter = (value: number, unit: string) =>
+  `${roundTo(value)}${unit}`;

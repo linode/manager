@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof AreaChart> = {
   component: AreaChart,
-  title: 'Components/AreaChart',
+  title: 'Components/Graphs/AreaChart',
 };
 
 export default meta;

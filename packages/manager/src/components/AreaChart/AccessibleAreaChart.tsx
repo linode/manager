@@ -1,8 +1,9 @@
 import { visuallyHidden } from '@mui/utils';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+
+import { getAccessibleTimestamp } from './utils';
 
 export interface AccessibleAreaChartProps {
   ariaLabel?: string;
@@ -36,9 +37,7 @@ export const AccessibleAreaChart = (props: AccessibleAreaChartProps) => {
           <tr key={`accessible-graph-data-body-row-${idx}`}>
             <td>
               {timestamp
-                ? DateTime.fromMillis(Number(timestamp)).toLocaleString(
-                    DateTime.DATETIME_SHORT
-                  )
+                ? getAccessibleTimestamp(Number(timestamp))
                 : 'timestamp unavailable'}
             </td>
             <td>
