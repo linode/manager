@@ -19,7 +19,6 @@ function scanDirectory(directoryPath: string): MarkdownInfo[] {
     const titleMatch = fileContent.match(/^#\s+(.*)/m);
     const title = titleMatch ? titleMatch[1] : "Untitled";
 
-    // Create object with "text" and "link" properties
     const markdownInfo: MarkdownInfo = {
       text: title,
       link: `/development-guide/${file}`,
@@ -31,7 +30,6 @@ function scanDirectory(directoryPath: string): MarkdownInfo[] {
   return markdownInfoArray;
 }
 
-// Example usage
 const directoryPath = "./docs/development-guide";
 
 export const guides = scanDirectory(directoryPath);
