@@ -21,6 +21,8 @@ import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { authentication } from 'src/utilities/storage';
 
+import { SwitchAccountDrawer } from '../SwitchAccountDrawer';
+
 import type { UserType } from '@linode/api-v4';
 
 interface MenuLink {
@@ -75,6 +77,7 @@ export const UserMenu = React.memo(() => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -109,6 +112,9 @@ export const UserMenu = React.memo(() => {
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
   const showCompanyName =
     flags.parentChildAccountAccess && user?.user_type !== null && companyName;
+  const isAccountSwitchable =
+    flags.parentChildAccountAccess &&
+    (user?.user_type === 'parent' || user?.user_type === 'proxy');
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -241,12 +247,41 @@ export const UserMenu = React.memo(() => {
         open={open}
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
+          {isAccountSwitchable && (
+            <Typography>You are currently logged in as:</Typography>
+          )}
           <Typography
             color={(theme) => theme.textColors.headlineStatic}
             fontSize="1.1rem"
           >
             <strong>{userName}</strong>
           </Typography>
+          {
+            isAccountSwitchable && (
+              <Button
+                onClick={() => {
+                  // From proxy accounts, switch directly back to parent.
+                  // From parent accounts, close the menu and open the drawer of child accounts.
+                  if (user.user_type === 'proxy') {
+                    // TODO: Parent/Child - M3-7430
+                    // handleAccountSwitch();
+                  } else {
+                    handleClose();
+                    setIsDrawerOpen(true);
+                  }
+                }}
+                buttonType="outlined"
+              >
+                Switch {user.user_type === 'proxy' ? 'Back' : 'Accounts'}
+              </Button>
+            )
+            // TODO: Parent/Child - M3-7430
+            /* {(isProxyTokenError || isParentTokenError) && (
+            <Notice variant="error">
+              There was an error switching accounts.
+            </Notice>
+          )} */
+          }
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
@@ -294,6 +329,15 @@ export const UserMenu = React.memo(() => {
           )}
         </Stack>
       </Popover>
+      <SwitchAccountDrawer
+        // TODO: Parent/Child - M3-7430
+        handleAccountSwitch={() => null} // {handleAccountSwitch}
+        isParentTokenError={false} // {isParentTokenError}
+        isProxyTokenError={false} // {isProxyTokenError}
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        username={userName}
+      />
     </>
   );
 });
