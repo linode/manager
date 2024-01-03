@@ -36,5 +36,3 @@ function scanDirectory(directoryPath: string): MarkdownInfo[] {
 const directoryPath = "./docs/development-guide";
 
 export const guides = scanDirectory(directoryPath);
-
-console.log(guides);

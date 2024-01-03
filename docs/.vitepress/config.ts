@@ -4,7 +4,7 @@ export default {
   title: "Cloud Manager Docs",
   description: "Akamai Cloud Manger Documentation",
   srcDir: "./",
-  base: "/",
+  base: "/manager/",
   themeConfig: {
     logo: "akamai-wave.svg",
     nav: [
