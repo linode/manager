@@ -8,15 +8,20 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
   StyledAccessCell,
   StyledPermissionsCell,
   StyledPermsTable,
 } from './APITokenDrawer.styles';
-import { basePermNameMap, scopeStringToPermTuples } from './utils';
+import {
+  basePermNameMap as _basePermNameMap,
+  scopeStringToPermTuples,
+} from './utils';
 
 interface Props {
   onClose: () => void;
@@ -30,7 +35,31 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const flags = useFlags();
 
   const { data: profile } = useProfile();
+  const { data: account } = useAccount();
   const { data: user } = useAccountUser(profile?.username ?? '');
+
+  const [basePermNameMap, setBasePermNameMap] = React.useState(
+    _basePermNameMap
+  );
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  React.useEffect(() => {
+    if (open && !showVPCs) {
+      // If VPCs should not be shown, do not display the VPC scope
+      const basePermNameMapCopy = Object.assign({}, basePermNameMap);
+      delete basePermNameMapCopy.vpc;
+      setBasePermNameMap(basePermNameMapCopy);
+    }
+
+    return () => {
+      setBasePermNameMap(basePermNameMap);
+    };
+  }, [open, showVPCs]);
 
   const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
 

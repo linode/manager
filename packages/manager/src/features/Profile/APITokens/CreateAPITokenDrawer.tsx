@@ -18,9 +18,11 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -30,9 +32,9 @@ import {
   StyledSelectCell,
 } from './APITokenDrawer.styles';
 import {
+  basePermNameMap as _basePermNameMap,
   Permission,
   allScopesAreTheSame,
-  basePermNameMap,
   permTuplesToScopeString,
   scopeStringToPermTuples,
 } from './utils';
@@ -95,6 +97,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   };
 
   const { data: profile } = useProfile();
+  const { data: account } = useAccount();
   const { data: user } = useAccountUser(profile?.username ?? '');
 
   const {
@@ -102,6 +105,16 @@ export const CreateAPITokenDrawer = (props: Props) => {
     isLoading,
     mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
+
+  const [basePermNameMap, setBasePermNameMap] = React.useState(
+    _basePermNameMap
+  );
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
 
   const form = useFormik<{
     expiry: string;
@@ -123,8 +136,19 @@ export const CreateAPITokenDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       form.resetForm({ values: initialValues });
+
+      // If VPCs should not be shown, do not display the VPC option
+      if (!showVPCs) {
+        const basePermNameMapCopy = Object.assign({}, basePermNameMap);
+        delete basePermNameMapCopy.vpc;
+        setBasePermNameMap(basePermNameMapCopy);
+      }
     }
-  }, [open]);
+
+    return () => {
+      setBasePermNameMap(basePermNameMap);
+    };
+  }, [open, showVPCs]);
 
   const handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const newScopes = form.values.scopes;
