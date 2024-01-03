@@ -93,14 +93,14 @@ export const AreaChart = (props: AreaChartProps) => {
   }: TooltipProps<any, any>) => {
     if (active && payload && payload.length) {
       return (
-        <StyledPaper>
+        <StyledTooltipPaper>
           <Typography>{tooltipLabelFormatter(label)}</Typography>
           {payload.map((item) => (
             <Typography fontFamily={theme.font.bold} key={item.dataKey}>
               {item.dataKey}: {tooltipValueFormatter(item.value)}
             </Typography>
           ))}
-        </StyledPaper>
+        </StyledTooltipPaper>
       );
     }
 
@@ -142,11 +142,15 @@ export const AreaChart = (props: AreaChartProps) => {
           {showLegend && (
             <Legend
               formatter={(value) => (
-                <span style={{ color: theme.color.label }}>{value}</span>
+                <span style={{ color: theme.color.label, cursor: 'pointer' }}>
+                  {value}
+                </span>
               )}
+              wrapperStyle={{
+                left: 25,
+              }}
               iconType="square"
               onClick={(props) => handleLegendClick(props.dataKey)}
-              wrapperStyle={{ left: 25 }}
             />
           )}
           {areas.map(({ color, dataKey }) => (
@@ -172,8 +176,8 @@ export const AreaChart = (props: AreaChartProps) => {
   );
 };
 
-const StyledPaper = styled(Paper, {
-  label: 'StyledPaper',
+const StyledTooltipPaper = styled(Paper, {
+  label: 'StyledTooltipPaper',
 })(({ theme }) => ({
   border: `1px solid ${theme.color.border2}`,
   padding: theme.spacing(1),
