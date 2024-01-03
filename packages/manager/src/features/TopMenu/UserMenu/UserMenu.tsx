@@ -270,7 +270,7 @@ export const UserMenu = React.memo(() => {
                 }}
                 buttonType="outlined"
               >
-                Switch {user.user_type === 'proxy' ? 'Back' : 'Accounts'}
+                Switch Accounts
               </Button>
             )
             // TODO: Parent/Child - M3-7430
