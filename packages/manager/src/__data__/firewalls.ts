@@ -1,7 +1,16 @@
 import { Firewall } from '@linode/api-v4/lib/firewalls';
+import { FirewallDeviceEntityType } from '@linode/api-v4/lib/firewalls';
 
 export const firewall: Firewall = {
   created_dt: '2019-09-11T19:44:38.526Z',
+  entities: [
+    {
+      id: 1,
+      label: 'my-linode',
+      type: 'linode' as FirewallDeviceEntityType,
+      url: '/test',
+    },
+  ],
   id: 1,
   label: 'my-firewall',
   rules: {
@@ -33,6 +42,14 @@ export const firewall: Firewall = {
 
 export const firewall2: Firewall = {
   created_dt: '2019-12-11T19:44:38.526Z',
+  entities: [
+    {
+      id: 1,
+      label: 'my-linode',
+      type: 'linode' as FirewallDeviceEntityType,
+      url: '/test',
+    },
+  ],
   id: 2,
   label: 'zzz',
   rules: {

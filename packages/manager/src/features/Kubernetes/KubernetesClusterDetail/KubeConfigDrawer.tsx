@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
@@ -12,7 +12,7 @@ import { Typography } from 'src/components/Typography';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   icon: {
     color: '#3683dc',
   },
@@ -39,7 +39,7 @@ interface Props {
 }
 
 export const KubeConfigDrawer = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { closeDrawer, clusterId, clusterLabel, open } = props;
 
   const {

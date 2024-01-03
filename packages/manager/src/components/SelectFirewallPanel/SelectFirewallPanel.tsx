@@ -1,4 +1,4 @@
-import { Firewall } from '@linode/api-v4';
+import { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -13,15 +13,19 @@ import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
 interface Props {
+  entityType: FirewallDeviceEntityType | undefined;
   handleFirewallChange: (firewallID: number) => void;
   helperText: JSX.Element;
   selectedFirewallId: number;
 }
 
-export const createFirewallLabel = 'Additional Linodes (Optional)';
-
 export const SelectFirewallPanel = (props: Props) => {
-  const { handleFirewallChange, helperText, selectedFirewallId } = props;
+  const {
+    entityType,
+    handleFirewallChange,
+    helperText,
+    selectedFirewallId,
+  } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
@@ -79,7 +83,7 @@ export const SelectFirewallPanel = (props: Props) => {
           </LinkButton>
         </StyledLinkButtonBox>
         <CreateFirewallDrawer
-          label={createFirewallLabel}
+          createFlow={entityType}
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}

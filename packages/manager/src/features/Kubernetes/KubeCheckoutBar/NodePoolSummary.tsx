@@ -1,6 +1,6 @@
 import Close from '@mui/icons-material/Close';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,7 +12,7 @@ import { Typography } from 'src/components/Typography';
 import { ExtendedType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&:hover': {
       color: '#6e6e6e',
@@ -56,7 +56,7 @@ export interface Props {
 }
 
 export const NodePoolSummary: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
 
   // This should never happen but TS wants us to account for the situation

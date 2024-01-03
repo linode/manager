@@ -7,10 +7,9 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { Metrics } from 'src/utilities/statMetrics';
+import { useMetricsDiaplyStyles } from './MetricDisplay.styles';
 
-import styled, { StyleProps } from './MetricDisplay.styles';
-
-interface MetricsDisplayProps {
+interface Props {
   rows: MetricsDisplayRow[];
 }
 
@@ -28,25 +27,22 @@ interface MetricsDisplayRow {
   legendTitle: string;
 }
 
-type CombinedProps = MetricsDisplayProps & StyleProps;
-
-export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
+export const MetricsDisplay = ({ rows }: Props) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
+  const { classes } = useMetricsDiaplyStyles();
 
   return (
-    <Table aria-label="Stats and metrics" className={classes.root} noBorder>
-      <TableHead>
-        <TableRow>
-          <TableCell>{''}</TableCell>
+    <Table aria-label="Stats and metrics" className={classes.root}>
+      <TableHead sx={{ borderTop: 'none !important' }}>
+        <TableRow sx={{ borderTop: 'none !important' }}>
+          <TableCell sx={{ borderTop: 'none !important' }}>{''}</TableCell>
           {rowHeaders.map((section, idx) => (
             <TableCell
-              className={classes.tableHeadInner}
               data-qa-header-cell
               key={idx}
+              sx={{ borderTop: 'none !important' }}
             >
-              <Typography className={classes.text} variant="body1">
-                {section}
-              </Typography>
+              {section}
             </TableCell>
           ))}
         </TableRow>
@@ -57,7 +53,10 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
           return (
             <TableRow data-qa-metric-row key={legendTitle}>
               <TableCell className={classes.legend}>
-                <div className={classes[legendColor]} data-qa-legend-title>
+                <div
+                  className={classes[legendColor]}
+                  data-testid="legend-title"
+                >
                   <Typography component="span">{legendTitle}</Typography>
                 </div>
               </TableCell>
@@ -68,9 +67,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
                     key={idx}
                     parentColumn={rowHeaders[idx]}
                   >
-                    <Typography className={classes.text} variant="body1">
-                      {format(section)}
-                    </Typography>
+                    {format(section)}
                   </TableCell>
                 );
               })}
@@ -90,4 +87,4 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.last,
 ];
 
-export default styled(MetricsDisplay);
+export default MetricsDisplay;

@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -27,7 +27,7 @@ interface Props {
   value: number;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   createVolumeText: {
     display: 'block',
     marginLeft: theme.spacing(1.5),
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const SizeField = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     error,

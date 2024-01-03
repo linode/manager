@@ -1,88 +1,186 @@
 import { NodeBalancer } from '@linode/api-v4';
-import Autocomplete from '@mui/material/Autocomplete';
+import { APIError } from '@linode/api-v4/lib/types';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 
-import { TextField, TextFieldProps } from 'src/components/TextField';
-import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
-interface Props {
+interface NodeBalancerSelectProps {
+  /** Whether to display the clear icon. Defaults to `true`. */
+  clearable?: boolean;
+  /** Disable editing the input value. */
   disabled?: boolean;
-  error?: string;
-  onChange: (id: number, nodebalancer: NodeBalancer | undefined) => void;
-  region?: string;
-  textFieldProps?: TextFieldProps;
-  value?: number;
+  /** Hint displayed with error styling. */
+  errorText?: string;
+  /** Hint displayed in normal styling. */
+  helperText?: string;
+  /** The ID of the input. */
+  id?: string;
+  /** Override the default "NodeBalancer" or "NodeBalancers" label */
+  label?: string;
+  /** Adds styling to indicate a loading state. */
+  loading?: boolean;
+  /** Optionally disable top margin for input label */
+  noMarginTop?: boolean;
+  /** Message displayed when no options match the user's search. */
+  noOptionsMessage?: string;
+  /** Called when the input loses focus. */
+  onBlur?: (e: React.FocusEvent) => void;
+  /* The options to display in the select. */
+  options?: NodeBalancer[];
+  /** Determine which NodeBalancers should be available as options. */
+  optionsFilter?: (nodebalancer: NodeBalancer) => boolean;
+  /* Displayed when the input is blank. */
+  placeholder?: string;
+  /* Render a custom option. */
+  renderOption?: (nodebalancer: NodeBalancer, selected: boolean) => JSX.Element;
+  /* Render a custom option label. */
+  renderOptionLabel?: (nodebalancer: NodeBalancer) => string;
+  /* Displays an indication that the input is required. */
+  required?: boolean;
+  /* Adds custom styles to the component. */
+  sx?: SxProps;
 }
 
-export const NodeBalancerSelect = (props: Props) => {
-  const { disabled, error, onChange, region, value } = props;
-  const [inputValue, setInputValue] = React.useState<string>('');
+export interface NodeBalancerMultiSelectProps extends NodeBalancerSelectProps {
+  /* Enable multi-select. */
+  multiple: true;
+  /* Called when the value changes */
+  onSelectionChange: (selected: NodeBalancer[]) => void;
+  /* An array of `id`s of NodeBalancers that should be selected or a function that should return `true` if the NodeBalancer should be selected. */
+  value: ((nodebalancer: NodeBalancer) => boolean) | null | number[];
+}
 
-  const searchFilter = inputValue
-    ? {
-        '+or': [
-          { label: { '+contains': inputValue } },
-          { tags: { '+contains': inputValue } },
-        ],
-      }
-    : {};
+export interface NodeBalancerSingleSelectProps extends NodeBalancerSelectProps {
+  /* Enable single-select. */
+  multiple?: false;
+  /* Called when the value changes */
+  onSelectionChange: (selected: NodeBalancer | null) => void;
+  /* The `id` of the selected NodeBalancers or a function that should return `true` if the NodeBalancer should be selected. */
+  value: ((nodebalancer: NodeBalancer) => boolean) | null | number;
+}
 
+/**
+ * A select input allowing selection between account NodeBalancers.
+ */
+export const NodeBalancerSelect = (
+  props: NodeBalancerMultiSelectProps | NodeBalancerSingleSelectProps
+) => {
   const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-  } = useInfiniteNodebalancersQuery({
-    ...searchFilter,
-    ...(region ? { region } : {}),
-    '+order': 'asc',
-    '+order_by': 'label',
-  });
-  const nodebalancers = data?.pages.flatMap((page) => page.data);
+    clearable = true,
+    disabled,
+    errorText,
+    helperText,
+    id,
+    label,
+    loading,
+    multiple,
+    noMarginTop,
+    noOptionsMessage,
+    onBlur,
+    onSelectionChange,
+    options,
+    optionsFilter,
+    placeholder,
+    renderOption,
+    renderOptionLabel,
+    sx,
+    value,
+  } = props;
 
-  const options = nodebalancers?.map(({ id, label }) => ({ id, label }));
+  const [inputValue, setInputValue] = React.useState('');
 
-  const selectedNodebalancer =
-    options?.find((option) => option.id === value) ?? null;
+  const { data, error, isLoading } = useAllNodeBalancersQuery();
+
+  const nodebalancers = optionsFilter ? data?.filter(optionsFilter) : data;
+
+  React.useEffect(() => {
+    /** We want to clear the input value when the value prop changes to null.
+     * This is for use cases where a user changes their region and the Linode
+     * they had selected is no longer available.
+     */
+    if (value === null) {
+      setInputValue('');
+    }
+  }, [value]);
 
   return (
     <Autocomplete
-      ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
-      }}
-      onChange={(event, value) =>
-        onChange(
-          value?.id ?? -1,
-          nodebalancers?.find((n) => n.id === value?.id)
-        )
+      getOptionLabel={(nodebalancer: NodeBalancer) =>
+        renderOptionLabel ? renderOptionLabel(nodebalancer) : nodebalancer.label
       }
-      onInputChange={(event, value) => {
-        setInputValue(value);
-      }}
-      renderInput={(params) => (
-        <TextField
-          errorText={error}
-          label="NodeBalancer"
-          loading={isLoading}
-          placeholder="Select a NodeBalancer"
-          {...params}
-        />
-      )}
+      noOptionsText={
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+      }
+      onChange={(_, value) =>
+        multiple && Array.isArray(value)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
+      }
+      placeholder={
+        placeholder
+          ? placeholder
+          : multiple
+          ? 'Select NodeBalancers'
+          : 'Select a NodeBalancer'
+      }
+      renderOption={
+        renderOption
+          ? (props, option, { selected }) => {
+              return (
+                <li {...props} data-qa-linode-option>
+                  {renderOption(option, selected)}
+                </li>
+              );
+            }
+          : undefined
+      }
+      value={
+        typeof value === 'function'
+          ? multiple && Array.isArray(value)
+            ? nodebalancers?.filter(value) ?? null
+            : nodebalancers?.find(value) ?? null
+          : mapIdsToDevices<NodeBalancer>(value, nodebalancers)
+      }
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
+      PopperComponent={CustomPopper}
+      clearOnBlur={false}
+      data-testid="add-nodebalancer-autocomplete"
+      disableClearable={!clearable}
+      disableCloseOnSelect={multiple}
+      disablePortal={true}
       disabled={disabled}
+      errorText={error?.[0].reason ?? errorText}
+      helperText={helperText}
+      id={id}
       inputValue={inputValue}
-      isOptionEqualToValue={(option) => option.id === selectedNodebalancer?.id}
-      loading={isLoading}
-      options={options ?? []}
-      value={selectedNodebalancer}
+      label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
+      loading={isLoading || loading}
+      multiple={multiple}
+      noMarginTop={noMarginTop}
+      onBlur={onBlur}
+      onInputChange={(_, value) => setInputValue(value)}
+      options={options || (nodebalancers ?? [])}
+      popupIcon={<KeyboardArrowDownIcon />}
+      sx={sx}
     />
   );
+};
+
+const getDefaultNoOptionsMessage = (
+  error: APIError[] | null,
+  loading: boolean
+) => {
+  if (error) {
+    return 'An error occurred while fetching your NodeBalancers';
+  } else if (loading) {
+    return 'Loading your NodeBalancers...';
+  } else {
+    return 'No available NodeBalancers';
+  }
 };
