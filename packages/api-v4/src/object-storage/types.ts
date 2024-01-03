@@ -5,7 +5,7 @@ export interface RegionS3EndpointAndID {
 
 export interface ObjectStorageKey {
   access_key: string;
-  bucket_access: ScopeObject[] | null;
+  bucket_access: Scope[] | null;
   id: number;
   label: string;
   limited: boolean;
@@ -18,16 +18,14 @@ export type AccessType = 'read_only' | 'read_write' | 'none';
 export interface Scope {
   bucket_name: string;
   permissions: AccessType;
-}
-
-export interface ScopeRequest extends Scope {
-  cluster?: string;
-  region?: string;
-}
-
-export interface ScopeObject extends Scope {
   cluster: string;
   region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
+}
+
+export interface ScopeRequest extends Omit<Scope, 'cluster'> {
+  // @TODO OBJ Multicluster: Omit 'region' as well when API changes get released to prod
+  cluster?: string;
+  region?: string;
 }
 
 export interface ObjectStorageKeyRequest {

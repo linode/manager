@@ -3,7 +3,7 @@ import {
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageKeyRequest,
-  ScopeObject,
+  Scope,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { Formik } from 'formik';
@@ -38,7 +38,7 @@ export interface AccessKeyDrawerProps {
 }
 
 interface FormState {
-  bucket_access: ScopeObject[] | null;
+  bucket_access: Scope[] | null;
   label: string;
 }
 
@@ -48,7 +48,7 @@ interface FormState {
  * bucket_access in the shape the API will expect,
  * sorted by cluster.
  */
-export const sortByCluster = (a: ScopeObject, b: ScopeObject) => {
+export const sortByCluster = (a: Scope, b: Scope) => {
   if (a.cluster > b.cluster) {
     return 1;
   }
@@ -58,9 +58,7 @@ export const sortByCluster = (a: ScopeObject, b: ScopeObject) => {
   return 0;
 };
 
-export const getDefaultScopes = (
-  buckets: ObjectStorageBucket[]
-): ScopeObject[] =>
+export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
   buckets
     .map((thisBucket) => ({
       bucket_name: thisBucket.label,
@@ -177,7 +175,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               );
             };
 
-            const handleScopeUpdate = (newScopes: ScopeObject[]) => {
+            const handleScopeUpdate = (newScopes: Scope[]) => {
               setFieldValue('bucket_access', newScopes);
             };
 

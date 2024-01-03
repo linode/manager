@@ -1,4 +1,4 @@
-import { ScopeObject } from '@linode/api-v4/lib/object-storage/types';
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
@@ -66,7 +66,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = {
         ...mockScopes[2],
         permissions: 'read_write',
-      } as ScopeObject;
+      } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)[2]).toHaveProperty(
         'permissions',
         'read_write'
@@ -77,7 +77,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = {
         ...mockScopes[2],
         access: 'read_write',
-      } as ScopeObject;
+      } as Scope;
       const updatedScopes = getUpdatedScopes(mockScopes, newScope);
       expect(updatedScopes[0]).toEqual(mockScopes[0]);
       expect(updatedScopes[1]).toEqual(mockScopes[1]);
@@ -90,7 +90,7 @@ describe('AccessKeyDrawer', () => {
         cluster: 'totally-fake',
         permissions: 'read_only',
         region: 'us-east',
-      } as ScopeObject;
+      } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });
   });
