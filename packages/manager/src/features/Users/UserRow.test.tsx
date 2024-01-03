@@ -16,27 +16,6 @@ import { UserRow } from './UserRow';
 // we must use this.
 beforeAll(() => mockMatchMedia());
 
-const queryMocks = vi.hoisted(() => ({
-  useAccountUser: vi.fn().mockReturnValue({}),
-  useAccountUserGrants: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
-  return {
-    ...actual,
-    useAccountUserGrants: queryMocks.useAccountUserGrants,
-  };
-});
-
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
-  return {
-    ...actual,
-    useAccountUser: queryMocks.useAccountUser,
-  };
-});
-
 describe('UserRow', () => {
   it('renders a username and email', () => {
     const user = accountUserFactory.build();
@@ -69,54 +48,78 @@ describe('UserRow', () => {
     expect(getByText('Limited')).toBeVisible();
   });
 
-  it.skip('renders "Enabled" if the active user has Child Account Access', () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build(),
-    });
-    queryMocks.useAccountUserGrants.mockReturnValue({
-      data: grantsFactory.build({
-        global: { child_account_access: true },
-      }),
-    });
+  it('renders "Enabled" if a user on an active parent account has Child Account Access', async () => {
+    // Mock the additional user on the parent account.
     const user = accountUserFactory.build();
 
-    const { getByText } = renderWithTheme(
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: true } })
+          )
+        );
+      }),
+      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
         flags: { parentChildAccountAccess: true },
       })
     );
-    expect(getByText('Enabled')).toBeVisible();
+    expect(await findByText('Enabled')).toBeVisible();
   });
 
-  it('renders "Disabled" if the active user does not have Child Account Access', () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
-    });
-    queryMocks.useAccountUserGrants.mockReturnValue({
-      data: grantsFactory.build({
-        global: { child_account_access: false },
-      }),
-    });
+  it('renders "Disabled" if a user on an active parent account does not have Child Account Access', async () => {
+    // Mock the additional user on the parent account.
     const user = accountUserFactory.build();
 
-    const { getByText } = renderWithTheme(
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: false } })
+          )
+        );
+      }),
+      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
         flags: { parentChildAccountAccess: true },
       })
     );
-    expect(getByText('Disabled')).toBeVisible();
+    expect(await findByText('Disabled')).toBeVisible();
   });
 
-  it('does not render the Child Account Access column for an active non-parent user', () => {
+  it('does not render the Child Account Access column for an active non-parent user', async () => {
+    // Mock the additional user on the parent account.
     const user = accountUserFactory.build();
-    queryMocks.useAccountUserGrants.mockReturnValue({
-      data: grantsFactory.build({
-        global: { child_account_access: false },
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: true } })
+          )
+        );
       }),
-    });
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: null }),
-    });
+      // Mock the active account, which must NOT be of `parent` user type to hide the Child Account Access column.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: null })));
+      })
+    );
 
     const { queryByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {

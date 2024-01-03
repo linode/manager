@@ -50,7 +50,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
       {showChildAccountAccessCol && (
         <Hidden lgDown>
           <TableCell>
-            {grants?.global.child_account_access ? 'Enabled' : 'Disabled'}
+            {grants?.global?.child_account_access ? 'Enabled' : 'Disabled'}
           </TableCell>
         </Hidden>
       )}
