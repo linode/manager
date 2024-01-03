@@ -6,7 +6,7 @@ import { Typography } from 'src/components/Typography';
 
 import { ConfigurationAccordionHeader } from './ConfigurationAccordionHeader';
 import { ConfigurationDrawer } from './ConfigurationDrawer';
-import { RouteAccordion } from './EditRoutes/RouteAccordion';
+import { RouteAccordion } from '../EditRoutes/RouteAccordion';
 
 import type { LoadBalancerCreateFormData } from '../../../LoadBalancerCreateFormWrapper';
 

@@ -7,7 +7,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import {
   EditActionButton,
   StyledPaper,
-} from '../../../LoadBalancerSummary.styles';
+} from '../../LoadBalancerSummary.styles';
 
 import type { RoutePayload } from '@linode/api-v4';
 

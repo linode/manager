@@ -5,7 +5,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import { LoadBalancerCreateFormData } from '../../../LoadBalancerCreateFormWrapper';
 
 interface Props {
   configIndex: number;
@@ -23,7 +23,7 @@ export const EditRouteDrawer = (props: Props) => {
     handleChange,
     touched,
     values,
-  } = useFormikContext<CreateLoadbalancerPayload>();
+  } = useFormikContext<LoadBalancerCreateFormData>();
 
   const isErrorPresent =
     getIn(errors, `configurations[${configIndex}].routes[${routeIndex}].label`)
