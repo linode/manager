@@ -137,10 +137,10 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {data.map((bucket) => (
+      {data.map((bucket, index) => (
         <BucketTableRow
           {...bucket}
-          key={`${bucket.label}-${bucket.cluster}`}
+          key={`${bucket.label}-${index}-${bucket.cluster}`}
           onDetails={() => onDetails(bucket)}
           onRemove={() => onRemove(bucket)}
         />

@@ -25,7 +25,8 @@ export interface UpdateObjectStorageKeyRequest {
 
 export interface ObjectStorageBucketRequestPayload {
   label: string;
-  cluster: string;
+  region?: string; // @TODO OBJ Multicluster - This field will become required, and the 'cluster' field will be deprecated once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster' feature flag.
+  cluster?: string;
   acl?: 'private' | 'public-read' | 'authenticated-read' | 'public-read-write';
   cors_enabled?: boolean;
 }
@@ -36,6 +37,7 @@ export interface ObjectStorageDeleteBucketRequestPayload {
 }
 
 export interface ObjectStorageBucket {
+  region?: string; // @TODO OBJ Multicluster - This field will become required, and the 'cluster' field will be deprecated once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster' feature flag.
   label: string;
   created: string;
   cluster: string;
