@@ -9,7 +9,7 @@ import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import EntityDetail from 'src/components/EntityDetail';
+import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';

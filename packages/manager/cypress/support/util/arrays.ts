@@ -18,3 +18,17 @@ export const buildArray = <T>(
     .fill(null)
     .map((_item: null, i: number) => builder(i));
 };
+
+/**
+ * Returns a copy of an array with its items sorted randomly.
+ *
+ * @param unsortedArray - Array to shuffle.
+ *
+ * @returns Copy of `unsortedArray` with its items sorted randomly.
+ */
+export const shuffleArray = <T>(unsortedArray: T[]): T[] => {
+  return unsortedArray
+    .map((value: T) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+};
