@@ -473,6 +473,7 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
         },
         colorError: {
+          background: Color.Red[70],
           color: color.white,
         },
         colorPrimary: {
@@ -482,6 +483,7 @@ export const lightTheme: ThemeOptions = {
           color: color.white,
         },
         colorSuccess: {
+          background: Color.Green[70],
           color: color.white,
         },
         deleteIcon: {
