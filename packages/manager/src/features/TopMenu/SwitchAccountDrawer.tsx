@@ -18,7 +18,7 @@ interface Props {
 
 export const SwitchAccountDrawer = (props: Props) => {
   const {
-    handleAccountSwitch,
+    // handleAccountSwitch,
     isParentTokenError,
     isProxyTokenError,
     onClose: _onClose,
@@ -29,37 +29,44 @@ export const SwitchAccountDrawer = (props: Props) => {
     _onClose();
   };
 
-  const { data: childAccounts, isLoading } = useChildAccounts({});
+  const { data: childAccounts, error, isLoading } = useChildAccounts({});
 
-  // Toggle to mock error from API.
-  // React.useEffect(() => {
-  // }, [isProxyTokenError, isParentTokenError]);
+  const renderChildAccounts = React.useCallback(() => {
+    if (isLoading) {
+      return <CircleProgress mini />;
+    }
+
+    if (childAccounts?.results === 0) {
+      return <Notice>There are no child accounts.</Notice>;
+    }
+
+    if (error) {
+      return (
+        <Notice variant="error">
+          There was an error loading child accounts.
+        </Notice>
+      );
+    }
+
+    return childAccounts?.data.map((childAccount, key) => (
+      <StyledLinkButton
+        onClick={() => {
+          // TODO: Parent/Child - M3-7430
+          // handleAccountSwitch();
+        }}
+        key={key}
+      >
+        {childAccount.company}
+      </StyledLinkButton>
+    ));
+  }, [childAccounts, error, isLoading]);
 
   return (
     <Drawer onClose={onClose} open={open} title="Switch Account">
       {(isParentTokenError || isProxyTokenError) && (
         <Notice variant="error">There was an error switching accounts.</Notice>
       )}
-      {isLoading ? (
-        <CircleProgress mini />
-      ) : (
-        <Stack>
-          {/* TODO */}
-          {childAccounts &&
-            childAccounts?.data.map((childAccount, key) => {
-              return (
-                <StyledLinkButton
-                  onClick={() => {
-                    handleAccountSwitch();
-                  }}
-                  key={key}
-                >
-                  {childAccount.company}
-                </StyledLinkButton>
-              );
-            })}
-        </Stack>
-      )}
+      <Stack>{renderChildAccounts()}</Stack>
     </Drawer>
   );
 };
