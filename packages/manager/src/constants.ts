@@ -278,4 +278,4 @@ export const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
 
 // Sold Out plans
 export const PLAN_IS_SOLD_OUT_COPY =
-  'This plan has no availability for the selected region. Please select a smaller plan or the same plan in another region.';
+  'This plan has no availability for the selected region. Please select a different plan or the same plan in another region.';

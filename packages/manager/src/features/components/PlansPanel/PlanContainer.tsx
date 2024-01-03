@@ -16,7 +16,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
-import { getPlanSoldOutStatus } from './utils';
+import { getIsPlanSoldOut } from './utils';
 
 import type { PlanSelectionType } from './types';
 import type { Region } from '@linode/api-v4';
@@ -88,7 +88,7 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getPlanSoldOutStatus({
+      const isPlanSoldOut = getIsPlanSoldOut({
         plan,
         regionAvailabilities,
         selectedRegionId,

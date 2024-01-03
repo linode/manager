@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { getPlanSoldOutStatus } from 'src/features/components/PlansPanel/utils';
+import { getIsPlanSoldOut } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsAvailabilitiesQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -60,7 +60,7 @@ export const KubernetesPlanContainer = (
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getPlanSoldOutStatus({
+      const isPlanSoldOut = getIsPlanSoldOut({
         plan,
         regionAvailabilities,
         selectedRegionId,

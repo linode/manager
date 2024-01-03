@@ -7,9 +7,10 @@ import { Hidden } from 'src/components/Hidden';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { LINODE_NETWORK_IN } from 'src/constants';
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -146,12 +147,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           <TableCell data-qa-plan-name>
             {type.heading}{' '}
             {isPlanSoldOut && (
-              <TooltipIcon
+              <Tooltip
                 data-testid="sold-out-chip"
-                icon={<Chip label="Sold Out" />}
-                status="other"
-                text={PLAN_IS_SOLD_OUT_COPY}
-              />
+                placement="right-start"
+                title={PLAN_IS_SOLD_OUT_COPY}
+              >
+                <span>
+                  <Chip label="Sold Out" />
+                </span>
+              </Tooltip>
             )}
             {(isSamePlan || type.id === selectedLinodePlanType) && (
               <StyledChip
@@ -227,21 +231,13 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...type.subHeadings,
-            isPlanSoldOut ? (
-              <TooltipIcon
-                icon={<Chip label="Sold Out" sx={{ ml: -1.5 }} />}
-                status="other"
-                text={PLAN_IS_SOLD_OUT_COPY}
-              />
-            ) : (
-              ''
-            ),
+            isPlanSoldOut ? <Chip label="Sold Out" /> : '',
           ]}
           checked={type.id === String(selectedId)}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
-          tooltip={tooltip}
+          tooltip={isPlanSoldOut ? PLAN_IS_SOLD_OUT_COPY : tooltip}
         />
       </Hidden>
     </React.Fragment>

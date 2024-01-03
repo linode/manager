@@ -4,7 +4,7 @@ import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
-  getPlanSoldOutStatus,
+  getIsPlanSoldOut,
   planTypeOrder,
 } from './utils';
 
@@ -145,12 +145,12 @@ describe('determineInitialPlanCategoryTab', () => {
   });
 });
 
-describe('getPlanSoldOutStatus', () => {
+describe('getIsPlanSoldOut', () => {
   const mockPlan: PlanSelectionType = planSelectionTypeFactory.build();
   const mockSelectedRegionId = 'us-east-1';
 
   it('should return false if regionAvailabilities is falsy', () => {
-    const result = getPlanSoldOutStatus({
+    const result = getIsPlanSoldOut({
       plan: mockPlan,
       regionAvailabilities: undefined,
       selectedRegionId: mockSelectedRegionId,
@@ -160,7 +160,7 @@ describe('getPlanSoldOutStatus', () => {
   });
 
   it('should return false if no matching regionAvailability is found (based on planId)', () => {
-    const result = getPlanSoldOutStatus({
+    const result = getIsPlanSoldOut({
       plan: mockPlan,
       regionAvailabilities: [
         { available: true, plan: 'fakeplan', region: 'us-east-1' },
@@ -172,7 +172,7 @@ describe('getPlanSoldOutStatus', () => {
   });
 
   it('should return false if selectedRegionId is falsy', () => {
-    const result = getPlanSoldOutStatus({
+    const result = getIsPlanSoldOut({
       plan: mockPlan,
       regionAvailabilities: [
         { available: false, plan: mockPlan.id, region: 'us-east-1' },
@@ -184,7 +184,7 @@ describe('getPlanSoldOutStatus', () => {
   });
 
   it('should return false if no matching regionAvailability is found', () => {
-    const result = getPlanSoldOutStatus({
+    const result = getIsPlanSoldOut({
       plan: mockPlan,
       regionAvailabilities: [
         { available: false, plan: mockPlan.id, region: 'us-west-2' },
@@ -196,7 +196,7 @@ describe('getPlanSoldOutStatus', () => {
   });
 
   it('should return true if matching regionAvailability is found with available set to false', () => {
-    const result = getPlanSoldOutStatus({
+    const result = getIsPlanSoldOut({
       plan: mockPlan,
       regionAvailabilities: [
         { available: false, plan: mockPlan.id, region: 'us-east-1' },
@@ -208,7 +208,7 @@ describe('getPlanSoldOutStatus', () => {
   });
 
   it('should return false if matching regionAvailability is found with available set to true', () => {
-    const result = getPlanSoldOutStatus({
+    const result = getIsPlanSoldOut({
       plan: mockPlan,
       regionAvailabilities: [
         { available: true, plan: mockPlan.id, region: 'us-east-1' },

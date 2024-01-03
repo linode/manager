@@ -10,7 +10,7 @@ import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/Enhanced
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Tooltip } from 'src/components/Tooltip';
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -70,14 +70,14 @@ export const KubernetesPlanSelection = (
     <Grid xs={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
-          disabled={disabled}
+          disabled={disabled || isPlanSoldOut}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           value={count}
         />
         {onAdd && (
           <Button
             buttonType="primary"
-            disabled={count < 1 || disabled}
+            disabled={count < 1 || disabled || isPlanSoldOut}
             onClick={() => onAdd(type.id, count)}
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
@@ -99,13 +99,15 @@ export const KubernetesPlanSelection = (
           <TableCell data-qa-plan-name>
             {type.heading}{' '}
             {isPlanSoldOut && (
-              <TooltipIcon
+              <Tooltip
                 data-testid="sold-out-chip"
-                icon={<Chip label="Sold Out" />}
-                status="other"
-                sxTooltipIcon={{ padding: 0 }}
-                text={PLAN_IS_SOLD_OUT_COPY}
-              />
+                placement="right-start"
+                title={PLAN_IS_SOLD_OUT_COPY}
+              >
+                <span>
+                  <Chip label="Sold Out" />
+                </span>
+              </Tooltip>
             )}
           </TableCell>
           <TableCell
@@ -170,15 +172,7 @@ export const KubernetesPlanSelection = (
         <SelectionCard
           subheadings={[
             ...subHeadings,
-            isPlanSoldOut ? (
-              <TooltipIcon
-                icon={<Chip label="Sold Out" sx={{ ml: -1.5 }} />}
-                status="other"
-                text={PLAN_IS_SOLD_OUT_COPY}
-              />
-            ) : (
-              ''
-            ),
+            isPlanSoldOut ? <Chip label="Sold Out" /> : '',
           ]}
           checked={type.id === String(selectedId)}
           disabled={disabled || isPlanSoldOut}
@@ -186,6 +180,7 @@ export const KubernetesPlanSelection = (
           key={type.id}
           onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
+          tooltip={isPlanSoldOut ? PLAN_IS_SOLD_OUT_COPY : undefined}
         />
       </Hidden>
     </React.Fragment>
