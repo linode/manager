@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FileUploader } from 'src/components/FileUploader/FileUploader';
 import { Link } from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
@@ -17,6 +16,7 @@ import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useFlags } from 'src/hooks/useFlags';
@@ -36,7 +36,7 @@ import { wrapInQuotes } from 'src/utilities/stringUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   browseFilesButton: {
     marginLeft: '1rem',
   },
@@ -108,7 +108,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const regions = useRegionsQuery().data ?? [];
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
@@ -279,7 +279,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
             required
             selectedId={region}
           />
-
           {showGDPRCheckbox ? (
             <EUAgreementCheckbox
               centerCheckbox
@@ -288,7 +287,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
               onChange={(e) => setHasSignedAgreement(e.target.checked)}
             />
           ) : null}
-
           <Notice
             spacingTop={24}
             sx={{ fontSize: '0.875rem' }}
@@ -296,13 +294,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
           >
             {imageSizeLimitsMessage}
           </Notice>
-
           <Typography className={classes.helperText}>
             Custom Images are billed at $0.10/GB per month based on the
             uncompressed image size.
           </Typography>
-
-          <FileUploader
+          <ImageUploader
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             description={description}
             dropzoneDisabled={uploadingDisabled}

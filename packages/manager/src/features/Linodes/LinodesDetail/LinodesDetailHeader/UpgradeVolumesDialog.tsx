@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -23,7 +23,7 @@ interface Props {
   upgradeableVolumeIds: number[];
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   notice: {
     borderLeft: `solid 6px ${theme.color.yellow}`,
     marginTop: theme.spacing(2),
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const UpgradeVolumesDialog = (props: Props) => {
   const { linode, onClose, open, upgradeableVolumeIds } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const queryClient = useQueryClient();
 
   const {

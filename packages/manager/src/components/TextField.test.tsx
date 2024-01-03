@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { InputAdornment } from './InputAdornment';
 import { TextField } from './TextField';
 
 describe('TextField', () => {
@@ -58,5 +59,36 @@ describe('TextField', () => {
       <TextField error errorText="There was an error" {...props} />
     );
     expect(getByText(/There was an error/i)).toBeInTheDocument();
+  });
+
+  it('can change the input type and renders an input adornment', () => {
+    const { getByDisplayValue, getByTestId, getByText } = renderWithTheme(
+      <TextField
+        InputProps={{
+          startAdornment: <InputAdornment position="end">$</InputAdornment>,
+        }}
+        label={'Money'}
+        type={'number'}
+        value={'100'}
+      />
+    );
+
+    expect(getByText('Money')).toBeInTheDocument();
+    expect(getByDisplayValue('100')).toBeInTheDocument();
+    expect(getByText('$')).toBeInTheDocument();
+    const input = getByTestId('textfield-input');
+    expect(input?.getAttribute('type')).toBe('number');
+  });
+
+  it('accepts a min and max value for a type of number and clamps the value within the range', () => {
+    const { getByTestId } = renderWithTheme(
+      <TextField label={'Money'} max={10} min={2} type={'number'} value={'5'} />
+    );
+    const input = getByTestId('textfield-input');
+    expect(input?.getAttribute('value')).toBe('5');
+    fireEvent.change(input, { target: { value: '50' } });
+    expect(input?.getAttribute('value')).toBe('10');
+    fireEvent.change(input, { target: { value: '1' } });
+    expect(input?.getAttribute('value')).toBe('2');
   });
 });
