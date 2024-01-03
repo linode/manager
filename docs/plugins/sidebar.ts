@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
 
+const DEVELOPMENT_GUIDE_PATH = "./docs/development-guide";
+
 interface MarkdownInfo {
   text: string;
   link: string;
@@ -30,6 +32,4 @@ function scanDirectory(directoryPath: string): MarkdownInfo[] {
   return markdownInfoArray;
 }
 
-const directoryPath = "./docs/development-guide";
-
-export const guides = scanDirectory(directoryPath);
+export const guides = scanDirectory(DEVELOPMENT_GUIDE_PATH);
