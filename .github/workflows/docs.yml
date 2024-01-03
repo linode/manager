@@ -15,12 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: yarn
-
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
