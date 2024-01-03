@@ -106,6 +106,7 @@ export const Autocomplete = <
           loading={loading}
           noMarginTop={noMarginTop}
           placeholder={placeholder || 'Select an option'}
+          required={textFieldProps?.InputProps?.required}
           {...params}
           {...textFieldProps}
           InputProps={{

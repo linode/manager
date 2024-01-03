@@ -15,6 +15,7 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorage
     ),
     label: Factory.each((i) => `obj-bucket-${i}`),
     objects: 103,
+    region: 'us-east',
     size: 999999,
   }
 );
