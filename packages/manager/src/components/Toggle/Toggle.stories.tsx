@@ -8,10 +8,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 const EXAMPLE_TEXT = "This is some example text for the toggle's tooltip";
 
 export const Default: StoryObj<ToggleProps> = {
-  render: (args) => <Toggle {...args} />,
+  render: (args) => <Toggle {...args} tooltipText={EXAMPLE_TEXT} />,
 };
 
-export const WithTooltip: StoryObj<ToggleProps> = {
+export const WithInteractiveTooltip: StoryObj<ToggleProps> = {
   render: (args) => (
     <Toggle {...args} interactive={true} tooltipText={EXAMPLE_TEXT} />
   ),
@@ -20,7 +20,6 @@ export const WithTooltip: StoryObj<ToggleProps> = {
 const meta: Meta<ToggleProps> = {
   args: {
     disabled: false,
-    interactive: false,
   },
   component: Toggle,
   title: 'Components/Toggle',
