@@ -1,10 +1,11 @@
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import _Button, { ButtonProps as _ButtonProps } from '@mui/material/Button';
-import { Theme, styled, useTheme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/reload.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Tooltip } from 'src/components/Tooltip';
 
 import { rotate360 } from '../../styles/keyframes';
 import { omittedProps } from '../../utilities/omittedProps';
@@ -36,6 +37,8 @@ export interface ButtonProps extends _ButtonProps {
   loading?: boolean;
   /** The `sx` prop can be either object or function */
   sx?: SxProps<Theme>;
+  /** Pass specific CSS styling for the SVG icon. */
+  sxEndIcon?: SxProps<Theme>;
   /** Tooltip analytics event */
   tooltipAnalyticsEvent?: () => void;
   /** Tooltip text */
@@ -100,15 +103,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       loading,
       sx,
+      sxEndIcon,
       tooltipAnalyticsEvent,
       tooltipText,
       ...rest
     },
     ref
   ) => {
-    const theme = useTheme();
     const color = buttonType === 'primary' ? 'primary' : 'secondary';
-    const sxTooltipIcon = { marginLeft: `-${theme.spacing()}` };
+    const showTooltip = disabled && Boolean(tooltipText);
 
     const variant =
       buttonType === 'primary' || buttonType === 'secondary'
@@ -117,34 +120,42 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ? 'outlined'
         : 'text';
 
-    return (
-      <React.Fragment>
-        <StyledButton
-          {...rest}
-          buttonType={buttonType}
-          className={className}
-          color={color}
-          compactX={compactX}
-          compactY={compactY}
-          disabled={disabled || loading}
-          loading={loading}
-          ref={ref}
-          sx={sx}
-          variant={variant}
-        >
-          <Span data-testid="loadingIcon">
-            {loading ? <Reload /> : children}
-          </Span>
-        </StyledButton>
-        {tooltipText && (
-          <TooltipIcon
-            status="help"
-            sxTooltipIcon={sxTooltipIcon}
-            text={tooltipText}
-            tooltipAnalyticsEvent={tooltipAnalyticsEvent}
-          />
-        )}
-      </React.Fragment>
+    const handleTooltipAnalytics = () => {
+      if (tooltipAnalyticsEvent) {
+        tooltipAnalyticsEvent();
+      }
+    };
+
+    const renderButton = (
+      <StyledButton
+        {...rest}
+        endIcon={
+          (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
+        }
+        aria-disabled={disabled}
+        buttonType={buttonType}
+        className={className}
+        color={color}
+        compactX={compactX}
+        compactY={compactY}
+        disableRipple={disabled}
+        disabled={loading}
+        loading={loading}
+        onClick={disabled ? undefined : rest.onClick}
+        ref={ref}
+        sx={sx}
+        variant={variant}
+      >
+        <Span data-testid="loadingIcon">{loading ? <Reload /> : children}</Span>
+      </StyledButton>
+    );
+
+    return showTooltip ? (
+      <Tooltip onClick={handleTooltipAnalytics} title={tooltipText}>
+        {renderButton}
+      </Tooltip>
+    ) : (
+      renderButton
     );
   }
 );
