@@ -111,7 +111,7 @@ export const getRegionsWithCapability = (
   return arrayToList(withCapability ?? []);
 };
 
-interface PlanSoldOutStatus {
+interface PlanSoldOutStatusOptions {
   plan: PlanSelectionType;
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -124,7 +124,7 @@ export const getIsPlanSoldOut = ({
   plan,
   regionAvailabilities,
   selectedRegionId,
-}: PlanSoldOutStatus): boolean => {
+}: PlanSoldOutStatusOptions): boolean => {
   if (!regionAvailabilities || !selectedRegionId) {
     return false;
   }
