@@ -20,8 +20,7 @@ jobs:
 
       - name: Build with VitePress
         run: |
-          npx vitepress build docs
-          touch docs/.vitepress/dist/.nojekyll
+          bunx vitepress@1.0.0-rc.35 build doc
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
