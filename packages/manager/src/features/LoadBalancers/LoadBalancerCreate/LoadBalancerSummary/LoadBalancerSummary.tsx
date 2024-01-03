@@ -59,12 +59,14 @@ export const LoadBalancerSummary = () => {
             <Stack spacing={1}>
               <Typography variant="body1">Regions (5)</Typography>
               <div>
+                {/* // TODO AGLB: Implement Pricing */}
                 <DisplayPrice interval="mo" price={60} />
               </div>
             </Stack>
 
             <Divider dark />
             <div>
+              {/* // TODO AGLB: Implement Pricing */}
               <DisplayPrice interval="hour" price={2} />
             </div>
             <Divider dark />

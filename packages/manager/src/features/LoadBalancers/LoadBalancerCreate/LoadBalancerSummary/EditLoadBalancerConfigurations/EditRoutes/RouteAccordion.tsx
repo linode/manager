@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 
-// import { RulesTable } from '../../RulesTable';
 import { EditRouteDrawer } from './EditRouteDrawer';
 import { RouteAccordionHeader } from './RouteAccordionHeader';
 
@@ -32,11 +31,7 @@ export const RouteAccordion = ({ configIndex, route, routeIndex }: Props) => {
         headingProps={{ sx: { width: '100%' } }}
         sx={{ backgroundColor: '#f4f5f6', paddingLeft: 1, paddingRight: 1.4 }}
       >
-        {/* <RulesTable
-          onDeleteRule={(index) => null}
-          onEditRule={(index) => null}
-          route={route}
-        /> */}
+        {/* // TODO AGLB: Implement RulesTable */}
       </Accordion>
       <EditRouteDrawer
         configIndex={configIndex}
