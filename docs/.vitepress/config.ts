@@ -6,7 +6,7 @@ export default {
   srcDir: "./",
   base: "/manager/",
   themeConfig: {
-    logo: "akamai-wave.svg",
+    logo: "/akamai-wave.svg",
     nav: [
       { text: "Home", link: "/" },
       { text: "Getting Started", link: "/GETTING_STARTED" },
@@ -25,5 +25,5 @@ export default {
       { icon: "github", link: "https://github.com/linode/manager" },
     ],
   },
-  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
+  head: [["link", { rel: "icon", href: "/manager/favicon.ico" }]],
 };
