@@ -4,9 +4,9 @@ import { Accordion } from 'src/components/Accordion';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
+import { RouteAccordion } from '../EditRoutes/RouteAccordion';
 import { ConfigurationAccordionHeader } from './ConfigurationAccordionHeader';
 import { ConfigurationDrawer } from './ConfigurationDrawer';
-import { RouteAccordion } from '../EditRoutes/RouteAccordion';
 
 import type { LoadBalancerCreateFormData } from '../../../LoadBalancerCreateFormWrapper';
 
@@ -21,7 +21,7 @@ export const ConfigurationAccordion = ({ configuration, index }: Props) => {
     setShowEditConfigurationDrawer,
   ] = useState(false);
 
-  const handleEditClick = () => {
+  const editConfigDetailsHandler = () => {
     setShowEditConfigurationDrawer(true);
   };
 
@@ -31,7 +31,7 @@ export const ConfigurationAccordion = ({ configuration, index }: Props) => {
         heading={
           <ConfigurationAccordionHeader
             configuration={configuration}
-            editClickHandler={handleEditClick}
+            editClickHandler={editConfigDetailsHandler}
           />
         }
         defaultExpanded={false}
