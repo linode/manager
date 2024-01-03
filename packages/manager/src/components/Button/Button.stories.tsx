@@ -94,8 +94,7 @@ export const LinkButton: Story = {
 };
 
 /**
- * Default Primary Button
- *  Bold and easily visible. Represents the primary or preferred action on the page.
+ * Disabled Button w/ Tooltip
  */
 export const DisabledTooltip: Story = {
   args: {
