@@ -260,11 +260,9 @@ export const UserMenu = React.memo(() => {
             isAccountSwitchable && (
               <Button
                 onClick={() => {
-                  // From proxy accounts, switch directly back to parent.
-                  // From parent accounts, close the menu and open the drawer of child accounts.
+                  // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
                   if (user.user_type === 'proxy') {
                     // TODO: Parent/Child - M3-7430
-                    // handleAccountSwitch();
                   } else {
                     handleClose();
                     setIsDrawerOpen(true);
