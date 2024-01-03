@@ -12,11 +12,11 @@ import {
 import type { RoutePayload } from '@linode/api-v4';
 
 interface Props {
-  onEditClick: () => void;
+  handleEditRoute: () => void;
   route: RoutePayload;
 }
 
-export const RouteAccordionHeader = ({ onEditClick, route }: Props) => {
+export const RouteAccordionHeader = ({ handleEditRoute, route }: Props) => {
   return (
     <Stack
       alignItems="center"
@@ -33,7 +33,7 @@ export const RouteAccordionHeader = ({ onEditClick, route }: Props) => {
         </Typography>
       </Stack>
       <StyledPaper sx={{ backgroundColor: 'transparent' }}>
-        <EditActionButton onClick={onEditClick}>Edit</EditActionButton>
+        <EditActionButton onClick={handleEditRoute}>Edit</EditActionButton>
       </StyledPaper>
     </Stack>
   );

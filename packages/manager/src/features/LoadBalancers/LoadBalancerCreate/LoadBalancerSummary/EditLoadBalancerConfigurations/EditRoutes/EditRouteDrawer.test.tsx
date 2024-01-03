@@ -64,14 +64,14 @@ describe('EditRouteDrawer', () => {
       }
     );
 
-    expect(
-      screen.getByRole('textbox', { name: 'Route Label' })
-    ).toHaveDisplayValue('route-label');
+    const routeLabelFiled = screen.getByRole('textbox', {
+      name: 'Route Label',
+    });
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Route Label' }),
-      'rote-new-label'
-    );
+    expect(routeLabelFiled).toHaveDisplayValue('route-label');
+
+    userEvent.type(routeLabelFiled, 'rote-new-label');
+
     userEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
   });
 

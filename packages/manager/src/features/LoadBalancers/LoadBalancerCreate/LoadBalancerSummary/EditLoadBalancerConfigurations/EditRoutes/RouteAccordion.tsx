@@ -16,14 +16,17 @@ interface Props {
 
 export const RouteAccordion = ({ configIndex, route, routeIndex }: Props) => {
   const [showEditRouteDrawer, setShowEditRouteDrawer] = useState(false);
-  const handleEditClick = () => {
+  const editRouteHandler = () => {
     setShowEditRouteDrawer(true);
   };
   return (
     <>
       <Accordion
         heading={
-          <RouteAccordionHeader onEditClick={handleEditClick} route={route} />
+          <RouteAccordionHeader
+            handleEditRoute={editRouteHandler}
+            route={route}
+          />
         }
         defaultExpanded={false}
         headingProps={{ sx: { width: '100%' } }}
