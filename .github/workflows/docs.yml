@@ -28,9 +28,7 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Build with VitePress
         working-directory: ./docs
-        run: |
-          bunx vitepress build
-          touch docs/.vitepress/dist/.nojekyll
+        run: bunx vitepress build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
