@@ -46,7 +46,11 @@ export interface ObjectStorageBucketRequestPayload {
   label: string;
   region?: string;
   /*
-   The API will accept either cluster or region, or both (provided they are the same value).
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+
+   Until then, the API will accept either cluster or region, or both (provided they are the same value).
    The payload requires at least one of them though, which will be enforced via validation.
   */
 }
@@ -57,12 +61,17 @@ export interface ObjectStorageDeleteBucketRequestPayload {
 }
 
 export interface ObjectStorageBucket {
-  cluster: string;
-  created: string;
-  hostname: string;
+  /*
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+  */
+  region?: string;
   label: string;
+  created: string;
+  cluster: string;
+  hostname: string;
   objects: number;
-  region: string;
   size: number; // Size of bucket in bytes
 }
 
