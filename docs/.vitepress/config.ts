@@ -1,10 +1,9 @@
-import { defineConfig } from 'vitepress'
-import { generateSidebar } from 'vitepress-sidebar';
+import { generateSidebar } from "./sidebar";
 
-export default defineConfig({
+export default {
   title: "Cloud Manager Docs",
   description: "Linode Cloud Manger Documentation",
-  srcDir: '../../docs',
+  srcDir: '../docs',
   base: '/manager/',
   themeConfig: {
     logo: 'akamai-wave.svg',
@@ -16,7 +15,7 @@ export default defineConfig({
       provider: 'local'
     },
     sidebar: generateSidebar({
-      documentRootPath: '../../docs',
+      documentRootPath: '../docs',
       hyphenToSpace: true,
       underscoreToSpace: true,
       capitalizeEachWords: true,
@@ -26,4 +25,4 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/linode/manager' }
     ]
   }
-})
+}

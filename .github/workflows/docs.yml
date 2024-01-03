@@ -21,19 +21,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - name: Install dependencies
-        run: yarn install
       - name: Build with VitePress
         run: |
-          yarn workspace @linode/docs docs:build
-          touch packages/docs/.vitepress/dist/.nojekyll
+          bunx vitepress build
+          touch docs/.vitepress/dist/.nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: packages/docs/.vitepress/dist
+          path: docs/.vitepress/dist
   deploy:
     environment:
       name: github-pages

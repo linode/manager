@@ -140,4 +140,5 @@ packages/manager/bundle_analyzer_report.html
 
 **/manager/src/dev-tools/*.local.*
 
-packages/docs/.vitepress/cache/
+docs/.vitepress/cache
+docs/.vitepress/dist
