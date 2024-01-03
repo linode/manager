@@ -74,4 +74,25 @@ describe('EditRouteDrawer', () => {
     );
     userEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
   });
+
+  test('Should call onClose when close button is clicked', () => {
+    const onCloseMock = vi.fn();
+    renderWithThemeAndFormik<LoadBalancerCreateFormData>(
+      <EditRouteDrawer
+        configIndex={0}
+        onClose={onCloseMock}
+        open={true}
+        routeIndex={0}
+      />,
+      {
+        initialValues,
+        onSubmit: vi.fn(),
+      }
+    );
+
+    const closeButton = screen.getByRole('button', { name: 'Close drawer' });
+    userEvent.click(closeButton);
+
+    expect(onCloseMock).toHaveBeenCalled();
+  });
 });
