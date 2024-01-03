@@ -147,6 +147,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
     <StyledGrid
       className={className}
       data-qa-selection-card
+      data-qa-selection-card-checked={checked}
       disabled={disabled}
       id={id}
       lg={4}
