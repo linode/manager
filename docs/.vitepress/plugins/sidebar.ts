@@ -8,7 +8,10 @@ interface MarkdownInfo {
   link: string;
 }
 
-function scanDirectory(directoryPath: string): MarkdownInfo[] {
+/**
+ * Aggregates the pages in the development-guide and populates the left sidebar.
+ */
+const scanDirectory = (directoryPath: string): MarkdownInfo[] => {
   const markdownFiles = fs
     .readdirSync(directoryPath)
     .filter((file) => file.endsWith(".md"));
@@ -30,6 +33,6 @@ function scanDirectory(directoryPath: string): MarkdownInfo[] {
   });
 
   return markdownInfoArray;
-}
+};
 
 export const guides = scanDirectory(DEVELOPMENT_GUIDE_PATH);

@@ -1,4 +1,4 @@
-import { guides } from "../plugins/sidebar";
+import { guides } from "./plugins/sidebar";
 
 export default {
   title: "Cloud Manager Docs",
