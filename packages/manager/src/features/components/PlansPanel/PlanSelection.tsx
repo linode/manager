@@ -145,7 +145,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             )}
           </StyledRadioCell>
           <TableCell data-qa-plan-name>
-            {type.heading}{' '}
+            {type.heading} &nbsp;
             {isPlanSoldOut && (
               <Tooltip
                 data-testid="sold-out-chip"

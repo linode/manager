@@ -97,7 +97,7 @@ export const KubernetesPlanSelection = (
           key={type.id}
         >
           <TableCell data-qa-plan-name>
-            {type.heading}{' '}
+            {type.heading} &nbsp;
             {isPlanSoldOut && (
               <Tooltip
                 data-testid="sold-out-chip"
