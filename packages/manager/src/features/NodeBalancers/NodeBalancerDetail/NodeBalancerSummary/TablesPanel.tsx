@@ -211,7 +211,7 @@ export const TablesPanel = () => {
 
     if (flags.recharts) {
       return (
-        <Box marginLeft={-4}>
+        <Box marginLeft={-3}>
           <AreaChart
             areas={[
               {

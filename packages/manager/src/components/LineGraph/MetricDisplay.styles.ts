@@ -28,6 +28,10 @@ export const useMetricsDisplayStyles = makeStyles()((theme: Theme) => ({
       },
       alignItems: 'center',
       display: 'flex',
+      justifyContent: 'flex-start',
+      [theme.breakpoints.down('sm')]: {
+        padding: 0,
+      },
     },
   },
   lightGreen: {

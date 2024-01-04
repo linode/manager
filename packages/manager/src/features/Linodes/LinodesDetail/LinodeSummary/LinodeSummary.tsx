@@ -44,7 +44,7 @@ interface Props {
 }
 
 const chartHeight = 160;
-const rechartsHeight = 260;
+const rechartsHeight = 300;
 
 const LinodeSummary: React.FC<Props> = (props) => {
   const { isBareMetalInstance, linodeCreated } = props;
@@ -125,7 +125,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
       }, []);
 
       return (
-        <Box marginLeft={-4} marginTop={3}>
+        <Box marginLeft={-4} marginTop={2}>
           <AreaChart
             areas={[
               {
@@ -308,7 +308,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
             spacing={4}
             xs={12}
           >
-            <StyledGrid xs={12}>
+            <StyledGrid recharts={flags.recharts} xs={12}>
               <StatsPanel
                 renderBody={renderCPUChart}
                 title="CPU (%)"
@@ -334,14 +334,17 @@ const StyledSelect = styled(Select, { label: 'StyledSelect' })({
   maxWidth: 150,
 });
 
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+const StyledGrid = styled(Grid, {
+  label: 'StyledGrid',
+  shouldForwardProp: (prop) => prop !== 'recharts',
+})<{ recharts?: boolean }>(({ recharts, theme }) => ({
   '& h2': {
     fontSize: '1rem',
   },
   '&.MuiGrid-item': {
     padding: theme.spacing(2),
   },
-  backgroundColor: theme.bg.offWhite,
+  backgroundColor: recharts ? 'transparent' : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
   marginBottom: theme.spacing(2),
   [theme.breakpoints.up(1100)]: {
