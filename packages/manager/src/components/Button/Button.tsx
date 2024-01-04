@@ -129,6 +129,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const renderButton = (
       <StyledButton
         {...rest}
+        aria-describedby={
+          showTooltip ? 'button-tooltip' : rest['aria-describedby']
+        }
         endIcon={
           (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
         }
@@ -141,7 +144,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disableRipple={disabled}
         disabled={loading}
         loading={loading}
-        onClick={disabled ? undefined : rest.onClick}
+        onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
         ref={ref}
         sx={sx}
         variant={variant}
@@ -151,7 +154,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     return showTooltip ? (
-      <Tooltip onClick={handleTooltipAnalytics} title={tooltipText}>
+      <Tooltip
+        id="button-tooltip"
+        onClick={handleTooltipAnalytics}
+        title={tooltipText}
+      >
         {renderButton}
       </Tooltip>
     ) : (
