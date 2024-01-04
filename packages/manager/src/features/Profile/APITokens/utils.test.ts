@@ -40,6 +40,7 @@ describe('APIToken utils', () => {
         ['object_storage', 2],
         ['stackscripts', 2],
         ['volumes', 2],
+        ['vpc', 2],
       ];
       it('should return an array containing a tuple for each type and a permission level of 2', () => {
         expect(result).toEqual(expected);
@@ -64,6 +65,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should return an array containing a tuple for each type and a permission level of 0', () => {
@@ -89,6 +91,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should return account:0', () => {
@@ -114,6 +117,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should return account:1', () => {
@@ -139,6 +143,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should return account:2', () => {
@@ -166,6 +171,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should domain:1 and longview:2', () => {
@@ -195,6 +201,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should return the higher value for account.', () => {
@@ -224,6 +231,7 @@ describe('APIToken utils', () => {
         ['object_storage', 0],
         ['stackscripts', 0],
         ['volumes', 0],
+        ['vpc', 0],
       ];
 
       it('should return the higher value for account.', () => {
@@ -249,6 +257,7 @@ describe('APIToken utils', () => {
           ['object_storage', 0],
           ['stackscripts', 0],
           ['volumes', 0],
+          ['vpc', 0],
         ];
         expect(allScopesAreTheSame(scopes)).toBe(0);
       });
@@ -289,6 +298,7 @@ describe('APIToken utils', () => {
           ['object_storage', 2],
           ['stackscripts', 2],
           ['volumes', 2],
+          ['vpc', 2],
         ];
         expect(allScopesAreTheSame(scopes)).toBe(2);
       });
@@ -309,6 +319,7 @@ describe('APIToken utils', () => {
           ['object_storage', 2],
           ['stackscripts', 2],
           ['volumes', 2],
+          ['vpc', 0],
         ];
         expect(allScopesAreTheSame(scopes)).toBe(null);
       });
