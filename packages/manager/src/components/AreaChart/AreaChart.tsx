@@ -163,6 +163,7 @@ export const AreaChart = (props: AreaChartProps) => {
         ariaLabel={ariaLabel}
         data={data}
         dataKeys={accessibleDataKeys}
+        timezone={timezone}
         unit={unit}
       />
     </>

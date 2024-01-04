@@ -9,6 +9,7 @@ export interface AccessibleAreaChartProps {
   ariaLabel?: string;
   data: any;
   dataKeys: string[];
+  timezone: string;
   unit: string;
 }
 
@@ -18,7 +19,7 @@ export interface AccessibleAreaChartProps {
  * visually hidden from the user, yet available to screen readers.
  */
 export const AccessibleAreaChart = (props: AccessibleAreaChartProps) => {
-  const { ariaLabel, data, dataKeys, unit } = props;
+  const { ariaLabel, data, dataKeys, timezone, unit } = props;
 
   const tables = dataKeys.map((dataKey, tableID) => {
     const TableHeader = (
@@ -37,7 +38,7 @@ export const AccessibleAreaChart = (props: AccessibleAreaChartProps) => {
           <tr key={`accessible-graph-data-body-row-${idx}`}>
             <td>
               {timestamp
-                ? getAccessibleTimestamp(Number(timestamp))
+                ? getAccessibleTimestamp(Number(timestamp), timezone)
                 : 'timestamp unavailable'}
             </td>
             <td>

@@ -509,8 +509,10 @@ export const timeData = [
   },
 ];
 
-export const getAccessibleTimestamp = (timestamp: number) =>
-  DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT);
+export const getAccessibleTimestamp = (timestamp: number, timezone: string) =>
+  DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(
+    DateTime.DATETIME_SHORT
+  );
 
 export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
   DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(

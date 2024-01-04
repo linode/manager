@@ -8,7 +8,9 @@ const timestamp = 1704204000000;
 
 describe('getAccessibleTimestamp', () => {
   it('should return the time in a format like 10/14/2023, 9:30 AM', () => {
-    expect(getAccessibleTimestamp(timestamp)).toEqual('1/2/2024, 9:00\u202fAM');
+    expect(getAccessibleTimestamp(timestamp, 'America/New_York')).toBe(
+      '1/2/2024, 9:00\u202fAM'
+    );
   });
 });
 

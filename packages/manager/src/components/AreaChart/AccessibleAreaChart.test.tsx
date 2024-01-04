@@ -16,6 +16,7 @@ describe('AccessibleAreaChart', () => {
         ariaLabel="data filter"
         data={data1}
         dataKeys={['Dataset 1']}
+        timezone="America/New_York"
         unit="%"
       />
     );
