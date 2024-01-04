@@ -34,6 +34,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     onClick,
     tooltip,
     tooltipAnalyticsEvent,
+    ...rest
   } = props;
 
   if (href) {
@@ -53,6 +54,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
       onClick={onClick}
       tooltipAnalyticsEvent={tooltipAnalyticsEvent}
       tooltipText={tooltip}
+      {...rest}
     >
       {actionText}
     </StyledActionButton>

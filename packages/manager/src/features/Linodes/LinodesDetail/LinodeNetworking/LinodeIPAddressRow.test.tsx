@@ -44,7 +44,7 @@ describe('LinodeIPAddressRow', () => {
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {
-    const { findByRole, getAllByRole } = renderWithTheme(
+    const { findByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
           isVPCOnlyLinode={true}
@@ -56,21 +56,18 @@ describe('LinodeIPAddressRow', () => {
       )
     );
 
-    const buttons = getAllByRole('button');
-
-    const deleteBtn = buttons[1];
+    const deleteBtn = getByTestId('action-menu-item-delete');
     expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
-    const deleteBtnTooltip = buttons[2];
-    fireEvent.mouseEnter(deleteBtnTooltip);
+    fireEvent.mouseEnter(deleteBtn);
     const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
     expect(publicIpsUnassignedTooltip).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
     );
 
-    const editRDNSBtn = buttons[3];
+    const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
     expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
-    const editRDNSBtnTooltip = buttons[4];
-    fireEvent.mouseEnter(editRDNSBtnTooltip);
+
+    fireEvent.mouseEnter(editRDNSBtn);
     const publicIpsUnassignedTooltip2 = await findByRole(/tooltip/);
     expect(publicIpsUnassignedTooltip2).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
