@@ -1,7 +1,6 @@
 import { ui } from 'support/ui';
 import { regionFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { cleanUp } from 'support/util/cleanup';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
 
