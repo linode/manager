@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
@@ -6,6 +7,8 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { useChildAccounts } from 'src/queries/account';
+import { useAccountUser } from 'src/queries/accountUsers';
+import { useProfile } from 'src/queries/profile';
 
 interface Props {
   handleAccountSwitch: () => void;
@@ -19,8 +22,8 @@ interface Props {
 export const SwitchAccountDrawer = (props: Props) => {
   const {
     // handleAccountSwitch,
-    isParentTokenError,
-    isProxyTokenError,
+    // isParentTokenError,
+    // isProxyTokenError,
     onClose: _onClose,
     open,
   } = props;
@@ -29,6 +32,8 @@ export const SwitchAccountDrawer = (props: Props) => {
     _onClose();
   };
 
+  const { data: profile } = useProfile();
+  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: childAccounts, error, isLoading } = useChildAccounts({});
 
   const renderChildAccounts = React.useCallback(() => {
@@ -63,10 +68,25 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Switch Account">
-      {(isParentTokenError || isProxyTokenError) && (
+      {/* {(isParentTokenError || isProxyTokenError) && (
         <Notice variant="error">There was an error switching accounts.</Notice>
-      )}
-      <Stack>{renderChildAccounts()}</Stack>
+      )} */}
+      <Stack>
+        <Typography>
+          Select an account to view and manage its settings and configurations
+          {user?.user_type === 'proxy' && (
+            <>
+              {' '}
+              or {/* TODO: Parent/Child - M3-7430 */}
+              <StyledLinkButton onClick={() => null}>
+                switch back to your account
+              </StyledLinkButton>
+            </>
+          )}
+          .
+        </Typography>
+        {renderChildAccounts()}
+      </Stack>
     </Drawer>
   );
 };

@@ -254,7 +254,7 @@ export const UserMenu = React.memo(() => {
             color={(theme) => theme.textColors.headlineStatic}
             fontSize="1.1rem"
           >
-            <strong>{userName}</strong>
+            <strong>{isAccountSwitchable ? companyName : userName}</strong>
           </Typography>
           {
             isAccountSwitchable && (
@@ -263,14 +263,14 @@ export const UserMenu = React.memo(() => {
                   // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
                   if (user.user_type === 'proxy') {
                     // TODO: Parent/Child - M3-7430
-                  } else {
-                    handleClose();
-                    setIsDrawerOpen(true);
                   }
+
+                  handleClose();
+                  setIsDrawerOpen(true);
                 }}
                 buttonType="outlined"
               >
-                Switch Accounts
+                Switch Account
               </Button>
             )
             // TODO: Parent/Child - M3-7430
