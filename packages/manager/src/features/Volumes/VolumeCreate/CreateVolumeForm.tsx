@@ -181,7 +181,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           linode_id:
             linode_id === initialValueDefaultId
               ? undefined
-              : maybeCastToNumber(linode_id),
+              /* -- Clanode Change -- */
+              //: maybeCastToNumber(linode_id),
+              : linode_id,
+              /* -- Clanode Change End -- */
           config_id:
             config_id === initialValueDefaultId
               ? undefined
