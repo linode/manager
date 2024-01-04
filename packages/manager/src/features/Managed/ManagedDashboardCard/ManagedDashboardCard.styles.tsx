@@ -18,6 +18,7 @@ export const StyledOuterContainerGrid = styled(Grid, {
   margin: '-8px',
   [theme.breakpoints.up('sm')]: {
     flexWrap: 'nowrap',
+    justifyContent: 'space-evenly',
   },
 }));
 
