@@ -334,7 +334,7 @@ describe('create linode', () => {
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
   });
 
-  it('assigns a VPC not enabled in the region to the linode during create flow', () => {
+  it("prevents a VPC from being assigned in a region that doesn't support VPCs during the Linode Create flow", () => {
     const region: Region = getRegionById('us-southeast');
     const mockNoVPCRegion = regionFactory.build({
       id: region.id,
@@ -371,7 +371,7 @@ describe('create linode', () => {
       containsVisible(
         'Allow Linode to communicate in an isolated environment.'
       );
-      // VPC in different region should not be available.
+      // Helper text appears if VPC is not available in selected region.
       containsVisible('VPC is not available in the selected region.');
     });
   });
