@@ -54,7 +54,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
     >
       {error ? <Notice text={error?.[0].reason} variant="error" /> : null}
       <Notice variant="warning">
-        <Typography style={{ fontSize: '0.875rem' }}>
+        <Typography component="div" style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong>
           <ul style={{ margin: '5px 0px 0px', paddingLeft: '15px' }}>
             <li>Deleting a cluster is permanent and can&apos;t be undone.</li>

@@ -19,7 +19,9 @@ describe('Button', () => {
 
   it('should render the HelpIcon when tooltipText is true', () => {
     const { getByTestId } = renderWithTheme(
-      <Button tooltipText="Test">Test</Button>
+      <Button disabled tooltipText="Test">
+        Test
+      </Button>
     );
 
     const helpIcon = getByTestId('HelpOutlineIcon');

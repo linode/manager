@@ -59,7 +59,7 @@ describe('LinodeIPAddressRow', () => {
     const buttons = getAllByRole('button');
 
     const deleteBtn = buttons[1];
-    expect(deleteBtn).toBeDisabled();
+    expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
     const deleteBtnTooltip = buttons[2];
     fireEvent.mouseEnter(deleteBtnTooltip);
     const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
@@ -68,7 +68,7 @@ describe('LinodeIPAddressRow', () => {
     );
 
     const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).toBeDisabled();
+    expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
     const editRDNSBtnTooltip = buttons[4];
     fireEvent.mouseEnter(editRDNSBtnTooltip);
     const publicIpsUnassignedTooltip2 = await findByRole(/tooltip/);
@@ -93,8 +93,9 @@ describe('LinodeIPAddressRow', () => {
     const buttons = getAllByRole('button');
 
     const deleteBtn = buttons[1];
-    expect(deleteBtn).not.toBeDisabled();
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+
     const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).not.toBeDisabled();
+    expect(editRDNSBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

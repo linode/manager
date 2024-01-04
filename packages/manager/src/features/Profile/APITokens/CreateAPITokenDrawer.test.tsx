@@ -46,10 +46,10 @@ describe('Create API Token Drawer', () => {
 
     const submitBtn = getByTestId('create-button');
     expect(submitBtn).toBeVisible();
-    expect(submitBtn).toBeEnabled();
+    expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
 
     const cancelBtn = getByText(/Cancel/);
-    expect(cancelBtn).toBeEnabled();
+    expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
   });
 
