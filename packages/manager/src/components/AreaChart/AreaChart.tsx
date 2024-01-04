@@ -18,6 +18,9 @@ import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChar
 import { Paper } from 'src/components/Paper';
 
 import { tooltipLabelFormatter, tooltipValueFormatter } from './utils';
+import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
+import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
+import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 interface AreaProps {
   color: string;
@@ -38,6 +41,7 @@ interface AreaChartProps {
   timezone: string;
   unit: string;
   xAxis: XAxisProps;
+  legendRows?: MetricsDisplayRow[];
 }
 
 const humanizeLargeData = (value: number) => {
@@ -60,6 +64,7 @@ export const AreaChart = (props: AreaChartProps) => {
     timezone,
     unit,
     xAxis,
+    legendRows,
   } = props;
 
   const theme = useTheme();
@@ -100,6 +105,14 @@ export const AreaChart = (props: AreaChartProps) => {
     return null;
   };
 
+  const CustomLegend = () => {
+    return legendRows ? (
+      <StyledBottomLegend>
+        <MetricsDisplay rows={legendRows} />
+      </StyledBottomLegend>
+    ) : null;
+  };
+
   const accessibleDataKeys = areas.map((area) => area.dataKey);
 
   return (
@@ -132,7 +145,7 @@ export const AreaChart = (props: AreaChartProps) => {
             }}
             content={<CustomTooltip />}
           />
-          {showLegend && (
+          {showLegend && !legendRows && (
             <Legend
               formatter={(value) => (
                 <span style={{ color: theme.color.label, cursor: 'pointer' }}>
@@ -144,6 +157,14 @@ export const AreaChart = (props: AreaChartProps) => {
               }}
               iconType="square"
               onClick={(props) => handleLegendClick(props.dataKey)}
+            />
+          )}
+          {showLegend && legendRows && (
+            <Legend
+              content={<CustomLegend />}
+              wrapperStyle={{
+                left: 20,
+              }}
             />
           )}
           {areas.map(({ color, dataKey }) => (

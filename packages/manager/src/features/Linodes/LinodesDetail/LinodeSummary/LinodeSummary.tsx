@@ -6,11 +6,14 @@ import { useParams } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import { Box } from 'src/components/Box';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,
@@ -28,9 +31,10 @@ import {
 } from 'src/utilities/statMetrics';
 
 import { NetworkGraphs } from './NetworkGraphs';
-import type { ChartProps } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 import { getDateOptions } from './helpers';
+
+import type { ChartProps } from './NetworkGraphs';
 
 setUpCharts();
 
@@ -40,12 +44,14 @@ interface Props {
 }
 
 const chartHeight = 160;
+const rechartsHeight = 260;
 
 const LinodeSummary: React.FC<Props> = (props) => {
   const { isBareMetalInstance, linodeCreated } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme();
+  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
@@ -106,8 +112,49 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   const renderCPUChart = () => {
     const data = stats?.data.cpu ?? [];
-
     const metrics = getMetrics(data);
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags.recharts) {
+      const timeData = data.reduce((acc: any, point: any) => {
+        acc.push({
+          'CPU %': point[1],
+          timestamp: point[0],
+        });
+        return acc;
+      }, []);
+
+      return (
+        <Box marginLeft={-4} marginTop={3}>
+          <AreaChart
+            areas={[
+              {
+                color: theme.graphs.cpu.percent,
+                dataKey: 'CPU %',
+              },
+            ]}
+            legendRows={[
+              {
+                data: metrics,
+                format: formatPercentage,
+                legendColor: 'blue',
+                legendTitle: 'CPU %',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'hh a',
+              tickGap: 60,
+            }}
+            ariaLabel="CPU Usage Graph"
+            data={timeData}
+            height={rechartsHeight}
+            showLegend
+            timezone={timezone}
+            unit={'%'}
+          />
+        </Box>
+      );
+    }
 
     return (
       <LineGraph
@@ -226,7 +273,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   return (
     <Paper>
-      <Grid sx={{ width: '100%', margin: 0 }} container>
+      <Grid container sx={{ margin: 0, width: '100%' }}>
         <Grid
           sx={{
             display: 'flex',

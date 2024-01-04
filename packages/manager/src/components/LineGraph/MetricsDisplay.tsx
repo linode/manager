@@ -13,7 +13,7 @@ interface Props {
   rows: MetricsDisplayRow[];
 }
 
-interface MetricsDisplayRow {
+export interface MetricsDisplayRow {
   data: Metrics;
   format: (n: number) => string;
   legendColor:

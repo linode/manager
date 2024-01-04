@@ -316,7 +316,7 @@ const StyledChart = styled('div', {
   width: '100%',
 }));
 
-const StyledBottomLegend = styled('div', {
+export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
 })(({ theme }) => ({
   backgroundColor: theme.bg.offWhite,
