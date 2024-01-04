@@ -10,7 +10,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilitiesQuery } from 'src/queries/regions';
+import { useRegionsAvailabilityQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -69,8 +69,9 @@ export const PlanContainer = (props: Props) => {
   const location = useLocation();
   const flags = useFlags();
 
-  const { data: regionAvailabilities } = useRegionsAvailabilitiesQuery(
-    Boolean(flags.soldOutChips)
+  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
+    selectedRegionId || '',
+    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
