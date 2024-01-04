@@ -1,5 +1,4 @@
 import { Theme, useTheme } from '@mui/material';
-import classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect, {
   ActionMeta,
@@ -167,7 +166,7 @@ const Select = <
   props: BaseSelectProps<I, IsMulti, Clearable>
 ) => {
   const theme = useTheme<Theme>();
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
   const {
     blurInputOnSelect,
     className,
@@ -273,7 +272,7 @@ const Select = <
         InputLabelProps: {
           shrink: true,
         },
-        className: classNames(
+        className: cx(
           {
             [classes.inline]: inline,
             [classes.medium]: medium,
@@ -290,7 +289,7 @@ const Select = <
         required,
       }}
       blurInputOnSelect={blurInputOnSelect}
-      className={classNames(classes.root, className)}
+      className={cx(classes.root, className)}
       classNamePrefix="react-select"
       classes={classes}
       components={combinedComponents}

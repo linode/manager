@@ -1,5 +1,4 @@
 import { Event } from '@linode/api-v4/lib/account/types';
-import classNames from 'classnames';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -22,11 +21,11 @@ interface RenderEventProps {
 }
 
 export const RenderEvent = React.memo((props: RenderEventProps) => {
-  const { classes } = useRenderEventStyles();
+  const { classes, cx } = useRenderEventStyles();
   const { event } = props;
   const { message } = useEventInfo(event);
 
-  const unseenEventClass = classNames({ [classes.unseenEvent]: !event.seen });
+  const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
 
   if (message === null) {
     return null;
