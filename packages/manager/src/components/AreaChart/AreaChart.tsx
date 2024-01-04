@@ -41,7 +41,7 @@ interface AreaChartProps {
   timezone: string;
   unit: string;
   xAxis: XAxisProps;
-  legendRows?: MetricsDisplayRow[];
+  legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
 }
 
 const humanizeLargeData = (value: number) => {
@@ -106,11 +106,19 @@ export const AreaChart = (props: AreaChartProps) => {
   };
 
   const CustomLegend = () => {
-    return legendRows ? (
-      <StyledBottomLegend>
-        <MetricsDisplay rows={legendRows} />
-      </StyledBottomLegend>
-    ) : null;
+    if (legendRows) {
+      const legendRowsWithClickHandler = legendRows.map((legendRow) => ({
+        ...legendRow,
+        handleLegendClick: () => handleLegendClick(legendRow.legendTitle),
+      }));
+
+      return (
+        <StyledBottomLegend>
+          <MetricsDisplay rows={legendRowsWithClickHandler} />
+        </StyledBottomLegend>
+      );
+    }
+    return null;
   };
 
   const accessibleDataKeys = areas.map((area) => area.dataKey);

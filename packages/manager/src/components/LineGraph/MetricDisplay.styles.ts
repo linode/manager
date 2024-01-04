@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-export const useMetricsDiaplyStyles = makeStyles()((theme: Theme) => ({
+export const useMetricsDisplayStyles = makeStyles()((theme: Theme) => ({
   blue: {
     '&:before': {
       backgroundColor: theme.graphs.blue,
@@ -18,7 +18,7 @@ export const useMetricsDiaplyStyles = makeStyles()((theme: Theme) => ({
     },
   },
   legend: {
-    '& > div': {
+    '& > button': {
       '&:before': {
         content: '""',
         display: 'inline-block',

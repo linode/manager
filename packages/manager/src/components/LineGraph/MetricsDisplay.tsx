@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Button } from 'src/components/Button/Button';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -7,7 +8,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { Metrics } from 'src/utilities/statMetrics';
-import { useMetricsDiaplyStyles } from './MetricDisplay.styles';
+
+import { useMetricsDisplayStyles } from './MetricDisplay.styles';
 
 interface Props {
   rows: MetricsDisplayRow[];
@@ -16,6 +18,7 @@ interface Props {
 export interface MetricsDisplayRow {
   data: Metrics;
   format: (n: number) => string;
+  handleLegendClick?: () => void;
   legendColor:
     | 'blue'
     | 'darkGreen'
@@ -29,7 +32,7 @@ export interface MetricsDisplayRow {
 
 export const MetricsDisplay = ({ rows }: Props) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
-  const { classes } = useMetricsDiaplyStyles();
+  const { classes } = useMetricsDisplayStyles();
 
   return (
     <Table aria-label="Stats and metrics" className={classes.root}>
@@ -49,16 +52,23 @@ export const MetricsDisplay = ({ rows }: Props) => {
       </TableHead>
       <TableBody>
         {rows.map((row) => {
-          const { data, format, legendColor, legendTitle } = row;
+          const {
+            data,
+            format,
+            handleLegendClick,
+            legendColor,
+            legendTitle,
+          } = row;
           return (
             <TableRow data-qa-metric-row key={legendTitle}>
               <TableCell className={classes.legend}>
-                <div
+                <Button
                   className={classes[legendColor]}
                   data-testid="legend-title"
+                  onClick={handleLegendClick}
                 >
                   <Typography component="span">{legendTitle}</Typography>
-                </div>
+                </Button>
               </TableCell>
               {metricsBySection(data).map((section, idx) => {
                 return (
