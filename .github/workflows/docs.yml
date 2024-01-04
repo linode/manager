@@ -23,8 +23,7 @@ jobs:
           bun-version: 1.0.21
 
       - name: Build with VitePress
-        run: |
-          bunx vitepress@1.0.0-rc.35 build docs
+        run: bunx vitepress@1.0.0-rc.35 build docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
