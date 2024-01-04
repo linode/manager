@@ -1,4 +1,10 @@
-import { Button, Color } from '@linode/design-language-system';
+import {
+  Border,
+  Button,
+  Color,
+  Content,
+  Interaction,
+} from '@linode/design-language-system';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { breakpoints } from 'src/foundations/breakpoints';
@@ -413,8 +419,8 @@ export const lightTheme: ThemeOptions = {
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5], // TODO: This was the closest color according to our palette
-            border: `1px solid ${Color.Neutrals[30]}`, // TODO: This was the closest color according to our palette
+            backgroundColor: Color.Neutrals[5],
+            border: `1px solid ${Border.Normal}`,
             color: Color.Brand[80],
           },
           backgroundColor: 'transparent',
@@ -510,7 +516,7 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           '&:focus': {
-            outline: `1px dotted ${Color.Neutrals[60]}`, // TODO: This was the closest color according to our palette
+            outline: `1px dotted ${Interaction.Border.Focus}`,
           },
           '&:last-child': {
             marginRight: 0,
@@ -732,33 +738,33 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
             fontSize: 18,
           },
-          '&$disabled': {
-            borderColor: Color.Neutrals[40],
-            color: 'rgba(0, 0, 0, 0.75)',
-            opacity: 0.5,
+          '&.Mui-disabled': {
+            backgroundColor: Interaction.Background.Disabled,
+            borderColor: Border.Normal,
+            color: Content.Text.Primary.Disabled,
           },
           '&.Mui-error': {
-            borderColor: Color.Red[70],
+            borderColor: Interaction.Border.Error,
           },
           '&.Mui-focused': {
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
-            borderColor: primaryColors.main,
+            borderColor: Interaction.Border.Focus,
             boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
           '&.affirmative': {
             borderColor: Color.Green[70],
           },
           alignItems: 'center',
-          backgroundColor: Color.Neutrals.White,
-          border: `1px solid ${Color.Neutrals[40]}`,
+          backgroundColor: Interaction.Background.Primary,
+          border: `1px solid ${Interaction.Border.Default}`,
           boxSizing: 'border-box',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
             width: '100%',
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
           minHeight: 34,
@@ -776,13 +782,13 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.only('xs')]: {
               fontSize: '1rem',
             },
-            color: Color.Neutrals[70],
+            color: Content.Icon.Primary.Default,
             fontSize: '0.9rem',
           },
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
-          color: Color.Neutrals[70],
+          color: Content.Icon.Primary.Default,
           fontSize: '0.9rem',
           whiteSpace: 'nowrap',
         },
@@ -932,7 +938,7 @@ export const lightTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         outlined: {
-          border: `1px solid ${Color.Neutrals[30]}`,
+          border: `1px solid ${Border.Normal}`,
         },
         root: {},
         rounded: {
@@ -1247,7 +1253,7 @@ export const lightTheme: ThemeOptions = {
             color: textColors.tableHeader,
           },
           '&:focus': {
-            outline: `1px dotted ${Color.Neutrals[60]}`, // TODO: This was the closest color according to our palette
+            outline: `1px dotted ${Interaction.Border.Focus}`,
           },
           '&:hover': {
             color: primaryColors.main,
