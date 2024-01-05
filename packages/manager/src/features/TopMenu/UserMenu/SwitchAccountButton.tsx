@@ -12,16 +12,11 @@ interface Props {
 }
 
 export const SwitchAccountButton = (props: Props) => {
-  const { handleClose, setIsDrawerOpen, userType } = props;
+  const { handleClose, setIsDrawerOpen } = props;
 
   return (
     <StyledButton
       onClick={() => {
-        // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
-        if (userType === 'proxy') {
-          // TODO: Parent/Child - M3-7430
-        }
-
         handleClose();
         setIsDrawerOpen(true);
       }}
@@ -42,7 +37,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
       fill: theme.name === 'dark' ? '#fff' : theme.textColors.linkActiveLight,
     },
   },
-  marginRight: theme.spacing(1),
 }));
 
 const StyledSwapIcon = styled(SwapIcon)(({ theme }) => ({

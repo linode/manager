@@ -22,9 +22,9 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { authentication } from 'src/utilities/storage';
 
 import { SwitchAccountDrawer } from '../SwitchAccountDrawer';
+import { SwitchAccountButton } from './SwitchAccountButton';
 
 import type { UserType } from '@linode/api-v4';
-import { SwitchAccountButton } from './SwitchAccountButton';
 
 interface MenuLink {
   display: string;
@@ -320,10 +320,6 @@ export const UserMenu = React.memo(() => {
         </Stack>
       </Popover>
       <SwitchAccountDrawer
-        // TODO: Parent/Child - M3-7430
-        handleAccountSwitch={() => null} // {handleAccountSwitch}
-        isParentTokenError={false} // {isParentTokenError}
-        isProxyTokenError={false} // {isProxyTokenError}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
         username={userName}
