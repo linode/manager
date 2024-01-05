@@ -35,7 +35,7 @@ describe('Button', () => {
     expect(button).toBeDisabled();
   });
 
-  it('should not have the disabled attribute if disabled', () => {
+  it('should have the aria-disabled attribute, instead of disabled attribute', () => {
     const { getByTestId } = renderWithTheme(<Button disabled>Test</Button>);
     const button = getByTestId('Button');
     expect(button).not.toHaveAttribute('disabled');
