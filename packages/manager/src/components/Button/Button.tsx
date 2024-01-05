@@ -141,12 +141,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         color={color}
         compactX={compactX}
         compactY={compactY}
-        data-testid="Button"
+        data-testid={rest['data-testid'] || 'Button'}
         disableRipple={disabled}
         disabled={loading}
         loading={loading}
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
-        onKeyDown={disabled ? (e) => e.preventDefault() : rest.onKeyDown}
+        // onKeyDown={disabled ? (e) => e.preventDefault() : rest.onKeyDown}
         ref={ref}
         sx={sx}
         variant={variant}
