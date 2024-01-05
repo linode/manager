@@ -1,6 +1,7 @@
 import { ui } from 'support/ui';
+import { fbtClick, getClick } from 'support/helpers';
 import { regionFactory } from '@src/factories';
-import { authenticate } from 'support/api/authentication';
+import { randomString, randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
 
@@ -39,7 +40,6 @@ const mockRegions: Region[] = [
   }),
 ];
 
-authenticate();
 describe('GDPR agreement', () => {
   it('displays the GDPR agreement based on region, if user has not agreed yet', () => {
     mockGetRegions(mockRegions).as('getRegions');
@@ -91,5 +91,38 @@ describe('GDPR agreement', () => {
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('us-east').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
+  });
+
+  it.only('needs the agreement checked to validate the form', () => {
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetAccountAgreements({
+      privacy_policy: false,
+      eu_model: false,
+    }).as('getAgreements');
+    const rootpass = randomString(32);
+    const linodeLabel = randomLabel();
+
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getAgreements', '@getRegions']);
+
+    // Paris should have the agreement
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionId('fr-par').click();
+    cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
+
+    // Fill out the form
+    fbtClick('Shared CPU');
+    getClick('[id="g6-nanode-1"]');
+    getClick('#linode-label').clear().type(linodeLabel);
+    cy.get('#root-password').type(rootpass);
+
+    // expect the button to be disabled
+    cy.get('[data-qa-deploy-linode="true"]').should('be.disabled');
+
+    // check the agreement
+    getClick('[data-testid="eu-agreement-checkbox"]');
+
+    // expect the button to be enabled
+    cy.get('[data-qa-deploy-linode="true"]').should('not.be.disabled');
   });
 });

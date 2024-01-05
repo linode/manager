@@ -47,8 +47,17 @@ export const EUAgreementCheckbox = (props: Props) => {
       display="flex"
       flexDirection="row"
     >
-      <Checkbox checked={checked} onChange={onChange} sx={checkboxStyle} />
-      <Typography style={{ marginLeft: 4 }}>
+      <Checkbox
+        checked={checked}
+        id="gdpr-checkbox"
+        onChange={onChange}
+        sx={checkboxStyle}
+      />
+      <Typography
+        component={'label'}
+        htmlFor="gdpr-checkbox"
+        style={{ marginLeft: 4 }}
+      >
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">
           Linode Privacy Policy
