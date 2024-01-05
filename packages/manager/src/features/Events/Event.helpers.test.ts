@@ -1,147 +1,14 @@
 import { eventFactory } from 'src/factories/events';
 
 import {
-  filterUniqueEvents,
   formatEventWithAppendedText,
   formatEventWithUsername,
   maybeRemoveTrailingPeriod,
-  percentCompleteHasUpdated,
-  shouldUpdateEvents,
 } from './Event.helpers';
 
-import type { Event, EventAction } from '@linode/api-v4';
-
-const uniqueEvents: Event[] = [
-  {
-    action: 'linode_boot',
-    created: '2018-12-02T20:23:43',
-    duration: 0,
-    entity: {
-      id: 11440645,
-      label: 'linode11440645',
-      type: 'linode',
-      url: '/v4/linode/instances/11440645',
-    },
-    id: 1231234,
-    message: null,
-    percent_complete: 100,
-    rate: null,
-    read: false,
-    secondary_entity: null,
-    seen: true,
-    status: 'finished',
-    time_remaining: null,
-    username: 'test',
-  },
-  {
-    action: 'linode_boot',
-    created: '2018-12-02T20:23:43',
-    duration: 0,
-    entity: {
-      id: 11440645,
-      label: 'linode11440645',
-      type: 'linode',
-      url: '/v4/linode/instances/11440645',
-    },
-    id: 17950407,
-    message: null,
-    percent_complete: 100,
-    rate: null,
-    read: false,
-    secondary_entity: null,
-    seen: true,
-    status: 'finished',
-    time_remaining: null,
-    username: 'test',
-  },
-];
-
-const inProgressEvents = {
-  1234: 50,
-  1235: 20,
-};
-
-const nextInProgressEvents = {
-  1234: 80,
-};
-
-const mostRecentEventTime = '1556810353941';
-const nextTime = '1556810370715';
+import type { EventAction } from '@linode/api-v4';
 
 describe('Utility Functions', () => {
-  it('should filter out unique events', () => {
-    const mockEvent: Event = eventFactory.build();
-    expect(filterUniqueEvents([mockEvent, mockEvent])).toHaveLength(1);
-    expect(filterUniqueEvents(uniqueEvents)).toHaveLength(2);
-  });
-
-  it('should return true if percent complete has changed', () => {
-    expect(
-      percentCompleteHasUpdated(inProgressEvents, inProgressEvents)
-    ).toBeFalsy();
-    expect(
-      percentCompleteHasUpdated(inProgressEvents, nextInProgressEvents)
-    ).toBeTruthy();
-    expect(percentCompleteHasUpdated(inProgressEvents, {})).toBeTruthy();
-  });
-
-  it('should update events if most recent event time has changed', () => {
-    expect(
-      shouldUpdateEvents(
-        {
-          inProgressEvents,
-          mostRecentEventTime,
-        },
-        {
-          inProgressEvents,
-          mostRecentEventTime: nextTime,
-        }
-      )
-    ).toBeTruthy();
-  });
-
-  it('should update if event progress has updated', () => {
-    expect(
-      shouldUpdateEvents(
-        {
-          inProgressEvents,
-          mostRecentEventTime,
-        },
-        {
-          inProgressEvents: nextInProgressEvents,
-          mostRecentEventTime,
-        }
-      )
-    ).toBeTruthy();
-    expect(
-      shouldUpdateEvents(
-        {
-          inProgressEvents,
-          mostRecentEventTime,
-        },
-        {
-          inProgressEvents: {},
-          mostRecentEventTime,
-        }
-      )
-    ).toBeTruthy();
-  });
-
-  it('should not update if nothing has changed', () => {
-    expect(
-      shouldUpdateEvents(
-        {
-          inProgressEvents,
-          mostRecentEventTime,
-        },
-        {
-          inProgressEvents,
-          mostRecentEventTime,
-        }
-      )
-    ).toBeFalsy();
-  });
-
   describe('formatEventWithUsername utility', () => {
     it('it should return a message for an event without a username unchanged', () => {
       const message = 'a message';
