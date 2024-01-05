@@ -53,6 +53,7 @@ describe('Close Account Settings', () => {
     );
     const button = getByTestId('close-account-button');
     expect(notice).toBeInTheDocument();
-    expect(button).toBeDisabled();
+    expect(button).not.toHaveAttribute('disabled');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 });
