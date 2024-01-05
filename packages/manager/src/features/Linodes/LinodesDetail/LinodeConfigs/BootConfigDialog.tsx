@@ -5,7 +5,7 @@ import React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
 
 interface Props {

@@ -16,7 +16,7 @@ import { SplashScreen } from './components/SplashScreen';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
-import { useEventsPoller } from './queries/events';
+import { useEventsPoller } from './queries/events/events';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 // Ensure component's display name is 'App'

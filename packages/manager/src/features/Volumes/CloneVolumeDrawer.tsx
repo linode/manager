@@ -8,7 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
 import {

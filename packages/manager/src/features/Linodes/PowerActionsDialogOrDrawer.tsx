@@ -8,7 +8,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useBootLinodeMutation,

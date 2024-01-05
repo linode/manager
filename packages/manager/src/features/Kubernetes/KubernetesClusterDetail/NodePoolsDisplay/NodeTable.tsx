@@ -21,7 +21,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { transitionText } from 'src/features/Linodes/transitions';
-import { useInProgressEvents } from 'src/queries/events';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 

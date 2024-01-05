@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useDetachVolumeMutation } from 'src/queries/volumes';
 

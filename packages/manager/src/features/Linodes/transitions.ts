@@ -5,7 +5,7 @@ import {
   isInProgressEvent,
   isPrimaryEntity,
   isSecondaryEntity,
-} from 'src/store/events/event.helpers';
+} from 'src/queries/events/event.helpers';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 export const transitionStatus = [

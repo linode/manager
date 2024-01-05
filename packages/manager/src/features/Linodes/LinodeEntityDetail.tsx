@@ -67,7 +67,7 @@ import type {
   LinodeType,
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
-import { useInProgressEvents } from 'src/queries/events';
+import { useInProgressEvents } from 'src/queries/events/events';
 
 interface LinodeEntityDetailProps {
   id: number;

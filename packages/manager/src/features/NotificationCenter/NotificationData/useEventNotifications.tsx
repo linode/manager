@@ -2,8 +2,8 @@ import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { partition } from 'ramda';
 import * as React from 'react';
 
-import { useEventsInfiniteQuery } from 'src/queries/events';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { useEventsInfiniteQuery } from 'src/queries/events/events';
+import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';

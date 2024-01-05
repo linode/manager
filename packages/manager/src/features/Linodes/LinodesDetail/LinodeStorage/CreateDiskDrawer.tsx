@@ -24,7 +24,7 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 
 type FileSystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
 

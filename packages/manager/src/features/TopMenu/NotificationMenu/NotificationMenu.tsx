@@ -21,7 +21,7 @@ import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useMarkEventsAsSeen } from 'src/queries/events';
+import { useMarkEventsAsSeen } from 'src/queries/events/events';
 import { ThunkDispatch } from 'src/store/types';
 import { omittedProps } from 'src/utilities/omittedProps';
 

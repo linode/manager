@@ -35,7 +35,7 @@ import {
   StyledGrid,
   StyledNotice,
 } from './RebuildFromImage.styles';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 
 interface Props {
   disabled: boolean;

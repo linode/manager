@@ -10,7 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import { EventRow } from './EventRow';
 import {

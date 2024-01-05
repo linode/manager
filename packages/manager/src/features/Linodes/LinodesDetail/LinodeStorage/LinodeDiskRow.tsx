@@ -7,7 +7,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useInProgressEvents } from 'src/queries/events';
+import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 

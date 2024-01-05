@@ -15,7 +15,7 @@ import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 
 interface Props {
   onClose: () => void;

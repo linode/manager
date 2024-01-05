@@ -29,7 +29,7 @@ import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import {
   queryKey,
   removeImageFromCache,
@@ -39,7 +39,7 @@ import {
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
-} from 'src/store/events/event.helpers';
+} from 'src/queries/events/event.helpers';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ImageRow, { ImageWithEvent } from './ImageRow';

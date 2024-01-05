@@ -11,7 +11,7 @@ import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
   useAllLinodesQuery,

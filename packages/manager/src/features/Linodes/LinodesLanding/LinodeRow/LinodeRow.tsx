@@ -17,7 +17,7 @@ import {
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useInProgressEvents } from 'src/queries/events';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';

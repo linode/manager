@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useDeleteVolumeMutation } from 'src/queries/volumes';
 
 interface Props {

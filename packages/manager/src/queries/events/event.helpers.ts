@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Event, EventAction, Filter } from '@linode/api-v4';
 
 export const isLongPendingEvent = (event: Event): boolean => {
   const { action, status } = event;
@@ -51,3 +51,29 @@ export const eventActionsForLinodeAsSecondaryEntity: EventAction[] = [
 ];
 export const isEventRelevantToLinodeAsSecondaryEntity = (event: Event) =>
   eventActionsForLinodeAsSecondaryEntity.includes(event?.action);
+
+/**
+ * Because we're using one polling instance (without any API filter) and have many possible event infinite queires
+ * with various filters, we must make sure that we filter out API-filtered events when we update our filtered
+ * infinite queries.
+ *
+ * @returns This function return true if the API filter `filter` would match the given `event`. We are basiclly
+ * mimicing the API's filtering for the sake of updating our different events infinite queries.
+ */
+export const doesEventMatchAPIFilter = (event: Event, filter: Filter) => {
+  // @ts-expect-error todo fix filter type
+  const notEqualItems = filter.action?.['+neq'];
+  if (notEqualItems && notEqualItems.includes(event.action)) {
+    return false;
+  }
+
+  if (filter?.['entity.id'] && filter['entity.id'] !== event.entity?.id) {
+    return false;
+  }
+
+  if (filter?.['entity.type'] && filter['entity.type'] !== event.entity?.type) {
+    return false;
+  }
+
+  return true;
+};

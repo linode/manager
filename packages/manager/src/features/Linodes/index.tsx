@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { useInProgressEvents } from 'src/queries/events';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { linodesInTransition } from './transitions';

@@ -16,7 +16,7 @@ import {
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
 import { SizeField } from './VolumeDrawer/SizeField';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 
 interface Props {
   onClose: () => void;

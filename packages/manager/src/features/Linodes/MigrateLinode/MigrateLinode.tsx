@@ -18,7 +18,10 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useInProgressEvents, usePollingInterval } from 'src/queries/events';
+import {
+  useInProgressEvents,
+  usePollingInterval,
+} from 'src/queries/events/events';
 import { useImageQuery } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -28,7 +31,7 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { isEventRelevantToLinode } from 'src/store/events/event.helpers';
+import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';

@@ -43,7 +43,7 @@ import {
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
 import type { ButtonProps } from 'src/components/Button/Button';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 
 interface Props {
   linodeId?: number;

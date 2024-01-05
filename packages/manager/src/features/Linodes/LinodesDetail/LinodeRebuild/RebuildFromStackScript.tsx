@@ -23,7 +23,7 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';

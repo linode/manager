@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { usePollingInterval } from 'src/queries/events';
+import { usePollingInterval } from 'src/queries/events/events';
 
 export type WithPollingIntervalProps = ReturnType<typeof usePollingInterval>;
 
