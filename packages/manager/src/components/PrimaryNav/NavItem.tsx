@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useStyles } from 'tss-react/mui';
 
 import { Divider } from 'src/components/Divider';
 import { ListItem } from 'src/components/ListItem';
@@ -39,6 +39,8 @@ export const NavItem = React.memo((props: Props) => {
     onClick,
   } = props;
 
+  const { cx } = useStyles();
+
   if (!onClick && !href) {
     throw new Error('A Primary Link needs either an href or an onClick prop');
   }
@@ -51,17 +53,14 @@ export const NavItem = React.memo((props: Props) => {
     <React.Fragment>
       {href ? (
         <Link
-          className={classNames({
-            [linkClasses(href)]: true,
-            listItemCollapsed: isCollapsed,
-          })}
+          className={linkClasses(href)}
           data-qa-nav-item={QAKey}
           onClick={closeMenu}
           to={href}
         >
           {icon && isCollapsed && <div className="icon">{icon}</div>}
           <ListItemText
-            className={classNames({
+            className={cx({
               hiddenWhenCollapsed: isCollapsed,
               [listItemClasses]: true,
               primaryNavLink: true,

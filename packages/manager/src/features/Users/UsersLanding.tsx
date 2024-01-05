@@ -14,9 +14,10 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
+import { useAccountUser, useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
@@ -24,7 +25,9 @@ import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
 
 export const UsersLanding = () => {
+  const flags = useFlags();
   const { data: profile } = useProfile();
+  const { data: activeUser } = useAccountUser(profile?.username ?? '');
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
@@ -41,6 +44,9 @@ export const UsersLanding = () => {
   );
 
   const isRestrictedUser = profile?.restricted;
+  const showChildAccountAccessCol =
+    flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
+  const numCols = showChildAccountAccessCol ? 6 : 5;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -58,7 +64,7 @@ export const UsersLanding = () => {
     if (isLoading) {
       return (
         <TableRowLoading
-          columns={5}
+          columns={numCols}
           responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
           rows={1}
         />
@@ -66,11 +72,11 @@ export const UsersLanding = () => {
     }
 
     if (error) {
-      return <TableRowError colSpan={5} message={error[0].reason} />;
+      return <TableRowError colSpan={numCols} message={error[0].reason} />;
     }
 
     if (!users || users.results === 0) {
-      return <TableRowEmpty colSpan={5} />;
+      return <TableRowEmpty colSpan={numCols} />;
     }
 
     return users.data.map((user) => (
@@ -115,6 +121,11 @@ export const UsersLanding = () => {
               </TableSortCell>
             </Hidden>
             <TableCell>Account Access</TableCell>
+            {showChildAccountAccessCol && (
+              <Hidden lgDown>
+                <TableCell>Child Account Access</TableCell>
+              </Hidden>
+            )}
             <Hidden lgDown>
               <TableCell>Last Login</TableCell>
             </Hidden>
