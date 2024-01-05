@@ -24,8 +24,12 @@ afterEach(() => {
 });
 
 describe('database scale up', () => {
+  const database = databaseFactory.build();
+  const dedicatedTypes = databaseTypeFactory.buildList(7, {
+    class: 'dedicated',
+  });
+
   it('should render a loading state', async () => {
-    const database = databaseFactory.build();
     const { getByTestId } = renderWithTheme(
       <DatabaseScaleUp database={database} />,
       {
@@ -38,9 +42,6 @@ describe('database scale up', () => {
   });
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
-    // Mock the Database.
-    const database = databaseFactory.build();
-
     // Mock database types
     const standardTypes = [
       databaseTypeFactory.build({
@@ -51,9 +52,6 @@ describe('database scale up', () => {
       }),
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),
     ];
-    const dedicatedTypes = databaseTypeFactory.buildList(7, {
-      class: 'dedicated',
-    });
     server.use(
       rest.get('*/databases/types', (req, res, ctx) => {
         return res(
@@ -62,7 +60,7 @@ describe('database scale up', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseScaleUp database={database} />,
       {
         queryClient,
@@ -72,13 +70,17 @@ describe('database scale up', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    getAllByText('Current Configuration');
-    getAllByText('Choose a Plan');
-    getAllByText('Summary');
+    getByText('Current Configuration');
+    getByText('Choose a Plan');
+    getByText('Summary');
   });
 
   describe('On rendering of page', () => {
     const examplePlanType = 'g6-standard-60';
+    const dedicatedTypes = databaseTypeFactory.buildList(7, {
+      class: 'dedicated',
+    });
+    const database = databaseFactory.build();
     beforeEach(() => {
       // Mock database types
       const standardTypes = [
@@ -90,9 +92,6 @@ describe('database scale up', () => {
         }),
         ...databaseTypeFactory.buildList(7, { class: 'standard' }),
       ];
-      const dedicatedTypes = databaseTypeFactory.buildList(7, {
-        class: 'dedicated',
-      });
       server.use(
         rest.get('*/databases/types', (req, res, ctx) => {
           return res(
@@ -103,7 +102,6 @@ describe('database scale up', () => {
     });
 
     it('scale up button should be disabled when no input is provided in the form', async () => {
-      const database = databaseFactory.build();
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseScaleUp database={database} />,
         {
@@ -117,7 +115,6 @@ describe('database scale up', () => {
     });
 
     it('when a plan is selected, scale up button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      const database = databaseFactory.build();
       // Mock route history so the Plan Selection table displays prices without requiring a region in the DB scale up flow.
       const history = createMemoryHistory();
       history.push(`databases/${database.engine}/${database.id}/scale-up`);

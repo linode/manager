@@ -18,8 +18,8 @@ afterEach(() => {
 });
 
 describe('database current configuration section', () => {
+  const database = databaseFactory.build();
   it('should render a loading state', async () => {
-    const database = databaseFactory.build();
     const { getByTestId } = renderWithTheme(
       <DatabaseScaleUpCurrentConfiguration database={database} />,
       {
@@ -32,9 +32,6 @@ describe('database current configuration section', () => {
   });
 
   it('should display number of status, version, nodes, region, RAM, CPUs and total disk size', async () => {
-    // Mock the Database.
-    const database = databaseFactory.build();
-
     // Mock database types
     const standardTypes = [
       databaseTypeFactory.build({
@@ -56,7 +53,7 @@ describe('database current configuration section', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseScaleUpCurrentConfiguration database={database} />,
       {
         queryClient,
@@ -66,20 +63,20 @@ describe('database current configuration section', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    getAllByText('Status');
-    getAllByText('Version');
-    getAllByText('Nodes');
+    getByText('Status');
+    getByText('Version');
+    getByText('Nodes');
 
-    getAllByText('Region');
-    getAllByText('Newark, NJ');
+    getByText('Region');
+    getByText('Newark, NJ');
 
-    getAllByText('RAM');
-    getAllByText('1 GB');
+    getByText('RAM');
+    getByText('1 GB');
 
-    getAllByText('CPUs');
-    getAllByText('2');
+    getByText('CPUs');
+    getByText('2');
 
-    getAllByText('Total Disk Size');
-    getAllByText('15 GB');
+    getByText('Total Disk Size');
+    getByText('15 GB');
   });
 });

@@ -199,6 +199,15 @@ export const PlanSelection = (props: Props) => {
       {/* Displays SelectionCard for small screens */}
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
+          headingDecoration={
+            isSamePlan || type.id === selectedLinodePlanType ? (
+              <StyledChip
+                aria-label="This is your current plan"
+                data-qa-current-plan
+                label="Current Plan"
+              />
+            ) : undefined
+          }
           checked={type.id === String(selectedId)}
           disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
           heading={type.heading}

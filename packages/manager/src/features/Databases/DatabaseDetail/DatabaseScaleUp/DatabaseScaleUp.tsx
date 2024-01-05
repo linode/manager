@@ -1,18 +1,15 @@
+import { LinodeTypeClass } from '@linode/api-v4';
 import {
   Database,
   DatabaseClusterSizeObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -20,48 +17,25 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import { getPlanSelectionsByPlanType } from 'src/features/components/PlansPanel/utils';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
+import {
+  StyledGrid,
+  StyledPlanSummarySpan,
+  StyledPlansPanel,
+  StyledScaleUpButton,
+} from './DatabaseScaleUp.style';
 import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  btnCtn: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      alignItems: 'flex-end',
-      flexDirection: 'column',
-      marginTop: theme.spacing(),
-    },
-  },
-  scaleUpBtn: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-    whiteSpace: 'nowrap',
-  },
-  selectPlanPanel: {
-    margin: 0,
-    padding: 0,
-  },
-  selectedPlanTitle: {
-    fontFamily: theme.font.bold,
-  },
-}));
 
 interface Props {
   database: Database;
 }
 
 export const DatabaseScaleUp = ({ database }: Props) => {
-  const { classes } = useStyles();
   const history = useHistory();
 
   const [planSelected, setPlanSelected] = React.useState<string>();
@@ -89,7 +63,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   } = useDatabaseMutation(database.engine, database.id);
 
   const {
-    data: dbtypes,
+    data: dbTypes,
     error: typesError,
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
@@ -113,7 +87,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   const scaleUpDescription = (
     <>
       <Typography variant="h2">Scaling up a Database Cluster</Typography>
-      <Typography sx={{ lineHeight: '20px', marginTop: '4px' }}>
+      <Typography sx={{ marginTop: '4px' }}>
         Adapt the cluster to your needs by scaling it up. Clusters cannot be
         scaled down.
       </Typography>
@@ -125,21 +99,18 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       <Typography variant="h2">Summary</Typography>
       <Box
         sx={(theme) => ({
-          lineHeight: theme.spacing(2.5),
           marginTop: theme.spacing(2),
         })}
         data-testid="summary"
       >
         {summaryText ? (
           <>
-            <span className={classes.selectedPlanTitle}>
-              {summaryText.plan}
-            </span>{' '}
+            <StyledPlanSummarySpan>{summaryText.plan}</StyledPlanSummarySpan>{' '}
             {summaryText.numberOfNodes} Node
             {summaryText.numberOfNodes > 1 ? 's' : ''}: {summaryText.price}
           </>
         ) : (
-          'Please choose your plan.'
+          'Please select a plan.'
         )}
       </Box>
     </>
@@ -161,23 +132,30 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     />
   );
 
+  const costSummary = (
+    <Typography sx={{ marginBottom: '10px' }} variant="h3">
+      {`The cost of the scaled-up database is ${summaryText?.price}.`}
+    </Typography>
+  );
   const confirmationPopUpMessage =
     database.cluster_size === 1 ? (
       <Notice variant="warning">
+        {costSummary}
         <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node cluster.`}</Typography>
       </Notice>
     ) : (
       <Notice variant="info">
+        {costSummary}
         <Typography variant="h3">{`Operation can take up to 2 hours and will incur a failover.`}</Typography>
       </Notice>
     );
 
   React.useEffect(() => {
-    if (!planSelected || !dbtypes) {
+    if (!planSelected || !dbTypes) {
       return;
     }
 
-    const selectedPlanType = dbtypes.find((type) => type.id === planSelected);
+    const selectedPlanType = dbTypes.find((type) => type.id === planSelected);
     if (!selectedPlanType) {
       setPlanSelected(undefined);
       setSummaryText(undefined);
@@ -199,7 +177,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       price: `$${price.monthly}/month or $${price.hourly}/hour`,
     });
   }, [
-    dbtypes,
+    dbTypes,
     database.engine,
     database.type,
     planSelected,
@@ -209,10 +187,10 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   const selectedEngine = database.engine.split('/')[0] as Engine;
 
   const displayTypes: PlanSelectionType[] = React.useMemo(() => {
-    if (!dbtypes) {
+    if (!dbTypes) {
       return [];
     }
-    return dbtypes.map((type) => {
+    return dbTypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
       const nodePricing = type.engines[selectedEngine].find(
@@ -225,7 +203,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
-      ] as [string, string];
+      ];
       return {
         ...type,
         formattedLabel,
@@ -234,21 +212,21 @@ export const DatabaseScaleUp = ({ database }: Props) => {
         subHeadings,
       };
     });
-  }, [database.cluster_size, dbtypes, selectedEngine]);
+  }, [database.cluster_size, dbTypes, selectedEngine]);
 
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
   // create an array of different class of types.
-  const typeClasses: string[] = Object.keys(
+  const typeClasses: LinodeTypeClass[] = Object.keys(
     getPlanSelectionsByPlanType(displayTypes)
-  );
+  ).map((plan) => (plan === 'shared' ? 'standard' : (plan as LinodeTypeClass)));
   const currentPlanClass = currentPlan?.class ?? 'dedicated';
   // We don't have a "Nanodes" tab anymore, so use `shared`
   const selectedTypeClass =
-    currentPlanClass === 'nanode' ? 'shared' : currentPlanClass;
+    currentPlanClass === 'nanode' ? 'standard' : currentPlanClass;
   // User cannot switch to different plan type apart from current plan while scaling up a DB cluster. So disable rest of the tabs.
-  const tabsToBeDisabled = typeClasses.filter(
-    (typeClass) => typeClass !== selectedTypeClass
-  );
+  const tabsToBeDisabled = typeClasses
+    .filter((typeClass) => typeClass !== selectedTypeClass)
+    .map((plan) => (plan === 'standard' ? 'shared' : plan));
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -256,18 +234,19 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   if (typesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
-
   return (
     <>
-      <Paper style={{ marginTop: 16 }}>
+      <Paper sx={{ marginTop: '16px' }}>
         {scaleUpDescription}
-        <div style={{ marginTop: 16 }}>
+        <Box sx={{ marginTop: '16px' }}>
           <DatabaseScaleUpCurrentConfiguration database={database} />
-        </div>
+        </Box>
       </Paper>
-      <Paper style={{ marginTop: 16 }}>
-        <PlansPanel
-          className={classes.selectPlanPanel}
+      <Paper sx={{ marginTop: '16px' }}>
+        <StyledPlansPanel
+          tabDisabledMessage={
+            'You can upscale your cluster only within already selected plan.'
+          }
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           disabledTabs={tabsToBeDisabled}
@@ -278,20 +257,19 @@ export const DatabaseScaleUp = ({ database }: Props) => {
           types={displayTypes}
         />
       </Paper>
-      <Paper style={{ marginTop: 16 }}>{summaryPanel}</Paper>
-      <Grid className={classes.btnCtn}>
-        <Button
+      <Paper sx={{ marginTop: '16px' }}>{summaryPanel}</Paper>
+      <StyledGrid>
+        <StyledScaleUpButton
           onClick={() => {
             setIsScaleUpConfirmationDialogOpen(true);
           }}
           buttonType="primary"
-          className={classes.scaleUpBtn}
           disabled={shouldSubmitBeDisabled}
           type="submit"
         >
           Scale Up Database Cluster
-        </Button>
-      </Grid>
+        </StyledScaleUpButton>
+      </StyledGrid>
       <ConfirmationDialog
         actions={confirmationDialogActions}
         error={scaleUpError?.[0].reason}
@@ -299,10 +277,6 @@ export const DatabaseScaleUp = ({ database }: Props) => {
         open={isScaleUpConfirmationDialogOpen}
         title={`Scale up ${database.label}?`}
       >
-        <Typography
-          sx={{ marginBottom: '10px' }}
-          variant="h3"
-        >{`The cost of the scaled-up database is ${summaryText?.price}`}</Typography>
         {confirmationPopUpMessage}
       </ConfirmationDialog>
     </>
