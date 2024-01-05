@@ -42,7 +42,12 @@ type Policy =
   | 'random'
   | 'maglev';
 
-export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
+export type MatchField =
+  | 'always_match'
+  | 'path_prefix'
+  | 'query'
+  | 'header'
+  | 'method';
 
 export interface RoutePayload {
   label: string;
