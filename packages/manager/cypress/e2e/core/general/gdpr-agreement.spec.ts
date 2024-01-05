@@ -93,7 +93,7 @@ describe('GDPR agreement', () => {
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
   });
 
-  it.only('needs the agreement checked to validate the form', () => {
+  it('needs the agreement checked to validate the form', () => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
       privacy_policy: false,
