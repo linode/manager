@@ -30,6 +30,9 @@ export const StyledGraphControlsDiv = styled('div', {
     width: 1,
   },
   position: 'relative',
+  [theme.breakpoints.up('sm')]: {
+    width: '60%',
+  },
 }));
 
 export const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })({
