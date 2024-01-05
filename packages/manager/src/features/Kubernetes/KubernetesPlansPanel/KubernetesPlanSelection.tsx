@@ -5,10 +5,13 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
+import { Chip } from 'src/components/Chip';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { Tooltip } from 'src/components/Tooltip';
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -23,10 +26,11 @@ export interface KubernetesPlanSelectionProps {
   disabled?: boolean;
   getTypeCount: (planId: string) => number;
   idx: number;
+  isPlanSoldOut: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   selectedId?: string;
-  selectedRegionID?: Region['id'];
+  selectedRegionId?: Region['id'];
   type: ExtendedType;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -38,10 +42,11 @@ export const KubernetesPlanSelection = (
     disabled,
     getTypeCount,
     idx,
+    isPlanSoldOut,
     onAdd,
     onSelect,
     selectedId,
-    selectedRegionID,
+    selectedRegionId,
     type,
     updatePlanCount,
   } = props;
@@ -50,7 +55,7 @@ export const KubernetesPlanSelection = (
 
   const price: PriceObject | undefined = getLinodeRegionPrice(
     type,
-    selectedRegionID
+    selectedRegionId
   );
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
@@ -65,14 +70,14 @@ export const KubernetesPlanSelection = (
     <Grid xs={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
-          disabled={disabled}
+          disabled={disabled || isPlanSoldOut}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           value={count}
         />
         {onAdd && (
           <Button
             buttonType="primary"
-            disabled={count < 1 || disabled}
+            disabled={count < 1 || disabled || isPlanSoldOut}
             onClick={() => onAdd(type.id, count)}
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
@@ -88,10 +93,23 @@ export const KubernetesPlanSelection = (
       <Hidden mdDown>
         <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
-          disabled={disabled}
+          disabled={disabled || isPlanSoldOut}
           key={type.id}
         >
-          <TableCell data-qa-plan-name>{type.heading}</TableCell>
+          <TableCell data-qa-plan-name>
+            {type.heading} &nbsp;
+            {isPlanSoldOut && (
+              <Tooltip
+                data-testid="sold-out-chip"
+                placement="right-start"
+                title={PLAN_IS_SOLD_OUT_COPY}
+              >
+                <span>
+                  <Chip label="Sold Out" />
+                </span>
+              </Tooltip>
+            )}
+          </TableCell>
           <TableCell
             data-qa-monthly
             errorCell={!price?.monthly}
@@ -124,7 +142,8 @@ export const KubernetesPlanSelection = (
                   // or there was a pricing data error.
                   (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
                   disabled ||
-                  !price?.monthly
+                  !price?.monthly ||
+                  isPlanSoldOut
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(type.id, newCount)
@@ -134,8 +153,10 @@ export const KubernetesPlanSelection = (
               />
               {onAdd && (
                 <Button
+                  disabled={
+                    count < 1 || disabled || !price?.monthly || isPlanSoldOut
+                  }
                   buttonType="primary"
-                  disabled={count < 1 || disabled || !price?.monthly}
                   onClick={() => onAdd(type.id, count)}
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
@@ -149,13 +170,17 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
+          subheadings={[
+            ...subHeadings,
+            isPlanSoldOut ? <Chip label="Sold Out" /> : '',
+          ]}
           checked={type.id === String(selectedId)}
-          disabled={disabled}
+          disabled={disabled || isPlanSoldOut}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
-          subheadings={subHeadings}
+          tooltip={isPlanSoldOut ? PLAN_IS_SOLD_OUT_COPY : undefined}
         />
       </Hidden>
     </React.Fragment>

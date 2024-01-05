@@ -1803,12 +1803,40 @@ export const handlers = [
   }),
   rest.get('*regions/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(makeResourcePage(regionAvailabilityFactory.buildList(10)))
+      ctx.json(
+        makeResourcePage([
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-6',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-7',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-5',
+            region: 'us-central',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-6',
+            region: 'us-central',
+          }),
+        ])
+      )
     );
   }),
   rest.get('*regions/:regionId/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(regionAvailabilityFactory.buildList(5, { region: 'us-east' }))
+      ctx.json([
+        regionAvailabilityFactory.build({
+          plan: 'g6-standard-6',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          plan: 'g6-standard-7',
+          region: 'us-east',
+        }),
+      ])
     );
   }),
   ...entityTransfers,

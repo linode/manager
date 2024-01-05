@@ -1,12 +1,14 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
-
 import { arrayToList } from 'src/utilities/arrayToList';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { PlanSelectionType } from './types';
 
-import type { LinodeTypeClass } from '@linode/api-v4';
+import type {
+  Capabilities,
+  LinodeTypeClass,
+  Region,
+  RegionAvailability,
+} from '@linode/api-v4';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
@@ -107,6 +109,41 @@ export const getRegionsWithCapability = (
     )
     .map((thisRegion: Region) => thisRegion.label);
   return arrayToList(withCapability ?? []);
+};
+
+interface PlanSoldOutStatusOptions {
+  plan: PlanSelectionType;
+  regionAvailabilities: RegionAvailability[] | undefined;
+  selectedRegionId: Region['id'] | undefined;
+}
+
+/**
+ * Utility to determine if a plan is sold out based on a region's availability.
+ */
+export const getIsPlanSoldOut = ({
+  plan,
+  regionAvailabilities,
+  selectedRegionId,
+}: PlanSoldOutStatusOptions): boolean => {
+  if (!regionAvailabilities || !selectedRegionId) {
+    return false;
+  }
+
+  const availability = regionAvailabilities?.find((regionAvailability) => {
+    const regionMatch = regionAvailability?.region === selectedRegionId;
+
+    if (!regionMatch) {
+      return false;
+    }
+
+    if (regionAvailability.plan === plan.id) {
+      return regionAvailability.available === false;
+    }
+
+    return false;
+  });
+
+  return !!availability;
 };
 
 export const planTabInfoContent = {
