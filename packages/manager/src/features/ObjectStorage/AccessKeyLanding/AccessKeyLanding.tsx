@@ -11,11 +11,14 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useErrors } from 'src/hooks/useErrors';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
@@ -25,6 +28,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable';
+import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { MODE, OpenAccessDrawer } from './types';
@@ -81,6 +85,8 @@ export const AccessKeyLanding = (props: Props) => {
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
   const viewPermissionsDrawer = useOpenClose();
+  const flags = useFlags();
+  const { account } = useAccountManagement();
 
   const handleCreateKey = (
     values: ObjectStorageKeyRequest,
@@ -245,6 +251,12 @@ export const AccessKeyLanding = (props: Props) => {
     revokeKeysDialog.close();
   };
 
+  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   return (
     <div>
       <DocumentTitleSegment segment="Access Keys" />
@@ -265,14 +277,26 @@ export const AccessKeyLanding = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <AccessKeyDrawer
-        isRestrictedUser={props.isRestrictedUser}
-        mode={mode}
-        objectStorageKey={keyToEdit ? keyToEdit : undefined}
-        onClose={closeAccessDrawer}
-        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-        open={accessDrawerOpen}
-      />
+      {isObjMultiClusterFlagEnabled ? (
+        <OMC_AccessKeyDrawer
+          isRestrictedUser={props.isRestrictedUser}
+          mode={mode}
+          objectStorageKey={keyToEdit ? keyToEdit : undefined}
+          onClose={closeAccessDrawer}
+          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+          open={accessDrawerOpen}
+        />
+      ) : (
+        <AccessKeyDrawer
+          isRestrictedUser={props.isRestrictedUser}
+          mode={mode}
+          objectStorageKey={keyToEdit ? keyToEdit : undefined}
+          onClose={closeAccessDrawer}
+          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+          open={accessDrawerOpen}
+        />
+      )}
+
       <ViewPermissionsDrawer
         objectStorageKey={keyToEdit}
         onClose={viewPermissionsDrawer.close}
