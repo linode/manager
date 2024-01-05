@@ -24,6 +24,7 @@ import { authentication } from 'src/utilities/storage';
 import { SwitchAccountDrawer } from '../SwitchAccountDrawer';
 
 import type { UserType } from '@linode/api-v4';
+import { SwitchAccountButton } from './SwitchAccountButton';
 
 interface MenuLink {
   display: string;
@@ -258,20 +259,11 @@ export const UserMenu = React.memo(() => {
           </Typography>
           {
             isAccountSwitchable && (
-              <Button
-                onClick={() => {
-                  // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
-                  if (user.user_type === 'proxy') {
-                    // TODO: Parent/Child - M3-7430
-                  }
-
-                  handleClose();
-                  setIsDrawerOpen(true);
-                }}
-                buttonType="outlined"
-              >
-                Switch Account
-              </Button>
+              <SwitchAccountButton
+                handleClose={handleClose}
+                setIsDrawerOpen={setIsDrawerOpen}
+                userType={user.user_type}
+              />
             )
             // TODO: Parent/Child - M3-7430
             /* {(isProxyTokenError || isParentTokenError) && (
