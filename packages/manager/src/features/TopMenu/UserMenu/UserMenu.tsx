@@ -15,14 +15,13 @@ import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
+import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
+import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { authentication } from 'src/utilities/storage';
-
-import { SwitchAccountDrawer } from '../SwitchAccountDrawer';
-import { SwitchAccountButton } from './SwitchAccountButton';
 
 import type { UserType } from '@linode/api-v4';
 
@@ -242,6 +241,7 @@ export const UserMenu = React.memo(() => {
           },
         }}
         anchorEl={anchorEl}
+        data-testid={id}
         id={id}
         marginThreshold={0}
         onClose={handleClose}
@@ -260,9 +260,9 @@ export const UserMenu = React.memo(() => {
           {
             isAccountSwitchable && (
               <SwitchAccountButton
-                handleClose={handleClose}
+                buttonType="outlined"
+                onClick={handleClose}
                 setIsDrawerOpen={setIsDrawerOpen}
-                userType={user.user_type}
               />
             )
             // TODO: Parent/Child - M3-7430

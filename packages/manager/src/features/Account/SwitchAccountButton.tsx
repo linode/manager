@@ -1,26 +1,24 @@
-import { UserType } from '@linode/api-v4/lib/account/types';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import SwapIcon from 'src/assets/icons/swapSmall.svg';
-import { Button } from 'src/components/Button/Button';
+import { Button, ButtonProps } from 'src/components/Button/Button';
 
-interface Props {
-  handleClose: () => void;
+interface Props extends ButtonProps {
+  onClick: () => void;
   setIsDrawerOpen: (open: boolean) => void;
-  userType: UserType | null;
 }
 
 export const SwitchAccountButton = (props: Props) => {
-  const { handleClose, setIsDrawerOpen } = props;
+  const { onClick, setIsDrawerOpen, ...rest } = props;
 
   return (
     <StyledButton
       onClick={() => {
-        handleClose();
+        onClick();
         setIsDrawerOpen(true);
       }}
-      buttonType="outlined"
+      {...rest}
     >
       <StyledSwapIcon />
       Switch Account
