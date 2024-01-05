@@ -4,22 +4,11 @@ import * as React from 'react';
 import SwapIcon from 'src/assets/icons/swapSmall.svg';
 import { Button, ButtonProps } from 'src/components/Button/Button';
 
-interface Props extends ButtonProps {
-  onClick: () => void;
-  setIsDrawerOpen: (open: boolean) => void;
-}
-
-export const SwitchAccountButton = (props: Props) => {
-  const { onClick, setIsDrawerOpen, ...rest } = props;
+export const SwitchAccountButton = (props: ButtonProps) => {
+  const { ...rest } = props;
 
   return (
-    <StyledButton
-      onClick={() => {
-        onClick();
-        setIsDrawerOpen(true);
-      }}
-      {...rest}
-    >
+    <StyledButton {...rest}>
       <StyledSwapIcon />
       Switch Account
     </StyledButton>

@@ -246,6 +246,8 @@ export const UserMenu = React.memo(() => {
         marginThreshold={0}
         onClose={handleClose}
         open={open}
+        // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
+        sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
           {isAccountSwitchable && (
@@ -261,8 +263,7 @@ export const UserMenu = React.memo(() => {
             isAccountSwitchable && (
               <SwitchAccountButton
                 buttonType="outlined"
-                onClick={handleClose}
-                setIsDrawerOpen={setIsDrawerOpen}
+                onClick={() => setIsDrawerOpen(true)}
               />
             )
             // TODO: Parent/Child - M3-7430
