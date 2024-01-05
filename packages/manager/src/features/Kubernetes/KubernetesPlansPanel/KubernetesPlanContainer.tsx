@@ -9,6 +9,9 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { getIsPlanSoldOut } from 'src/features/components/PlansPanel/utils';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsAvailabilityQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -31,7 +34,7 @@ export interface KubernetesPlanContainerProps {
   onSelect: (key: string) => void;
   plans: ExtendedType[];
   selectedId?: string;
-  selectedRegionID?: string;
+  selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
@@ -45,35 +48,50 @@ export const KubernetesPlanContainer = (
     onSelect,
     plans,
     selectedId,
-    selectedRegionID,
+    selectedRegionId,
     updatePlanCount,
   } = props;
+  const flags = useFlags();
 
-  const shouldDisplayNoRegionSelectedMessage = !selectedRegionID;
+  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
+    selectedRegionId || '',
+    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
+  );
+  const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
 
   const renderPlanSelection = React.useCallback(() => {
-    return plans.map((plan, id) => (
-      <KubernetesPlanSelection
-        disabled={disabled}
-        getTypeCount={getTypeCount}
-        idx={id}
-        key={id}
-        onAdd={onAdd}
-        onSelect={onSelect}
-        selectedId={selectedId}
-        selectedRegionID={selectedRegionID}
-        type={plan}
-        updatePlanCount={updatePlanCount}
-      />
-    ));
+    return plans.map((plan, id) => {
+      const isPlanSoldOut = getIsPlanSoldOut({
+        plan,
+        regionAvailabilities,
+        selectedRegionId,
+      });
+
+      return (
+        <KubernetesPlanSelection
+          disabled={disabled}
+          getTypeCount={getTypeCount}
+          idx={id}
+          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add sold out chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
+          key={id}
+          onAdd={onAdd}
+          onSelect={onSelect}
+          selectedId={selectedId}
+          selectedRegionId={selectedRegionId}
+          type={plan}
+          updatePlanCount={updatePlanCount}
+        />
+      );
+    });
   }, [
     disabled,
     getTypeCount,
     onAdd,
     onSelect,
     plans,
+    regionAvailabilities,
     selectedId,
-    selectedRegionID,
+    selectedRegionId,
     updatePlanCount,
   ]);
 

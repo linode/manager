@@ -1,11 +1,14 @@
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { typeFactory } from 'src/factories/types';
+import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 
 import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
+  getIsPlanSoldOut,
   planTypeOrder,
 } from './utils';
+
+import type { PlanSelectionType } from './types';
 
 const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
@@ -132,11 +135,87 @@ describe('determineInitialPlanCategoryTab', () => {
 
     expect(initialTab).toBe(2);
   });
+
   it('should return the correct initial tab when gpu plan is selected', () => {
     const selectedId = 'g1-gpu-rtx6000-2';
 
     const initialTab = determineInitialPlanCategoryTab(types, selectedId);
 
     expect(initialTab).toBe(3);
+  });
+});
+
+describe('getIsPlanSoldOut', () => {
+  const mockPlan: PlanSelectionType = planSelectionTypeFactory.build();
+  const mockSelectedRegionId = 'us-east-1';
+
+  it('should return false if regionAvailabilities is falsy', () => {
+    const result = getIsPlanSoldOut({
+      plan: mockPlan,
+      regionAvailabilities: undefined,
+      selectedRegionId: mockSelectedRegionId,
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false if no matching regionAvailability is found (based on planId)', () => {
+    const result = getIsPlanSoldOut({
+      plan: mockPlan,
+      regionAvailabilities: [
+        { available: true, plan: 'fakeplan', region: 'us-east-1' },
+      ],
+      selectedRegionId: mockSelectedRegionId,
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false if selectedRegionId is falsy', () => {
+    const result = getIsPlanSoldOut({
+      plan: mockPlan,
+      regionAvailabilities: [
+        { available: false, plan: mockPlan.id, region: 'us-east-1' },
+      ],
+      selectedRegionId: undefined,
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false if no matching regionAvailability is found', () => {
+    const result = getIsPlanSoldOut({
+      plan: mockPlan,
+      regionAvailabilities: [
+        { available: false, plan: mockPlan.id, region: 'us-west-2' },
+      ],
+      selectedRegionId: mockSelectedRegionId,
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true if matching regionAvailability is found with available set to false', () => {
+    const result = getIsPlanSoldOut({
+      plan: mockPlan,
+      regionAvailabilities: [
+        { available: false, plan: mockPlan.id, region: 'us-east-1' },
+      ],
+      selectedRegionId: mockSelectedRegionId,
+    });
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false if matching regionAvailability is found with available set to true', () => {
+    const result = getIsPlanSoldOut({
+      plan: mockPlan,
+      regionAvailabilities: [
+        { available: true, plan: mockPlan.id, region: 'us-east-1' },
+      ],
+      selectedRegionId: mockSelectedRegionId,
+    });
+
+    expect(result).toBe(false);
   });
 });

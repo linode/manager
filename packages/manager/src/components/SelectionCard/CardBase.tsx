@@ -16,7 +16,7 @@ export interface CardBaseProps {
   headingDecoration?: JSX.Element;
   renderIcon?: () => JSX.Element;
   renderVariant?: () => JSX.Element | null;
-  subheadings: (string | undefined)[];
+  subheadings: (JSX.Element | string | undefined)[];
   sx?: SxProps;
   sxHeading?: SxProps;
   sxIcon?: SxProps;

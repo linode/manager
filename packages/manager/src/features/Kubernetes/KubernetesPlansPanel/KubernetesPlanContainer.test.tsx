@@ -15,7 +15,7 @@ const props: KubernetesPlanContainerProps = {
   getTypeCount: vi.fn(),
   onSelect: vi.fn(),
   plans,
-  selectedRegionID: undefined,
+  selectedRegionId: undefined,
   updatePlanCount: vi.fn(),
 };
 

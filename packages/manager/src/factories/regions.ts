@@ -6,8 +6,6 @@ import {
 } from '@linode/api-v4/lib/regions/types';
 import * as Factory from 'factory.ts';
 
-import { pickRandom } from 'src/utilities/random';
-
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
   ipv4: '1.1.1.1',
   ipv6: '2600:3c03::',
@@ -45,11 +43,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
 export const regionAvailabilityFactory = Factory.Sync.makeFactory<RegionAvailability>(
   {
     available: false,
-    // TODO SOLD OUT PLANS - Remove this comment once the API is changed: Note that the mock data below doesn't match what the API
-    // currently returns for plans; however, the API will be changing soon to match the below labels (ex: g7-premium-#, g1-gpu-rtx-6000-#)
-    plan: Factory.each((id) =>
-      pickRandom([`g7-premium-${id}`, `g1-gpu-rtx6000-${id}`])
-    ),
-    region: Factory.each((id) => `us-${id}`),
+    plan: 'g6-standard-7',
+    region: 'us-east',
   }
 );
