@@ -157,6 +157,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return showTooltip ? (
       <Tooltip
+        aria-label={rest['aria-label']}
         data-testid="Tooltip"
         id="button-tooltip"
         onClick={handleTooltipAnalytics}
