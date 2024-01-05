@@ -290,7 +290,7 @@ const Graph = (props: GraphProps) => {
           }}
           ariaLabel={ariaLabel}
           data={timeData}
-          height={442}
+          height={420}
           showLegend
           timezone={timezone}
           unit={' Kb/s'}
