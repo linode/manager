@@ -9,6 +9,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
 import { Box } from '../Box';
@@ -32,6 +33,7 @@ interface TabbedPanelProps {
   noPadding?: boolean;
   rootClass?: string;
   sx?: SxProps;
+  tabDisabledMessage?: string;
   tabs: Tab[];
   value?: number;
 }
@@ -95,6 +97,9 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
                 key={`tabs-${tab.title}-${idx}`}
               >
                 {tab.title}
+                {tab.disabled && props.tabDisabledMessage && (
+                  <TooltipIcon status="help" text={props.tabDisabledMessage} />
+                )}
               </StyledTab>
             ))}
           </StyledTabList>

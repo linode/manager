@@ -32,6 +32,7 @@ interface Props {
   selectedId?: string;
   selectedRegionID?: string;
   showTransfer?: boolean;
+  tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
 }
@@ -119,6 +120,7 @@ export const PlansPanel = (props: Props) => {
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
       sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
   );

@@ -108,8 +108,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) =>
       `Database ${e.entity!.label}'s credentials have been reset.`,
   },
+  database_degraded: {
+    notification: (e) => `Database ${e.entity!.label} has been degraded.`,
+  },
   database_delete: {
     notification: (e) => `Database ${e.entity!.label} has been deleted.`,
+  },
+  database_failed: {
+    notification: (e) => `Database ${e.entity!.label} failed to update.`,
   },
   database_low_disk_space: {
     finished: (e) =>
