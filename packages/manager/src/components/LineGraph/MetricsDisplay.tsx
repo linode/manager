@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -9,9 +7,14 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { Metrics } from 'src/utilities/statMetrics';
 
-import { useMetricsDisplayStyles } from './MetricDisplay.styles';
+import {
+  StyledButton,
+  StyledTable,
+  StyledTableCell,
+} from './MetricDisplay.styles';
 
 interface Props {
+  hiddenRows?: string[];
   rows: MetricsDisplayRow[];
 }
 
@@ -30,21 +33,19 @@ export interface MetricsDisplayRow {
   legendTitle: string;
 }
 
-export const MetricsDisplay = ({ rows }: Props) => {
+export const MetricsDisplay = ({ hiddenRows, rows }: Props) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
-  const { classes } = useMetricsDisplayStyles();
+  const sxProps = {
+    borderTop: 'none !important',
+  };
 
   return (
-    <Table aria-label="Stats and metrics" className={classes.root}>
-      <TableHead sx={{ borderTop: 'none !important' }}>
-        <TableRow sx={{ borderTop: 'none !important' }}>
-          <TableCell sx={{ borderTop: 'none !important' }}>{''}</TableCell>
+    <StyledTable aria-label="Stats and metrics">
+      <TableHead sx={sxProps}>
+        <TableRow sx={sxProps}>
+          <TableCell sx={sxProps}>{''}</TableCell>
           {rowHeaders.map((section, idx) => (
-            <TableCell
-              data-qa-header-cell
-              key={idx}
-              sx={{ borderTop: 'none !important' }}
-            >
+            <TableCell data-qa-header-cell key={idx} sx={sxProps}>
               {section}
             </TableCell>
           ))}
@@ -59,17 +60,20 @@ export const MetricsDisplay = ({ rows }: Props) => {
             legendColor,
             legendTitle,
           } = row;
+          const hidden = hiddenRows?.includes(legendTitle);
+
           return (
             <TableRow data-qa-metric-row key={legendTitle}>
-              <TableCell className={classes.legend}>
-                <Button
-                  className={classes[legendColor]}
+              <StyledTableCell>
+                <StyledButton
                   data-testid="legend-title"
+                  hidden={hidden}
+                  legendColor={legendColor}
                   onClick={handleLegendClick}
                 >
                   <Typography component="span">{legendTitle}</Typography>
-                </Button>
-              </TableCell>
+                </StyledButton>
+              </StyledTableCell>
               {metricsBySection(data).map((section, idx) => {
                 return (
                   <TableCell
@@ -85,7 +89,7 @@ export const MetricsDisplay = ({ rows }: Props) => {
           );
         })}
       </TableBody>
-    </Table>
+    </StyledTable>
   );
 };
 

@@ -1382,6 +1382,7 @@ export const lightTheme: ThemeOptions = {
       user: `rgba(81, 166, 245, ${graphTransparency})`,
       wait: `rgba(145, 199, 237, ${graphTransparency})`,
     },
+    darkGreen: `rgba(16, 162, 29, ${graphTransparency})`,
     diskIO: {
       read: `rgba(255, 196, 105, ${graphTransparency})`,
       swap: `rgba(238, 44, 44, ${graphTransparency})`,
@@ -1389,16 +1390,13 @@ export const lightTheme: ThemeOptions = {
     },
     green: `rgba(91, 215, 101, ${graphTransparency})`,
     inodes: `rgba(224, 138, 146, ${graphTransparency})`,
+    lightGreen: `rgba(49, 206, 62, ${graphTransparency})`,
     load: `rgba(255, 220, 77, ${graphTransparency})`,
     memory: {
       buffers: `rgba(142, 56, 142, ${graphTransparency})`,
       cache: `rgba(205, 150, 205, ${graphTransparency})`,
       swap: `rgba(238, 44, 44, ${graphTransparency})`,
       used: `rgba(236, 200, 236, ${graphTransparency})`,
-    },
-    network: {
-      inbound: `rgba(16, 162, 29, ${graphTransparency})`,
-      outbound: `rgba(49, 206, 62, ${graphTransparency})`,
     },
     orange: `rgba(255, 179, 77, ${graphTransparency})`,
     processCount: `rgba(113, 86, 245, ${graphTransparency})`,

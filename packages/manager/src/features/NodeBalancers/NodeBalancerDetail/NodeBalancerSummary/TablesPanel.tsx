@@ -215,11 +215,11 @@ export const TablesPanel = () => {
           <AreaChart
             areas={[
               {
-                color: theme.graphs.network.inbound,
+                color: theme.graphs.darkGreen,
                 dataKey: 'Traffic In',
               },
               {
-                color: theme.graphs.network.outbound,
+                color: theme.graphs.lightGreen,
                 dataKey: 'Traffic Out',
               },
             ]}
@@ -258,13 +258,13 @@ export const TablesPanel = () => {
           <LineGraph
             data={[
               {
-                backgroundColor: theme.graphs.network.inbound,
+                backgroundColor: theme.graphs.darkGreen,
                 borderColor: 'transparent',
                 data: trafficIn,
                 label: 'Traffic In',
               },
               {
-                backgroundColor: theme.graphs.network.outbound,
+                backgroundColor: theme.graphs.lightGreen,
                 borderColor: 'transparent',
                 data: trafficOut,
                 label: 'Traffic Out',

@@ -114,7 +114,10 @@ export const AreaChart = (props: AreaChartProps) => {
 
       return (
         <StyledBottomLegend>
-          <MetricsDisplay rows={legendRowsWithClickHandler} />
+          <MetricsDisplay
+            rows={legendRowsWithClickHandler}
+            hiddenRows={activeSeries}
+          />
         </StyledBottomLegend>
       );
     }

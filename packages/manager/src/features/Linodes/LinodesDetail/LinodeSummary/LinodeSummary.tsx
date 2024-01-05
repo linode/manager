@@ -125,7 +125,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
       }, []);
 
       return (
-        <Box marginLeft={-5} marginTop={2}>
+        <Box marginLeft={-4} marginTop={2}>
           <AreaChart
             areas={[
               {
@@ -231,7 +231,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
               tickFormat: 'hh a',
               tickGap: 60,
             }}
-            ariaLabel="Network Traffic Graph"
+            ariaLabel="Disk I/O Graph"
             data={timeData}
             height={342}
             showLegend

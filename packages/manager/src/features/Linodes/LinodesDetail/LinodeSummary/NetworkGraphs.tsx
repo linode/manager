@@ -242,11 +242,11 @@ const Graph = (props: GraphProps) => {
         <AreaChart
           areas={[
             {
-              color: theme.graphs.network.inbound,
+              color: theme.graphs.darkGreen,
               dataKey: 'Public In',
             },
             {
-              color: theme.graphs.network.outbound,
+              color: theme.graphs.lightGreen,
               dataKey: 'Public Out',
             },
             {
@@ -268,7 +268,7 @@ const Graph = (props: GraphProps) => {
             {
               data: metrics.publicOut,
               format,
-              legendColor: 'green',
+              legendColor: 'lightGreen',
               legendTitle: 'Public Out',
             },
             {
@@ -303,13 +303,13 @@ const Graph = (props: GraphProps) => {
     <LineGraph
       data={[
         {
-          backgroundColor: theme.graphs.network.inbound,
+          backgroundColor: theme.graphs.darkGreen,
           borderColor: 'transparent',
           data: convertedPublicIn,
           label: 'Public In',
         },
         {
-          backgroundColor: theme.graphs.network.outbound,
+          backgroundColor: theme.graphs.lightGreen,
           borderColor: 'transparent',
           data: convertedPublicOut,
           label: 'Public Out',
