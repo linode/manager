@@ -230,14 +230,18 @@ describe('getExistingEventDataForPollingFilterGenerator', () => {
     expect(inProgressEvents[0]).toBe(inProgressEvent.id);
   });
 
-  it('returns the ID of events with the same timestamp', () => {
+  it('returns the IDs of events with the same timestamp', () => {
     const timestamp = '2024-01-05T19:28:19';
 
     const eventWithSameTimestamp = eventFactory.build({
       created: timestamp,
+      percent_complete: null,
+      status: 'finished',
     });
     const eventWithDifferentTimestamp = eventFactory.build({
       created: '2024-01-01T18:28:19',
+      percent_complete: null,
+      status: 'finished',
     });
 
     const {
@@ -251,5 +255,27 @@ describe('getExistingEventDataForPollingFilterGenerator', () => {
     expect(eventsThatAlreadyHappenedAtTheFilterTime[0]).toBe(
       eventWithSameTimestamp.id
     );
+  });
+
+  it('will return an in-progress event in `inProgressEvents` and not in `eventsThatAlreadyHappenedAtTheFilterTime` even if it happened same second', () => {
+    // we want this behavior because we want to keep polling in-progress events always
+    const timestamp = '2024-01-05T19:28:19';
+
+    const eventWithSameTimestamp = eventFactory.build({
+      created: timestamp,
+      percent_complete: 5,
+      status: 'started',
+    });
+
+    const {
+      eventsThatAlreadyHappenedAtTheFilterTime,
+      inProgressEvents,
+    } = getExistingEventDataForPollingFilterGenerator(
+      [eventWithSameTimestamp],
+      timestamp
+    );
+
+    expect(eventsThatAlreadyHappenedAtTheFilterTime).toHaveLength(0);
+    expect(inProgressEvents).toHaveLength(1);
   });
 });

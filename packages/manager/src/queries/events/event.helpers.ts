@@ -165,12 +165,12 @@ export const getExistingEventDataForPollingFilterGenerator = (
     inProgressEvents: number[];
   }>(
     (acc, event) => {
-      if (event.created === latestEventTime) {
-        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event.id);
-        return acc;
-      }
       if (isInProgressEvent(event)) {
         acc.inProgressEvents.push(event.id);
+        return acc;
+      }
+      if (event.created === latestEventTime) {
+        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event.id);
         return acc;
       }
       return acc;
