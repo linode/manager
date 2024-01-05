@@ -6,6 +6,15 @@ import React from 'react';
 export const MatchTypeInfo = () => {
   const types = [
     {
+      description:
+        'Match is based on both the name of a HTTP header and its value.',
+      title: 'HTTP Header',
+    },
+    {
+      description: 'Match is on the request method.',
+      title: 'HTTP Method',
+    },
+    {
       description: 'Match is on a network path.',
       title: 'Path',
     },
@@ -13,15 +22,6 @@ export const MatchTypeInfo = () => {
       description:
         'Match is based on both the name of the query and the single URL query value to match on.',
       title: 'Query String',
-    },
-    {
-      description:
-        'Match is based on both the name of a HTTP header and its value.',
-      title: 'HTTP Header',
-    },
-    {
-      description: 'Match is on the request method.',
-      title: 'Method',
     },
   ];
 

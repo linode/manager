@@ -14,11 +14,15 @@ export const getNormalizedServiceTargetPayload = (
   })),
   healthcheck: {
     ...serviceTarget.healthcheck,
-    host: serviceTarget.healthcheck.host
-      ? serviceTarget.healthcheck.host
-      : null,
-    path: serviceTarget.healthcheck.path
-      ? serviceTarget.healthcheck.path
-      : null,
+    host:
+      serviceTarget.healthcheck.host &&
+      serviceTarget.healthcheck.protocol === 'http'
+        ? serviceTarget.healthcheck.host
+        : null,
+    path:
+      serviceTarget.healthcheck.path &&
+      serviceTarget.healthcheck.protocol === 'http'
+        ? serviceTarget.healthcheck.path
+        : null,
   },
 });
