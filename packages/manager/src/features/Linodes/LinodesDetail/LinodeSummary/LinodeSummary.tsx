@@ -125,7 +125,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
       }, []);
 
       return (
-        <Box marginLeft={-4} marginTop={2}>
+        <Box marginLeft={-5} marginTop={2}>
           <AreaChart
             areas={[
               {
@@ -188,6 +188,59 @@ const LinodeSummary: React.FC<Props> = (props) => {
       io: stats?.data.io.io ?? [],
       swap: stats?.data.io.swap ?? [],
     };
+    const timeData = [];
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags.recharts) {
+      for (let i = 0; i < data.io.length; i++) {
+        timeData.push({
+          'I/O Rate': data.io[i][1],
+          'Swap Rate': data.swap[i][1],
+          timestamp: data.io[i][0],
+        });
+      }
+
+      return (
+        <Box marginLeft={-4} marginTop={2}>
+          <AreaChart
+            areas={[
+              {
+                color: theme.graphs.diskIO.read,
+                dataKey: 'I/O Rate',
+              },
+              {
+                color: theme.graphs.diskIO.swap,
+                dataKey: 'Swap Rate',
+              },
+            ]}
+            legendRows={[
+              {
+                data: getMetrics(data.io),
+                format: formatNumber,
+                legendColor: 'yellow',
+                legendTitle: 'I/O Rate',
+              },
+              {
+                data: getMetrics(data.swap),
+                format: formatNumber,
+                legendColor: 'red',
+                legendTitle: 'Swap Rate',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'hh a',
+              tickGap: 60,
+            }}
+            ariaLabel="Network Traffic Graph"
+            data={timeData}
+            height={342}
+            showLegend
+            timezone={timezone}
+            unit={' blocks/s'}
+          />
+        </Box>
+      );
+    }
 
     return (
       <LineGraph
@@ -315,7 +368,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
                 {...chartProps}
               />
             </StyledGrid>
-            <StyledGrid xs={12}>
+            <StyledGrid recharts={flags.recharts} xs={12}>
               <StatsPanel
                 renderBody={renderDiskIOChart}
                 title="Disk I/O (blocks/s)"
