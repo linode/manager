@@ -20,9 +20,9 @@ import { useEventHandlers } from 'src/hooks/useEventHandlers';
 import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import {
   doesEventMatchAPIFilter,
+  generatePollingFilter,
   isInProgressEvent,
 } from 'src/queries/events/event.helpers';
-import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 
