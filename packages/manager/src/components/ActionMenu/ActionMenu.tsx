@@ -9,6 +9,7 @@ import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 export interface Action {
   disabled?: boolean;
+  id?: string;
   onClick: () => void;
   title: string;
   tooltip?: string;

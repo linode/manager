@@ -189,12 +189,26 @@ export const darkTheme: ThemeOptions = {
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
+          '&[aria-disabled="true"]': {
+            backgroundColor: '#454b54',
+            color: '#5c6470',
+          },
+        },
+        containedSecondary: {
+          '&[aria-disabled="true"]': {
+            color: '#c9cacb',
+          },
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: 'transparent !important',
+            backgroundColor: 'transparent',
             border: '1px solid #fff',
             color: '#fff',
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: '#454b54',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            color: '#5c6470',
           },
           color: customDarkModeOptions.textColors.linkActiveLight,
         },
@@ -208,6 +222,9 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover': {
             backgroundColor: '#000',
+          },
+          '&[aria-disabled="true"]': {
+            cursor: 'not-allowed',
           },
           color: primaryColors.main,
         },

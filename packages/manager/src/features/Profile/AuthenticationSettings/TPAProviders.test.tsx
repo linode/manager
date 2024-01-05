@@ -33,7 +33,7 @@ describe('TPAProviders component', () => {
     const linodeButton = screen.getByTestId('Button-Cloud Manager');
     const LinodeButtonEnabled = screen.getByTestId('Enabled-Cloud Manager');
     expect(linodeButton).toBeInTheDocument();
-    expect(linodeButton).toBeDisabled();
+    expect(linodeButton).toHaveAttribute('aria-disabled', 'true');
     expect(LinodeButtonEnabled).toBeInTheDocument();
   });
   it('Should render login method with Google button', () => {
@@ -43,7 +43,7 @@ describe('TPAProviders component', () => {
     const googleButtonEnabled = screen.getByTestId('Enabled-Google');
     const noticeElement = screen.getByTestId('Notice-Google');
     expect(googleButton).toBeInTheDocument();
-    expect(googleButton).toBeDisabled();
+    expect(googleButton).toHaveAttribute('aria-disabled', 'true');
     expect(googleButtonEnabled).toBeInTheDocument();
     expect(noticeElement).toBeInTheDocument();
   });
@@ -54,7 +54,7 @@ describe('TPAProviders component', () => {
     const githubButtonEnabled = screen.getByTestId('Enabled-GitHub');
     const noticeElement = screen.getByTestId('Notice-GitHub');
     expect(githubButton).toBeInTheDocument();
-    expect(githubButton).toBeDisabled();
+    expect(githubButton).toHaveAttribute('aria-disabled', 'true');
     expect(githubButtonEnabled).toBeInTheDocument();
     expect(noticeElement).toBeInTheDocument();
   });

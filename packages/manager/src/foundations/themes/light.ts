@@ -383,6 +383,10 @@ export const lightTheme: ThemeOptions = {
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
+          '&[aria-disabled="true"]': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+            color: 'white',
+          },
           backgroundColor: primaryColors.main,
           color: '#fff',
           padding: '2px 20px',
@@ -406,6 +410,9 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
             color: textColors.linkActiveLight,
           },
+          '&[aria-disabled="true"]': {
+            color: '#c9cacb',
+          },
           backgroundColor: 'transparent',
           color: textColors.linkActiveLight,
         },
@@ -415,12 +422,20 @@ export const lightTheme: ThemeOptions = {
             border: '1px solid #d7dfed',
             color: '#2575d0',
           },
+          '&[aria-disabled="true"]': {
+            backgroundColor: 'transparent',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            color: 'rgba(0, 0, 0, 0.26)',
+          },
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
           color: textColors.linkActiveLight,
           minHeight: 34,
         },
         root: {
+          '&[aria-disabled="true"]': {
+            cursor: 'not-allowed',
+          },
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
