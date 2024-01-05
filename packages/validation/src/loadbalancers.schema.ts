@@ -2,6 +2,14 @@ import { number, object, string, array } from 'yup';
 
 const LABEL_REQUIRED = 'Label is required.';
 
+const matchFieldOptions = [
+  'always_match',
+  'path_prefix',
+  'query',
+  'header',
+  'method',
+];
+
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
   key: string().when('type', {
@@ -119,7 +127,7 @@ const TCPMatchConditionSchema = object({
 const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
   object({
     match_field: string()
-      .oneOf(['path_prefix', 'query', 'header', 'method', 'host'])
+      .oneOf(matchFieldOptions)
       .required('Match field is required.'),
     match_value: string().required('Match value is required.'),
     session_stickiness_cookie: string().nullable(),
@@ -237,9 +245,7 @@ const CreateLoadBalancerServiceTargetSchema = object({
 const CreateLoadBalancerRuleSchema = object({
   match_condition: object().shape({
     hostname: string().required(),
-    match_field: string()
-      .oneOf(['path_prefix', 'host', 'query', 'hostname', 'header', 'method'])
-      .required(),
+    match_field: string().oneOf(matchFieldOptions).required(),
     match_value: string().required(),
     session_stickiness_cookie: string(),
     session_stickiness_ttl: number().integer(),
