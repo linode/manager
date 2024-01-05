@@ -5,6 +5,7 @@ import {
   generateInFilter,
   generateNeqFilter,
   generatePollingFilter,
+  getExistingEventDataForPollingFilterGenerator,
   isEventRelevantToLinode,
   isEventRelevantToLinodeAsSecondaryEntity,
   isInProgressEvent,
@@ -206,5 +207,49 @@ describe('requestFilters', () => {
         ],
       });
     });
+  });
+});
+
+describe('getExistingEventDataForPollingFilterGenerator', () => {
+  it('returns the IDs in-progress of events', () => {
+    const inProgressEvent = eventFactory.build({
+      percent_complete: 5,
+      status: 'started',
+    });
+    const eventThatIsNotInProgress = eventFactory.build({
+      percent_complete: null,
+      status: 'finished',
+    });
+
+    const { inProgressEvents } = getExistingEventDataForPollingFilterGenerator(
+      [eventThatIsNotInProgress, inProgressEvent],
+      ''
+    );
+
+    expect(inProgressEvents).toHaveLength(1);
+    expect(inProgressEvents[0]).toBe(inProgressEvent.id);
+  });
+
+  it('returns the ID of events with the same timestamp', () => {
+    const timestamp = '2024-01-05T19:28:19';
+
+    const eventWithSameTimestamp = eventFactory.build({
+      created: timestamp,
+    });
+    const eventWithDifferentTimestamp = eventFactory.build({
+      created: '2024-01-01T18:28:19',
+    });
+
+    const {
+      eventsThatAlreadyHappenedAtTheFilterTime,
+    } = getExistingEventDataForPollingFilterGenerator(
+      [eventWithDifferentTimestamp, eventWithSameTimestamp],
+      timestamp
+    );
+
+    expect(eventsThatAlreadyHappenedAtTheFilterTime).toHaveLength(1);
+    expect(eventsThatAlreadyHappenedAtTheFilterTime[0]).toBe(
+      eventWithSameTimestamp.id
+    );
   });
 });

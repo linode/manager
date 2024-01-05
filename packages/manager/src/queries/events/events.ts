@@ -21,7 +21,7 @@ import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import {
   doesEventMatchAPIFilter,
   generatePollingFilter,
-  isInProgressEvent,
+  getExistingEventDataForPollingFilterGenerator,
 } from 'src/queries/events/event.helpers';
 
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
@@ -116,23 +116,7 @@ export const useEventsPoller = () => {
   const {
     eventsThatAlreadyHappenedAtTheFilterTime,
     inProgressEvents,
-  } = events?.reduce<{
-    eventsThatAlreadyHappenedAtTheFilterTime: number[];
-    inProgressEvents: number[];
-  }>(
-    (acc, event) => {
-      if (isInProgressEvent(event)) {
-        acc.inProgressEvents.push(event.id);
-        return acc;
-      }
-      if (event.created === latestEventTime) {
-        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event.id);
-        return acc;
-      }
-      return acc;
-    },
-    { eventsThatAlreadyHappenedAtTheFilterTime: [], inProgressEvents: [] }
-  ) ?? { eventsThatAlreadyHappenedAtTheFilterTime: [], inProgressEvents: [] };
+  } = getExistingEventDataForPollingFilterGenerator(events, latestEventTime);
 
   const hasFetchedInitialEvents = events !== undefined;
 

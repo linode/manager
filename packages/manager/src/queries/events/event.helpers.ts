@@ -126,3 +126,55 @@ export const generatePollingFilter = (
 
   return filter;
 };
+
+/**
+ * This function exists to...
+ * - Solve the "same second problem"
+ * - Continue to poll in-progress events
+ *
+ * ## The "same second problem"
+ *
+ * It's possible that we may poll for events and a new event might be created after we polled,
+ * but at the same second. We must overlap our requests so that we catch any "same second" events.
+ * This function returns the ID of events that happened at `latestEventTime` so that we can
+ * exclude them (using '+neq') them in our next request.
+ *
+ *
+ * ## Continue to poll in-progress events
+ *
+ * Given all events that have been fetched since the app loaded,
+ * this function returns the IDs of any in progress events so that we
+ * continue to poll them for updates.
+ *
+ * @param events All events that have been fetched since loading the app
+ * @param latestEventTime The created timestamp of the most revent event (for example: 2020-01-01T12:00:00)
+ */
+export const getExistingEventDataForPollingFilterGenerator = (
+  events: Event[] | undefined,
+  latestEventTime: string
+) => {
+  if (!events) {
+    return {
+      eventsThatAlreadyHappenedAtTheFilterTime: [],
+      inProgressEvents: [],
+    };
+  }
+
+  return events.reduce<{
+    eventsThatAlreadyHappenedAtTheFilterTime: number[];
+    inProgressEvents: number[];
+  }>(
+    (acc, event) => {
+      if (event.created === latestEventTime) {
+        acc.eventsThatAlreadyHappenedAtTheFilterTime.push(event.id);
+        return acc;
+      }
+      if (isInProgressEvent(event)) {
+        acc.inProgressEvents.push(event.id);
+        return acc;
+      }
+      return acc;
+    },
+    { eventsThatAlreadyHappenedAtTheFilterTime: [], inProgressEvents: [] }
+  );
+};
