@@ -9,6 +9,7 @@ import type {
   GetRegionOptionAvailability,
   GetRegionOptions,
   GetSelectedRegionById,
+  GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
@@ -150,4 +151,22 @@ export const getRegionOptionAvailability = ({
   }
 
   return regionWithUnavailability.unavailable.includes(currentCapability);
+};
+
+export const getSelectedRegionsByIds = ({
+  accountAvailabilityData,
+  currentCapability,
+  regions,
+  selectedRegionIds,
+}: GetSelectedRegionsByIdsArgs): RegionSelectOption[] => {
+  return selectedRegionIds
+    .map((selectedRegionId) =>
+      getSelectedRegionById({
+        accountAvailabilityData,
+        currentCapability,
+        regions,
+        selectedRegionId,
+      })
+    )
+    .filter((region): region is RegionSelectOption => !!region);
 };

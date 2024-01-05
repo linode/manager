@@ -2,6 +2,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
+import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 
 export const StyledAutocompleteContainer = styled(Box, {
@@ -64,4 +65,18 @@ export const SelectedIcon = styled(DoneIcon, {
   marginRight: '5px',
   visibility: visible ? 'visible' : 'hidden',
   width: 17,
+}));
+
+export const SelectedOptionsList = styled(List)(({ theme }) => ({
+  background: theme.bg.main,
+  marginTop: theme.spacing(2),
+  maxWidth: '416px',
+  padding: '5px 0',
+  width: '100%',
+}));
+
+export const SelectedOptionsListItem = styled(ListItem)(() => ({
+  justifyContent: 'space-between',
+  paddingBottom: 0,
+  paddingTop: 0,
 }));
