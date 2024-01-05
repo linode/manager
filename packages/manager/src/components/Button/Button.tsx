@@ -141,6 +141,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         color={color}
         compactX={compactX}
         compactY={compactY}
+        data-testid="Button"
         disableRipple={disabled}
         disabled={loading}
         loading={loading}
@@ -156,6 +157,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return showTooltip ? (
       <Tooltip
+        data-testid="Tooltip"
         id="button-tooltip"
         onClick={handleTooltipAnalytics}
         title={tooltipText}
