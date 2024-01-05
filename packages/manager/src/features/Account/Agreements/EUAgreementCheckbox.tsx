@@ -54,7 +54,7 @@ export const EUAgreementCheckbox = (props: Props) => {
         sx={checkboxStyle}
       />
       <Typography
-        component={'label'}
+        component="label"
         htmlFor="gdpr-checkbox"
         style={{ marginLeft: 4 }}
       >
