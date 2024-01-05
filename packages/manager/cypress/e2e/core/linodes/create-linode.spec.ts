@@ -73,14 +73,9 @@ describe('create linode', () => {
   it('region select', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
-    mockAppendFeatureFlags({
-      soldOutTokyo: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     cy.visitWithLogin('linodes/create');
 
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getRegions']);
+    cy.wait(['@getRegions']);
 
     // Confirm that region select dropdown is visible and interactive.
     ui.regionSelect.find().click();
