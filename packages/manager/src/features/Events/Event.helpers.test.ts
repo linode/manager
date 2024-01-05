@@ -1,6 +1,3 @@
-import { EventAction } from '@linode/api-v4/lib/account';
-
-import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import { eventFactory } from 'src/factories/events';
 
 import {
@@ -11,6 +8,53 @@ import {
   percentCompleteHasUpdated,
   shouldUpdateEvents,
 } from './Event.helpers';
+
+import type { Event, EventAction } from '@linode/api-v4';
+
+const uniqueEvents: Event[] = [
+  {
+    action: 'linode_boot',
+    created: '2018-12-02T20:23:43',
+    duration: 0,
+    entity: {
+      id: 11440645,
+      label: 'linode11440645',
+      type: 'linode',
+      url: '/v4/linode/instances/11440645',
+    },
+    id: 1231234,
+    message: null,
+    percent_complete: 100,
+    rate: null,
+    read: false,
+    secondary_entity: null,
+    seen: true,
+    status: 'finished',
+    time_remaining: null,
+    username: 'test',
+  },
+  {
+    action: 'linode_boot',
+    created: '2018-12-02T20:23:43',
+    duration: 0,
+    entity: {
+      id: 11440645,
+      label: 'linode11440645',
+      type: 'linode',
+      url: '/v4/linode/instances/11440645',
+    },
+    id: 17950407,
+    message: null,
+    percent_complete: 100,
+    rate: null,
+    read: false,
+    secondary_entity: null,
+    seen: true,
+    status: 'finished',
+    time_remaining: null,
+    username: 'test',
+  },
+];
 
 const inProgressEvents = {
   1234: 50,
@@ -26,7 +70,8 @@ const nextTime = '1556810370715';
 
 describe('Utility Functions', () => {
   it('should filter out unique events', () => {
-    expect(filterUniqueEvents([reduxEvent, reduxEvent])).toHaveLength(1);
+    const mockEvent: Event = eventFactory.build();
+    expect(filterUniqueEvents([mockEvent, mockEvent])).toHaveLength(1);
     expect(filterUniqueEvents(uniqueEvents)).toHaveLength(2);
   });
 
