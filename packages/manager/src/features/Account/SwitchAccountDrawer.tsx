@@ -78,14 +78,19 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' '}
             or {/* TODO: Parent/Child - M3-7430 */}
-            <StyledLinkButton onClick={() => null}>
+            <StyledLinkButton
+              aria-label="parent-account-link"
+              onClick={() => null}
+            >
               switch back to your account
             </StyledLinkButton>
           </>
         )}
         .
       </StyledTypography>
-      <Stack alignItems={'flex-start'}>{renderChildAccounts()}</Stack>
+      <Stack alignItems={'flex-start'} data-testid="child-account-list">
+        {renderChildAccounts()}
+      </Stack>
     </Drawer>
   );
 };
