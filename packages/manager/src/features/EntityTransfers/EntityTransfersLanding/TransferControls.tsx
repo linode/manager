@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-
 import { ConfirmTransferDialog } from './ConfirmTransferDialog';
 import {
   StyledLabelWrapperGrid,
@@ -62,15 +59,10 @@ export const TransferControls = React.memo(() => {
               buttonType="primary"
               disabled={token === ''}
               onClick={() => setConfirmDialogOpen(true)}
+              tooltipText="Enter a service transfer token to review the details and accept the transfer."
             >
               Review Details
             </StyledReviewButton>
-            <Hidden mdDown>
-              <TooltipIcon
-                status="help"
-                text="Enter a service transfer token to review the details and accept the transfer."
-              />
-            </Hidden>
           </StyledTransferWrapperGrid>
         </StyledLabelWrapperGrid>
         <StyledTransferGrid>
