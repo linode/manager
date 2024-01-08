@@ -3,7 +3,7 @@ import {
   default as _TextField,
   StandardTextFieldProps,
 } from '@mui/material/TextField';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -62,9 +62,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     marginTop: 0,
-  },
-  wrapper: {
-    marginTop: theme.spacing(2),
   },
 }));
 
@@ -265,6 +262,7 @@ export const TextField = (props: TextFieldProps) => {
   } = props;
 
   const [_value, setValue] = React.useState<Value>(value);
+  const theme = useTheme();
 
   React.useEffect(() => {
     setValue(value);
@@ -358,13 +356,24 @@ export const TextField = (props: TextFieldProps) => {
         containerProps?.className
       )}
     >
-      <Box display="flex">
+      <Box
+        className={cx({
+          'visually-hidden': hideLabel,
+        })}
+        sx={{
+          marginBottom: theme.spacing(1),
+          ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+        }}
+        alignItems={'center'}
+        display="flex"
+      >
         <InputLabel
           className={cx({
             [classes.noTransform]: true,
-            [classes.wrapper]: noMarginTop ? false : true,
-            'visually-hidden': hideLabel,
           })}
+          sx={{
+            marginBottom: 0,
+          }}
           data-qa-textfield-label={label}
           htmlFor={validInputId}
         >
@@ -378,7 +387,8 @@ export const TextField = (props: TextFieldProps) => {
         {labelTooltipText && (
           <TooltipIcon
             sxTooltipIcon={{
-              padding: '8px 0px 0px 8px',
+              marginLeft: `${theme.spacing(0.5)}`,
+              padding: `${theme.spacing(0.5)}`,
             }}
             status="help"
             text={labelTooltipText}
