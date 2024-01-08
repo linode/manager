@@ -91,7 +91,11 @@ export const RegionsMultiSelect = React.memo(
       const updatedSelectedOptions = selectedRegions.filter(
         (option) => option.value !== optionToRemove.value
       );
+      const updatedSelectedIds = updatedSelectedOptions.map(
+        (region) => region.value
+      );
       setSelectedRegions(updatedSelectedOptions);
+      handleSelection(updatedSelectedIds);
     };
 
     return (

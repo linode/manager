@@ -101,13 +101,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   // and so not included in Formik's types
   const [limitedAccessChecked, setLimitedAccessChecked] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      setLimitedAccessChecked(false);
-      formik.resetForm({ values: initialValues });
-    }
-  }, [open]);
-
   const title = createMode ? 'Create Access Key' : 'Edit Access Key Label';
 
   const initialLabelValue =
@@ -164,6 +157,13 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     // Reset scopes
     formik.setFieldValue('bucket_access', getDefaultScopes(buckets));
   };
+
+  useEffect(() => {
+    if (open) {
+      setLimitedAccessChecked(false);
+      formik.resetForm({ values: initialValues });
+    }
+  }, [open]);
 
   return (
     <Drawer
