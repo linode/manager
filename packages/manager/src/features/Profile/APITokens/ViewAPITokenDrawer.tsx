@@ -41,6 +41,18 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const filteredPermissions = allPermissions.filter(
     (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
   );
+  // TODO: Parent/Child - remove this conditional once code is in prod.
+  // Note: We couldn't include 'child_account' in our list of permissions in utils
+  // because it needs to be feature-flagged. Therefore, we're manually adding it here.
+  if (flags.parentChildAccountAccess && user?.user_type !== null) {
+    const childAccountIndex = allPermissions.findIndex(
+      ([scope]) => scope === 'child_account'
+    );
+    if (childAccountIndex === -1) {
+      allPermissions.push(['child_account', 0]);
+    }
+    basePermNameMap.child_account = 'Child Account Access';
+  }
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
