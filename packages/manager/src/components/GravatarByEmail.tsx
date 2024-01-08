@@ -1,6 +1,5 @@
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
-import classNames from 'classnames';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
@@ -20,7 +19,7 @@ export const GravatarByEmail = (props: Props) => {
   return (
     <StyledAvatar
       alt={`Avatar for user ${email}`}
-      className={classNames(className)}
+      className={className}
       src={url}
       sx={{ height, width }}
     >

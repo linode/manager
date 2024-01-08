@@ -914,7 +914,7 @@ export const handlers = [
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(0);
+    const buckets = objectStorageBucketFactory.buildList(1);
 
     return res(
       ctx.json({
@@ -1046,6 +1046,7 @@ export const handlers = [
       active_promotions: promoFactory.buildList(1),
       active_since: '2022-11-30',
       balance: 50,
+      company: 'Mock Company',
     });
     return res(ctx.json(account));
   }),
@@ -1176,6 +1177,7 @@ export const handlers = [
       }),
     ];
     return res(ctx.json(makeResourcePage(childAccounts)));
+    // return res(ctx.json(makeResourcePage(accountFactory.buildList(101))));
   }),
   rest.get('*/account/child-accounts/:euuid', (req, res, ctx) => {
     const childAccount = accountFactory.build({
@@ -1447,7 +1449,7 @@ export const handlers = [
         longview_subscription: 'longview-100',
         managed: true,
         network_helper: true,
-        object_storage: 'disabled',
+        object_storage: 'active',
       })
     );
   }),
@@ -1802,12 +1804,40 @@ export const handlers = [
   }),
   rest.get('*regions/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(makeResourcePage(regionAvailabilityFactory.buildList(10)))
+      ctx.json(
+        makeResourcePage([
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-6',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-7',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-5',
+            region: 'us-central',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-6',
+            region: 'us-central',
+          }),
+        ])
+      )
     );
   }),
   rest.get('*regions/:regionId/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(regionAvailabilityFactory.buildList(5, { region: 'us-east' }))
+      ctx.json([
+        regionAvailabilityFactory.build({
+          plan: 'g6-standard-6',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          plan: 'g6-standard-7',
+          region: 'us-east',
+        }),
+      ])
     );
   }),
   ...entityTransfers,

@@ -29,6 +29,7 @@ const meta: Meta<typeof Button> = {
     compactY: false,
     disabled: false,
     loading: false,
+    onClick: action('onClick'),
     sx: {},
     tooltipAnalyticsEvent: action('tooltipAnalyticsEvent'),
     tooltipText: '',
@@ -90,4 +91,15 @@ export const LinkButton: Story = {
   },
   // _args must be present in order to disable controls
   render: (_args) => <StyledLinkButton>Button</StyledLinkButton>,
+};
+
+/**
+ * Disabled Button w/ Tooltip
+ */
+export const DisabledTooltip: Story = {
+  args: {
+    disabled: true,
+    tooltipText: `You don't have permission to do this.`,
+  },
+  render: (args) => <Button {...args} />,
 };
