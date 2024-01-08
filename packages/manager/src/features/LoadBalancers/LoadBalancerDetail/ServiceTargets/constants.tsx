@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
@@ -133,13 +134,13 @@ export const SERVICE_TARGET_COPY = {
         'The number of consecutive health checks that must fail to consider a service target as unhealthy. Minimum value is 1.',
     },
     Protocol: (
-      <Typography>
+      <Box>
         The protocol this target is configured to serve.
         <ul>
           <li>The HTTP and TCP protocols do not support TLS certificates.</li>
           <li> HTTPS requires TLS certificates.</li>
         </ul>
-      </Typography>
+      </Box>
     ),
   },
 };
