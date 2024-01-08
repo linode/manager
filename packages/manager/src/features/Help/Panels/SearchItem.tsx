@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
+import { useStyles } from 'tss-react/mui';
 
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
@@ -24,6 +24,8 @@ export const SearchItem = (props: Props) => {
     }
   };
 
+  const { cx } = useStyles();
+
   const {
     data,
     isFocused,
@@ -34,7 +36,7 @@ export const SearchItem = (props: Props) => {
 
   return (
     <Option
-      className={classNames({
+      className={cx({
         [classes.algoliaRoot]: true,
         [classes.selectedMenuItem]: isFocused,
       })}

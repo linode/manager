@@ -15,6 +15,7 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorage
     ),
     label: Factory.each((i) => `obj-bucket-${i}`),
     objects: 103,
+    region: 'us-east',
     size: 999999,
   }
 );
@@ -48,6 +49,7 @@ export const objectStorageKeyFactory = Factory.Sync.makeFactory<ObjectStorageKey
     id: Factory.each((id) => id),
     label: Factory.each((id) => `access-key-${id}`),
     limited: false,
+    regions: [{ id: 'us-east', s3_endpoint: 'us-east.com' }],
     secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
   }
 );

@@ -28,7 +28,7 @@ export const StyledDisabledTableRow = styled(TableRow, {
   ...(props.disabled && {
     backgroundColor: theme.bg.tableHeader,
     cursor: 'not-allowed',
-    opacity: 0.4,
+    opacity: 0.5,
   }),
   '&:focus-within': {
     backgroundColor: theme.bg.lightBlue1,

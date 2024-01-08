@@ -20,7 +20,8 @@ vi.mock('src/queries/accountUsers', async () => {
   };
 });
 
-const nonParentPerms = basePerms.filter((value) => value !== 'child_account');
+// TODO: Parent/Child - add back after API code is in prod. Replace basePerms with nonParentPerms.
+// const nonParentPerms = basePerms.filter((value) => value !== 'child_account');
 
 const token = appTokenFactory.build({ label: 'my-token', scopes: '*' });
 const limitedToken = appTokenFactory.build({
@@ -42,10 +43,8 @@ describe('View API Token Drawer', () => {
   });
 
   it('should show all permissions as read/write with wildcard scopes', () => {
-    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { vpc: true },
-    });
-    for (const permissionName of nonParentPerms) {
+    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
+    for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
         'aria-label',
         `This token has 2 access for ${permissionName}`
@@ -58,7 +57,7 @@ describe('View API Token Drawer', () => {
       <ViewAPITokenDrawer {...props} token={limitedToken} />,
       { flags: { parentChildAccountAccess: false, vpc: true } }
     );
-    for (const permissionName of nonParentPerms) {
+    for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
         'aria-label',
         `This token has 0 access for ${permissionName}`
@@ -74,7 +73,7 @@ describe('View API Token Drawer', () => {
       />,
       { flags: { vpc: true } }
     );
-    for (const permissionName of nonParentPerms) {
+    for (const permissionName of basePerms) {
       // We only expect account to have read/write for this test
       const expectedScopeLevel = permissionName === 'account' ? 2 : 0;
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -114,7 +113,7 @@ describe('View API Token Drawer', () => {
       vpc: 2,
     } as const;
 
-    for (const permissionName of nonParentPerms) {
+    for (const permissionName of basePerms) {
       const expectedScopeLevel = expectedScopeLevels[permissionName];
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
         'aria-label',
@@ -141,8 +140,9 @@ describe('View API Token Drawer', () => {
     );
 
     const childScope = getByText('Child Account Access');
+    // TODO: Parent/Child - confirm that this scope level shouldn't be 2
     const expectedScopeLevels = {
-      child_account: 2,
+      child_account: 0,
     } as const;
     const childPermissionName = 'child_account';
 

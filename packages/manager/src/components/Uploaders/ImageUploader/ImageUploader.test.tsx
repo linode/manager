@@ -20,7 +20,7 @@ describe('File Uploader', () => {
 
     const browseFiles = screen.getByTestId('upload-button');
     expect(browseFiles).toBeVisible();
-    expect(browseFiles).toBeEnabled();
+    expect(browseFiles).toHaveAttribute('aria-disabled', 'false');
     const text = screen.getByText(
       'You can browse your device to upload an image file or drop it here.'
     );
@@ -34,7 +34,7 @@ describe('File Uploader', () => {
 
     const browseFiles = screen.getByTestId('upload-button');
     expect(browseFiles).toBeVisible();
-    expect(browseFiles).not.toBeEnabled();
+    expect(browseFiles).toHaveAttribute('aria-disabled', 'true');
 
     const text = screen.getByText(
       'To upload an image, complete the required fields.'
