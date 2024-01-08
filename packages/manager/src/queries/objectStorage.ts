@@ -8,12 +8,14 @@ import {
   ObjectStorageObjectListResponse,
   ObjectStorageObjectURL,
   ObjectStorageObjectURLOptions,
+  Region,
   createBucket,
   deleteBucket,
   deleteSSLCert,
   getBucket,
   getBuckets,
   getBucketsInCluster,
+  getBucketsInRegion,
   getClusters,
   getObjectList,
   getObjectStorageKeys,
@@ -37,8 +39,14 @@ import { queryKey as accountSettingsQueryKey } from './accountSettings';
 import { queryPresets } from './base';
 
 export interface BucketError {
+  /*
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+  */
   cluster: ObjectStorageCluster;
   error: APIError[];
+  region?: Region;
 }
 
 interface BucketsResponce {
@@ -80,6 +88,20 @@ export const useObjectStorageBuckets = (
     {
       ...queryPresets.longLived,
       enabled: clusters !== undefined && enabled,
+      retry: false,
+    }
+  );
+
+export const useObjectStorageBucketsFromRegions = (
+  regions: Region[] | undefined,
+  enabled: boolean = true
+) =>
+  useQuery<BucketsResponce, APIError[]>(
+    `${queryKey}-buckets`,
+    () => getAllBucketsFromRegions(regions),
+    {
+      ...queryPresets.longLived,
+      enabled: regions !== undefined && enabled,
       retry: false,
     }
   );
@@ -182,6 +204,41 @@ export const getAllBucketsFromClusters = async (
   const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
 
   if (errors.length === clusters.length) {
+    throw new Error('Unable to get Object Storage buckets.');
+  }
+
+  return { buckets, errors } as BucketsResponce;
+};
+
+export const getAllBucketsFromRegions = async (
+  regions: Region[] | undefined
+) => {
+  if (regions === undefined) {
+    return { buckets: [], errors: [] } as BucketsResponce;
+  }
+
+  const promises = regions.map((region) =>
+    getAll<ObjectStorageBucket>((params) =>
+      getBucketsInRegion(region.id, params)
+    )()
+      .then((data) => data.data)
+      .catch((error) => ({
+        error,
+        region,
+      }))
+  );
+
+  const data = await Promise.all(promises);
+
+  const bucketsPerCluster = data.filter((item) =>
+    Array.isArray(item)
+  ) as ObjectStorageBucket[][];
+
+  const buckets = bucketsPerCluster.reduce((acc, val) => acc.concat(val), []);
+
+  const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
+
+  if (errors.length === regions.length) {
     throw new Error('Unable to get Object Storage buckets.');
   }
 

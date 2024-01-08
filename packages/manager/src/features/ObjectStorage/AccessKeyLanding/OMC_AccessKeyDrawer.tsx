@@ -17,10 +17,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/accountSettings';
-import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
+import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -79,24 +77,22 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
-  const {
-    data: objectStorageClusters,
-    isLoading: areClustersLoading,
-  } = useObjectStorageClusters();
+  const { data: regions } = useRegionsQuery();
 
   const {
-    data: objectStorageBucketsResponse,
+    data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters);
+  } = useObjectStorageBucketsFromRegions(regions);
+
   const { data: accountSettings } = useAccountSettings();
 
-  const buckets = objectStorageBucketsResponse?.buckets || [];
+  const buckets = objectStorageBuckets?.buckets || [];
 
   const hasBuckets = buckets?.length > 0;
 
   const hidePermissionsTable =
-    bucketsError || objectStorageBucketsResponse?.buckets.length === 0;
+    bucketsError || objectStorageBuckets?.buckets.length === 0;
 
   const createMode = mode === 'creating';
 
@@ -108,6 +104,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   useEffect(() => {
     if (open) {
       setLimitedAccessChecked(false);
+      formik.resetForm({ values: initialValues });
     }
   }, [open]);
 
@@ -115,11 +112,15 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const initialLabelValue =
     !createMode && objectStorageKey ? objectStorageKey.label : '';
+  const initialRegions =
+    !createMode && objectStorageKey
+      ? objectStorageKey.regions?.map((region) => region.id)
+      : [];
 
   const initialValues: FormState = {
     bucket_access: getDefaultScopes(buckets),
     label: initialLabelValue,
-    regions: [],
+    regions: initialRegions,
   };
 
   const formik = useFormik({
@@ -171,7 +172,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       title={title}
       wide={createMode && hasBuckets}
     >
-      {areBucketsLoading || areClustersLoading ? (
+      {areBucketsLoading ? (
         <CircleProgress />
       ) : (
         <>
@@ -232,6 +233,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             }}
             disabled={isRestrictedUser}
             error={formik.errors.regions as string}
+            name="regions"
             onBlur={formik.handleBlur}
             required
             selectedRegion={formik.values.regions}

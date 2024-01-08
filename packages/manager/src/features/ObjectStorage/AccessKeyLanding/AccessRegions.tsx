@@ -6,6 +6,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 interface Props {
   disabled?: boolean;
   error?: string;
+  name: string;
   onBlur: (e: any) => void;
   onChange: (value: string[]) => void;
   required?: boolean;

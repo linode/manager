@@ -88,6 +88,12 @@ export const AccessKeyLanding = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
+  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   const handleCreateKey = (
     values: ObjectStorageKeyRequest,
     { setErrors, setStatus, setSubmitting }: FormikProps
@@ -96,7 +102,7 @@ export const AccessKeyLanding = (props: Props) => {
     setStatus(null);
     setSubmitting(true);
 
-    createObjectStorageKeys(values)
+    createObjectStorageKeys(values, isObjMultiClusterFlagEnabled)
       .then((data) => {
         setSubmitting(false);
 
@@ -250,12 +256,6 @@ export const AccessKeyLanding = (props: Props) => {
     setRevokeErrors([]);
     revokeKeysDialog.close();
   };
-
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
 
   return (
     <div>

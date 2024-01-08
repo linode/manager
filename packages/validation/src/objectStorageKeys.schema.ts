@@ -6,7 +6,6 @@ export const createObjectStorageKeysSchema = object({
     .min(3, 'Label must be between 3 and 50 characters.')
     .max(50, 'Label must be between 3 and 50 characters.')
     .trim(),
-  regions: string().required(),
 });
 
 // TODO : OMC - The above createObjectStorageKeysSchema will be replaced with omc_createObjectStorageKeysSchema without prefix omc.
