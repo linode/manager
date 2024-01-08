@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { extendedTypeFactory } from 'src/factories/types';
 import { breakpoints } from 'src/foundations/breakpoints';
 import {
@@ -28,9 +29,10 @@ const extendedType = extendedTypeFactory.build();
 const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
   idx: 0,
+  isPlanSoldOut: false,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
-  selectedRegionID: 'us-east',
+  selectedRegionId: 'us-east',
   type: extendedType,
   updatePlanCount: vi.fn(),
 };
@@ -62,7 +64,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   it('displays DC-specific prices in a region with a price increase', async () => {
     const { queryByText } = render(
       wrapWithTableBody(
-        <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />
+        <KubernetesPlanSelection {...props} selectedRegionId="id-cgk" />
       )
     );
 
@@ -96,7 +98,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
 
     it('displays DC-specific prices in a region with a price increase', async () => {
       const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} selectedRegionID="id-cgk" />
+        <KubernetesPlanSelection {...props} selectedRegionId="id-cgk" />
       );
 
       expect(
@@ -105,6 +107,18 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       expect(
         getByText(`${regionHourlyPrice}/hr`, { exact: false })
       ).toBeInTheDocument();
+    });
+
+    it('shows a chip if plan is sold out', () => {
+      const { getByLabelText } = renderWithTheme(
+        <KubernetesPlanSelection
+          {...props}
+          isPlanSoldOut={true}
+          selectedRegionId={'us-east'}
+        />
+      );
+
+      expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
     });
   });
 });

@@ -13,10 +13,12 @@ import { Button } from './Button';
 export const StyledActionButton = styled(Button, {
   label: 'StyledActionButton',
 })(({ theme, ...props }) => ({
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.name === 'dark' ? theme.color.black : theme.color.white,
-  },
+  ...(!props.disabled && {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.name === 'dark' ? theme.color.black : theme.color.white,
+    },
+  }),
   fontFamily: latoWeb.normal,
   fontSize: '14px',
   lineHeight: '16px',

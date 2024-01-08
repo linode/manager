@@ -35,7 +35,7 @@ describe('Edit VPC Drawer', () => {
     expect(saveButton).toBeVisible();
 
     const cancelBtn = getByText(/Cancel/);
-    expect(cancelBtn).toBeEnabled();
+    expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
   });
 });

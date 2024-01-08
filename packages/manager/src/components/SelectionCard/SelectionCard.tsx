@@ -54,7 +54,7 @@ export interface SelectionCardProps {
    * An array of subheadings to display below the heading.
    * @example ['Linode 1GB', 'Linode 2GB', 'Linode 4GB']
    */
-  subheadings: (string | undefined)[];
+  subheadings: (JSX.Element | string | undefined)[];
   /**
    * Optional styles to apply to the root element.
    */

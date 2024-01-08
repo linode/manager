@@ -2,6 +2,8 @@ import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
@@ -13,6 +15,16 @@ export interface Props {
   onClose: () => void;
   open: boolean;
 }
+
+const CLUSTER_DELETION_WARNINGS = [
+  {
+    text: "Deleting a cluster is permanent and can't be undone.",
+  },
+  {
+    text:
+      'Attached Block Storage Volumes or NodeBalancers must be deleted separately.',
+  },
+];
 
 export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
   return pools.reduce((accum, thisPool) => {
@@ -54,15 +66,28 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
     >
       {error ? <Notice text={error?.[0].reason} variant="error" /> : null}
       <Notice variant="warning">
-        <Typography style={{ fontSize: '0.875rem' }}>
+        <Typography component="div" sx={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong>
-          <ul style={{ margin: '5px 0px 0px', paddingLeft: '15px' }}>
-            <li>Deleting a cluster is permanent and can&apos;t be undone.</li>
-            <li>
-              Attached Block Storage Volumes or NodeBalancers must be deleted
-              separately.
-            </li>
-          </ul>
+          <List
+            sx={{
+              listStyleType: 'disc',
+              margin: '5px 0px 0px',
+              paddingLeft: '15px',
+            }}
+            dense
+          >
+            {CLUSTER_DELETION_WARNINGS.map((notice, idx) => (
+              <ListItem
+                sx={{
+                  display: 'list-item',
+                }}
+                disableGutters
+                key={idx}
+              >
+                {notice.text}
+              </ListItem>
+            ))}
+          </List>
         </Typography>
       </Notice>
     </TypeToConfirmDialog>
