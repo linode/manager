@@ -10,6 +10,7 @@ import Request, {
   setData,
   setMethod,
   setParams,
+  setHeaders,
   setURL,
   setXFilter,
 } from '../request';
@@ -24,6 +25,7 @@ import {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
 } from './types';
+import type { RequestOptions } from '../types';
 
 /**
  * getProfile
@@ -31,8 +33,13 @@ import {
  * Return the current (logged in) user's profile.
  *
  */
-export const getProfile = () =>
-  Request<Profile>(setURL(`${API_ROOT}/profile`), setMethod('GET'));
+export const getProfile = ({ headers }: RequestOptions = {}) => {
+  return Request<Profile>(
+    setURL(`${API_ROOT}/profile`),
+    setMethod('GET'),
+    setHeaders(headers)
+  );
+};
 
 /**
  * updateProfile

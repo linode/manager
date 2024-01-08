@@ -9,26 +9,37 @@ import {
 import { omittedProps } from 'src/utilities/omittedProps';
 
 interface CircleProgressProps extends CircularProgressProps {
+  /**
+   * Additional child elements to pass in
+   */
   children?: JSX.Element;
-  className?: string;
+  /**
+   * Displays a smaller version of the circle progress.
+   */
   mini?: boolean;
+  /**
+   * If true, will not show an inner circle beneath the spinning circle
+   */
   noInner?: boolean;
+  /**
+   * Removes the padding for `mini` circle progresses only.
+   */
   noPadding?: boolean;
+  /**
+   * To be primarily used with mini and noPadding. Set spinner to a custom size.
+   */
   size?: number;
+  /**
+   * Additional styles to apply to the root element.
+   */
   sx?: SxProps;
 }
 
+/**
+ * Use for short, indeterminate activities requiring user attention.
+ */
 const CircleProgress = (props: CircleProgressProps) => {
-  const {
-    children,
-    className,
-    mini,
-    noInner,
-    noPadding,
-    size,
-    sx,
-    ...rest
-  } = props;
+  const { children, mini, noInner, noPadding, size, sx, ...rest } = props;
 
   const variant =
     typeof props.value === 'number' ? 'determinate' : 'indeterminate';
@@ -48,16 +59,12 @@ const CircleProgress = (props: CircleProgressProps) => {
   }
 
   return (
-    <StyledRootDiv
-      aria-label="Content is loading"
-      className={className}
-      sx={sx}
-    >
+    <StyledRootDiv aria-label="Content is loading" sx={sx}>
       {children !== undefined && (
         <Box sx={{ marginTop: 4, position: 'absolute' }}>{children}</Box>
       )}
       {noInner !== true && (
-        <StyledTopWrapperDiv>
+        <StyledTopWrapperDiv data-testid="inner-circle-progress">
           <StyledTopDiv />
         </StyledTopWrapperDiv>
       )}

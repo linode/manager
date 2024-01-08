@@ -99,7 +99,9 @@ describe('NodeBalancerSelect', () => {
 
     await waitFor(() => {
       // The default no options message should be displayed when noOptionsMessage prop is not provided
-      expect(screen.getByText('No options')).toBeInTheDocument();
+      expect(
+        screen.getByText('No available NodeBalancers')
+      ).toBeInTheDocument();
     });
   });
 

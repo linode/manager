@@ -6,6 +6,8 @@ export type Permission = [string, number];
 
 export const basePerms = [
   'account',
+  // TODO: Parent/Child - add this scope once API code is in prod.
+  // 'child_account',
   'databases',
   'domains',
   'events',
@@ -23,6 +25,8 @@ export const basePerms = [
 
 export const basePermNameMap: Record<string, string> = {
   account: 'Account',
+  // TODO: Parent/Child - add this scope once API code is in prod.
+  // child_account: 'Child Account Access',
   databases: 'Databases',
   domains: 'Domains',
   events: 'Events',

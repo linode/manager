@@ -1,7 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -42,7 +42,7 @@ import { SizeField } from './VolumeDrawer/SizeField';
 
 export const SIZE_FIELD_WIDTH = 160;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   agreement: {
     maxWidth: '70%',
     [theme.breakpoints.down('sm')]: {
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const VolumeCreate = () => {
   const theme = useTheme();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
 
   const { data: profile } = useProfile();

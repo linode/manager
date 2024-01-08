@@ -22,6 +22,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import {
   prefixToQueryKey,
@@ -33,7 +34,6 @@ import { sendDownloadObjectEvent } from 'src/utilities/analytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 
-import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
 import { deleteObject as _deleteObject } from '../requests';
 import {
   displayName,

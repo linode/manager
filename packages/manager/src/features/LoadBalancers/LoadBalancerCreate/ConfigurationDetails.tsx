@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import { useFormikContext } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -16,14 +16,15 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/Configurations/constants';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import type { Handlers } from './LoadBalancerConfigurations';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
+  handlers: Handlers;
   index: number;
-  name: string;
 }
 
-export const ConfigurationDetails = ({ index, name }: Props) => {
+export const ConfigurationDetails = ({ index }: Props) => {
   const {
     errors,
     handleBlur,
@@ -31,7 +32,7 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
     setFieldValue,
     touched,
     values,
-  } = useFormikContext<CreateLoadbalancerPayload>();
+  } = useFormikContext<LoadBalancerCreateFormData>();
 
   return (
     <Box padding={1}>
@@ -44,18 +45,19 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
         <Stack direction="row" spacing={2}>
           <Autocomplete
             errorText={
-              touched[name]?.[index]?.protocol
-                ? errors[name]?.[index]?.protocol
+              touched.configurations?.[index]?.protocol
+                ? getIn(errors, `configurations[${index}].protocol`)
                 : ''
             }
             onChange={(_, { value }) =>
-              setFieldValue(`${name}.${index}.protocol`, value)
+              setFieldValue(`configurations[${index}].protocol`, value)
             }
             textFieldProps={{
               labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
             value={protocolOptions.find(
-              (option) => option.value === values[name]?.[index]?.protocol
+              (option) =>
+                option.value === values.configurations?.[index]?.protocol
             )}
             disableClearable
             label="Protocol"
@@ -63,16 +65,19 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
           />
           <TextField
             errorText={
-              touched[name]?.[index]?.port ? errors[name]?.[index]?.port : ''
+              touched.configurations?.[index]?.port
+                ? getIn(errors, `configurations[${index}].port`)
+                : ''
             }
+            inputId={`configuration-${index}-port`}
             label="Port"
             labelTooltipText={CONFIGURATION_COPY.Port}
-            name={`${name}.${index}.port`}
+            name={`configurations[${index}].port`}
             onBlur={handleBlur}
             onChange={handleChange}
             placeholder="Enter Port"
             type="number"
-            value={values[name]?.[index]?.port}
+            value={values.configurations?.[index]?.port}
           />
         </Stack>
         <Stack>
@@ -98,15 +103,18 @@ export const ConfigurationDetails = ({ index, name }: Props) => {
       </Stack>
       <TextField
         errorText={
-          touched[name]?.[index]?.label ? errors[name]?.[index]?.label : ''
+          touched.configurations?.[index]?.label
+            ? getIn(errors, `configurations[${index}].label`)
+            : ''
         }
+        inputId={`configuration-${index}-label`}
         label="Configuration Label"
         labelTooltipText={CONFIGURATION_COPY.configuration}
-        name={`${name}.${index}.label`}
+        name={`configurations[${index}].label`}
         onBlur={handleBlur}
         onChange={handleChange}
         placeholder="Enter Configuration Label"
-        value={values[name]?.[index]?.label}
+        value={values.configurations?.[index]?.label}
       />
     </Box>
   );

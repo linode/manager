@@ -28,6 +28,14 @@ export const firewallRulesFactory = Factory.Sync.makeFactory<FirewallRules>({
 
 export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   created_dt: '2020-01-01 00:00:00',
+  entities: [
+    {
+      id: 1,
+      label: 'my-linode',
+      type: 'linode' as FirewallDeviceEntityType,
+      url: '/test',
+    },
+  ],
   id: Factory.each((id) => id),
   label: Factory.each((id) => `mock-firewall-${id}`),
   rules: firewallRulesFactory.build(),

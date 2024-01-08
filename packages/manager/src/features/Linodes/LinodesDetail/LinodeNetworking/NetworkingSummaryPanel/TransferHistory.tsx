@@ -7,6 +7,7 @@ import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
+import { AreaChart } from 'src/components/AreaChart';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -27,8 +28,6 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
-
-import { NetworkTransferHistoryChart } from './NetworkTransferHistoryChart';
 
 interface Props {
   linodeCreated: string;
@@ -168,12 +167,25 @@ export const TransferHistory = React.memo((props: Props) => {
       }, []);
 
       return (
-        <NetworkTransferHistoryChart
-          aria-label={graphAriaLabel}
-          data={timeData}
-          timezone={profile?.timezone ?? 'UTC'}
-          unit={unit}
-        />
+        <Box marginLeft={-5}>
+          <AreaChart
+            areas={[
+              {
+                color: '#1CB35C',
+                dataKey: 'Public Outbound Traffic',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'LLL dd',
+              tickGap: 15,
+            }}
+            aria-label={graphAriaLabel}
+            data={timeData}
+            height={190}
+            timezone={profile?.timezone ?? 'UTC'}
+            unit={unit}
+          />
+        </Box>
       );
     }
 

@@ -5,17 +5,25 @@ import React from 'react';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
+import {
+  LoadBalancerCreateFormData,
+  initialValues,
+} from './LoadBalancerCreate';
 
-// Define your initial values based on your form structure
-const initialValues = {
-  configurations: [{ label: '', port: 80, protocol: 'https' }],
-  label: '',
+import type { Handlers } from './LoadBalancerConfigurations';
+
+export const handlers: Handlers = {
+  handleAddRoute: vi.fn(),
+  handleAddServiceTarget: vi.fn(),
+  handleCloseServiceTargetDrawer: vi.fn(),
+  handleEditRoute: vi.fn(),
+  handleEditServiceTarget: vi.fn(),
 };
 
 describe('LoadBalancerConfiguration', () => {
   test('Should render Details content', () => {
-    renderWithThemeAndFormik(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+    renderWithThemeAndFormik<LoadBalancerCreateFormData>(
+      <LoadBalancerConfiguration handlers={handlers} index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
 
@@ -33,59 +41,33 @@ describe('LoadBalancerConfiguration', () => {
     expect(ConfigurationPort).toHaveValue(90);
 
     expect(screen.getByText('Protocol')).toBeInTheDocument();
-    expect(
-      screen.queryByText(
-        'TODO: AGLB - Implement Service Targets Configuration.'
-      )
-    ).toBeNull();
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Routes Configuration.')
-    ).toBeNull();
     expect(screen.getByText('Next: Service Targets')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Details')).toBeNull();
   });
   test('Should navigate to Service Targets content', () => {
-    renderWithThemeAndFormik(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+    renderWithThemeAndFormik<LoadBalancerCreateFormData>(
+      <LoadBalancerConfiguration handlers={handlers} index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
-    expect(
-      screen.getByText('TODO: AGLB - Implement Service Targets Configuration.')
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Details step content.')
-    ).toBeNull();
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Routes Configuration.')
-    ).toBeNull();
+    expect(screen.getByText('Add Service Target')).toBeInTheDocument();
     expect(screen.getByText('Next: Routes')).toBeInTheDocument();
     expect(screen.getByText('Previous: Details')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Service Targets')).toBeNull();
   });
   test('Should navigate to Routes content', () => {
-    renderWithThemeAndFormik(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+    renderWithThemeAndFormik<LoadBalancerCreateFormData>(
+      <LoadBalancerConfiguration index={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));
     userEvent.click(screen.getByTestId('routes'));
-    expect(
-      screen.queryByText('TODO: AGLB - Implement Details step content.')
-    ).toBeNull();
-    expect(
-      screen.queryByText(
-        'TODO: AGLB - Implement Service Targets Configuration.'
-      )
-    ).toBeNull();
-    expect(
-      screen.getByText('TODO: AGLB - Implement Routes Configuration.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Routes', { selector: 'h2' })).toBeVisible();
     expect(screen.getByText('Previous: Service Targets')).toBeInTheDocument();
   });
   test('Should be able to go previous step', () => {
-    renderWithThemeAndFormik(
-      <LoadBalancerConfiguration index={0} name="configurations" />,
+    renderWithThemeAndFormik<LoadBalancerCreateFormData>(
+      <LoadBalancerConfiguration index={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
     userEvent.click(screen.getByTestId('service-targets'));

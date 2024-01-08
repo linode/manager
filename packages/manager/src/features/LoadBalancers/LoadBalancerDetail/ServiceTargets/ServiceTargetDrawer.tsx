@@ -224,23 +224,29 @@ export const ServiceTargetDrawer = (props: Props) => {
           onRemove={onRemoveEndpoint}
         />
         <AddEndpointForm onAdd={onAddEndpoint} />
-        <Divider spacingBottom={12} spacingTop={24} />
-        <Stack alignItems="center" direction="row">
-          <Typography variant="h3">Service Target CA Certificate</Typography>
-          <TooltipIcon
-            status="help"
-            text={SERVICE_TARGET_COPY.Tooltips.Certificate}
-          />
-        </Stack>
-        <CertificateSelect
-          onChange={(cert) =>
-            formik.setFieldValue('certificate_id', cert?.id ?? null)
-          }
-          errorText={formik.errors.certificate_id}
-          filter={{ type: 'ca' }}
-          loadbalancerId={loadbalancerId}
-          value={formik.values.certificate_id}
-        />
+        {formik.values.protocol === 'https' && (
+          <>
+            <Divider spacingBottom={12} spacingTop={24} />
+            <Stack alignItems="center" direction="row">
+              <Typography variant="h3">
+                Service Target CA Certificate
+              </Typography>
+              <TooltipIcon
+                status="help"
+                text={SERVICE_TARGET_COPY.Tooltips.Certificate}
+              />
+            </Stack>
+            <CertificateSelect
+              onChange={(cert) =>
+                formik.setFieldValue('certificate_id', cert?.id ?? null)
+              }
+              errorText={formik.errors.certificate_id}
+              filter={{ type: 'ca' }}
+              loadbalancerId={loadbalancerId}
+              value={formik.values.certificate_id}
+            />
+          </>
+        )}
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Health Checks</Typography>
