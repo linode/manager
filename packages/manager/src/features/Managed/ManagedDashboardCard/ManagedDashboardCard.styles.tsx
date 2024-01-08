@@ -15,8 +15,10 @@ export const StyledMonitorStatusOuterGrid = styled(Grid, {
 export const StyledOuterContainerGrid = styled(Grid, {
   label: 'StyledOuterContainerGrid',
 })(({ theme }) => ({
+  flexDirection: 'column',
   margin: '-8px',
   [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'space-evenly',
   },
