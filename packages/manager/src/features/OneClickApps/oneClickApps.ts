@@ -1141,7 +1141,8 @@ export const oneClickApps: OCA[] = [
           'Deploy MainConcept FFmpeg Plugins Demo through the Linode Marketplace',
       },
     ],
-    summary: 'MainConcept FFmpeg Plugins Demo contains advanced video encoding tools.',
+    summary:
+      'MainConcept FFmpeg Plugins Demo contains advanced video encoding tools.',
     website: 'https://www.mainconcept.com/ffmpeg',
   },
   {
@@ -1159,7 +1160,8 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder-demo/',
-        title: 'Deploy MainConcept Live Encoder Demo through the Linode Marketplace',
+        title:
+          'Deploy MainConcept Live Encoder Demo through the Linode Marketplace',
       },
     ],
     summary: 'MainConcept Live Encoder is a real time video encoding engine.',

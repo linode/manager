@@ -42,6 +42,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
+/**
+ * Add a new color to the palette, especially another tint of gray or blue, only after exhausting the option of using an existing color.
+ *
+ * - Colors used in light mode are located in `foundations/light.ts
+ * - Colors used in dark mode are located in `foundations/dark.ts`
+ *
+ * If a color does not exist in the current palette and is only used once, consider applying the color conditionally:
+ *
+ * `theme.name === 'light' ? '#fff' : '#000'`
+ */
 export const ColorPalette = () => {
   const { classes } = useStyles();
   const theme = useTheme();

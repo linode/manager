@@ -12,18 +12,36 @@ import { LoadBalancerConfigurations } from './LoadBalancerConfigurations';
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import type {
+  ConfigurationPayload,
+  CreateLoadbalancerPayload,
+  ServiceTargetPayload,
+} from '@linode/api-v4';
 
-const initialValues: CreateLoadbalancerPayload = {
+export interface LoadBalancerCreateFormData
+  extends Omit<CreateLoadbalancerPayload, 'configurations'> {
+  configurations: (ConfigurationPayload & {
+    service_targets: ServiceTargetPayload[];
+  })[];
+}
+
+export const initialValues: LoadBalancerCreateFormData = {
   configurations: [
-    { certificates: [], label: '', port: 443, protocol: 'https' },
+    {
+      certificates: [],
+      label: '',
+      port: 443,
+      protocol: 'https',
+      routes: [],
+      service_targets: [],
+    },
   ],
   label: '',
   regions: [],
 };
 
 export const LoadBalancerCreate = () => {
-  const handleSubmit = (values: CreateLoadbalancerPayload) => {
+  const handleSubmit = (values: LoadBalancerCreateFormData) => {
     // console.log('Submitted values:', values);
   };
 

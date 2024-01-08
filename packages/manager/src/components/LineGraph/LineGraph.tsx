@@ -37,14 +37,16 @@ setUpCharts();
 export interface DataSet {
   backgroundColor?: string;
   borderColor: string;
-  // this data property type might not be the perfect fit, but it works for
-  // the data returned from /linodes/:linodeID/stats and
-  // /nodebalancers/:nodebalancer/stats
+  /**
+   * The data point to plot on the line graph that should be of type `DataSet`.
+   * This data property type might not be the perfect fit, but it works for the data returned from /linodes/:linodeID/stats and /nodebalancers/:nodebalancer/stats.
+   */
   data: [number, null | number][];
   // the first number will be a UTC data and the second will be the amount per second
   fill?: boolean | string;
   label: string;
 }
+
 export interface LineGraphProps {
   /**
    * `accessibleDataTable` is responsible to both rendering the accessible graph data table and an associated unit.
@@ -52,18 +54,57 @@ export interface LineGraphProps {
   accessibleDataTable?: {
     unit: string;
   };
+  /**
+   * The accessible aria-label for the chart.
+   */
   ariaLabel?: string;
+  /**
+   * The height in `px` of the chart.
+   */
   chartHeight?: number;
+  /**
+   * The data to be plotted on the line graph.
+   */
   data: DataSet[];
+  /**
+   * The function that formats the data point values.
+   */
   formatData?: (value: number) => null | number;
+  /**
+   * The function that formats the tooltip text.
+   */
   formatTooltip?: (value: number) => string;
+  /**
+   * Legend row labels that are used in the legend.
+   */
   legendRows?: Array<any>;
-  nativeLegend?: boolean; // Display chart.js native legend
+  /**
+   * Show the native **Chart.js** legend
+   */
+  nativeLegend?: boolean;
+  /**
+   * Row headers for the legend.
+   */
   rowHeaders?: Array<string>;
+  /**
+   * Determines whether dates or times are shown on the x-axis and also determines the x-axis step size.
+   */
   showToday: boolean;
+  /**
+   * The suggested maximum y-axis value passed to **Chart,js**.
+   */
   suggestedMax?: number;
+  /**
+   * The suggested maximum y-axis value passed to **Chart,js**.
+   */
   tabIndex?: number;
+  /**
+   * The timezone the graph should use for interpreting the UNIX date-times in the data set.
+   */
   timezone: string;
+  /**
+   * The unit to add to the mouse-over tooltip in the chart.
+   */
   unit?: string;
 }
 
@@ -85,6 +126,12 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
+/**
+ * **Chart.js** is the charting tool we use for analytics shown on the Linode detail page
+ * - Keep charts compact
+ * - When selecting a chart color palette make sure colors are distinct when viewed by a person with color blindness
+ * - Test the palette with a checker such as the [Coblis — Color Blindness Simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/)
+ */
 export const LineGraph = (props: LineGraphProps) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -308,7 +355,7 @@ export const LineGraph = (props: LineGraphProps) => {
     // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
     // and the fact that the legend can filter them.
     // Meanwhile the CSS uses column-reverse to visually retain the original order
-    <StyledWrapper tabIndex={tabIndex ?? 0}>
+    <StyledWrapper data-testid="linegraph-wrapper" tabIndex={tabIndex ?? 0}>
       {legendRendered && legendRows && (
         <StyledContainer>
           <StyledTable

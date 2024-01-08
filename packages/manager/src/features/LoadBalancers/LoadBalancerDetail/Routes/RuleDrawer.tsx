@@ -27,6 +27,7 @@ import {
   TimeUnit,
   defaultServiceTarget,
   defaultTTL,
+  defaultTTLUnit,
   getIsSessionStickinessEnabled,
   getNormalizedRulePayload,
   initialValues,
@@ -74,7 +75,7 @@ export const RuleDrawer = (props: Props) => {
     reset,
   } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
 
-  const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
+  const [ttlUnit, setTTLUnit] = useState<TimeUnit>(defaultTTLUnit);
 
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
@@ -121,7 +122,7 @@ export const RuleDrawer = (props: Props) => {
     _onClose();
     formik.resetForm();
     reset();
-    setTTLUnit('hour');
+    setTTLUnit(defaultTTLUnit);
   };
 
   const onAddServiceTarget = () => {
@@ -463,11 +464,9 @@ export const RuleDrawer = (props: Props) => {
                       />
                       <Autocomplete
                         onChange={(_, option) => {
-                          const currentTTLUnit = ttlUnit;
-
                           const factor =
                             timeUnitFactorMap[option.key] /
-                            timeUnitFactorMap[currentTTLUnit];
+                            timeUnitFactorMap[ttlUnit];
 
                           setTTLUnit(option.key);
 
@@ -504,6 +503,7 @@ export const RuleDrawer = (props: Props) => {
           primaryButtonProps={{
             label: isEditMode ? 'Save' : 'Add Rule',
             loading: formik.isSubmitting || isLoading,
+            disabled: isEditMode && !formik.dirty,
             type: 'submit',
           }}
           secondaryButtonProps={{

@@ -15,6 +15,11 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 // Message shown on-screen when user navigates to an empty bucket.
 const emptyBucketMessage = 'This bucket is empty.';
@@ -116,8 +121,13 @@ describe('object storage end-to-end tests', () => {
     interceptCreateBucket().as('createBucket');
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
 
+    mockAppendFeatureFlags({
+      objMultiCluster: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
     cy.visitWithLogin('/object-storage');
-    cy.wait('@getBuckets');
+    cy.wait(['@getFeatureFlags', '@getBuckets']);
 
     ui.button.findByTitle('Create Bucket').should('be.visible').click();
 

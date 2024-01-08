@@ -7,34 +7,36 @@ import { Typography } from 'src/components/Typography';
 import { VerticalLinearStepper } from 'src/components/VerticalLinearStepper/VerticalLinearStepper';
 
 import { ConfigurationDetails } from './ConfigurationDetails';
+import { Handlers } from './LoadBalancerConfigurations';
+import { Routes } from './Routes';
+import { ServiceTargets } from './ServiceTargets';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 
 interface Props {
+  handlers: Handlers;
   index: number;
-  name: string;
 }
 
-export const LoadBalancerConfiguration = ({ index, name }: Props) => {
+export const LoadBalancerConfiguration = ({ handlers, index }: Props) => {
   const configurationSteps = [
     {
-      content: <ConfigurationDetails index={index} name={name} />,
-      handler: () => null,
+      content: <ConfigurationDetails handlers={handlers} index={index} />,
       label: 'Details',
     },
     {
-      content: <div>TODO: AGLB - Implement Service Targets Configuration.</div>,
-      handler: () => null,
+      content: (
+        <ServiceTargets configurationIndex={index} handlers={handlers} />
+      ),
       label: 'Service Targets',
     },
     {
-      content: <div>TODO: AGLB - Implement Routes Configuration.</div>,
-      handler: () => null,
+      content: <Routes configurationIndex={index} handlers={handlers} />,
       label: 'Routes',
     },
   ];
 
-  const { values } = useFormikContext<CreateLoadbalancerPayload>();
+  const { values } = useFormikContext<LoadBalancerCreateFormData>();
 
   return (
     <Paper>
@@ -42,7 +44,7 @@ export const LoadBalancerConfiguration = ({ index, name }: Props) => {
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
       >
-        Configuration -{values[name]?.[index]?.label}
+        Configuration - {values.configurations?.[index]?.label}
       </Typography>
       <Stack spacing={1}>
         <Typography>

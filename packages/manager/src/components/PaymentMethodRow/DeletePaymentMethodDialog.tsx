@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
-import { Grid } from '../Grid';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
@@ -58,7 +58,6 @@ export const DeletePaymentMethodDialog = React.memo((props: Props) => {
       <Grid className={classes.container} container>
         <Grid
           className={classes.item}
-          item
           style={{ paddingBottom: 0, paddingLeft: 0 }}
         >
           {paymentMethod && paymentMethod.type === 'credit_card' ? (
