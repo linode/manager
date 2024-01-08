@@ -184,6 +184,8 @@ export const useDisableTwoFactorMutation = () => {
   return useMutation<{}, APIError[]>(disableTwoFactor, {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, {}]);
+      // also invalidate the /account/users data because that endpoint returns 2FA status for each user
+      queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
   });
 };
