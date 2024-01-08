@@ -1,3 +1,10 @@
+## [2024-01-08] - v0.37.0
+
+
+### Tech Stories:
+
+- Add Lint Github Action ([#9973](https://github.com/linode/manager/pull/9973))
+
 ## [2023-12-11] - v0.36.0
 
 

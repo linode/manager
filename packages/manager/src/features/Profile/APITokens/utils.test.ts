@@ -26,7 +26,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('*');
       const expected = [
         ['account', 2],
-        ['child_account', 2],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 2],
         ['databases', 2],
         ['domains', 2],
         ['events', 2],
@@ -50,7 +51,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('');
       const expected = [
         ['account', 0],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
         ['events', 0],
@@ -75,7 +77,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:none');
       const expected = [
         ['account', 0],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
         ['events', 0],
@@ -100,7 +103,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:read_only');
       const expected = [
         ['account', 1],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
         ['events', 0],
@@ -125,7 +129,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:read_write');
       const expected = [
         ['account', 2],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
         ['events', 0],
@@ -152,7 +157,8 @@ describe('APIToken utils', () => {
       );
       const expected = [
         ['account', 0],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 1],
         ['events', 0],
@@ -181,7 +187,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:none,tokens:read_write');
       const expected = [
         ['account', 2],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
         ['events', 0],
@@ -210,7 +217,8 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:read_only,tokens:none');
       const expected = [
         ['account', 1],
-        ['child_account', 0],
+        // TODO: Parent/Child - add this scope once code is in prod.
+        // ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
         ['events', 0],
@@ -235,7 +243,8 @@ describe('APIToken utils', () => {
       it('should return 0 if all scopes are 0', () => {
         const scopes: Permission[] = [
           ['account', 0],
-          ['child_account', 0],
+          // TODO: Parent/Child - add this scope once code is in prod.
+          // ['child_account', 0],
           ['databases', 0],
           ['domains', 0],
           ['events', 0],
@@ -255,7 +264,8 @@ describe('APIToken utils', () => {
       it('should return 1 if all scopes are 1', () => {
         const scopes: Permission[] = [
           ['account', 1],
-          ['child_account', 1],
+          // TODO: Parent/Child - add this scope once code is in prod.
+          // ['child_account', 1],
           ['databases', 1],
           ['domains', 1],
           ['events', 1],
@@ -275,7 +285,8 @@ describe('APIToken utils', () => {
       it('should return 2 if all scopes are 2', () => {
         const scopes: Permission[] = [
           ['account', 2],
-          ['child_account', 2],
+          // TODO: Parent/Child - add this scope once code is in prod.
+          // ['child_account', 2],
           ['databases', 2],
           ['domains', 2],
           ['events', 2],
@@ -295,7 +306,8 @@ describe('APIToken utils', () => {
       it('should return null if all scopes are different', () => {
         const scopes: Permission[] = [
           ['account', 1],
-          ['child_account', 0],
+          // TODO: Parent/Child - add this scope once code is in prod.
+          // ['child_account', 0],
           ['databases', 0],
           ['domains', 2],
           ['events', 0],

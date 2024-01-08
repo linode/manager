@@ -19,6 +19,7 @@ import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 // import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -113,12 +114,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { loading } = this.state;
     const { username } = this.props;
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${username} - Permissions`} />
-        {this.renderBody()}
+        {loading ? <CircleProgress /> : this.renderBody()}
       </React.Fragment>
     );
   }
