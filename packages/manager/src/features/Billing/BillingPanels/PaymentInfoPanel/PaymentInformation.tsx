@@ -7,15 +7,9 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { Typography } from 'src/components/Typography';
-import {
-  ADMINISTRATOR,
-  BUSINESS_PARTNER,
-} from 'src/features/Account/constants';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import {
-  ADD_PAYMENT_METHOD,
-  RESTRICTED_SECTION_EDIT_MESSAGE,
-} from 'src/features/Billing/constants';
+import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
+import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { queryKey } from 'src/queries/accountPayment';
 import { useAccountUser } from 'src/queries/accountUsers';
@@ -102,11 +96,10 @@ const PaymentInformation = (props: Props) => {
     }
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
-  const conditionalTooltipText = isRestrictedUser
-    ? `${RESTRICTED_SECTION_EDIT_MESSAGE} ${
-        isChildUser ? BUSINESS_PARTNER : ADMINISTRATOR
-      }`
-    : undefined;
+  const conditionalTooltipText = getDisabledTooltipText({
+    isChildUser,
+    isRestrictedUser,
+  });
 
   return (
     <Grid md={6} xs={12}>

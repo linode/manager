@@ -7,6 +7,11 @@ import {
   PAYMENT_SOFT_MAX,
 } from 'src/constants';
 import { TaxDetail } from 'src/featureFlags';
+import {
+  ADMINISTRATOR,
+  BUSINESS_PARTNER,
+} from 'src/features/Account/constants';
+import { RESTRICTED_SECTION_EDIT_MESSAGE } from 'src/features/Billing/constants';
 import { parseAPIDate } from 'src/utilities/date';
 
 export const cleanCVV = (input: string): string => {
@@ -54,3 +59,17 @@ export function getPaymentLimits(
     min: balance < PAYMENT_MIN && balance > 0 ? balance : PAYMENT_MIN,
   };
 }
+
+export const getDisabledTooltipText = ({
+  isChildUser,
+  isRestrictedUser,
+}: {
+  isChildUser: boolean | undefined;
+  isRestrictedUser: boolean;
+}) => {
+  return isRestrictedUser
+    ? `${RESTRICTED_SECTION_EDIT_MESSAGE} ${
+        isChildUser ? BUSINESS_PARTNER : ADMINISTRATOR
+      }`
+    : undefined;
+};

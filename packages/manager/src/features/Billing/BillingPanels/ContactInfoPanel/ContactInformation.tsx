@@ -5,14 +5,8 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
-import {
-  ADMINISTRATOR,
-  BUSINESS_PARTNER,
-} from 'src/features/Account/constants';
-import {
-  EDIT_BILLING_CONTACT,
-  RESTRICTED_SECTION_EDIT_MESSAGE,
-} from 'src/features/Billing/constants';
+import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
+import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -135,11 +129,10 @@ const ContactInformation = (props: Props) => {
       }),
   };
 
-  const conditionalTooltipText = isRestrictedUser
-    ? `${RESTRICTED_SECTION_EDIT_MESSAGE} ${
-        isChildUser ? BUSINESS_PARTNER : ADMINISTRATOR
-      }`
-    : undefined;
+  const conditionalTooltipText = getDisabledTooltipText({
+    isChildUser,
+    isRestrictedUser,
+  });
 
   return (
     <Grid md={6} xs={12}>
