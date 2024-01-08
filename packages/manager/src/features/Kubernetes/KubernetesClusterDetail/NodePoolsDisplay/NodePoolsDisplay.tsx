@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -25,7 +24,7 @@ import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 import type { Region } from '@linode/api-v4';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(),
@@ -64,7 +63,7 @@ export interface Props {
 
 export const NodePoolsDisplay = (props: Props) => {
   const { clusterID, clusterLabel, clusterRegionId, regionsData } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const {
     data: pools,
@@ -125,24 +124,21 @@ export const NodePoolsDisplay = (props: Props) => {
         spacing={2}
       >
         <Grid>
-          <Typography
-            className={classNames(classes.nodePoolHeader)}
-            variant="h2"
-          >
+          <Typography className={cx(classes.nodePoolHeader)} variant="h2">
             Node Pools
           </Typography>
         </Grid>
         <Grid>
           <Button
             buttonType="secondary"
-            className={classNames(classes.button)}
+            className={cx(classes.button)}
             onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
           </Button>
           <Button
             buttonType="primary"
-            className={classNames(classes.button)}
+            className={cx(classes.button)}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool

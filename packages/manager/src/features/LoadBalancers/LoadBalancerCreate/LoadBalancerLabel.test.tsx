@@ -5,12 +5,13 @@ import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { LoadBalancerLabel } from './LoadBalancerLabel';
 
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+
 const loadBalancerLabelValue = 'Test Label';
 const loadBalancerTestId = 'textfield-input';
 
-import type { CreateLoadbalancerPayload } from '@linode/api-v4';
-
-const initialValues: CreateLoadbalancerPayload = {
+const initialValues: LoadBalancerCreateFormData = {
+  configurations: [],
   label: loadBalancerLabelValue,
   regions: [],
 };

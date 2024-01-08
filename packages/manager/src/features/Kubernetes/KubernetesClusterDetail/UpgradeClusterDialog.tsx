@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -18,7 +18,7 @@ import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   noticeHeader: {
     fontSize: '0.875rem',
   },
@@ -51,7 +51,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
   );
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const onUpgrade = () => {
     setSubmitting(true);

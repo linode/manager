@@ -1,18 +1,16 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   post: {
     marginBottom: theme.spacing(0.5),
-    ...theme.typography.body1,
   },
-
   postTitle: {
     marginBottom: theme.spacing(2),
   },
@@ -31,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const PopularPosts = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const renderPopularDocs = () => {
     return (

@@ -2,8 +2,8 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
-import { Stack } from 'src/components/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
+import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,10 +12,16 @@ import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useGrants } from 'src/queries/profile';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccountUser } from 'src/queries/accountUsers';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { authentication } from 'src/utilities/storage';
+
+import type { UserType } from '@linode/api-v4';
 
 interface MenuLink {
   display: string;
@@ -45,8 +51,22 @@ export const UserMenu = React.memo(() => {
   const {
     _hasAccountAccess,
     _isRestrictedUser,
+    account,
     profile,
   } = useAccountManagement();
+
+  const flags = useFlags();
+
+  const { data: user } = useAccountUser(profile?.username ?? '');
+  const { data: grants } = useGrants();
+
+  // For proxy accounts: configure request headers using a parent's token to fetch the parent's username from /profile.
+  const headers =
+    flags.parentChildAccountAccess && user?.user_type === 'proxy'
+      ? new AxiosHeaders({ Authorization: authentication.token.get() }) // TODO: Parent/Child - M3-7430: replace this token with the parent token in local storage.
+      : undefined;
+
+  const { data: parentProfile } = useProfile({ headers });
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -64,13 +84,31 @@ export const UserMenu = React.memo(() => {
     setAnchorEl(null);
   };
 
+  /**
+   * Use the current profile's username for all accounts but a proxy user account, for which we display the parent's username.
+   */
+  const getUserNameBasedOnUserType = (
+    userType: UserType | null | undefined,
+    isParentChildFeatureEnabled: boolean
+  ) => {
+    return isParentChildFeatureEnabled && userType === 'proxy'
+      ? parentProfile?.username
+      : profile?.username;
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
-
-  const { data: grants } = useGrants();
-  const userName = profile?.username ?? '';
+  const companyName =
+    user?.user_type && account?.company ? account?.company : '';
+  const userName =
+    getUserNameBasedOnUserType(
+      user?.user_type,
+      Boolean(flags.parentChildAccountAccess)
+    ) ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
+  const showCompanyName =
+    flags.parentChildAccountAccess && user?.user_type !== null && companyName;
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -161,7 +199,25 @@ export const UserMenu = React.memo(() => {
           startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
           <Hidden mdDown>
-            <Typography sx={{ fontSize: '0.875rem' }}>{userName}</Typography>
+            <Stack alignItems={'flex-start'}>
+              <Typography
+                sx={{
+                  fontSize: showCompanyName ? '0.775rem' : '0.875rem',
+                }}
+              >
+                {userName}
+              </Typography>
+              {showCompanyName && (
+                <Typography
+                  sx={(theme) => ({
+                    fontFamily: theme.font.bold,
+                    fontSize: '0.875rem',
+                  })}
+                >
+                  {companyName}
+                </Typography>
+              )}
+            </Stack>
           </Hidden>
         </Button>
       </Tooltip>

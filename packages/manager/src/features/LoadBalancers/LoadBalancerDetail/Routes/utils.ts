@@ -43,6 +43,8 @@ export const defaultServiceTarget = {
   percentage: 100,
 };
 
+export const defaultTTLUnit = 'second';
+
 export const initialValues = {
   match_condition: {
     hostname: '',
@@ -76,11 +78,10 @@ export const getNormalizedRulePayload = (rule: RulePayload) => ({
 });
 
 export const timeUnitFactorMap = {
-  millisecond: 1,
-  second: 1000,
-  minute: 60000,
-  hour: 3_600_000,
-  day: 86_400_000,
+  second: 1,
+  minute: 60,
+  hour: 3_600,
+  day: 86_400,
 };
 
 export type TimeUnit = keyof typeof timeUnitFactorMap;
@@ -93,7 +94,7 @@ export const timeUnitOptions = Object.keys(timeUnitFactorMap).map(
   })
 );
 
-export const defaultTTL = timeUnitFactorMap['hour'] * 8;
+export const defaultTTL = timeUnitFactorMap['hour'] * 1;
 
 /**
  * Routes can be `http` or `tcp`.

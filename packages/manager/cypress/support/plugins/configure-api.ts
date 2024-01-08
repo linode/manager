@@ -1,6 +1,7 @@
-import { CypressPlugin } from './plugin';
+import { Profile, getProfile } from '@linode/api-v4';
+
 import { configureLinodeApi, defaultApiRoot } from '../util/api';
-import { getProfile, Profile } from '@linode/api-v4';
+import { CypressPlugin } from './plugin';
 
 /**
  * Configures API requests to use configure access token and API root.

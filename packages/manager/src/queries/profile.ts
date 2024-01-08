@@ -37,13 +37,24 @@ import { Grants } from '../../../api-v4/lib';
 import { queryKey as accountQueryKey } from './account';
 import { queryPresets } from './base';
 
+import type { RequestOptions } from '@linode/api-v4';
+
 export const queryKey = 'profile';
 
-export const useProfile = (givenProfile?: Profile) =>
-  useQuery<Profile, APIError[]>(queryKey, getProfile, {
-    ...queryPresets.oneTimeFetch,
-    initialData: givenProfile,
-  });
+export const useProfile = (options?: RequestOptions) => {
+  const key = [
+    queryKey,
+    options?.headers ? { headers: options.headers } : null,
+  ];
+
+  return useQuery<Profile, APIError[]>(
+    key,
+    () => getProfile({ headers: options?.headers }),
+    {
+      ...queryPresets.oneTimeFetch,
+    }
+  );
+};
 
 export const useMutateProfile = () => {
   const queryClient = useQueryClient();
@@ -57,7 +68,7 @@ export const updateProfileData = (
   newData: Partial<Profile>,
   queryClient: QueryClient
 ): void => {
-  queryClient.setQueryData(queryKey, (oldData: Profile) => ({
+  queryClient.setQueryData([queryKey, null], (oldData: Profile) => ({
     ...oldData,
     ...newData,
   }));
@@ -72,7 +83,8 @@ export const useGrants = () => {
 };
 
 export const getProfileData = (queryClient: QueryClient) =>
-  queryClient.getQueryData<Profile>(queryKey);
+  queryClient.getQueryData<Profile>([queryKey, null]);
+
 export const getGrantData = (queryClient: QueryClient) =>
   queryClient.getQueryData<Grants>([queryKey, 'grants']);
 
@@ -179,7 +191,9 @@ export const useDisableTwoFactorMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(disableTwoFactor, {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+      queryClient.invalidateQueries([queryKey, null]);
+      // also invalidate the /account/users data because that endpoint returns 2FA status for each user
+      queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
   });
 };

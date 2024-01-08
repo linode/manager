@@ -1,7 +1,6 @@
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 
@@ -11,7 +10,7 @@ import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   distroIcon: {
     fontSize: '1.8em',
 
@@ -54,13 +53,13 @@ interface ImageOptionProps extends OptionProps<any, any> {
 }
 
 export const ImageOption = (props: ImageOptionProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const { data, isFocused, isSelected, label } = props;
   const flags = useFlags();
 
   return (
     <Option
-      className={classNames({
+      className={cx({
         [classes.focused]: isFocused,
         [classes.root]: true,
         [classes.selected]: isSelected,

@@ -12,6 +12,7 @@ export const AGLB_DOCS_TLS_CERTIFICATE =
   'https://deploy-preview-14--roaring-gelato-12dc9e.netlify.app/docs/products/networking/global-loadbalancer/guides/certificates/';
 
 export const AGLB_DOCS = {
+  Certificates: `${AGLB_DOCS_URL}/docs/products/networking/global-loadbalancer/guides/certificates/#service-target-certificates`,
   Developers: `${AGLB_DOCS_URL}/docs/products/networking/global-loadbalancer/developers`,
   GettingStarted: `${AGLB_DOCS_URL}/docs/products/networking/global-loadbalancer/get-started`,
   Guides: `${AGLB_DOCS_URL}/docs/products/networking/global-loadbalancer/guides`,

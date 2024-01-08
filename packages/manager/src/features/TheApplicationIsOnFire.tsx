@@ -1,11 +1,11 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Typography } from 'src/components/Typography';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   restartButton: {
     ...theme.applyLinkStyles,
   },
@@ -22,7 +22,7 @@ const TheApplicationIsOnFire = () => {
 };
 
 const ReloadLink = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <button

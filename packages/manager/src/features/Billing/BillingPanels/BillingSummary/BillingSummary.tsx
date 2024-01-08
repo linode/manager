@@ -1,9 +1,8 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import { GridSize } from '@mui/material/Grid';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Breakpoint } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { Breakpoint } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -22,6 +21,8 @@ import { BillingPaper } from '../../BillingDetail';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 import { PromoDisplay } from './PromoDisplay';
+
+import type { GridSize } from '@mui/material';
 
 interface BillingSummaryProps {
   balance: number;

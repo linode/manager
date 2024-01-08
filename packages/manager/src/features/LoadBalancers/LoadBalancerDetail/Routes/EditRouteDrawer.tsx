@@ -1,4 +1,5 @@
 import { UpdateRoutePayload } from '@linode/api-v4';
+import { UpdateRouteSchema } from '@linode/validation';
 import { useFormik, yupToFormErrors } from 'formik';
 import React from 'react';
 
@@ -16,7 +17,6 @@ import { capitalize } from 'src/utilities/capitalize';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { Route } from '@linode/api-v4';
-import { UpdateRouteSchema } from '@linode/validation';
 
 interface Props {
   loadbalancerId: number;

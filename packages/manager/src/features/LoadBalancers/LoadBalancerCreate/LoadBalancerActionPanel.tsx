@@ -1,8 +1,9 @@
-import { useFormikContext } from 'formik';
+import { useFormikContext, FieldArray } from 'formik';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { initialValues } from './LoadBalancerCreate';
 
 export const LoadBalancerActionPanel = () => {
   const { submitForm } = useFormikContext();
@@ -14,7 +15,17 @@ export const LoadBalancerActionPanel = () => {
       justifyContent="space-between"
       rowGap={3}
     >
-      <Button buttonType="outlined">Add Another Configuration</Button>
+      <FieldArray
+        name="configurations"
+        render={({ push }) => (
+          <Button
+            buttonType="outlined"
+            onClick={() => push(initialValues.configurations![0])}
+          >
+            Add Another Configuration
+          </Button>
+        )}
+      />
       <Button
         buttonType="primary"
         onClick={submitForm}
