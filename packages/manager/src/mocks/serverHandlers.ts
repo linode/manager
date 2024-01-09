@@ -1,5 +1,6 @@
 import {
   NotificationType,
+  ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
   TokenRequest,
   User,
@@ -965,7 +966,23 @@ export const handlers = [
       ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
     );
   }),
+  rest.post('*object-storage/keys', (req, res, ctx) => {
+    const { label, regions } = req.body as ObjectStorageKeyRequest;
 
+    const regionsData = regions?.map((region: string) => ({
+      id: region,
+      s3_endpoint: `${region}.com`,
+    }));
+
+    return res(
+      ctx.json(
+        objectStorageKeyFactory.build({
+          label,
+          regions: regionsData,
+        })
+      )
+    );
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
