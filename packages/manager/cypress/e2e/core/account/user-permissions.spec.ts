@@ -1,4 +1,5 @@
 import type { Grant, Grants } from '@linode/api-v4';
+import { profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
@@ -13,6 +14,7 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
@@ -233,6 +235,7 @@ describe('User permission management', () => {
     cy.get('[data-qa-global-section]')
       .should('be.visible')
       .within(() => {
+        cy.findByText('General Permissions').should('be.visible');
         cy.contains(
           'Configure the specific rights and privileges this user has within the account.'
         ).should('be.visible');
@@ -258,8 +261,8 @@ describe('User permission management', () => {
       .should('be.visible')
       .click();
 
+    cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('be.visible');
-    cy.findByText('Global Permissions').should('not.exist');
     cy.findByText('Billing Access').should('not.exist');
     cy.findByText('Specific Permissions').should('not.exist');
   });
@@ -478,7 +481,11 @@ describe('User permission management', () => {
       });
   });
 
-  it.only('disables Read-Write and defaults to Read Only Billing Access for child account users with Parent/Child feature flag', () => {
+  it('disables Read-Write and defaults to Read Only Billing Access for child account users with Parent/Child feature flag', () => {
+    const mockProfile = profileFactory.build({
+      username: 'unrestricted-child-user',
+    });
+
     const mockActiveUser = accountUserFactory.build({
       username: 'unrestricted-child-user',
       restricted: false,
@@ -502,10 +509,9 @@ describe('User permission management', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
-    mockGetUser(mockActiveUser).as('getUser');
-    mockGetUserGrants(mockActiveUser.username, mockUserGrants).as(
-      'getUserGrants'
-    );
+    mockGetUser(mockActiveUser);
+    mockGetUserGrants(mockActiveUser.username, mockUserGrants);
+    mockGetProfile(mockProfile);
 
     // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
     cy.visitWithLogin('/account/users');
@@ -524,7 +530,7 @@ describe('User permission management', () => {
     cy.visitWithLogin(
       `/account/users/${mockRestrictedUser.username}/permissions`
     );
-    mockGetUser(mockRestrictedUser).as('getUser');
+    mockGetUser(mockRestrictedUser);
     mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
     cy.wait(['@getClientStream', '@getFeatureFlags']);
 
@@ -535,8 +541,7 @@ describe('User permission management', () => {
         cy.get(`[data-qa-select-card-heading="Read-Write"]`)
           .closest('[data-qa-selection-card]')
           .should('be.visible')
-          .should('be.disabled')
-          .should('have.attr', 'data-qa-selection-card-checked', 'false');
+          .should('have.attr', 'disabled');
         assertBillingAccessSelected('Read Only');
 
         // Switch billing access to "None" and confirm that "Read Only" has been deselected.

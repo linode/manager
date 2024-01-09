@@ -407,11 +407,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={
               grants.global.account_access === 'read_only' ||
-              (this.state.isAccountAccessRestricted &&
-                view(
-                  lensPath(['grants', 'global', 'account_access']),
-                  this.state
-                ))
+              Boolean(
+                this.state.isAccountAccessRestricted &&
+                  view<State, string>(
+                    lensPath(['grants', 'global', 'account_access']),
+                    this.state
+                  )
+              )
             }
             data-qa-billing-access="Read Only"
             heading="Read Only"
