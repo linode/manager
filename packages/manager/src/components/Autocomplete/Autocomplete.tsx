@@ -106,6 +106,7 @@ export const Autocomplete = <
           loading={loading}
           noMarginTop={noMarginTop}
           placeholder={placeholder || 'Select an option'}
+          required={textFieldProps?.InputProps?.required}
           {...params}
           {...textFieldProps}
           InputProps={{
@@ -150,7 +151,7 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      options={multiple ? optionsWithSelectAll : options}
+      options={multiple && options.length > 0 ? optionsWithSelectAll : options}
       popupIcon={<KeyboardArrowDownIcon />}
       value={value}
       {...rest}

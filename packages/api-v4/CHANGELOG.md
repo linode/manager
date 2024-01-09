@@ -1,3 +1,14 @@
+## [2024-01-08] - v0.107.0
+
+
+### Added:
+
+-  Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
+
+### Tech Stories:
+
+- Add Lint GitHub Action ([#9973](https://github.com/linode/manager/pull/9973))
+
 ## [2023-12-11] - v0.106.0
 
 

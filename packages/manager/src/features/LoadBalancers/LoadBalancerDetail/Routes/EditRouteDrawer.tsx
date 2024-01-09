@@ -1,4 +1,5 @@
 import { UpdateRoutePayload } from '@linode/api-v4';
+import { UpdateRouteSchema } from '@linode/validation';
 import { useFormik, yupToFormErrors } from 'formik';
 import React from 'react';
 
@@ -16,7 +17,6 @@ import { capitalize } from 'src/utilities/capitalize';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { Route } from '@linode/api-v4';
-import { UpdateRouteSchema } from '@linode/validation';
 
 interface Props {
   loadbalancerId: number;
@@ -40,6 +40,7 @@ export const EditRouteDrawer = (props: Props) => {
     initialValues: {
       label: route?.label,
       protocol: route?.protocol,
+      rules: route?.rules, // We shouldn't have to do this, but the API clears out the rules if this isnt passed
     },
     async onSubmit(values) {
       try {

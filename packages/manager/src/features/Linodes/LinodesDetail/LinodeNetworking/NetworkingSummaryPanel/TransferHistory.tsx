@@ -7,7 +7,7 @@ import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
-import { AreaChart } from 'src/components/AreaChart';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -161,7 +161,7 @@ export const TransferHistory = React.memo((props: Props) => {
           'Public Outbound Traffic': convertNetworkData
             ? convertNetworkData(point[1])
             : point[1],
-          t: point[0],
+          timestamp: point[0],
         });
         return acc;
       }, []);
@@ -179,11 +179,11 @@ export const TransferHistory = React.memo((props: Props) => {
               tickFormat: 'LLL dd',
               tickGap: 15,
             }}
-            aria-label={graphAriaLabel}
+            ariaLabel={graphAriaLabel}
             data={timeData}
             height={190}
             timezone={profile?.timezone ?? 'UTC'}
-            unit={unit}
+            unit={` ${unit}/s`}
           />
         </Box>
       );

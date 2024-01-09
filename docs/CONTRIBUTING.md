@@ -38,3 +38,7 @@ Feel free to open an issue to report a bug or request a feature.
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
+
+## Docs
+
+To run the docs development server locally, [install Bun](https://bun.sh/) and start the server: `yarn docs`.
