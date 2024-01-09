@@ -495,6 +495,8 @@ describe('Akamai Global Load Balancer configurations page', () => {
         routes: newRoutes.map((r) => ({ id: r.id, label: r.label })),
       };
 
+      // Beacsue the configruations data will be invalidated and refetched,
+      // we must mock that the route was removed.
       mockGetLoadBalancerConfigurations(loadbalancer.id, [newConfiguration]).as(
         'getConfigurations'
       );
