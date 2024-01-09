@@ -22,7 +22,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
-import { AccessRegions } from './AccessRegions';
+import { AccessKeyRegions } from './AccessKeyRegions';
 import { LimitedAccessControls } from './LimitedAccessControls';
 import { MODE } from './types';
 
@@ -140,6 +140,8 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     validationSchema: omc_createObjectStorageKeysSchema,
   });
 
+  const hasRegionSelected = formik.values.regions.length > 0;
+
   const beforeSubmit = () => {
     confirmObjectStorage<FormState>(
       accountSettings?.object_storage || 'active',
@@ -227,7 +229,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             required
             value={formik.values.label}
           />
-          <AccessRegions
+          <AccessKeyRegions
             onChange={(value) => {
               formik.setFieldValue('regions', value);
             }}
@@ -238,7 +240,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             required
             selectedRegion={formik.values.regions}
           />
-          {createMode && !hidePermissionsTable ? (
+          {createMode && !hidePermissionsTable && hasRegionSelected ? (
             <LimitedAccessControls
               bucket_access={formik.values.bucket_access}
               checked={limitedAccessChecked}

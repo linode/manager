@@ -13,7 +13,7 @@ interface Props {
   selectedRegion: string[];
 }
 
-export const AccessRegions = (props: Props) => {
+export const AccessKeyRegions = (props: Props) => {
   const { disabled, error, onBlur, onChange, required, selectedRegion } = props;
 
   const { data: regions, error: regionsError } = useRegionsQuery();
