@@ -12,7 +12,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
-import { compose, flatten, lensPath, omit, set, view } from 'ramda';
+import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { compose as recompose } from 'recompose';
@@ -407,13 +407,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={
               grants.global.account_access === 'read_only' ||
-              Boolean(
-                this.state.isAccountAccessRestricted &&
-                  view<State, string>(
-                    lensPath(['grants', 'global', 'account_access']),
-                    this.state
-                  )
-              )
+              (this.state.isAccountAccessRestricted &&
+                Boolean(this.state.grants?.global.account_access))
             }
             data-qa-billing-access="Read Only"
             heading="Read Only"

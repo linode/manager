@@ -229,13 +229,13 @@ describe('User permission management', () => {
 
     ui.toast.assertMessage('User permissions successfully saved.');
 
-    // Smoke tests to confirm that "Global Permissions" and "Specific Permissions"
+    // Smoke tests to confirm that "General Permissions" and "Specific Permissions"
     // sections are visible.
+    cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('not.exist');
     cy.get('[data-qa-global-section]')
       .should('be.visible')
       .within(() => {
-        cy.findByText('General Permissions').should('be.visible');
         cy.contains(
           'Configure the specific rights and privileges this user has within the account.'
         ).should('be.visible');
