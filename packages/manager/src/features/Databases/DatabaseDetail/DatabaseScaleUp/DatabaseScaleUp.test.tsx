@@ -111,7 +111,7 @@ describe('database scale up', () => {
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       expect(
         getByText(/Scale Up Database Cluster/i).closest('button')
-      ).toBeDisabled();
+      ).toHaveAttribute('aria-disabled', 'true');
     });
 
     it('when a plan is selected, scale up button should be enabled and on click of it, it should show a confirmation dialog', async () => {
@@ -130,7 +130,10 @@ describe('database scale up', () => {
       const getById = queryByAttribute.bind(null, 'id');
       fireEvent.click(getById(container, examplePlanType));
       const scaleUpButton = getByText(/Scale Up Database Cluster/i);
-      expect(scaleUpButton.closest('button')).not.toBeDisabled();
+      expect(scaleUpButton.closest('button')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      );
       fireEvent.click(scaleUpButton);
       getByText(`Scale up ${database.label}?`);
     });
