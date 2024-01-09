@@ -11,10 +11,14 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useGrants } from 'src/queries/profile';
+import { useAccountUser } from 'src/queries/accountUsers';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 import AccountLogins from './AccountLogins';
+import { SwitchAccountButton } from './SwitchAccountButton';
+import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const Billing = React.lazy(() =>
   import('src/features/Billing/BillingDetail').then((module) => ({
@@ -43,6 +47,11 @@ const AccountLanding = () => {
   const location = useLocation();
   const { data: account } = useAccount();
   const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+  const { data: user } = useAccountUser(profile?.username ?? '');
+
+  const flags = useFlags();
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
@@ -107,6 +116,9 @@ const AccountLanding = () => {
   let idx = 0;
 
   const isBillingTabSelected = location.pathname.match(/billing/);
+  const isAccountSwitchable =
+    flags.parentChildAccountAccess &&
+    (user?.user_type === 'parent' || user?.user_type === 'child');
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -125,6 +137,9 @@ const AccountLanding = () => {
         history.replace('/account/billing/make-payment');
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
+    landingHeaderProps.extraActions = isAccountSwitchable ? (
+      <SwitchAccountButton onClick={() => setIsDrawerOpen(true)} />
+    ) : undefined;
   }
 
   return (
@@ -158,6 +173,11 @@ const AccountLanding = () => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
+      <SwitchAccountDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        username={user?.username ?? ''}
+      />
     </React.Fragment>
   );
 };

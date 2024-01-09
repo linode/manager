@@ -10,7 +10,6 @@ import { Stack } from 'src/components/Stack';
 import { useFlags } from 'src/hooks/useFlags';
 import { useChildAccounts } from 'src/queries/account';
 import { useAccountUser } from 'src/queries/accountUsers';
-import { useProfile } from 'src/queries/profile';
 import { authentication } from 'src/utilities/storage';
 
 interface Props {
@@ -20,7 +19,7 @@ interface Props {
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { onClose, open, username } = props;
 
   const flags = useFlags();
 
@@ -28,8 +27,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     onClose();
   };
 
-  const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
+  const { data: user } = useAccountUser(username ?? '');
 
   // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
   const headers =
