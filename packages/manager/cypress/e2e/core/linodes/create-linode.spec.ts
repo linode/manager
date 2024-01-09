@@ -26,11 +26,6 @@ import {
 } from 'support/intercepts/linodes';
 
 import type { Region } from '@linode/api-v4';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 const mockRegions: Region[] = [
   regionFactory.build({

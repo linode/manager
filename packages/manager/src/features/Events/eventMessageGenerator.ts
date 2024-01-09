@@ -679,6 +679,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   oauth_client_update: {
     notification: (e) => `OAuth App ${e.entity!.label} has been updated.`,
   },
+  obj_access_key_create: {
+    notification: (e) => `Access Key ${e.entity!.label} has been created.`,
+  },
+  obj_access_key_delete: {
+    notification: (e) => `Access Key ${e.entity!.label} has been deleted.`,
+  },
+  obj_access_key_update: {
+    notification: (e) => `Access Key ${e.entity!.label} has been updated.`,
+  },
   password_reset: {
     failed: (e) => `Password reset failed for Linode ${e.entity!.label}.`,
     finished: (e) => `Password has been reset on Linode ${e.entity!.label}.`,
