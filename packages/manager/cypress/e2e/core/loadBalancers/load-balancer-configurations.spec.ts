@@ -440,6 +440,80 @@ describe('Akamai Global Load Balancer configurations page', () => {
       cy.wait('@updateConfiguration');
     });
 
+    it('can remove a route from an AGLB configuration', () => {
+      const routes = routeFactory.buildList(3);
+      const configuration = configurationFactory.build({
+        protocol: 'http',
+        routes: routes.map((route) => ({ id: route.id, label: route.label })),
+      });
+      const loadbalancer = loadbalancerFactory.build({
+        configurations: [{ id: configuration.id, label: configuration.label }],
+      });
+
+      mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+      mockGetLoadBalancerConfigurations(loadbalancer.id, [configuration]).as(
+        'getConfigurations'
+      );
+      mockUpdateLoadBalancerConfiguration(loadbalancer.id, configuration).as(
+        'updateConfiguration'
+      );
+      mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+
+      cy.visitWithLogin(
+        `/loadbalancers/${loadbalancer.id}/configurations/${configuration.id}`
+      );
+
+      cy.wait([
+        '@getFeatureFlags',
+        '@getClientStream',
+        '@getLoadBalancer',
+        '@getConfigurations',
+        '@getRoutes',
+      ]);
+
+      // In edit mode, we will disable the "save" button if the user hasn't made any changes
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.disabled');
+
+      cy.findByText('route-1')
+        .closest('tr')
+        .within(() => {
+          ui.actionMenu.findByTitle('Action Menu for Route route-1').click();
+        });
+
+      // Because the route table uses an API filter at all times to show the correct routes,
+      // we must simulate the filtering by mocking.
+      const newRoutes = routes.filter((r) => r.label !== 'route-1');
+      mockGetLoadBalancerRoutes(loadbalancer.id, newRoutes).as('getRoutes');
+
+      ui.actionMenuItem.findByTitle('Remove').click();
+
+      const newConfiguration = {
+        ...configuration,
+        routes: newRoutes.map((r) => ({ id: r.id, label: r.label })),
+      };
+
+      mockGetLoadBalancerConfigurations(loadbalancer.id, [newConfiguration]).as(
+        'getConfigurations'
+      );
+
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@updateConfiguration');
+
+      // After successfully saving changes, the button should be disabled.
+      ui.button
+        .findByTitle('Save Configuration')
+        .should('be.visible')
+        .should('be.disabled');
+    });
+
     it('shows API errors when editing', () => {
       const configuration = configurationFactory.build({ protocol: 'https' });
       const loadbalancer = loadbalancerFactory.build({
