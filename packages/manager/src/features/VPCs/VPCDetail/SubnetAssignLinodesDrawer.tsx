@@ -387,7 +387,6 @@ export const SubnetAssignLinodesDrawer = (
             setAssignLinodesErrors({});
           }}
           disabled={userCannotAssignLinodes}
-          inputValue={values.selectedLinode?.label || ''}
           label={'Linodes'}
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
@@ -440,7 +439,6 @@ export const SubnetAssignLinodesDrawer = (
                 setAssignLinodesErrors({});
               }}
               disabled={userCannotAssignLinodes}
-              inputValue={values.selectedConfig?.label || ''}
               label={'Configuration profile'}
               options={linodeConfigs}
               placeholder="Select a configuration profile"
