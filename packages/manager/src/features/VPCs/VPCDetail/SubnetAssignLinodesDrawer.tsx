@@ -40,6 +40,7 @@ import type {
   Linode,
   Subnet,
 } from '@linode/api-v4';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
@@ -381,9 +382,9 @@ export const SubnetAssignLinodesDrawer = (
       />
       <form onSubmit={handleSubmit}>
         <FormHelperText>{REGIONAL_LINODE_MESSAGE}</FormHelperText>
-        <Autocomplete
-          onChange={(_, value: Linode) => {
-            setFieldValue('selectedLinode', value);
+        <LinodeSelect
+          onSelectionChange={(selected) => {
+            setFieldValue('selectedLinode', selected);
             setAssignLinodesErrors({});
           }}
           disabled={userCannotAssignLinodes}
@@ -392,7 +393,7 @@ export const SubnetAssignLinodesDrawer = (
           options={linodeOptionsToAssign}
           placeholder="Select Linodes or type to search"
           sx={{ marginBottom: '8px' }}
-          value={values.selectedLinode || null}
+          value={values.selectedLinode?.id || null}
         />
         <Box alignItems="center" display="flex" flexDirection="row">
           <FormControlLabel
