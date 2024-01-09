@@ -1,3 +1,4 @@
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +10,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import { Box } from '../Box';
@@ -55,6 +56,13 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
 
   const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
 
+  const sxHelpIcon = {
+    height: 20,
+    m: 0.5,
+    verticalAlign: 'sub',
+    width: 20,
+  };
+
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
     if (handleTabChange) {
@@ -98,7 +106,11 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
               >
                 {tab.title}
                 {tab.disabled && props.tabDisabledMessage && (
-                  <TooltipIcon status="help" text={props.tabDisabledMessage} />
+                  <Tooltip title={props.tabDisabledMessage}>
+                    <span>
+                      <HelpOutline fontSize="small" sx={sxHelpIcon} />
+                    </span>
+                  </Tooltip>
                 )}
               </StyledTab>
             ))}

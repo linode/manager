@@ -63,8 +63,8 @@ export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
       : `Primary +${database.cluster_size - 1} replicas`;
 
   const sxTooltipIcon = {
-    marginLeft: '4px',
-    padding: '0px',
+    marginLeft: 0.5,
+    padding: 0,
   };
 
   const STORAGE_COPY =
@@ -98,7 +98,6 @@ export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
           <StyledSummaryTextTypography>
             <span style={{ fontFamily: theme.font.bold }}>Nodes</span>{' '}
             {configuration}
-            {databaseEngineMap[database.engine]} v{database.version}
           </StyledSummaryTextTypography>
         </Box>
         <Box key={'region-plan'} paddingRight={6}>

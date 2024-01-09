@@ -2,6 +2,7 @@ import { LinodeTypeClass } from '@linode/api-v4';
 import {
   Database,
   DatabaseClusterSizeObject,
+  DatabasePriceObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { useSnackbar } from 'notistack';
@@ -139,15 +140,19 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   );
   const confirmationPopUpMessage =
     database.cluster_size === 1 ? (
-      <Notice variant="warning">
+      <>
         {costSummary}
-        <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node cluster.`}</Typography>
-      </Notice>
+        <Notice variant="warning">
+          <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node cluster.`}</Typography>
+        </Notice>
+      </>
     ) : (
-      <Notice variant="info">
+      <>
         {costSummary}
-        <Typography variant="h3">{`Operation can take up to 2 hours and will incur a failover.`}</Typography>
-      </Notice>
+        <Notice variant="info">
+          <Typography variant="h3">{`Operation can take up to 2 hours and will incur a failover.`}</Typography>
+        </Notice>
+      </>
     );
 
   React.useEffect(() => {
@@ -163,18 +168,18 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       return;
     }
 
-    const engineType = database.engine.split('/')[0];
+    const engineType = database.engine.split('/')[0] as Engine;
     const price = selectedPlanType.engines[engineType].find(
       (cluster: DatabaseClusterSizeObject) =>
         cluster.quantity === database.cluster_size
-    )?.price;
+    )?.price as DatabasePriceObject;
 
     setShouldSubmitBeDisabled(false);
 
     setSummaryText({
       numberOfNodes: database.cluster_size,
       plan: formatStorageUnits(selectedPlanType.label),
-      price: `$${price.monthly}/month or $${price.hourly}/hour`,
+      price: `$${price?.monthly}/month or $${price?.hourly}/hour`,
     });
   }, [
     dbTypes,
@@ -236,13 +241,13 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   }
   return (
     <>
-      <Paper sx={{ marginTop: '16px' }}>
+      <Paper sx={{ marginTop: 2 }}>
         {scaleUpDescription}
-        <Box sx={{ marginTop: '16px' }}>
+        <Box sx={{ marginTop: 2 }}>
           <DatabaseScaleUpCurrentConfiguration database={database} />
         </Box>
       </Paper>
-      <Paper sx={{ marginTop: '16px' }}>
+      <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
           tabDisabledMessage={
             'You can upscale your cluster only within already selected plan.'
@@ -257,7 +262,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
           types={displayTypes}
         />
       </Paper>
-      <Paper sx={{ marginTop: '16px' }}>{summaryPanel}</Paper>
+      <Paper sx={{ marginTop: 2 }}>{summaryPanel}</Paper>
       <StyledGrid>
         <StyledScaleUpButton
           onClick={() => {
