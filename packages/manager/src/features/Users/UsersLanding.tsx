@@ -1,3 +1,4 @@
+import { User } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -44,6 +45,14 @@ export const UsersLanding = () => {
   );
 
   const isRestrictedUser = profile?.restricted;
+
+  const showBusinessPartnerAccessTable =
+    flags.parentChildAccountAccess && activeUser?.user_type === 'child';
+  const businessPartnerUsers =
+    users?.data.filter((user) => user.user_type === 'proxy') ?? [];
+  const filteredUsers =
+    users?.data.filter((user) => user.user_type !== 'proxy') ?? [];
+
   const showChildAccountAccessCol =
     flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
   const numCols = showChildAccountAccessCol ? 6 : 5;
@@ -60,6 +69,7 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
+  // TODO: Parent/Child - remove once feature is live in production.
   const renderTableContent = () => {
     if (isLoading) {
       return (
@@ -84,6 +94,65 @@ export const UsersLanding = () => {
     ));
   };
 
+  const renderTableHeader = () => {
+    return (
+      <TableRow>
+        <TableSortCell
+          active={order.orderBy === 'username'}
+          direction={order.order}
+          handleClick={order.handleOrderChange}
+          label="username"
+        >
+          Username
+        </TableSortCell>
+        <Hidden smDown>
+          <TableSortCell
+            active={order.orderBy === 'email'}
+            direction={order.order}
+            handleClick={order.handleOrderChange}
+            label="email"
+          >
+            Email Address
+          </TableSortCell>
+        </Hidden>
+        <TableCell>Account Access</TableCell>
+        {showChildAccountAccessCol && (
+          <Hidden lgDown>
+            <TableCell>Child Account Access</TableCell>
+          </Hidden>
+        )}
+        <Hidden lgDown>
+          <TableCell>Last Login</TableCell>
+        </Hidden>
+        <TableCell />
+      </TableRow>
+    );
+  };
+
+  const renderTableBody = (users: User[]) => {
+    if (isLoading) {
+      return (
+        <TableRowLoading
+          columns={numCols}
+          responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
+          rows={1}
+        />
+      );
+    }
+
+    if (error) {
+      return <TableRowError colSpan={numCols} message={error[0].reason} />;
+    }
+
+    if (!users || users.length === 0) {
+      return <TableRowEmpty colSpan={numCols} />;
+    }
+
+    return users.map((user) => (
+      <UserRow key={user.username} onDelete={onDelete} user={user} />
+    ));
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
@@ -99,6 +168,12 @@ export const UsersLanding = () => {
           onClick={() => setIsCreateDrawerOpen(true)}
         />
       </Box>
+      {showBusinessPartnerAccessTable && (
+        <Table aria-label="List of Business Partners">
+          <TableHead>{renderTableHeader()}</TableHead>
+          <TableBody>{renderTableBody(businessPartnerUsers)}</TableBody>
+        </Table>
+      )}
       <Table aria-label="List of Users">
         <TableHead>
           <TableRow>
@@ -132,7 +207,11 @@ export const UsersLanding = () => {
             <TableCell />
           </TableRow>
         </TableHead>
-        <TableBody>{renderTableContent()}</TableBody>
+        <TableBody>
+          {flags.parentChildAccountAccess
+            ? renderTableBody(filteredUsers)
+            : renderTableContent()}
+        </TableBody>
       </Table>
       <PaginationFooter
         count={users?.results || 0}

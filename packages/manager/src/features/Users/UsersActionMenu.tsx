@@ -20,6 +20,9 @@ export const UsersActionMenu = ({ onDelete, username }: Props) => {
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
 
+  // TODO: Parent/Child -  if active user is a child and the user is a proxy user, do not display User Profile or Delete.
+  // In place of those, display 'Manage access'.
+
   const actions: Action[] = [
     {
       onClick: () => {
