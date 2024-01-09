@@ -165,7 +165,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         const isParentAccount = currentUser.user_type === 'parent';
         const isFeatureFlagOn = flags.parentChildAccountAccess;
 
-        // An parent user account should have a toggleable `child_account_access` grant for its restricted users.
+        // A parent user account should have a toggleable `child_account_access` grant for its restricted users.
         this.setState({
           childAccountAccessEnabled: Boolean(
             isParentAccount && isFeatureFlagOn
