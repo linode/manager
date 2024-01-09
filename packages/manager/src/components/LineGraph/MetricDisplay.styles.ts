@@ -35,17 +35,11 @@ export const StyledButton = styled(Button, {
   label: 'StyledButton',
   shouldForwardProp: omittedProps(['legendColor', 'hidden']),
 })<{ legendColor?: string }>(({ hidden, legendColor, theme }) => ({
-  ...(hidden && {
-    '&hover, &:focus': {
-      color: theme.textColors.tableStatic,
-      textDecoration: 'line-through',
-    },
-    color: theme.textColors.tableStatic,
-    textDecoration: 'line-through',
-  }),
   ...(legendColor && {
     '&:before': {
-      backgroundColor: theme.graphs[legendColor],
+      backgroundColor: hidden
+        ? theme.color.disabledText
+        : theme.graphs[legendColor],
     },
   }),
 }));
