@@ -57,3 +57,6 @@ export const NETWORK_INTERFACES_GUIDE_URL =
 
 export const VPC_DOCS_LINK =
   'https://www.linode.com/docs/products/networking/vpc/';
+
+export const VPC_GETTING_STARTED_LINK =
+  'https://www.linode.com/docs/products/networking/vpc/get-started/';
