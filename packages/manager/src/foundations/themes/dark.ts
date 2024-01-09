@@ -189,6 +189,8 @@ export const darkTheme: ThemeOptions = {
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
+          backgroundColor: primaryColors.main,
+          color: primaryColors.text,
         },
         outlined: {
           '&:hover, &:focus': {
