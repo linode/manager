@@ -477,15 +477,19 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .should('be.visible')
         .should('be.disabled');
 
-      cy.findByText('route-1')
+      const routeToDelete = routes[1];
+
+      cy.findByText(routeToDelete.label)
         .closest('tr')
         .within(() => {
-          ui.actionMenu.findByTitle('Action Menu for Route route-1').click();
+          ui.actionMenu
+            .findByTitle(`Action Menu for Route ${routeToDelete.label}`)
+            .click();
         });
 
       // Because the route table uses an API filter at all times to show the correct routes,
       // we must simulate the filtering by mocking.
-      const newRoutes = routes.filter((r) => r.label !== 'route-1');
+      const newRoutes = routes.filter((r) => r.label !== routeToDelete.label);
       mockGetLoadBalancerRoutes(loadbalancer.id, newRoutes).as('getRoutes');
 
       ui.actionMenuItem.findByTitle('Remove').click();
