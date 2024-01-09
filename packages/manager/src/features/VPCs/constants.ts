@@ -1,5 +1,16 @@
 // Various constants for the VPCs package
 
+// Labels
+export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
+
+// Keys
+export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
+  'not-recommended-configuration';
+
+export const WARNING_ICON_UNRECOMMENDED_CONFIG =
+  'warning-icon-for-unrecommended-config';
+
+// Copy
 export const ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE =
   'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.';
 
@@ -13,8 +24,6 @@ export const REBOOT_LINODE_WARNING_VPCDETAILS =
 
 export const SUBNET_UNASSIGN_LINODES_WARNING = `Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`;
 
-export const VPC_LABEL = 'Virtual Private Cloud (VPC)';
-
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 
@@ -26,20 +35,8 @@ export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT =
 export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
   'A VPC is an isolated network that enables private communication between Compute Instances within the same data center.';
 
-export const VPC_FEEDBACK_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
-
 export const VPC_REBOOT_MESSAGE =
   'The VPC configuration has been updated. Reboot the Linode to reflect configuration changes.';
-
-export const NETWORK_INTERFACES_GUIDE_URL =
-  'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
-
-export const UNRECOMMENDED_CONFIGURATION_PREFERENCE_KEY =
-  'not-recommended-configuration';
-
-export const WARNING_ICON_UNRECOMMENDED_CONFIG =
-  'warning-icon-for-unrecommended-config';
 
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
@@ -50,3 +47,13 @@ export const NATTED_PUBLIC_IP_HELPER_TEXT =
 
 export const NOT_NATTED_HELPER_TEXT =
   'The Linode will not be able to access the internet. If this Linode needs access to the internet, we recommend checking the “Assign a public IPv4 address for this Linode” checkbox which will enable 1:1 NAT on the VPC interface.';
+
+// Links
+export const VPC_FEEDBACK_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLScvWbTupCNsBF5cz5YEsv5oErHM4ONBZodDYi8KuOgC8fyfag/viewform';
+
+export const NETWORK_INTERFACES_GUIDE_URL =
+  'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
+
+export const VPC_DOCS_LINK =
+  'https://www.linode.com/docs/products/networking/vpc/';
