@@ -157,6 +157,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   checkAndEnableChildAccountAccess = async () => {
     const { currentUser: currentUsername, flags } = this.props;
+
+    // Current user is the active user on the account.
     if (currentUsername) {
       try {
         const currentUser = await getUser(currentUsername);
