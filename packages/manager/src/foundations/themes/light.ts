@@ -738,10 +738,10 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
             fontSize: 18,
           },
-          '&.Mui-disabled': {
-            backgroundColor: Interaction.Background.Disabled,
+          '&$disabled': {
             borderColor: Border.Normal,
-            color: Content.Text.Primary.Disabled,
+            color: 'rgba(0, 0, 0, 0.75)',
+            opacity: 0.5,
           },
           '&.Mui-error': {
             borderColor: Interaction.Border.Error,
@@ -750,21 +750,21 @@ export const lightTheme: ThemeOptions = {
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
-            borderColor: Interaction.Border.Focus,
+            borderColor: primaryColors.main,
             boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
           '&.affirmative': {
             borderColor: Color.Green[70],
           },
           alignItems: 'center',
-          backgroundColor: Interaction.Background.Primary,
+          backgroundColor: Color.Neutrals.White,
           border: `1px solid ${Interaction.Border.Default}`,
           boxSizing: 'border-box',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
             width: '100%',
           },
-          color: Content.Text.Primary.Default,
+          color: primaryColors.text,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
           minHeight: 34,
