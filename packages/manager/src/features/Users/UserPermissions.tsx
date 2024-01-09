@@ -74,6 +74,7 @@ interface State {
   childAccountAccessEnabled: boolean;
   errors?: APIError[];
   grants?: Grants;
+  isAccountAccessRestricted: boolean;
   isSavingEntity: boolean;
   isSavingGlobal: boolean;
   loading: boolean;
@@ -160,13 +161,21 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       try {
         const currentUser = await getUser(currentUsername);
 
+        const isChildAccount = currentUser.user_type === 'child';
         const isParentAccount = currentUser.user_type === 'parent';
         const isFeatureFlagOn = flags.parentChildAccountAccess;
 
+        // An parent user account should have a toggleable `child_account_access` grant for its restricted users.
         this.setState({
           childAccountAccessEnabled: Boolean(
             isParentAccount && isFeatureFlagOn
           ),
+        });
+
+        // A child user account should have no more than `read_only` billing (account) access.
+        // Since API returns `read_write` for child users' `account_access` grant, we must manually disable the `read_write` Billing Access permission.
+        this.setState({
+          isAccountAccessRestricted: Boolean(isChildAccount && isFeatureFlagOn),
         });
       } catch (error) {
         this.setState({
@@ -406,6 +415,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ]}
             checked={grants.global.account_access === 'read_write'}
             data-qa-billing-access="Read-Write"
+            disabled={this.state.isAccountAccessRestricted}
             heading="Read-Write"
             onClick={this.billingPermOnClick('read_write')}
           />
@@ -805,6 +815,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   state: State = {
     childAccountAccessEnabled: false,
+    isAccountAccessRestricted: false,
     isSavingEntity: false,
     isSavingGlobal: false,
     loading: true,
