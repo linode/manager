@@ -403,17 +403,23 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['The user cannot view any billing information.']}
           />
           <SelectionCard
-            checked={grants.global.account_access === 'read_only'}
+            checked={
+              grants.global.account_access === 'read_only' ||
+              this.state.isAccountAccessRestricted
+            }
             data-qa-billing-access="Read Only"
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
           />
           <SelectionCard
+            checked={
+              grants.global.account_access === 'read_write' &&
+              !this.state.isAccountAccessRestricted
+            }
             subheadings={[
               'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails.',
             ]}
-            checked={grants.global.account_access === 'read_write'}
             data-qa-billing-access="Read-Write"
             disabled={this.state.isAccountAccessRestricted}
             heading="Read-Write"
