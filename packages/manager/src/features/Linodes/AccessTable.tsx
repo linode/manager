@@ -1,5 +1,4 @@
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -24,24 +23,20 @@ interface AccessTableRow {
 
 interface AccessTableProps {
   footer?: JSX.Element;
-  gridProps?: Grid2Props;
+  gridSize: {
+    lg: number;
+
+    xs: number;
+  };
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
-  sx?: SxProps;
   title: string;
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
-  const { footer, gridProps, isVPCOnlyLinode, rows, sx, title } = props;
+  const { footer, gridSize, isVPCOnlyLinode, rows, title } = props;
   return (
-    <Grid
-      container
-      direction="column"
-      md={6}
-      spacing={1}
-      sx={sx}
-      {...gridProps}
-    >
+    <Grid lg={gridSize.lg} sx={{ padding: 0 }} xs={gridSize.xs}>
       <StyledColumnLabelGrid>
         {title}{' '}
         {isVPCOnlyLinode &&
