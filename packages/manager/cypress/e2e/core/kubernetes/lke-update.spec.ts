@@ -112,7 +112,7 @@ describe('LKE cluster updates', () => {
    * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
    * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
    */
-  it('can upgrade Kubernetes engine version', () => {
+  it.only('can upgrade Kubernetes engine version', () => {
     const oldVersion = '1.25';
     const newVersion = '1.26';
 
@@ -171,7 +171,47 @@ describe('LKE cluster updates', () => {
 
     // Wait for API response and assert toast message is shown.
     cy.wait('@updateCluster');
+
+    // Verify the banner goes away because the version update has happened
     cy.findByText(upgradePrompt).should('not.exist');
+
+    mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
+
+    const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+
+    ui.dialog
+      .findByTitle(stepTwoDialogTitle)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Kubernetes version has been updated successfully.', {
+          exact: false,
+        }).should('be.visible');
+
+        cy.findByText(
+          'For the changes to take full effect you must recycle the nodes in your cluster.',
+          { exact: false }
+        ).should('be.visible');
+
+        ui.button
+          .findByTitle('Recycle All Nodes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Verify clicking the "Recycle All Nodes" makes an API call
+    cy.wait('@recycleAllNodes');
+
+    // Verify the upgrade dialog closed
+    cy.findByText(stepTwoDialogTitle).should('not.exist');
+
+    // Verify the banner is still gone after the flow
+    cy.findByText(upgradePrompt).should('not.exist');
+
+    // Verify the version is correct after the update
+    cy.findByText(`Version ${newVersion}`);
+
+    ui.toast.findByMessage('Recycle started successfully.');
   });
 
   /*
