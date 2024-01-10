@@ -1,4 +1,5 @@
 import type { Grant, Grants } from '@linode/api-v4';
+import { profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
@@ -9,8 +10,14 @@ import {
   mockUpdateUser,
   mockUpdateUserGrants,
 } from 'support/intercepts/account';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 
 // Message shown when user has unrestricted account acess.
@@ -222,8 +229,9 @@ describe('User permission management', () => {
 
     ui.toast.assertMessage('User permissions successfully saved.');
 
-    // Smoke tests to confirm that "Global Permissions" and "Specific Permissions"
+    // Smoke tests to confirm that "General Permissions" and "Specific Permissions"
     // sections are visible.
+    cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('not.exist');
     cy.get('[data-qa-global-section]')
       .should('be.visible')
@@ -253,8 +261,8 @@ describe('User permission management', () => {
       .should('be.visible')
       .click();
 
+    cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('be.visible');
-    cy.findByText('Global Permissions').should('not.exist');
     cy.findByText('Billing Access').should('not.exist');
     cy.findByText('Specific Permissions').should('not.exist');
   });
@@ -470,6 +478,84 @@ describe('User permission management', () => {
                 .should('be.visible');
             });
         });
+      });
+  });
+
+  it('disables Read-Write and defaults to Read Only Billing Access for child account users with Parent/Child feature flag', () => {
+    const mockProfile = profileFactory.build({
+      username: 'unrestricted-child-user',
+    });
+
+    const mockActiveUser = accountUserFactory.build({
+      username: 'unrestricted-child-user',
+      restricted: false,
+      user_type: 'child',
+    });
+
+    const mockRestrictedUser = {
+      ...mockActiveUser,
+      restricted: true,
+      username: 'restricted-child-user',
+    };
+
+    const mockUserGrants = grantsFactory.build({
+      global: { account_access: 'read_write' },
+    });
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
+    mockGetUser(mockActiveUser);
+    mockGetUserGrants(mockActiveUser.username, mockUserGrants);
+    mockGetProfile(mockProfile);
+
+    // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+    cy.findByText(mockRestrictedUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('User Permissions')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.visitWithLogin(
+      `/account/users/${mockRestrictedUser.username}/permissions`
+    );
+    mockGetUser(mockRestrictedUser);
+    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    cy.get('[data-qa-global-section]')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that 'Read-Write' Billing Access is disabled and 'Read Only' Billing Access is selected by default.
+        cy.get(`[data-qa-select-card-heading="Read-Write"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'disabled');
+        assertBillingAccessSelected('Read Only');
+
+        // Switch billing access to "None" and confirm that "Read Only" has been deselected.
+        selectBillingAccess('None');
+        cy.get(`[data-qa-select-card-heading="Read Only"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'data-qa-selection-card-checked', 'false');
+
+        ui.button
+          .findByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
   });
 });
