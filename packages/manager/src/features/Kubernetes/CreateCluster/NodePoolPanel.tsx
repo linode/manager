@@ -103,7 +103,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
           selectedId={selectedType}
-          selectedRegionID={selectedRegionId}
+          selectedRegionId={selectedRegionId}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

@@ -4,6 +4,62 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-01-08] - v1.109.0
+
+
+### Changed:
+
+- Improve layout of User Permissions page ([#10005](https://github.com/linode/manager/pull/10005))
+- Update toast notifications for UserPermissions ([#10011](https://github.com/linode/manager/pull/10011))
+- VLAN availability text on Linode Create ([#9989](https://github.com/linode/manager/pull/9989))
+- Default access to `None` for all scopes when creating Personal Access Tokens ([#9992](https://github.com/linode/manager/pull/9992))
+- Filter already assigned services from firewall dropdowns ([#9993](https://github.com/linode/manager/pull/9993))
+
+### Fixed:
+
+- User Permissions toggle and radio button accessibility ([#10009](https://github.com/linode/manager/pull/10009))
+
+### Tech Stories:
+
+- Currency and DateTimeDisplay v7 storybook migrations ([#10007](https://github.com/linode/manager/pull/10007))
+- ColorPalette and CircleProgress v7 storybook migration ([#10015](https://github.com/linode/manager/pull/10015))
+- DebouncedSearchTextfield and EditableText v7 storybook migrations ([#10017](https://github.com/linode/manager/pull/10017))
+- Placeholder and EntityDetails v7 storybook migrations ([#10019](https://github.com/linode/manager/pull/10019))
+- PaginationControls V7 story migration ([#9959](https://github.com/linode/manager/pull/9959))
+- TagsInput & TagsPanel Storybook v7 Stories ([#9963](https://github.com/linode/manager/pull/9963))
+- Add Lint Github Action ([#9973](https://github.com/linode/manager/pull/9973))
+- Complete @mui/styles to tss-react migration and remove @mui/styles ([#9978](https://github.com/linode/manager/pull/9978))
+- ErrorState and FileUploader v7 storybook migrations ([#9981](https://github.com/linode/manager/pull/9981))
+- Speed up code coverage Github Actions jobs by skipping Cloud Manager build ([#9988](https://github.com/linode/manager/pull/9988))
+- Radio and TextField v7 storybook migrations ([#9994](https://github.com/linode/manager/pull/9994))
+- Graphs stories v7 migration ([#9999](https://github.com/linode/manager/pull/9999))
+- Add ability to pass headers to useProfile query ([#9987](https://github.com/linode/manager/pull/9987))
+
+### Tests:
+
+- Add Cypress test for Firewalls empty state landing page ([#10000](https://github.com/linode/manager/pull/10000))
+- Add integration test for Domains empty landing page ([#10004](https://github.com/linode/manager/pull/10004))
+- Add Cypress integration tests for User Permissions page ([#10009](https://github.com/linode/manager/pull/10009))
+- Fix `CreditCard.test.tsx` failing unit test triggered by new year ([#10023](https://github.com/linode/manager/pull/10023))
+- Add integration test for AGLB Load Balancer delete flows. ([#9955](https://github.com/linode/manager/pull/9955))
+- Add Cypress test for Volumes empty state landing page ([#9995](https://github.com/linode/manager/pull/9995))
+- Tests to power on/off and reboot Linodes ([#9980](https://github.com/linode/manager/pull/9980))
+
+### Upcoming Features:
+
+- Add child access user permissions for parent accounts ([#10005](https://github.com/linode/manager/pull/10005))
+- Update top menu for parent, child, and proxy accounts ([#10014](https://github.com/linode/manager/pull/10014))
+- Add AGLB Service Target Section to Full Create Flow ([#9965](https://github.com/linode/manager/pull/9965))
+- Change AGLB Rule Session Stickiness unit from milliseconds to seconds ([#9969](https://github.com/linode/manager/pull/9969))
+- Improve AGLB selects and other UX ([#9975](https://github.com/linode/manager/pull/9975))
+- Ability to choose a single Compute Region ID (e.g., us-east) in Create Object Storage Bucket drawer ([#9976](https://github.com/linode/manager/pull/9976))
+- Add mocks and update queries for new Parent/Child endpoints ([#9977](https://github.com/linode/manager/pull/9977))
+- Replace NodeBalancer detail charts with Recharts ([#9983](https://github.com/linode/manager/pull/9983))
+- Revised copy for Private IP add-on in Linode Create flow ([#9990](https://github.com/linode/manager/pull/9990))
+- Add `child_account` oauth scope to Personal Access Token drawers ([#9992](https://github.com/linode/manager/pull/9992))
+- Add AGLB Routes section of full create page ([#9997](https://github.com/linode/manager/pull/9997))
+
+
 ## [2023-12-11] - v1.108.0
 
 ### Added:

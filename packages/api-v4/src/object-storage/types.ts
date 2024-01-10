@@ -1,33 +1,58 @@
+export interface RegionS3EndpointAndID {
+  id: string;
+  s3_endpoint: string;
+}
+
 export interface ObjectStorageKey {
   access_key: string;
+  bucket_access: Scope[] | null;
   id: number;
   label: string;
-  secret_key: string;
   limited: boolean;
-  bucket_access: Scope[] | null;
+  regions: RegionS3EndpointAndID[];
+  secret_key: string;
 }
 
 export type AccessType = 'read_only' | 'read_write' | 'none';
+
 export interface Scope {
   bucket_name: string;
-  cluster: string;
   permissions: AccessType;
+  cluster: string;
+  region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
+}
+
+export interface ScopeRequest extends Omit<Scope, 'cluster'> {
+  // @TODO OBJ Multicluster: Omit 'region' as well when API changes get released to prod
+  cluster?: string;
+  region?: string;
 }
 
 export interface ObjectStorageKeyRequest {
   label: string;
   bucket_access: Scope[] | null;
+  regions?: string[];
 }
 
 export interface UpdateObjectStorageKeyRequest {
-  label: string;
+  label?: string;
+  regions?: string[];
 }
 
 export interface ObjectStorageBucketRequestPayload {
-  label: string;
-  cluster: string;
   acl?: 'private' | 'public-read' | 'authenticated-read' | 'public-read-write';
+  cluster?: string;
   cors_enabled?: boolean;
+  label: string;
+  region?: string;
+  /*
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+
+   Until then, the API will accept either cluster or region, or both (provided they are the same value).
+   The payload requires at least one of them though, which will be enforced via validation.
+  */
 }
 
 export interface ObjectStorageDeleteBucketRequestPayload {
@@ -36,12 +61,18 @@ export interface ObjectStorageDeleteBucketRequestPayload {
 }
 
 export interface ObjectStorageBucket {
+  /*
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+  */
+  region?: string;
   label: string;
   created: string;
   cluster: string;
   hostname: string;
-  size: number; // Size of bucket in bytes
   objects: number;
+  size: number; // Size of bucket in bytes
 }
 
 export interface ObjectStorageObject {
