@@ -105,18 +105,18 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             Summary
           </StyledColumnLabelGrid>
           <StyledSummaryGrid container spacing={1}>
-            <Grid alignItems="center" display="flex" lg={6} xs={12}>
+            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
               <Typography>
                 {pluralize('CPU Core', 'CPU Cores', numCPUs)}
               </Typography>
             </Grid>
-            <Grid alignItems="center" display="flex" lg={6} xs={12}>
+            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
               <Typography>{gbStorage} GB Storage</Typography>
             </Grid>
-            <Grid lg={6} xs={12}>
+            <Grid lg={6} sm={12} xs={6}>
               <Typography>{gbRAM} GB RAM</Typography>
             </Grid>
-            <Grid lg={6} xs={12}>
+            <Grid lg={6} sm={12} xs={6}>
               <Typography>
                 {pluralize('Volume', 'Volumes', numVolumes)}
               </Typography>

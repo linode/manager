@@ -25,7 +25,6 @@ interface AccessTableProps {
   footer?: JSX.Element;
   gridSize: {
     lg: number;
-
     xs: number;
   };
   isVPCOnlyLinode: boolean;
