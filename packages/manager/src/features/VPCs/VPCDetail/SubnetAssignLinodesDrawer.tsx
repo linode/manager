@@ -433,9 +433,8 @@ export const SubnetAssignLinodesDrawer = (
         {linodeConfigs.length > 1 && (
           <>
             <FormHelperText sx={{ marginTop: `16px` }}>
-              {MULTIPLE_CONFIGURATIONS_MESSAGE}
+              {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
               <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
-                {' '}
                 Learn more
               </Link>
               .
