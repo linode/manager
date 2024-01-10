@@ -13,7 +13,7 @@ describe('update linode label', () => {
 
   it('updates a linode label from details page', () => {
     createLinode().then((linode) => {
-      const newLinodeLable = randomLabel();
+      const newLinodeLabel = randomLabel();
       cy.visitWithLogin(`/linodes/${linode.id}`);
       containsVisible('RUNNING');
 
@@ -21,25 +21,25 @@ describe('update linode label', () => {
       cy.get(`[id="edit-${linode.label}-label"]`)
         .click()
         .clear()
-        .type(`${newLinodeLable}{enter}`);
+        .type(`${newLinodeLabel}{enter}`);
 
       cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${newLinodeLable}"]`).should('be.visible');
+      cy.get(`[data-qa-linode="${newLinodeLabel}"]`).should('be.visible');
     });
   });
 
   it('updates a linode label from the "Settings" tab', () => {
     createLinode().then((linode) => {
-      const newLinodeLable = randomLabel();
+      const newLinodeLabel = randomLabel();
       cy.visitWithLogin(`/linodes/${linode.id}`);
       containsVisible('RUNNING');
 
       cy.visitWithLogin(`/linodes/${linode.id}/settings`);
-      cy.get('[id="label"]').click().clear().type(`${newLinodeLable}{enter}`);
+      cy.get('[id="label"]').click().clear().type(`${newLinodeLabel}{enter}`);
       ui.buttonGroup.findButtonByTitle('Save').should('be.visible').click();
 
       cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${newLinodeLable}"]`).should('be.visible');
+      cy.get(`[data-qa-linode="${newLinodeLabel}"]`).should('be.visible');
     });
   });
 });
