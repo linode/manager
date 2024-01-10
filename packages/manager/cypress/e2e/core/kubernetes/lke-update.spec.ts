@@ -112,7 +112,7 @@ describe('LKE cluster updates', () => {
    * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
    * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
    */
-  it.only('can upgrade Kubernetes engine version', () => {
+  it('can upgrade Kubernetes engine version', () => {
     const oldVersion = '1.25';
     const newVersion = '1.26';
 
