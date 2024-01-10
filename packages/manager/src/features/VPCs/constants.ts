@@ -60,3 +60,6 @@ export const VPC_DOCS_LINK =
 
 export const VPC_GETTING_STARTED_LINK =
   'https://www.linode.com/docs/products/networking/vpc/get-started/';
+
+export const VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';

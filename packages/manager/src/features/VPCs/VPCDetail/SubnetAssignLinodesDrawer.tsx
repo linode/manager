@@ -17,7 +17,10 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
-import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import {
+  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
+} from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -431,8 +434,11 @@ export const SubnetAssignLinodesDrawer = (
           <>
             <FormHelperText sx={{ marginTop: `16px` }}>
               {MULTIPLE_CONFIGURATIONS_MESSAGE}
-              {/* @TODO VPC: add docs link */}
-              <Link to="#"> Learn more</Link>.
+              <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
+                {' '}
+                Learn more
+              </Link>
+              .
             </FormHelperText>
             <Autocomplete
               onChange={(_, value: Config) => {
