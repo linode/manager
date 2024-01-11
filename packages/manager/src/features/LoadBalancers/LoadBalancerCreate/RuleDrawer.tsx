@@ -1,3 +1,4 @@
+import { CreateLoadBalancerRuleSchema } from '@linode/validation';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import { getIn, useFormik, useFormikContext } from 'formik';
@@ -34,7 +35,6 @@ import {
 
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
 import type { RuleCreatePayload, ServiceTargetPayload } from '@linode/api-v4';
-import { ConfigurationSchema, CreateLoadBalancerRuleSchema } from '@linode/validation';
 
 interface Props {
   configurationIndex: number | undefined;
@@ -117,7 +117,9 @@ export const RuleDrawer = (props: Props) => {
     validationSchema: CreateLoadBalancerRuleSchema,
   });
 
-  const allServiceTargets = values.configurations.reduce<ServiceTargetPayload[]>((acc, configuration) => {
+  const allServiceTargets = values.configurations.reduce<
+    ServiceTargetPayload[]
+  >((acc, configuration) => {
     return acc.concat(configuration.service_targets);
   }, []);
 

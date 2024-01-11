@@ -14,18 +14,58 @@ export interface ExtendedButtonProps extends ButtonProps {
 }
 
 export interface PlaceholderProps {
+  /**
+   * Additional copy text to display
+   */
   additionalCopy?: React.ReactNode | string;
+  /**
+   * Determines the buttons to display
+   */
   buttonProps?: ExtendedButtonProps[];
+  /**
+   * Additional children to pass in
+   */
   children?: React.ReactNode | string;
+  /**
+   * Additional styles to pass to the root element
+   */
   className?: string;
+  /**
+   * Used for testing
+   */
   dataQAPlaceholder?: boolean | string;
+  /**
+   * If provided, determines the max width of any children or additional copy text
+   */
   descriptionMaxWidth?: number;
+  /**
+   * Icon to display as placeholder
+   * @default LinodeIcon
+   */
   icon?: React.ComponentType<any>;
+  /**
+   * If true, applies additional styles to the icon container
+   */
   isEntity?: boolean;
+  /**
+   * Links to display
+   */
   linksSection?: JSX.Element;
+  /**
+   *If true, uses 'h2' as the root node of the title instead of 'h1'
+   */
   renderAsSecondary?: boolean;
+  /**
+   * If true, displays transfer display
+   */
   showTransferDisplay?: boolean;
+  /**
+   * Subtitle text to display
+   */
   subtitle?: string;
+  /**
+   * Title text to display as placeholder
+   */
   title: string;
 }
 
@@ -78,7 +118,7 @@ export const Placeholder = (props: PlaceholderProps) => {
         data-qa-placeholder-container={dataQAPlaceholder || true}
       >
         <StyledIconWrapper isEntity={isEntity}>
-          {Icon && <Icon style={IconStyles} />}
+          {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
         </StyledIconWrapper>
 
         <H1Header
