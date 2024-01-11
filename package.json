@@ -44,6 +44,7 @@
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
+    "junit:summary": "ts-node scripts/junit-summary/index.ts",
     "docs": "bunx vitepress@1.0.0-rc.35 dev docs"
   },
   "resolutions": {
