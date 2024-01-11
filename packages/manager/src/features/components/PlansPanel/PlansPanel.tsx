@@ -20,6 +20,7 @@ interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
   header?: string;
@@ -31,6 +32,7 @@ interface Props {
   selectedId?: string;
   selectedRegionID?: string;
   showTransfer?: boolean;
+  tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
 }
@@ -68,6 +70,7 @@ export const PlansPanel = (props: Props) => {
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
+      disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
       render: () => {
         return (
           <>
@@ -117,6 +120,7 @@ export const PlansPanel = (props: Props) => {
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
       sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
   );

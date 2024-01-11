@@ -49,7 +49,7 @@ export const createDatabaseSchema = object({
 
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
-  allow_list: array().of(string()).required('An IPv4 address is required'),
+  allow_list: array().of(string()).notRequired(),
   updates: object()
     .notRequired()
     .shape({
@@ -60,4 +60,5 @@ export const updateDatabaseSchema = object({
       week_of_month: number().nullable(true),
     })
     .nullable(true),
+  type: string().notRequired(),
 });
