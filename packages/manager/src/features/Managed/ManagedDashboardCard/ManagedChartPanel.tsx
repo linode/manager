@@ -275,7 +275,11 @@ export const ManagedChartPanel = () => {
   }
 
   if (isLoading) {
-    return <CircleProgress />;
+    return (
+      <StyledGraphControlsDiv>
+        <CircleProgress />
+      </StyledGraphControlsDiv>
+    );
   }
 
   if (!data) {

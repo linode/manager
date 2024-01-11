@@ -29,6 +29,9 @@ export const StyledGraphControlsDiv = styled('div', {
     top: 52,
     width: 1,
   },
+  alignItems: 'center',
+  display: 'flex',
+  minHeight: 460,
   position: 'relative',
   [theme.breakpoints.up('sm')]: {
     width: '60%',
