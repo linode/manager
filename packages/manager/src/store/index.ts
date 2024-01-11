@@ -71,7 +71,6 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDialog,
 });
 
-// We need an instance of the query client for some event event handlers
 export const storeFactory = () =>
   createStore(reducers, defaultState, applyMiddleware(thunk));
 
