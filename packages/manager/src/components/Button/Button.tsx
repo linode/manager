@@ -126,6 +126,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     };
 
+    const handleDisabledKeyDown = (e: React.KeyboardEvent) => {
+      // Disable the buttom from submitting forms when disabled
+      // Allow the user to tab to the button and press
+      // space or enter to trigger the tooltip.
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleTooltipAnalytics();
+      }
+    };
+
     const renderButton = (
       <StyledButton
         {...rest}
@@ -146,7 +156,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={loading}
         loading={loading}
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
-        onKeyDown={disabled ? (e) => e.preventDefault() : rest.onKeyDown}
+        onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}
         ref={ref}
         sx={sx}
         variant={variant}
