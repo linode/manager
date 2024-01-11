@@ -140,5 +140,6 @@ export const LandingHeader = ({
 };
 
 const Actions = styled('div')(({ theme }) => ({
-  marginLeft: `${theme.spacing(2)}`,
+  display: 'flex',
+  marginLeft: theme.spacing(2),
 }));
