@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.108.0",
+  "version": "1.109.1",
   "private": true,
   "type": "module",
   "bugs": {
@@ -24,7 +24,7 @@
     "@reach/tabs": "^0.10.5",
     "@sentry/react": "^7.57.0",
     "algoliasearch": "^4.14.3",
-    "axios": "~1.6.1",
+    "axios": "~1.6.5",
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "chartjs-adapter-luxon": "^0.2.1",

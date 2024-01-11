@@ -179,6 +179,7 @@ export interface UpdateDatabasePayload {
   label?: string;
   allow_list?: string[];
   updates?: UpdatesSchedule;
+  type?: string;
 }
 
 export interface UpdateDatabaseResponse {
