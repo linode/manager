@@ -8,6 +8,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
+import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
 import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
@@ -42,7 +43,7 @@ const VPCCreate = () => {
           pathname: `/vpcs/create`,
         }}
         docsLabel="Getting Started"
-        docsLink="#" // @TODO VPC: add correct docs link
+        docsLink={VPC_GETTING_STARTED_LINK}
         title="Create"
       />
       {userCannotAddVPC && CannotCreateVPCNotice}

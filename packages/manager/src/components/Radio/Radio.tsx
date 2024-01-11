@@ -38,3 +38,5 @@ export const Radio = (props: RadioProps) => {
     />
   );
 };
+
+export type { RadioProps };
