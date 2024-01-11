@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 
 import { roundTo } from 'src/utilities/roundTo';
 
+import { LinodeNetworkTimeData } from './types';
+
 export const getAccessibleTimestamp = (timestamp: number, timezone: string) =>
   DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(
     DateTime.DATETIME_SHORT
@@ -15,7 +17,7 @@ export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
 export const tooltipValueFormatter = (value: number, unit: string) =>
   `${roundTo(value)}${unit}`;
 
-export const timeData = [
+export const timeData: LinodeNetworkTimeData[] = [
   {
     'Public Outbound Traffic': 5.434939999999999,
     timestamp: 1703304000000,

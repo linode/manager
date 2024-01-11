@@ -5,6 +5,7 @@ import { map, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import { NetworkTimeData } from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import {
@@ -223,7 +224,7 @@ const Graph = (props: GraphProps) => {
   const convertedPublicOut = data.publicOut;
   const convertedPrivateIn = data.privateIn;
   const convertedPrivateOut = data.privateOut;
-  const timeData = [];
+  const timeData: NetworkTimeData[] = [];
 
   for (let i = 0; i < data.publicIn.length; i++) {
     timeData.push({

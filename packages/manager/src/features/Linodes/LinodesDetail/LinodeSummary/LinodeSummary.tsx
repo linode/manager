@@ -7,6 +7,11 @@ import { debounce } from 'throttle-debounce';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import {
+  CPUTimeData,
+  DiskIOTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -116,7 +121,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
     // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
     if (flags.recharts) {
-      const timeData = data.reduce((acc: any, point: any) => {
+      const timeData = data.reduce((acc: CPUTimeData[], point: Point) => {
         acc.push({
           'CPU %': point[1],
           timestamp: point[0],
@@ -188,7 +193,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
       io: stats?.data.io.io ?? [],
       swap: stats?.data.io.swap ?? [],
     };
-    const timeData = [];
+    const timeData: DiskIOTimeData[] = [];
 
     // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
     if (flags.recharts) {
