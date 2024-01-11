@@ -61,6 +61,11 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
+    mockAppendFeatureFlags({
+      objMultiCluster: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
+
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
       object_storage: 'disabled',
