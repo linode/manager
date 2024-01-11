@@ -70,6 +70,7 @@ export interface Flags {
   taxes: Taxes;
   tpaProviders: Provider[];
   unifiedMigrations: boolean;
+  vmPlacement: boolean;
   vpc: boolean;
 }
 
