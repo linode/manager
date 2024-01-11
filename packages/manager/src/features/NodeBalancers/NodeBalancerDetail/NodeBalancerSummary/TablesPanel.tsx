@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
-import { AreaChart } from 'src/components/AreaChart';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -91,7 +91,7 @@ export const TablesPanel = () => {
       timeData = data.reduce((acc: any, point: any) => {
         acc.push({
           Connections: point[1],
-          t: point[0],
+          timestamp: point[0],
         });
         return acc;
       }, []);
@@ -112,11 +112,11 @@ export const TablesPanel = () => {
                 tickFormat: 'hh a',
                 tickGap: 60,
               }}
-              aria-label={'Connections Graph'}
+              ariaLabel="Connections Graph"
               data={timeData}
               height={300}
               timezone={timezone}
-              unit={'CXN'}
+              unit={' CXN/s'}
             />
           </Box>
         ) : (
@@ -164,7 +164,7 @@ export const TablesPanel = () => {
         timeData.push({
           'Traffic In': trafficIn[i][1],
           'Traffic Out': trafficOut[i][1],
-          t: trafficIn[i][0],
+          timestamp: trafficIn[i][0],
         });
       }
     }
@@ -220,11 +220,11 @@ export const TablesPanel = () => {
                   tickFormat: 'hh a',
                   tickGap: 60,
                 }}
-                aria-label={'Traffic Graph'}
+                ariaLabel="Traffic Graph"
                 data={timeData}
                 height={300}
                 timezone={timezone}
-                unit={'bits'}
+                unit={' bits/s'}
               />
             </Box>
           ) : (

@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -149,13 +149,13 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      wide
       PaperProps={{
         sx: { maxWidth: '790px !important' },
       }}
       onClose={onClose}
       open={open}
       title={`Add a Node Pool: ${clusterLabel}`}
+      wide
     >
       {error && (
         <Notice
@@ -184,7 +184,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
-          selectedRegionID={clusterRegionId}
+          selectedRegionId={clusterRegionId}
           updatePlanCount={updatePlanCount}
         />
         {selectedTypeInfo &&

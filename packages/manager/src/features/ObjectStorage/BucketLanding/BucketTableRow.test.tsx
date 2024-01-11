@@ -19,6 +19,7 @@ describe('BucketTableRow', () => {
     objects: bucket.objects,
     onDetails: vi.fn(),
     onRemove: mockOnRemove,
+    region: bucket.region,
     size: bucket.size,
   };
 
