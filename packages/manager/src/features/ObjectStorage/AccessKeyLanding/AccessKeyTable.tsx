@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Table } from 'src/components/Table';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -13,6 +14,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessKeyMenu } from './AccessKeyMenu';
 import { OpenAccessDrawer } from './types';
@@ -35,6 +39,15 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     openDrawer,
     openRevokeDialog,
   } = props;
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   const renderContent = () => {
     if (isRestrictedUser) {
@@ -75,6 +88,18 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             <StyledCopyIcon text={eachKey.access_key} />
           </Typography>
         </TableCell>
+        {isObjMultiClusterFlagEnabled && (
+          <TableCell>
+            {`${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint} `}
+            {eachKey.regions.length > 0 ? (
+              <StyledLinkButton onClick={() => null} type="button">
+                and 6 more...
+              </StyledLinkButton>
+            ) : (
+              `${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint}`
+            )}
+          </TableCell>
+        )}
         <TableCell>
           <AccessKeyMenu
             label={eachKey.label}
@@ -98,6 +123,11 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
         <TableRow data-qa-table-head>
           <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
           <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
+          {isObjMultiClusterFlagEnabled && (
+            <StyledLabelCell data-qa-header-key>
+              Regions/S3 Hostnames
+            </StyledLabelCell>
+          )}
           {/* empty cell for kebab menu */}
           <TableCell />
         </TableRow>

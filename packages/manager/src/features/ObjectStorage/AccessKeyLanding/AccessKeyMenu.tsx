@@ -5,6 +5,9 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { OpenAccessDrawer } from './types';
 
@@ -17,6 +20,15 @@ interface Props {
 
 export const AccessKeyMenu = (props: Props) => {
   const { objectStorageKey, openDrawer, openRevokeDialog } = props;
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   const actions = [
     {
@@ -41,21 +53,30 @@ export const AccessKeyMenu = (props: Props) => {
 
   return (
     <StyledInlineActionsContainer>
-      <Hidden mdDown>
-        {actions.map((thisAction) => (
-          <InlineMenuAction
-            actionText={thisAction.title}
-            key={thisAction.title}
-            onClick={thisAction.onClick}
-          />
-        ))}
-      </Hidden>
-      <Hidden mdUp>
+      {isObjMultiClusterFlagEnabled ? (
         <ActionMenu
           actionsList={actions}
           ariaLabel={`Action menu for Object Storage Key ${props.label}`}
         />
-      </Hidden>
+      ) : (
+        <>
+          <Hidden mdDown>
+            {actions.map((thisAction) => (
+              <InlineMenuAction
+                actionText={thisAction.title}
+                key={thisAction.title}
+                onClick={thisAction.onClick}
+              />
+            ))}
+          </Hidden>
+          <Hidden mdUp>
+            <ActionMenu
+              actionsList={actions}
+              ariaLabel={`Action menu for Object Storage Key ${props.label}`}
+            />
+          </Hidden>
+        </>
+      )}
     </StyledInlineActionsContainer>
   );
 };
