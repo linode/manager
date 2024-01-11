@@ -1,6 +1,7 @@
 import type { Region } from '../regions';
-import { IPAddress, IPRange } from '../networking/types';
-import { SSHKey } from '../profile/types';
+import type { IPAddress, IPRange } from '../networking/types';
+import type { SSHKey } from '../profile/types';
+import type { PlacementGroup } from '../vm-placement/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -23,6 +24,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
+  placement_groups: Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>[];
   type: string | null;
   status: LinodeStatus;
   updated: string;

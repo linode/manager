@@ -62,6 +62,7 @@ const props: AddonsPanelProps = {
       ipv4: ['45.56.75.98'],
       ipv6: '2600:3c00::f03c:93ff:fe85:576d/128',
       label: 'test_instance',
+      placement_groups: [],
       region: 'us-central',
       specs: {
         disk: 51200,
@@ -101,6 +102,7 @@ const props: AddonsPanelProps = {
       ipv4: ['192.168.139.183', '139.144.17.202'],
       ipv6: '2600:3c04::f03c:93ff:fe75:0612/128',
       label: 'debian-ca-central',
+      placement_groups: [],
       region: 'ca-central',
       specs: {
         disk: 25600,
@@ -139,6 +141,7 @@ const props: AddonsPanelProps = {
       ipv4: ['45.79.74.95'],
       ipv6: '2600:3c01::f03c:93ff:fe75:e4f9/128',
       label: 'almalinux-us-west',
+      placement_groups: [],
       region: 'us-west',
       specs: {
         disk: 25600,

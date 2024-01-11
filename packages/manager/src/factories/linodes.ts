@@ -260,6 +260,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
+  placement_groups: [],
   region: 'us-east',
   specs: linodeSpecsFactory.build(),
   status: 'running',
