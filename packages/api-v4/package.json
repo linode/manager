@@ -41,7 +41,7 @@
   "unpkg": "./lib/index.global.js",
   "dependencies": {
     "@linode/validation": "*",
-    "axios": "~1.6.1",
+    "axios": "~1.6.5",
     "ipaddr.js": "^2.0.0",
     "yup": "^0.32.9"
   },
