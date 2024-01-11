@@ -356,20 +356,4 @@ describe('VPC landing page', () => {
 
     cy.findByText(MOCK_DELETE_VPC_ERROR).should('not.exist');
   });
-
-  /*
-   * - Confirms that users cannot navigate to VPC landing page when feature is disabled.
-   */
-  it('cannot access VPC landing page when feature is disabled', () => {
-    // TODO Remove this test once VPC feature flag is removed from codebase.
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
-
-    cy.findByText('Not Found').should('be.visible');
-  });
 });
