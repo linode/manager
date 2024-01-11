@@ -128,8 +128,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     if (!formik.values.route_ids) {
       return;
     }
-    formik.values.route_ids.splice(index, 1);
-    formik.setFieldValue('route_ids', formik.values.route_ids);
+    const newRouteIds = [...formik.values.route_ids];
+    newRouteIds.splice(index, 1);
+    formik.setFieldValue('route_ids', newRouteIds);
   };
 
   const handleAddCerts = (certificates: Configuration['certificates']) => {
