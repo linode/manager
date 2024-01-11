@@ -68,6 +68,7 @@ export type AccountCapability =
   | 'Machine Images'
   | 'Managed Databases'
   | 'NodeBalancers'
+  | 'Object Storage Access Key Regions'
   | 'Object Storage'
   | 'Vlans'
   | 'VPCs';

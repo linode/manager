@@ -4,12 +4,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 
 import { IPTypes } from './types';
+
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   ipAddress?: IPAddress | IPRange;
@@ -58,6 +60,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
       ? {
           disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
+          id: 'delete',
           onClick: () => {
             onRemove(ipAddress);
           },
@@ -74,6 +77,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     onEdit && ipAddress && showEdit
       ? {
           disabled: readOnly || isVPCOnlyLinode,
+          id: 'edit-rdns',
           onClick: () => {
             onEdit(ipAddress);
           },
@@ -94,8 +98,9 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           return (
             <InlineMenuAction
               actionText={action.title}
+              data-testid={`action-menu-item-${action.id}`}
               disabled={action.disabled}
-              key={action.title}
+              key={action.id}
               onClick={action.onClick}
               tooltip={action.tooltip}
             />

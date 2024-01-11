@@ -150,6 +150,7 @@ export const NodeBalancerSelect = (
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
+      data-testid="add-nodebalancer-autocomplete"
       disableClearable={!clearable}
       disableCloseOnSelect={multiple}
       disablePortal={true}
@@ -180,6 +181,6 @@ const getDefaultNoOptionsMessage = (
   } else if (loading) {
     return 'Loading your NodeBalancers...';
   } else {
-    return 'No options';
+    return 'No available NodeBalancers';
   }
 };

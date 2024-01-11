@@ -68,7 +68,10 @@ describe('EnhancedNumberInput', () => {
 
     const input = getByTestId('textfield-input') as HTMLInputElement;
     expect(input.value).toBe('1');
-    expect(getByTestId('decrement-button')).toHaveAttribute('disabled');
+    expect(getByTestId('decrement-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should respect max values', () => {
@@ -78,7 +81,10 @@ describe('EnhancedNumberInput', () => {
 
     const input = getByTestId('textfield-input') as HTMLInputElement;
     expect(input.value).toBe('5');
-    expect(getByTestId('increment-button')).toHaveAttribute('disabled');
+    expect(getByTestId('increment-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should display buttons and input as disabled when given the corresponding prop', () => {
@@ -86,7 +92,13 @@ describe('EnhancedNumberInput', () => {
       wrapWithTheme(<EnhancedNumberInput {...disabledProps} />)
     );
     expect(getByTestId('textfield-input')).toHaveAttribute('disabled');
-    expect(getByTestId('decrement-button')).toHaveAttribute('disabled');
-    expect(getByTestId('increment-button')).toHaveAttribute('disabled');
+    expect(getByTestId('decrement-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+    expect(getByTestId('increment-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 });

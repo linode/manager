@@ -67,7 +67,7 @@ export const useInitialRequests = () => {
 
       // Username and whether a user is restricted
       queryClient.prefetchQuery({
-        queryFn: getProfile,
+        queryFn: () => getProfile(),
         queryKey: 'profile',
       }),
 

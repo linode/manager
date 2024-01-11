@@ -1,14 +1,16 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { planSelectionTypeFactory } from 'src/factories/types';
 import { breakpoints } from 'src/foundations/breakpoints';
-import { resizeScreenSize } from 'src/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
+import type { PlanSelectionProps } from './PlanSelection';
 import type { PlanSelectionType } from './types';
 
 const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
@@ -21,20 +23,25 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
   ],
 });
 
+const defaultProps: PlanSelectionProps = {
+  idx: 0,
+  isPlanSoldOut: false,
+  onSelect: () => vi.fn(),
+  type: mockPlan,
+};
+
 describe('PlanSelection (table, desktop)', () => {
   beforeAll(() => {
     resizeScreenSize(breakpoints.values.lg);
   });
 
   it('renders the table row', () => {
-    const { container } = renderWithTheme(
+    const { container, queryByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <PlanSelection
-          idx={0}
+          {...defaultProps}
           isCreate={true}
-          onSelect={() => vi.fn()}
           selectedRegionId={'us-east'}
-          type={mockPlan}
         />
       )
     );
@@ -54,18 +61,12 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
+    expect(queryByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
     const { container } = renderWithTheme(
-      wrapWithTableBody(
-        <PlanSelection
-          idx={0}
-          isCreate={true}
-          onSelect={() => vi.fn()}
-          type={mockPlan}
-        />
-      )
+      wrapWithTableBody(<PlanSelection {...defaultProps} isCreate={true} />)
     );
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
@@ -85,7 +86,7 @@ describe('PlanSelection (table, desktop)', () => {
 
     const { getByRole } = renderWithTheme(
       wrapWithTableBody(
-        <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />
+        <PlanSelection {...defaultProps} onSelect={mockOnSelect} />
       )
     );
 
@@ -98,12 +99,7 @@ describe('PlanSelection (table, desktop)', () => {
   it('shows the dynamic prices for a region with DC-specific pricing', () => {
     const { container } = renderWithTheme(
       wrapWithTableBody(
-        <PlanSelection
-          idx={0}
-          onSelect={() => {}}
-          selectedRegionId={'br-gru'}
-          type={mockPlan}
-        />
+        <PlanSelection {...defaultProps} selectedRegionId={'br-gru'} />
       )
     );
 
@@ -132,12 +128,7 @@ describe('PlanSelection (card, mobile)', () => {
 
   it('renders the table row', () => {
     const { container } = renderWithTheme(
-      <PlanSelection
-        idx={0}
-        onSelect={() => {}}
-        selectedRegionId={'us-east'}
-        type={mockPlan}
-      />
+      <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
     );
 
     expect(
@@ -161,9 +152,7 @@ describe('PlanSelection (card, mobile)', () => {
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
-    const { container } = renderWithTheme(
-      <PlanSelection idx={0} onSelect={() => {}} type={mockPlan} />
-    );
+    const { container } = renderWithTheme(<PlanSelection {...defaultProps} />);
 
     expect(
       container.querySelector('[data-qa-selection-card]')
@@ -180,7 +169,7 @@ describe('PlanSelection (card, mobile)', () => {
     const mockOnSelect = vi.fn();
 
     const { container } = renderWithTheme(
-      <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />
+      <PlanSelection {...defaultProps} onSelect={mockOnSelect} />
     );
 
     fireEvent.click(container.querySelector('[data-qa-selection-card]')!);
@@ -190,12 +179,7 @@ describe('PlanSelection (card, mobile)', () => {
 
   it('shows the dynamic prices for a region with DC-specific pricing', () => {
     const { container } = renderWithTheme(
-      <PlanSelection
-        idx={0}
-        onSelect={() => {}}
-        selectedRegionId={'br-gru'}
-        type={mockPlan}
-      />
+      <PlanSelection {...defaultProps} selectedRegionId={'br-gru'} />
     );
 
     expect(
@@ -216,5 +200,17 @@ describe('PlanSelection (card, mobile)', () => {
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-4"]')
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
+  });
+
+  it('shows a chip if plan is sold out', () => {
+    const { getByLabelText } = renderWithTheme(
+      <PlanSelection
+        {...defaultProps}
+        isPlanSoldOut={true}
+        selectedRegionId={'us-east'}
+      />
+    );
+
+    expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
   });
 });

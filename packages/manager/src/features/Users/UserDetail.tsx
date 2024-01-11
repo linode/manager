@@ -252,6 +252,7 @@ export const UserDetail = () => {
             <UserPermissions
               clearNewUser={clearNewUser}
               currentUser={profile?.username}
+              queryClient={queryClient}
               username={username}
             />
           </SafeTabPanel>

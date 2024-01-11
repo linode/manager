@@ -1,6 +1,9 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
+import { Paper } from 'src/components/Paper';
 
 export const StyledSelect = styled(Select, {
   label: 'StyledSelect',
@@ -29,4 +32,58 @@ export const StyledDivWrapper = styled('div', {
 })(({ theme }) => ({
   marginTop: theme.spacing(2),
   paddingBottom: 0,
+}));
+
+export const StyledHeaderGrid = styled(Grid, {
+  label: 'StyledHeaderGrid',
+})(({ theme }) => ({
+  padding: 0,
+  [theme.breakpoints.down('sm')]: {
+    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    width: '100%',
+  },
+}));
+
+export const StyledSubHeaderGrid = styled(Grid, {
+  label: 'StyledSubHeaderGrid',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    margin: theme.spacing(0.5),
+    padding: 0,
+  },
+}));
+
+export const StyledUnrestrictedGrid = styled(Grid, {
+  label: 'StyledUnrestrictedGrid',
+})(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+  paddingLeft: theme.spacing(3),
+  [theme.breakpoints.down('sm')]: {
+    paddingLeft: theme.spacing(2),
+  },
+}));
+
+export const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
+  paddingBottom: 0,
+  paddingTop: 0,
+  [theme.breakpoints.down('sm')]: {
+    padding: 0,
+  },
+}));
+
+export const StyledPermPaper = styled(Paper, {
+  label: 'StyledPermPaper',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
+  },
+}));
+
+export const StyledCircleProgress = styled(CircleProgress, {
+  label: 'StyledCircleProgress',
+})(({ theme }) => ({
+  marginTop: theme.spacing(2),
 }));
