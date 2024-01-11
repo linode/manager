@@ -97,7 +97,7 @@ export const useObjectStorageBucketsFromRegions = (
   enabled: boolean = true
 ) =>
   useQuery<BucketsResponce, APIError[]>(
-    `${queryKey}-buckets`,
+    `${queryKey}-buckets-from-regions`,
     () => getAllBucketsFromRegions(regions),
     {
       ...queryPresets.longLived,

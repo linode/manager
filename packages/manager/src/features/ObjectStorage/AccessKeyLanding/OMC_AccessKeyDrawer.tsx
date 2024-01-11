@@ -48,11 +48,14 @@ export interface FormState {
  * bucket_access in the shape the API will expect,
  * sorted by cluster.
  */
-export const sortByCluster = (a: Scope, b: Scope) => {
-  if (a.cluster > b.cluster) {
+export const sortByRegion = (a: Scope, b: Scope) => {
+  if (!a.region || !b.region) {
+    return 0;
+  }
+  if (a.region > b.region) {
     return 1;
   }
-  if (a.cluster < b.cluster) {
+  if (a.region < b.region) {
     return -1;
   }
   return 0;
@@ -64,8 +67,9 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
       bucket_name: thisBucket.label,
       cluster: thisBucket.cluster,
       permissions: 'none' as AccessType,
+      region: thisBucket.region,
     }))
-    .sort(sortByCluster);
+    .sort(sortByRegion);
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const {
@@ -79,11 +83,15 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const { data: regions } = useRegionsQuery();
 
+  const regionsSupportObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
   const {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBucketsFromRegions(regions);
+  } = useObjectStorageBucketsFromRegions(regionsSupportObjectStorage);
 
   const { data: accountSettings } = useAccountSettings();
 
@@ -96,6 +104,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const createMode = mode === 'creating';
 
+  const [showBucketsTable, setShowBucketsTable] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   // This is for local display management only, not part of the payload
   // and so not included in Formik's types
@@ -111,7 +120,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       : [];
 
   const initialValues: FormState = {
-    bucket_access: getDefaultScopes(buckets),
+    bucket_access: [],
     label: initialLabelValue,
     regions: initialRegions,
   };
@@ -140,8 +149,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     validationSchema: omc_createObjectStorageKeysSchema,
   });
 
-  const hasRegionSelected = formik.values.regions.length > 0;
-
   const beforeSubmit = () => {
     confirmObjectStorage<FormState>(
       accountSettings?.object_storage || 'active',
@@ -156,15 +163,12 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const handleToggleAccess = () => {
     setLimitedAccessChecked((checked) => !checked);
-    // Reset scopes
-    formik.setFieldValue('bucket_access', getDefaultScopes(buckets));
   };
 
   useEffect(() => {
-    if (open) {
-      setLimitedAccessChecked(false);
-      formik.resetForm({ values: initialValues });
-    }
+    setLimitedAccessChecked(false);
+    formik.resetForm({ values: initialValues });
+    setShowBucketsTable(false);
   }, [open]);
 
   return (
@@ -230,17 +234,39 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             value={formik.values.label}
           />
           <AccessKeyRegions
-            onChange={(value) => {
-              formik.setFieldValue('regions', value);
+            onBlur={() => {
+              const bucketsInRegions = buckets?.filter(
+                (bucket) =>
+                  bucket.region && formik.values.regions.includes(bucket.region)
+              );
+              formik.setFieldValue(
+                'bucket_access',
+                getDefaultScopes(bucketsInRegions)
+              );
+              if (
+                bucketsInRegions.length > 0 &&
+                formik.values.regions.length > 0
+              ) {
+                setShowBucketsTable(true);
+              }
+            }}
+            onChange={(values) => {
+              const bucketsInRegions = buckets?.filter(
+                (bucket) => bucket.region && values.includes(bucket.region)
+              );
+              formik.setFieldValue(
+                'bucket_access',
+                getDefaultScopes(bucketsInRegions)
+              );
+              formik.setFieldValue('regions', values);
             }}
             disabled={isRestrictedUser}
             error={formik.errors.regions as string}
             name="regions"
-            onBlur={formik.handleBlur}
             required
             selectedRegion={formik.values.regions}
           />
-          {createMode && !hidePermissionsTable && hasRegionSelected ? (
+          {createMode && !hidePermissionsTable && showBucketsTable ? (
             <LimitedAccessControls
               bucket_access={formik.values.bucket_access}
               checked={limitedAccessChecked}

@@ -37,6 +37,7 @@ export const RegionsMultiSelect = React.memo(
       helperText,
       isClearable,
       label,
+      onBlur,
       regions,
       required,
       selectedIds,
@@ -171,6 +172,7 @@ export const RegionsMultiSelect = React.memo(
             loading={accountAvailabilityLoading}
             multiple
             noOptionsText="No results"
+            onBlur={onBlur}
             options={options}
             placeholder="Select Regions"
             renderTags={() => null}
