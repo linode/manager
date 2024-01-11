@@ -15,12 +15,12 @@ import {
 } from 'recharts';
 
 import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
+import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { Paper } from 'src/components/Paper';
+import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
 import { tooltipLabelFormatter, tooltipValueFormatter } from './utils';
-import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
-import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 interface AreaProps {
   color: string;
@@ -37,11 +37,11 @@ interface AreaChartProps {
   ariaLabel: string;
   data: any;
   height: number;
+  legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
   showLegend?: boolean;
   timezone: string;
   unit: string;
   xAxis: XAxisProps;
-  legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
 }
 
 const humanizeLargeData = (value: number) => {
@@ -60,11 +60,11 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     data,
     height,
+    legendRows,
     showLegend,
     timezone,
     unit,
     xAxis,
-    legendRows,
   } = props;
 
   const theme = useTheme();
@@ -115,8 +115,8 @@ export const AreaChart = (props: AreaChartProps) => {
       return (
         <StyledBottomLegend>
           <MetricsDisplay
-            rows={legendRowsWithClickHandler}
             hiddenRows={activeSeries}
+            rows={legendRowsWithClickHandler}
           />
         </StyledBottomLegend>
       );
@@ -172,10 +172,10 @@ export const AreaChart = (props: AreaChartProps) => {
           )}
           {showLegend && legendRows && (
             <Legend
-              content={<CustomLegend />}
               wrapperStyle={{
                 left: 20,
               }}
+              content={<CustomLegend />}
             />
           )}
           {areas.map(({ color, dataKey }) => (
