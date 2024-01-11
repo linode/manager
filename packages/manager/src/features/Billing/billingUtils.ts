@@ -70,6 +70,6 @@ export const getDisabledTooltipText = ({
   return isRestrictedUser
     ? `${RESTRICTED_SECTION_EDIT_MESSAGE} ${
         isChildUser ? BUSINESS_PARTNER : ADMINISTRATOR
-      }`
+      }.`
     : undefined;
 };
