@@ -8,6 +8,10 @@ import type { TextFieldProps } from 'src/components/TextField';
 
 interface Props {
   /**
+   * Disabled the "x" clear button
+   */
+  disableClearable?: boolean;
+  /**
    * Error text to display as helper text under the TextField. Useful for validation errors.
    */
   errorText?: string;
@@ -46,6 +50,7 @@ export const CertificateSelect = (props: Props) => {
     onChange,
     textFieldProps,
     value,
+    disableClearable,
   } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
@@ -90,6 +95,7 @@ export const CertificateSelect = (props: Props) => {
           setInputValue(value);
         }
       }}
+      disableClearable={disableClearable}
       errorText={error?.[0].reason ?? errorText}
       inputValue={selectedCertificate ? selectedCertificate.label : inputValue}
       label={label ?? 'Certificate'}

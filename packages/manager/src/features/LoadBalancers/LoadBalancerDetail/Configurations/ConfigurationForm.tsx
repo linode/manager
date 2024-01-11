@@ -24,7 +24,7 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 import { RoutesTable } from '../Routes/RoutesTable';
-import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
+import { AddCertificateDrawer } from './AddCertificateDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 import {
@@ -34,7 +34,11 @@ import {
   protocolOptions,
 } from './constants';
 
-import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
+import type {
+  CertificateConfig,
+  Configuration,
+  ConfigurationPayload,
+} from '@linode/api-v4';
 
 interface EditProps {
   configuration: Configuration;
@@ -120,8 +124,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
 
   const handleRemoveCert = (index: number) => {
     formik.setFieldTouched('certificates');
-    formik.values.certificates.splice(index, 1);
-    formik.setFieldValue('certificates', formik.values.certificates);
+    const newCerts = [...formik.values.certificates];
+    newCerts.splice(index, 1);
+    formik.setFieldValue('certificates', newCerts);
   };
 
   const handleRemoveRoute = (index: number) => {
@@ -133,11 +138,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     formik.setFieldValue('route_ids', newRouteIds);
   };
 
-  const handleAddCerts = (certificates: Configuration['certificates']) => {
+  const handleAddCertificate = (certificate: CertificateConfig) => {
     formik.setFieldTouched('certificates');
     formik.setFieldValue('certificates', [
       ...formik.values.certificates,
-      ...certificates,
+      certificate,
     ]);
   };
 
@@ -234,8 +239,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
                 }}
                 buttonType="outlined"
               >
-                Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
-                Certificates
+                Add Certificate
               </Button>
             </Box>
           </Stack>
@@ -308,9 +312,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         onClose={() => setIsAddRouteDrawerOpen(false)}
         open={isAddRouteDrawerOpen}
       />
-      <ApplyCertificatesDrawer
+      <AddCertificateDrawer
         loadbalancerId={loadbalancerId}
-        onAdd={handleAddCerts}
+        onAdd={handleAddCertificate}
         onClose={() => setIsApplyCertDialogOpen(false)}
         open={isApplyCertDialogOpen}
       />

@@ -24,12 +24,13 @@ import type { Certificate, CreateCertificatePayload } from '@linode/api-v4';
 interface Props {
   loadbalancerId: number;
   onClose: () => void;
+  onSuccess?: (certificate: Certificate) => void;
   open: boolean;
   type: Certificate['type'];
 }
 
 export const CreateCertificateDrawer = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open, type } = props;
+  const { loadbalancerId, onClose: _onClose, onSuccess, open, type } = props;
 
   const onClose = () => {
     formik.resetForm();
@@ -40,6 +41,7 @@ export const CreateCertificateDrawer = (props: Props) => {
   const {
     error,
     mutateAsync: createCertificate,
+    isLoading,
     reset,
   } = useLoadBalancerCertificateCreateMutation(loadbalancerId);
 
@@ -48,7 +50,10 @@ export const CreateCertificateDrawer = (props: Props) => {
     initialValues: initialValues[type],
     async onSubmit(values) {
       try {
-        await createCertificate(values);
+        const certificate = await createCertificate(values);
+        if (onSuccess) {
+          onSuccess(certificate);
+        }
         onClose();
       } catch (errors) {
         formik.setErrors(getFormikErrorsFromAPIErrors(errors));
@@ -106,7 +111,12 @@ export const CreateCertificateDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'submit',
             label: 'Upload Certificate',
+            loading: isLoading,
             type: 'submit',
+          }}
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: onClose,
           }}
         />
       </form>
