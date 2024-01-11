@@ -144,6 +144,7 @@ const ContactInformation = (props: Props) => {
               history.push('/account/billing/edit');
               handleEditDrawerOpen();
             }}
+            data-testid="edit-contact-info"
             disableFocusRipple
             disableRipple
             disableTouchRipple
