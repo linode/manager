@@ -7,7 +7,7 @@ import { pluralize } from '../util/pluralize';
 import { secondsToTimeString } from '../util';
 import * as path from 'path';
 import { cypressRunCommand } from '../util/cypress';
-
+import { escapeHtmlString } from '../util/escape';
 
 /**
  * Outputs test result summary formatted as a GitHub comment.
@@ -31,7 +31,7 @@ export const githubFormatter: Formatter = (
 
     // If available, render a link for the run.
     const runLink = (metadata.runId && metadata.runUrl)
-      ? `[test run #${metadata.runId} ↗︎](${metadata.runUrl})`
+      ? `[test run #${escapeHtmlString(metadata.runId)} ↗︎](${escapeHtmlString(metadata.runUrl)})`
       : 'test run';
 
     return `${headingMarkdown}${description} ${runLink}`;
