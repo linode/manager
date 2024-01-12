@@ -16,6 +16,8 @@ import {
   StyledTableRow,
 } from './LinodeEntityDetail.styles';
 
+import type { SxProps } from '@mui/system';
+
 interface AccessTableRow {
   heading?: string;
   text: null | string;
@@ -29,13 +31,14 @@ interface AccessTableProps {
   };
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
+  sx?: SxProps;
   title: string;
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
-  const { footer, gridSize, isVPCOnlyLinode, rows, title } = props;
+  const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
   return (
-    <Grid lg={gridSize.lg} sx={{ padding: 0 }} xs={gridSize.xs}>
+    <Grid lg={gridSize.lg} sx={sx} xs={gridSize.xs}>
       <StyledColumnLabelGrid>
         {title}{' '}
         {isVPCOnlyLinode &&

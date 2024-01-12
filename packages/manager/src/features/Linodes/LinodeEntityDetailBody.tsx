@@ -93,7 +93,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   return (
     <>
-      <StyledBodyGrid container spacing={2}>
+      <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
         <Grid
           container
           flexDirection={matchesLgUp ? 'row' : 'column'}
@@ -128,7 +128,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             <AccessTable
               footer={
                 numIPAddresses > 2 ? (
-                  <Typography variant="body1">
+                  <Typography
+                    sx={{ position: matchesLgUp ? 'absolute' : 'relative' }}
+                    variant="body1"
+                  >
                     <HashLink
                       to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
                     >
@@ -140,6 +143,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               gridSize={{ lg: 5, xs: 12 }}
               isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[{ text: firstAddress }, { text: secondAddress }]}
+              sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
@@ -152,6 +156,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               ]}
               gridSize={{ lg: 7, xs: 12 }}
               isVPCOnlyLinode={isVPCOnlyLinode}
+              sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
               title="Access"
             />
           </Grid>
