@@ -91,22 +91,6 @@ export const SwitchAccountDrawer = (props: Props) => {
         // );
         // ================================================================
 
-        if (!isParentTokenValid({ isProxyUser })) {
-          const expiredTokenError: APIError = {
-            field: 'token',
-            reason:
-              'The reseller account token has expired. You must log back into the account manually.',
-          };
-
-          setIsParentTokenError([expiredTokenError]);
-
-          enqueueSnackbar(expiredTokenError.reason, {
-            variant: 'error',
-          });
-
-          return;
-        }
-
         const proxyToken = await getProxyToken({ euuid, headers });
 
         // We don't need to worry about this if we're a proxy user.
@@ -157,6 +141,27 @@ export const SwitchAccountDrawer = (props: Props) => {
     [enqueueSnackbar]
   );
 
+  const handleSwitchToParentAccount = React.useCallback(() => {
+    if (!isParentTokenValid({ isProxyUser })) {
+      const expiredTokenError: APIError = {
+        field: 'token',
+        reason:
+          'The reseller account token has expired. You must log back into the account manually.',
+      };
+
+      setIsParentTokenError([expiredTokenError]);
+
+      enqueueSnackbar(expiredTokenError.reason, {
+        variant: 'error',
+      });
+
+      return;
+    }
+
+    setActiveTokenInLocalStorage({ userType: 'parent' });
+    handleClose();
+  }, [enqueueSnackbar, handleClose, isProxyUser]);
+
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
       {isProxyTokenError.length > 0 && (
@@ -175,11 +180,8 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
-              onClick={() => {
-                setActiveTokenInLocalStorage({ userType: 'parent' });
-                handleClose();
-              }}
               aria-label="parent-account-link"
+              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>
