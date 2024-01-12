@@ -3,7 +3,7 @@ import {
   createPlacementGroupSchema,
   unassignVmsFromPlacementGroupSchema,
   updatePlacementGroupSchema,
-} from '@linode/validation/lib/placement-groups.schema';
+} from '@linode/validation';
 import { API_ROOT } from '../constants';
 
 import Request, {
