@@ -21,7 +21,10 @@ export const ConfigurationAccordion = ({ configuration, index }: Props) => {
     setShowEditConfigurationDrawer,
   ] = useState(false);
 
-  const editConfigDetailsHandler = () => {
+  const editConfigDetailsHandler = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.stopPropagation();
     setShowEditConfigurationDrawer(true);
   };
 

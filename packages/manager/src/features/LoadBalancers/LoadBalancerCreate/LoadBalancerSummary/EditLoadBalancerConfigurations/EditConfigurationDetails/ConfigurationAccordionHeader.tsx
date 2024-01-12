@@ -13,7 +13,7 @@ import type { LoadBalancerCreateFormData } from '../../../LoadBalancerCreateForm
 
 interface Props {
   configuration: LoadBalancerCreateFormData['configurations'][number];
-  editClickHandler: () => void;
+  editClickHandler: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
 export const ConfigurationAccordionHeader = ({
