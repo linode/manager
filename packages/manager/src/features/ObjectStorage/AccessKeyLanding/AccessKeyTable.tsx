@@ -108,7 +108,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
                 }}
                 type="button"
               >
-                and ${eachKey.regions.length - 1} more...
+                and {eachKey.regions.length - 1} more...
               </StyledLinkButton>
             ) : (
               `${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint}`
