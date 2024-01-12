@@ -1844,17 +1844,17 @@ export const handlers = [
     );
   }),
   // Placement Groups
-  rest.get('*/placement-groups', (_req, res, ctx) => {
+  rest.get('*/placement/groups', (_req, res, ctx) => {
     return res(ctx.json(makeResourcePage(placementGroupFactory.buildList(3))));
   }),
-  rest.get('*/placement-groups/:placementGroupId', (req, res, ctx) => {
+  rest.get('*/placement/groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }
 
     return res(ctx.json(placementGroupFactory.build()));
   }),
-  rest.post('*/placement-groups', (req, res, ctx) => {
+  rest.post('*/placement/groups', (req, res, ctx) => {
     return res(
       ctx.json(
         createPlacementGroupPayloadFactory.build(
@@ -1863,7 +1863,7 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/placement-groups/:placementGroupId', (req, res, ctx) => {
+  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }
@@ -1874,14 +1874,14 @@ export const handlers = [
 
     return res(ctx.json(response));
   }),
-  rest.delete('*/placement-groups/:placementGroupId', (req, res, ctx) => {
+  rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }
 
     return res(ctx.json({}));
   }),
-  rest.post('*/placement-groups/:placementGroupId/assign', (req, res, ctx) => {
+  rest.post('*/placement/groups/:placementGroupId/assign', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }
@@ -1889,7 +1889,7 @@ export const handlers = [
     return res(ctx.json({}));
   }),
   rest.post(
-    '*/placement-groups/:placementGroupId/unassign',
+    '*/placement/groups/:placementGroupId/unassign',
     (req, res, ctx) => {
       if (req.params.placementGroupId === 'undefined') {
         return res(ctx.status(404));
