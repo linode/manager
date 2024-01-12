@@ -1,7 +1,7 @@
 import type { Region } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
-import type { PlacementGroup } from '../vm-placement/types';
+import type { PlacementGroup } from '../placement-groups/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 

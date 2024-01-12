@@ -15,3 +15,11 @@ export type CreatePlacementGroupPayload = Pick<
   PlacementGroup,
   'label' | 'affinity_type' | 'region'
 >;
+
+export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
+
+/**
+ * Since the API expects an array of ONE linode id, we'll use a tuple here.
+ */
+export type AssignVmsToPlacementGroupPayload = [number];
+export type UnassignVmsFromPlacementGroupPayload = [number];
