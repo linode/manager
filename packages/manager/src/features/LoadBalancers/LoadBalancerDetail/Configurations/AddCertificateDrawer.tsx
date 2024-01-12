@@ -1,4 +1,3 @@
-import { createLoadbalancerCertificate } from '@linode/api-v4';
 import {
   CertificateEntrySchema,
   CreateCertificateSchema,
@@ -17,16 +16,17 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
-
-import type {
-  CertificateConfig,
-  CreateCertificatePayload,
-} from '@linode/api-v4';
 import {
   CERTIFICATES_COPY,
   exampleCert,
   exampleKey,
 } from '../Certificates/constants';
+
+import type {
+  CertificateConfig,
+  CreateCertificatePayload,
+} from '@linode/api-v4';
+import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
 
 interface Props {
   loadbalancerId: number;
@@ -132,6 +132,10 @@ const AddExistingCertificate = (props: Props) => {
 const AddNewCertificate = (props: Props) => {
   const { loadbalancerId, onAdd, onClose, open } = props;
 
+  const {
+    mutateAsync: createCertificate,
+  } = useLoadBalancerCertificateCreateMutation(loadbalancerId);
+
   const formik = useFormik<
     CreateCertificatePayload & Omit<CertificateConfig, 'id'>
   >({
@@ -143,7 +147,7 @@ const AddNewCertificate = (props: Props) => {
       type: 'downstream',
     },
     async onSubmit({ certificate, hostname, key, label, type }) {
-      const cert = await createLoadbalancerCertificate(loadbalancerId, {
+      const cert = await createCertificate({
         certificate,
         key,
         label,
@@ -214,6 +218,7 @@ const AddNewCertificate = (props: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           label: 'Create and Add',
+          loading: formik.isSubmitting,
           type: 'submit',
         }}
         secondaryButtonProps={{
