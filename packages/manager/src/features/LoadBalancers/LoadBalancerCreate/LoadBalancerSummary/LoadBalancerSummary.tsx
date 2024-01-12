@@ -74,7 +74,7 @@ export const LoadBalancerSummary = () => {
               <Typography>
                 Upload and apply certificates after LB creation.
                 {/* // TODO AGLB: update learn more link */}
-                <Link to="#">Learn more</Link>.
+                <Link to="#"> Learn more</Link>.
               </Typography>
             </Notice>
           </Stack>
