@@ -1,11 +1,14 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import {
+  ObjectStorageKey,
+  RegionS3EndpointAndID,
+} from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
+import React, { useState } from 'react';
 
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Table } from 'src/components/Table';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -19,6 +22,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessKeyMenu } from './AccessKeyMenu';
+import { HostNamesDrawer } from './HostNamesDrawer';
 import { OpenAccessDrawer } from './types';
 
 export interface AccessKeyTableProps {
@@ -39,6 +43,11 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     openDrawer,
     openRevokeDialog,
   } = props;
+
+  const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
+    false
+  );
+  const [hostNames, setHostNames] = useState<RegionS3EndpointAndID[]>([]);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
@@ -91,9 +100,15 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
         {isObjMultiClusterFlagEnabled && (
           <TableCell>
             {`${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint} `}
-            {eachKey.regions.length > 0 ? (
-              <StyledLinkButton onClick={() => null} type="button">
-                and 6 more...
+            {eachKey.regions.length > 1 ? (
+              <StyledLinkButton
+                onClick={() => {
+                  setHostNames(eachKey.regions);
+                  setShowHostNamesDrawers(true);
+                }}
+                type="button"
+              >
+                and ${eachKey.regions.length - 1} more...
               </StyledLinkButton>
             ) : (
               `${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint}`
@@ -113,27 +128,36 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   };
 
   return (
-    <Table
-      aria-label="List of Object Storage Access Keys"
-      colCount={2}
-      data-testid="data-qa-access-key-table"
-      rowCount={data?.length}
-    >
-      <TableHead>
-        <TableRow data-qa-table-head>
-          <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
-          <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
-          {isObjMultiClusterFlagEnabled && (
-            <StyledLabelCell data-qa-header-key>
-              Regions/S3 Hostnames
-            </StyledLabelCell>
-          )}
-          {/* empty cell for kebab menu */}
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>{renderContent()}</TableBody>
-    </Table>
+    <>
+      <Table
+        aria-label="List of Object Storage Access Keys"
+        colCount={2}
+        data-testid="data-qa-access-key-table"
+        rowCount={data?.length}
+      >
+        <TableHead>
+          <TableRow data-qa-table-head>
+            <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
+            <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
+            {isObjMultiClusterFlagEnabled && (
+              <StyledLabelCell data-qa-header-key>
+                Regions/S3 Hostnames
+              </StyledLabelCell>
+            )}
+            {/* empty cell for kebab menu */}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
+      {isObjMultiClusterFlagEnabled && (
+        <HostNamesDrawer
+          onClose={() => setShowHostNamesDrawers(false)}
+          open={showHostNamesDrawer}
+          regions={hostNames}
+        />
+      )}
+    </>
   );
 };
 

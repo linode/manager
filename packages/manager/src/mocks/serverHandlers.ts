@@ -968,7 +968,37 @@ export const handlers = [
   }),
   rest.get('*object-storage/keys', (req, res, ctx) => {
     return res(
-      ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
+      ctx.json(
+        makeResourcePage([
+          ...objectStorageKeyFactory.buildList(1),
+          ...objectStorageKeyFactory.buildList(1, {
+            regions: [
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+            ],
+          }),
+          ...objectStorageKeyFactory.buildList(1, {
+            regions: [
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+            ],
+          }),
+          ...objectStorageKeyFactory.buildList(1, {
+            regions: [
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+            ],
+          }),
+        ])
+      )
     );
   }),
   rest.post('*object-storage/keys', (req, res, ctx) => {
