@@ -10,6 +10,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const props = {
+  isProxyUser: false,
   onClose: vi.fn(),
   open: true,
   username: 'mock-user',
@@ -39,7 +40,7 @@ describe('SwitchAccountDrawer', () => {
     );
 
     const { findByLabelText, getByText } = renderWithTheme(
-      <SwitchAccountDrawer {...props} />
+      <SwitchAccountDrawer {...props} isProxyUser />
     );
 
     expect(
