@@ -36,8 +36,7 @@ export const StyledSidebarGridItem = styled(Grid, {
   label: 'StyledSidebarGridItem',
 })(({ theme }) => ({
   marginBottom: theme.spacing(1),
-  marginTop: theme.spacing(1),
-  padding: theme.spacing(3),
+  padding: theme.spacing(1),
   [theme.breakpoints.up('md')]: {
     order: 2,
   },
