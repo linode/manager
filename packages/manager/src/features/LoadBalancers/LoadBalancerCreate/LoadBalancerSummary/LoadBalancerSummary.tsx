@@ -72,7 +72,7 @@ export const LoadBalancerSummary = () => {
             <Divider dark />
             <Notice important variant="warning">
               <Typography>
-                Upload and apply certificates after LB creation.
+                Upload and apply certificates after Load Balancer creation.{' '}
                 {/* // TODO AGLB: update learn more link */}
                 <Link to="#"> Learn more</Link>.
               </Typography>
