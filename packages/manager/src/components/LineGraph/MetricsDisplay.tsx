@@ -67,6 +67,7 @@ export const MetricsDisplay = ({ hiddenRows, rows }: Props) => {
               <StyledTableCell>
                 <StyledButton
                   data-testid="legend-title"
+                  disableTouchRipple
                   hidden={hidden}
                   legendColor={legendColor}
                   onClick={handleLegendClick}
