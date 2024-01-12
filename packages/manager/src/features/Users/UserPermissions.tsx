@@ -19,6 +19,7 @@ import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 // import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -73,6 +74,7 @@ interface State {
   childAccountAccessEnabled: boolean;
   errors?: APIError[];
   grants?: Grants;
+  isAccountAccessRestricted: boolean;
   isSavingEntity: boolean;
   isSavingGlobal: boolean;
   loading: boolean;
@@ -113,12 +115,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { loading } = this.state;
     const { username } = this.props;
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${username} - Permissions`} />
-        {this.renderBody()}
+        {loading ? <CircleProgress /> : this.renderBody()}
       </React.Fragment>
     );
   }
@@ -154,17 +157,27 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   checkAndEnableChildAccountAccess = async () => {
     const { currentUser: currentUsername, flags } = this.props;
+
+    // Current user is the active user on the account.
     if (currentUsername) {
       try {
         const currentUser = await getUser(currentUsername);
 
+        const isChildAccount = currentUser.user_type === 'child';
         const isParentAccount = currentUser.user_type === 'parent';
         const isFeatureFlagOn = flags.parentChildAccountAccess;
 
+        // A parent user account should have a toggleable `child_account_access` grant for its restricted users.
         this.setState({
           childAccountAccessEnabled: Boolean(
             isParentAccount && isFeatureFlagOn
           ),
+        });
+
+        // A child user account should have no more than `read_only` billing (account) access.
+        // Since API returns `read_write` for child users' `account_access` grant, we must manually disable the `read_write` Billing Access permission.
+        this.setState({
+          isAccountAccessRestricted: Boolean(isChildAccount && isFeatureFlagOn),
         });
       } catch (error) {
         this.setState({
@@ -392,18 +405,26 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['The user cannot view any billing information.']}
           />
           <SelectionCard
-            checked={grants.global.account_access === 'read_only'}
+            checked={
+              grants.global.account_access === 'read_only' ||
+              (this.state.isAccountAccessRestricted &&
+                Boolean(this.state.grants?.global.account_access))
+            }
             data-qa-billing-access="Read Only"
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
           />
           <SelectionCard
+            checked={
+              grants.global.account_access === 'read_write' &&
+              !this.state.isAccountAccessRestricted
+            }
             subheadings={[
               'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails.',
             ]}
-            checked={grants.global.account_access === 'read_write'}
             data-qa-billing-access="Read-Write"
+            disabled={this.state.isAccountAccessRestricted}
             heading="Read-Write"
             onClick={this.billingPermOnClick('read_write')}
           />
@@ -803,6 +824,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   state: State = {
     childAccountAccessEnabled: false,
+    isAccountAccessRestricted: false,
     isSavingEntity: false,
     isSavingGlobal: false,
     loading: true,

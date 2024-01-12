@@ -44,6 +44,7 @@ export interface Flags {
   aglbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
+  databaseScaleUp: boolean;
   databases: boolean;
   dcGetWell: boolean;
   firewallNodebalancer: boolean;
@@ -63,13 +64,13 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
   selfServeBetas: boolean;
-  soldOutSingapore: boolean;
-  soldOutTokyo: boolean;
+  soldOutChips: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
   unifiedMigrations: boolean;
+  vmPlacement: boolean;
   vpc: boolean;
 }
 
