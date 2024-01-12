@@ -195,3 +195,22 @@ export const isWayInTheFuture = (time: string) => {
   const wayInTheFuture = DateTime.local().plus({ years: 100 }).toISO();
   return isPast(wayInTheFuture)(time);
 };
+
+/**
+ * Used to remove a permission
+ * @param basePermNameMap an object consisting of API perm keys and their
+ * corresponding names in Cloud
+ * @param perm an object consisting of a perm name and a boolean indicating
+ * whether it should be included in basePermNameMap or not
+ * @returns basePermNameMap (either unedited or with the specified perm removed)
+ */
+export const getPermsNameMap = (
+  basePermNameMap: Record<string, string>,
+  perm: { name: string; shouldBeIncluded: boolean }
+) => {
+  if (basePermNameMap[perm.name] && !perm.shouldBeIncluded) {
+    delete basePermNameMap[perm.name];
+  }
+
+  return basePermNameMap;
+};

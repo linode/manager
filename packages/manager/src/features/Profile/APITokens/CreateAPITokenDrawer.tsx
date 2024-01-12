@@ -35,6 +35,7 @@ import {
   basePermNameMap as _basePermNameMap,
   Permission,
   allScopesAreTheSame,
+  getPermsNameMap,
   permTuplesToScopeString,
   scopeStringToPermTuples,
 } from './utils';
@@ -106,15 +107,18 @@ export const CreateAPITokenDrawer = (props: Props) => {
     mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
 
-  const [basePermNameMap, setBasePermNameMap] = React.useState(
-    _basePermNameMap
-  );
-
   const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
+
+  // @TODO VPC: once VPC enters GA, remove _basePermNameMap logic and references.
+  // Just use the basePermNameMap import directly w/o any manipulation.
+  const basePermNameMap = getPermsNameMap(_basePermNameMap, {
+    name: 'vpc',
+    shouldBeIncluded: showVPCs,
+  });
 
   const form = useFormik<{
     expiry: string;
@@ -136,19 +140,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       form.resetForm({ values: initialValues });
-
-      // If VPCs should not be shown, do not display the VPC option
-      if (!showVPCs) {
-        const basePermNameMapCopy = Object.assign({}, basePermNameMap);
-        delete basePermNameMapCopy.vpc;
-        setBasePermNameMap(basePermNameMapCopy);
-      }
     }
-
-    return () => {
-      setBasePermNameMap(basePermNameMap);
-    };
-  }, [open, showVPCs]);
+  }, [open]);
 
   const handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const newScopes = form.values.scopes;
