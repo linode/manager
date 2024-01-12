@@ -370,6 +370,8 @@ const StyledGrid = styled(Grid, {
   },
   backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
+  padding: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   [theme.breakpoints.down(1100)]: {
     '&:first-of-type': {
       marginBottom: theme.spacing(2),

@@ -335,7 +335,8 @@ const LinodeSummary: React.FC<Props> = (props) => {
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
-          marginBottom: theme.spacing(),
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(),
           padding: 0,
         }}
         xs={12}
@@ -403,6 +404,8 @@ const StyledGrid = styled(Grid, {
   backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
   marginBottom: theme.spacing(2),
+  padding: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   [theme.breakpoints.up(1100)]: {
     '&:first-of-type': {
       marginRight: theme.spacing(2),
