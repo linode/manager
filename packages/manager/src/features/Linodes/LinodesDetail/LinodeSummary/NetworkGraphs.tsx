@@ -368,7 +368,7 @@ const StyledGrid = styled(Grid, {
   '&.MuiGrid-item': {
     padding: theme.spacing(2),
   },
-  backgroundColor: recharts ? 'transparent' : theme.bg.offWhite,
+  backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
   [theme.breakpoints.down(1100)]: {
     '&:first-of-type': {

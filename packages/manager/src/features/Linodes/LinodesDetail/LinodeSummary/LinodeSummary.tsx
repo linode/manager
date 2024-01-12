@@ -330,61 +330,59 @@ const LinodeSummary: React.FC<Props> = (props) => {
   };
 
   return (
-    <Paper>
-      <Grid container sx={{ margin: 0, width: '100%' }}>
+    <Grid container sx={{ margin: 0, width: '100%' }}>
+      <Grid
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginBottom: theme.spacing(),
+          padding: 0,
+        }}
+        xs={12}
+      >
+        <StyledSelect
+          defaultValue={options[0]}
+          hideLabel
+          id="chartRange"
+          isClearable={false}
+          label="Select Time Range"
+          name="chartRange"
+          onChange={handleChartRangeChange}
+          options={options}
+          small
+        />
+      </Grid>
+      {!isBareMetalInstance ? (
         <Grid
           sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginBottom: theme.spacing(),
-            padding: 0,
+            flexWrap: 'nowrap',
+            margin: 0,
+            [theme.breakpoints.down(1100)]: {
+              flexWrap: 'wrap',
+            },
           }}
+          container
+          spacing={4}
           xs={12}
         >
-          <StyledSelect
-            defaultValue={options[0]}
-            hideLabel
-            id="chartRange"
-            isClearable={false}
-            label="Select Time Range"
-            name="chartRange"
-            onChange={handleChartRangeChange}
-            options={options}
-            small
-          />
+          <StyledGrid recharts={flags.recharts} xs={12}>
+            <StatsPanel
+              renderBody={renderCPUChart}
+              title="CPU (%)"
+              {...chartProps}
+            />
+          </StyledGrid>
+          <StyledGrid recharts={flags.recharts} xs={12}>
+            <StatsPanel
+              renderBody={renderDiskIOChart}
+              title="Disk I/O (blocks/s)"
+              {...chartProps}
+            />
+          </StyledGrid>
         </Grid>
-        {!isBareMetalInstance ? (
-          <Grid
-            sx={{
-              flexWrap: 'nowrap',
-              margin: 0,
-              [theme.breakpoints.down(1100)]: {
-                flexWrap: 'wrap',
-              },
-            }}
-            container
-            spacing={4}
-            xs={12}
-          >
-            <StyledGrid recharts={flags.recharts} xs={12}>
-              <StatsPanel
-                renderBody={renderCPUChart}
-                title="CPU (%)"
-                {...chartProps}
-              />
-            </StyledGrid>
-            <StyledGrid recharts={flags.recharts} xs={12}>
-              <StatsPanel
-                renderBody={renderDiskIOChart}
-                title="Disk I/O (blocks/s)"
-                {...chartProps}
-              />
-            </StyledGrid>
-          </Grid>
-        ) : null}
-        <NetworkGraphs stats={stats} {...chartProps} />
-      </Grid>
-    </Paper>
+      ) : null}
+      <NetworkGraphs stats={stats} {...chartProps} />
+    </Grid>
   );
 };
 
@@ -402,7 +400,7 @@ const StyledGrid = styled(Grid, {
   '&.MuiGrid-item': {
     padding: theme.spacing(2),
   },
-  backgroundColor: recharts ? 'transparent' : theme.bg.offWhite,
+  backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
   marginBottom: theme.spacing(2),
   [theme.breakpoints.up(1100)]: {
