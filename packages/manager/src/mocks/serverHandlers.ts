@@ -1863,6 +1863,17 @@ export const handlers = [
       )
     );
   }),
+  rest.post('*/placement-groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    const response = placementGroupFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
   rest.delete('*/placement-groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
