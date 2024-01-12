@@ -44,6 +44,7 @@ export interface Flags {
   aglbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
+  databaseScaleUp: boolean;
   databases: boolean;
   dcGetWell: boolean;
   firewallNodebalancer: boolean;
@@ -69,6 +70,7 @@ export interface Flags {
   taxes: Taxes;
   tpaProviders: Provider[];
   unifiedMigrations: boolean;
+  vmPlacement: boolean;
   vpc: boolean;
 }
 
