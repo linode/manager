@@ -17,7 +17,7 @@ export const EditLoadBalancerRegions = () => {
         >
           Edit
         </EditActionButton>
-        <LoadBalancerRegions />
+        <LoadBalancerRegions sx={{ paddingTop: 0 }} />
       </StyledPaper>
       <EditLoadBalancerRegionsDrawer
         onClose={() => setShowDrawer(!showDrawer)}

@@ -35,7 +35,6 @@ export const StyledMainGridItem = styled(Grid, {
 export const StyledSidebarGridItem = styled(Grid, {
   label: 'StyledSidebarGridItem',
 })(({ theme }) => ({
-  backgroundColor: theme.bg.white,
   marginBottom: theme.spacing(1),
   marginTop: theme.spacing(1),
   padding: theme.spacing(3),
