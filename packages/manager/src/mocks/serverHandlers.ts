@@ -1,4 +1,5 @@
 import {
+  CreatePlacementGroupPayload,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
@@ -22,6 +23,7 @@ import {
   certificateFactory,
   configurationFactory,
   contactFactory,
+  createPlacementGroupPayloadFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -73,6 +75,7 @@ import {
   objectStorageKeyFactory,
   paymentFactory,
   paymentMethodFactory,
+  placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   proDedicatedTypeFactory,
@@ -1840,6 +1843,50 @@ export const handlers = [
       ])
     );
   }),
+  // Placement Groups
+  rest.get('*/placement-groups', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(placementGroupFactory.buildList(3))));
+  }),
+  rest.get('*/placement-groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json(placementGroupFactory.build()));
+  }),
+  rest.post('*/placement-groups', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        createPlacementGroupPayloadFactory.build(
+          req.body as CreatePlacementGroupPayload
+        )
+      )
+    );
+  }),
+  rest.delete('*/placement-groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post('*/placement-groups/:placementGroupId/assign', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post(
+    '*/placement-groups/:placementGroupId/unassign',
+    (req, res, ctx) => {
+      if (req.params.placementGroupId === 'undefined') {
+        return res(ctx.status(404));
+      }
+
+      return res(ctx.json({}));
+    }
+  ),
   ...entityTransfers,
   ...statusPage,
   ...databases,
