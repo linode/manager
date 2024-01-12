@@ -89,7 +89,7 @@ describe('VPC landing page', () => {
    * - Confirms landing page automatically updates to reflect deleted VPCs.
    * - Confirms landing page reverts to its empty state when last VPC is deleted.
    */
-  it('can update VPCs from VPC landing page', () => {
+  it('can update and delete VPCs from VPC landing page', () => {
     const mockVPCs = [
       vpcFactory.build({
         label: randomLabel(),
