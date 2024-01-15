@@ -24,7 +24,9 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  placement_groups: [Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>]; // While the API expects an array of PlacementGroup objects for future proofing, we only support one PlacementGroup per Linode at this time, hence the tuple.
+  placement_groups:
+    | [Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>]
+    | []; // While the API returns an array of PlacementGroup objects for future proofing, we only support one PlacementGroup per Linode at this time, hence the tuple.
   type: string | null;
   status: LinodeStatus;
   updated: string;
