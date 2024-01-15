@@ -92,6 +92,15 @@ export const mockGetUser = (user: User): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts POST request to add an account user.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptAddUser = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('account/users'));
+};
+
+/**
  * Intercepts PUT request to update account user information and mocks response.
  *
  * @param username - Username of user to update.

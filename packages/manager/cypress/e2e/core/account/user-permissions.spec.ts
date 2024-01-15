@@ -4,6 +4,7 @@ import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
+  interceptAddUser,
   mockGetUser,
   mockGetUserGrants,
   mockGetUsers,
@@ -18,7 +19,7 @@ import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel } from 'support/util/random';
+import { randomHex, randomLabel } from 'support/util/random';
 
 // Message shown when user has unrestricted account acess.
 const unrestrictedAccessMessage =
@@ -634,5 +635,247 @@ describe('User permission management', () => {
           .should('be.visible')
           .should('have.attr', 'disabled');
       });
+  });
+
+  it('can add full-access users with no redirect occurs', () => {
+    const mockUser = accountUserFactory.build({
+      username: randomLabel(),
+      restricted: false,
+    });
+
+    const username = randomLabel();
+    const newUser = accountUserFactory.build({
+      username: username,
+      email: `${username}@test.com`,
+      restricted: false,
+    });
+
+    const mockUserGrantsUpdated = grantsFactory.build();
+    const mockUserGrants = {
+      ...mockUserGrantsUpdated,
+      global: undefined,
+    };
+
+    mockGetUsers([mockUser]).as('getUsers');
+    mockGetUser(mockUser).as('getUser');
+    mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
+    interceptAddUser().as('addUser');
+
+    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that the "Users & Grants" page initially lists the main user
+    cy.findByText(mockUser.username).should('be.visible');
+
+    mockGetUsers([mockUser, newUser]).as('getUsers');
+
+    // "Add a User" button shows up and is clickable
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // "Add a User" drawer shows up
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // "x" or cancel button will not add a new user
+    cy.findByText(newUser.username).should('not.exist');
+
+    // new user should be added and shown in the user list
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // confirm to add a new user
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        // an inline error message will be displayed when username or email is not specified
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Username is required.').should('be.visible');
+        cy.findByText('Email address is required.').should('be.visible');
+
+        // type username
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+
+        // an inline error message will be displayed when the email address is invalid
+        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Must be a valid Email address.').should('be.visible');
+
+        // type email address
+        cy.get('[id="email"]')
+          .click()
+          .clear()
+          .type(`${newUser.username}@test.com{enter}`);
+
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // Cloud Manager passes "restricted: false" in the request payload
+    cy.wait('@addUser').then((intercept) => {
+      expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
+    });
+    cy.wait('@getUsers');
+
+    // the new user is displayed in the user list
+    cy.findByText(newUser.username).should('be.visible');
+
+    // no redirect occurs
+    cy.url().should('endWith', '/users');
+  });
+
+  it('can add non full-access users with redirecting to the new user\'s "User Permission" page', () => {
+    const mockUser = accountUserFactory.build({
+      username: randomLabel(),
+      restricted: false,
+    });
+
+    const username = randomLabel();
+    const newUser = accountUserFactory.build({
+      username: username,
+      email: `${username}@test.com`,
+      restricted: true,
+    });
+
+    const mockUserGrantsUpdated = grantsFactory.build();
+    const mockUserGrants = {
+      ...mockUserGrantsUpdated,
+      global: undefined,
+    };
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockUser]).as('getUsers');
+    mockGetUser(mockUser).as('getUser');
+    mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
+    interceptAddUser().as('addUser');
+
+    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that the "Users & Grants" page initially lists the main user
+    cy.findByText(mockUser.username).should('be.visible');
+
+    mockGetUsers([mockUser, newUser]).as('getUsers');
+
+    // "Add a User" button shows up and is clickable
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // "Add a User" drawer shows up
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // "x" or cancel button will not add a new user
+    cy.findByText(newUser.username).should('not.exist');
+
+    // new user should be added and shown in the user list
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // confirm to add a new user
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        // an inline error message will be displayed when username or email is not specified
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Username is required.').should('be.visible');
+        cy.findByText('Email address is required.').should('be.visible');
+
+        // type username
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+
+        // an inline error message will be displayed when the email address is invalid
+        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Must be a valid Email address.').should('be.visible');
+
+        // type email address
+        cy.get('[id="email"]')
+          .click()
+          .clear()
+          .type(`${newUser.username}@test.com{enter}`);
+
+        // toggle to disable full access
+        cy.get('[data-qa-create-restricted="true"]')
+          .should('be.visible')
+          .click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // Cloud Manager passes "restricted: true" in the request payload
+    cy.wait('@addUser').then((intercept) => {
+      expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
+    });
+    cy.wait('@getUsers');
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    // the new user is displayed in the user list
+    cy.findByText(newUser.username).should('be.visible');
+
+    // redirects to the new user's "User Permissions" page
+    cy.url().should('endWith', `/users/${newUser.username}/permissions`);
   });
 });
