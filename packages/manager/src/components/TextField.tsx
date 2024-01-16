@@ -365,6 +365,7 @@ export const TextField = (props: TextFieldProps) => {
           ...(!noMarginTop && { marginTop: theme.spacing(2) }),
         }}
         alignItems={'center'}
+        data-testid="inputLabelWrapper"
         display="flex"
       >
         <InputLabel
