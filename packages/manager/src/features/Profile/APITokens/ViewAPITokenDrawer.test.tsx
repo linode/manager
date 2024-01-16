@@ -35,6 +35,8 @@ const props = {
   token,
 };
 
+const ariaLabel = 'aria-label';
+
 describe('View API Token Drawer', () => {
   it('the token label should be visible', () => {
     const { getByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
@@ -43,10 +45,12 @@ describe('View API Token Drawer', () => {
   });
 
   it('should show all permissions as read/write with wildcard scopes', () => {
-    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
+    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
+      flags: { vpc: true },
+    });
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has 2 access for ${permissionName}`
       );
     }
@@ -59,7 +63,7 @@ describe('View API Token Drawer', () => {
     );
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has 0 access for ${permissionName}`
       );
     }
@@ -77,7 +81,7 @@ describe('View API Token Drawer', () => {
       // We only expect account to have read/write for this test
       const expectedScopeLevel = permissionName === 'account' ? 2 : 0;
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has ${expectedScopeLevel} access for ${permissionName}`
       );
     }
@@ -116,7 +120,7 @@ describe('View API Token Drawer', () => {
     for (const permissionName of basePerms) {
       const expectedScopeLevel = expectedScopeLevels[permissionName];
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has ${expectedScopeLevel} access for ${permissionName}`
       );
     }
@@ -148,7 +152,7 @@ describe('View API Token Drawer', () => {
 
     expect(childScope).toBeInTheDocument();
     expect(getByTestId(`perm-${childPermissionName}`)).toHaveAttribute(
-      'aria-label',
+      ariaLabel,
       `This token has ${expectedScopeLevels[childPermissionName]} access for ${childPermissionName}`
     );
   });

@@ -202,15 +202,16 @@ export const isWayInTheFuture = (time: string) => {
  * corresponding names in Cloud
  * @param perm an object consisting of a perm name and a boolean indicating
  * whether it should be included in basePermNameMap or not
- * @returns basePermNameMap (either unedited or with the specified perm removed)
+ * @returns a copy of basePermNameMap (either unedited or with the specified perm removed)
  */
 export const getPermsNameMap = (
   basePermNameMap: Record<string, string>,
   perm: { name: string; shouldBeIncluded: boolean }
 ) => {
-  if (basePermNameMap[perm.name] && !perm.shouldBeIncluded) {
-    delete basePermNameMap[perm.name];
+  const basePermNameMapCopy = { ...basePermNameMap };
+  if (basePermNameMapCopy[perm.name] && !perm.shouldBeIncluded) {
+    delete basePermNameMapCopy[perm.name];
   }
 
-  return basePermNameMap;
+  return basePermNameMapCopy;
 };
