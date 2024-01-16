@@ -15,7 +15,10 @@ import {
 } from 'recharts';
 
 import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
+import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { Paper } from 'src/components/Paper';
+import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
 import { tooltipLabelFormatter, tooltipValueFormatter } from './utils';
 
@@ -34,6 +37,7 @@ interface AreaChartProps {
   ariaLabel: string;
   data: any;
   height: number;
+  legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
   showLegend?: boolean;
   timezone: string;
   unit: string;
@@ -56,6 +60,7 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     data,
     height,
+    legendRows,
     showLegend,
     timezone,
     unit,
@@ -100,6 +105,25 @@ export const AreaChart = (props: AreaChartProps) => {
     return null;
   };
 
+  const CustomLegend = () => {
+    if (legendRows) {
+      const legendRowsWithClickHandler = legendRows.map((legendRow) => ({
+        ...legendRow,
+        handleLegendClick: () => handleLegendClick(legendRow.legendTitle),
+      }));
+
+      return (
+        <StyledBottomLegend>
+          <MetricsDisplay
+            hiddenRows={activeSeries}
+            rows={legendRowsWithClickHandler}
+          />
+        </StyledBottomLegend>
+      );
+    }
+    return null;
+  };
+
   const accessibleDataKeys = areas.map((area) => area.dataKey);
 
   return (
@@ -132,7 +156,7 @@ export const AreaChart = (props: AreaChartProps) => {
             }}
             content={<CustomTooltip />}
           />
-          {showLegend && (
+          {showLegend && !legendRows && (
             <Legend
               formatter={(value) => (
                 <span style={{ color: theme.color.label, cursor: 'pointer' }}>
@@ -144,6 +168,14 @@ export const AreaChart = (props: AreaChartProps) => {
               }}
               iconType="square"
               onClick={(props) => handleLegendClick(props.dataKey)}
+            />
+          )}
+          {showLegend && legendRows && (
+            <Legend
+              wrapperStyle={{
+                left: 20,
+              }}
+              content={<CustomLegend />}
             />
           )}
           {areas.map(({ color, dataKey }) => (

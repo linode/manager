@@ -1,9 +1,12 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme, Theme } from '@mui/material/styles';
+import { Theme, styled, useTheme } from '@mui/material/styles';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import { NetworkTimeData } from 'src/components/AreaChart/types';
+import { Box } from 'src/components/Box';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import {
   convertNetworkToUnit,
@@ -11,12 +14,14 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   Metrics,
   getMetrics,
   getTotalTraffic,
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import { StatsPanel } from './StatsPanel';
 
 export interface TotalTrafficProps {
@@ -68,6 +73,7 @@ export const NetworkGraphs = (props: Props) => {
   const { rangeSelection, stats, ...rest } = props;
 
   const theme = useTheme();
+  const flags = useFlags();
 
   const v4Data: NetworkStats = {
     privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
@@ -135,7 +141,7 @@ export const NetworkGraphs = (props: Props) => {
 
   return (
     <StyledGraphGrid container spacing={4} xs={12}>
-      <StyledGrid xs={12}>
+      <StyledGrid recharts={flags.recharts} xs={12}>
         <StatsPanel
           renderBody={() => (
             <Graph
@@ -151,7 +157,7 @@ export const NetworkGraphs = (props: Props) => {
           {...rest}
         />
       </StyledGrid>
-      <StyledGrid xs={12}>
+      <StyledGrid recharts={flags.recharts} xs={12}>
         <StatsPanel
           renderBody={() => (
             <Graph
@@ -195,6 +201,8 @@ const Graph = (props: GraphProps) => {
     unit,
   } = props;
 
+  const flags = useFlags();
+
   const format = formatBitsPerSecond;
 
   const convertNetworkData = (value: number) => {
@@ -216,18 +224,93 @@ const Graph = (props: GraphProps) => {
   const convertedPublicOut = data.publicOut;
   const convertedPrivateIn = data.privateIn;
   const convertedPrivateOut = data.privateOut;
+  const timeData: NetworkTimeData[] = [];
+
+  for (let i = 0; i < data.publicIn.length; i++) {
+    timeData.push({
+      'Private In': convertNetworkData(data.privateIn[i][1]),
+      'Private Out': convertNetworkData(data.privateOut[i][1]),
+      'Public In': convertNetworkData(data.publicIn[i][1]),
+      'Public Out': convertNetworkData(data.publicOut[i][1]),
+      timestamp: data.publicIn[i][0],
+    });
+  }
+
+  // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+  if (flags.recharts) {
+    return (
+      <Box marginLeft={-4} marginTop={2}>
+        <AreaChart
+          areas={[
+            {
+              color: theme.graphs.darkGreen,
+              dataKey: 'Public In',
+            },
+            {
+              color: theme.graphs.lightGreen,
+              dataKey: 'Public Out',
+            },
+            {
+              color: theme.graphs.purple,
+              dataKey: 'Private In',
+            },
+            {
+              color: theme.graphs.yellow,
+              dataKey: 'Private Out',
+            },
+          ]}
+          legendRows={[
+            {
+              data: metrics.publicIn,
+              format,
+              legendColor: 'darkGreen',
+              legendTitle: 'Public In',
+            },
+            {
+              data: metrics.publicOut,
+              format,
+              legendColor: 'lightGreen',
+              legendTitle: 'Public Out',
+            },
+            {
+              data: metrics.privateIn,
+              format,
+              legendColor: 'purple',
+              legendTitle: 'Private In',
+            },
+            {
+              data: metrics.privateOut,
+              format,
+              legendColor: 'yellow',
+              legendTitle: 'Private Out',
+            },
+          ]}
+          xAxis={{
+            tickFormat: 'hh a',
+            tickGap: 60,
+          }}
+          ariaLabel={ariaLabel}
+          data={timeData}
+          height={420}
+          showLegend
+          timezone={timezone}
+          unit={' Kb/s'}
+        />
+      </Box>
+    );
+  }
 
   return (
     <LineGraph
       data={[
         {
-          backgroundColor: theme.graphs.network.inbound,
+          backgroundColor: theme.graphs.darkGreen,
           borderColor: 'transparent',
           data: convertedPublicIn,
           label: 'Public In',
         },
         {
-          backgroundColor: theme.graphs.network.outbound,
+          backgroundColor: theme.graphs.lightGreen,
           borderColor: 'transparent',
           data: convertedPublicOut,
           label: 'Public Out',
@@ -275,15 +358,20 @@ const Graph = (props: GraphProps) => {
   );
 };
 
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+const StyledGrid = styled(Grid, {
+  label: 'StyledGrid',
+  shouldForwardProp: (prop) => prop !== 'recharts',
+})<{ recharts?: boolean }>(({ recharts, theme }) => ({
   '& h2': {
     fontSize: '1rem',
   },
   '&.MuiGrid-item': {
     padding: theme.spacing(2),
   },
-  backgroundColor: theme.bg.offWhite,
+  backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
+  padding: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   [theme.breakpoints.down(1100)]: {
     '&:first-of-type': {
       marginBottom: theme.spacing(2),
