@@ -32,6 +32,7 @@ export * from './nodebalancer';
 export * from './notification';
 export * from './oauth';
 export * from './objectStorage';
+export * from './placementGroups';
 export * from './profile';
 export * from './promotionalOffer';
 export * from './regions';
