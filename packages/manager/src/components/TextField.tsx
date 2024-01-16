@@ -364,7 +364,7 @@ export const TextField = (props: TextFieldProps) => {
           marginBottom: theme.spacing(1),
           ...(!noMarginTop && { marginTop: theme.spacing(2) }),
         }}
-        alignItems={'center'}
+        alignItems="center"
         display="flex"
       >
         <InputLabel
