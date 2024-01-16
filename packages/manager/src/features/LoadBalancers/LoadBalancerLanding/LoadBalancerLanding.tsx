@@ -121,6 +121,9 @@ export const LoadBalancerLanding = () => {
                 >
                   Label
                 </TableSortCell>
+                <Hidden mdDown>
+                  <TableCell>Endpoints</TableCell>
+                </Hidden>
                 <Hidden smDown>
                   <TableCell>Ports</TableCell>
                 </Hidden>
