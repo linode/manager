@@ -52,7 +52,7 @@ export const useCreatePlacementGroup = () => {
   const queryClient = useQueryClient();
 
   return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>({
-    mutationFn: (data) => createPlacementGroup(data),
+    mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
