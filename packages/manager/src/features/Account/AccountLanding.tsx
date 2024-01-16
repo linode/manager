@@ -118,7 +118,7 @@ const AccountLanding = () => {
   const isBillingTabSelected = location.pathname.match(/billing/);
   const isAccountSwitchable =
     flags.parentChildAccountAccess &&
-    (user?.user_type === 'parent' || user?.user_type === 'child');
+    (user?.user_type === 'parent' || user?.user_type === 'proxy');
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
