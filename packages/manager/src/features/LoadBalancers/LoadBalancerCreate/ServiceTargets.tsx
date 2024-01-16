@@ -19,56 +19,28 @@ import { Typography } from 'src/components/Typography';
 
 import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-import { ServiceTargetPayload } from '@linode/api-v4';
 
 interface Props {
   configurationIndex: number;
   handlers: Handlers;
 }
 
-function getUpdatedValuesFromRemovingServiceTarget(
-  values: LoadBalancerCreateFormData,
-  serviceTarget: ServiceTargetPayload
-) {
-  for (let i = 0; i < values.configurations.length; i++) {
-    values.configurations[i].service_targets = values.configurations[
-      i
-    ].service_targets.filter((st) => st.label !== serviceTarget.label);
-
-    for (let j = 0; j < values.configurations[i].routes!.length; j++) {
-      for (
-        let k = 0;
-        k < values.configurations[i].routes![j].rules.length;
-        k++
-      ) {
-        for (
-          let l = 0;
-          l <
-          values.configurations[i].routes![j].rules[k].service_targets.length;
-          l++
-        ) {
-          values.configurations[i].routes![j].rules[
-            k
-          ].service_targets = values.configurations[i].routes![j].rules[
-            k
-          ].service_targets.filter((st) => st.label !== serviceTarget.label);
-        }
-      }
-    }
-  }
-  return values;
-}
-
 export const ServiceTargets = ({ configurationIndex, handlers }: Props) => {
-  const { setValues, values } = useFormikContext<LoadBalancerCreateFormData>();
+  const {
+    setFieldValue,
+    values,
+  } = useFormikContext<LoadBalancerCreateFormData>();
 
   const [query, setQuery] = useState<string>('');
 
   const configuration = values.configurations![configurationIndex];
 
   const handleRemoveServiceTarget = (index: number) => {
-    const st = configuration.service_targets[index];
-    setValues(getUpdatedValuesFromRemovingServiceTarget(values, st));
+    configuration.service_targets.splice(index, 1);
+    setFieldValue(
+      `configuration[${configurationIndex}].service_targets`,
+      configuration.service_targets
+    );
   };
 
   return (
