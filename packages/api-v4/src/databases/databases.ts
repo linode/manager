@@ -144,7 +144,7 @@ export const getEngineDatabase = (engine: Engine, databaseID: number) =>
 /**
  * updateDatabase
  *
- * Update the label or allowed IPs of an
+ * Update the label or allowed IPs or plan of an
  * existing database
  *
  */

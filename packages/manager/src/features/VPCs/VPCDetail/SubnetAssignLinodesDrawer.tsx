@@ -17,7 +17,10 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
-import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import {
+  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
+} from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -40,6 +43,7 @@ import type {
   Linode,
   Subnet,
 } from '@linode/api-v4';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
@@ -381,19 +385,18 @@ export const SubnetAssignLinodesDrawer = (
       />
       <form onSubmit={handleSubmit}>
         <FormHelperText>{REGIONAL_LINODE_MESSAGE}</FormHelperText>
-        <Autocomplete
-          onChange={(_, value: Linode) => {
-            setFieldValue('selectedLinode', value);
+        <LinodeSelect
+          onSelectionChange={(selected) => {
+            setFieldValue('selectedLinode', selected);
             setAssignLinodesErrors({});
           }}
           disabled={userCannotAssignLinodes}
-          inputValue={values.selectedLinode?.label || ''}
           label={'Linodes'}
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linodes or type to search"
           sx={{ marginBottom: '8px' }}
-          value={values.selectedLinode || null}
+          value={values.selectedLinode?.id || null}
         />
         <Box alignItems="center" display="flex" flexDirection="row">
           <FormControlLabel
@@ -430,9 +433,11 @@ export const SubnetAssignLinodesDrawer = (
         {linodeConfigs.length > 1 && (
           <>
             <FormHelperText sx={{ marginTop: `16px` }}>
-              {MULTIPLE_CONFIGURATIONS_MESSAGE}
-              {/* @TODO VPC: add docs link */}
-              <Link to="#"> Learn more</Link>.
+              {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
+              <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
+                Learn more
+              </Link>
+              .
             </FormHelperText>
             <Autocomplete
               onChange={(_, value: Config) => {
@@ -440,7 +445,6 @@ export const SubnetAssignLinodesDrawer = (
                 setAssignLinodesErrors({});
               }}
               disabled={userCannotAssignLinodes}
-              inputValue={values.selectedConfig?.label || ''}
               label={'Configuration profile'}
               options={linodeConfigs}
               placeholder="Select a configuration profile"
