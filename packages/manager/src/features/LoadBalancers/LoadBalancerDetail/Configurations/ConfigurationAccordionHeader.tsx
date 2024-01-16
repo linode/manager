@@ -39,12 +39,14 @@ export const ConfigurationAccordionHeader = (props: Props) => {
       </Stack>
       <Stack direction="row" spacing={2}>
         <Stack direction="row" spacing={1}>
-          <Typography>Endpoints:</Typography>
           {health && (
-            <EndpointHealth
-              down={health.total_endpoints - health.healthy_endpoints}
-              up={health.healthy_endpoints}
-            />
+            <>
+              <Typography>Endpoints:</Typography>
+              <EndpointHealth
+                down={health.total_endpoints - health.healthy_endpoints}
+                up={health.healthy_endpoints}
+              />
+            </>
           )}
         </Stack>
         <Typography>ID: {configuration.id}</Typography>
