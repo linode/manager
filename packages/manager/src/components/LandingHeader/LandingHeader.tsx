@@ -66,10 +66,6 @@ export const LandingHeader = ({
     ? analyticsLabel
     : `${title} Landing`;
 
-  const sxButton = {
-    marginLeft: theme.spacing(1),
-  };
-
   return (
     <Grid
       alignItems="center"
@@ -91,7 +87,18 @@ export const LandingHeader = ({
       </Grid>
       {!shouldHideDocsAndCreateButtons && (
         <Grid>
-          <Grid alignItems="center" container justifyContent="flex-end">
+          <Grid
+            sx={{
+              flex: '1 1 auto',
+              marginLeft: xsDown ? theme.spacing(1) : undefined,
+            }}
+            alignItems="center"
+            data-qa-entity-header
+            display="flex"
+            flexWrap={xsDown ? 'wrap' : 'nowrap'}
+            gap={3}
+            justifyContent="flex-end"
+          >
             {betaFeedbackLink && (
               <span
                 style={{
@@ -124,7 +131,6 @@ export const LandingHeader = ({
                     loading={loading}
                     onClick={onButtonClick}
                     onKeyPress={onButtonKeyPress}
-                    sx={sxButton}
                     {...buttonDataAttrs}
                   >
                     {createButtonText ?? `Create ${entity}`}
@@ -139,7 +145,7 @@ export const LandingHeader = ({
   );
 };
 
-const Actions = styled('div')(({ theme }) => ({
+const Actions = styled('div')(() => ({
   display: 'flex',
-  marginLeft: theme.spacing(2),
+  justifyContent: 'flex-end',
 }));
