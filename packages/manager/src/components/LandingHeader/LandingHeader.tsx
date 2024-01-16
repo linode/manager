@@ -93,7 +93,6 @@ export const LandingHeader = ({
               marginLeft: xsDown ? theme.spacing(1) : undefined,
             }}
             alignItems="center"
-            data-qa-entity-header
             display="flex"
             flexWrap={xsDown ? 'wrap' : 'nowrap'}
             gap={3}
