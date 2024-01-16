@@ -16,7 +16,7 @@ export const LoadBalancerEndpointHealth = ({ id }: Props) => {
   );
 
   if (isLoading) {
-    return <Skeleton />;
+    return <Skeleton sx={{ minWidth: '100px' }} />;
   }
 
   if (error) {
