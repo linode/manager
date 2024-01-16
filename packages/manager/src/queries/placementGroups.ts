@@ -1,10 +1,10 @@
 import {
-  assignVmsToPlacementGroup,
+  assignVMsToPlacementGroup,
   createPlacementGroup,
   deletePlacementGroup,
   getPlacementGroup,
   getPlacementGroups,
-  unassignVmsFromPlacementGroup,
+  unassignVMsFromPlacementGroup,
   updatePlacementGroup,
 } from '@linode/api-v4';
 import {
@@ -92,14 +92,14 @@ export const useDeletePlacementGroup = (id: number) => {
   });
 };
 
-export const useAssignVmsToPlacementGroup = (
+export const useAssignVMsToPlacementGroup = (
   id: number,
   linodeIds: [number]
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[]>({
-    mutationFn: () => assignVmsToPlacementGroup(id, linodeIds),
+    mutationFn: () => assignVMsToPlacementGroup(id, linodeIds),
     onSuccess: (updatedPlacementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
@@ -110,13 +110,13 @@ export const useAssignVmsToPlacementGroup = (
   });
 };
 
-export const useUnassignVmsToPlacementGroup = (
+export const useUnassignVMsToPlacementGroup = (
   id: number,
   linodeIds: [number]
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
-    mutationFn: () => unassignVmsFromPlacementGroup(id, linodeIds),
+    mutationFn: () => unassignVMsFromPlacementGroup(id, linodeIds),
     onSuccess: (updatedPlacementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(

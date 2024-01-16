@@ -1,7 +1,7 @@
 import {
-  assignVmsToPlacementGroupSchema,
+  assignVMsToPlacementGroupSchema,
   createPlacementGroupSchema,
-  unassignVmsFromPlacementGroupSchema,
+  unassignVMsFromPlacementGroupSchema,
   updatePlacementGroupSchema,
 } from '@linode/validation';
 import { API_ROOT } from '../constants';
@@ -15,10 +15,10 @@ import Request, {
 } from '../request';
 import type { Filter, Params, ResourcePage as Page } from '../types';
 import type {
-  AssignVmsToPlacementGroupPayload,
+  AssignVMsToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
-  UnassignVmsFromPlacementGroupPayload,
+  UnassignVMsFromPlacementGroupPayload,
   UpdatePlacementGroupPayload,
 } from './types';
 
@@ -109,9 +109,9 @@ export const deletePlacementGroup = (placementGroupId: number) =>
  *
  * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
  */
-export const assignVmsToPlacementGroup = (
+export const assignVMsToPlacementGroup = (
   placementGroupId: number,
-  linodeIds: AssignVmsToPlacementGroupPayload
+  linodeIds: AssignVMsToPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -120,7 +120,7 @@ export const assignVmsToPlacementGroup = (
       )}/assign`
     ),
     setMethod('POST'),
-    setData(linodeIds, assignVmsToPlacementGroupSchema)
+    setData(linodeIds, assignVMsToPlacementGroupSchema)
   );
 
 /**
@@ -133,9 +133,9 @@ export const assignVmsToPlacementGroup = (
  *
  * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
  */
-export const unassignVmsFromPlacementGroup = (
+export const unassignVMsFromPlacementGroup = (
   placementGroupId: number,
-  linodeIds: UnassignVmsFromPlacementGroupPayload
+  linodeIds: UnassignVMsFromPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -144,5 +144,5 @@ export const unassignVmsFromPlacementGroup = (
       )}/unassign`
     ),
     setMethod('POST'),
-    setData(linodeIds, unassignVmsFromPlacementGroupSchema)
+    setData(linodeIds, unassignVMsFromPlacementGroupSchema)
   );
