@@ -20,6 +20,7 @@ import {
 } from './APITokenDrawer.styles';
 import {
   basePermNameMap as _basePermNameMap,
+  getPermsNameMap,
   scopeStringToPermTuples,
 } from './utils';
 
@@ -38,28 +39,18 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const { data: account } = useAccount();
   const { data: user } = useAccountUser(profile?.username ?? '');
 
-  const [basePermNameMap, setBasePermNameMap] = React.useState(
-    _basePermNameMap
-  );
-
   const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
 
-  React.useEffect(() => {
-    if (open && !showVPCs) {
-      // If VPCs should not be shown, do not display the VPC scope
-      const basePermNameMapCopy = Object.assign({}, basePermNameMap);
-      delete basePermNameMapCopy.vpc;
-      setBasePermNameMap(basePermNameMapCopy);
-    }
-
-    return () => {
-      setBasePermNameMap(basePermNameMap);
-    };
-  }, [open, showVPCs]);
+  // @TODO VPC: once VPC enters GA, remove _basePermNameMap logic and references.
+  // Just use the basePermNameMap import directly w/o any manipulation.
+  const basePermNameMap = getPermsNameMap(_basePermNameMap, {
+    name: 'vpc',
+    shouldBeIncluded: showVPCs,
+  });
 
   const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
 
