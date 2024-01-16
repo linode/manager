@@ -30,65 +30,61 @@ export const usePlacementGroupsQuery = (
   filter: Filter,
   enabled: boolean = true
 ) =>
-  useQuery<ResourcePage<PlacementGroup>, APIError[]>(
-    [queryKey, 'paginated', params, filter],
-    () => getPlacementGroups(params, filter),
-    { enabled, keepPreviousData: true }
-  );
+  useQuery<ResourcePage<PlacementGroup>, APIError[]>({
+    enabled,
+    keepPreviousData: true,
+    queryFn: () => getPlacementGroups(params, filter),
+    queryKey: [queryKey, 'paginated', params, filter],
+  });
 
 export const usePlacementGroupQuery = (
   placementGroupId: number,
   enabled: boolean = true
 ) => {
-  return useQuery<PlacementGroup, APIError[]>(
-    [queryKey, 'placement-group', placementGroupId],
-    () => getPlacementGroup(placementGroupId),
-    {
-      enabled,
-    }
-  );
+  return useQuery<PlacementGroup, APIError[]>({
+    enabled,
+    queryFn: () => getPlacementGroup(placementGroupId),
+    queryKey: [queryKey, 'placement-group', placementGroupId],
+  });
 };
 
 export const useCreatePlacementGroup = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>(
-    createPlacementGroup,
-    {
-      onSuccess: (placementGroup) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData(
-          [queryKey, 'placement-groups', placementGroup.id],
-          placementGroup
-        );
-        // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
-      },
-    }
-  );
+  return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>({
+    mutationFn: (data) => createPlacementGroup(data),
+    onSuccess: (placementGroup) => {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.setQueryData(
+        [queryKey, 'placement-groups', placementGroup.id],
+        placementGroup
+      );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+    },
+  });
 };
 
 export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>(
-    (data) => updatePlacementGroup(id, data),
-    {
-      onSuccess: (placementGroup) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData(
-          [queryKey, 'placement-group', id],
-          placementGroup
-        );
-      },
-    }
-  );
+  return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
+    mutationFn: (data) => updatePlacementGroup(id, data),
+    onSuccess: (placementGroup) => {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.setQueryData(
+        [queryKey, 'placement-group', id],
+        placementGroup
+      );
+    },
+  });
 };
 
 export const useDeletePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>(() => deletePlacementGroup(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.removeQueries([queryKey, 'placement-group', id]);
@@ -101,18 +97,17 @@ export const useAssignVmsToPlacementGroup = (
   linodeIds: [number]
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => assignVmsToPlacementGroup(id, linodeIds),
-    {
-      onSuccess: (placementGroup) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData(
-          [queryKey, 'placement-group', id],
-          placementGroup
-        );
-      },
-    }
-  );
+
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => assignVmsToPlacementGroup(id, linodeIds),
+    onSuccess: (updatedPlacementGroup) => {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.setQueryData(
+        [queryKey, 'placement-group', id],
+        updatedPlacementGroup
+      );
+    },
+  });
 };
 
 export const useUnassignVmsToPlacementGroup = (
@@ -120,16 +115,14 @@ export const useUnassignVmsToPlacementGroup = (
   linodeIds: [number]
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => unassignVmsFromPlacementGroup(id, linodeIds),
-    {
-      onSuccess: (placementGroup) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData(
-          [queryKey, 'placement-group', id],
-          placementGroup
-        );
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => unassignVmsFromPlacementGroup(id, linodeIds),
+    onSuccess: (updatedPlacementGroup) => {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.setQueryData(
+        [queryKey, 'placement-group', id],
+        updatedPlacementGroup
+      );
+    },
+  });
 };
