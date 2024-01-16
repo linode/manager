@@ -22,6 +22,7 @@ import {
   betaFactory,
   certificateFactory,
   configurationFactory,
+  configurationsEndpointHealthFactory,
   contactFactory,
   createPlacementGroupPayloadFactory,
   createRouteFactory,
@@ -54,6 +55,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
@@ -85,6 +87,7 @@ import {
   routeFactory,
   securityQuestionsFactory,
   serviceTargetFactory,
+  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -315,6 +318,30 @@ const aglb = [
     const configurations = configurationFactory.buildList(3);
     return res(ctx.json(makeResourcePage(configurations)));
   }),
+  rest.get('*/v4beta/aglb/:id/endpoints-health', (req, res, ctx) => {
+    const health = loadbalancerEndpointHealthFactory.build({
+      id: Number(req.params.id),
+    });
+    return res(ctx.json(health));
+  }),
+  rest.get(
+    '*/v4beta/aglb/:id/configurations/endpoints-health',
+    (req, res, ctx) => {
+      const health = configurationsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
+  rest.get(
+    '*/v4beta/aglb/:id/service-targets/endpoints-health',
+    (req, res, ctx) => {
+      const health = serviceTargetsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
   rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),

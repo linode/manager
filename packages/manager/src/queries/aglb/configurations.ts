@@ -2,6 +2,7 @@ import {
   createLoadbalancerConfiguration,
   deleteLoadbalancerConfiguration,
   getLoadbalancerConfigurations,
+  getLoadbalancerConfigurationsEndpointHealth,
   updateLoadbalancerConfiguration,
 } from '@linode/api-v4';
 import {
@@ -17,6 +18,7 @@ import type {
   APIError,
   Configuration,
   ConfigurationPayload,
+  ConfigurationsEndpointHealth,
   Filter,
   Params,
   ResourcePage,
@@ -33,6 +35,22 @@ export const useLoadBalancerConfigurationsQuery = (
     () => getLoadbalancerConfigurations(loadbalancerId, params, filter),
     { keepPreviousData: true }
   );
+};
+
+export const useLoadBalancerConfigurationsEndpointsHealth = (
+  loadbalancerId: number
+) => {
+  return useQuery<ConfigurationsEndpointHealth, APIError[]>({
+    queryFn: () => getLoadbalancerConfigurationsEndpointHealth(loadbalancerId),
+    queryKey: [
+      QUERY_KEY,
+      'aglb',
+      loadbalancerId,
+      'configurations',
+      'endpoint-health',
+    ],
+    refetchInterval: 10_000,
+  });
 };
 
 export const useLoabalancerConfigurationsInfiniteQuery = (

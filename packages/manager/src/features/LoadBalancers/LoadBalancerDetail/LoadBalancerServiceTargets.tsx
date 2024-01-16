@@ -135,6 +135,9 @@ export const LoadBalancerServiceTargets = () => {
             >
               Label
             </TableSortCell>
+            <Hidden mdDown>
+              <TableCell>Endpoints</TableCell>
+            </Hidden>
             <TableSortCell
               active={orderBy === 'protocol'}
               direction={order}
