@@ -10,7 +10,7 @@ import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 // import { useRegionsQuery } from 'src/queries/regions';
 
 import { Ports } from '../LoadBalancerLanding/Ports';
-import { LoadBalancerEndpontHeath } from './LoadBalancerEndpointHealth';
+import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
 import { LoadBalancerRegions } from './LoadBalancerRegions';
 
 export const LoadBalancerSummary = () => {
@@ -40,7 +40,7 @@ export const LoadBalancerSummary = () => {
     },
     {
       title: 'Endpoints',
-      value: <LoadBalancerEndpontHeath id={id} />,
+      value: <LoadBalancerEndpointHealth id={id} />,
     },
     {
       title: 'Regions',

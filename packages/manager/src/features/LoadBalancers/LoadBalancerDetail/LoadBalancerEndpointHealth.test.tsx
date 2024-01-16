@@ -4,7 +4,7 @@ import { loadbalancerEndpointHealthFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LoadBalancerEndpontHeath } from './LoadBalancerEndpointHealth';
+import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
 
 describe('LoadBalancerEndpointHealth', () => {
   it('renders endpoint health from API data', async () => {
@@ -18,7 +18,9 @@ describe('LoadBalancerEndpointHealth', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<LoadBalancerEndpontHeath id={0} />);
+    const { findByText } = renderWithTheme(
+      <LoadBalancerEndpointHealth id={0} />
+    );
 
     await findByText('150 up');
 

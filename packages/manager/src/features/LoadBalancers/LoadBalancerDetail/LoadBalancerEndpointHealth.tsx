@@ -10,7 +10,7 @@ interface Props {
   id: number;
 }
 
-export const LoadBalancerEndpontHeath = ({ id }: Props) => {
+export const LoadBalancerEndpointHealth = ({ id }: Props) => {
   const { data: health, error, isLoading } = useLoadBalancerEndpointHealthQuery(
     id
   );

@@ -9,7 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
-import { LoadBalancerEndpontHeath } from '../LoadBalancerDetail/LoadBalancerEndpointHealth';
+import { LoadBalancerEndpointHealth } from '../LoadBalancerDetail/LoadBalancerEndpointHealth';
 import { regions as alphaRegions } from '../LoadBalancerDetail/LoadBalancerRegions';
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { Ports } from './Ports';
@@ -36,7 +36,7 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
       </TableCell>
       <Hidden mdDown>
         <TableCell>
-          <LoadBalancerEndpontHeath id={id} />
+          <LoadBalancerEndpointHealth id={id} />
         </TableCell>
       </Hidden>
       <Hidden smDown>
