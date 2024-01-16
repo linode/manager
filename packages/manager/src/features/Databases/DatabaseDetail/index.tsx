@@ -12,6 +12,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useDatabaseMutation,
   useDatabaseQuery,
@@ -22,9 +23,15 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
+const DatabaseScaleUp = React.lazy(() =>
+  import('./DatabaseScaleUp/DatabaseScaleUp').then(({ DatabaseScaleUp }) => ({
+    default: DatabaseScaleUp,
+  }))
+);
 
 export const DatabaseDetail = () => {
   const history = useHistory();
+  const flags = useFlags();
 
   const { databaseId, engine } = useParams<{
     databaseId: string;
@@ -76,6 +83,13 @@ export const DatabaseDetail = () => {
       title: 'Settings',
     },
   ];
+
+  if (flags.databaseScaleUp) {
+    tabs.push({
+      routeName: `/databases/${engine}/${id}/scale-up`,
+      title: 'Scale Up',
+    });
+  }
 
   const getTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
@@ -150,6 +164,11 @@ export const DatabaseDetail = () => {
           <SafeTabPanel index={2}>
             <DatabaseSettings database={database} />
           </SafeTabPanel>
+          {flags.databaseScaleUp ? (
+            <SafeTabPanel index={3}>
+              <DatabaseScaleUp database={database} />
+            </SafeTabPanel>
+          ) : null}
         </TabPanels>
       </Tabs>
     </>

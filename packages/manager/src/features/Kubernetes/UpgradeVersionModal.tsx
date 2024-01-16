@@ -49,11 +49,11 @@ export const UpgradeDialog = (props: Props) => {
     }
   }, [isOpen]);
 
-  if (nextVersion === null) {
-    return null;
-  }
-
   const onSubmitUpgradeDialog = () => {
+    if (!nextVersion) {
+      setError('Your Kubernetes Cluster is already on the latest version.');
+      return;
+    }
     setSubmitting(true);
     setError(undefined);
     updateKubernetesCluster({

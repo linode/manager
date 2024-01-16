@@ -175,7 +175,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
                 component="span"
                 variant="body1"
               >
-                <em>Linode Expert</em>
+                <em>Customer Support</em>
               </Typography>
             ) : null}
             <Typography component="span" variant="body1">
