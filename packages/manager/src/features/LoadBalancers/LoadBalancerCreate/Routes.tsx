@@ -19,9 +19,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
+import { RulesTable } from './RulesTable';
+
 import type { Handlers } from './LoadBalancerConfigurations';
 import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-import { RulesTable } from './RulesTable';
+import { Box } from 'src/components/Box';
 
 interface Props {
   configurationIndex: number;
@@ -39,11 +41,9 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
   const configuration = values.configurations![configurationIndex];
 
   const handleRemoveRoute = (index: number) => {
-    configuration.routes!.splice(index, 1);
-    setFieldValue(
-      `configurations[${configurationIndex}].routes`,
-      configuration.routes
-    );
+    const newRoutes = [...configuration.routes!];
+    newRoutes.splice(index, 1);
+    setFieldValue(`configurations[${configurationIndex}].routes`, newRoutes);
   };
 
   const getTableItems = (): TableItem[] => {
@@ -94,10 +94,10 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
 
         const InnerTable = (
           <RulesTable
-            configurationIndex={configurationIndex}
             onEditRule={(ruleIndex) =>
               handlers.handleEditRule(configurationIndex, index, ruleIndex)
             }
+            configurationIndex={configurationIndex}
             routeIndex={index}
           />
         );
@@ -162,11 +162,13 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
             value={query}
           />
         </Stack>
-        <CollapsibleTable
-          TableItems={getTableItems()}
-          TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Routes'} />}
-          TableRowHead={RoutesTableRowHead}
-        />
+        <Box maxWidth="99%">
+          <CollapsibleTable
+            TableItems={getTableItems()}
+            TableRowEmpty={<TableRowEmpty colSpan={4} message={'No Routes'} />}
+            TableRowHead={RoutesTableRowHead}
+          />
+        </Box>
       </Stack>
     </Stack>
   );
