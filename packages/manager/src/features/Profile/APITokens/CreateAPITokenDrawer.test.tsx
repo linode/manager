@@ -115,6 +115,26 @@ describe('Create API Token Drawer', () => {
     expect(childScope).not.toBeInTheDocument();
   });
 
+  it('Should show the VPC scope with the VPC feature flag on', () => {
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
+      flags: { vpc: true },
+    });
+    const vpcScope = getByText('VPCs');
+    expect(vpcScope).toBeInTheDocument();
+  });
+
+  it('Should not show the VPC scope with the VPC feature flag off', () => {
+    const { queryByText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { vpc: false },
+      }
+    );
+
+    const vpcScope = queryByText('VPCs');
+    expect(vpcScope).not.toBeInTheDocument();
+  });
+
   it('Should close when Cancel is pressed', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
