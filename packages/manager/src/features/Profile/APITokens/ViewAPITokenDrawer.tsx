@@ -8,15 +8,21 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
   StyledAccessCell,
   StyledPermissionsCell,
   StyledPermsTable,
 } from './APITokenDrawer.styles';
-import { basePermNameMap, scopeStringToPermTuples } from './utils';
+import {
+  basePermNameMap as _basePermNameMap,
+  getPermsNameMap,
+  scopeStringToPermTuples,
+} from './utils';
 
 interface Props {
   onClose: () => void;
@@ -30,7 +36,21 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const flags = useFlags();
 
   const { data: profile } = useProfile();
+  const { data: account } = useAccount();
   const { data: user } = useAccountUser(profile?.username ?? '');
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  // @TODO VPC: once VPC enters GA, remove _basePermNameMap logic and references.
+  // Just use the basePermNameMap import directly w/o any manipulation.
+  const basePermNameMap = getPermsNameMap(_basePermNameMap, {
+    name: 'vpc',
+    shouldBeIncluded: showVPCs,
+  });
 
   const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
 
