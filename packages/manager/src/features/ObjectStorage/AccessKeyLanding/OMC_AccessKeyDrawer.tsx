@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4';
 import {
   AccessType,
   ObjectStorageBucket,
@@ -19,6 +20,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -48,20 +50,27 @@ export interface FormState {
  * bucket_access in the shape the API will expect,
  * sorted by cluster.
  */
-export const sortByRegion = (a: Scope, b: Scope) => {
+export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
+  a: Scope,
+  b: Scope
+) => {
   if (!a.region || !b.region) {
     return 0;
   }
-  if (a.region > b.region) {
+
+  if (regionLookup[a.region].label > regionLookup[b.region].label) {
     return 1;
   }
-  if (a.region < b.region) {
+  if (regionLookup[a.region].label < regionLookup[b.region].label) {
     return -1;
   }
   return 0;
 };
 
-export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
+export const getDefaultScopes = (
+  buckets: ObjectStorageBucket[],
+  regionLookup: { [key: string]: Region } = {}
+): Scope[] =>
   buckets
     .map((thisBucket) => ({
       bucket_name: thisBucket.label,
@@ -69,7 +78,7 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
       permissions: 'none' as AccessType,
       region: thisBucket.region,
     }))
-    .sort(sortByRegion);
+    .sort(sortByRegion(regionLookup));
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const {
@@ -82,6 +91,8 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   } = props;
 
   const { data: regions } = useRegionsQuery();
+
+  const regionsLookup = regions && getRegionsByRegionId(regions);
 
   const regionsSupportObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
@@ -163,6 +174,14 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const handleToggleAccess = () => {
     setLimitedAccessChecked((checked) => !checked);
+    // Reset scopes
+    const bucketsInRegions = buckets?.filter(
+      (bucket) => bucket.region && formik.values.regions.includes(bucket.region)
+    );
+    formik.setFieldValue(
+      'bucket_access',
+      getDefaultScopes(bucketsInRegions, regionsLookup)
+    );
   };
 
   useEffect(() => {
@@ -239,9 +258,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 (bucket) =>
                   bucket.region && formik.values.regions.includes(bucket.region)
               );
+
               formik.setFieldValue(
                 'bucket_access',
-                getDefaultScopes(bucketsInRegions)
+                getDefaultScopes(bucketsInRegions, regionsLookup)
               );
               if (
                 bucketsInRegions.length > 0 &&
@@ -256,7 +276,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               );
               formik.setFieldValue(
                 'bucket_access',
-                getDefaultScopes(bucketsInRegions)
+                getDefaultScopes(bucketsInRegions, regionsLookup)
               );
               formik.setFieldValue('regions', values);
             }}

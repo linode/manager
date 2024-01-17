@@ -27,6 +27,19 @@ import type {
   RegionsMultiSelectProps,
 } from './RegionSelect.types';
 
+export const sortByRegion = (a: RegionSelectOption, b: RegionSelectOption) => {
+  if (!a.label || !b.label) {
+    return 0;
+  }
+  if (a.label > b.label) {
+    return 1;
+  }
+  if (a.label < b.label) {
+    return -1;
+  }
+  return 0;
+};
+
 export const RegionsMultiSelect = React.memo(
   (props: RegionsMultiSelectProps) => {
     const {
@@ -145,13 +158,19 @@ export const RegionsMultiSelect = React.memo(
                   disableHoverListener={!option.unavailable}
                 >
                   <StyledListItem {...props}>
-                    <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexGrow: 1,
+                      }}
+                    >
                       <StyledFlagContainer>
                         <Flag country={option.data.country} />
                       </StyledFlagContainer>
                       {option.label}
-                      {selected && <SelectedIcon visible />}
                     </Box>
+                    <SelectedIcon visible={selected} />
                   </StyledListItem>
                 </Tooltip>
               );
@@ -181,7 +200,7 @@ export const RegionsMultiSelect = React.memo(
         </StyledAutocompleteContainer>
         {selectedRegions.length > 0 && (
           <SelectedOptionsList>
-            {selectedRegions.map((option, index) => (
+            {[...selectedRegions].sort(sortByRegion).map((option, index) => (
               <SelectedOptionsListItem alignItems="center" key={index}>
                 <Box sx={{ display: 'flex' }}>
                   <StyledFlagContainer>

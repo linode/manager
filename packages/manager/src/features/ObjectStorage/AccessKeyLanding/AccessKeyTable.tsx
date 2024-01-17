@@ -19,7 +19,9 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { AccessKeyMenu } from './AccessKeyMenu';
 import { HostNamesDrawer } from './HostNamesDrawer';
@@ -51,6 +53,9 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
 
   const flags = useFlags();
   const { account } = useAccountManagement();
+  const { data: regionsData } = useRegionsQuery();
+
+  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   const isObjMultiClusterFlagEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
@@ -97,10 +102,15 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             <StyledCopyIcon text={eachKey.access_key} />
           </Typography>
         </TableCell>
-        {isObjMultiClusterFlagEnabled && (
+        {isObjMultiClusterFlagEnabled && regionsLookup && (
           <TableCell>
-            {`${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint} `}
-            {eachKey.regions.length > 1 ? (
+            {`${regionsLookup[eachKey?.regions[0]?.id].label}: ${
+              eachKey?.regions[0]?.s3_endpoint
+            } `}
+            {eachKey?.regions?.length === 1 && (
+              <StyledCopyIcon text={eachKey?.regions[0]?.s3_endpoint} />
+            )}
+            {eachKey.regions.length > 1 && (
               <StyledLinkButton
                 onClick={() => {
                   setHostNames(eachKey.regions);
@@ -110,8 +120,6 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
               >
                 and {eachKey.regions.length - 1} more...
               </StyledLinkButton>
-            ) : (
-              `${eachKey.regions[0].id}: ${eachKey.regions[0].s3_endpoint}`
             )}
           </TableCell>
         )}

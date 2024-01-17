@@ -7,6 +7,8 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { useRegionsQuery } from 'src/queries/regions';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { AccessCell } from './AccessCell';
 import {
@@ -51,7 +53,10 @@ interface TableProps {
 export const BucketPermissionsTable = React.memo((props: TableProps) => {
   const { bucket_access, checked, mode, updateScopes } = props;
 
-  if (!bucket_access) {
+  const { data: regionsData } = useRegionsQuery();
+  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
+
+  if (!bucket_access || !regionsLookup) {
     return null;
   }
 
@@ -141,7 +146,7 @@ export const BucketPermissionsTable = React.memo((props: TableProps) => {
           </StyledRadioRow>
         )}
         {bucket_access.map((thisScope) => {
-          const scopeName = `${thisScope.cluster}-${thisScope.bucket_name}`;
+          const scopeName = `${thisScope.region}-${thisScope.bucket_name}`;
           return (
             <StyledRadioRow
               data-testid={scopeName}
@@ -150,7 +155,7 @@ export const BucketPermissionsTable = React.memo((props: TableProps) => {
               mode={mode}
             >
               <StyledClusterCell padding="checkbox">
-                {thisScope.region}
+                {regionsLookup[thisScope.region ?? '']?.label}
               </StyledClusterCell>
               <StyledBucketCell padding="checkbox">
                 {thisScope.bucket_name}

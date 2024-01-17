@@ -4,6 +4,8 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
+import { useRegionsQuery } from 'src/queries/regions';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { CopyAll } from './CopyAll';
 
@@ -15,6 +17,12 @@ interface Props {
 
 export const HostNamesDrawer = (props: Props) => {
   const { onClose, open, regions } = props;
+  const { data: regionsData } = useRegionsQuery();
+  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
+
+  if (!regionsData || !regionsLookup) {
+    return null;
+  }
 
   return (
     <Drawer onClose={onClose} open={open} title="Regions / S3 Hostnames">
@@ -23,7 +31,10 @@ export const HostNamesDrawer = (props: Props) => {
           text={
             regions
               .map(
-                (region) => `s3 Endpoint: ${region.id}: ${region.s3_endpoint}`
+                (region) =>
+                  `S3 Endpoint: ${regionsLookup[region.id].label}: ${
+                    region.s3_endpoint
+                  }`
               )
               .join('\n') ?? ''
           }
@@ -38,11 +49,13 @@ export const HostNamesDrawer = (props: Props) => {
       >
         {regions.map((region, index) => (
           <CopyableTextField
+            value={`S3 Endpoint: ${regionsLookup[region.id].label}: ${
+              region.s3_endpoint
+            }`}
             hideLabel
             key={index}
             label={`${region.id}: ${region.s3_endpoint}`}
             sx={{ border: 'none', maxWidth: '100%' }}
-            value={`s3 Endpoint: ${region.id}: ${region.s3_endpoint}`}
           />
         ))}
       </Box>
