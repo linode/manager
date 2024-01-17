@@ -41,7 +41,11 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     ['events', 'infinite', filter],
-    ({ pageParam }) => getEvents({}, { ...filter, id: { '+lt': pageParam } }),
+    ({ pageParam }) =>
+      getEvents(
+        {},
+        { ...filter, id: pageParam ? { '+lt': pageParam } : undefined }
+      ),
     {
       cacheTime: Infinity,
       getNextPageParam: ({ data, results }) => {
