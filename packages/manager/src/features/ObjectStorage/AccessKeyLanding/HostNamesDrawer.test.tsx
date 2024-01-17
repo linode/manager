@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesDrawer } from './HostNamesDrawer';
@@ -10,7 +11,7 @@ import { HostNamesDrawer } from './HostNamesDrawer';
 const mockOnClose = vi.fn();
 
 // Mock regions data
-const mockRegions = [
+const mockS3Regions = [
   {
     id: 'region1',
     s3_endpoint: 'endpoint1',
@@ -21,13 +22,22 @@ const mockRegions = [
   },
 ];
 
+vi.mock('src/queries/regions', () => ({
+  useRegionsQuery: vi.fn(() => ({
+    data: [
+      ...regionFactory.buildList(1, { id: 'region1', label: 'Newark, NJ' }),
+      ...regionFactory.buildList(1, { id: 'region2', label: 'Atlanta, GA' }),
+    ],
+  })),
+}));
+
 describe('HostNamesDrawer', () => {
   it('renders the drawer with regions and copyable text', () => {
     renderWithTheme(
       <HostNamesDrawer
         onClose={mockOnClose}
         open={true}
-        regions={mockRegions}
+        regions={mockS3Regions}
       />
     );
 
@@ -43,7 +53,12 @@ describe('HostNamesDrawer', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', {
-        name: 'Copy s3 Endpoint: region1: endpoint1 to clipboard',
+        name: 'Copy S3 Endpoint: Atlanta, GA: endpoint2 to clipboard',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'Copy S3 Endpoint: Newark, NJ: endpoint1 to clipboard',
       })
     ).toBeInTheDocument();
   });
@@ -53,7 +68,7 @@ describe('HostNamesDrawer', () => {
       <HostNamesDrawer
         onClose={mockOnClose}
         open={true}
-        regions={mockRegions}
+        regions={mockS3Regions}
       />
     );
 
