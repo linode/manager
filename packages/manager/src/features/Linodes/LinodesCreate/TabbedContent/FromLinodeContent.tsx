@@ -5,6 +5,7 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -46,6 +47,8 @@ export const FromLinodeContent = (props: CombinedProps) => {
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
   const history = useHistory();
+
+  const flags = useFlags();
 
   const updateSearchParams = (search: string) => {
     history.replace({ search });
@@ -105,11 +108,15 @@ export const FromLinodeContent = (props: CombinedProps) => {
                 text:
                   'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
               },
-              {
-                level: 'warning',
-                text:
-                  'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
-              },
+              ...(flags.linodeCloneUIChanges
+                ? [
+                    {
+                      level: 'warning' as const,
+                      text:
+                        'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
+                    },
+                  ]
+                : []),
             ]}
             data-qa-linode-panel
             disabled={userCannotCreateLinode}

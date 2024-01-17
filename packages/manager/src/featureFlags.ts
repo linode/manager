@@ -50,6 +50,7 @@ export interface Flags {
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
+  linodeCloneUIChanges: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
