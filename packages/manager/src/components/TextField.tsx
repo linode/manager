@@ -480,7 +480,8 @@ export const TextField = (props: TextFieldProps) => {
         {tooltipText && (
           <TooltipIcon
             sxTooltipIcon={{
-              padding: '0px 0px 0px 8px',
+              margin: '0px 0px 0px 4px',
+              padding: '6px',
             }}
             classes={{ popper: tooltipClasses }}
             interactive={tooltipInteractive}
