@@ -58,20 +58,20 @@ export const setTokenInLocalStorage = ({
 /**
  * Set the active token in the local storage.
  */
-export const setActiveTokenInLocalStorage = ({
+export const updateCurrentTokenBasedOnUserType = ({
   userType,
 }: {
   userType: 'parent' | 'proxy';
 }) => {
   const storageKeyPrefix = `authentication/${userType}_token`;
 
-  const activeToken = getStorage(`${storageKeyPrefix}/token`, false);
-  const activeScope = getStorage(`${storageKeyPrefix}/scopes`, false);
-  const activeExpiry = getStorage(`${storageKeyPrefix}/expire`, false);
+  const userToken = getStorage(`${storageKeyPrefix}/token`, false);
+  const userScope = getStorage(`${storageKeyPrefix}/scopes`, false);
+  const userExpiry = getStorage(`${storageKeyPrefix}/expire`, false);
 
-  if (activeToken) {
-    setStorage('authentication/token', activeToken);
-    setStorage('authentication/scopes', activeScope);
-    setStorage('authentication/expire', activeExpiry);
+  if (userToken) {
+    setStorage('authentication/token', userToken);
+    setStorage('authentication/scopes', userScope);
+    setStorage('authentication/expire', userExpiry);
   }
 };

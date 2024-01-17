@@ -1,5 +1,4 @@
 import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
-import { RequestHeaders } from '@linode/api-v4/src/types';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
@@ -9,16 +8,15 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import {
   isParentTokenValid,
-  setActiveTokenInLocalStorage,
   setTokenInLocalStorage,
+  updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { useFlags } from 'src/hooks/useFlags';
-import { storage } from 'src/utilities/storage';
+import { getStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
-import type { APIError, ChildAccountPayload } from '@linode/api-v4';
+import type { APIError, ChildAccountPayload, UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
@@ -37,50 +35,59 @@ export const SwitchAccountDrawer = (props: Props) => {
     []
   );
 
-  const flags = useFlags();
-  const currentBearerToken = useCurrentToken() ?? '';
+  const currentTokenWithBearer = useCurrentToken() ?? '';
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClose = React.useCallback(() => {
     onClose();
   }, [onClose]);
 
-  // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
-  const headers =
-    flags.parentChildAccountAccess && isProxyUser
-      ? {
-          Authorization: `Bearer ${currentBearerToken}`,
-        }
-      : undefined;
-
-  const getProxyToken = async ({ euuid, headers }: ChildAccountPayload) => {
-    try {
-      return await createChildAccountPersonalAccessToken({
-        euuid,
-        headers,
-      });
-    } catch (error) {
-      setIsProxyTokenError(error as APIError[]);
-      throw error;
-    }
-  };
+  /**
+   * Headers are required for proxy users when obtaining a proxy token.
+   * For 'proxy' userType, use the stored parent token in the request.
+   */
+  const getProxyToken = React.useCallback(
+    async ({
+      euuid,
+      token,
+      userType,
+    }: {
+      euuid: ChildAccountPayload['euuid'];
+      token: string;
+      userType: Omit<UserType, 'child'>;
+    }) => {
+      try {
+        return await createChildAccountPersonalAccessToken({
+          euuid,
+          headers:
+            userType === 'proxy'
+              ? {
+                  Authorization: `Bearer ${token}`,
+                }
+              : undefined,
+        });
+      } catch (error) {
+        setIsProxyTokenError(error as APIError[]);
+        throw error;
+      }
+    },
+    []
+  );
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
       companyName,
-      currentBearerToken,
+      currentTokenWithBearer,
       euuid,
       event,
       handleClose,
-      headers,
       isProxyUser,
     }: {
       companyName?: string;
-      currentBearerToken?: AuthState['token'];
+      currentTokenWithBearer?: AuthState['token'];
       euuid: string;
       event: React.MouseEvent<HTMLElement>;
       handleClose: (e: React.SyntheticEvent<HTMLElement>) => void;
-      headers?: RequestHeaders;
       isProxyUser: boolean;
     }) => {
       try {
@@ -91,14 +98,12 @@ export const SwitchAccountDrawer = (props: Props) => {
         // );
         // ================================================================
 
-        const proxyToken = await getProxyToken({ euuid, headers });
-
         // We don't need to worry about this if we're a proxy user.
         if (!isProxyUser) {
           const parentToken = {
             expiry: storage.authentication.expire.get(),
             scopes: storage.authentication.scopes.get(),
-            token: currentBearerToken ?? '',
+            token: currentTokenWithBearer ?? '',
           };
 
           setTokenInLocalStorage({
@@ -107,12 +112,20 @@ export const SwitchAccountDrawer = (props: Props) => {
           });
         }
 
+        const proxyToken = await getProxyToken({
+          euuid,
+          token: isProxyUser
+            ? currentTokenWithBearer
+            : getStorage('authentication/parent_token/token'),
+          userType: isProxyUser ? 'proxy' : 'parent',
+        });
+
         setTokenInLocalStorage({
           prefix: 'authentication/proxy_token',
           token: proxyToken,
         });
 
-        setActiveTokenInLocalStorage({
+        updateCurrentTokenBasedOnUserType({
           userType: 'proxy',
         });
 
@@ -138,7 +151,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         );
       }
     },
-    [enqueueSnackbar]
+    [enqueueSnackbar, getProxyToken]
   );
 
   const handleSwitchToParentAccount = React.useCallback(() => {
@@ -158,7 +171,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       return;
     }
 
-    setActiveTokenInLocalStorage({ userType: 'parent' });
+    updateCurrentTokenBasedOnUserType({ userType: 'parent' });
     handleClose();
   }, [enqueueSnackbar, handleClose, isProxyUser]);
 
@@ -190,8 +203,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         .
       </Typography>
       <ChildAccountList
-        currentBearerToken={currentBearerToken}
-        headers={headers}
+        currentTokenWithBearer={currentTokenWithBearer}
         isProxyUser={isProxyUser}
         onClose={handleClose}
         onSwitchAccount={handleSwitchToChildAccount}

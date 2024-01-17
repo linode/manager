@@ -14,28 +14,23 @@ import {
   useChildAccounts,
 } from 'src/queries/account';
 
-import type { RequestHeaders } from '@linode/api-v4';
-
 interface ChildAccountListProps {
-  currentBearerToken: string;
-  headers: RequestHeaders | undefined;
+  currentTokenWithBearer: string;
   isProxyUser: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     companyName: string;
-    currentBearerToken: string;
+    currentTokenWithBearer: string;
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
     handleClose: () => void;
-    headers: RequestHeaders | undefined;
     isProxyUser: boolean;
   }) => void;
 }
 
 export const ChildAccountList = React.memo(
   ({
-    currentBearerToken,
-    headers,
+    currentTokenWithBearer,
     isProxyUser,
     onClose,
     onSwitchAccount,
@@ -46,7 +41,11 @@ export const ChildAccountList = React.memo(
       isLoading,
       refetch: refetchChildAccounts,
     } = useChildAccounts({
-      headers,
+      headers: isProxyUser
+        ? {
+            Authorization: `Bearer ${currentTokenWithBearer}`,
+          }
+        : undefined,
     });
     const queryClient = useQueryClient();
 
@@ -99,11 +98,10 @@ export const ChildAccountList = React.memo(
           onClick={(event) =>
             onSwitchAccount({
               companyName: childAccount.company,
-              currentBearerToken,
+              currentTokenWithBearer,
               euuid,
               event,
               handleClose: onClose,
-              headers,
               isProxyUser,
             })
           }
