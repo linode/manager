@@ -70,7 +70,7 @@ export const UserMenu = React.memo(() => {
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
   const isParentUser = user_type === 'parent';
   const isProxyUser = user_type === 'proxy';
-  const canSwitchBetweenAccounts = isParentUser || isProxyUser;
+  const canSwitchBetweenParentOrProxyAccount = isParentUser || isProxyUser;
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
   const companyName = (user_type && account?.company) ?? '';
@@ -243,16 +243,18 @@ export const UserMenu = React.memo(() => {
         sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
-          {canSwitchBetweenAccounts && (
+          {canSwitchBetweenParentOrProxyAccount && (
             <Typography>You are currently logged in as:</Typography>
           )}
           <Typography
             color={(theme) => theme.textColors.headlineStatic}
             fontSize="1.1rem"
           >
-            <strong>{canSwitchBetweenAccounts ? companyName : userName}</strong>
+            <strong>
+              {canSwitchBetweenParentOrProxyAccount ? companyName : userName}
+            </strong>
           </Typography>
-          {canSwitchBetweenAccounts && (
+          {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
               onClick={() => setIsDrawerOpen(true)}
