@@ -1,5 +1,4 @@
 import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
@@ -36,7 +35,6 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const currentTokenWithBearer = useCurrentToken() ?? '';
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleClose = React.useCallback(() => {
     onClose();
@@ -76,14 +74,12 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
-      companyName,
       currentTokenWithBearer,
       euuid,
       event,
       handleClose,
       isProxyUser,
     }: {
-      companyName?: string;
       currentTokenWithBearer?: AuthState['token'];
       euuid: string;
       event: React.MouseEvent<HTMLElement>;
@@ -94,7 +90,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
         // ================================================================
         // throw new Error(
-        //   `There was an error switching to ${companyName}. Please try again.`
+        //   `Account switching failed. Try again.`
         // );
         // ================================================================
 
@@ -142,16 +138,9 @@ export const SwitchAccountDrawer = (props: Props) => {
         //   },
         // ]);
         // ================================================================
-
-        enqueueSnackbar(
-          `There was an error switching to ${companyName}. Please try again.`,
-          {
-            variant: 'error',
-          }
-        );
       }
     },
-    [enqueueSnackbar, getProxyToken]
+    [getProxyToken]
   );
 
   const handleSwitchToParentAccount = React.useCallback(() => {
@@ -164,16 +153,12 @@ export const SwitchAccountDrawer = (props: Props) => {
 
       setIsParentTokenError([expiredTokenError]);
 
-      enqueueSnackbar(expiredTokenError.reason, {
-        variant: 'error',
-      });
-
       return;
     }
 
     updateCurrentTokenBasedOnUserType({ userType: 'parent' });
     handleClose();
-  }, [enqueueSnackbar, handleClose, isProxyUser]);
+  }, [handleClose, isProxyUser]);
 
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
