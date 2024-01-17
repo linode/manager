@@ -558,4 +558,80 @@ describe('User permission management', () => {
           .click();
       });
   });
+
+  it.only('disables "Ready Only" and "None" and defaults to "Read Write" Billing Access for "Proxy" account users with Parent/Child feature flag', () => {
+    const mockProfile = profileFactory.build({
+      username: 'proxy-user',
+    });
+
+    const mockActiveUser = accountUserFactory.build({
+      username: 'proxy-user',
+      restricted: false,
+      user_type: 'proxy',
+    });
+
+    const mockRestrictedUser = {
+      ...mockActiveUser,
+      restricted: true,
+      username: 'restricted-proxy-user',
+    };
+
+    const mockUserGrants = grantsFactory.build({
+      global: { account_access: 'read_write' },
+    });
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
+    mockGetUser(mockActiveUser);
+    mockGetUserGrants(mockActiveUser.username, mockUserGrants);
+    mockGetProfile(mockProfile);
+
+    // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+    cy.findByText(mockRestrictedUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('User Permissions')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.visitWithLogin(
+      `/account/users/${mockRestrictedUser.username}/permissions`
+    );
+    mockGetUser(mockRestrictedUser);
+    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    cy.get('[data-qa-global-section]')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that 'Read-Write' Billing Access is enabled
+        cy.get(`[data-qa-select-card-heading="Read-Write"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('be.enabled');
+        assertBillingAccessSelected('Read-Write');
+
+        // Confirm that 'Read Only' and 'None' Billing Access is disabled
+        cy.get(`[data-qa-select-card-heading="Read Only"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'disabled');
+
+        cy.get(`[data-qa-select-card-heading="None"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'disabled');
+      });
+  });
 });
