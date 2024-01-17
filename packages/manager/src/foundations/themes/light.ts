@@ -2,7 +2,6 @@ import {
   Border,
   Button,
   Color,
-  Content,
   Interaction,
 } from '@linode/design-language-system';
 import { ThemeOptions } from '@mui/material/styles';
@@ -531,7 +530,7 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           '&:focus': {
-            outline: `1px dotted ${Interaction.Border.Focus}`,
+            outline: `1px dotted ${Color.Neutrals[60]}`,
           },
           '&:last-child': {
             marginRight: 0,
@@ -754,7 +753,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: 18,
           },
           '&$disabled': {
-            borderColor: Border.Normal,
+            borderColor: Color.Neutrals[40],
             color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5,
           },
@@ -773,7 +772,7 @@ export const lightTheme: ThemeOptions = {
           },
           alignItems: 'center',
           backgroundColor: Color.Neutrals.White,
-          border: `1px solid ${Interaction.Border.Default}`,
+          border: `1px solid ${Color.Neutrals[40]}`,
           boxSizing: 'border-box',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -797,13 +796,13 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.only('xs')]: {
               fontSize: '1rem',
             },
-            color: Content.Icon.Primary.Default,
+            color: Color.Neutrals[70],
             fontSize: '0.9rem',
           },
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
-          color: Content.Icon.Primary.Default,
+          color: Color.Neutrals[70],
           fontSize: '0.9rem',
           whiteSpace: 'nowrap',
         },
@@ -953,7 +952,7 @@ export const lightTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         outlined: {
-          border: `1px solid ${Border.Normal}`,
+          border: `1px solid ${Color.Neutrals[30]}`,
         },
         root: {},
         rounded: {
@@ -1268,7 +1267,7 @@ export const lightTheme: ThemeOptions = {
             color: textColors.tableHeader,
           },
           '&:focus': {
-            outline: `1px dotted ${Interaction.Border.Focus}`,
+            outline: `1px dotted ${Color.Neutrals[60]}`,
           },
           '&:hover': {
             color: primaryColors.main,

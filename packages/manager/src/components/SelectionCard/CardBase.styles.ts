@@ -18,13 +18,13 @@ export const CardBaseGrid = styled(Grid, {
     width: 5,
   },
   '&:hover': {
-    backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.main,
+    backgroundColor: props.checked ? theme.bg.lightBlue1 : theme.bg.main,
     borderColor: props.checked
       ? theme.palette.primary.main
       : theme.color.border2,
   },
   alignItems: 'center',
-  backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.offWhite,
+  backgroundColor: props.checked ? theme.bg.lightBlue1 : theme.bg.offWhite,
   border: `1px solid ${theme.bg.main}`,
   borderColor: props.checked ? theme.palette.primary.main : undefined,
   height: '100%',
