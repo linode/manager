@@ -89,9 +89,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // DC Dynamic price logic - DB creation flow is out of scope
-  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
-  const price: PriceObject | undefined = !isDatabaseCreateFlow
+  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
+  const isDatabaseFlow = location.pathname.includes('/databases');
+  const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(type, selectedRegionId)
     : type.price;
   type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
@@ -110,7 +110,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
           }
           onClick={() =>
-            !isSamePlan && !disabled && !isPlanSoldOut && !isDisabledClass
+            !isSamePlan &&
+            !disabled &&
+            !isPlanSoldOut &&
+            !isDisabledClass &&
+            !planTooSmall
               ? onSelect(type.id)
               : undefined
           }
@@ -228,6 +232,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             disabled ||
             isPlanSoldOut ||
             isDisabledClass
+          }
+          headingDecoration={
+            isSamePlan || type.id === selectedLinodePlanType ? (
+              <StyledChip
+                aria-label="This is your current plan"
+                data-qa-current-plan
+                label="Current Plan"
+              />
+            ) : undefined
           }
           subheadings={[
             ...type.subHeadings,

@@ -4,9 +4,14 @@ import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
+import { profileFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories/accountUsers';
+import { grantsFactory } from 'src/factories/grants';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';
+
+const ADD_PAYMENT_METHOD_BUTTON_ID = 'payment-info-add-payment-method';
 
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
@@ -14,6 +19,33 @@ vi.mock('@linode/api-v4/lib/account', async () => {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
   };
+});
+
+const queryMocks = vi.hoisted(() => ({
+  useAccountUser: vi.fn().mockReturnValue({}),
+  useGrants: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/accountUsers', async () => {
+  const actual = await vi.importActual<any>('src/queries/accountUsers');
+  return {
+    ...actual,
+    useAccountUser: queryMocks.useAccountUser,
+  };
+});
+
+vi.mock('src/queries/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile');
+  return {
+    ...actual,
+    useGrants: queryMocks.useGrants,
+    useProfile: queryMocks.useAccountUser,
+  };
+});
+
+queryMocks.useAccountUser.mockReturnValue({
+  data: accountUserFactory.build({ user_type: 'parent' }),
 });
 
 /*
@@ -58,7 +90,7 @@ describe('Payment Info Panel', () => {
       </PayPalScriptProvider>
     );
 
-    expect(getByTestId('payment-info-add-payment-method')).toBeInTheDocument();
+    expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toBeInTheDocument();
 
     rerender(
       wrapWithTheme(
@@ -86,9 +118,7 @@ describe('Payment Info Panel', () => {
       </PayPalScriptProvider>
     );
 
-    const addPaymentMethodButton = getByTestId(
-      'payment-info-add-payment-method'
-    );
+    const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);
 
     fireEvent.click(addPaymentMethodButton);
     expect(getByTestId('drawer')).toBeVisible();
@@ -129,5 +159,61 @@ describe('Payment Info Panel', () => {
       ).toBeNull();
     });
     expect(getByTestId('akamai-customer-text')).toBeInTheDocument();
+  });
+
+  describe('Add Payment Method', () => {
+    it('should be disabled for all child users', () => {
+      queryMocks.useProfile.mockReturnValue({
+        data: profileFactory.build({
+          restricted: false,
+        }),
+      });
+
+      queryMocks.useAccountUser.mockReturnValue({
+        data: accountUserFactory.build({ user_type: 'child' }),
+      });
+
+      const { getByTestId } = renderWithTheme(
+        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+          <PaymentInformation
+            isAkamaiCustomer={false}
+            loading={false}
+            paymentMethods={paymentMethods}
+          />
+        </PayPalScriptProvider>,
+        {
+          flags: { parentChildAccountAccess: true },
+        }
+      );
+
+      expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+    });
+
+    it('should be disabled for non-parent/child restricted users', () => {
+      queryMocks.useGrants.mockReturnValue({
+        data: grantsFactory.build({
+          global: {
+            account_access: 'read_only',
+          },
+        }),
+      });
+
+      const { getByTestId } = renderWithTheme(
+        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+          <PaymentInformation
+            isAkamaiCustomer={false}
+            loading={false}
+            paymentMethods={paymentMethods}
+          />
+        </PayPalScriptProvider>
+      );
+
+      const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);
+
+      expect(addPaymentMethodButton).toHaveAttribute('aria-disabled', 'true');
+    });
   });
 });
