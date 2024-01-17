@@ -43,6 +43,7 @@ const parseObject = (key: string, value: {}) => {
       }
       return `--${key}.${_key} ${JSON.stringify(_value)}`;
     })
+    .filter((string) => string.length > 0)
     .join(' ');
   return result.padStart(result.length + 2);
 };
