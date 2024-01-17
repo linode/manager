@@ -86,6 +86,7 @@ export const useEventsInfiniteQuery = (filter?: Filter) => {
  */
 export const useInProgressEvents = () => {
   return useQuery<Event[], APIError[]>({
+    enabled: false,
     queryKey: ['events', 'poller', true],
   });
 };
