@@ -1,56 +1,45 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 
-export const useMetricsDiaplyStyles = makeStyles()((theme: Theme) => ({
-  blue: {
+import { Button } from 'src/components/Button/Button';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { omittedProps } from 'src/utilities/omittedProps';
+
+export const StyledTable = styled(Table, {
+  label: 'StyledTable',
+})(({ theme }) => ({
+  border: `1px solid ${theme.borderColors.borderTable}`,
+}));
+
+export const StyledTableCell = styled(TableCell, {
+  label: 'StyledTableCell',
+})(({ theme }) => ({
+  '& > button': {
     '&:before': {
-      backgroundColor: theme.graphs.blue,
+      content: '""',
+      display: 'inline-block',
+      height: 20,
+      marginRight: theme.spacing(1),
+      width: 20,
+    },
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
     },
   },
-  darkGreen: {
+}));
+
+export const StyledButton = styled(Button, {
+  label: 'StyledButton',
+  shouldForwardProp: omittedProps(['legendColor', 'hidden']),
+})<{ legendColor?: string }>(({ hidden, legendColor, theme }) => ({
+  ...(legendColor && {
     '&:before': {
-      backgroundColor: theme.graphs.network.inbound,
+      backgroundColor: hidden
+        ? theme.color.disabledText
+        : theme.graphs[legendColor],
     },
-  },
-  green: {
-    '&:before': {
-      backgroundColor: theme.graphs.green,
-    },
-  },
-  legend: {
-    '& > div': {
-      '&:before': {
-        content: '""',
-        display: 'inline-block',
-        height: 20,
-        marginRight: theme.spacing(1),
-        width: 20,
-      },
-      alignItems: 'center',
-      display: 'flex',
-    },
-  },
-  lightGreen: {
-    '&:before': {
-      backgroundColor: theme.graphs.network.outbound,
-    },
-  },
-  purple: {
-    '&:before': {
-      backgroundColor: theme.graphs.purple,
-    },
-  },
-  red: {
-    '&:before': {
-      backgroundColor: theme.graphs.red,
-    },
-  },
-  root: {
-    border: `1px solid ${theme.borderColors.borderTable}`,
-  },
-  yellow: {
-    '&:before': {
-      backgroundColor: theme.graphs.yellow,
-    },
-  },
+  }),
 }));

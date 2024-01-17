@@ -608,15 +608,13 @@ export const darkTheme: ThemeOptions = {
       user: `rgb(81, 166, 245)`,
       wait: `rgb(145, 199, 237)`,
     },
+    darkGreen: `rgb(16, 162, 29)`,
     diskIO: {
       read: `rgb(255, 196, 105)`,
       swap: `rgb(238, 44, 44)`,
       write: `rgb(255, 179, 77)`,
     },
-    network: {
-      inbound: `rgb(16, 162, 29)`,
-      outbound: `rgb(49, 206, 62)`,
-    },
+    lightGreen: `rgb(49, 206, 62)`,
     purple: `rgb(217, 176, 217)`,
     red: `rgb(255, 99, 60)`,
     yellow: `rgb(255, 220, 125)`,

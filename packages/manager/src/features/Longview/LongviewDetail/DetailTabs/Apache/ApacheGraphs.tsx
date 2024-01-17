@@ -113,7 +113,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
               <LongviewLineGraph
                 data={[
                   {
-                    backgroundColor: theme.graphs.network.outbound,
+                    backgroundColor: theme.graphs.lightGreen,
                     borderColor: 'transparent',
                     data: _convertData(
                       totalKBytes,
