@@ -19,7 +19,6 @@ interface ChildAccountListProps {
   isProxyUser: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
-    companyName: string;
     currentTokenWithBearer: string;
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
@@ -97,7 +96,6 @@ export const ChildAccountList = React.memo(
         <StyledLinkButton
           onClick={(event) =>
             onSwitchAccount({
-              companyName: childAccount.company,
               currentTokenWithBearer,
               euuid,
               event,
