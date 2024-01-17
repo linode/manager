@@ -14,6 +14,7 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
+import PlacementGroups from 'src/assets/icons/entityIcons/placement-groups.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
@@ -54,6 +55,7 @@ type NavEntity =
   | 'Marketplace'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Groups'
   | 'StackScripts'
   | 'VPC'
   | 'Volumes';
@@ -170,6 +172,14 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Linodes',
           href: '/linodes',
           icon: <Linode />,
+        },
+        {
+          betaChipClassName: 'beta-chip-placement-groups',
+          display: 'Placement Groups',
+          hide: !flags.vmPlacement,
+          href: '/placement-groups',
+          icon: <PlacementGroups />,
+          isBeta: true,
         },
         {
           display: 'Volumes',
