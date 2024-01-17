@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
@@ -21,7 +22,6 @@ import type {
   CertificateConfig,
   CreateCertificatePayload,
 } from '@linode/api-v4';
-import { Notice } from 'src/components/Notice/Notice';
 
 export const AddNewCertificateForm = (props: AddCertificateDrawerProps) => {
   const { loadbalancerId, onAdd, onClose, open } = props;
