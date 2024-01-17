@@ -158,9 +158,11 @@ export const useEventsPoller = () => {
 export const usePollingInterval = () => {
   const queryKey = ['events', 'interval'];
   const queryClient = useQueryClient();
-  const { data: intervalMultiplier = 1 } = useQuery(queryKey, () =>
-    queryClient.getQueryData<number>(queryKey)
-  );
+  const { data: intervalMultiplier = 1 } = useQuery({
+    enabled: false,
+    initialData: 1,
+    queryKey,
+  });
   return {
     incrementPollingInterval: () =>
       queryClient.setQueryData<number>(
