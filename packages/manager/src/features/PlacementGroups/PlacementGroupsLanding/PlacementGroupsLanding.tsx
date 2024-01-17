@@ -1,9 +1,11 @@
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
+import { IconButton } from 'src/components/IconButton';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -12,18 +14,26 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { useFlags } from 'src/hooks/useFlags';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { PlacementGroupsRow } from './PlacementGroupsRow';
+
+import type { PlacementGroup } from '@linode/api-v4';
+
 const preferenceKey = 'placement-groups';
 
 export const PlacementGroupsLanding = React.memo(() => {
-  const flags = useFlags();
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const [_selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+    PlacementGroup | undefined
+  >();
+  const [query, setQuery] = React.useState<string>('');
   const { handleOrderChange, order, orderBy } = useOrder(
     {
       order: 'asc',
@@ -72,15 +82,47 @@ export const PlacementGroupsLanding = React.memo(() => {
     history.push('/placement-groups/create');
   };
 
+  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+  };
+
+  const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+  };
+
   return (
     <>
       <LandingHeader
         breadcrumbProps={{ pathname: '/placement-groups' }}
-        // TODO VM_Placement: add doc link
-        docsLink={''}
+        docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
         onButtonClick={onOpenCreateDrawer}
         title="Placement Groups"
+      />
+      <Typography sx={{ mb: 4, mt: 2 }}>
+        The maximum amount of Placement Groups is 5 per account.
+      </Typography>
+      <TextField
+        InputProps={{
+          endAdornment: query && (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="Clear"
+                onClick={() => setQuery('')}
+                size="small"
+                sx={{ padding: 'unset' }}
+              >
+                <CloseIcon sx={{ color: '#aaa !important' }} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        hideLabel
+        label="Filter"
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Filter"
+        sx={{ mb: 4 }}
+        value={query}
       />
       <Table aria-label="List of Placement Groups">
         <TableHead>
@@ -94,33 +136,43 @@ export const PlacementGroupsLanding = React.memo(() => {
               Label
             </TableSortCell>
             <TableSortCell
-              active={orderBy === 'status'}
+              active={orderBy === 'compliance'}
               direction={order}
               handleClick={handleOrderChange}
-              label="status"
+              label="compliance"
             >
-              Status
+              Compliance
             </TableSortCell>
-            <Hidden smDown>
-              <TableCell>Rules</TableCell>
-              <TableCell>
-                {flags.firewallNodebalancer ? 'Services' : 'Linodes'}
-              </TableCell>
-            </Hidden>
+            <TableCell>Linodes</TableCell>
+            <TableCell>Region</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>{/* TODO VM_Placement: add Table Rows */}</TableBody>
+        <TableBody>
+          {placementGroups?.data.map((placementGroup) => (
+            <PlacementGroupsRow
+              handleDeletePlacementGroup={() =>
+                handleDeletePlacementGroup(placementGroup)
+              }
+              handleRenamePlacementGroup={() =>
+                handleRenamePlacementGroup(placementGroup)
+              }
+              key={`pg-${placementGroup.id}`}
+              placementGroup={placementGroup}
+            />
+          ))}
+        </TableBody>
       </Table>
       <PaginationFooter
         count={placementGroups?.results ?? 0}
-        eventCategory="Firewalls Table"
+        eventCategory="Placement Groups Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {/* TODO VM_Placement: add create drawer */}
+      {/* TODO VM_Placement: add delete dialog */}
+      {/* TODO VM_Placement: add create/edit drawer */}
     </>
   );
 });
