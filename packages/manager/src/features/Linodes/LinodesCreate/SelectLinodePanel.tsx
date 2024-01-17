@@ -28,7 +28,7 @@ interface Props {
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: ExtendedLinode[];
-  notice?: Notice;
+  notices?: Notice[];
   selectedLinodeID?: number;
 }
 
@@ -39,7 +39,7 @@ const SelectLinodePanel = (props: Props) => {
     handleSelection,
     header,
     linodes,
-    notice,
+    notices,
     selectedLinodeID,
   } = props;
 
@@ -72,9 +72,11 @@ const SelectLinodePanel = (props: Props) => {
           <>
             <StyledPaper data-qa-select-linode-panel>
               {error && <Notice text={error} variant="error" />}
-              {notice && !disabled && (
-                <Notice text={notice.text} variant={notice.level} />
-              )}
+              {notices &&
+                !disabled &&
+                notices.map((notice, i) => (
+                  <Notice key={i} text={notice.text} variant={notice.level} />
+                ))}
               <Typography data-qa-select-linode-header variant="h2">
                 {!!header ? header : 'Select Linode'}
               </Typography>
