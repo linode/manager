@@ -111,8 +111,8 @@ export const SwitchAccountDrawer = (props: Props) => {
         const proxyToken = await getProxyToken({
           euuid,
           token: isProxyUser
-            ? currentTokenWithBearer
-            : getStorage('authentication/parent_token/token'),
+            ? getStorage('authentication/parent_token/token')
+            : currentTokenWithBearer,
           userType: isProxyUser ? 'proxy' : 'parent',
         });
 
