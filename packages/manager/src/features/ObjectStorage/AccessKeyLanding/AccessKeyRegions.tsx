@@ -30,7 +30,7 @@ export const AccessKeyRegions = (props: Props) => {
       disabled={disabled}
       errorText={errorText}
       isClearable={false}
-      label="Region"
+      label="Regions"
       onBlur={onBlur}
       placeholder="Select a Region"
       regions={regions ?? []}
