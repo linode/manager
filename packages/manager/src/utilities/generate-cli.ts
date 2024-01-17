@@ -1,4 +1,7 @@
-import { UserData } from '@linode/api-v4/lib/linodes/types';
+import {
+  ConfigInterfaceIPv4,
+  UserData,
+} from '@linode/api-v4/lib/linodes/types';
 
 // Credit: https://github.com/xxorax/node-shell-escape
 function escapeStringForCLI(s: string): string {
@@ -18,8 +21,25 @@ const convertObjectToCLIArg = (data: {} | null) => {
 };
 
 const parseObject = (key: string, value: {}) => {
+  const parseIpv4Object = (_key: string, _value: ConfigInterfaceIPv4) => {
+    let ipv4ValueString = '';
+    if (_value.nat_1_1) {
+      ipv4ValueString =
+        ipv4ValueString +
+        ` --${key}.${_key}.nat_1_1 ${JSON.stringify(_value.nat_1_1)}`;
+    }
+    if (_value.vpc) {
+      ipv4ValueString =
+        ipv4ValueString + ` --${key}.${_key}.vpc ${JSON.stringify(_value.vpc)}`;
+    }
+    return ipv4ValueString.replace(/\s+/g, ' ');
+  };
+
   const result = Object.entries(value)
     .map(([_key, _value]) => {
+      if (_key === 'ipv4') {
+        return parseIpv4Object(_key, _value as ConfigInterfaceIPv4);
+      }
       return `--${key}.${_key} ${JSON.stringify(_value)}`;
     })
     .join(' ');
@@ -32,6 +52,7 @@ const parseArray = (key: string, value: any[]) => {
     results.push(
       value
         .map((item) => {
+          delete item.vpc_id;
           return parseObject('interfaces', item);
         })
         .join('\\\n')

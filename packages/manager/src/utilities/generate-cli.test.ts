@@ -8,6 +8,20 @@ const linodeData = {
   ...linodeRequest,
   authorized_users: ['Linny', 'Gritty'],
   backup_id: undefined,
+  interfaces: [
+    {
+      ipam_address: null,
+      ipv4: {
+        nat_1_1: 'any',
+        vpc: '123',
+      },
+      label: null,
+      primary: true,
+      purpose: 'vpc',
+      subnet_id: 8296,
+      vpc_id: 7403,
+    },
+  ],
   metadata: {
     user_data: 'cmVrbmpnYmloZXVma2xkbQpqZXZia2Y=',
   },
@@ -27,6 +41,7 @@ const linodeDataForCLI = `
   --type ${linodeRequest.type} \\
   --authorized_users Linny \\
   --authorized_users Gritty \\
+  --interfaces.ipam_address null  --interfaces.ipv4.nat_1_1 \"any\" --interfaces.ipv4.vpc \"123\" --interfaces.label null --interfaces.primary true --interfaces.purpose \"vpc\" --interfaces.subnet_id 8296 \\
   --metadata.user_data="cmVrbmpnYmloZXVma2xkbQpqZXZia2Y=" \\
   --stackscript_data '{"gh_username": "linode"}' \\
   --stackscript_id 10079
