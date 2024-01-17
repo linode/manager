@@ -8,25 +8,19 @@ import type { Meta, StoryObj } from '@storybook/react';
 const EXAMPLE_TEXT = "This is some example text for the toggle's tooltip";
 
 export const Default: StoryObj<ToggleProps> = {
-  render: (args) => <Toggle {...args} />,
+  render: (args) => <Toggle {...args} tooltipText={EXAMPLE_TEXT} />,
 };
 
-/**
- * Example of a Toggle with a non-interactable tooltip
- */
-export const TooltipToggle: StoryObj<ToggleProps> = {
-  render: () => <Toggle tooltipText={EXAMPLE_TEXT} />,
-};
-
-/**
- * Example of a Toggle with an interactable tooltip
- */
-export const InteractableTooltipToggle: StoryObj<ToggleProps> = {
-  render: () => <Toggle interactive={true} tooltipText={EXAMPLE_TEXT} />,
+export const WithInteractiveTooltip: StoryObj<ToggleProps> = {
+  render: (args) => (
+    <Toggle {...args} interactive={true} tooltipText={EXAMPLE_TEXT} />
+  ),
 };
 
 const meta: Meta<ToggleProps> = {
-  args: { interactive: undefined, tooltipText: undefined },
+  args: {
+    disabled: false,
+  },
   component: Toggle,
   title: 'Components/Toggle',
 };

@@ -23,6 +23,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
+  { flag: 'vmPlacement', label: 'Placement Groups' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

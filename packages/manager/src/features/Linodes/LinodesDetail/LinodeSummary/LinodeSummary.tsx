@@ -6,11 +6,19 @@ import { useParams } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import {
+  CPUTimeData,
+  DiskIOTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
+import { Box } from 'src/components/Box';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,
@@ -28,9 +36,10 @@ import {
 } from 'src/utilities/statMetrics';
 
 import { NetworkGraphs } from './NetworkGraphs';
-import type { ChartProps } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 import { getDateOptions } from './helpers';
+
+import type { ChartProps } from './NetworkGraphs';
 
 setUpCharts();
 
@@ -40,12 +49,14 @@ interface Props {
 }
 
 const chartHeight = 160;
+const rechartsHeight = 300;
 
 const LinodeSummary: React.FC<Props> = (props) => {
   const { isBareMetalInstance, linodeCreated } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme();
+  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
@@ -106,8 +117,49 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   const renderCPUChart = () => {
     const data = stats?.data.cpu ?? [];
-
     const metrics = getMetrics(data);
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags.recharts) {
+      const timeData = data.reduce((acc: CPUTimeData[], point: Point) => {
+        acc.push({
+          'CPU %': point[1],
+          timestamp: point[0],
+        });
+        return acc;
+      }, []);
+
+      return (
+        <Box marginLeft={-4} marginTop={2}>
+          <AreaChart
+            areas={[
+              {
+                color: theme.graphs.cpu.percent,
+                dataKey: 'CPU %',
+              },
+            ]}
+            legendRows={[
+              {
+                data: metrics,
+                format: formatPercentage,
+                legendColor: 'blue',
+                legendTitle: 'CPU %',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'hh a',
+              tickGap: 60,
+            }}
+            ariaLabel="CPU Usage Graph"
+            data={timeData}
+            height={rechartsHeight}
+            showLegend
+            timezone={timezone}
+            unit={'%'}
+          />
+        </Box>
+      );
+    }
 
     return (
       <LineGraph
@@ -141,6 +193,59 @@ const LinodeSummary: React.FC<Props> = (props) => {
       io: stats?.data.io.io ?? [],
       swap: stats?.data.io.swap ?? [],
     };
+    const timeData: DiskIOTimeData[] = [];
+
+    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
+    if (flags.recharts) {
+      for (let i = 0; i < data.io.length; i++) {
+        timeData.push({
+          'I/O Rate': data.io[i][1],
+          'Swap Rate': data.swap[i][1],
+          timestamp: data.io[i][0],
+        });
+      }
+
+      return (
+        <Box marginLeft={-4} marginTop={2}>
+          <AreaChart
+            areas={[
+              {
+                color: theme.graphs.diskIO.read,
+                dataKey: 'I/O Rate',
+              },
+              {
+                color: theme.graphs.diskIO.swap,
+                dataKey: 'Swap Rate',
+              },
+            ]}
+            legendRows={[
+              {
+                data: getMetrics(data.io),
+                format: formatNumber,
+                legendColor: 'yellow',
+                legendTitle: 'I/O Rate',
+              },
+              {
+                data: getMetrics(data.swap),
+                format: formatNumber,
+                legendColor: 'red',
+                legendTitle: 'Swap Rate',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'hh a',
+              tickGap: 60,
+            }}
+            ariaLabel="Disk I/O Graph"
+            data={timeData}
+            height={342}
+            showLegend
+            timezone={timezone}
+            unit={' blocks/s'}
+          />
+        </Box>
+      );
+    }
 
     return (
       <LineGraph
@@ -225,61 +330,60 @@ const LinodeSummary: React.FC<Props> = (props) => {
   };
 
   return (
-    <Paper>
-      <Grid sx={{ width: '100%', margin: 0 }} container>
+    <Grid container sx={{ margin: 0, width: '100%' }}>
+      <Grid
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(),
+          padding: 0,
+        }}
+        xs={12}
+      >
+        <StyledSelect
+          defaultValue={options[0]}
+          hideLabel
+          id="chartRange"
+          isClearable={false}
+          label="Select Time Range"
+          name="chartRange"
+          onChange={handleChartRangeChange}
+          options={options}
+          small
+        />
+      </Grid>
+      {!isBareMetalInstance ? (
         <Grid
           sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginBottom: theme.spacing(),
-            padding: 0,
+            flexWrap: 'nowrap',
+            margin: 0,
+            [theme.breakpoints.down(1100)]: {
+              flexWrap: 'wrap',
+            },
           }}
+          container
+          spacing={4}
           xs={12}
         >
-          <StyledSelect
-            defaultValue={options[0]}
-            hideLabel
-            id="chartRange"
-            isClearable={false}
-            label="Select Time Range"
-            name="chartRange"
-            onChange={handleChartRangeChange}
-            options={options}
-            small
-          />
+          <StyledGrid recharts={flags.recharts} xs={12}>
+            <StatsPanel
+              renderBody={renderCPUChart}
+              title="CPU (%)"
+              {...chartProps}
+            />
+          </StyledGrid>
+          <StyledGrid recharts={flags.recharts} xs={12}>
+            <StatsPanel
+              renderBody={renderDiskIOChart}
+              title="Disk I/O (blocks/s)"
+              {...chartProps}
+            />
+          </StyledGrid>
         </Grid>
-        {!isBareMetalInstance ? (
-          <Grid
-            sx={{
-              flexWrap: 'nowrap',
-              margin: 0,
-              [theme.breakpoints.down(1100)]: {
-                flexWrap: 'wrap',
-              },
-            }}
-            container
-            spacing={4}
-            xs={12}
-          >
-            <StyledGrid xs={12}>
-              <StatsPanel
-                renderBody={renderCPUChart}
-                title="CPU (%)"
-                {...chartProps}
-              />
-            </StyledGrid>
-            <StyledGrid xs={12}>
-              <StatsPanel
-                renderBody={renderDiskIOChart}
-                title="Disk I/O (blocks/s)"
-                {...chartProps}
-              />
-            </StyledGrid>
-          </Grid>
-        ) : null}
-        <NetworkGraphs stats={stats} {...chartProps} />
-      </Grid>
-    </Paper>
+      ) : null}
+      <NetworkGraphs stats={stats} {...chartProps} />
+    </Grid>
   );
 };
 
@@ -287,16 +391,21 @@ const StyledSelect = styled(Select, { label: 'StyledSelect' })({
   maxWidth: 150,
 });
 
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+const StyledGrid = styled(Grid, {
+  label: 'StyledGrid',
+  shouldForwardProp: (prop) => prop !== 'recharts',
+})<{ recharts?: boolean }>(({ recharts, theme }) => ({
   '& h2': {
     fontSize: '1rem',
   },
   '&.MuiGrid-item': {
     padding: theme.spacing(2),
   },
-  backgroundColor: theme.bg.offWhite,
+  backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
   border: `solid 1px ${theme.borderColors.divider}`,
   marginBottom: theme.spacing(2),
+  padding: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   [theme.breakpoints.up(1100)]: {
     '&:first-of-type': {
       marginRight: theme.spacing(2),

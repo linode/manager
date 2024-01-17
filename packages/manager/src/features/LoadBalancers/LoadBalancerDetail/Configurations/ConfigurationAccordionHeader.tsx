@@ -4,13 +4,18 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { ConfigurationEndpointHealth } from './ConfigurationEndpointHealth';
+
 import type { Configuration } from '@linode/api-v4';
 
 interface Props {
   configuration: Configuration;
+  loadbalancerId: number;
 }
 
-export const ConfigurationAccordionHeader = ({ configuration }: Props) => {
+export const ConfigurationAccordionHeader = (props: Props) => {
+  const { configuration, loadbalancerId } = props;
+
   return (
     <Stack
       alignItems="center"
@@ -28,7 +33,13 @@ export const ConfigurationAccordionHeader = ({ configuration }: Props) => {
           {pluralize('Route', 'Routes', configuration.routes.length)}
         </Typography>
       </Stack>
-      <Typography>ID: {configuration.id}</Typography>
+      <Stack alignItems="center" direction="row" spacing={2}>
+        <ConfigurationEndpointHealth
+          configurationId={configuration.id}
+          loadBalancerId={loadbalancerId}
+        />
+        <Typography>ID: {configuration.id}</Typography>
+      </Stack>
     </Stack>
   );
 };

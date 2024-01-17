@@ -1,10 +1,10 @@
 import { CreditCardSchema } from '@linode/validation';
-import { DateTime } from 'luxon';
+import { Settings } from 'luxon';
 import { take, takeLast } from 'ramda';
 
 import {
   formatExpiry,
-  hasExpirationPassedFor,
+  isCreditCardExpired,
   parseExpiryYear,
 } from './creditCard';
 
@@ -12,10 +12,9 @@ const currentYear = new Date().getFullYear();
 const currentYearFirstTwoDigits = take(2, String(currentYear));
 
 describe('isCreditCardExpired', () => {
-  describe('give today is 01/01/2019', () => {
-    const date = DateTime.fromObject({ day: 1, month: 1, year: 2019 });
-
-    const isCreditCardExpired = hasExpirationPassedFor(date);
+  describe('given today is 01/01/2019', () => {
+    // Mock that the current date is 1/1/2019
+    Settings.now = () => new Date(2019, 0, 1).valueOf();
 
     [
       ['01/2018', true],
@@ -30,7 +29,7 @@ describe('isCreditCardExpired', () => {
       ['10/2018', true],
       ['11/2018', true],
       ['12/2018', true],
-      ['01/2019', false],
+      ['01/2019', false], // A card is still valid until the end of the month
       ['02/2019', false],
       ['03/2019', false],
       ['04/2019', false],

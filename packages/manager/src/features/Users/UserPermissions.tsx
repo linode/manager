@@ -4,24 +4,27 @@ import {
   GrantType,
   Grants,
   getGrants,
+  getUser,
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
+// import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
@@ -41,7 +44,16 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { StyledDivWrapper, StyledSelect } from './UserPermissions.styles';
+import {
+  StyledCircleProgress,
+  StyledDivWrapper,
+  StyledHeaderGrid,
+  StyledPaper,
+  StyledPermPaper,
+  StyledSelect,
+  StyledSubHeaderGrid,
+  StyledUnrestrictedGrid,
+} from './UserPermissions.styles';
 import {
   UserPermissionsEntitySection,
   entityNameMap,
@@ -49,6 +61,7 @@ import {
 interface Props {
   clearNewUser: () => void;
   currentUser?: string;
+  queryClient: QueryClient;
   username?: string;
 }
 
@@ -58,8 +71,10 @@ interface TabInfo {
 }
 
 interface State {
+  childAccountAccessEnabled: boolean;
   errors?: APIError[];
   grants?: Grants;
+  isAccountAccessRestricted: boolean;
   isSavingEntity: boolean;
   isSavingGlobal: boolean;
   loading: boolean;
@@ -83,6 +98,7 @@ type CombinedProps = Props &
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.getUserGrants();
+    this.checkAndEnableChildAccountAccess();
 
     if (this.props.flags.vpc) {
       this.setState({ vpcEnabled: true });
@@ -94,6 +110,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.username !== this.props.username) {
       this.getUserGrants();
+      this.checkAndEnableChildAccountAccess();
     }
   }
 
@@ -134,6 +151,42 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       /* apply all of them at once */
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
+      }
+    }
+  };
+
+  checkAndEnableChildAccountAccess = async () => {
+    const { currentUser: currentUsername, flags } = this.props;
+
+    // Current user is the active user on the account.
+    if (currentUsername) {
+      try {
+        const currentUser = await getUser(currentUsername);
+
+        const isChildAccount = currentUser.user_type === 'child';
+        const isParentAccount = currentUser.user_type === 'parent';
+        const isFeatureFlagOn = flags.parentChildAccountAccess;
+
+        // A parent user account should have a toggleable `child_account_access` grant for its restricted users.
+        this.setState({
+          childAccountAccessEnabled: Boolean(
+            isParentAccount && isFeatureFlagOn
+          ),
+        });
+
+        // A child user account should have no more than `read_only` billing (account) access.
+        // Since API returns `read_write` for child users' `account_access` grant, we must manually disable the `read_write` Billing Access permission.
+        this.setState({
+          isAccountAccessRestricted: Boolean(isChildAccount && isFeatureFlagOn),
+        });
+      } catch (error) {
+        this.setState({
+          errors: getAPIErrorOrDefault(
+            error,
+            'Unknown error occurred while fetching user permissions. Try again later.'
+          ),
+        });
+        scrollErrorIntoView();
       }
     }
   };
@@ -262,6 +315,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState({
             restricted: user.restricted,
           });
+          this.props.queryClient.invalidateQueries(['account', 'users']);
         })
         .then(() => {
           // unconditionally sets this.state.loadingGrants to false
@@ -351,18 +405,26 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['The user cannot view any billing information.']}
           />
           <SelectionCard
-            checked={grants.global.account_access === 'read_only'}
+            checked={
+              grants.global.account_access === 'read_only' ||
+              (this.state.isAccountAccessRestricted &&
+                Boolean(this.state.grants?.global.account_access))
+            }
             data-qa-billing-access="Read Only"
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
           />
           <SelectionCard
+            checked={
+              grants.global.account_access === 'read_write' &&
+              !this.state.isAccountAccessRestricted
+            }
             subheadings={[
               'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails.',
             ]}
-            checked={grants.global.account_access === 'read_write'}
             data-qa-billing-access="Read-Write"
+            disabled={this.state.isAccountAccessRestricted}
             heading="Read-Write"
             onClick={this.billingPermOnClick('read_write')}
           />
@@ -378,49 +440,47 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <React.Fragment>
+      <Box sx={{ marginTop: (theme) => theme.spacing(4) }}>
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
-        <Grid
-          alignItems="center"
-          container
-          spacing={2}
-          style={{ width: 'auto' }}
-        >
-          <Grid>
-            <Typography
-              sx={(theme) => ({
-                [theme.breakpoints.down('md')]: {
-                  paddingLeft: theme.spacing(),
-                },
-              })}
-              data-qa-restrict-access={restricted}
-              variant="h2"
-            >
-              Full Account Access:
-            </Typography>
+        <StyledPaper>
+          <Grid
+            alignItems="center"
+            container
+            spacing={2}
+            sx={{ margin: 0, width: 'auto' }}
+          >
+            <StyledHeaderGrid>
+              <Typography data-qa-restrict-access={restricted} variant="h2">
+                General Permissions
+              </Typography>
+            </StyledHeaderGrid>
+            <StyledSubHeaderGrid>
+              <Toggle
+                tooltipText={
+                  username === currentUser
+                    ? 'You cannot restrict the current active user.'
+                    : ''
+                }
+                aria-label="Toggle Full Account Access"
+                checked={!restricted}
+                disabled={username === currentUser}
+                onChange={this.onChangeRestricted}
+              />
+            </StyledSubHeaderGrid>
+            <Grid sx={{ padding: 0 }}>
+              <Typography
+                sx={{ fontFamily: (theme) => theme.font.bold }}
+                variant="subtitle2"
+              >
+                Full Account Access
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid>
-            <Typography variant="h2">{!restricted ? 'On' : 'Off'}</Typography>
-          </Grid>
-          <Grid>
-            <Toggle
-              aria-label="Toggle Full Account Access"
-              tooltipText={
-                username === currentUser
-                  ? 'You cannot restrict the current active user.'
-                  : ''
-              }
-              checked={!restricted}
-              disabled={username === currentUser}
-              onChange={this.onChangeRestricted}
-              sx={{ marginRight: '3px' }}
-            />
-          </Grid>
-        </Grid>
+        </StyledPaper>
         {restricted ? this.renderPermissions() : this.renderUnrestricted()}
-      </React.Fragment>
+      </Box>
     );
   };
 
@@ -444,6 +504,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       permDescriptionMap['add_vpcs'] = 'Can add VPCs to this account';
     }
 
+    if (this.state.childAccountAccessEnabled) {
+      permDescriptionMap['child_account_access'] =
+        'Enable child account access';
+    }
+
     return (
       <Grid className="py0" key={perm} sm={6} xs={12}>
         <FormControlLabel
@@ -459,25 +524,27 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           })}
           label={permDescriptionMap[perm]}
         />
-        <Divider />
       </Grid>
     );
   };
 
   renderGlobalPerms = () => {
     const { grants, isSavingGlobal } = this.state;
+    if (
+      this.state.childAccountAccessEnabled &&
+      !this.globalBooleanPerms.includes('child_account_access')
+    ) {
+      this.globalBooleanPerms.push('child_account_access');
+    }
     return (
-      <Paper
-        sx={(theme) => ({
-          marginTop: theme.spacing(2),
-        })}
-        data-qa-global-section
-      >
+      <StyledPermPaper data-qa-global-section>
         <Typography
           data-qa-permissions-header="Global Permissions"
-          variant="h2"
+          variant="subtitle2"
         >
-          Global Permissions
+          Configure the specific rights and privileges this user has within the
+          account.{<br />}Remember that permissions related to actions with the
+          '$' symbol may incur additional charges.
         </Typography>
         <Grid
           sx={(theme) => ({
@@ -506,14 +573,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.cancelPermsType('global'),
           isSavingGlobal
         )}
-      </Paper>
+      </StyledPermPaper>
     );
   };
 
   renderPermissions = () => {
-    const { loadingGrants } = this.state;
-    if (loadingGrants) {
-      return <CircleProgress />;
+    const { loading, loadingGrants } = this.state;
+    if (loadingGrants || loading) {
+      return <StyledCircleProgress />;
     } else {
       return (
         <React.Fragment>
@@ -538,7 +605,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <Paper
+      <StyledPermPaper
         sx={(theme) => ({
           marginTop: theme.spacing(2),
         })}
@@ -610,22 +677,21 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.cancelPermsType('entity'),
           isSavingEntity
         )}
-      </Paper>
+      </StyledPermPaper>
     );
   };
 
   renderUnrestricted = () => {
-    /* TODO: render all permissions disabled with this message above */
     return (
-      <Paper
-        sx={(theme) => ({
-          marginTop: theme.spacing(2),
-          padding: theme.spacing(3),
-        })}
-      >
-        <Typography data-qa-unrestricted-msg>
-          This user has unrestricted access to the account.
-        </Typography>
+      <Paper>
+        <StyledUnrestrictedGrid>
+          <Typography data-qa-unrestricted-msg>
+            This user has unrestricted access to the account.
+          </Typography>
+          {/* <Button buttonType="primary" onClick={this.onChangeRestricted}>
+          Save
+        </Button> */}
+        </StyledUnrestrictedGrid>
       </Paper>
     );
   };
@@ -757,6 +823,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
+    childAccountAccessEnabled: false,
+    isAccountAccessRestricted: false,
     isSavingEntity: false,
     isSavingGlobal: false,
     loading: true,

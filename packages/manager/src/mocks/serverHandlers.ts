@@ -1,7 +1,9 @@
 import {
+  CreatePlacementGroupPayload,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
+  User,
   VolumeStatus,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
@@ -20,7 +22,9 @@ import {
   betaFactory,
   certificateFactory,
   configurationFactory,
+  configurationsEndpointHealthFactory,
   contactFactory,
+  createPlacementGroupPayloadFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -51,6 +55,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
@@ -72,6 +77,7 @@ import {
   objectStorageKeyFactory,
   paymentFactory,
   paymentMethodFactory,
+  placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   proDedicatedTypeFactory,
@@ -81,6 +87,7 @@ import {
   routeFactory,
   securityQuestionsFactory,
   serviceTargetFactory,
+  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -311,6 +318,30 @@ const aglb = [
     const configurations = configurationFactory.buildList(3);
     return res(ctx.json(makeResourcePage(configurations)));
   }),
+  rest.get('*/v4beta/aglb/:id/endpoints-health', (req, res, ctx) => {
+    const health = loadbalancerEndpointHealthFactory.build({
+      id: Number(req.params.id),
+    });
+    return res(ctx.json(health));
+  }),
+  rest.get(
+    '*/v4beta/aglb/:id/configurations/endpoints-health',
+    (req, res, ctx) => {
+      const health = configurationsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
+  rest.get(
+    '*/v4beta/aglb/:id/service-targets/endpoints-health',
+    (req, res, ctx) => {
+      const health = serviceTargetsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
   rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),
@@ -507,6 +538,12 @@ const childAccountUser = accountUserFactory.build({
   restricted: false,
   user_type: 'child',
   username: 'ChildUser',
+});
+const parentAccountNonAdminUser = accountUserFactory.build({
+  email: 'account@linode.com',
+  last_login: null,
+  restricted: false,
+  username: 'NonAdminUser',
 });
 
 export const handlers = [
@@ -907,7 +944,7 @@ export const handlers = [
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(0);
+    const buckets = objectStorageBucketFactory.buildList(1);
 
     return res(
       ctx.json({
@@ -1039,6 +1076,7 @@ export const handlers = [
       active_promotions: promoFactory.buildList(1),
       active_since: '2022-11-30',
       balance: 50,
+      company: 'Mock Company',
     });
     return res(ctx.json(account));
   }),
@@ -1169,6 +1207,7 @@ export const handlers = [
       }),
     ];
     return res(ctx.json(makeResourcePage(childAccounts)));
+    // return res(ctx.json(makeResourcePage(accountFactory.buildList(101))));
   }),
   rest.get('*/account/child-accounts/:euuid', (req, res, ctx) => {
     const childAccount = accountFactory.build({
@@ -1204,6 +1243,7 @@ export const handlers = [
       childAccountUser,
       parentAccountUser,
       proxyAccountUser,
+      parentAccountNonAdminUser,
     ];
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
@@ -1216,10 +1256,26 @@ export const handlers = [
   rest.get(`*/account/users/${parentAccountUser.username}`, (req, res, ctx) => {
     return res(ctx.json(parentAccountUser));
   }),
+  rest.get(
+    `*/account/users/${parentAccountNonAdminUser.username}`,
+    (req, res, ctx) => {
+      return res(ctx.json(parentAccountNonAdminUser));
+    }
+  ),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     // Parent/Child: switch the `user_type` depending on what account view you need to mock.
     return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
   }),
+  rest.put(
+    `*/account/users/${parentAccountNonAdminUser.username}`,
+    (req, res, ctx) => {
+      const { restricted } = req.body as Partial<User>;
+      if (restricted !== undefined) {
+        parentAccountNonAdminUser.restricted = restricted;
+      }
+      return res(ctx.json(parentAccountNonAdminUser));
+    }
+  ),
   rest.get(
     `*/account/users/${childAccountUser.username}/grants`,
     (req, res, ctx) => {
@@ -1271,6 +1327,20 @@ export const handlers = [
           })
         )
       );
+    }
+  ),
+  rest.get(
+    `*/account/users/${parentAccountNonAdminUser.username}/grants`,
+    (req, res, ctx) => {
+      const grantsResponse = grantsFactory.build({
+        global: parentAccountNonAdminUser.restricted
+          ? {
+              cancel_account: false,
+              child_account_access: true,
+            }
+          : undefined,
+      });
+      return res(ctx.json(grantsResponse));
     }
   ),
   rest.get('*/account/users/:user/grants', (req, res, ctx) => {
@@ -1409,7 +1479,7 @@ export const handlers = [
         longview_subscription: 'longview-100',
         managed: true,
         network_helper: true,
-        object_storage: 'disabled',
+        object_storage: 'active',
       })
     );
   }),
@@ -1764,14 +1834,97 @@ export const handlers = [
   }),
   rest.get('*regions/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(makeResourcePage(regionAvailabilityFactory.buildList(10)))
+      ctx.json(
+        makeResourcePage([
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-6',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-standard-7',
+            region: 'us-east',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-5',
+            region: 'us-central',
+          }),
+          regionAvailabilityFactory.build({
+            plan: 'g6-dedicated-6',
+            region: 'us-central',
+          }),
+        ])
+      )
     );
   }),
   rest.get('*regions/:regionId/availability', (_req, res, ctx) => {
     return res(
-      ctx.json(regionAvailabilityFactory.buildList(5, { region: 'us-east' }))
+      ctx.json([
+        regionAvailabilityFactory.build({
+          plan: 'g6-standard-6',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          plan: 'g6-standard-7',
+          region: 'us-east',
+        }),
+      ])
     );
   }),
+  // Placement Groups
+  rest.get('*/placement/groups', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(placementGroupFactory.buildList(3))));
+  }),
+  rest.get('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json(placementGroupFactory.build()));
+  }),
+  rest.post('*/placement/groups', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        createPlacementGroupPayloadFactory.build(
+          req.body as CreatePlacementGroupPayload
+        )
+      )
+    );
+  }),
+  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    const response = placementGroupFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
+  rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post('*/placement/groups/:placementGroupId/assign', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post(
+    '*/placement/groups/:placementGroupId/unassign',
+    (req, res, ctx) => {
+      if (req.params.placementGroupId === 'undefined') {
+        return res(ctx.status(404));
+      }
+
+      return res(ctx.json({}));
+    }
+  ),
   ...entityTransfers,
   ...statusPage,
   ...databases,
