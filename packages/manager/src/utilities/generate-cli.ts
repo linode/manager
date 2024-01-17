@@ -22,17 +22,18 @@ const convertObjectToCLIArg = (data: {} | null) => {
 
 const parseObject = (key: string, value: {}) => {
   const parseIpv4Object = (_key: string, _value: ConfigInterfaceIPv4) => {
-    let ipv4ValueString = '';
+    const ipv4ValueStrings = [];
     if (_value.nat_1_1) {
-      ipv4ValueString =
-        ipv4ValueString +
-        ` --${key}.${_key}.nat_1_1 ${JSON.stringify(_value.nat_1_1)}`;
+      ipv4ValueStrings.push(
+        `--${key}.${_key}.nat_1_1 ${JSON.stringify(_value.nat_1_1)}`
+      );
     }
     if (_value.vpc) {
-      ipv4ValueString =
-        ipv4ValueString + ` --${key}.${_key}.vpc ${JSON.stringify(_value.vpc)}`;
+      ipv4ValueStrings.push(
+        `--${key}.${_key}.vpc ${JSON.stringify(_value.vpc)}`
+      );
     }
-    return ipv4ValueString.replace(/\s+/g, ' ');
+    return ipv4ValueStrings.join(' ');
   };
 
   const result = Object.entries(value)
