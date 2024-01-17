@@ -116,7 +116,7 @@ const AccountLanding = () => {
   let idx = 0;
 
   const isBillingTabSelected = location.pathname.match(/billing/);
-  const isAccountSwitchable =
+  const canSwitchBetweenParentOrProxyAccount =
     flags.parentChildAccountAccess &&
     (user?.user_type === 'parent' || user?.user_type === 'proxy');
 
@@ -137,7 +137,7 @@ const AccountLanding = () => {
         history.replace('/account/billing/make-payment');
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
-    landingHeaderProps.extraActions = isAccountSwitchable ? (
+    landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton onClick={() => setIsDrawerOpen(true)} />
     ) : undefined;
   }
