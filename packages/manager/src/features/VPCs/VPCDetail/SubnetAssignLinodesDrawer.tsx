@@ -398,37 +398,41 @@ export const SubnetAssignLinodesDrawer = (
           sx={{ marginBottom: '8px' }}
           value={values.selectedLinode?.id || null}
         />
-        <Box alignItems="center" display="flex" flexDirection="row">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={autoAssignIPv4}
-                onChange={handleAutoAssignIPv4Change}
+        {values.selectedLinode?.id && (
+          <>
+            <Box alignItems="center" display="flex" flexDirection="row">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={autoAssignIPv4}
+                    onChange={handleAutoAssignIPv4Change}
+                  />
+                }
+                label={
+                  <Typography>
+                    Auto-assign a VPC IPv4 address for this Linode
+                  </Typography>
+                }
+                data-testid="vpc-ipv4-checkbox"
+                disabled={userCannotAssignLinodes}
+                sx={{ marginRight: 0 }}
               />
-            }
-            label={
-              <Typography>
-                Auto-assign a VPC IPv4 address for this Linode
-              </Typography>
-            }
-            data-testid="vpc-ipv4-checkbox"
-            disabled={userCannotAssignLinodes}
-            sx={{ marginRight: 0 }}
-          />
-          <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
-        </Box>
-        {!autoAssignIPv4 && (
-          <TextField
-            onChange={(e) => {
-              setFieldValue('chosenIP', e.target.value);
-              setAssignLinodesErrors({});
-            }}
-            disabled={userCannotAssignLinodes}
-            errorText={assignLinodesErrors['ipv4.vpc']}
-            label={'VPC IPv4'}
-            sx={{ marginBottom: '8px' }}
-            value={values.chosenIP}
-          />
+              <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
+            </Box>
+            {!autoAssignIPv4 && (
+              <TextField
+                onChange={(e) => {
+                  setFieldValue('chosenIP', e.target.value);
+                  setAssignLinodesErrors({});
+                }}
+                disabled={userCannotAssignLinodes}
+                errorText={assignLinodesErrors['ipv4.vpc']}
+                label={'VPC IPv4'}
+                sx={{ marginBottom: '8px' }}
+                value={values.chosenIP}
+              />
+            )}
+          </>
         )}
         {linodeConfigs.length > 1 && (
           <>
