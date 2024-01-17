@@ -61,6 +61,12 @@ export const LandingHeader = ({
   const labelTitle = title?.toString();
 
   const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const customXsDownBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(636)
+  );
+  const customSmMdBetweenBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.between(636, 'md')
+  );
 
   const docsAnalyticsLabel = analyticsLabel
     ? analyticsLabel
@@ -90,7 +96,11 @@ export const LandingHeader = ({
           <Grid
             sx={{
               flex: '1 1 auto',
-              marginLeft: xsDown ? theme.spacing(1) : undefined,
+              marginLeft: customSmMdBetweenBreakpoint
+                ? theme.spacing(2)
+                : customXsDownBreakpoint
+                ? theme.spacing(1)
+                : undefined,
             }}
             alignItems="center"
             display="flex"
