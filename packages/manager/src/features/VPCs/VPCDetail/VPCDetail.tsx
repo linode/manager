@@ -16,6 +16,7 @@ import {
   VPC_FEEDBACK_FORM_URL,
   VPC_LABEL,
 } from 'src/features/VPCs/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
@@ -39,6 +40,7 @@ const VPCDetail = () => {
 
   const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
   const { data: regions } = useRegionsQuery();
+  const flags = useFlags();
 
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
@@ -112,7 +114,7 @@ const VPCDetail = () => {
           labelOptions: { noCap: true },
           pathname: `/vpcs/${vpc.label}`,
         }}
-        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
+        betaFeedbackLink={flags.vpc ? VPC_FEEDBACK_FORM_URL : undefined} // @TODO VPC: remove this once VPC goes into GA
         docsLabel="Docs"
         docsLink={VPC_DOCS_LINK}
       />
