@@ -9,11 +9,17 @@ import type {
 
 export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   affinity_type: 'anti-affinity',
-  compliant: true,
+  compliant: Factory.each(() => pickRandom([true, false])),
   id: Factory.each((id) => id),
   label: Factory.each((id) => `pg-${id}`),
-  linode_ids: [1, 2, 3],
-  region: pickRandom(['us-east', 'us-southeast', 'ca-central']),
+  linode_ids: Factory.each(() => [
+    pickRandom([1, 2, 3]),
+    pickRandom([4, 5, 6]),
+    pickRandom([7, 8, 9]),
+  ]),
+  region: Factory.each(() =>
+    pickRandom(['us-east', 'us-southeast', 'ca-central'])
+  ),
 });
 
 export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<CreatePlacementGroupPayload>(
