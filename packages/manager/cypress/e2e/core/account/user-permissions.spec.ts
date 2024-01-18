@@ -559,7 +559,7 @@ describe('User permission management', () => {
       });
   });
 
-  it.only('disables "Ready Only" and "None" and defaults to "Read Write" Billing Access for "Proxy" account users with Parent/Child feature flag', () => {
+  it('disables "Read Only" and "None" and defaults to "Read Write" Billing Access for "Proxy" account users with Parent/Child feature flag', () => {
     const mockProfile = profileFactory.build({
       username: 'proxy-user',
     });
