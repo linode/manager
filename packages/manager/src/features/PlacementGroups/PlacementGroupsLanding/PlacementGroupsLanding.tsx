@@ -25,6 +25,7 @@ import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
 import type { PlacementGroup } from '@linode/api-v4';
+import { Hidden } from '@mui/material';
 
 const preferenceKey = 'placement-groups';
 
@@ -141,23 +142,17 @@ export const PlacementGroupsLanding = React.memo(() => {
             >
               Label
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'compliant'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="compliant"
-            >
-              Compliance
-            </TableSortCell>
             <TableCell>Linodes</TableCell>
-            <TableSortCell
-              active={orderBy === 'region'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="region"
-            >
-              Region
-            </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'region'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="region"
+              >
+                Region
+              </TableSortCell>
+            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>

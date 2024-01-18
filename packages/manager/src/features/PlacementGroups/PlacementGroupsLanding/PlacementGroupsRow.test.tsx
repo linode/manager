@@ -65,7 +65,7 @@ describe('PlacementGroupsLanding', () => {
           <PlacementGroupsRow
             placementGroup={placementGroupFactory.build({
               affinity_type: 'anti-affinity',
-              compliant: true,
+              compliant: false,
               label: 'group 1',
               linode_ids: [1],
               region: 'us-east',
@@ -80,7 +80,7 @@ describe('PlacementGroupsLanding', () => {
     expect(getByTestId('link-to-placement-group-1')).toHaveTextContent(
       'group 1 (Anti-affinity)'
     );
-    expect(getByText('Compliant')).toBeInTheDocument();
+    expect(getByText('Non-compliant')).toBeInTheDocument();
     expect(getByTestId('placement-group-1-assigned-linodes')).toHaveTextContent(
       '1'
     );
