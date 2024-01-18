@@ -1,6 +1,5 @@
+import Warning from '@mui/icons-material/Warning';
 import { styled } from '@mui/material/styles';
-
-import Warning from 'src/assets/icons/warning.svg';
 
 export const StyledWarningIcon = styled(Warning, {
   label: 'StyledWarningIcon',

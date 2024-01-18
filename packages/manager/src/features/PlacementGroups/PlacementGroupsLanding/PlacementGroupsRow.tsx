@@ -1,3 +1,4 @@
+import { Hidden } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,11 +14,8 @@ import { useRegionsQuery } from 'src/queries/regions';
 
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
-import { MAX_NUMBER_OF_VMS_PER_PLACEMENT_GROUP } from '../constants';
-
 import type { PlacementGroup } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from '@mui/material';
 
 interface PlacementGroupsRowProps {
   handleDeletePlacementGroup: () => void;
@@ -31,16 +29,22 @@ export const PlacementGroupsRow = React.memo(
     handleRenamePlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
-    const { affinity_type, compliant, id, label } = placementGroup;
+    const {
+      affinity_type,
+      compliant,
+      id,
+      label,
+      limits,
+      linode_ids,
+    } = placementGroup;
     const { data: regions } = useRegionsQuery();
     const { data: linodes } = useLinodesQuery();
     const regionLabel =
       regions?.find((region) => region.id === placementGroup.region)?.label ??
       '';
-    const numberOfAssignedLinodesAsString =
-      placementGroup.linode_ids.length?.toString() ?? '';
+    const numberOfAssignedLinodesAsString = linode_ids.length?.toString() ?? '';
     const listOfAssignedLinodes = linodes?.data.filter((linode) =>
-      placementGroup.linode_ids.includes(linode.id)
+      linode_ids.includes(linode.id)
     );
     const affinityType =
       affinity_type === 'affinity' ? 'Affinity' : 'Anti-affinity';
@@ -86,7 +90,7 @@ export const PlacementGroupsRow = React.memo(
             displayText={numberOfAssignedLinodesAsString}
             minWidth={200}
           />
-          &nbsp; of {MAX_NUMBER_OF_VMS_PER_PLACEMENT_GROUP}
+          &nbsp; of {limits}
         </TableCell>
         <Hidden smDown>
           <TableCell>{regionLabel}</TableCell>

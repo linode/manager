@@ -12,6 +12,7 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   compliant: Factory.each(() => pickRandom([true, false])),
   id: Factory.each((id) => id),
   label: Factory.each((id) => `pg-${id}`),
+  limits: 10,
   linode_ids: Factory.each(() => [
     pickRandom([1, 2, 3]),
     pickRandom([4, 5, 6]),

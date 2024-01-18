@@ -9,6 +9,7 @@ export interface PlacementGroup {
   affinity_type: AffinityType;
   compliant: boolean;
   linode_ids: number[];
+  limits: number;
 }
 
 export type CreatePlacementGroupPayload = Pick<
