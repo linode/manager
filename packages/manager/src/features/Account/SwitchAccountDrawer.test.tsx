@@ -56,6 +56,9 @@ describe('SwitchAccountDrawer', () => {
 
   it('should display a list of child accounts', async () => {
     server.use(
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      }),
       rest.get('*/account/child-accounts', (req, res, ctx) => {
         return res(
           ctx.json(

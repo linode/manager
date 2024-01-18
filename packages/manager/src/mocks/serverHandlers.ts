@@ -1,4 +1,5 @@
 import {
+  CreatePlacementGroupPayload,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
@@ -21,7 +22,9 @@ import {
   betaFactory,
   certificateFactory,
   configurationFactory,
+  configurationsEndpointHealthFactory,
   contactFactory,
+  createPlacementGroupPayloadFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -52,6 +55,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
@@ -73,6 +77,7 @@ import {
   objectStorageKeyFactory,
   paymentFactory,
   paymentMethodFactory,
+  placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   proDedicatedTypeFactory,
@@ -82,6 +87,7 @@ import {
   routeFactory,
   securityQuestionsFactory,
   serviceTargetFactory,
+  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -312,6 +318,30 @@ const aglb = [
     const configurations = configurationFactory.buildList(3);
     return res(ctx.json(makeResourcePage(configurations)));
   }),
+  rest.get('*/v4beta/aglb/:id/endpoints-health', (req, res, ctx) => {
+    const health = loadbalancerEndpointHealthFactory.build({
+      id: Number(req.params.id),
+    });
+    return res(ctx.json(health));
+  }),
+  rest.get(
+    '*/v4beta/aglb/:id/configurations/endpoints-health',
+    (req, res, ctx) => {
+      const health = configurationsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
+  rest.get(
+    '*/v4beta/aglb/:id/service-targets/endpoints-health',
+    (req, res, ctx) => {
+      const health = serviceTargetsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
   rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),
@@ -1253,6 +1283,9 @@ export const handlers = [
         ctx.json(
           grantsFactory.build({
             global: {
+              // The API returns 'read_write' for child account users' account access,
+              // On the frontend, we display 'read_only' and restrict child users from billing actions.
+              account_access: 'read_write',
               cancel_account: false,
             },
           })
@@ -1267,6 +1300,7 @@ export const handlers = [
         ctx.json(
           grantsFactory.build({
             global: {
+              account_access: 'read_write', // This is immutable for proxy users
               add_domains: false,
               add_firewalls: false,
               add_images: false,
@@ -1840,6 +1874,61 @@ export const handlers = [
       ])
     );
   }),
+  // Placement Groups
+  rest.get('*/placement/groups', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(placementGroupFactory.buildList(3))));
+  }),
+  rest.get('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json(placementGroupFactory.build()));
+  }),
+  rest.post('*/placement/groups', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        createPlacementGroupPayloadFactory.build(
+          req.body as CreatePlacementGroupPayload
+        )
+      )
+    );
+  }),
+  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    const response = placementGroupFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
+  rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post('*/placement/groups/:placementGroupId/assign', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post(
+    '*/placement/groups/:placementGroupId/unassign',
+    (req, res, ctx) => {
+      if (req.params.placementGroupId === 'undefined') {
+        return res(ctx.status(404));
+      }
+
+      return res(ctx.json({}));
+    }
+  ),
   ...entityTransfers,
   ...statusPage,
   ...databases,

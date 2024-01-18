@@ -1,14 +1,18 @@
 import {
   Certificate,
   Configuration,
+  ConfigurationsEndpointHealth,
   CreateCertificatePayload,
   CreateLoadbalancerPayload,
   CreateRoutePayload,
   Endpoint,
+  EndpointHealth,
+  LoadBalancerEndpointHealth,
   Loadbalancer,
   Route,
   ServiceTarget,
   ServiceTargetPayload,
+  ServiceTargetsEndpointHealth,
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4/lib/aglb/types';
 import * as Factory from 'factory.ts';
@@ -337,3 +341,36 @@ export const endpointFactory = Factory.Sync.makeFactory<Endpoint>({
   port: 80,
   rate_capacity: 10_000,
 });
+
+export const loadbalancerEndpointHealthFactory = Factory.Sync.makeFactory<LoadBalancerEndpointHealth>(
+  {
+    healthy_endpoints: 4,
+    id: Factory.each((i) => i),
+    timestamp: '2020-01-31T12:00:00',
+    total_endpoints: 6,
+  }
+);
+
+export const endpointHealthFactory = Factory.Sync.makeFactory<EndpointHealth>({
+  healthy_endpoints: 4,
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `endpoint-${i}`),
+  timestamp: '2020-01-31T12:00:00',
+  total_endpoints: 6,
+  type: '',
+  url: '',
+});
+
+export const configurationsEndpointHealthFactory = Factory.Sync.makeFactory<ConfigurationsEndpointHealth>(
+  {
+    configurations: endpointHealthFactory.buildList(5),
+    id: Factory.each((i) => i),
+  }
+);
+
+export const serviceTargetsEndpointHealthFactory = Factory.Sync.makeFactory<ServiceTargetsEndpointHealth>(
+  {
+    id: Factory.each((i) => i),
+    service_targets: endpointHealthFactory.buildList(5),
+  }
+);
