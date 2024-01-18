@@ -42,7 +42,7 @@ export const ChildAccountList = React.memo(
     } = useChildAccounts({
       headers: isProxyUser
         ? {
-            Authorization: `Bearer ${currentTokenWithBearer}`,
+            Authorization: currentTokenWithBearer,
           }
         : undefined,
     });
