@@ -15,6 +15,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -24,12 +25,11 @@ import { useProfile } from 'src/queries/profile';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
-import { Typography } from 'src/components/Typography';
 
 export const UsersLanding = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: activeUser } = useAccountUser(profile?.username ?? '');
+  const { data: accountUser } = useAccountUser(profile?.username ?? '');
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
@@ -48,14 +48,14 @@ export const UsersLanding = () => {
   const isRestrictedUser = profile?.restricted;
 
   const showBusinessPartnerAccessTable =
-    flags.parentChildAccountAccess && activeUser?.user_type === 'child';
+    flags.parentChildAccountAccess && accountUser?.user_type === 'child';
   const businessPartnerUsers =
     users?.data.filter((user) => user.user_type === 'proxy') ?? [];
   const filteredUsers =
     users?.data.filter((user) => user.user_type !== 'proxy') ?? [];
 
   const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
+    flags.parentChildAccountAccess && accountUser?.user_type === 'parent';
   const numCols = showChildAccountAccessCol ? 6 : 5;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
@@ -70,7 +70,7 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
-  // TODO: Parent/Child - remove once feature is live in production.
+  // TODO: Parent/Child - M3-7559 remove once feature is live in production.
   const renderTableContent = () => {
     if (isLoading) {
       return (
