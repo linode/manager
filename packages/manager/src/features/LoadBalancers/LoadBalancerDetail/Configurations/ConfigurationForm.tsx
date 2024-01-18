@@ -65,6 +65,8 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  const [hasChangedPort, setHasChangedPort] = useState(false);
+
   const [routesTableQuery, setRoutesTableQuery] = useState('');
 
   const loadbalancerId = Number(_loadbalancerId);
@@ -148,6 +150,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
 
   const handleReset = () => {
     formik.resetForm();
+    setHasChangedPort(false);
     reset();
   };
 
@@ -183,6 +186,30 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           <Autocomplete
+            onChange={(e, { value }) => {
+              if (hasChangedPort) {
+                return formik.setFieldValue('protocol', value);
+              }
+
+              let newPort = formik.values.port;
+
+              if (value === 'http') {
+                newPort = 80;
+              }
+
+              if (value === 'https') {
+                newPort = 443;
+              }
+
+              formik.setFormikState((prev) => ({
+                ...prev,
+                values: {
+                  ...prev.values,
+                  port: newPort,
+                  protocol: value,
+                },
+              }));
+            }}
             textFieldProps={{
               labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
@@ -192,16 +219,18 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             disableClearable
             errorText={formik.errors.protocol}
             label="Protocol"
-            onChange={(e, { value }) => formik.setFieldValue('protocol', value)}
             options={protocolOptions}
           />
           <TextField
+            onChange={(e) => {
+              formik.handleChange(e);
+              setHasChangedPort(true);
+            }}
             errorText={formik.touched.port ? formik.errors.port : undefined}
             label="Port"
             labelTooltipText={CONFIGURATION_COPY.Port}
             name="port"
             onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
             type="number"
             value={formik.values.port}
           />
