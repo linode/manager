@@ -2,10 +2,10 @@
  * @file Integration tests for restricted user billing flows.
  */
 
-import { profileFactory } from '@src/factories';
+import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
-import { mockGetUser } from 'support/intercepts/account';
+import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -25,6 +25,26 @@ const restrictedUserTooltip =
 // Tooltip message that appears on disabled billing action buttons for child users.
 const childUserTooltip =
   'To modify this content, please contact your business partner.';
+
+// Mock credit card payment method to use in tests.
+const mockPaymentMethods = [
+  paymentMethodFactory.build({
+    data: {
+      card_type: 'Visa',
+      expiry: '12/2026',
+      last_four: '1234',
+    },
+    is_default: false,
+  }),
+  paymentMethodFactory.build({
+    data: {
+      card_type: 'Visa',
+      expiry: '12/2026',
+      last_four: '5678',
+    },
+    is_default: true,
+  }),
+];
 
 /**
  * Asserts that the billing contact "Edit" button is disabled.
@@ -87,6 +107,20 @@ const assertEditBillingInfoEnabled = () => {
  * @param tooltipText - Expected tooltip message to be shown to the user.
  */
 const assertAddPaymentMethodDisabled = (tooltipText: string) => {
+  // Confirm that payment method action menu items are disabled.
+  ui.actionMenu
+    .findByTitle('Action menu for card ending in 1234')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+
+  ['Make a Payment', 'Make Default', 'Delete'].forEach((menuItem: string) => {
+    ui.actionMenuItem.findByTitle(menuItem).should('be.disabled');
+  });
+
+  // Dismiss action menu.
+  cy.get('[data-qa-action-menu="true"]').click();
+
   // Confirm Billing Summary section "Add Payment Method" button is disabled, then click it.
   cy.get('[data-qa-billing-summary]')
     .should('be.visible')
@@ -110,6 +144,20 @@ const assertAddPaymentMethodDisabled = (tooltipText: string) => {
  * "Add Payment Method" drawer, then closes the drawer.
  */
 const assertAddPaymentMethodEnabled = () => {
+  // Confirm that payment method action menu items are enabled.
+  ui.actionMenu
+    .findByTitle('Action menu for card ending in 1234')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+
+  ['Make a Payment', 'Make Default', 'Delete'].forEach((menuItem: string) => {
+    ui.actionMenuItem.findByTitle(menuItem).should('be.enabled');
+  });
+
+  // Dismiss action menu.
+  cy.get('[data-qa-action-menu="true"]').click();
+
   cy.get('[data-qa-billing-summary]')
     .should('be.visible')
     .within(() => {
@@ -129,6 +177,10 @@ const assertAddPaymentMethodEnabled = () => {
 };
 
 describe('restricted user billing flows', () => {
+  beforeEach(() => {
+    mockGetPaymentMethods(mockPaymentMethods);
+  });
+
   // TODO Delete all of these tests when Parent/Child launches and flag is removed.
   describe('Parent/Child feature disabled', () => {
     beforeEach(() => {
@@ -142,6 +194,7 @@ describe('restricted user billing flows', () => {
     /*
      * - Smoke test to confirm that regular users can edit billing information.
      * - Confirms that billing action buttons are enabled and open their respective drawers on click.
+     * - Confirms that payment method action menu items are enabled.
      */
     it('can edit billing information', () => {
       // The flow prior to Parent/Child does not account for user privileges, instead relying
@@ -184,6 +237,7 @@ describe('restricted user billing flows', () => {
      * - Confirms that "Edit" and "Add Payment Method" buttons are disabled and have informational tooltips.
      * - Confirms that clicking "Edit" and "Add Payment Method" does not open their respective drawers when disabled.
      * - Confirms that button tooltip text reflects read-only account access.
+     * - Confirms that payment method action menu items are disabled.
      */
     it('cannot edit billing information with read-only account access', () => {
       const mockProfile = profileFactory.build({
@@ -218,6 +272,7 @@ describe('restricted user billing flows', () => {
      * - Confirms that "Edit" and "Add Payment Method" buttons are disabled and have informational tooltips.
      * - Confirms that clicking "Edit" and "Add Payment Method" does not open their respective drawers when disabled.
      * - Confirms that button tooltip text reflects child user access.
+     * - Confirms that payment method action menu items are disabled.
      */
     it('cannot edit billing information as child account', () => {
       const mockProfile = profileFactory.build({

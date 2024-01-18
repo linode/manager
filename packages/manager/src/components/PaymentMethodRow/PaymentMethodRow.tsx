@@ -11,7 +11,6 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { queryKey } from 'src/queries/accountPayment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
@@ -41,7 +40,7 @@ interface Props {
  */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { isChildUser, isRestrictedUser, onDelete, paymentMethod } = props;
+  const { isRestrictedUser, onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -97,10 +96,6 @@ export const PaymentMethodRow = (props: Props) => {
     }
   };
 
-  const actionMenuAriaLabel = isRestrictedUser
-    ? getDisabledTooltipText({ isChildUser, isRestrictedUser })
-    : getActionMenuAriaLabel(paymentMethod);
-
   const sxBoxFlex = {
     alignItems: 'center',
     display: 'flex',
@@ -140,7 +135,10 @@ export const PaymentMethodRow = (props: Props) => {
             marginLeft: 'auto',
           }}
         >
-          <ActionMenu actionsList={actions} ariaLabel={actionMenuAriaLabel} />
+          <ActionMenu
+            actionsList={actions}
+            ariaLabel={getActionMenuAriaLabel(paymentMethod)}
+          />
         </Box>
       </Box>
     </Paper>
