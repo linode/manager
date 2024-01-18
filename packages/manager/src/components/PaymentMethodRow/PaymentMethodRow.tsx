@@ -11,11 +11,20 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { queryKey } from 'src/queries/accountPayment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 interface Props {
+  /**
+   * Whether the user is a child user.
+   */
+  isChildUser?: boolean | undefined;
+  /**
+   * Whether the user is a restricted user.
+   */
+  isRestrictedUser?: boolean | undefined;
   /**
    * Function called when the delete button in the Action Menu is pressed.
    */
@@ -32,7 +41,7 @@ interface Props {
  */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { onDelete, paymentMethod } = props;
+  const { isChildUser, isRestrictedUser, onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -51,6 +60,7 @@ export const PaymentMethodRow = (props: Props) => {
 
   const actions: Action[] = [
     {
+      disabled: isRestrictedUser,
       onClick: () => {
         history.push({
           pathname: '/account/billing/make-payment/',
@@ -60,7 +70,7 @@ export const PaymentMethodRow = (props: Props) => {
       title: 'Make a Payment',
     },
     {
-      disabled: paymentMethod.is_default,
+      disabled: isRestrictedUser || paymentMethod.is_default,
       onClick: () => makeDefault(paymentMethod.id),
       title: 'Make Default',
       tooltip: paymentMethod.is_default
@@ -68,7 +78,7 @@ export const PaymentMethodRow = (props: Props) => {
         : undefined,
     },
     {
-      disabled: paymentMethod.is_default,
+      disabled: isRestrictedUser || paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default
@@ -86,6 +96,10 @@ export const PaymentMethodRow = (props: Props) => {
         return `Action menu for card ending in ${paymentMethod.data.last_four}`;
     }
   };
+
+  const actionMenuAriaLabel = isRestrictedUser
+    ? getDisabledTooltipText({ isChildUser, isRestrictedUser })
+    : getActionMenuAriaLabel(paymentMethod);
 
   const sxBoxFlex = {
     alignItems: 'center',
@@ -126,10 +140,7 @@ export const PaymentMethodRow = (props: Props) => {
             marginLeft: 'auto',
           }}
         >
-          <ActionMenu
-            actionsList={actions}
-            ariaLabel={getActionMenuAriaLabel(paymentMethod)}
-          />
+          <ActionMenu actionsList={actions} ariaLabel={actionMenuAriaLabel} />
         </Box>
       </Box>
     </Paper>

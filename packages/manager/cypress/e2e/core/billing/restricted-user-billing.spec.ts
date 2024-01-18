@@ -20,11 +20,11 @@ import { randomLabel } from 'support/util/random';
 
 // Tooltip message that appears on disabled billing action buttons for restricted users.
 const restrictedUserTooltip =
-  'To edit this section, please contact your administrator.';
+  'To modify this content, please contact your administrator.';
 
 // Tooltip message that appears on disabled billing action buttons for child users.
 const childUserTooltip =
-  'To edit this section, please contact your business partner.';
+  'To modify this content, please contact your business partner.';
 
 /**
  * Asserts that the billing contact "Edit" button is disabled.
