@@ -173,9 +173,10 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         />
       )}
       <TextField
-        errorText={formik.errors.label}
+        errorText={formik.touched.label ? formik.errors.label : undefined}
         label="Configuration Label"
         name="label"
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value={formik.values.label}
       />
@@ -195,10 +196,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             options={protocolOptions}
           />
           <TextField
-            errorText={formik.errors.port}
+            errorText={formik.touched.port ? formik.errors.port : undefined}
             label="Port"
             labelTooltipText={CONFIGURATION_COPY.Port}
             name="port"
+            onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             type="number"
             value={formik.values.port}
