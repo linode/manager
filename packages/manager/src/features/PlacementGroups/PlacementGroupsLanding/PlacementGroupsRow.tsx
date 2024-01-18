@@ -1,7 +1,7 @@
-import { Hidden } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
@@ -41,8 +41,8 @@ export const PlacementGroupsRow = React.memo(
     const { data: linodes } = useLinodesQuery();
     const regionLabel =
       regions?.find((region) => region.id === placementGroup.region)?.label ??
-      '';
-    const numberOfAssignedLinodesAsString = linode_ids.length?.toString() ?? '';
+      placementGroup.region;
+    const numberOfAssignedLinodesAsString = linode_ids.length.toString() ?? '';
     const listOfAssignedLinodes = linodes?.data.filter((linode) =>
       linode_ids.includes(linode.id)
     );

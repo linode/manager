@@ -3,7 +3,11 @@ import * as React from 'react';
 import { linodeFactory } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { placementGroupFactory } from 'src/factories';
-import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  resizeScreenSize,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
@@ -62,21 +66,19 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <table>
-        <tbody>
-          <PlacementGroupsRow
-            placementGroup={placementGroupFactory.build({
-              affinity_type: 'anti-affinity',
-              compliant: false,
-              label: 'group 1',
-              linode_ids: [1],
-              region: 'us-east',
-            })}
-            handleDeletePlacementGroup={handleDeletePlacementGroupMock}
-            handleRenamePlacementGroup={handleRenamePlacementGroupMock}
-          />
-        </tbody>
-      </table>
+      wrapWithTableBody(
+        <PlacementGroupsRow
+          placementGroup={placementGroupFactory.build({
+            affinity_type: 'anti-affinity',
+            compliant: false,
+            label: 'group 1',
+            linode_ids: [1],
+            region: 'us-east',
+          })}
+          handleDeletePlacementGroup={handleDeletePlacementGroupMock}
+          handleRenamePlacementGroup={handleRenamePlacementGroupMock}
+        />
+      )
     );
 
     expect(getByTestId('link-to-placement-group-1')).toHaveTextContent(

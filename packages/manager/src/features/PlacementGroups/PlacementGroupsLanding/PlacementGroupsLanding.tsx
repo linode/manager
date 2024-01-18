@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -25,7 +26,6 @@ import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
 import type { PlacementGroup } from '@linode/api-v4';
-import { Hidden } from '@mui/material';
 
 const preferenceKey = 'placement-groups';
 
