@@ -42,8 +42,6 @@ import {
 } from './LinodeResize.utils';
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
-import type { ButtonProps } from 'src/components/Button/Button';
-
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
@@ -180,16 +178,6 @@ export const LinodeResize = (props: Props) => {
     types?.filter((thisType) => !Boolean(thisType.successor)) ?? [];
 
   const error = getError(resizeError);
-
-  const resizeButtonProps: ButtonProps =
-    formik.values.migration_type === 'warm' && !isLinodeOffline
-      ? {
-          onClick: () => formik.handleSubmit(),
-        }
-      : {
-          loading: isLoading,
-          type: 'submit',
-        };
 
   return (
     <Dialog
@@ -333,7 +321,8 @@ export const LinodeResize = (props: Props) => {
             }
             buttonType="primary"
             data-qa-resize
-            {...resizeButtonProps}
+            loading={isLoading}
+            type="submit"
           >
             Resize Linode
           </Button>
