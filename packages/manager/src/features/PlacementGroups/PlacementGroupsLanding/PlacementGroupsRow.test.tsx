@@ -3,7 +3,7 @@ import * as React from 'react';
 import { linodeFactory } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { placementGroupFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
@@ -35,6 +35,8 @@ const handleRenamePlacementGroupMock = vi.fn();
 
 describe('PlacementGroupsLanding', () => {
   it('renders the columns with proper data', () => {
+    resizeScreenSize(1200);
+
     queryMocks.useLinodesQuery.mockReturnValue({
       data: {
         data: [
