@@ -1,6 +1,6 @@
 import type { Region } from '../regions/types';
 
-export type AffinityType = 'affinity' | 'anti-affinity';
+export type AffinityType = 'affinity' | 'anti_affinity';
 
 export interface PlacementGroup {
   id: number;

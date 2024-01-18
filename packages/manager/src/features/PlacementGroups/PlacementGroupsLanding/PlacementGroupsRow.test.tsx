@@ -69,7 +69,7 @@ describe('PlacementGroupsLanding', () => {
       wrapWithTableBody(
         <PlacementGroupsRow
           placementGroup={placementGroupFactory.build({
-            affinity_type: 'anti-affinity',
+            affinity_type: 'anti_affinity',
             compliant: false,
             label: 'group 1',
             linode_ids: [1],

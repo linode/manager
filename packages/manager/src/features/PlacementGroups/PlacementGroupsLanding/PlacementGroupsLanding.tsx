@@ -99,6 +99,12 @@ export const PlacementGroupsLanding = React.memo(() => {
   return (
     <>
       <LandingHeader
+        buttonDataAttrs={{
+          disabled:
+            (placementGroups?.results &&
+              placementGroups?.results >= MAX_NUMBER_OF_PLACEMENT_GROUPS) ||
+            false,
+        }}
         breadcrumbProps={{ pathname: '/placement-groups' }}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
