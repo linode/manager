@@ -57,11 +57,13 @@ export const UserRow = ({ onDelete, user }: Props) => {
           </TableCell>
         </Hidden>
       )}
-      <Hidden lgDown>
-        <TableCell>
-          <LastLogin last_login={user.last_login} />
-        </TableCell>
-      </Hidden>
+      {!isProxyUser && (
+        <Hidden lgDown>
+          <TableCell>
+            <LastLogin last_login={user.last_login} />
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
         <UsersActionMenu
           isProxyUser={isProxyUser}

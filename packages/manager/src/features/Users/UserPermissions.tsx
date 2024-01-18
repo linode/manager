@@ -427,6 +427,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
+    const isProxyUser = this.state.userType === 'proxy';
 
     return (
       <Box sx={{ marginTop: (theme) => theme.spacing(4) }}>
@@ -442,7 +443,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           >
             <StyledHeaderGrid>
               <Typography data-qa-restrict-access={restricted} variant="h2">
-                General Permissions
+                {isProxyUser
+                  ? 'Business Partner Permissions'
+                  : 'General Permissions'}
               </Typography>
             </StyledHeaderGrid>
             <StyledSubHeaderGrid>

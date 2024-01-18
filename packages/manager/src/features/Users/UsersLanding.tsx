@@ -47,11 +47,11 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
-  const showBusinessPartnerAccessTable =
+  const showProxyUserTable =
     flags.parentChildAccountAccess && accountUser?.user_type === 'child';
-  const businessPartnerUsers =
+  const proxyUsers =
     users?.data.filter((user) => user.user_type === 'proxy') ?? [];
-  const filteredUsers =
+  const nonProxyUsers =
     users?.data.filter((user) => user.user_type !== 'proxy') ?? [];
 
   const showChildAccountAccessCol =
@@ -93,6 +93,32 @@ export const UsersLanding = () => {
     return users.data.map((user) => (
       <UserRow key={user.username} onDelete={onDelete} user={user} />
     ));
+  };
+
+  const renderProxyTableHeader = () => {
+    return (
+      <TableRow>
+        <TableSortCell
+          active={order.orderBy === 'username'}
+          direction={order.order}
+          handleClick={order.handleOrderChange}
+          label="username"
+        >
+          Username
+        </TableSortCell>
+        <Hidden smDown>
+          <TableSortCell
+            active={order.orderBy === 'email'}
+            direction={order.order}
+            handleClick={order.handleOrderChange}
+            label="email"
+          >
+            Email Address
+          </TableSortCell>
+        </Hidden>
+        <TableCell>Account Access</TableCell>
+      </TableRow>
+    );
   };
 
   const renderTableHeader = () => {
@@ -175,10 +201,10 @@ export const UsersLanding = () => {
       >
         Business partner settings
       </Typography>
-      {showBusinessPartnerAccessTable && (
+      {showProxyUserTable && (
         <Table aria-label="List of Business Partners">
-          <TableHead>{renderTableHeader()}</TableHead>
-          <TableBody>{renderTableBody(businessPartnerUsers)}</TableBody>
+          <TableHead>{renderProxyTableHeader()}</TableHead>
+          <TableBody>{renderTableBody(proxyUsers)}</TableBody>
         </Table>
       )}
       <Typography
@@ -188,41 +214,10 @@ export const UsersLanding = () => {
         User settings
       </Typography>
       <Table aria-label="List of Users">
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={order.orderBy === 'username'}
-              direction={order.order}
-              handleClick={order.handleOrderChange}
-              label="username"
-            >
-              Username
-            </TableSortCell>
-            <Hidden smDown>
-              <TableSortCell
-                active={order.orderBy === 'email'}
-                direction={order.order}
-                handleClick={order.handleOrderChange}
-                label="email"
-              >
-                Email Address
-              </TableSortCell>
-            </Hidden>
-            <TableCell>Account Access</TableCell>
-            {showChildAccountAccessCol && (
-              <Hidden lgDown>
-                <TableCell>Child Account Access</TableCell>
-              </Hidden>
-            )}
-            <Hidden lgDown>
-              <TableCell>Last Login</TableCell>
-            </Hidden>
-            <TableCell />
-          </TableRow>
-        </TableHead>
+        <TableHead>{renderTableHeader()}</TableHead>
         <TableBody>
           {flags.parentChildAccountAccess
-            ? renderTableBody(filteredUsers)
+            ? renderTableBody(nonProxyUsers)
             : renderTableContent()}
         </TableBody>
       </Table>
