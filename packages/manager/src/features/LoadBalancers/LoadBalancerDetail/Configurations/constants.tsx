@@ -31,7 +31,7 @@ export const protocolOptions = [
   { label: 'HTTPS', value: 'https' },
   { label: 'HTTP', value: 'http' },
   { label: 'TCP', value: 'tcp' },
-] as const;
+];
 
 export const CONFIGURATION_COPY = {
   Certificates:
