@@ -4,7 +4,7 @@ import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
-  interceptAddUser,
+  mockAddUser,
   mockGetUser,
   mockGetUserGrants,
   mockGetUsers,
@@ -19,7 +19,7 @@ import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomHex, randomLabel } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
 
 // Message shown when user has unrestricted account acess.
 const unrestrictedAccessMessage =
@@ -637,7 +637,7 @@ describe('User permission management', () => {
       });
   });
 
-  it('can add full-access users with no redirect occurs', () => {
+  it('can add users with full access', () => {
     const mockUser = accountUserFactory.build({
       username: randomLabel(),
       restricted: false,
@@ -657,9 +657,9 @@ describe('User permission management', () => {
     };
 
     mockGetUsers([mockUser]).as('getUsers');
-    mockGetUser(mockUser).as('getUser');
-    mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
-    interceptAddUser().as('addUser');
+    mockGetUser(mockUser);
+    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
     cy.visitWithLogin('/account/users');
@@ -691,8 +691,34 @@ describe('User permission management', () => {
           .should('be.enabled')
           .click();
       });
+    // the drawer has been closed
+    cy.findByText('Add a User').should('not.exist');
+    // cancel button will not add a new user
+    cy.findByText(newUser.username).should('not.exist');
 
-    // "x" or cancel button will not add a new user
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // "x" button will not add a new user
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // the drawer has been closed
+    cy.findByText('Add a User').should('not.exist');
+    // no new user is added
     cy.findByText(newUser.username).should('not.exist');
 
     // new user should be added and shown in the user list
@@ -752,7 +778,7 @@ describe('User permission management', () => {
     cy.url().should('endWith', '/users');
   });
 
-  it('can add non full-access users with redirecting to the new user\'s "User Permission" page', () => {
+  it('can add users with restricted access', () => {
     const mockUser = accountUserFactory.build({
       username: randomLabel(),
       restricted: false,
@@ -778,9 +804,9 @@ describe('User permission management', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetUsers([mockUser]).as('getUsers');
-    mockGetUser(mockUser).as('getUser');
-    mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
-    interceptAddUser().as('addUser');
+    mockGetUser(mockUser);
+    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
     cy.visitWithLogin('/account/users');
