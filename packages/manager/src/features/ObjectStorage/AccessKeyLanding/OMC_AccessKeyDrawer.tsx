@@ -110,12 +110,8 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const hasBuckets = buckets?.length > 0;
 
-  const hidePermissionsTable =
-    bucketsError || objectStorageBuckets?.buckets.length === 0;
-
   const createMode = mode === 'creating';
 
-  const [showBucketsTable, setShowBucketsTable] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   // This is for local display management only, not part of the payload
   // and so not included in Formik's types
@@ -187,7 +183,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   useEffect(() => {
     setLimitedAccessChecked(false);
     formik.resetForm({ values: initialValues });
-    setShowBucketsTable(false);
   }, [open]);
 
   return (
@@ -263,12 +258,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 'bucket_access',
                 getDefaultScopes(bucketsInRegions, regionsLookup)
               );
-              if (
-                bucketsInRegions.length > 0 &&
-                formik.values.regions.length > 0
-              ) {
-                setShowBucketsTable(true);
-              }
             }}
             onChange={(values) => {
               const bucketsInRegions = buckets?.filter(
@@ -286,15 +275,16 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             required
             selectedRegion={formik.values.regions}
           />
-          {createMode && !hidePermissionsTable && showBucketsTable ? (
+          {createMode && !bucketsError && (
             <LimitedAccessControls
               bucket_access={formik.values.bucket_access}
               checked={limitedAccessChecked}
               handleToggle={handleToggleAccess}
               mode={mode}
+              selectedRegions={formik.values.regions}
               updateScopes={handleScopeUpdate}
             />
-          ) : null}
+          )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',

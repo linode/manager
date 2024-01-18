@@ -77,7 +77,7 @@ export const SecretTokenDialog = (props: Props) => {
             text={
               objectStorageKey?.regions
                 .map(
-                  (region) => `s3 Endpoint: ${region.id}: ${region.s3_endpoint}`
+                  (region) => `S3 Endpoint: ${region.id}: ${region.s3_endpoint}`
                 )
                 .join('\n') ?? ''
             }
@@ -87,8 +87,13 @@ export const SecretTokenDialog = (props: Props) => {
       {isObjMultiClusterFlagEnabled && (
         <Box
           sx={(theme) => ({
+            '.copyIcon': {
+              marginRight: 0,
+              paddingRight: 0,
+            },
             backgroundColor: theme.bg.main,
             border: `1px solid ${theme.color.grey3}`,
+            borderColor: theme.name === 'light' ? '#ccc' : '#222',
             padding: theme.spacing(1),
           })}
         >
@@ -98,7 +103,7 @@ export const SecretTokenDialog = (props: Props) => {
               key={index}
               label="Create a Filesystem"
               sx={{ border: 'none', maxWidth: '100%' }}
-              value={`s3 Endpoint: ${region.id}: ${region.s3_endpoint}`}
+              value={`S3 Endpoint: ${region.id}: ${region.s3_endpoint}`}
             />
           ))}
         </Box>

@@ -17,6 +17,7 @@ interface Props {
   checked: boolean;
   handleToggle: () => void;
   mode: MODE;
+  selectedRegions?: string[];
   updateScopes: (newScopes: Scope[]) => void;
 }
 

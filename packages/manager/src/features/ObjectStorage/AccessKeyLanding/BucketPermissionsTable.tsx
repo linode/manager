@@ -7,6 +7,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
@@ -43,15 +44,16 @@ export const SCOPES: Record<string, AccessType> = {
   write: 'read_write',
 };
 
-interface TableProps {
+interface Props {
   bucket_access: Scope[] | null;
   checked: boolean;
   mode: MODE;
+  selectedRegions?: string[];
   updateScopes: (newScopes: Scope[]) => void;
 }
 
-export const BucketPermissionsTable = React.memo((props: TableProps) => {
-  const { bucket_access, checked, mode, updateScopes } = props;
+export const BucketPermissionsTable = React.memo((props: Props) => {
+  const { bucket_access, checked, mode, selectedRegions, updateScopes } = props;
 
   const { data: regionsData } = useRegionsQuery();
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
@@ -91,7 +93,9 @@ export const BucketPermissionsTable = React.memo((props: TableProps) => {
           <TableCell data-qa-perm-region>Region</TableCell>
           <TableCell data-qa-perm-bucket>Bucket</TableCell>
           <TableCell data-qa-perm-none>None</TableCell>
-          <TableCell data-qa-perm-read>Read Only</TableCell>
+          <TableCell data-qa-perm-read sx={{ minWidth: '100px' }}>
+            Read Only
+          </TableCell>
           <TableCell data-qa-perm-rw>Read/Write</TableCell>
         </TableRow>
       </TableHead>
@@ -120,12 +124,12 @@ export const BucketPermissionsTable = React.memo((props: TableProps) => {
                 inputProps={{
                   'aria-label': 'Select read-only for all',
                 }}
-                checked={allScopesEqual('read_only')}
+                checked={allScopesEqual(SCOPES.read)}
                 data-qa-perm-read-radio
                 data-testid="set-all-read"
                 disabled={disabled}
                 name="Select All"
-                onChange={() => updateAllScopes('read_only')}
+                onChange={() => updateAllScopes(SCOPES.read)}
                 value="read-only"
               />
             </TableCell>
@@ -145,69 +149,80 @@ export const BucketPermissionsTable = React.memo((props: TableProps) => {
             </TableCell>
           </StyledRadioRow>
         )}
-        {bucket_access.map((thisScope) => {
-          const scopeName = `${thisScope.region}-${thisScope.bucket_name}`;
-          return (
-            <StyledRadioRow
-              data-testid={scopeName}
-              disabled={disabled}
-              key={scopeName}
-              mode={mode}
-            >
-              <StyledClusterCell padding="checkbox">
-                {regionsLookup[thisScope.region ?? '']?.label}
-              </StyledClusterCell>
-              <StyledBucketCell padding="checkbox">
-                {thisScope.bucket_name}
-              </StyledBucketCell>
-              <StyledRadioCell padding="checkbox">
-                <AccessCell
-                  onChange={() =>
-                    updateSingleScope({
-                      ...thisScope,
-                      permissions: SCOPES.none,
-                    })
-                  }
-                  active={thisScope.permissions === SCOPES.none}
-                  disabled={disabled}
-                  scope="none"
-                  scopeDisplay={scopeName}
-                  viewOnly={mode === 'viewing'}
-                />
-              </StyledRadioCell>
-              <StyledRadioCell padding="checkbox">
-                <AccessCell
-                  onChange={() =>
-                    updateSingleScope({
-                      ...thisScope,
-                      permissions: SCOPES.read,
-                    })
-                  }
-                  active={thisScope.permissions === SCOPES.read}
-                  disabled={disabled}
-                  scope="read-only"
-                  scopeDisplay={scopeName}
-                  viewOnly={mode === 'viewing'}
-                />
-              </StyledRadioCell>
-              <StyledRadioCell padding="checkbox">
-                <AccessCell
-                  onChange={() =>
-                    updateSingleScope({
-                      ...thisScope,
-                      permissions: SCOPES.write,
-                    })
-                  }
-                  active={thisScope.permissions === SCOPES.write}
-                  disabled={disabled}
-                  scope="read-write"
-                  scopeDisplay={scopeName}
-                  viewOnly={mode === 'viewing'}
-                />
-              </StyledRadioCell>
-            </StyledRadioRow>
-          );
-        })}
+        {!bucket_access?.length ? (
+          <TableRowEmpty
+            message={
+              !selectedRegions?.length
+                ? 'Select at least one Region to see buckets'
+                : 'There are no buckets in the selected regions'
+            }
+            colSpan={9}
+          />
+        ) : (
+          bucket_access.map((thisScope) => {
+            const scopeName = `${thisScope.region}-${thisScope.bucket_name}`;
+            return (
+              <StyledRadioRow
+                data-testid={scopeName}
+                disabled={disabled}
+                key={scopeName}
+                mode={mode}
+              >
+                <StyledClusterCell padding="checkbox">
+                  {regionsLookup[thisScope.region ?? '']?.label}
+                </StyledClusterCell>
+                <StyledBucketCell padding="checkbox">
+                  {thisScope.bucket_name}
+                </StyledBucketCell>
+                <StyledRadioCell padding="checkbox">
+                  <AccessCell
+                    onChange={() =>
+                      updateSingleScope({
+                        ...thisScope,
+                        permissions: SCOPES.none,
+                      })
+                    }
+                    active={thisScope.permissions === SCOPES.none}
+                    disabled={disabled}
+                    scope="none"
+                    scopeDisplay={scopeName}
+                    viewOnly={mode === 'viewing'}
+                  />
+                </StyledRadioCell>
+                <StyledRadioCell padding="checkbox">
+                  <AccessCell
+                    onChange={() =>
+                      updateSingleScope({
+                        ...thisScope,
+                        permissions: SCOPES.read,
+                      })
+                    }
+                    active={thisScope.permissions === SCOPES.read}
+                    disabled={disabled}
+                    scope="read-only"
+                    scopeDisplay={scopeName}
+                    viewOnly={mode === 'viewing'}
+                  />
+                </StyledRadioCell>
+                <StyledRadioCell padding="checkbox">
+                  <AccessCell
+                    onChange={() =>
+                      updateSingleScope({
+                        ...thisScope,
+                        permissions: SCOPES.write,
+                      })
+                    }
+                    active={thisScope.permissions === SCOPES.write}
+                    disabled={disabled}
+                    scope="read-write"
+                    scopeDisplay={scopeName}
+                    viewOnly={mode === 'viewing'}
+                  />
+                </StyledRadioCell>
+              </StyledRadioRow>
+            );
+          })
+        )}
       </TableBody>
     </StyledTableRoot>
   );

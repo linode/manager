@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
@@ -21,12 +22,7 @@ export const CopyAll = (props: Props) => {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}
-    >
+    <StyledBox>
       <InputLabel>S3 Endpoint Hostnames</InputLabel>
       <Tooltip
         className="copy-tooltip"
@@ -43,6 +39,12 @@ export const CopyAll = (props: Props) => {
           Copy all
         </StyledLinkButton>
       </Tooltip>
-    </Box>
+    </StyledBox>
   );
 };
+
+const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
+  borderColor: theme.name === 'light' ? '#ccc' : '#222',
+  display: 'flex',
+  justifyContent: 'space-between',
+}));

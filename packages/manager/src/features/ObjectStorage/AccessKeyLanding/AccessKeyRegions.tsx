@@ -32,7 +32,7 @@ export const AccessKeyRegions = (props: Props) => {
       isClearable={false}
       label="Regions"
       onBlur={onBlur}
-      placeholder="Select a Region"
+      placeholder="Select Regions or type to search"
       regions={regions ?? []}
       required={required}
       selectedIds={selectedRegion}
