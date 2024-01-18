@@ -590,6 +590,8 @@ describe('User permission management', () => {
     mockGetUser(mockActiveUser);
     mockGetUserGrants(mockActiveUser.username, mockUserGrants);
     mockGetProfile(mockProfile);
+    mockGetUser(mockRestrictedUser);
+    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
 
     // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
     cy.visitWithLogin('/account/users');
@@ -605,11 +607,10 @@ describe('User permission management', () => {
           .click();
       });
 
-    cy.visitWithLogin(
+    cy.url().should(
+      'endWith',
       `/account/users/${mockRestrictedUser.username}/permissions`
     );
-    mockGetUser(mockRestrictedUser);
-    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
     cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     cy.get('[data-qa-global-section]')
