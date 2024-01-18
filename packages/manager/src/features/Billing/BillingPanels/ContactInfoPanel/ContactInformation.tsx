@@ -5,11 +5,11 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
+import { CAPABILITY_CHILD } from 'src/features/Account/constants';
 import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 
 import {
   BillingActionButton,
@@ -18,9 +18,12 @@ import {
 } from '../../BillingDetail';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
+import type { AccountCapability } from '@linode/api-v4';
+
 interface Props {
   address1: string;
   address2: string;
+  capabilities: AccountCapability[];
   city: string;
   company: string;
   country: string;
@@ -50,6 +53,7 @@ const ContactInformation = (props: Props) => {
   const {
     address1,
     address2,
+    capabilities,
     city,
     company,
     country,
@@ -75,11 +79,10 @@ const ContactInformation = (props: Props) => {
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const flags = useFlags();
-  const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: user } = useAccountUser(profile?.username ?? '');
+
   const isChildUser =
-    flags.parentChildAccountAccess && user?.user_type === 'child';
+    flags.parentChildAccountAccess && capabilities?.includes(CAPABILITY_CHILD);
 
   const isRestrictedUser =
     isChildUser || grants?.global.account_access === 'read_only';

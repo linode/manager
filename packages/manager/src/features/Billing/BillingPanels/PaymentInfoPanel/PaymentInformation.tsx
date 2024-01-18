@@ -7,13 +7,13 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { Typography } from 'src/components/Typography';
+import { CAPABILITY_CHILD } from 'src/features/Account/constants';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { queryKey } from 'src/queries/accountPayment';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -23,7 +23,10 @@ import {
 } from '../../BillingDetail';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
+import type { AccountCapability } from '@linode/api-v4';
+
 interface Props {
+  capabilities: AccountCapability[];
   error?: APIError[] | null;
   isAkamaiCustomer: boolean;
   loading: boolean;
@@ -31,7 +34,13 @@ interface Props {
 }
 
 const PaymentInformation = (props: Props) => {
-  const { error, isAkamaiCustomer, loading, paymentMethods } = props;
+  const {
+    capabilities,
+    error,
+    isAkamaiCustomer,
+    loading,
+    paymentMethods,
+  } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
@@ -46,14 +55,13 @@ const PaymentInformation = (props: Props) => {
   const { replace } = useHistory();
   const queryClient = useQueryClient();
   const flags = useFlags();
-  const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
   const isChildUser =
-    flags.parentChildAccountAccess && user?.user_type === 'child';
+    flags.parentChildAccountAccess && capabilities?.includes(CAPABILITY_CHILD);
+
   const isRestrictedUser =
     isChildUser || grants?.global.account_access === 'read_only';
 

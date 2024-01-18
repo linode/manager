@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
-import { profileFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { accountFactory, profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
+import { CAPABILITY_CHILD } from 'src/features/Account/constants';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';
@@ -22,16 +22,16 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 });
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountUser: vi.fn().mockReturnValue({}),
+  useAccount: vi.fn().mockReturnValue({}),
   useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
+vi.mock('src/queries/account', async () => {
+  const actual = await vi.importActual<any>('src/queries/account');
   return {
     ...actual,
-    useAccountUser: queryMocks.useAccountUser,
+    useAccount: queryMocks.useAccount,
   };
 });
 
@@ -40,12 +40,7 @@ vi.mock('src/queries/profile', async () => {
   return {
     ...actual,
     useGrants: queryMocks.useGrants,
-    useProfile: queryMocks.useAccountUser,
   };
-});
-
-queryMocks.useAccountUser.mockReturnValue({
-  data: accountUserFactory.build({ user_type: 'parent' }),
 });
 
 /*
@@ -64,15 +59,18 @@ const paymentMethods = [
   }),
 ];
 
+const props = {
+  capabilities: [],
+  isAkamaiCustomer: false,
+  loading: false,
+  paymentMethods,
+};
+
 describe('Payment Info Panel', () => {
   it('Shows loading animation when loading', () => {
     const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <PaymentInformation
-          isAkamaiCustomer={false}
-          loading={true}
-          paymentMethods={paymentMethods}
-        />
+        <PaymentInformation {...props} loading={true} />
       </PayPalScriptProvider>
     );
 
@@ -82,11 +80,7 @@ describe('Payment Info Panel', () => {
   it('Shows Add Payment button for Linode customers and hides it for Akamai customers', () => {
     const { getByTestId, queryByText, rerender } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <PaymentInformation
-          isAkamaiCustomer={false}
-          loading={false}
-          paymentMethods={paymentMethods}
-        />
+        <PaymentInformation {...props} loading={false} />
       </PayPalScriptProvider>
     );
 
@@ -95,11 +89,7 @@ describe('Payment Info Panel', () => {
     rerender(
       wrapWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-          <PaymentInformation
-            isAkamaiCustomer={true}
-            loading={false}
-            paymentMethods={paymentMethods}
-          />
+          <PaymentInformation {...props} isAkamaiCustomer={true} />
         </PayPalScriptProvider>
       )
     );
@@ -110,11 +100,7 @@ describe('Payment Info Panel', () => {
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', () => {
     const { getByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <PaymentInformation
-          isAkamaiCustomer={false}
-          loading={false}
-          paymentMethods={paymentMethods}
-        />
+        <PaymentInformation {...props} />
       </PayPalScriptProvider>
     );
 
@@ -127,11 +113,7 @@ describe('Payment Info Panel', () => {
   it('Lists all payment methods for Linode customers', () => {
     const { getByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <PaymentInformation
-          isAkamaiCustomer={false}
-          loading={false}
-          paymentMethods={paymentMethods}
-        />
+        <PaymentInformation {...props} />
       </PayPalScriptProvider>
     );
 
@@ -145,11 +127,7 @@ describe('Payment Info Panel', () => {
   it('Hides payment methods and shows text for Akamai customers', () => {
     const { getByTestId, queryByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <PaymentInformation
-          isAkamaiCustomer={true}
-          loading={false}
-          paymentMethods={paymentMethods}
-        />
+        <PaymentInformation {...props} isAkamaiCustomer={true} />
       </PayPalScriptProvider>
     );
 
@@ -169,16 +147,17 @@ describe('Payment Info Panel', () => {
         }),
       });
 
-      queryMocks.useAccountUser.mockReturnValue({
-        data: accountUserFactory.build({ user_type: 'child' }),
+      queryMocks.useAccount.mockReturnValue({
+        data: accountFactory.build({
+          capabilities: [CAPABILITY_CHILD],
+        }),
       });
 
       const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
           <PaymentInformation
-            isAkamaiCustomer={false}
-            loading={false}
-            paymentMethods={paymentMethods}
+            {...props}
+            capabilities={queryMocks.useAccount().data.capabilities ?? []}
           />
         </PayPalScriptProvider>,
         {
@@ -204,9 +183,8 @@ describe('Payment Info Panel', () => {
       const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
           <PaymentInformation
-            isAkamaiCustomer={false}
-            loading={false}
-            paymentMethods={paymentMethods}
+            {...props}
+            capabilities={queryMocks.useAccount().data.capabilities ?? []}
           />
         </PayPalScriptProvider>
       );

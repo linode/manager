@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { accountFactory } from 'src/factories';
+import { CAPABILITY_CHILD } from 'src/features/Account/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ContactInformation from './ContactInformation';
@@ -10,6 +11,7 @@ const EDIT_BUTTON_ID = 'edit-contact-info';
 const props = {
   address1: '123 Linode Lane',
   address2: '',
+  capabilities: [],
   city: 'Philadelphia',
   company: 'Linny Corp',
   country: 'United States',
@@ -23,15 +25,15 @@ const props = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountUser: vi.fn().mockReturnValue({}),
+  useAccount: vi.fn().mockReturnValue({}),
   useGrants: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
+vi.mock('src/queries/account', async () => {
+  const actual = await vi.importActual<any>('src/queries/account');
   return {
     ...actual,
-    useAccountUser: queryMocks.useAccountUser,
+    useAccount: queryMocks.useAccount,
   };
 });
 
@@ -44,19 +46,23 @@ vi.mock('src/queries/accountUsers', async () => {
 //   };
 // });
 
-queryMocks.useAccountUser.mockReturnValue({
-  data: accountUserFactory.build({ user_type: 'parent' }),
-});
-
 describe('Edit Contact Information', () => {
   it('should be disabled for all child users', () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'child' }),
+    queryMocks.useAccount.mockReturnValue({
+      data: accountFactory.build({
+        capabilities: [CAPABILITY_CHILD],
+      }),
     });
 
-    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByTestId } = renderWithTheme(
+      <ContactInformation
+        {...props}
+        capabilities={queryMocks.useAccount().data.capabilities ?? []}
+      />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',

@@ -68,6 +68,7 @@ export const BillingDetail = () => {
         <ContactInfo
           address1={account.address_1}
           address2={account.address_2}
+          capabilities={account.capabilities}
           city={account.city}
           company={account.company}
           country={account.country}
@@ -80,6 +81,7 @@ export const BillingDetail = () => {
           zip={account.zip}
         />
         <PaymentInformation
+          capabilities={account.capabilities}
           error={paymentMethodsError}
           isAkamaiCustomer={account?.billing_source === 'akamai'}
           loading={paymentMethodsLoading}
