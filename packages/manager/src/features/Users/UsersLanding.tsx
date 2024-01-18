@@ -183,36 +183,53 @@ export const UsersLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
-      <Box display="flex" justifyContent="flex-end" sx={{ marginBottom: 1 }}>
-        <AddNewLink
-          disabledReason={
-            isRestrictedUser
-              ? 'You cannot create other users as a restricted user.'
-              : undefined
-          }
-          disabled={isRestrictedUser}
-          label="Add a User"
-          onClick={() => setIsCreateDrawerOpen(true)}
-        />
-      </Box>
-      <Typography
-        sx={(theme) => ({ margin: `${theme.spacing(2)} 0` })}
-        variant="h3"
-      >
-        Business partner settings
-      </Typography>
+      {showProxyUserTable && (
+        <Typography
+          sx={(theme) => ({
+            marginBottom: theme.spacing(2),
+            marginTop: theme.spacing(3),
+            [theme.breakpoints.down('md')]: {
+              marginLeft: theme.spacing(1),
+            },
+          })}
+          variant="h3"
+        >
+          Business partner settings
+        </Typography>
+      )}
       {showProxyUserTable && (
         <Table aria-label="List of Business Partners">
           <TableHead>{renderProxyTableHeader()}</TableHead>
           <TableBody>{renderTableBody(proxyUsers)}</TableBody>
         </Table>
       )}
-      <Typography
-        sx={(theme) => ({ margin: `${theme.spacing(2)} 0` })}
-        variant="h3"
-      >
-        User settings
-      </Typography>
+      <Box>
+        {showProxyUserTable && (
+          <Typography
+            sx={(theme) => ({
+              marginTop: theme.spacing(3),
+              [theme.breakpoints.down('md')]: {
+                marginLeft: theme.spacing(1),
+              },
+            })}
+            variant="h3"
+          >
+            User settings
+          </Typography>
+        )}
+        <Box display="flex" justifyContent="flex-end" sx={{ marginBottom: 1 }}>
+          <AddNewLink
+            disabledReason={
+              isRestrictedUser
+                ? 'You cannot create other users as a restricted user.'
+                : undefined
+            }
+            disabled={isRestrictedUser}
+            label="Add a User"
+            onClick={() => setIsCreateDrawerOpen(true)}
+          />
+        </Box>
+      </Box>
       <Table aria-label="List of Users">
         <TableHead>{renderTableHeader()}</TableHead>
         <TableBody>
