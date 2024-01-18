@@ -1,5 +1,4 @@
 import CloseIcon from '@mui/icons-material/Close';
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +15,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -49,6 +47,10 @@ export const PlacementGroupsLanding = React.memo(() => {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
+
+  if (query) {
+    filter['label'] = { '+contains': query };
+  }
 
   const params = {
     page: pagination.page,
@@ -140,26 +142,14 @@ export const PlacementGroupsLanding = React.memo(() => {
               Label{' '}
             </TableSortCell>
             <TableSortCell
-              active={orderBy === 'compliance'}
+              active={orderBy === 'compliant'}
               direction={order}
               handleClick={handleOrderChange}
-              label="compliance"
+              label="compliant"
             >
               Compliance
-              <TooltipIcon
-                icon={<HelpOutline />}
-                status="help"
-                text="TODO VM_Placement: add tooltip text"
-              />
             </TableSortCell>
-            <TableCell>
-              Linodes
-              <TooltipIcon
-                icon={<HelpOutline />}
-                status="help"
-                text="TODO VM_Placement: add tooltip text"
-              />
-            </TableCell>
+            <TableCell>Linodes</TableCell>
             <TableSortCell
               active={orderBy === 'region'}
               direction={order}

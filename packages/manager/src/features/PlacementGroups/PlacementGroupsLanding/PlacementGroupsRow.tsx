@@ -33,8 +33,9 @@ export const PlacementGroupsRow = React.memo(
     const regionLabel =
       regions?.find((region) => region.id === placementGroup.region)?.label ??
       '';
-    const numberOfLinodes = placementGroup.linode_ids.length?.toString() ?? '';
-    const listOfLinodes = linodes?.data.filter((linode) =>
+    const numberOfAssignedLinodesAsString =
+      placementGroup.linode_ids.length?.toString() ?? '';
+    const listOfAssignedLinodes = linodes?.data.filter((linode) =>
       placementGroup.linode_ids.includes(linode.id)
     );
     const compliance = placementGroup.compliant ? 'Compliant' : 'Non-Compliant';
@@ -58,16 +59,16 @@ export const PlacementGroupsRow = React.memo(
           <Link to={`/placement-groups/${id}`}>{label}</Link>
         </TableCell>
         <TableCell>{compliance}</TableCell>
-        <TableCell>
+        <TableCell data-testid={`placement-group-${id}-assigned-linodes`}>
           <TextTooltip
             tooltipText={
               <List>
-                {listOfLinodes?.map((linode, idx) => (
+                {listOfAssignedLinodes?.map((linode, idx) => (
                   <ListItem key={`pg-linode-${idx}`}>{linode.label}</ListItem>
                 ))}
               </List>
             }
-            displayText={numberOfLinodes}
+            displayText={numberOfAssignedLinodesAsString}
             minWidth={200}
           />
           &nbsp; of {MAX_NUMBER_OF_VMS_PER_PLACEMENT_GROUP}
