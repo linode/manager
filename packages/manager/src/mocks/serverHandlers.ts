@@ -1,4 +1,5 @@
 import {
+  CreatePlacementGroupPayload,
   NotificationType,
   ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
@@ -22,7 +23,9 @@ import {
   betaFactory,
   certificateFactory,
   configurationFactory,
+  configurationsEndpointHealthFactory,
   contactFactory,
+  createPlacementGroupPayloadFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -53,6 +56,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
@@ -74,6 +78,7 @@ import {
   objectStorageKeyFactory,
   paymentFactory,
   paymentMethodFactory,
+  placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   proDedicatedTypeFactory,
@@ -83,6 +88,7 @@ import {
   routeFactory,
   securityQuestionsFactory,
   serviceTargetFactory,
+  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -313,6 +319,30 @@ const aglb = [
     const configurations = configurationFactory.buildList(3);
     return res(ctx.json(makeResourcePage(configurations)));
   }),
+  rest.get('*/v4beta/aglb/:id/endpoints-health', (req, res, ctx) => {
+    const health = loadbalancerEndpointHealthFactory.build({
+      id: Number(req.params.id),
+    });
+    return res(ctx.json(health));
+  }),
+  rest.get(
+    '*/v4beta/aglb/:id/configurations/endpoints-health',
+    (req, res, ctx) => {
+      const health = configurationsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
+  rest.get(
+    '*/v4beta/aglb/:id/service-targets/endpoints-health',
+    (req, res, ctx) => {
+      const health = serviceTargetsEndpointHealthFactory.build({
+        id: Number(req.params.id),
+      });
+      return res(ctx.json(health));
+    }
+  ),
   rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),
@@ -1892,6 +1922,61 @@ export const handlers = [
       ])
     );
   }),
+  // Placement Groups
+  rest.get('*/placement/groups', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(placementGroupFactory.buildList(3))));
+  }),
+  rest.get('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json(placementGroupFactory.build()));
+  }),
+  rest.post('*/placement/groups', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        createPlacementGroupPayloadFactory.build(
+          req.body as CreatePlacementGroupPayload
+        )
+      )
+    );
+  }),
+  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    const response = placementGroupFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
+  rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post('*/placement/groups/:placementGroupId/assign', (req, res, ctx) => {
+    if (req.params.placementGroupId === 'undefined') {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.json({}));
+  }),
+  rest.post(
+    '*/placement/groups/:placementGroupId/unassign',
+    (req, res, ctx) => {
+      if (req.params.placementGroupId === 'undefined') {
+        return res(ctx.status(404));
+      }
+
+      return res(ctx.json({}));
+    }
+  ),
   ...entityTransfers,
   ...statusPage,
   ...databases,

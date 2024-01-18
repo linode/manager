@@ -85,16 +85,26 @@ describe('VPC landing page', () => {
   /*
    * - Confirms that VPCs can be updated from the VPC landing page.
    * - Confirms that VPC landing page updates to reflected update VPC data.
+   * - Confirms VPC deletion flow from landing page using mocked data and API responses.
+   * - Confirms landing page automatically updates to reflect deleted VPCs.
+   * - Confirms landing page reverts to its empty state when last VPC is deleted.
    */
-  it('can update VPCs from VPC landing page', () => {
-    const mockVPC = vpcFactory.build({
-      label: randomLabel(),
-      region: chooseRegion().id,
-      description: randomPhrase(),
-    });
+  it('can update and delete VPCs from VPC landing page', () => {
+    const mockVPCs = [
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+        description: randomPhrase(),
+      }),
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+        description: randomPhrase(),
+      }),
+    ];
 
     const mockUpdatedVPC = {
-      ...mockVPC,
+      ...mockVPCs[1],
       label: randomLabel(),
       description: randomPhrase(),
     };
@@ -103,14 +113,14 @@ describe('VPC landing page', () => {
       vpc: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
-    mockGetVPCs([mockVPC]).as('getVPCs');
-    mockUpdateVPC(mockVPC.id, mockUpdatedVPC).as('updateVPC');
+    mockGetVPCs([mockVPCs[1]]).as('getVPCs');
+    mockUpdateVPC(mockVPCs[1].id, mockUpdatedVPC).as('updateVPC');
 
     cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Find mocked VPC and click its "Edit" button.
-    cy.findByText(mockVPC.label)
+    cy.findByText(mockVPCs[1].label)
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -125,13 +135,13 @@ describe('VPC landing page', () => {
       .within(() => {
         cy.findByLabelText('Label')
           .should('be.visible')
-          .should('have.value', mockVPC.label)
+          .should('have.value', mockVPCs[1].label)
           .clear()
           .type(mockUpdatedVPC.label);
 
         cy.findByLabelText('Description')
           .should('be.visible')
-          .should('have.value', mockVPC.description)
+          .should('have.value', mockVPCs[1].description)
           .clear()
           .type(mockUpdatedVPC.description);
 
@@ -146,7 +156,7 @@ describe('VPC landing page', () => {
     // Confirm that updated VPC information is shown on the landing page and
     // in the "Edit" drawer.
     cy.wait(['@updateVPC', '@getVPCs']);
-    cy.findByText(mockVPC.label).should('not.exist');
+    cy.findByText(mockVPCs[1].label).should('not.exist');
     cy.findByText(mockUpdatedVPC.label)
       .should('be.visible')
       .closest('tr')
@@ -166,38 +176,15 @@ describe('VPC landing page', () => {
           .should('be.visible')
           .should('have.value', mockUpdatedVPC.description);
       });
-  });
 
-  /*
-   * - Confirms VPC deletion flow from landing page using mocked data and API responses.
-   * - Confirms landing page automatically updates to reflect deleted VPCs.
-   * - Confirms landing page reverts to its empty state when last VPC is deleted.
-   */
-  it('can delete VPCs from VPC landing page', () => {
-    const mockVPCs = [
-      vpcFactory.build({
-        label: randomLabel(),
-        region: chooseRegion().id,
-      }),
-      vpcFactory.build({
-        label: randomLabel(),
-        region: chooseRegion().id,
-      }),
-    ];
-
-    const mockVPCsAfterDeletion = [mockVPCs[1]];
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+    // Delete VPCs Flow
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockDeleteVPC(mockVPCs[0].id).as('deleteVPC');
 
     cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
-    // Delete first VPC.
+    // Delete the first VPC instance
     cy.findByText(mockVPCs[0].label)
       .should('be.visible')
       .closest('tr')
@@ -208,8 +195,6 @@ describe('VPC landing page', () => {
           .should('be.enabled')
           .click();
       });
-
-    mockGetVPCs(mockVPCsAfterDeletion).as('getVPCs');
     // Complete type-to-confirm dialog.
     ui.dialog
       .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
@@ -226,13 +211,14 @@ describe('VPC landing page', () => {
           .should('be.enabled')
           .click();
       });
-
-    // Confirm that toast appears and VPC is removed from landing page.
+    // Confirm that toast notification appears and VPC is removed from landing page.
     cy.wait(['@deleteVPC', '@getVPCs']);
     ui.toast.assertMessage('VPC deleted successfully.');
     cy.findByText(mockVPCs[0].label).should('not.exist');
 
-    // Delete second VPC.
+    // Delete the second VPC instance
+    mockDeleteVPC(mockVPCs[1].id).as('deleteVPC');
+    mockGetVPCs([]).as('getVPCs');
     cy.findByText(mockVPCs[1].label)
       .should('be.visible')
       .closest('tr')
@@ -243,9 +229,6 @@ describe('VPC landing page', () => {
           .should('be.enabled')
           .click();
       });
-
-    mockDeleteVPC(mockVPCs[1].id).as('deleteVPC');
-    mockGetVPCs([]).as('getVPCs');
     // Complete type-to-confirm dialog.
     ui.dialog
       .findByTitle(`Delete VPC ${mockVPCs[1].label}`)
@@ -262,12 +245,12 @@ describe('VPC landing page', () => {
           .should('be.enabled')
           .click();
       });
-
-    // Confirm that toast appears, VPC is removed from landing page, and landing
-    // page reverts to its empty state.
+    // Confirm that toast notification appears and VPC is removed from landing page.
     cy.wait(['@deleteVPC', '@getVPCs']);
     ui.toast.assertMessage('VPC deleted successfully.');
     cy.findByText(mockVPCs[1].label).should('not.exist');
+
+    // Confirm that landing page reverts to its empty state.
     cy.findByText('Create a private and isolated network').should('be.visible');
   });
 

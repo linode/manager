@@ -1,10 +1,14 @@
-import { styled } from '@mui/material/styles';
 import { Theme, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import {
+  NodeBalancerConnectionsTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -85,58 +89,69 @@ export const TablesPanel = () => {
 
     const metrics = getMetrics(data);
 
-    let timeData = [];
     // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
     if (flags.recharts) {
-      timeData = data.reduce((acc: any, point: any) => {
-        acc.push({
-          Connections: point[1],
-          timestamp: point[0],
-        });
-        return acc;
-      }, []);
+      const timeData = data.reduce(
+        (acc: NodeBalancerConnectionsTimeData[], point: Point) => {
+          acc.push({
+            Connections: point[1],
+            timestamp: point[0],
+          });
+          return acc;
+        },
+        []
+      );
+
+      return (
+        <Box marginLeft={-3}>
+          <AreaChart
+            areas={[
+              {
+                color: theme.graphs.purple,
+                dataKey: 'Connections',
+              },
+            ]}
+            legendRows={[
+              {
+                data: metrics,
+                format: formatNumber,
+                legendColor: 'purple',
+                legendTitle: 'Connections',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'hh a',
+              tickGap: 60,
+            }}
+            ariaLabel="Connections Graph"
+            data={timeData}
+            height={412}
+            showLegend
+            timezone={timezone}
+            unit={' CXN/s'}
+          />
+        </Box>
+      );
     }
 
     return (
-      <React.Fragment>
-        {flags.recharts ? (
-          <Box marginLeft={-3}>
-            <AreaChart
-              areas={[
-                {
-                  color: theme.graphs.purple,
-                  dataKey: 'Connections',
-                },
-              ]}
-              xAxis={{
-                tickFormat: 'hh a',
-                tickGap: 60,
-              }}
-              ariaLabel="Connections Graph"
-              data={timeData}
-              height={300}
-              timezone={timezone}
-              unit={' CXN/s'}
-            />
-          </Box>
-        ) : (
-          <StyledChart>
-            <LineGraph
-              data={[
-                {
-                  backgroundColor: theme.graphs.purple,
-                  borderColor: 'transparent',
-                  data,
-                  label: 'Connections',
-                },
-              ]}
-              accessibleDataTable={{ unit: 'CXN/s' }}
-              ariaLabel="Connections Graph"
-              showToday={true}
-              timezone={timezone}
-            />
-          </StyledChart>
-        )}
+      <>
+        <StyledChart>
+          <LineGraph
+            data={[
+              {
+                backgroundColor: theme.graphs.purple,
+                borderColor: 'transparent',
+                data,
+                label: 'Connections',
+              },
+            ]}
+            accessibleDataTable={{ unit: 'CXN/s' }}
+            ariaLabel="Connections Graph"
+            showToday={true}
+            timezone={timezone}
+          />
+        </StyledChart>
         <StyledBottomLegend>
           <MetricsDisplay
             rows={[
@@ -149,7 +164,7 @@ export const TablesPanel = () => {
             ]}
           />
         </StyledBottomLegend>
-      </React.Fragment>
+      </>
     );
   };
 
@@ -200,55 +215,72 @@ export const TablesPanel = () => {
       return <Loading />;
     }
 
+    if (flags.recharts) {
+      return (
+        <Box marginLeft={-3}>
+          <AreaChart
+            areas={[
+              {
+                color: theme.graphs.darkGreen,
+                dataKey: 'Traffic In',
+              },
+              {
+                color: theme.graphs.lightGreen,
+                dataKey: 'Traffic Out',
+              },
+            ]}
+            legendRows={[
+              {
+                data: getMetrics(trafficIn),
+                format: formatBitsPerSecond,
+                legendColor: 'darkGreen',
+                legendTitle: 'Traffic In',
+              },
+              {
+                data: getMetrics(trafficOut),
+                format: formatBitsPerSecond,
+                legendColor: 'lightGreen',
+                legendTitle: 'Traffic Out',
+              },
+            ]}
+            xAxis={{
+              tickFormat: 'hh a',
+              tickGap: 60,
+            }}
+            ariaLabel="Network Traffic Graph"
+            data={timeData}
+            height={412}
+            showLegend
+            timezone={timezone}
+            unit={' bits/s'}
+          />
+        </Box>
+      );
+    }
+
     return (
       <React.Fragment>
         <StyledChart>
-          {flags.recharts ? (
-            <Box marginLeft={-4}>
-              <AreaChart
-                areas={[
-                  {
-                    color: theme.graphs.network.inbound,
-                    dataKey: 'Traffic In',
-                  },
-                  {
-                    color: theme.graphs.network.outbound,
-                    dataKey: 'Traffic Out',
-                  },
-                ]}
-                xAxis={{
-                  tickFormat: 'hh a',
-                  tickGap: 60,
-                }}
-                ariaLabel="Traffic Graph"
-                data={timeData}
-                height={300}
-                timezone={timezone}
-                unit={' bits/s'}
-              />
-            </Box>
-          ) : (
-            <LineGraph
-              data={[
-                {
-                  backgroundColor: theme.graphs.network.inbound,
-                  borderColor: 'transparent',
-                  data: trafficIn,
-                  label: 'Traffic In',
-                },
-                {
-                  backgroundColor: theme.graphs.network.outbound,
-                  borderColor: 'transparent',
-                  data: trafficOut,
-                  label: 'Traffic Out',
-                },
-              ]}
-              accessibleDataTable={{ unit: 'bits/s' }}
-              ariaLabel="Traffic Graph"
-              showToday={true}
-              timezone={timezone}
-            />
-          )}
+          <LineGraph
+            data={[
+              {
+                backgroundColor: theme.graphs.darkGreen,
+                borderColor: 'transparent',
+                data: trafficIn,
+                label: 'Traffic In',
+              },
+              {
+                backgroundColor: theme.graphs.lightGreen,
+                borderColor: 'transparent',
+                data: trafficOut,
+                label: 'Traffic Out',
+              },
+            ]}
+            accessibleDataTable={{ unit: 'bits/s' }}
+            ariaLabel="Traffic Graph"
+            showToday={true}
+            timezone={timezone}
+          />
         </StyledChart>
         <StyledBottomLegend>
           <MetricsDisplay
@@ -316,7 +348,7 @@ const StyledChart = styled('div', {
   width: '100%',
 }));
 
-const StyledBottomLegend = styled('div', {
+export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
 })(({ theme }) => ({
   backgroundColor: theme.bg.offWhite,

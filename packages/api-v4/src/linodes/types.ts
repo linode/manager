@@ -1,6 +1,7 @@
 import type { Region } from '../regions';
-import { IPAddress, IPRange } from '../networking/types';
-import { SSHKey } from '../profile/types';
+import type { IPAddress, IPRange } from '../networking/types';
+import type { SSHKey } from '../profile/types';
+import type { PlacementGroup } from '../placement-groups/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -23,6 +24,9 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
+  placement_groups:
+    | [Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>] // While the API returns an array of PlacementGroup objects for future proofing, we only support one PlacementGroup per Linode at this time, hence the tuple.
+    | [];
   type: string | null;
   status: LinodeStatus;
   updated: string;
