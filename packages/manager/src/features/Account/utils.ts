@@ -36,6 +36,7 @@ export const isParentTokenValid = ({
 
 /**
  * Set token information in the local storage.
+ * This allows us to store a token for later use, such as switching between parent and proxy accounts.
  */
 export const setTokenInLocalStorage = ({
   prefix,
