@@ -65,9 +65,9 @@ export const updateCurrentTokenBasedOnUserType = ({
 }) => {
   const storageKeyPrefix = `authentication/${userType}_token`;
 
-  const userToken = getStorage(`${storageKeyPrefix}/token`, false);
-  const userScope = getStorage(`${storageKeyPrefix}/scopes`, false);
-  const userExpiry = getStorage(`${storageKeyPrefix}/expire`, false);
+  const userToken = getStorage(`${storageKeyPrefix}/token`);
+  const userScope = getStorage(`${storageKeyPrefix}/scopes`);
+  const userExpiry = getStorage(`${storageKeyPrefix}/expire`);
 
   if (userToken) {
     setStorage('authentication/token', userToken);
