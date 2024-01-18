@@ -70,7 +70,7 @@ export const UserMenu = React.memo(() => {
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
   const isParentUser = user_type === 'parent';
   const isProxyUser = user_type === 'proxy';
-  const canSwitchBetweenParentOrProxyAccount = isParentUser || isProxyUser;
+  const canSwitchBetweenParentOrProxyAccount = hasParentChildAccountAccess && (isParentUser || isProxyUser);
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
   const companyName = (user_type && account?.company) ?? '';
