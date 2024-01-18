@@ -117,6 +117,7 @@ export const UsersLanding = () => {
           </TableSortCell>
         </Hidden>
         <TableCell>Account Access</TableCell>
+        <TableCell />
       </TableRow>
     );
   };
