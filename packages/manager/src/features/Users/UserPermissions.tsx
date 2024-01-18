@@ -248,7 +248,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   getUserType = async () => {
     const { currentUsername } = this.props;
 
-    // Current user is the active user on the account.
+    // Current user is the user whose permissions are currently being viewed.
     if (currentUsername) {
       try {
         const user = await getUser(currentUsername);
