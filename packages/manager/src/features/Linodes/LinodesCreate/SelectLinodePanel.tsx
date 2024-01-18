@@ -10,6 +10,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Paper } from 'src/components/Paper';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 export interface ExtendedLinode extends Linode {
@@ -28,7 +29,7 @@ interface Props {
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: ExtendedLinode[];
-  notice?: Notice;
+  notices?: Notice[];
   selectedLinodeID?: number;
 }
 
@@ -39,7 +40,7 @@ const SelectLinodePanel = (props: Props) => {
     handleSelection,
     header,
     linodes,
-    notice,
+    notices,
     selectedLinodeID,
   } = props;
 
@@ -71,10 +72,27 @@ const SelectLinodePanel = (props: Props) => {
         return (
           <>
             <StyledPaper data-qa-select-linode-panel>
-              {error && <Notice text={error} variant="error" />}
-              {notice && !disabled && (
-                <Notice text={notice.text} variant={notice.level} />
-              )}
+              <Stack gap={0.5} mb={2}>
+                {error && (
+                  <Notice
+                    spacingBottom={0}
+                    spacingTop={0}
+                    text={error}
+                    variant="error"
+                  />
+                )}
+                {notices &&
+                  !disabled &&
+                  notices.map((notice, i) => (
+                    <Notice
+                      key={i}
+                      spacingBottom={0}
+                      spacingTop={0}
+                      text={notice.text}
+                      variant={notice.level}
+                    />
+                  ))}
+              </Stack>
               <Typography data-qa-select-linode-header variant="h2">
                 {!!header ? header : 'Select Linode'}
               </Typography>
