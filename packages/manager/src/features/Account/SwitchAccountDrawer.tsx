@@ -1,5 +1,6 @@
 import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Drawer } from 'src/components/Drawer';
@@ -35,6 +36,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const currentTokenWithBearer = useCurrentToken() ?? '';
+  const history = useHistory();
 
   const handleClose = React.useCallback(() => {
     onClose();
@@ -71,6 +73,12 @@ export const SwitchAccountDrawer = (props: Props) => {
     },
     []
   );
+
+  // Navigate to the current location, triggering a re-render without a full page reload.
+  const refreshPage = React.useCallback(() => {
+    // TODO: Parent/Child: We need to test this against the real API.
+    history.push(history.location.pathname);
+  }, [history]);
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -126,6 +134,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         });
 
         handleClose(event);
+        refreshPage();
       } catch (error) {
         setIsProxyTokenError(error as APIError[]);
 
@@ -140,7 +149,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         // ================================================================
       }
     },
-    [getProxyToken]
+    [getProxyToken, refreshPage]
   );
 
   const handleSwitchToParentAccount = React.useCallback(() => {
