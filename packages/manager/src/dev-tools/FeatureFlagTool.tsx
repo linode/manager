@@ -19,7 +19,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'metadata', label: 'Metadata' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'recharts', label: 'Recharts' },
