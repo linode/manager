@@ -622,7 +622,7 @@ describe('User permission management', () => {
           .should('be.enabled');
         assertBillingAccessSelected('Read-Write');
 
-        // Confirm that 'Read Only' and 'None' Billing Access is disabled
+        // Confirm that 'Read Only' and 'None' Billing Access are disabled
         cy.get(`[data-qa-select-card-heading="Read Only"]`)
           .closest('[data-qa-selection-card]')
           .should('be.visible')
