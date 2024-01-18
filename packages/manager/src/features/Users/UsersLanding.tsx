@@ -24,6 +24,7 @@ import { useProfile } from 'src/queries/profile';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
+import { Typography } from 'src/components/Typography';
 
 export const UsersLanding = () => {
   const flags = useFlags();
@@ -168,12 +169,24 @@ export const UsersLanding = () => {
           onClick={() => setIsCreateDrawerOpen(true)}
         />
       </Box>
+      <Typography
+        sx={(theme) => ({ margin: `${theme.spacing(2)} 0` })}
+        variant="h3"
+      >
+        Business partner settings
+      </Typography>
       {showBusinessPartnerAccessTable && (
         <Table aria-label="List of Business Partners">
           <TableHead>{renderTableHeader()}</TableHead>
           <TableBody>{renderTableBody(businessPartnerUsers)}</TableBody>
         </Table>
       )}
+      <Typography
+        sx={(theme) => ({ margin: `${theme.spacing(2)} 0` })}
+        variant="h3"
+      >
+        User settings
+      </Typography>
       <Table aria-label="List of Users">
         <TableHead>
           <TableRow>

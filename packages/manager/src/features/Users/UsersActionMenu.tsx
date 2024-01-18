@@ -8,11 +8,12 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import { useProfile } from 'src/queries/profile';
 
 interface Props {
+  isProxyUser: boolean;
   onDelete: (username: string) => void;
   username: string;
 }
 
-export const UsersActionMenu = ({ onDelete, username }: Props) => {
+export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -20,10 +21,16 @@ export const UsersActionMenu = ({ onDelete, username }: Props) => {
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
 
-  // TODO: Parent/Child -  if active user is a child and the user is a proxy user, do not display User Profile or Delete.
-  // In place of those, display 'Manage access'.
+  const proxyUserActions: Action[] = [
+    {
+      onClick: () => {
+        history.push(`/account/users/${username}/permissions`);
+      },
+      title: 'Manage Access',
+    },
+  ];
 
-  const actions: Action[] = [
+  const nonProxyUserActions: Action[] = [
     {
       onClick: () => {
         history.push(`/account/users/${username}`);
@@ -48,6 +55,8 @@ export const UsersActionMenu = ({ onDelete, username }: Props) => {
           : undefined,
     },
   ];
+
+  const actions = isProxyUser ? proxyUserActions : nonProxyUserActions;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment

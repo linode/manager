@@ -1264,7 +1264,7 @@ export const handlers = [
   ),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     // Parent/Child: switch the `user_type` depending on what account view you need to mock.
-    return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+    return res(ctx.json(accountUserFactory.build({ user_type: 'child' })));
   }),
   rest.put(
     `*/account/users/${parentAccountNonAdminUser.username}`,

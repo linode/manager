@@ -30,6 +30,9 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const { data: profile } = useProfile();
   const { data: activeUser } = useAccountUser(profile?.username ?? '');
 
+  const isProxyUser = Boolean(
+    flags.parentChildAccountAccess && user.user_type === 'proxy'
+  );
   const showChildAccountAccessCol =
     flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
 
@@ -60,7 +63,11 @@ export const UserRow = ({ onDelete, user }: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <UsersActionMenu onDelete={onDelete} username={user.username} />
+        <UsersActionMenu
+          isProxyUser={isProxyUser}
+          onDelete={onDelete}
+          username={user.username}
+        />
       </TableCell>
     </TableRow>
   );
