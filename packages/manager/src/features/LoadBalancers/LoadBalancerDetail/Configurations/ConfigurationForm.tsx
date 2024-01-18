@@ -38,6 +38,7 @@ import type {
   CertificateConfig,
   Configuration,
   ConfigurationPayload,
+  Protocol,
 } from '@linode/api-v4';
 
 interface EditProps {
@@ -154,6 +155,33 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     reset();
   };
 
+  const handleProtocolChange = (protocol: Protocol) => {
+    // If the user has changed the port manually, just update the protocol and NOT the port.
+    if (hasChangedPort) {
+      return formik.setFieldValue('protocol', protocol);
+    }
+
+    let newPort = formik.values.port;
+
+    if (protocol === 'http') {
+      newPort = 80;
+    }
+
+    if (protocol === 'https') {
+      newPort = 443;
+    }
+
+    // Update the protocol and port at the same time if the port is unchanged.
+    formik.setFormikState((prev) => ({
+      ...prev,
+      values: {
+        ...prev.values,
+        port: newPort,
+        protocol,
+      },
+    }));
+  };
+
   const generalErrors = error?.reduce((acc, { field, reason }) => {
     if (
       !field ||
@@ -187,28 +215,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         <Stack direction="row" spacing={2}>
           <Autocomplete
             onChange={(e, { value }) => {
-              if (hasChangedPort) {
-                return formik.setFieldValue('protocol', value);
-              }
-
-              let newPort = formik.values.port;
-
-              if (value === 'http') {
-                newPort = 80;
-              }
-
-              if (value === 'https') {
-                newPort = 443;
-              }
-
-              formik.setFormikState((prev) => ({
-                ...prev,
-                values: {
-                  ...prev.values,
-                  port: newPort,
-                  protocol: value,
-                },
-              }));
+              handleProtocolChange(value);
             }}
             textFieldProps={{
               labelTooltipText: CONFIGURATION_COPY.Protocol,
