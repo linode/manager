@@ -139,7 +139,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               handleClick={handleOrderChange}
               label="label"
             >
-              Label{' '}
+              Label
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'compliant'}

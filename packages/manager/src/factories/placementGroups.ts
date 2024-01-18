@@ -8,7 +8,7 @@ import type {
 } from '@linode/api-v4';
 
 export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
-  affinity_type: 'anti-affinity',
+  affinity_type: Factory.each(() => pickRandom(['affinity', 'anti-affinity'])),
   compliant: Factory.each(() => pickRandom([true, false])),
   id: Factory.each((id) => id),
   label: Factory.each((id) => `pg-${id}`),

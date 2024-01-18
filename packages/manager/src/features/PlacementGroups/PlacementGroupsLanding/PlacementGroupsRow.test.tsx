@@ -59,11 +59,12 @@ describe('PlacementGroupsLanding', () => {
       ],
     });
 
-    const { getByTestId, getByText, getByRole } = renderWithTheme(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <table>
         <tbody>
           <PlacementGroupsRow
             placementGroup={placementGroupFactory.build({
+              affinity_type: 'anti-affinity',
               compliant: true,
               label: 'group 1',
               linode_ids: [1],
@@ -76,7 +77,9 @@ describe('PlacementGroupsLanding', () => {
       </table>
     );
 
-    expect(getByText('group 1')).toBeInTheDocument();
+    expect(getByTestId('link-to-placement-group-1')).toHaveTextContent(
+      'group 1 (Anti-affinity)'
+    );
     expect(getByText('Compliant')).toBeInTheDocument();
     expect(getByTestId('placement-group-1-assigned-linodes')).toHaveTextContent(
       '1'

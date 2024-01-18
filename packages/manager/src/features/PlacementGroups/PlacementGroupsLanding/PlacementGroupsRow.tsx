@@ -27,7 +27,7 @@ export const PlacementGroupsRow = React.memo(
     handleRenamePlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
-    const { id, label } = placementGroup;
+    const { affinity_type, id, label } = placementGroup;
     const { data: regions } = useRegionsQuery();
     const { data: linodes } = useLinodesQuery();
     const regionLabel =
@@ -38,6 +38,8 @@ export const PlacementGroupsRow = React.memo(
     const listOfAssignedLinodes = linodes?.data.filter((linode) =>
       placementGroup.linode_ids.includes(linode.id)
     );
+    const affinityType =
+      affinity_type === 'affinity' ? 'Affinity' : 'Anti-affinity';
     const compliance = placementGroup.compliant ? 'Compliant' : 'Non-Compliant';
     const actions: Action[] = [
       {
@@ -56,7 +58,12 @@ export const PlacementGroupsRow = React.memo(
         data-testid={`placement-group-${id}`}
       >
         <TableCell>
-          <Link to={`/placement-groups/${id}`}>{label}</Link>
+          <Link
+            data-testid={`link-to-placement-group-${id}`}
+            to={`/placement-groups/${id}`}
+          >
+            {label} ({affinityType})
+          </Link>
         </TableCell>
         <TableCell>{compliance}</TableCell>
         <TableCell data-testid={`placement-group-${id}-assigned-linodes`}>
