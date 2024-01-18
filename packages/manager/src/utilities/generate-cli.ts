@@ -21,6 +21,7 @@ const convertObjectToCLIArg = (data: {} | null) => {
 };
 
 const parseObject = (key: string, value: {}) => {
+  // M3-7638: The Linode CLI does not currently accept interfaces.ipv4 as an object so we need to make them separate arguments
   const parseIpv4Object = (_key: string, _value: ConfigInterfaceIPv4) => {
     const ipv4ValueStrings = [];
     if (_value.nat_1_1) {
@@ -54,6 +55,7 @@ const parseArray = (key: string, value: any[]) => {
     results.push(
       value
         .map((item) => {
+          // M3-7638: vpc_id is not a valid argument. The subnet_id will be used in the backend to implicitly determine the VPC ID
           delete item.vpc_id;
           return parseObject('interfaces', item);
         })
