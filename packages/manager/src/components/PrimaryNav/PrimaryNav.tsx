@@ -298,6 +298,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowMarketplacePrefetch,
       flags.databaseBeta,
       flags.aglb,
+      flags.vmPlacement,
       showVPCs,
     ]
   );
