@@ -66,14 +66,13 @@ export const UserMenu = React.memo(() => {
   const isRestrictedUser = profile?.restricted ?? false;
   const hasAccountAccess = !isRestrictedUser || hasGrant('account_access');
   const hasReadWriteAccountAccess = hasGrant('account_access') === 'read_write';
-  const user_type = user?.user_type;
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
-  const isParentUser = user_type === 'parent';
-  const isProxyUser = user_type === 'proxy';
+  const isParentUser = user?.user_type === 'parent';
+  const isProxyUser = user?.user_type === 'proxy';
   const canSwitchBetweenParentOrProxyAccount = isParentUser || isProxyUser;
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
-  const companyName = (user_type && account?.company) ?? '';
+  const companyName = (user?.user_type && account?.company) ?? '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
