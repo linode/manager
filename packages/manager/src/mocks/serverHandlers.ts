@@ -1283,6 +1283,9 @@ export const handlers = [
         ctx.json(
           grantsFactory.build({
             global: {
+              // The API returns 'read_write' for child account users' account access,
+              // On the frontend, we display 'read_only' and restrict child users from billing actions.
+              account_access: 'read_write',
               cancel_account: false,
             },
           })
@@ -1297,6 +1300,7 @@ export const handlers = [
         ctx.json(
           grantsFactory.build({
             global: {
+              account_access: 'read_write', // This is immutable for proxy users
               add_domains: false,
               add_firewalls: false,
               add_images: false,
