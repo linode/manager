@@ -21,7 +21,7 @@ export type RemovableItem = {
   // Trying to type them as 'unknown' led to type errors.
 } & { [key: string]: any };
 
-export interface RemovableSelectionsListProps<> {
+export interface RemovableSelectionsListProps {
   /**
    * The custom label component
    */
