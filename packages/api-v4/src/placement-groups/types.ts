@@ -1,6 +1,6 @@
 import type { Region } from '../regions/types';
 
-export type AffinityType = 'affinity' | 'anti-affinity';
+export type AffinityType = 'affinity' | 'anti_affinity';
 
 export interface PlacementGroup {
   id: number;
@@ -9,6 +9,7 @@ export interface PlacementGroup {
   affinity_type: AffinityType;
   compliant: boolean;
   linode_ids: number[];
+  limits: number;
 }
 
 export type CreatePlacementGroupPayload = Pick<
