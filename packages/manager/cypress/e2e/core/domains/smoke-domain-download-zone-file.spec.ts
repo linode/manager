@@ -40,12 +40,12 @@ describe('Download a Zone file', () => {
       .should('be.enabled')
       .click();
 
-    mockGetDomains(mockDomain).as('getDomains');
+    mockGetDomains([mockDomain]).as('getDomains');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
 
     mockGetDomain(mockDomain.id, mockDomain).as('getDomain');
-    mockGetDomainRecords(mockDomainRecords).as('getDomainRecords');
+    mockGetDomainRecords([mockDomainRecords]).as('getDomainRecords');
     fbtVisible(mockDomain.domain);
     fbtClick(mockDomain.domain);
     cy.wait('@getDomain');
