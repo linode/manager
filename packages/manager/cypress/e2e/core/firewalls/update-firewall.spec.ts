@@ -4,13 +4,14 @@ import type {
   FirewallRuleType,
   CreateLinodeRequest,
   CreateFirewallPayload,
+  FirewallPolicyType,
 } from '@linode/api-v4';
 import { createLinode, createFirewall } from '@linode/api-v4';
 import {
   createLinodeRequestFactory,
   firewallFactory,
   firewallRuleFactory,
-  linodeFactory,
+  firewallRulesFactory,
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import { containsClick } from 'support/helpers';
@@ -35,16 +36,22 @@ const portPresetMap = {
 const inboundRule = firewallRuleFactory.build({
   label: randomLabel(),
   description: randomString(),
-  action: 'Accept',
+  action: 'ACCEPT',
   ports: randomItem(Object.keys(portPresetMap)),
 });
 
 const outboundRule = firewallRuleFactory.build({
   label: randomLabel(),
   description: randomString(),
-  action: 'Drop',
+  action: 'DROP',
   ports: randomItem(Object.keys(portPresetMap)),
 });
+
+const getRuleActionLabel = (ruleAction: FirewallPolicyType): string => {
+  return `${ruleAction.charAt(0).toUpperCase()}${ruleAction
+    .slice(1)
+    .toLowerCase()}`;
+};
 
 /**
  * Adds an inbound / outbound firewall rule.
@@ -81,10 +88,7 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
       containsClick('Label').type('{selectall}{backspace}' + label);
       containsClick('Description').type(description);
 
-      const action = rule.action
-        ? rule.action.charAt(0).toUpperCase() +
-          rule.action.slice(1).toLowerCase()
-        : 'Accept';
+      const action = rule.action ? getRuleActionLabel(rule.action) : 'Accept';
       containsClick(action).click();
 
       ui.button
@@ -185,8 +189,7 @@ describe('update firewall', () => {
 
     const firewallRequest = firewallFactory.build({
       label: randomLabel(),
-      region: region.id,
-      rules: firewallRuleFactory.build({
+      rules: firewallRulesFactory.build({
         inbound: [],
         outbound: [],
       }),
@@ -218,10 +221,12 @@ describe('update firewall', () => {
       cy.get('[data-rbd-droppable-context-id="0"]')
         .should('be.visible')
         .within(() => {
-          cy.findByText(inboundRule.label).should('be.visible');
+          cy.findByText(inboundRule.label!).should('be.visible');
           cy.findByText(inboundRule.protocol).should('be.visible');
-          cy.findByText(inboundRule.ports).should('be.visible');
-          cy.findByText(inboundRule.action).should('be.visible');
+          cy.findByText(inboundRule.ports!).should('be.visible');
+          cy.findByText(getRuleActionLabel(inboundRule.action)).should(
+            'be.visible'
+          );
         });
 
       // Add outbound rules
@@ -231,10 +236,12 @@ describe('update firewall', () => {
       cy.get('[data-rbd-droppable-context-id="1"]')
         .should('be.visible')
         .within(() => {
-          cy.findByText(outboundRule.label).should('be.visible');
+          cy.findByText(outboundRule.label!).should('be.visible');
           cy.findByText(outboundRule.protocol).should('be.visible');
-          cy.findByText(outboundRule.ports).should('be.visible');
-          cy.findByText(outboundRule.action).should('be.visible');
+          cy.findByText(outboundRule.ports!).should('be.visible');
+          cy.findByText(getRuleActionLabel(outboundRule.action)).should(
+            'be.visible'
+          );
         });
 
       // Save configuration
@@ -258,10 +265,10 @@ describe('update firewall', () => {
       cy.findByText(firewall.label).click();
 
       // Remove inbound rules
-      removeFirewallRules(inboundRule.label);
+      removeFirewallRules(inboundRule.label!);
 
       // Remove outbound rules
-      removeFirewallRules(outboundRule.label);
+      removeFirewallRules(outboundRule.label!);
 
       // Save configuration
       interceptUpdateFirewallRules(firewall.id).as('updateFirewallRules');
@@ -302,7 +309,7 @@ describe('update firewall', () => {
   it("updates a firewall's status", () => {
     const region = chooseRegion();
 
-    const linodeRequest = linodeFactory.build({
+    const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
@@ -310,7 +317,6 @@ describe('update firewall', () => {
 
     const firewallRequest = firewallFactory.build({
       label: randomLabel(),
-      region: region.id,
       rules: {
         inbound: [],
         outbound: [],
