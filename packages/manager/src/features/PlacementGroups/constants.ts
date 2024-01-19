@@ -1,0 +1,1 @@
+export const MAX_NUMBER_OF_PLACEMENT_GROUPS = 5;

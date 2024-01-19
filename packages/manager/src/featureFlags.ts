@@ -143,6 +143,7 @@ export type ProductInformationBannerLocation =
   | 'Managed'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Groups'
   | 'StackScripts'
   | 'VPC'
   | 'Volumes';
