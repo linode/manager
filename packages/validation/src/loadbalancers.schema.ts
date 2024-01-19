@@ -34,16 +34,12 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
-const CertificateEntrySchema = object({
+export const CertificateEntrySchema = object({
   id: number()
     .typeError('Certificate ID must be a number.')
     .required('Certificate ID is required.')
     .min(0, 'Certificate ID is required.'),
   hostname: string().required('A Host Header is required.'),
-});
-
-export const CertificateConfigSchema = object({
-  certificates: array(CertificateEntrySchema),
 });
 
 export const EndpointSchema = object({

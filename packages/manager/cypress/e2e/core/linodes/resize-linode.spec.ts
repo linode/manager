@@ -17,9 +17,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size: warm migration', () => {
-    mockAppendFeatureFlags({
-      unifiedMigrations: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     createLinode().then((linode) => {
@@ -44,9 +41,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size: cold migration', () => {
-    mockAppendFeatureFlags({
-      unifiedMigrations: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     createLinode().then((linode) => {
       cy.intercept(
@@ -71,9 +65,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size when offline: cold migration', () => {
-    mockAppendFeatureFlags({
-      unifiedMigrations: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     createLinode().then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
