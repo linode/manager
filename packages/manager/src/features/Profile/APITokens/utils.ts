@@ -6,8 +6,7 @@ export type Permission = [string, number];
 
 export const basePerms = [
   'account',
-  // TODO: Parent/Child - add this scope once API code is in prod.
-  // 'child_account',
+  'child_account',
   'databases',
   'domains',
   'events',
@@ -26,8 +25,7 @@ export const basePerms = [
 
 export const basePermNameMap: Record<string, string> = {
   account: 'Account',
-  // TODO: Parent/Child - add this scope once API code is in prod.
-  // child_account: 'Child Account Access',
+  child_account: 'Child Account Access',
   databases: 'Databases',
   domains: 'Domains',
   events: 'Events',
@@ -197,21 +195,23 @@ export const isWayInTheFuture = (time: string) => {
 };
 
 /**
- * Used to remove a permission
- * @param basePermNameMap an object consisting of API perm keys and their
- * corresponding names in Cloud
- * @param perm an object consisting of a perm name and a boolean indicating
- * whether it should be included in basePermNameMap or not
- * @returns a copy of basePermNameMap (either unedited or with the specified perm removed)
+ * Filters permissions from the base permission name map.
+ * @param basePermNameMap An object consisting of API perm keys and their corresponding names in Cloud.
+ * @param perm A collection of objects, each comprising a name and a boolean value indicating whether
+ * the permission should be included in the basePermNameMap.
+ * @returns A copy of basePermNameMap, either unedited or with the specified permissions removed.
  */
-export const getPermsNameMap = (
+export const filterPermsNameMap = (
   basePermNameMap: Record<string, string>,
-  perm: { name: string; shouldBeIncluded: boolean }
-) => {
-  const basePermNameMapCopy = { ...basePermNameMap };
-  if (basePermNameMapCopy[perm.name] && !perm.shouldBeIncluded) {
-    delete basePermNameMapCopy[perm.name];
+  perm: { name: string; shouldBeIncluded: boolean }[]
+): Record<string, string> => {
+  const filteredPermNameMap = { ...basePermNameMap };
+
+  for (const { name, shouldBeIncluded } of perm) {
+    if (!shouldBeIncluded && filteredPermNameMap[name]) {
+      delete filteredPermNameMap[name];
+    }
   }
 
-  return basePermNameMapCopy;
+  return filteredPermNameMap;
 };
