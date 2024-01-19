@@ -126,7 +126,41 @@ describe('UserRow', () => {
         flags: { parentChildAccountAccess: true },
       })
     );
-    expect(queryByText('Child Account Access')).not.toBeInTheDocument();
+    expect(queryByText('Enabled')).not.toBeInTheDocument();
+  });
+
+  it('renders only a username, email, and account access status for a Proxy user', async () => {
+    const mockLogin = {
+      login_datetime: '2022-02-09T16:19:26',
+    };
+    const proxyUser = accountUserFactory.build({
+      email: 'proxy@proxy.com',
+      last_login: mockLogin,
+      restricted: true,
+      user_type: 'proxy',
+      username: 'proxyUsername',
+    });
+
+    server.use(
+      // Mock the active child account.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'child' })));
+      })
+    );
+
+    const { findByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+
+    // Renders Username, Email, and Account Access fields for a proxy user.
+    expect(await findByText('proxyUsername')).toBeInTheDocument();
+    expect(await findByText('proxy@proxy.com')).toBeInTheDocument();
+    expect(await findByText('Limited')).toBeInTheDocument();
+
+    // Does not render the Last Login for a proxy user.
+    expect(queryByText('2022-02-09T16:19:26')).not.toBeInTheDocument();
   });
 
   it('renders "Never" if last_login is null', () => {
