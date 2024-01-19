@@ -21,6 +21,10 @@ import {
   WithAccountSettingsProps,
   withAccountSettings,
 } from 'src/containers/accountSettings.container';
+import {
+  WithEventsPollingActionProps,
+  withEventsPollingActions,
+} from 'src/containers/events.container';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -62,11 +66,11 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -85,7 +89,6 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import { WithPollingIntervalProps, withPollingInterval } from 'src/containers/events.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -138,7 +141,7 @@ type CombinedProps = WithSnackbarProps &
   WithQueryClientProps &
   WithMarketplaceAppsProps &
   WithAccountSettingsProps &
-  WithPollingIntervalProps;
+  WithEventsPollingActionProps;
 
 const defaultState: State = {
   assignPublicIPv4Address: false,
@@ -947,7 +950,7 @@ export default recompose<CombinedProps, {}>(
   withQueryClient,
   withAccountSettings,
   withMarketplaceApps,
-  withPollingInterval
+  withEventsPollingActions
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {

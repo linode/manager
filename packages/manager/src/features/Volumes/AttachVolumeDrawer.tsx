@@ -11,11 +11,11 @@ import { FormControl } from 'src/components/FormControl';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { usePollingInterval } from 'src/queries/events/events';
 
 interface Props {
   onClose: () => void;
@@ -37,7 +37,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const { data: grants } = useGrants();
 

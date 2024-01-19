@@ -19,6 +19,7 @@ import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -35,7 +36,6 @@ import {
   StyledGrid,
   StyledNotice,
 } from './RebuildFromImage.styles';
-import { usePollingInterval } from 'src/queries/events/events';
 
 interface Props {
   disabled: boolean;
@@ -79,7 +79,7 @@ export const RebuildFromImage = (props: Props) => {
     isLoading: isLoadingPreferences,
   } = usePreferences();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();

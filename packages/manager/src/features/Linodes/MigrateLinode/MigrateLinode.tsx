@@ -18,9 +18,10 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
+  useEventsPollingActions,
   useInProgressEvents,
-  usePollingInterval,
 } from 'src/queries/events/events';
 import { useImageQuery } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
@@ -31,7 +32,6 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -54,7 +54,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,

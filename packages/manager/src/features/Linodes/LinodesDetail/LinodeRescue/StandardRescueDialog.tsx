@@ -11,7 +11,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { usePrevious } from 'src/hooks/usePrevious';
-import { usePollingInterval } from 'src/queries/events/events';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -142,7 +142,7 @@ export const StandardRescueDialog = (props: Props) => {
     deviceMap
   );
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const { enqueueSnackbar } = useSnackbar();
 

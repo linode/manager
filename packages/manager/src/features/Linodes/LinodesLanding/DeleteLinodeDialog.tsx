@@ -6,7 +6,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { usePollingInterval } from 'src/queries/events/events';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useDeleteLinodeMutation,
@@ -29,7 +29,7 @@ export const DeleteLinodeDialog = (props: Props) => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const enableVPCActions = isFeatureEnabled(
     'VPCs',

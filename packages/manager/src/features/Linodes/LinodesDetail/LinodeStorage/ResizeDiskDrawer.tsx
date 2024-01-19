@@ -14,7 +14,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { usePollingInterval } from 'src/queries/events/events';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
@@ -45,7 +45,7 @@ export const ResizeDiskDrawer = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const { mutateAsync: resizeDisk, reset } = useLinodeDiskResizeMutation(
     linodeId,

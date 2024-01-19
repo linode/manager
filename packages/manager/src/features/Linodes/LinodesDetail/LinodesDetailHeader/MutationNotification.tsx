@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { MBpsIntraDC } from 'src/constants';
-import { usePollingInterval } from 'src/queries/events/events';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -24,7 +24,7 @@ export const MutationNotification = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId);
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const { data: currentTypeInfo } = useTypeQuery(
     linode?.type ?? '',

@@ -16,6 +16,7 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
@@ -24,7 +25,6 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
-import { usePollingInterval } from 'src/queries/events/events';
 
 type FileSystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 
@@ -51,7 +51,7 @@ export const CreateDiskDrawer = (props: Props) => {
   const { linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
 

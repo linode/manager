@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { usePollingInterval } from 'src/queries/events/events';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -25,7 +25,7 @@ export const CaptureSnapshot = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = usePollingInterval();
+  const { resetEventsPolling } = useEventsPollingActions();
 
   const {
     error: snapshotError,

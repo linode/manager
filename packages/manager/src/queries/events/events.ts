@@ -183,18 +183,17 @@ export const usePollingInterval = () => {
 };
 
 /**
- * Manages the events polling interval.
+ * This hook manages the events polling interval.
  *
  * This hook should be used in application components that need to change
- * the events polling interval.
+ * the events polling interval. It performs actions, but does not return any state
+ * in hopes to prevent extra rendering.
  */
 export const useEventsPollingActions = () => {
   const queryClient = useQueryClient();
 
-  const resetEventsPolling = queryClient.setQueryData<number>(
-    pollingIntervalQueryKey,
-    1
-  );
+  const resetEventsPolling = () =>
+    queryClient.setQueryData<number>(pollingIntervalQueryKey, 1);
 
   return {
     /**

@@ -1,14 +1,16 @@
 import React from 'react';
 
-import { usePollingInterval } from 'src/queries/events/events';
+import { useEventsPollingActions } from 'src/queries/events/events';
 
-export type WithPollingIntervalProps = ReturnType<typeof usePollingInterval>;
+export type WithEventsPollingActionProps = ReturnType<
+  typeof useEventsPollingActions
+>;
 
-export const withPollingInterval = <Props>(
-  Component: React.ComponentType<Props & WithPollingIntervalProps>
+export const withEventsPollingActions = <Props>(
+  Component: React.ComponentType<Props & WithEventsPollingActionProps>
 ) => {
   return (props: Props) => {
-    const polling = usePollingInterval();
+    const polling = useEventsPollingActions();
 
     return React.createElement(Component, {
       ...props,
