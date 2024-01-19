@@ -1,7 +1,7 @@
 import { containsClick, containsVisible, getVisible } from '../helpers';
 import { waitForAppLoad } from './common';
 
-export const loadAppNoLogin = (path) => waitForAppLoad(path, false);
+export const loadAppNoLogin = (path: string) => waitForAppLoad(path, false);
 
 /* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {

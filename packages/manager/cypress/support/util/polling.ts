@@ -61,7 +61,7 @@ const defaultBackoffMethod: BackoffMethod = new FibonacciBackoffMethod(
  */
 export const poll = async <T>(
   callback: () => Promise<T>,
-  evaluator: (T) => boolean,
+  evaluator: (data: T) => boolean,
   backoffOptions: PollBackoffConfiguration = undefined,
   label: string | undefined = undefined
 ): Promise<T> => {
