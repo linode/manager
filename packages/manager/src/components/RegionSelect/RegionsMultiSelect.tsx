@@ -1,18 +1,14 @@
-import Close from '@mui/icons-material/Close';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { IconButton } from 'src/components/IconButton';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import {
   SelectedIcon,
-  SelectedOptionsList,
-  SelectedOptionsListItem,
   StyledAutocompleteContainer,
   StyledFlagContainer,
   StyledListItem,
@@ -43,6 +39,7 @@ export const sortByRegion = (a: RegionSelectOption, b: RegionSelectOption) => {
 export const RegionsMultiSelect = React.memo(
   (props: RegionsMultiSelectProps) => {
     const {
+      RenderSelectedRegionsList,
       currentCapability,
       disabled,
       errorText,
@@ -199,27 +196,11 @@ export const RegionsMultiSelect = React.memo(
             value={selectedRegions}
           />
         </StyledAutocompleteContainer>
-        {selectedRegions.length > 0 && (
-          <SelectedOptionsList>
-            {[...selectedRegions].sort(sortByRegion).map((option, index) => (
-              <SelectedOptionsListItem alignItems="center" key={index}>
-                <Box sx={{ display: 'flex' }}>
-                  <StyledFlagContainer>
-                    <Flag country={option.data.country} />
-                  </StyledFlagContainer>
-                  {option.label}
-                </Box>
-                <IconButton
-                  aria-label={`remove ${option.value}`}
-                  disableRipple
-                  onClick={() => removeOption(option)}
-                  size="medium"
-                >
-                  <Close />
-                </IconButton>
-              </SelectedOptionsListItem>
-            ))}
-          </SelectedOptionsList>
+        {selectedRegions.length > 0 && RenderSelectedRegionsList && (
+          <RenderSelectedRegionsList
+            onRemove={removeOption}
+            selectedRegions={[...selectedRegions].sort(sortByRegion)}
+          />
         )}
       </>
     );

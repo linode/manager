@@ -21,7 +21,11 @@ export type RemovableItem = {
   // Trying to type them as 'unknown' led to type errors.
 } & { [key: string]: any };
 
-export interface RemovableSelectionsListProps {
+export interface RemovableSelectionsListProps<> {
+  /**
+   * The custom label component
+   */
+  LabelComponent?: React.ComponentType<{ selection: RemovableItem }>;
   /**
    * The descriptive text to display above the list
    */
@@ -62,6 +66,7 @@ export const RemovableSelectionsList = (
   props: RemovableSelectionsListProps
 ) => {
   const {
+    LabelComponent,
     headerText,
     isRemovable = true,
     maxHeight = 427,
@@ -99,9 +104,13 @@ export const RemovableSelectionsList = (
               {selectionData.map((selection) => (
                 <SelectedOptionsListItem alignItems="center" key={selection.id}>
                   <StyledLabel>
-                    {preferredDataLabel
-                      ? selection[preferredDataLabel]
-                      : selection.label}
+                    {LabelComponent ? (
+                      <LabelComponent selection={selection} />
+                    ) : preferredDataLabel ? (
+                      selection[preferredDataLabel]
+                    ) : (
+                      selection.label
+                    )}
                   </StyledLabel>
                   {isRemovable && (
                     <IconButton

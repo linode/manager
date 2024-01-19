@@ -1,3 +1,5 @@
+import React from 'react';
+
 import type {
   AccountAvailability,
   Capabilities,
@@ -44,6 +46,10 @@ export interface RegionsMultiSelectProps
     EnhancedAutocompleteProps<RegionSelectOption, false>,
     'label' | 'onChange' | 'options'
   > {
+  RenderSelectedRegionsList?: React.ComponentType<{
+    onRemove: (option: RegionSelectOption) => void;
+    selectedRegions: RegionSelectOption[];
+  }>;
   currentCapability: Capabilities | undefined;
   handleSelection: (ids: string[]) => void;
   helperText?: string;
