@@ -50,12 +50,15 @@ const SelectLinodePanel = (props: Props) => {
     string | undefined
   >(undefined);
 
+  const [preselectedLinodeID] = React.useState(selectedLinodeID);
+
   const searchText = React.useMemo(
     () =>
       userSearchText !== undefined
         ? userSearchText
-        : linodes.find((linode) => linode.id === selectedLinodeID)?.label || '',
-    [linodes, selectedLinodeID, userSearchText]
+        : linodes.find((linode) => linode.id === preselectedLinodeID)?.label ||
+          '',
+    [linodes, preselectedLinodeID, userSearchText]
   );
 
   const filteredLinodes = React.useMemo(
