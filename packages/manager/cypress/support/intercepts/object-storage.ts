@@ -9,8 +9,11 @@ import { makeResponse } from 'support/util/response';
 
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 
-import type { ObjectStorageBucket, ObjectStorageKey } from '@linode/api-v4';
-import { Cluster } from 'cluster';
+import type {
+  ObjectStorageBucket,
+  ObjectStorageKey,
+  ObjectStorageCluster,
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET requests to fetch buckets.
@@ -379,7 +382,9 @@ export const mockCancelObjectStorage = (): Cypress.Chainable => {
  *
  * @returns Cypress chainable.
  */
-export const mockGetClusters = (clusters: Cluster[]): Cypress.Chainable => {
+export const mockGetClusters = (
+  clusters: ObjectStorageCluster[]
+): Cypress.Chainable => {
   return cy.intercept(
     'GET',
     apiMatcher('object-storage/clusters*'),
