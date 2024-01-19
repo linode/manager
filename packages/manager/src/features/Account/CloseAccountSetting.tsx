@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
-import { Notice } from 'src/components/Notice/Notice';
 import { useFlags } from 'src/hooks/useFlags';
 import { useChildAccounts } from 'src/queries/account';
 import { useAccountUser } from 'src/queries/accountUsers';
@@ -14,16 +13,18 @@ import CloseAccountDialog from './CloseAccountDialog';
 const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
-  // TODO: Parent/Child - replace this with an account query once user_type is returned in capabilities
+  // TODO: Parent/Child - replace this with just a profile query once user_type is returned in profile
   const { data: profile } = useProfile();
   const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: childAccounts } = useChildAccounts({});
   const flags = useFlags();
 
   const hasChildAccounts = Boolean(
-    childAccounts && childAccounts?.data?.length > 0
+    user?.user_type === 'parent' &&
+      childAccounts &&
+      childAccounts?.data?.length > 0
   );
-  const closeAccountDisabled =
+  const isCloseAccountDisabled =
     flags.parentChildAccountAccess &&
     (hasChildAccounts ||
       user?.user_type === 'child' ||
@@ -34,15 +35,15 @@ const CloseAccountSetting = () => {
       <Accordion defaultExpanded={true} heading="Close Account">
         <Grid container direction="column">
           <Grid>
-            {hasChildAccounts && (
-              <Notice spacingBottom={20} variant="info">
-                Remove indirect customers before closing the account.
-              </Notice>
-            )}
             <Button
+              tooltipText={
+                hasChildAccounts
+                  ? 'Remove indirect customers before closing the account.'
+                  : 'Contact your business partner to close your account.'
+              }
               buttonType="outlined"
               data-testid="close-account-button"
-              disabled={closeAccountDisabled}
+              disabled={isCloseAccountDisabled}
               onClick={() => setDialogOpen(true)}
             >
               Close Account
