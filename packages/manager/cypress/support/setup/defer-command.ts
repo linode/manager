@@ -49,10 +49,12 @@ const isAxiosError = (e: any): e is AxiosError => {
  */
 const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
   if (isAxiosError(e)) {
-    const errorData = e.response?.data?.errors;
+    //const errorData = e.response?.data?.errors;
+    const responseData = e.response?.data as any;
     return (
-      Array.isArray(errorData) &&
-      errorData.every((item: any) => {
+      responseData.errors &&
+      Array.isArray(responseData.errors) &&
+      responseData.errors.every((item: any) => {
         return 'reason' in item;
       })
     );
@@ -85,7 +87,7 @@ const enhanceError = (e: any) => {
     });
 
     const requestInfo =
-      !!e.request?.responseURL && !!e.config.method
+      !!e.request?.responseURL && !!e.config?.method
         ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
         : '';
 
@@ -100,7 +102,7 @@ const enhanceError = (e: any) => {
       : `Request failed`;
 
     const requestInfo =
-      !!e.request?.responseURL && !!e.config.method
+      !!e.request?.responseURL && !!e.config?.method
         ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
         : '';
 
