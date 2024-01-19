@@ -166,22 +166,32 @@ describe('View API Token Drawer', () => {
     expect(vpcScope).not.toBeInTheDocument();
   });
 
-  describe('Parent/Child: User Roles w/ Feature Flag Enabled', () => {
-    const setupAndRender = (userType: UserType | null) => {
+  describe('Parent/Child: User Roles', () => {
+    const setupAndRender = (
+      userType: UserType | null,
+      enableFeatureFlag = true
+    ) => {
       queryMocks.useAccountUser.mockReturnValue({
         data: accountUserFactory.build({ user_type: userType }),
       });
 
       return renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-        flags: { parentChildAccountAccess: true },
+        flags: { parentChildAccountAccess: enableFeatureFlag },
       });
     };
 
-    const testChildScopeNotDisplayed = (userType: UserType | null) => {
-      const { queryByText } = setupAndRender(userType);
+    const testChildScopeNotDisplayed = (
+      userType: UserType | null,
+      enableFeatureFlag = true
+    ) => {
+      const { queryByText } = setupAndRender(userType, enableFeatureFlag);
       const childScope = queryByText('Child Account Access');
       expect(childScope).not.toBeInTheDocument();
     };
+
+    it('should not display the Child Account Access when feature flag is disabled', () => {
+      testChildScopeNotDisplayed('parent', false);
+    });
 
     it('should not display the Child Account Access scope for a user account without a parent role', () => {
       testChildScopeNotDisplayed(null);
