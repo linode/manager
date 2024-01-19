@@ -1,9 +1,10 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -44,6 +45,27 @@ const SelectLinodePanel = (props: Props) => {
     selectedLinodeID,
   } = props;
 
+  const theme = useTheme();
+  const [userSearchText, setUserSearchText] = React.useState<
+    string | undefined
+  >(undefined);
+
+  const searchText = React.useMemo(
+    () =>
+      userSearchText !== undefined
+        ? userSearchText
+        : linodes.find((linode) => linode.id === selectedLinodeID)?.label || '',
+    [linodes, selectedLinodeID, userSearchText]
+  );
+
+  const filteredLinodes = React.useMemo(
+    () =>
+      linodes.filter((linode) =>
+        linode.label.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [linodes, searchText]
+  );
+
   const renderCard = (linode: ExtendedLinode) => {
     return (
       <SelectionCard
@@ -60,7 +82,7 @@ const SelectLinodePanel = (props: Props) => {
   };
 
   return (
-    <Paginate data={linodes}>
+    <Paginate data={filteredLinodes}>
       {({
         count,
         data: linodesData,
@@ -93,9 +115,27 @@ const SelectLinodePanel = (props: Props) => {
                     />
                   ))}
               </Stack>
-              <Typography data-qa-select-linode-header variant="h2">
+              <Typography
+                data-qa-select-linode-header
+                marginBottom={theme.spacing(2)}
+                variant="h2"
+              >
                 {!!header ? header : 'Select Linode'}
               </Typography>
+              <DebouncedSearchTextField
+                sx={{
+                  marginBottom: theme.spacing(1),
+                  width: '330px',
+                }}
+                clearable
+                debounceTime={0}
+                expand={true}
+                hideLabel
+                label=""
+                onSearch={setUserSearchText}
+                placeholder="Search"
+                value={searchText}
+              />
               <StyledBox>
                 <Grid container spacing={2}>
                   {linodesData.map((linode) => {
