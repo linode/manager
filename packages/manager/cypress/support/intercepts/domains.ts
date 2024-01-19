@@ -73,7 +73,7 @@ export const mockImportDomain = (domain: Domain): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockGetDomain = (
-  domainId: string,
+  domainId: number,
   domain: Domain
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher(`domains/${domainId}`), domain);
@@ -88,7 +88,7 @@ export const mockGetDomain = (
  * @returns Cypress chainable.
  */
 export const mockGetDomainZoneFile = (
-  domainId: string,
+  domainId: number,
   zoneFile: ZoneFile
 ): Cypress.Chainable<null> => {
   return cy.intercept(
