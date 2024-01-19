@@ -1,4 +1,4 @@
-import { UserType } from '../account';
+import type { UserType } from '../account';
 
 export interface Referrals {
   code: string;
