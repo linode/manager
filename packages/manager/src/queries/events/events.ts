@@ -11,11 +11,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import {
-  DISABLE_EVENT_THROTTLE,
-  INTERVAL,
-  ISO_DATETIME_NO_TZ_FORMAT,
-} from 'src/constants';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
 import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import {
@@ -98,8 +94,6 @@ export const useInProgressEvents = () => {
  * *Warning* This hook should only be mounted once!
  */
 export const useEventsPoller = () => {
-  const { incrementPollingInterval, pollingInterval } = usePollingInterval();
-
   const { handleGlobalToast } = useToastNotifications();
   const { handleEvent } = useEventHandlers();
 
@@ -134,8 +128,6 @@ export const useEventsPoller = () => {
   useQuery({
     enabled: hasFetchedInitialEvents,
     onSuccess(events) {
-      incrementPollingInterval();
-
       if (events.length > 0) {
         updateEventsQueries(events, queryClient);
 
@@ -147,39 +139,14 @@ export const useEventsPoller = () => {
     },
     queryFn: () => getEvents({}, filter).then((data) => data.data),
     queryKey: ['events', 'poller', hasFetchedInitialEvents],
-    refetchInterval: pollingInterval,
+    // The /v4/account/events endpoint has a rate-limit of 400 requets per minute.
+    // If we request events every 5 seconds, we will make 12 calls in 1 minute.
+    // If we request events every 2.5 seconds, we will make 24 calls in 1 minute.
+    // If we request events every 1 second, we will make 60 calls in 1 minute.
+    refetchInterval: inProgressEvents.length > 0 ? 2_500 : 16_000,
   });
 
   return null;
-};
-
-const pollingIntervalQueryKey = ['events', 'interval'];
-
-/**
- * Manages and exposes the events polling interval.
- */
-export const usePollingInterval = () => {
-  const queryClient = useQueryClient();
-  const { data: intervalMultiplier = 1 } = useQuery({
-    enabled: false,
-    initialData: 1,
-    queryKey: pollingIntervalQueryKey,
-  });
-  return {
-    /**
-     * Increases the polling interval by 1 second up to 16 seconds
-     */
-    incrementPollingInterval: () =>
-      queryClient.setQueryData<number>(
-        pollingIntervalQueryKey,
-        Math.min(intervalMultiplier * 2, 16)
-      ),
-    pollingInterval: DISABLE_EVENT_THROTTLE
-      ? 500
-      : intervalMultiplier * INTERVAL,
-    resetEventsPolling: () =>
-      queryClient.setQueryData<number>(pollingIntervalQueryKey, 1),
-  };
 };
 
 /**
@@ -193,7 +160,7 @@ export const useEventsPollingActions = () => {
   const queryClient = useQueryClient();
 
   const resetEventsPolling = () =>
-    queryClient.setQueryData<number>(pollingIntervalQueryKey, 1);
+    queryClient.invalidateQueries(['events', 'poller']);
 
   return {
     /**
