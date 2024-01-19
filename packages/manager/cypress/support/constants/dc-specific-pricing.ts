@@ -106,7 +106,7 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
 export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
   (type) => {
     return {
-      size: type.id.split('-')[2],
+      size: parseInt(type.id.split('-')[2], 10),
       tab: 'Shared CPU',
       type: 'Linode',
     };

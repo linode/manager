@@ -25,7 +25,7 @@ describe('Import a Zone', () => {
       group: 'test-group',
     });
 
-    mockGetDomains(mockDomain).as('getDomains');
+    mockGetDomains([mockDomain]).as('getDomains');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
 
@@ -86,7 +86,7 @@ describe('Import a Zone', () => {
 
         // Fill out and import the zone.
         mockImportDomain(mockDomain).as('importDomain');
-        mockGetDomains(mockDomain).as('getDomains');
+        mockGetDomains([mockDomain]).as('getDomains');
         fbltClick('Domain').clear().type(zone.domain);
         fbltClick('Remote Nameserver').clear().type(zone.remote_nameserver);
         ui.buttonGroup
