@@ -25,6 +25,8 @@ import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 
+import type { EntityTransferStatus } from '@linode/api-v4';
+
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
 
@@ -32,9 +34,9 @@ const serviceTransferLandingUrl = '/account/service-transfers';
 const serviceTransferCreateUrl = '/account/service-transfers/create';
 
 // Possible status responses for service transfers.
-const serviceTransferStatuses = [
+const serviceTransferStatuses: EntityTransferStatus[] = [
   'pending',
-  'complete',
+  'completed',
   'failed',
   'accepted',
   'stale',
@@ -151,7 +153,7 @@ describe('Account service transfers', () => {
       },
     });
 
-    const sentTransfers = serviceTransferStatuses.map((status: string) => {
+    const sentTransfers = serviceTransferStatuses.map((status) => {
       return entityTransferFactory.build({
         is_sender: true,
         entities: {
