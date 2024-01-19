@@ -116,7 +116,7 @@ const StyledSearchIcon = styled(Search)(({ theme }) => ({
 }));
 
 const StyledClearIcon = styled(Clear)(({ theme }) => ({
-  '&&, &&:hover': {
+  '&&': {
     color: theme.color.grey1,
   },
   cursor: 'pointer',
