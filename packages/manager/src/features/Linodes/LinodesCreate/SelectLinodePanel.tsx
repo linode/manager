@@ -13,6 +13,7 @@ import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -45,12 +46,16 @@ const SelectLinodePanel = (props: Props) => {
     selectedLinodeID,
   } = props;
 
+  const flags = useFlags();
+
   const theme = useTheme();
   const [userSearchText, setUserSearchText] = React.useState<
     string | undefined
   >(undefined);
 
-  const [preselectedLinodeID] = React.useState(selectedLinodeID);
+  const [preselectedLinodeID] = React.useState(
+    flags.linodeCloneUIChanges && selectedLinodeID
+  );
 
   const searchText = React.useMemo(
     () =>
@@ -119,26 +124,30 @@ const SelectLinodePanel = (props: Props) => {
                   ))}
               </Stack>
               <Typography
+                marginBottom={
+                  flags.linodeCloneUIChanges ? theme.spacing(2) : undefined
+                }
                 data-qa-select-linode-header
-                marginBottom={theme.spacing(2)}
                 variant="h2"
               >
                 {!!header ? header : 'Select Linode'}
               </Typography>
-              <DebouncedSearchTextField
-                sx={{
-                  marginBottom: theme.spacing(1),
-                  width: '330px',
-                }}
-                clearable
-                debounceTime={0}
-                expand={true}
-                hideLabel
-                label=""
-                onSearch={setUserSearchText}
-                placeholder="Search"
-                value={searchText}
-              />
+              {flags.linodeCloneUIChanges && (
+                <DebouncedSearchTextField
+                  sx={{
+                    marginBottom: theme.spacing(1),
+                    width: '330px',
+                  }}
+                  clearable
+                  debounceTime={0}
+                  expand={true}
+                  hideLabel
+                  label=""
+                  onSearch={setUserSearchText}
+                  placeholder="Search"
+                  value={searchText}
+                />
+              )}
               <StyledBox>
                 <Grid container spacing={2}>
                   {linodesData.map((linode) => {
