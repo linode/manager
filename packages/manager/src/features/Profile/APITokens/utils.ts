@@ -23,7 +23,7 @@ export const basePerms = [
   'vpc',
 ] as const;
 
-export const basePermNameMap: Record<string, string> = {
+export const basePermNameMap = {
   account: 'Account',
   child_account: 'Child Account Access',
   databases: 'Databases',
@@ -40,7 +40,7 @@ export const basePermNameMap: Record<string, string> = {
   stackscripts: 'StackScripts',
   volumes: 'Volumes',
   vpc: 'VPCs',
-};
+} as const;
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
@@ -195,17 +195,24 @@ export const isWayInTheFuture = (time: string) => {
 };
 
 /**
- * Filters permissions from the base permission name map.
- * @param basePermNameMap An object consisting of API perm keys and their corresponding names in Cloud.
- * @param perm A collection of objects, each comprising a name and a boolean value indicating whether
- * the permission should be included in the basePermNameMap.
- * @returns A copy of basePermNameMap, either unedited or with the specified permissions removed.
+ * Filters permissions from a base map, removing those specified in the perm parameter.
+ *
+ * @param basePermNameMap - Map of API permission keys to their corresponding Cloud names.
+ * @param perm - Array of objects specifying permissions for inclusion or exclusion:
+ *  - name: Key of the permission to filter.
+ *  - shouldBeIncluded: Boolean indicating whether to include or exclude the permission.
+ *
+ * @returns A new map containing only the allowed permissions from basePermNameMap.
  */
-export const filterPermsNameMap = (
-  basePermNameMap: Record<string, string>,
-  perm: { name: string; shouldBeIncluded: boolean }[]
-): Record<string, string> => {
-  const filteredPermNameMap = { ...basePermNameMap };
+export const filterPermsNameMap = <
+  // We're constraining T to an array of objects with the following shape:
+  T extends { name: keyof typeof basePermNameMap; shouldBeIncluded: boolean }[]
+>(
+  permMap: typeof basePermNameMap,
+  perm: T
+): // Return type excludes the keys specified by T in the perm parameter dynamically.
+Omit<typeof basePermNameMap, T[number]['name']> => {
+  const filteredPermNameMap = { ...permMap };
 
   for (const { name, shouldBeIncluded } of perm) {
     if (!shouldBeIncluded && filteredPermNameMap[name]) {
