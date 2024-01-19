@@ -7,7 +7,6 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { Typography } from 'src/components/Typography';
-import { CAPABILITY_CHILD } from 'src/features/Account/constants';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
@@ -23,24 +22,18 @@ import {
 } from '../../BillingDetail';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
-import type { AccountCapability } from '@linode/api-v4';
+import type { UserType } from '@linode/api-v4';
 
 interface Props {
-  capabilities: AccountCapability[];
   error?: APIError[] | null;
   isAkamaiCustomer: boolean;
   loading: boolean;
   paymentMethods: PaymentMethod[] | undefined;
+  userType: UserType | null;
 }
 
 const PaymentInformation = (props: Props) => {
-  const {
-    capabilities,
-    error,
-    isAkamaiCustomer,
-    loading,
-    paymentMethods,
-  } = props;
+  const { error, isAkamaiCustomer, loading, paymentMethods, userType } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
@@ -59,8 +52,7 @@ const PaymentInformation = (props: Props) => {
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
-  const isChildUser =
-    flags.parentChildAccountAccess && capabilities?.includes(CAPABILITY_CHILD);
+  const isChildUser = flags.parentChildAccountAccess && userType === 'child';
 
   const isRestrictedUser =
     isChildUser || grants?.global.account_access === 'read_only';

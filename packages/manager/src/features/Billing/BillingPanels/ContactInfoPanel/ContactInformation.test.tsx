@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { accountFactory } from 'src/factories';
-import { CAPABILITY_CHILD } from 'src/features/Account/constants';
+import { profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ContactInformation from './ContactInformation';
@@ -25,15 +24,15 @@ const props = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useAccount: vi.fn().mockReturnValue({}),
   useGrants: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/account', async () => {
-  const actual = await vi.importActual<any>('src/queries/account');
+vi.mock('src/queries/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile');
   return {
     ...actual,
-    useAccount: queryMocks.useAccount,
+    useProfle: queryMocks.useProfile,
   };
 });
 
@@ -48,16 +47,16 @@ vi.mock('src/queries/account', async () => {
 
 describe('Edit Contact Information', () => {
   it('should be disabled for all child users', () => {
-    queryMocks.useAccount.mockReturnValue({
-      data: accountFactory.build({
-        capabilities: [CAPABILITY_CHILD],
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({
+        user_type: 'child',
       }),
     });
 
     const { getByTestId } = renderWithTheme(
       <ContactInformation
         {...props}
-        capabilities={queryMocks.useAccount().data.capabilities ?? []}
+        userType={queryMocks.useProfile().data.user_type ?? null}
       />,
       {
         flags: { parentChildAccountAccess: true },

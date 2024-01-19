@@ -3,10 +3,9 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
+import { profileFactory } from 'src/factories';
 import { paymentMethodFactory } from 'src/factories';
-import { accountFactory, profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
-import { CAPABILITY_CHILD } from 'src/features/Account/constants';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';
@@ -22,18 +21,9 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 });
 
 const queryMocks = vi.hoisted(() => ({
-  useAccount: vi.fn().mockReturnValue({}),
   useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
 }));
-
-vi.mock('src/queries/account', async () => {
-  const actual = await vi.importActual<any>('src/queries/account');
-  return {
-    ...actual,
-    useAccount: queryMocks.useAccount,
-  };
-});
 
 vi.mock('src/queries/profile', async () => {
   const actual = await vi.importActual<any>('src/queries/profile');
@@ -60,10 +50,10 @@ const paymentMethods = [
 ];
 
 const props = {
-  capabilities: [],
   isAkamaiCustomer: false,
   loading: false,
   paymentMethods,
+  userType: null,
 };
 
 describe('Payment Info Panel', () => {
@@ -147,18 +137,9 @@ describe('Payment Info Panel', () => {
         }),
       });
 
-      queryMocks.useAccount.mockReturnValue({
-        data: accountFactory.build({
-          capabilities: [CAPABILITY_CHILD],
-        }),
-      });
-
       const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-          <PaymentInformation
-            {...props}
-            capabilities={queryMocks.useAccount().data.capabilities ?? []}
-          />
+          <PaymentInformation {...props} userType={'child'} />
         </PayPalScriptProvider>,
         {
           flags: { parentChildAccountAccess: true },
@@ -182,10 +163,7 @@ describe('Payment Info Panel', () => {
 
       const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-          <PaymentInformation
-            {...props}
-            capabilities={queryMocks.useAccount().data.capabilities ?? []}
-          />
+          <PaymentInformation {...props} />
         </PayPalScriptProvider>
       );
 
