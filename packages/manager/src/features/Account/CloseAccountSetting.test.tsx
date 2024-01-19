@@ -1,13 +1,15 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CloseAccountSetting from './CloseAccountSetting';
 
-// Mock the useChildAccounts hook to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useChildAccounts and useAccountUser hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
+  useAccountUser: vi.fn().mockReturnValue({}),
   useChildAccounts: vi.fn().mockReturnValue({}),
 }));
 
@@ -53,6 +55,32 @@ describe('Close Account Settings', () => {
     );
     const button = getByTestId('close-account-button');
     expect(notice).toBeInTheDocument();
+    expect(button).not.toHaveAttribute('disabled');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should render a disabled Close Account button for a child account user', () => {
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'child' }),
+    });
+
+    const { getByTestId } = renderWithTheme(<CloseAccountSetting />, {
+      flags: { parentChildAccountAccess: true },
+    });
+    const button = getByTestId('close-account-button');
+    expect(button).not.toHaveAttribute('disabled');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should render a disabled Close Account button for a proxy account user', () => {
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'proxy' }),
+    });
+
+    const { getByTestId } = renderWithTheme(<CloseAccountSetting />, {
+      flags: { parentChildAccountAccess: true },
+    });
+    const button = getByTestId('close-account-button');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });

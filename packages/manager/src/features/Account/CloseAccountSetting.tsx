@@ -6,10 +6,10 @@ import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { useFlags } from 'src/hooks/useFlags';
 import { useChildAccounts } from 'src/queries/account';
+import { useAccountUser } from 'src/queries/accountUsers';
+import { useProfile } from 'src/queries/profile';
 
 import CloseAccountDialog from './CloseAccountDialog';
-import { useProfile } from 'src/queries/profile';
-import { useAccountUser } from 'src/queries/accountUsers';
 
 const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -20,21 +20,23 @@ const CloseAccountSetting = () => {
   const { data: childAccounts } = useChildAccounts({});
   const flags = useFlags();
 
-  const isChildAccount = user?.user_type === 'child';
+  const hasChildAccounts = Boolean(
+    childAccounts && childAccounts?.data?.length > 0
+  );
   const closeAccountDisabled =
     flags.parentChildAccountAccess &&
-    (Boolean(childAccounts?.data?.length) || isChildAccount);
+    (hasChildAccounts ||
+      user?.user_type === 'child' ||
+      user?.user_type === 'proxy');
 
   return (
     <>
       <Accordion defaultExpanded={true} heading="Close Account">
         <Grid container direction="column">
           <Grid>
-            {closeAccountDisabled && (
+            {hasChildAccounts && (
               <Notice spacingBottom={20} variant="info">
-                {isChildAccount
-                  ? 'Contact your business partner to close your account.'
-                  : 'Remove indirect customers before closing the account.'}
+                Remove indirect customers before closing the account.
               </Notice>
             )}
             <Button
