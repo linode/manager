@@ -11,6 +11,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
+import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
@@ -30,6 +31,10 @@ export const BillingDetail = () => {
     error: accountError,
     isLoading: accountLoading,
   } = useAccount();
+
+  const { data: profile } = useProfile();
+
+  const userType = profile?.user_type ?? null;
 
   if (accountLoading) {
     return <CircleProgress />;
@@ -77,6 +82,7 @@ export const BillingDetail = () => {
           phone={account.phone}
           state={account.state}
           taxId={account.tax_id}
+          userType={userType}
           zip={account.zip}
         />
         <PaymentInformation
@@ -84,6 +90,7 @@ export const BillingDetail = () => {
           isAkamaiCustomer={account?.billing_source === 'akamai'}
           loading={paymentMethodsLoading}
           paymentMethods={paymentMethods}
+          userType={userType}
         />
         <BillingActivityPanel accountActiveSince={account?.active_since} />
       </Grid>

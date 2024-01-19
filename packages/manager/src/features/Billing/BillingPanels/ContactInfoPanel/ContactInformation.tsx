@@ -8,8 +8,7 @@ import { Typography } from 'src/components/Typography';
 import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 
 import {
   BillingActionButton,
@@ -17,6 +16,8 @@ import {
   BillingPaper,
 } from '../../BillingDetail';
 import BillingContactDrawer from './EditBillingContactDrawer';
+
+import type { UserType } from '@linode/api-v4';
 
 interface Props {
   address1: string;
@@ -30,6 +31,7 @@ interface Props {
   phone: string;
   state: string;
   taxId: string;
+  userType: UserType | null;
   zip: string;
 }
 
@@ -59,6 +61,7 @@ const ContactInformation = (props: Props) => {
     phone,
     state,
     taxId,
+    userType,
     zip,
   } = props;
 
@@ -75,11 +78,9 @@ const ContactInformation = (props: Props) => {
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const flags = useFlags();
-  const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: user } = useAccountUser(profile?.username ?? '');
-  const isChildUser =
-    flags.parentChildAccountAccess && user?.user_type === 'child';
+
+  const isChildUser = flags.parentChildAccountAccess && userType === 'child';
 
   const isRestrictedUser =
     isChildUser || grants?.global.account_access === 'read_only';

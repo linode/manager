@@ -60,6 +60,9 @@ export interface Account {
 export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
+  | 'Account Relationship: Child'
+  | 'Account Relationship: Parent'
+  | 'Account Relationship: Proxy'
   | 'Block Storage'
   | 'Cloud Firewall'
   | 'Kubernetes'
