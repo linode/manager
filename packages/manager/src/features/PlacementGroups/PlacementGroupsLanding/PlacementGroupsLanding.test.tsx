@@ -41,8 +41,12 @@ describe('PlacementGroupsLanding', () => {
   it('renders docs link and create button', () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
-        data: [],
-        results: 0,
+        data: [
+          placementGroupFactory.build({
+            label: 'group 1',
+          }),
+        ],
+        results: 1,
       },
     });
 
@@ -73,7 +77,7 @@ describe('PlacementGroupsLanding', () => {
     expect(getByText(/group 2/i)).toBeInTheDocument();
   });
 
-  it('should render placement group landing with empty state', async () => {
+  it('should render placement group landing with empty state', () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [],
