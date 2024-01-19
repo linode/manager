@@ -24,7 +24,7 @@ export const deleteAllTestDomains = async (): Promise<void> => {
   await Promise.all(deletionPromises);
 };
 
-const makeDomainCreateReq = (domain: Domain) => {
+const makeDomainCreateReq = (domain?: Domain) => {
   const domainData: Domain = domain
     ? domain
     : domainFactory.build({
@@ -48,7 +48,7 @@ const makeDomainCreateReq = (domain: Domain) => {
  * @param domain if undefined will use default
  * @returns domain object
  */
-export const createDomain = (domain = undefined) => {
+export const createDomain = (domain?: Domain) => {
   return makeDomainCreateReq(domain).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Domain ${resp.body.label} successfully`, resp);

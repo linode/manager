@@ -6,7 +6,7 @@ import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptAttachVolume,
-  interceptDetachVolume,
+  // interceptDetachVolume,
 } from 'support/intercepts/volumes';
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
@@ -26,23 +26,23 @@ const pageSizeOverride = {
  *
  * @returns Promise that resolves to an array containing created Linode and Volume.
  */
-const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
-  const commonRegion = chooseRegion();
-  const linodeRequest = createLinodeRequestFactory.build({
-    label: randomLabel(),
-    region: commonRegion.id,
-    root_pass: randomString(32),
-  });
+// const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
+//   const commonRegion = chooseRegion();
+//   const linodeRequest = createLinodeRequestFactory.build({
+//     label: randomLabel(),
+//     region: commonRegion.id,
+//     root_pass: randomString(32),
+//   });
 
-  const linode = await createLinode(linodeRequest);
-  const volumeRequest = volumeRequestPayloadFactory.build({
-    label: randomLabel(),
-    region: commonRegion.id,
-    linode_id: linode.id,
-  });
-  const volume = await createVolume(volumeRequest);
-  return [linode, volume];
-};
+//   const linode = await createLinode(linodeRequest);
+//   const volumeRequest = volumeRequestPayloadFactory.build({
+//     label: randomLabel(),
+//     region: commonRegion.id,
+//     linode_id: linode.id,
+//   });
+//   const volume = await createVolume(volumeRequest);
+//   return [linode, volume];
+// };
 
 authenticate();
 describe('volume attach and detach flows', () => {

@@ -41,36 +41,8 @@ const sortByLabel = (a: Linode, b: Linode) => {
   return a.label.localeCompare(b.label);
 };
 
-const linodeLabel = (number) => {
-  return mockLinodes[number - 1].label;
-};
-
-const deleteLinodeFromActionMenu = (linodeLabel) => {
-  ui.actionMenu
-    .findByTitle(`Action menu for Linode ${linodeLabel}`)
-    .should('be.visible')
-    .click();
-
-  ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
-  ui.dialog
-    .findByTitle(`Delete ${linodeLabel}?`)
-    .should('be.visible')
-    .within(() => {
-      cy.findByLabelText('Linode Label')
-        .should('be.visible')
-        .click()
-        .type(linodeLabel);
-
-      ui.buttonGroup
-        .findButtonByTitle('Delete')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-    });
-
-  cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
-  cy.findByText(linodeLabel).should('not.exist');
+const linodeLabel = (index: number) => {
+  return mockLinodes[index - 1].label;
 };
 
 const preferenceOverrides = {
@@ -366,7 +338,7 @@ describe('linode landing checks', () => {
 
   it('checks summary view for linode table', () => {
     const mockPreferencesListView = userPreferencesFactory.build({
-      linodes_view_style: 'list',
+      linodes_view_style: 'list' as any,
     });
 
     const mockPreferencesSummaryView = {

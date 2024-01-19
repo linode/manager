@@ -1,8 +1,4 @@
-import {
-  NodeBalancer,
-  deleteNodeBalancer,
-  getNodeBalancers,
-} from '@linode/api-v4';
+import { deleteNodeBalancer, getNodeBalancers } from '@linode/api-v4';
 import { oauthToken, pageSize } from 'support/constants/api';
 import { entityTag } from 'support/constants/cypress';
 import { depaginate } from 'support/util/paginate';
@@ -10,17 +6,18 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import { isTestLabel } from './common';
+import { nodeBalancerFactory } from 'src/factories';
+import type { NodeBalancer } from '@linode/api-v4';
 
-export const makeNodeBalCreateReq = (nodeBal) => {
+export const makeNodeBalCreateReq = (nodeBal: NodeBalancer) => {
   const nodeBalData = nodeBal
     ? nodeBal
-    : {
+    : nodeBalancerFactory.build({
         client_conn_throttle: 0,
-        configs: [],
         label: randomLabel(),
         region: chooseRegion().id,
         tags: [entityTag],
-      };
+      });
 
   return cy.request({
     auth: {

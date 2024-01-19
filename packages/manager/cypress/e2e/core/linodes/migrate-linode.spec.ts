@@ -6,7 +6,7 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
-import { linodeFactory, linodeTypeFactory } from '@src/factories';
+import { linodeFactory } from '@src/factories';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { getClick, fbtClick } from 'support/helpers';
 import { getRegionById } from 'support/util/regions';
@@ -102,12 +102,14 @@ describe('Migrate linodes', () => {
     cy.findByText(dcPricingCurrentPriceLabel).should('be.visible');
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
-    );
+    )!;
     const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
-    );
+    )!;
     cy.get('[data-testid="current-price-panel"]').within(() => {
-      cy.findByText(`$${currentPrice.monthly.toFixed(2)}`).should('be.visible');
+      cy.findByText(`$${currentPrice.monthly!.toFixed(2)}`).should(
+        'be.visible'
+      );
       cy.findByText(`$${currentPrice.hourly}`).should('be.visible');
       cy.findByText(`$${currentBackupPrice.monthly}`).should('be.visible');
     });
@@ -115,12 +117,12 @@ describe('Migrate linodes', () => {
     cy.findByText(dcPricingNewPriceLabel).should('be.visible');
     const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
       (linodeType) => linodeType.id === newRegion.id
-    );
+    )!;
     const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
       (regionPrice) => regionPrice.id === newRegion.id
-    );
+    )!;
     cy.get('[data-testid="new-price-panel"]').within(() => {
-      cy.findByText(`$${newPrice.monthly.toFixed(2)}`).should('be.visible');
+      cy.findByText(`$${newPrice.monthly!.toFixed(2)}`).should('be.visible');
       cy.findByText(`$${newPrice.hourly}`).should('be.visible');
       cy.findByText(`$${newBackupPrice.monthly}`).should('be.visible');
     });

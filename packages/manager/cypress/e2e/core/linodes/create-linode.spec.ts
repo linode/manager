@@ -217,16 +217,16 @@ describe('create linode', () => {
 
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
-    );
+    )!;
     const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
-    );
+    )!;
     const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
       (linodeType) => linodeType.id === newRegion.id
-    );
+    )!;
     const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
       (regionPrice) => regionPrice.id === newRegion.id
-    );
+    )!;
 
     // Mock requests to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
@@ -266,11 +266,11 @@ describe('create linode', () => {
       });
     // Confirm that the checkout summary at the bottom of the page reflects the correct price.
     cy.get('[data-qa-summary="true"]').within(() => {
-      cy.findByText(`$${currentPrice.monthly.toFixed(2)}/month`).should(
+      cy.findByText(`$${currentPrice.monthly!.toFixed(2)}/month`).should(
         'be.visible'
       );
       cy.findByText('Backups').should('be.visible');
-      cy.findByText(`$${currentBackupPrice.monthly.toFixed(2)}/month`).should(
+      cy.findByText(`$${currentBackupPrice.monthly!.toFixed(2)}/month`).should(
         'be.visible'
       );
     });
@@ -292,11 +292,11 @@ describe('create linode', () => {
       });
     // Confirms that the summary updates to reflect price changes if the user changes their region and plan selection.
     cy.get('[data-qa-summary="true"]').within(() => {
-      cy.findByText(`$${newPrice.monthly.toFixed(2)}/month`).should(
+      cy.findByText(`$${newPrice.monthly!.toFixed(2)}/month`).should(
         'be.visible'
       );
       cy.findByText('Backups').should('be.visible');
-      cy.findByText(`$${newBackupPrice.monthly.toFixed(2)}/month`).should(
+      cy.findByText(`$${newBackupPrice.monthly!.toFixed(2)}/month`).should(
         'be.visible'
       );
     });

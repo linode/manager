@@ -2,7 +2,11 @@
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
 
-import type { Region } from '@linode/api-v4';
+import type {
+  AccountSettings,
+  ObjectStorageCluster,
+  Region,
+} from '@linode/api-v4';
 import {
   accountSettingsFactory,
   objectStorageClusterFactory,
@@ -17,14 +21,9 @@ import {
   mockGetBuckets,
   mockGetClusters,
 } from 'support/intercepts/object-storage';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 
@@ -61,12 +60,12 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
-    const mockAccountSettings = accountSettingsFactory.build({
+    const mockAccountSettings: AccountSettings = accountSettingsFactory.build({
       managed: false,
       object_storage: 'disabled',
     });
 
-    const mockAccountSettingsEnabled = {
+    const mockAccountSettingsEnabled: AccountSettings = {
       ...mockAccountSettings,
       object_storage: 'active',
     };
@@ -92,7 +91,7 @@ describe('Object Storage enrollment', () => {
     // Clusters with special pricing are currently hardcoded rather than
     // retrieved via API, so we have to mock the cluster API request to correspond
     // with that hardcoded data.
-    const mockClusters = [
+    const mockClusters: ObjectStorageCluster[] = [
       // Regions with special pricing.
       objectStorageClusterFactory.build({
         id: 'br-gru-0',

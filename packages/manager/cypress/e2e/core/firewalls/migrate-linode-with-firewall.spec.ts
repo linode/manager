@@ -84,9 +84,6 @@ describe('Migrate Linode With Firewall', () => {
       id: randomNumber(),
       label: randomLabel(),
       status: 'enabled',
-      devices: {
-        linodes: [mockLinode.id],
-      },
     });
 
     mockGetFirewalls([mockFirewall]).as('getFirewalls');
