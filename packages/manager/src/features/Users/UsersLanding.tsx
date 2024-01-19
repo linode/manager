@@ -19,7 +19,7 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUser, useAccountUsers } from 'src/queries/accountUsers';
+import { useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
@@ -29,7 +29,6 @@ import { UserRow } from './UserRow';
 export const UsersLanding = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: accountUser } = useAccountUser(profile?.username ?? '');
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
@@ -48,14 +47,14 @@ export const UsersLanding = () => {
   const isRestrictedUser = profile?.restricted;
 
   const showProxyUserTable =
-    flags.parentChildAccountAccess && accountUser?.user_type === 'child';
+    flags.parentChildAccountAccess && profile?.user_type === 'child';
   const proxyUsers =
     users?.data.filter((user) => user.user_type === 'proxy') ?? [];
   const nonProxyUsers =
     users?.data.filter((user) => user.user_type !== 'proxy') ?? [];
 
   const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && accountUser?.user_type === 'parent';
+    flags.parentChildAccountAccess && profile?.user_type === 'parent';
   const numCols = showChildAccountAccessCol ? 6 : 5;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(

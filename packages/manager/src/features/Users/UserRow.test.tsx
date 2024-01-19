@@ -61,9 +61,9 @@ describe('UserRow', () => {
           )
         );
       }),
-      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
       })
     );
 
@@ -88,9 +88,9 @@ describe('UserRow', () => {
           )
         );
       }),
-      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
       })
     );
 
@@ -115,9 +115,9 @@ describe('UserRow', () => {
           )
         );
       }),
-      // Mock the active account, which must NOT be of `parent` user type to hide the Child Account Access column.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: null })));
+      // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ user_type: null })));
       })
     );
 
@@ -142,9 +142,9 @@ describe('UserRow', () => {
     });
 
     server.use(
-      // Mock the active child account.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'child' })));
+      // Mock the active profile for the child account.
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ user_type: 'child' })));
       })
     );
 

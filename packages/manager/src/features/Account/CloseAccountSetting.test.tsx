@@ -1,8 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { accountFactory, profileFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -12,17 +11,17 @@ import {
   PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from './constants';
 
-// Mock the useChildAccounts and useAccountUser hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useChildAccounts and useProfile hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
-  useAccountUser: vi.fn().mockReturnValue({}),
   useChildAccounts: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
+vi.mock('src/queries/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile');
   return {
     ...actual,
-    useAccountUser: queryMocks.useAccountUser,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -53,8 +52,8 @@ describe('Close Account Settings', () => {
   });
 
   it('should render a disabled Close Account button with tooltip when there is at least one child account', async () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
     });
     queryMocks.useChildAccounts.mockReturnValue({
       data: makeResourcePage(accountFactory.buildList(1)),
@@ -80,8 +79,8 @@ describe('Close Account Settings', () => {
   });
 
   it('should render a disabled Close Account button with tooltip for a child account user', async () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'child' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'child' }),
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
@@ -106,8 +105,8 @@ describe('Close Account Settings', () => {
   });
 
   it('should render a disabled Close Account button with tooltip for a proxy account user', async () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'proxy' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'proxy' }),
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(

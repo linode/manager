@@ -11,7 +11,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountUser, useAccountUserGrants } from 'src/queries/accountUsers';
+import { useAccountUserGrants } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -28,13 +28,12 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const flags = useFlags();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
-  const { data: activeUser } = useAccountUser(profile?.username ?? '');
 
   const isProxyUser = Boolean(
     flags.parentChildAccountAccess && user.user_type === 'proxy'
   );
   const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
+    flags.parentChildAccountAccess && profile?.user_type === 'parent';
 
   return (
     <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
