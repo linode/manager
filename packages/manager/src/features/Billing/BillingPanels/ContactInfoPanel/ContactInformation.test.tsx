@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { grantsFactory } from 'src/factories/grants';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -35,14 +36,13 @@ vi.mock('src/queries/accountUsers', async () => {
   };
 });
 
-// TODO: When we figure out issue with Vitest circular dependencies
-// vi.mock('src/queries/profile', async () => {
-//   const actual = await vi.importActual<any>('src/queries/profile');
-//   return {
-//     ...actual,
-//     useGrants: queryMocks.useGrants,
-//   };
-// });
+vi.mock('src/queries/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile');
+  return {
+    ...actual,
+    useGrants: queryMocks.useGrants,
+  };
+});
 
 queryMocks.useAccountUser.mockReturnValue({
   data: accountUserFactory.build({ user_type: 'parent' }),
@@ -64,21 +64,20 @@ describe('Edit Contact Information', () => {
     );
   });
 
-  // TODO: When we figure out issue with Vitest circular dependencies
-  // it('should be disabled for non-parent/child restricted users', () => {
-  //   queryMocks.useGrants.mockReturnValue({
-  //     data: grantsFactory.build({
-  //       global: {
-  //         account_access: 'read_only',
-  //       },
-  //     }),
-  //   });
+  it('should be disabled for non-parent/child restricted users', () => {
+    queryMocks.useGrants.mockReturnValue({
+      data: grantsFactory.build({
+        global: {
+          account_access: 'read_only',
+        },
+      }),
+    });
 
-  //   const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
+    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
 
-  //   expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
-  //     'aria-disabled',
-  //     'true'
-  //   );
-  // });
+    expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
 });

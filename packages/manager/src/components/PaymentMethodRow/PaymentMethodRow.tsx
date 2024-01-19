@@ -17,6 +17,14 @@ import { ThirdPartyPayment } from './ThirdPartyPayment';
 
 interface Props {
   /**
+   * Whether the user is a child user.
+   */
+  isChildUser?: boolean | undefined;
+  /**
+   * Whether the user is a restricted user.
+   */
+  isRestrictedUser?: boolean | undefined;
+  /**
    * Function called when the delete button in the Action Menu is pressed.
    */
   onDelete: () => void;
@@ -32,7 +40,7 @@ interface Props {
  */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { onDelete, paymentMethod } = props;
+  const { isRestrictedUser, onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -51,6 +59,7 @@ export const PaymentMethodRow = (props: Props) => {
 
   const actions: Action[] = [
     {
+      disabled: isRestrictedUser,
       onClick: () => {
         history.push({
           pathname: '/account/billing/make-payment/',
@@ -60,7 +69,7 @@ export const PaymentMethodRow = (props: Props) => {
       title: 'Make a Payment',
     },
     {
-      disabled: paymentMethod.is_default,
+      disabled: isRestrictedUser || paymentMethod.is_default,
       onClick: () => makeDefault(paymentMethod.id),
       title: 'Make Default',
       tooltip: paymentMethod.is_default
@@ -68,7 +77,7 @@ export const PaymentMethodRow = (props: Props) => {
         : undefined,
     },
     {
-      disabled: paymentMethod.is_default,
+      disabled: isRestrictedUser || paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default
