@@ -153,27 +153,56 @@ export const useEventsPoller = () => {
   return null;
 };
 
+const pollingIntervalQueryKey = ['events', 'interval'];
+
 /**
- * Manages the events polling interval.
+ * Manages and exposes the events polling interval.
  */
 export const usePollingInterval = () => {
-  const queryKey = ['events', 'interval'];
   const queryClient = useQueryClient();
   const { data: intervalMultiplier = 1 } = useQuery({
     enabled: false,
     initialData: 1,
-    queryKey,
+    queryKey: pollingIntervalQueryKey,
   });
   return {
+    /**
+     * Increases the polling interval by 1 second up to 16 seconds
+     */
     incrementPollingInterval: () =>
       queryClient.setQueryData<number>(
-        queryKey,
-        Math.min(intervalMultiplier + 1, 16)
+        pollingIntervalQueryKey,
+        Math.min(intervalMultiplier * 2, 16)
       ),
     pollingInterval: DISABLE_EVENT_THROTTLE
       ? 500
       : intervalMultiplier * INTERVAL,
-    resetEventsPolling: () => queryClient.setQueryData<number>(queryKey, 1),
+    resetEventsPolling: () =>
+      queryClient.setQueryData<number>(pollingIntervalQueryKey, 1),
+  };
+};
+
+/**
+ * Manages the events polling interval.
+ *
+ * This hook should be used in application components that need to change
+ * the events polling interval.
+ */
+export const useEventsPollingActions = () => {
+  const queryClient = useQueryClient();
+
+  const resetEventsPolling = queryClient.setQueryData<number>(
+    pollingIntervalQueryKey,
+    1
+  );
+
+  return {
+    /**
+     * Sets the polling interval to 1 second so that events get polled faster temporarily
+     *
+     * The polling backoff will start over from 1 second.
+     */
+    resetEventsPolling,
   };
 };
 
