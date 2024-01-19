@@ -1,4 +1,4 @@
-import { createLinode, Devices, getLinodeConfigs } from '@linode/api-v4';
+import { createLinode, getLinodeConfigs } from '@linode/api-v4';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { SimpleBackoffMethod } from 'support/util/backoff';

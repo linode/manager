@@ -49,7 +49,6 @@ const isAxiosError = (e: any): e is AxiosError => {
  */
 const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
   if (isAxiosError(e)) {
-    //const errorData = e.response?.data?.errors;
     const responseData = e.response?.data as any;
     return (
       responseData.errors &&
