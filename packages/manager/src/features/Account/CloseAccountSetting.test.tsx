@@ -1,3 +1,4 @@
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
@@ -6,12 +7,24 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CloseAccountSetting from './CloseAccountSetting';
+import {
+  CHILD_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+} from './constants';
 
 // Mock the useChildAccounts and useAccountUser hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
   useAccountUser: vi.fn().mockReturnValue({}),
   useChildAccounts: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('src/queries/accountUsers', async () => {
+  const actual = await vi.importActual<any>('src/queries/accountUsers');
+  return {
+    ...actual,
+    useAccountUser: queryMocks.useAccountUser,
+  };
+});
 
 vi.mock('src/queries/account', async () => {
   const actual = await vi.importActual<any>('src/queries/account');
@@ -39,48 +52,81 @@ describe('Close Account Settings', () => {
     expect(span).toHaveTextContent('Close Account');
   });
 
-  it('should render a disabled Close Account button and helper text when there is at least one child account', () => {
+  it('should render a disabled Close Account button with tooltip when there is at least one child account', async () => {
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'parent' }),
+    });
     queryMocks.useChildAccounts.mockReturnValue({
       data: makeResourcePage(accountFactory.buildList(1)),
     });
 
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <CloseAccountSetting />,
       {
         flags: { parentChildAccountAccess: true },
       }
     );
-    const notice = getByText(
-      'Remove indirect customers before closing the account.'
-    );
     const button = getByTestId('close-account-button');
-    expect(notice).toBeInTheDocument();
+    fireEvent.mouseOver(button);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(getByText(PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)).toBeVisible();
+    expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should render a disabled Close Account button for a child account user', () => {
+  it('should render a disabled Close Account button with tooltip for a child account user', async () => {
     queryMocks.useAccountUser.mockReturnValue({
       data: accountUserFactory.build({ user_type: 'child' }),
     });
 
-    const { getByTestId } = renderWithTheme(<CloseAccountSetting />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <CloseAccountSetting />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
     const button = getByTestId('close-account-button');
+    fireEvent.mouseOver(button);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(
+      getByText(CHILD_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
+    ).toBeVisible();
+    expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should render a disabled Close Account button for a proxy account user', () => {
+  it('should render a disabled Close Account button with tooltip for a proxy account user', async () => {
     queryMocks.useAccountUser.mockReturnValue({
       data: accountUserFactory.build({ user_type: 'proxy' }),
     });
 
-    const { getByTestId } = renderWithTheme(<CloseAccountSetting />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <CloseAccountSetting />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
     const button = getByTestId('close-account-button');
+    fireEvent.mouseOver(button);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(
+      getByText(CHILD_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
+    ).toBeVisible();
+    expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });

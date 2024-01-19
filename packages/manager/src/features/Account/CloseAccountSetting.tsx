@@ -9,6 +9,10 @@ import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 
 import CloseAccountDialog from './CloseAccountDialog';
+import {
+  CHILD_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+} from './constants';
 
 const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -38,8 +42,8 @@ const CloseAccountSetting = () => {
             <Button
               tooltipText={
                 hasChildAccounts
-                  ? 'Remove indirect customers before closing the account.'
-                  : 'Contact your business partner to close your account.'
+                  ? PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT
+                  : CHILD_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT
               }
               buttonType="outlined"
               data-testid="close-account-button"
