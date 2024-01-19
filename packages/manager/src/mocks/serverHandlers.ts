@@ -1078,12 +1078,6 @@ export const handlers = [
       active_promotions: promoFactory.buildList(1),
       active_since: '2022-11-30',
       balance: 50,
-      capabilities: [
-        ...accountFactory.build().capabilities,
-        // 'Account Relationship: Child',
-        'Account Relationship: Parent',
-        // 'Account Relationship: Proxy',
-      ],
       company: 'Mock Company',
     });
     return res(ctx.json(account));
