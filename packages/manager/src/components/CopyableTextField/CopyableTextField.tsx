@@ -35,7 +35,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   '.copyIcon': {
     '& svg': {
-      color: '#3683dc',
       height: 14,
       top: 1,
     },

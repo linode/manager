@@ -1,34 +1,87 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-// Error will go away after merging Alban's PR for [M3-7609].
 import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 
-const queryClient = new QueryClient();
+const queryMocks = vi.hoisted(() => ({
+  usePlacementGroupsQuery: vi.fn().mockReturnValue({}),
+}));
 
-const loadingTestId = 'circle-progress';
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
+  return {
+    ...actual,
+    usePlacementGroupsQuery: queryMocks.usePlacementGroupsQuery,
+  };
+});
 
-describe('PlacementGroup Landing Page', () => {
+describe('PlacementGroupsLanding', () => {
+  it('renders loading state', () => {
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      isLoading: true,
+    });
+
+    const { getByRole } = renderWithTheme(<PlacementGroupsLanding />);
+
+    expect(getByRole('progressbar')).toBeInTheDocument();
+  });
+
+  it('renders error state', () => {
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      error: [{ reason: 'Not found' }],
+    });
+
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+
+    expect(getByText(/not found/i)).toBeInTheDocument();
+  });
+
+  it('renders docs link and create button', () => {
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+
+    expect(getByText(/create placement group/i)).toBeInTheDocument();
+    expect(getByText(/docs/i)).toBeInTheDocument();
+  });
+
+  it('renders placement groups', () => {
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      data: {
+        data: [
+          placementGroupFactory.build({
+            label: 'group 1',
+          }),
+          placementGroupFactory.build({
+            label: 'group 2',
+          }),
+        ],
+        results: 2,
+      },
+    });
+
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+
+    expect(getByText(/group 1/i)).toBeInTheDocument();
+    expect(getByText(/group 2/i)).toBeInTheDocument();
+  });
+
   it('should render placement group landing with empty state', async () => {
-    server.use(
-      rest.get('*/placement/groups', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
-      })
-    );
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
 
-    const { getByTestId, getByText } = renderWithTheme(
-      <PlacementGroupsLanding />,
-      {
-        queryClient,
-      }
-    );
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
 
     expect(
       getByText(

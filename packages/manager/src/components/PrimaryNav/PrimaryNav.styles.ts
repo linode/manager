@@ -21,6 +21,11 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         left: 70,
         position: 'absolute',
       },
+      '&.beta-chip-placement-groups': {
+        bottom: -2,
+        left: 52,
+        position: 'absolute',
+      },
       marginTop: 2,
     },
     divider: {

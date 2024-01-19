@@ -38,6 +38,8 @@ export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
 export const VPC_REBOOT_MESSAGE =
   'The VPC configuration has been updated. Reboot the Linode to reflect configuration changes.';
 
+export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
+
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
