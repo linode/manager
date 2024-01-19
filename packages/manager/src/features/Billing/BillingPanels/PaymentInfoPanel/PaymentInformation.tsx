@@ -22,18 +22,18 @@ import {
 } from '../../BillingDetail';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
-import type { UserType } from '@linode/api-v4';
+import type { Profile } from '@linode/api-v4';
 
 interface Props {
   error?: APIError[] | null;
   isAkamaiCustomer: boolean;
   loading: boolean;
   paymentMethods: PaymentMethod[] | undefined;
-  userType: UserType | null;
+  profile: Profile | undefined;
 }
 
 const PaymentInformation = (props: Props) => {
-  const { error, isAkamaiCustomer, loading, paymentMethods, userType } = props;
+  const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
@@ -52,7 +52,8 @@ const PaymentInformation = (props: Props) => {
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
-  const isChildUser = flags.parentChildAccountAccess && userType === 'child';
+  const isChildUser =
+    flags.parentChildAccountAccess && profile?.user_type === 'child';
 
   const isRestrictedUser =
     isChildUser || grants?.global.account_access === 'read_only';

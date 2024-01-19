@@ -8,6 +8,11 @@ import ContactInformation from './ContactInformation';
 
 const EDIT_BUTTON_ID = 'edit-contact-info';
 
+const queryMocks = vi.hoisted(() => ({
+  useGrants: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
+}));
+
 const props = {
   address1: '123 Linode Lane',
   address2: '',
@@ -18,22 +23,17 @@ const props = {
   firstName: 'Linny',
   lastName: 'The Platypus',
   phone: '19005553221',
+  profile: queryMocks.useProfile().data,
   state: 'PA',
   taxId: '1337',
-  userType: null,
   zip: '19106',
 };
-
-const queryMocks = vi.hoisted(() => ({
-  useGrants: vi.fn().mockReturnValue({}),
-  useProfile: vi.fn().mockReturnValue({}),
-}));
 
 vi.mock('src/queries/profile', async () => {
   const actual = await vi.importActual<any>('src/queries/profile');
   return {
     ...actual,
-    useProfle: queryMocks.useProfile,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -54,7 +54,7 @@ describe('Edit Contact Information', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <ContactInformation {...props} userType={'child'} />,
+      <ContactInformation {...props} profile={queryMocks.useProfile().data} />,
       {
         flags: { parentChildAccountAccess: true },
       }
