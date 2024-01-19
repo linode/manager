@@ -1,3 +1,4 @@
+import Clear from '@mui/icons-material/Clear';
 import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -5,10 +6,22 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import { usePrevious } from 'src/hooks/usePrevious';
 
 export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;
+  /**
+   * Whether to show a clear button at the end of the input.
+   */
+  clearable?: boolean;
+  /**
+   * Including this prop will disable this field from being self-managed.
+   * The user must then manage the state of the text field and provide a
+   * value and change handler.
+   */
+  customValue?: {
+    onChange: (newValue: string | undefined) => void;
+    value: string | undefined;
+  };
   /**
    * Interval in milliseconds of time that passes before search queries are accepted.
    * @default 400
@@ -16,6 +29,7 @@ export interface DebouncedSearchProps extends TextFieldProps {
   debounceTime?: number;
   defaultValue?: string;
   hideLabel?: boolean;
+
   /**
    * Determines if the textbox is currently searching for inputted query
    */
@@ -31,6 +45,8 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
   const {
     InputProps,
     className,
+    clearable,
+    customValue,
     debounceTime,
     defaultValue,
     hideLabel,
@@ -40,34 +56,23 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
     placeholder,
     ...restOfTextFieldProps
   } = props;
-  const [query, setQuery] = React.useState<string>('');
-  const prevQuery = usePrevious<string>(query);
+
+  // Manage the textfield state if customValue is not provided
+  const managedValue = React.useState<string | undefined>();
+  const [textFieldValue, setTextFieldValue] = customValue
+    ? [customValue.value, customValue.onChange]
+    : managedValue;
 
   React.useEffect(() => {
-    /*
-      This `didCancel` business is to prevent a warning from React.
-      See: https://github.com/facebook/react/issues/14369#issuecomment-468267798
-    */
-    let didCancel = false;
-    /*
-      don't run the search if the query hasn't changed.
-      This is mostly to prevent this effect from running on first mount
-    */
-    if ((prevQuery || '') !== query) {
-      setTimeout(() => {
-        if (!didCancel) {
-          onSearch(query);
-        }
-      }, debounceTime || 400);
+    if (textFieldValue != undefined) {
+      const timeout = setTimeout(
+        () => onSearch(textFieldValue),
+        debounceTime !== undefined ? debounceTime : 400
+      );
+      return () => clearTimeout(timeout);
     }
-    return () => {
-      didCancel = true;
-    };
-  }, [query]);
-
-  const _setQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
+    return undefined;
+  }, [textFieldValue]);
 
   return (
     <TextField
@@ -77,7 +82,11 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
             <CircleProgress mini={true} />
           </InputAdornment>
         ) : (
-          <React.Fragment />
+          clearable && (
+            <InputAdornment position="end">
+              <StyledClearIcon onClick={() => setTextFieldValue('')} />
+            </InputAdornment>
+          )
         ),
         startAdornment: (
           <InputAdornment position="end">
@@ -91,7 +100,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
       defaultValue={defaultValue}
       hideLabel={hideLabel}
       label={label}
-      onChange={_setQuery}
+      onChange={(e) => setTextFieldValue(e.target.value)}
       placeholder={placeholder || 'Filter by query'}
       {...restOfTextFieldProps}
     />
@@ -104,4 +113,11 @@ const StyledSearchIcon = styled(Search)(({ theme }) => ({
   '&&, &&:hover': {
     color: theme.color.grey1,
   },
+}));
+
+const StyledClearIcon = styled(Clear)(({ theme }) => ({
+  '&&, &&:hover': {
+    color: theme.color.grey1,
+  },
+  cursor: 'pointer',
 }));
