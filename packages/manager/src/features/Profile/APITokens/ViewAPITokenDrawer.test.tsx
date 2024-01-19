@@ -7,6 +7,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 import { basePerms } from './utils';
 
+import type { UserType } from '@linode/api-v4';
+
 // Mock the useAccountUser hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
   useAccountUser: vi.fn().mockReturnValue({}),
@@ -45,8 +47,13 @@ describe('View API Token Drawer', () => {
   });
 
   it('should show all permissions as read/write with wildcard scopes', () => {
+    // We want to show all perms for this test, even perms specific to Parent/Child accounts.
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'parent' }),
+    });
+
     const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { vpc: true },
+      flags: { parentChildAccountAccess: true, vpc: true },
     });
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -57,9 +64,14 @@ describe('View API Token Drawer', () => {
   });
 
   it('should show all permissions as none with no scopes', () => {
+    // We want to show all perms for this test, even perms specific to Parent/Child accounts.
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'parent' }),
+    });
+
     const { getByTestId } = renderWithTheme(
       <ViewAPITokenDrawer {...props} token={limitedToken} />,
-      { flags: { parentChildAccountAccess: false, vpc: true } }
+      { flags: { parentChildAccountAccess: true, vpc: true } }
     );
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -70,12 +82,17 @@ describe('View API Token Drawer', () => {
   });
 
   it('only account has read/write, all others are none', () => {
+    // We want to show all perms for this test, even perms specific to Parent/Child accounts.
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'parent' }),
+    });
+
     const { getByTestId } = renderWithTheme(
       <ViewAPITokenDrawer
         {...props}
         token={appTokenFactory.build({ scopes: 'account:read_write' })}
       />,
-      { flags: { vpc: true } }
+      { flags: { parentChildAccountAccess: true, vpc: true } }
     );
     for (const permissionName of basePerms) {
       // We only expect account to have read/write for this test
@@ -88,19 +105,25 @@ describe('View API Token Drawer', () => {
   });
 
   it('check table for more complex permissions', () => {
+    // We want to show all perms for this test, even perms specific to Parent/Child accounts.
+    queryMocks.useAccountUser.mockReturnValue({
+      data: accountUserFactory.build({ user_type: 'parent' }),
+    });
+
     const { getByTestId } = renderWithTheme(
       <ViewAPITokenDrawer
         {...props}
         token={appTokenFactory.build({
           scopes:
-            'databases:read_only domains:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
+            'child_account:read_write databases:read_only domains:read_write child_account:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
         })}
       />,
-      { flags: { vpc: true } }
+      { flags: { parentChildAccountAccess: true, vpc: true } }
     );
 
     const expectedScopeLevels = {
       account: 0,
+      child_account: 2,
       databases: 1,
       domains: 2,
       events: 2,
@@ -126,50 +149,6 @@ describe('View API Token Drawer', () => {
     }
   });
 
-  it('should show Child Account Access scope with read/write perms for a parent user account with the parent/child feature flag on', () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
-    });
-
-    const { getByTestId, getByText } = renderWithTheme(
-      <ViewAPITokenDrawer
-        {...props}
-        token={appTokenFactory.build({
-          scopes: 'child_account:read_write',
-        })}
-      />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
-    );
-
-    const childScope = getByText('Child Account Access');
-    // TODO: Parent/Child - confirm that this scope level shouldn't be 2
-    const expectedScopeLevels = {
-      child_account: 0,
-    } as const;
-    const childPermissionName = 'child_account';
-
-    expect(childScope).toBeInTheDocument();
-    expect(getByTestId(`perm-${childPermissionName}`)).toHaveAttribute(
-      ariaLabel,
-      `This token has ${expectedScopeLevels[childPermissionName]} access for ${childPermissionName}`
-    );
-  });
-
-  it('should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: null }),
-    });
-
-    const { queryByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
-
-    const childScope = queryByText('Child Account Access');
-    expect(childScope).not.toBeInTheDocument();
-  });
-
   it('Should show the VPC scope with the VPC feature flag on', () => {
     const { getByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
       flags: { vpc: true },
@@ -185,5 +164,35 @@ describe('View API Token Drawer', () => {
 
     const vpcScope = queryByText('VPCs');
     expect(vpcScope).not.toBeInTheDocument();
+  });
+
+  describe('Parent/Child: User Roles w/ Feature Flag Enabled', () => {
+    const setupAndRender = (userType: UserType | null) => {
+      queryMocks.useAccountUser.mockReturnValue({
+        data: accountUserFactory.build({ user_type: userType }),
+      });
+
+      return renderWithTheme(<ViewAPITokenDrawer {...props} />, {
+        flags: { parentChildAccountAccess: true },
+      });
+    };
+
+    const testChildScopeNotDisplayed = (userType: UserType | null) => {
+      const { queryByText } = setupAndRender(userType);
+      const childScope = queryByText('Child Account Access');
+      expect(childScope).not.toBeInTheDocument();
+    };
+
+    it('should not display the Child Account Access scope for a user account without a parent role', () => {
+      testChildScopeNotDisplayed(null);
+    });
+
+    it('should not display the Child Account Access scope for "proxy" user role', () => {
+      testChildScopeNotDisplayed('proxy');
+    });
+
+    it('should not display the Child Account Access scope for "child" user role', () => {
+      testChildScopeNotDisplayed('child');
+    });
   });
 });
