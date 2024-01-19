@@ -70,7 +70,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  unifiedMigrations: boolean;
   vmPlacement: boolean;
   vpc: boolean;
 }
@@ -144,6 +143,7 @@ export type ProductInformationBannerLocation =
   | 'Managed'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Groups'
   | 'StackScripts'
   | 'VPC'
   | 'Volumes';

@@ -106,7 +106,12 @@ export const CreateCertificateDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'submit',
             label: 'Upload Certificate',
+            loading: formik.isSubmitting,
             type: 'submit',
+          }}
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: onClose,
           }}
         />
       </form>
