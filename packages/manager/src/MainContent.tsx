@@ -171,6 +171,11 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
+const PlacementGroups = React.lazy(() =>
+  import('src/features/PlacementGroups').then((module) => ({
+    default: module.PlacementGroups,
+  }))
+);
 
 export const MainContent = () => {
   const { classes, cx } = useStyles();
@@ -327,6 +332,10 @@ export const MainContent = () => {
                     <React.Suspense fallback={<SuspenseLoader />}>
                       <Switch>
                         <Route component={LinodesRoutes} path="/linodes" />
+                        <Route
+                          component={PlacementGroups}
+                          path="/placement-groups"
+                        />
                         <Route component={Volumes} path="/volumes" />
                         <Redirect path="/volumes*" to="/volumes" />
                         {flags.aglb && (
