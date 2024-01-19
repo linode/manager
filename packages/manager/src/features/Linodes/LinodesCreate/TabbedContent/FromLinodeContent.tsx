@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Paper } from 'src/components/Paper';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { StyledGrid } from './CommonTabbedContent.styles';
 
 import SelectLinodePanel from '../SelectLinodePanel';
 import {
@@ -16,6 +16,7 @@ import {
   WithLinodesTypesRegionsAndImages,
 } from '../types';
 import { extendLinodes } from '../utilities';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 const errorResources = {
   label: 'A label',
@@ -46,6 +47,8 @@ export const FromLinodeContent = (props: CombinedProps) => {
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
   const history = useHistory();
+
+  const flags = useFlags();
 
   const updateSearchParams = (search: string) => {
     history.replace({ search });
@@ -99,10 +102,22 @@ export const FromLinodeContent = (props: CombinedProps) => {
               extendedTypes,
               regionsData
             )}
-            notice={{
-              level: 'warning',
-              text: `This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.`,
-            }}
+            notices={[
+              {
+                level: 'warning',
+                text:
+                  'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
+              },
+              ...(flags.linodeCloneUIChanges
+                ? [
+                    {
+                      level: 'warning' as const,
+                      text:
+                        'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
+                    },
+                  ]
+                : []),
+            ]}
             data-qa-linode-panel
             disabled={userCannotCreateLinode}
             error={hasErrorFor('linode_id')}

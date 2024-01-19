@@ -123,6 +123,8 @@ const PaymentInformation = (props: Props) => {
         {!isAkamaiCustomer ? (
           <PaymentMethods
             error={error}
+            isChildUser={isChildUser}
+            isRestrictedUser={isRestrictedUser}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}
