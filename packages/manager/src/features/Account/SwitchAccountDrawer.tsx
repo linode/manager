@@ -12,7 +12,7 @@ import {
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { getStorage, storage } from 'src/utilities/storage';
+import { getStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
@@ -105,8 +105,8 @@ export const SwitchAccountDrawer = (props: Props) => {
         // We don't need to worry about this if we're a proxy user.
         if (!isProxyUser) {
           const parentToken = {
-            expiry: storage.authentication.expire.get(),
-            scopes: storage.authentication.scopes.get(),
+            expiry: getStorage('authenication/expire'),
+            scopes: getStorage('authenication/scopes'),
             token: currentTokenWithBearer ?? '',
           };
 
