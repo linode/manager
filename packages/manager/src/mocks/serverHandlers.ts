@@ -550,6 +550,8 @@ export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
       restricted: false,
+      // Parent/Child: switch the `user_type` depending on what account view you need to mock.
+      user_type: 'parent',
     });
     return res(ctx.json(profile));
   }),

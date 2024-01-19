@@ -277,11 +277,11 @@ describe('restricted user billing flows', () => {
     it('cannot edit billing information as child account', () => {
       const mockProfile = profileFactory.build({
         username: randomLabel(),
+        user_type: 'child',
       });
 
       const mockUser = accountUserFactory.build({
         username: mockProfile.username,
-        user_type: 'child',
       });
 
       mockGetProfile(mockProfile);
