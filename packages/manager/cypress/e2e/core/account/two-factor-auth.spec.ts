@@ -2,7 +2,7 @@
  * @file Integration tests for account two-factor authentication functionality.
  */
 
-import { SecurityQuestionsData } from '@linode/api-v4/types';
+import { SecurityQuestionsData } from '@linode/api-v4';
 import {
   profileFactory,
   securityQuestionsFactory,

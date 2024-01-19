@@ -2,7 +2,7 @@
  * @file Integration tests for personal access token CRUD operations.
  */
 
-import { Token } from '@linode/api-v4/types';
+import { Token } from '@linode/api-v4';
 import { appTokenFactory } from 'src/factories/oauth';
 import {
   mockCreatePersonalAccessToken,

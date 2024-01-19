@@ -12,7 +12,7 @@ import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { getProfile } from '@linode/api-v4/lib';
-import { Profile, StackScript } from '@linode/api-v4/types';
+import { Profile, StackScript } from '@linode/api-v4';
 import { formatDate } from '@src/utilities/formatDate';
 
 const mockStackScripts: StackScript[] = [

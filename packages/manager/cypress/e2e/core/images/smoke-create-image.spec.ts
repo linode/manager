@@ -1,4 +1,4 @@
-import type { Linode, Disk } from '@linode/api-v4/types';
+import type { Linode, Disk } from '@linode/api-v4';
 import { imageFactory } from 'src/factories/images';
 import { authenticate } from 'support/api/authentication';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';

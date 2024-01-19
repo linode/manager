@@ -1,4 +1,4 @@
-import { ImportZonePayload } from '@linode/api-v4/types';
+import { ImportZonePayload } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { fbltClick } from 'support/helpers';

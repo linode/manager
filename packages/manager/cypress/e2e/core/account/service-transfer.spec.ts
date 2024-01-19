@@ -4,7 +4,7 @@
 
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { EntityTransfer, Linode, Profile } from '@linode/api-v4/types';
+import { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
 import { linodeFactory } from 'src/factories';
 import { createLinodeRequestFactory } from 'src/factories/linodes';

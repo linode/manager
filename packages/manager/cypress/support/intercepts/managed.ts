@@ -10,7 +10,7 @@ import {
   ManagedServiceMonitor,
   ManagedServicePayload,
   ManagedStats,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';

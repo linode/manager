@@ -5,7 +5,7 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
-import type { Domain, DomainRecord, ZoneFile } from '@linode/api-v4/types';
+import type { Domain, DomainRecord, ZoneFile } from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Domain.

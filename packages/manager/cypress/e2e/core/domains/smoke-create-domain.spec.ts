@@ -1,4 +1,4 @@
-import { Domain } from '@linode/api-v4/types';
+import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { fbtClick, getClick, getVisible } from 'support/helpers';

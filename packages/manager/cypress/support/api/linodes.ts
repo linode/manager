@@ -1,5 +1,5 @@
 import { Linode, deleteLinode, getLinodes } from '@linode/api-v4';
-import { CreateLinodeRequest } from '@linode/api-v4/types';
+import { CreateLinodeRequest } from '@linode/api-v4';
 import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { oauthToken, pageSize } from 'support/constants/api';

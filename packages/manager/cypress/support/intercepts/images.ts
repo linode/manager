@@ -7,7 +7,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
 
-import type { Image, ImageStatus } from '@linode/api-v4/types';
+import type { Image, ImageStatus } from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a machine image and mocks the response.

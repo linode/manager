@@ -1,6 +1,6 @@
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { Linode, Volume } from '@linode/api-v4/types';
+import { Linode, Volume } from '@linode/api-v4';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';

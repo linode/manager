@@ -1,5 +1,5 @@
 import { mockGetPaymentMethods } from 'support/intercepts/account';
-import { PaymentMethod, CreditCardData } from '@linode/api-v4/types';
+import { PaymentMethod, CreditCardData } from '@linode/api-v4';
 import { ui } from 'support/ui';
 
 const mockPaymentMethods: PaymentMethod[] = [

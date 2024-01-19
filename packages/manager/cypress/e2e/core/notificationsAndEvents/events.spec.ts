@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/types';
+import { Event, EventAction } from '@linode/api-v4';
 import { eventFactory } from '@src/factories/events';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
