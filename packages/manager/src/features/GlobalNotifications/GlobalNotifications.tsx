@@ -31,8 +31,7 @@ export const GlobalNotifications = ({
       .length === 3;
   const hasVerifiedPhoneNumber = profile?.verified_phone_number !== null;
 
-  const isVerified =
-    isChildAccount && hasVerifiedPhoneNumber && hasSecurityQuestions;
+  const isVerified = hasVerifiedPhoneNumber && hasSecurityQuestions;
 
   const { hasDismissedNotifications } = useDismissibleNotifications();
 
@@ -53,7 +52,7 @@ export const GlobalNotifications = ({
       <AbuseTicketBanner />
       <ComplianceBanner />
       <ComplianceUpdateModal />
-      {!isVerified && (
+      {isChildAccount && !isVerified && (
         <VerificationDetailsBanner
           hasSecurityQuestions={hasSecurityQuestions}
           hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
