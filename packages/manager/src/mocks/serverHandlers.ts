@@ -551,7 +551,7 @@ export const handlers = [
     const profile = profileFactory.build({
       restricted: false,
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
-      user_type: 'parent',
+      user_type: 'child',
     });
     return res(ctx.json(profile));
   }),
@@ -1266,7 +1266,7 @@ export const handlers = [
   ),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     // Parent/Child: switch the `user_type` depending on what account view you need to mock.
-    return res(ctx.json(accountUserFactory.build({ user_type: 'child' })));
+    return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
   }),
   rest.put(
     `*/account/users/${parentAccountNonAdminUser.username}`,

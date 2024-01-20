@@ -203,11 +203,18 @@ export const UsersLanding = () => {
           <TableBody>{renderTableBody(proxyUsers)}</TableBody>
         </Table>
       )}
-      <Box>
+      <Box
+        sx={(theme) => ({
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(3),
+        })}
+      >
         {showProxyUserTable && (
           <Typography
             sx={(theme) => ({
-              marginTop: theme.spacing(3),
               [theme.breakpoints.down('md')]: {
                 marginLeft: theme.spacing(1),
               },
@@ -217,18 +224,16 @@ export const UsersLanding = () => {
             User settings
           </Typography>
         )}
-        <Box display="flex" justifyContent="flex-end" sx={{ marginBottom: 1 }}>
-          <AddNewLink
-            disabledReason={
-              isRestrictedUser
-                ? 'You cannot create other users as a restricted user.'
-                : undefined
-            }
-            disabled={isRestrictedUser}
-            label="Add a User"
-            onClick={() => setIsCreateDrawerOpen(true)}
-          />
-        </Box>
+        <AddNewLink
+          disabledReason={
+            isRestrictedUser
+              ? 'You cannot create other users as a restricted user.'
+              : undefined
+          }
+          disabled={isRestrictedUser}
+          label="Add a User"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        />
       </Box>
       <Table aria-label="List of Users">
         <TableHead>{renderTableHeader()}</TableHead>
