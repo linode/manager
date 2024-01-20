@@ -161,6 +161,7 @@ export const LinodeSelect = (
       helperText={helperText}
       id={id}
       inputValue={inputValue}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       label={label ? label : multiple ? 'Linodes' : 'Linode'}
       loading={isLoading || loading}
       multiple={multiple}

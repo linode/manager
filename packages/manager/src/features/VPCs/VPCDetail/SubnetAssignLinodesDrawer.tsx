@@ -16,6 +16,7 @@ import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -27,6 +28,7 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
@@ -34,19 +36,20 @@ import {
   MULTIPLE_CONFIGURATIONS_MESSAGE,
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
+import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 
 import type {
   APIError,
   Config,
+  Interface,
   InterfacePayload,
   Linode,
   Subnet,
 } from '@linode/api-v4';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
-// putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
+// putting this in a common file and naming it something like SubnetActionMenuItemProps or something
 interface SubnetAssignLinodesDrawerProps {
   onClose: () => void;
   open: boolean;
@@ -72,7 +75,7 @@ export const SubnetAssignLinodesDrawer = (
     unassignLinodesErrors,
   } = useUnassignLinode();
   const csvRef = React.useRef<any>();
-  const newInterfaceId = React.useRef<number>(-1);
+  const newInterface = React.useRef<Interface>();
   const removedLinodeId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
 
@@ -145,7 +148,7 @@ export const SubnetAssignLinodesDrawer = (
   }
 
   const handleAssignLinode = async () => {
-    const { chosenIP, selectedConfig, selectedLinode } = values;
+    const { chosenIP, ipRanges, selectedConfig, selectedLinode } = values;
 
     const configId = getConfigId(linodeConfigs, selectedConfig);
 
@@ -154,6 +157,7 @@ export const SubnetAssignLinodesDrawer = (
     );
 
     const interfacePayload: InterfacePayload = {
+      ip_ranges: ipRanges.map((ipRange) => ipRange.address),
       ipam_address: null,
       ipv4: {
         nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
@@ -177,7 +181,7 @@ export const SubnetAssignLinodesDrawer = (
         );
       }
 
-      const newInterface = await appendConfigInterface(
+      const _newInterface = await appendConfigInterface(
         selectedLinode?.id ?? -1,
         configId,
         interfacePayload
@@ -186,7 +190,7 @@ export const SubnetAssignLinodesDrawer = (
       // We're storing this in a ref to access this later in order
       // to update `assignedLinodesAndConfigData` with the new
       // interfaceId without causing a re-render
-      newInterfaceId.current = newInterface.id;
+      newInterface.current = _newInterface;
 
       await invalidateQueries({
         configId,
@@ -195,7 +199,32 @@ export const SubnetAssignLinodesDrawer = (
         vpcId,
       });
     } catch (errors) {
-      const errorMap = getErrorMap(['ipv4.vpc'], errors);
+      const fieldsOfIPRangesErrors = errors.reduce(
+        (accum: any, _err: { field: string }) => {
+          if (_err.field && _err.field.includes('ip_ranges[')) {
+            return [...accum, _err.field];
+          } else {
+            return [...accum];
+          }
+        },
+        []
+      );
+
+      const errorMap = getErrorMap(
+        [...fieldsOfIPRangesErrors, 'ipv4.vpc', 'ip_ranges'],
+        errors
+      );
+
+      const ipRangesWithErrors = ipRanges.map((ipRange, idx) => {
+        const errorForThisIdx = errorMap[`ip_ranges[${idx}]`];
+        return {
+          address: ipRange.address,
+          error: errorForThisIdx,
+        };
+      });
+
+      setFieldValue('ipRanges', ipRangesWithErrors);
+
       const errorMessage = determineErrorMessage(configId, errorMap);
 
       setAssignLinodesErrors({ ...errorMap, none: errorMessage });
@@ -244,6 +273,7 @@ export const SubnetAssignLinodesDrawer = (
     enableReinitialize: true,
     initialValues: {
       chosenIP: '',
+      ipRanges: [] as ExtendedIP[],
       selectedConfig: null as Config | null,
       selectedLinode: null as Linode | null,
     },
@@ -251,6 +281,13 @@ export const SubnetAssignLinodesDrawer = (
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const handleIPRangeChange = React.useCallback(
+    (_ipRanges: ExtendedIP[]) => {
+      setFieldValue('ipRanges', _ipRanges);
+    },
+    [setFieldValue]
+  );
 
   React.useEffect(() => {
     // Return early if no Linode is selected
@@ -270,7 +307,8 @@ export const SubnetAssignLinodesDrawer = (
       const newLinodeData = {
         ...values.selectedLinode,
         configId,
-        interfaceId: newInterfaceId.current,
+        interfaceData: newInterface?.current,
+        interfaceId: newInterface?.current?.id ?? -1,
         // Create a label that combines Linode label and configuration label (if available)
         linodeConfigLabel: `${values.selectedLinode.label}${
           values.selectedConfig?.label
@@ -290,6 +328,7 @@ export const SubnetAssignLinodesDrawer = (
       setLinodeConfigs([]);
       setValues({
         chosenIP: '',
+        ipRanges: [],
         selectedConfig: null,
         selectedLinode: null,
       });
@@ -297,6 +336,7 @@ export const SubnetAssignLinodesDrawer = (
   }, [
     subnet,
     assignedLinodesAndConfigData,
+    values.ipRanges,
     values.selectedLinode,
     values.selectedConfig,
     linodeConfigs,
@@ -391,10 +431,10 @@ export const SubnetAssignLinodesDrawer = (
             setAssignLinodesErrors({});
           }}
           disabled={userCannotAssignLinodes}
-          label={'Linodes'}
+          label="Linode"
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
-          placeholder="Select Linodes or type to search"
+          placeholder="Select Linode or type to search"
           sx={{ marginBottom: '8px' }}
           value={values.selectedLinode?.id || null}
         />
@@ -427,33 +467,45 @@ export const SubnetAssignLinodesDrawer = (
                 }}
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
-                label={'VPC IPv4'}
+                label="VPC IPv4"
                 sx={{ marginBottom: '8px' }}
                 value={values.chosenIP}
               />
             )}
-          </>
-        )}
-        {linodeConfigs.length > 1 && (
-          <>
-            <FormHelperText sx={{ marginTop: `16px` }}>
-              {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
-              <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
-                Learn more
-              </Link>
-              .
-            </FormHelperText>
-            <Autocomplete
-              onChange={(_, value: Config) => {
-                setFieldValue('selectedConfig', value);
-                setAssignLinodesErrors({});
-              }}
-              disabled={userCannotAssignLinodes}
-              label={'Configuration profile'}
-              options={linodeConfigs}
-              placeholder="Select a configuration profile"
-              value={values.selectedConfig || null}
-            />
+            {linodeConfigs.length > 1 && (
+              <>
+                <FormHelperText sx={{ marginTop: `16px` }}>
+                  {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
+                  <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
+                    Learn more
+                  </Link>
+                  .
+                </FormHelperText>
+                <Autocomplete
+                  onChange={(_, value: Config) => {
+                    setFieldValue('selectedConfig', value);
+                    setAssignLinodesErrors({});
+                  }}
+                  disabled={userCannotAssignLinodes}
+                  label={'Configuration profile'}
+                  options={linodeConfigs}
+                  placeholder="Select a configuration profile"
+                  value={values.selectedConfig || null}
+                />
+              </>
+            )}
+            {/* Display the 'Assign additional IPv4 ranges' section if
+                the Configuration Profile section has been populated, or
+                if it doesn't display b/c the linode has a single config
+            */}
+            {((linodeConfigs.length > 1 && values.selectedConfig) ||
+              linodeConfigs.length === 1) && (
+              <AssignIPRanges
+                handleIPRangeChange={handleIPRangeChange}
+                ipRanges={values.ipRanges}
+                ipRangesError={assignLinodesErrors['ip_ranges']}
+              />
+            )}
           </>
         )}
         <StyledButtonBox>
@@ -490,6 +542,7 @@ export const SubnetAssignLinodesDrawer = (
         noDataText={'No Linodes have been assigned.'}
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndConfigData}
+        tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
       />
       {assignedLinodesAndConfigData.length > 0 && (
         <DownloadCSV

@@ -56,9 +56,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props {
+  buttonText?: string;
   className?: string;
   error?: string;
   forDatabaseAccessControls?: boolean;
+  forVPCIPv4Ranges?: boolean;
   helperText?: string;
   inputProps?: InputBaseProps;
   ips: ExtendedIP[];
@@ -72,9 +74,11 @@ interface Props {
 
 export const MultipleIPInput = React.memo((props: Props) => {
   const {
+    buttonText,
     className,
     error,
     forDatabaseAccessControls,
+    forVPCIPv4Ranges,
     helperText,
     ips,
     onBlur,
@@ -177,16 +181,18 @@ export const MultipleIPInput = React.memo((props: Props) => {
               value={thisIP.address}
             />
           </Grid>
-          {/** Don't show the button for the first input since it won't do anything, unless this component is used in DBaaS */}
+          {/** Don't show the button for the first input since it won't do anything, unless this component is
+           * used in DBaaS or for Linode VPC interfaces
+           */}
           <Grid xs={1}>
-            {idx > 0 || forDatabaseAccessControls ? (
+            {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}
                 onClick={() => removeInput(idx)}
               >
                 <Close data-testid={`delete-ip-${idx}`} />
               </Button>
-            ) : null}
+            )}
           </Grid>
         </Grid>
       ))}
@@ -196,7 +202,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
         compactX
         onClick={addNewInput}
       >
-        Add an IP
+        {buttonText ?? 'Add an IP'}
       </Button>
     </div>
   );
