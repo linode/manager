@@ -34,8 +34,6 @@ export const BillingDetail = () => {
 
   const { data: profile } = useProfile();
 
-  const userType = profile?.user_type ?? null;
-
   if (accountLoading) {
     return <CircleProgress />;
   }
@@ -80,9 +78,9 @@ export const BillingDetail = () => {
           firstName={account.first_name}
           lastName={account.last_name}
           phone={account.phone}
+          profile={profile}
           state={account.state}
           taxId={account.tax_id}
-          userType={userType}
           zip={account.zip}
         />
         <PaymentInformation
@@ -90,7 +88,7 @@ export const BillingDetail = () => {
           isAkamaiCustomer={account?.billing_source === 'akamai'}
           loading={paymentMethodsLoading}
           paymentMethods={paymentMethods}
-          userType={userType}
+          profile={profile}
         />
         <BillingActivityPanel accountActiveSince={account?.active_since} />
       </Grid>

@@ -53,7 +53,7 @@ const props = {
   isAkamaiCustomer: false,
   loading: false,
   paymentMethods,
-  userType: null,
+  profile: queryMocks.useProfile().data,
 };
 
 describe('Payment Info Panel', () => {
@@ -134,12 +134,16 @@ describe('Payment Info Panel', () => {
       queryMocks.useProfile.mockReturnValue({
         data: profileFactory.build({
           restricted: false,
+          user_type: 'child',
         }),
       });
 
       const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-          <PaymentInformation {...props} userType={'child'} />
+          <PaymentInformation
+            {...props}
+            profile={queryMocks.useProfile().data}
+          />
         </PayPalScriptProvider>,
         {
           flags: { parentChildAccountAccess: true },

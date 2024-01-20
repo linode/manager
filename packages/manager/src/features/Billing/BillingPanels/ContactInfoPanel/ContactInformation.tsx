@@ -17,7 +17,7 @@ import {
 } from '../../BillingDetail';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
-import type { UserType } from '@linode/api-v4';
+import type { Profile } from '@linode/api-v4';
 
 interface Props {
   address1: string;
@@ -29,9 +29,9 @@ interface Props {
   firstName: string;
   lastName: string;
   phone: string;
+  profile: Profile | undefined;
   state: string;
   taxId: string;
-  userType: UserType | null;
   zip: string;
 }
 
@@ -59,9 +59,9 @@ const ContactInformation = (props: Props) => {
     firstName,
     lastName,
     phone,
+    profile,
     state,
     taxId,
-    userType,
     zip,
   } = props;
 
@@ -80,7 +80,8 @@ const ContactInformation = (props: Props) => {
   const flags = useFlags();
   const { data: grants } = useGrants();
 
-  const isChildUser = flags.parentChildAccountAccess && userType === 'child';
+  const isChildUser =
+    flags.parentChildAccountAccess && profile?.user_type === 'child';
 
   const isRestrictedUser =
     isChildUser || grants?.global.account_access === 'read_only';
