@@ -14,12 +14,11 @@ import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
-import type { AccountCapability, Profile } from '@linode/api-v4';
+import type { Profile } from '@linode/api-v4';
 
 export const GlobalNotifications = ({
   profile,
 }: {
-  capabilities: AccountCapability[] | undefined;
   profile: Profile | undefined;
 }) => {
   const flags = useFlags();

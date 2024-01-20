@@ -326,10 +326,7 @@ export const MainContent = () => {
               >
                 <Grid className={classes.grid} container spacing={0}>
                   <Grid className={cx(classes.switchWrapper, 'p0')}>
-                    <GlobalNotifications
-                      capabilities={account?.capabilities}
-                      profile={profile}
-                    />
+                    <GlobalNotifications profile={profile} />
                     <React.Suspense fallback={<SuspenseLoader />}>
                       <Switch>
                         <Route component={LinodesRoutes} path="/linodes" />
