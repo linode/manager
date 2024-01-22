@@ -38,6 +38,7 @@ import type {
   CertificateConfig,
   Configuration,
   ConfigurationPayload,
+  Protocol,
 } from '@linode/api-v4';
 
 interface EditProps {
@@ -64,6 +65,8 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   const [isAddCertDrawerOpen, setIsAddCertDrawerOpen] = useState(false);
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const [hasChangedPort, setHasChangedPort] = useState(false);
 
   const [routesTableQuery, setRoutesTableQuery] = useState('');
 
@@ -148,7 +151,35 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
 
   const handleReset = () => {
     formik.resetForm();
+    setHasChangedPort(false);
     reset();
+  };
+
+  const handleProtocolChange = (protocol: Protocol) => {
+    // If the user has changed the port manually, just update the protocol and NOT the port.
+    if (hasChangedPort) {
+      return formik.setFieldValue('protocol', protocol);
+    }
+
+    let newPort = formik.values.port;
+
+    if (protocol === 'http') {
+      newPort = 80;
+    }
+
+    if (protocol === 'https') {
+      newPort = 443;
+    }
+
+    // Update the protocol and port at the same time if the port is unchanged.
+    formik.setFormikState((prev) => ({
+      ...prev,
+      values: {
+        ...prev.values,
+        port: newPort,
+        protocol,
+      },
+    }));
   };
 
   const generalErrors = error?.reduce((acc, { field, reason }) => {
@@ -173,15 +204,19 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         />
       )}
       <TextField
-        errorText={formik.errors.label}
+        errorText={formik.touched.label ? formik.errors.label : undefined}
         label="Configuration Label"
         name="label"
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value={formik.values.label}
       />
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           <Autocomplete
+            onChange={(e, { value }) => {
+              handleProtocolChange(value);
+            }}
             textFieldProps={{
               labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
@@ -191,15 +226,18 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             disableClearable
             errorText={formik.errors.protocol}
             label="Protocol"
-            onChange={(e, { value }) => formik.setFieldValue('protocol', value)}
             options={protocolOptions}
           />
           <TextField
-            errorText={formik.errors.port}
+            onChange={(e) => {
+              formik.handleChange(e);
+              setHasChangedPort(true);
+            }}
+            errorText={formik.touched.port ? formik.errors.port : undefined}
             label="Port"
             labelTooltipText={CONFIGURATION_COPY.Port}
             name="port"
-            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             type="number"
             value={formik.values.port}
           />
