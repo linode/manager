@@ -84,7 +84,6 @@ export const Default: StoryObj<RegionMultiSelectProps> = {
             {...args}
             handleSelection={handleSelectionChange}
             selectedIds={selectedRegionsIds}
-            sortRegionOptions={sortRegionOptions}
           />
         </Box>
       );
@@ -104,6 +103,7 @@ const meta: Meta<RegionMultiSelectProps> = {
     label: 'Regions',
     placeholder: 'Select Regions or type to search',
     regions,
+    sortRegionOptions,
   },
   component: RegionMultiSelect,
   title: 'Components/Selects/Region Multi Select',

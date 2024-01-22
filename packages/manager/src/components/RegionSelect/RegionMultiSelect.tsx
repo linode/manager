@@ -2,6 +2,7 @@ import { visuallyHidden } from '@mui/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { StyledListItem as SelectAndDeselectAll } from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
@@ -121,16 +122,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             if (!option.data) {
               // Render options like "Select All / Deselect All "
               return (
-                <StyledListItem {...props}>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'block',
-                    }}
-                  >
-                    {option.label}
-                  </Box>
-                </StyledListItem>
+                <SelectAndDeselectAll {...props}>
+                  {option.label}
+                </SelectAndDeselectAll>
               );
             }
 
