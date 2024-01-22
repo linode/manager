@@ -30,7 +30,7 @@ const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   type: 'g6-standard-2',
 };
 
-const linodeRequest = (linodeData) => {
+const linodeRequest = (linodeData: CreateLinodeRequest) => {
   return cy.request({
     auth: {
       bearer: oauthToken,

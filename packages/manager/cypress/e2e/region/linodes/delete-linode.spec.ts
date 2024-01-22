@@ -27,7 +27,7 @@ describeRegions('Delete Linodes', (region: Region) => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: region.id,
-      root_password: randomString(32),
+      root_pass: randomString(32),
     });
 
     // Create a Linode before navigating to its details page to delete it.

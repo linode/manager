@@ -15,7 +15,7 @@ import { describeRegions } from 'support/util/regions';
 const makeLinodePayload = (region: string, booted: boolean) => {
   return createLinodeRequestFactory.build({
     label: randomLabel(),
-    password: randomString(32),
+    root_pass: randomString(32),
     region,
     booted,
   });

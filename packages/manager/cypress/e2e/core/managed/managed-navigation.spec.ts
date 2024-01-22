@@ -39,7 +39,7 @@ const managedURLs = [
 // User preferences object to ensure that nav sidebar is open.
 const userPreferences = userPreferencesFactory.build({
   // `false` corresponds to the sidebar being open.
-  desktop_sidebar_open: false,
+  desktop_sidebar_open: false as any,
 });
 
 describe('Managed navigation', () => {

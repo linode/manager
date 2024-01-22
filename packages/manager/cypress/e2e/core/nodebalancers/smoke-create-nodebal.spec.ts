@@ -22,7 +22,7 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
+const createNodeBalancerWithUI = (nodeBal: any, isDcPricingTest = false) => {
   const regionName = getRegionById(nodeBal.region).label;
 
   cy.visitWithLogin('/nodebalancers/create');

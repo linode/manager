@@ -14,7 +14,7 @@ describe('smoke - deep link', () => {
         cy.visitWithLogin('/null');
       });
 
-      page.goWithUI.forEach((uiPath) => {
+      page.goWithUI.forEach((uiPath: any) => {
         (page.first ? it.only : page.skip ? it.skip : it)(
           `by ${uiPath.name}`,
           () => {

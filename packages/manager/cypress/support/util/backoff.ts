@@ -64,7 +64,7 @@ export const attemptWithBackoff = async <T>(
     const nextAttempt = attempt + 1;
     try {
       return await promiseCallback();
-    } catch (e) {
+    } catch (e: unknown) {
       attemptErrors.push(e);
       if (nextAttempt <= maxAttempts) {
         const backoffTime = backoffMethod.calculateBackoff(nextAttempt);
@@ -74,11 +74,11 @@ export const attemptWithBackoff = async <T>(
   }
 
   const errorMessage = attemptErrors.reduce(
-    (acc: string, cur: unknown, index: number) => {
+    (acc: string, cur: unknown, index: number): string => {
       return `${acc}\n\nAttempt #${index + 1}:\n${cur}`;
     },
     `Failed to resolve promise after ${maxAttempts} attempt(s):`
-  );
+  ) as string;
   throw new Error(errorMessage);
 };
 

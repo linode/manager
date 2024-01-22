@@ -1,5 +1,5 @@
 import { createLinode } from 'support/api/linodes';
-import { containsVisible, fbtVisible } from 'support/helpers';
+import { containsVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';

@@ -97,7 +97,7 @@ export const deleteByLabel = (path: string, label: string) => {
 };
 
 // Images do not have tags
-export const isTestEntity = (entity) =>
+export const isTestEntity = (entity: any) =>
   entity.tags?.includes(entityTag) ||
   entity.label?.startsWith(entityPrefix) ||
   entity.summary?.includes(entityTag);
