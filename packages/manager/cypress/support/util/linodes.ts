@@ -44,7 +44,9 @@ export const createLinodeAndGetConfig = async ({
   linodeConfigRequestOverride = {},
   waitForLinodeToBeRunning = false,
 }: {
-  linodeConfigRequestOverride?: Partial<Linode & LinodeConfigCreationData>;
+  linodeConfigRequestOverride?: Partial<
+    CreateLinodeRequest & LinodeConfigCreationData
+  >;
   waitForLinodeToBeRunning?: boolean;
 }): Promise<[Linode, Config]> => {
   const createPayload = createLinodeRequestFactory.build({
