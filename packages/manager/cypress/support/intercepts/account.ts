@@ -124,6 +124,26 @@ export const mockUpdateUser = (
 /**
  * Intercepts GET request to fetch account user grants and mocks response.
  *
+ * The mocked response contains a 204 status code and no body, indicating that
+ * the mocked user has unrestricted account access.
+ *
+ * @param username - Username of user for which to fetch grants.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetUserGrantsUnrestrictedAccess = (
+  username: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/users/${username}/grants`),
+    makeResponse(undefined, 204)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch account user grants and mocks response.
+ *
  * @param username - Username of user for which to fetch grants.
  *
  * @returns Cypress chainable.

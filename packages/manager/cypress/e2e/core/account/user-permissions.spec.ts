@@ -7,6 +7,7 @@ import {
   mockAddUser,
   mockGetUser,
   mockGetUserGrants,
+  mockGetUserGrantsUnrestrictedAccess,
   mockGetUsers,
   mockUpdateUser,
   mockUpdateUserGrants,
@@ -190,14 +191,11 @@ describe('User permission management', () => {
     };
 
     const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
 
+    // Initially mock user with unrestricted account access.
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser).as('getUser');
-    mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username).as('getUserGrants');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
     cy.visitWithLogin('/account/users');
@@ -257,7 +255,7 @@ describe('User permission management', () => {
 
     // Re-enable unrestricted account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     cy.findByLabelText('Toggle Full Account Access')
       .should('be.visible')
       .click();
@@ -650,15 +648,9 @@ describe('User permission management', () => {
       restricted: false,
     });
 
-    const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
-
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
@@ -791,12 +783,6 @@ describe('User permission management', () => {
       restricted: true,
     });
 
-    const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
-
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
       parentChildAccountAccess: makeFeatureFlagData(false),
@@ -805,7 +791,7 @@ describe('User permission management', () => {
 
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
