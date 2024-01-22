@@ -37,11 +37,11 @@ export const AssignIPRanges = (props: Props) => {
         .
       </Typography>
       <MultipleIPInput
-        buttonText="Add IPv4 Ranges"
+        buttonText="Add IPv4 Range"
         forVPCIPv4Ranges
         ips={ipRanges}
         onChange={handleIPRangeChange}
-        placeholder="IPv4 range address format, e.g. 10.0.0.0/24"
+        placeholder="10.0.0.0/24"
         title=""
       />
     </>
