@@ -1,8 +1,10 @@
+import { visuallyHidden } from '@mui/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
@@ -22,23 +24,11 @@ import type {
   RegionMultiSelectProps,
   RegionSelectOption,
 } from './RegionSelect.types';
-
-export const sortByRegion = (a: RegionSelectOption, b: RegionSelectOption) => {
-  if (!a.label || !b.label) {
-    return 0;
-  }
-  if (a.label > b.label) {
-    return 1;
-  }
-  if (a.label < b.label) {
-    return -1;
-  }
-  return 0;
-};
+import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
-    RenderSelectedRegionsList,
+    SelectedRegionsList,
     currentCapability,
     disabled,
     errorText,
@@ -51,6 +41,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     regions,
     required,
     selectedIds,
+    sortRegionOptions,
     width,
   } = props;
 
@@ -96,7 +87,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     [accountAvailability, currentCapability, regions]
   );
 
-  const removeOption = (optionToRemove: RegionSelectOption) => {
+  const handleRemoveOption = (optionToRemove: RegionSelectOption) => {
     const updatedSelectedOptions = selectedRegions.filter(
       (option) => option.value !== optionToRemove.value
     );
@@ -125,6 +116,8 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             handleRegionChange(selectedOption as RegionSelectOption[])
           }
           renderOption={(props, option, { selected }) => {
+            const isDisabledMenuItem =
+              Boolean(flags.dcGetWell) && Boolean(option.unavailable);
             if (!option.data) {
               // Render options like "Select All / Deselect All "
               return (
@@ -132,7 +125,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
                   <Box
                     sx={{
                       alignItems: 'center',
-                      // display: 'flex',
                       display: 'block',
                     }}
                   >
@@ -145,27 +137,68 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             // Render regular options
             return (
               <Tooltip
+                PopperProps={{
+                  sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+                }}
                 title={
-                  option.unavailable
-                    ? 'There may be limited capacity in this region. Learn more.'
-                    : ''
+                  isDisabledMenuItem ? (
+                    <>
+                      There may be limited capacity in this region.{' '}
+                      <Link to="https://www.linode.com/global-infrastructure/availability">
+                        Learn more
+                      </Link>
+                      .
+                    </>
+                  ) : (
+                    ''
+                  )
                 }
-                disableHoverListener={!option.unavailable}
+                disableFocusListener={!isDisabledMenuItem}
+                disableHoverListener={!isDisabledMenuItem}
+                disableTouchListener={!isDisabledMenuItem}
+                enterDelay={200}
+                enterNextDelay={200}
+                enterTouchDelay={200}
+                key={option.value}
               >
-                <StyledListItem {...props}>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      flexGrow: 1,
-                    }}
-                  >
-                    <StyledFlagContainer>
-                      <Flag country={option.data.country} />
-                    </StyledFlagContainer>
-                    {option.label}
-                  </Box>
-                  <SelectedIcon visible={selected} />
+                <StyledListItem
+                  {...props}
+                  className={
+                    isDisabledMenuItem
+                      ? `${props.className} Mui-disabled`
+                      : props.className
+                  }
+                  componentsProps={{
+                    root: {
+                      'data-qa-option': option.value,
+                      'data-testid': option.value,
+                    } as ListItemComponentsPropsOverrides,
+                  }}
+                  onClick={(e) =>
+                    isDisabledMenuItem
+                      ? e.preventDefault()
+                      : props.onClick
+                      ? props.onClick(e)
+                      : null
+                  }
+                  aria-disabled={undefined}
+                >
+                  <>
+                    <Box alignItems="center" display="flex" flexGrow={1}>
+                      <StyledFlagContainer>
+                        <Flag country={option.data.country} />
+                      </StyledFlagContainer>
+                      {option.label}
+                      {isDisabledMenuItem && (
+                        <Box sx={visuallyHidden}>
+                          Disabled option - There may be limited capacity in
+                          this region. Learn more at
+                          https://www.linode.com/global-infrastructure/availability.
+                        </Box>
+                      )}
+                    </Box>
+                    {selected && <SelectedIcon visible={selected} />}
+                  </>
                 </StyledListItem>
               </Tooltip>
             );
@@ -193,10 +226,14 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           value={selectedRegions}
         />
       </StyledAutocompleteContainer>
-      {selectedRegions.length > 0 && RenderSelectedRegionsList && (
-        <RenderSelectedRegionsList
-          onRemove={removeOption}
-          selectedRegions={[...selectedRegions].sort(sortByRegion)}
+      {selectedRegions.length > 0 && SelectedRegionsList && (
+        <SelectedRegionsList
+          selectedRegions={
+            sortRegionOptions
+              ? [...selectedRegions].sort(sortRegionOptions)
+              : selectedRegions
+          }
+          onRemove={handleRemoveOption}
         />
       )}
     </>

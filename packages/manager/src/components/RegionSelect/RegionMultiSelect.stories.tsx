@@ -7,6 +7,7 @@ import {
   RemovableItem,
   RemovableSelectionsList,
 } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
+import { sortByString } from 'src/utilities/sort-by';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
 import { StyledFlagContainer } from './RegionSelect.styles';
@@ -23,6 +24,10 @@ interface SelectedRegionsProps {
 interface LabelComponentProps {
   selection: RemovableItem;
 }
+
+const sortRegionOptions = (a: RegionSelectOption, b: RegionSelectOption) => {
+  return sortByString(a.label, b.label, 'asc');
+};
 
 const LabelComponent = ({ selection }: LabelComponentProps) => {
   return (
@@ -46,8 +51,7 @@ const SelectedRegionsList = ({
   selectedRegions,
 }: SelectedRegionsProps) => {
   const handleRemove = (data: RemovableItem) => {
-    const { id: _id, ...dataWithoutId } = data;
-    onRemove((dataWithoutId as unknown) as RegionSelectOption);
+    onRemove((data as unknown) as RegionSelectOption);
   };
 
   return (
@@ -66,11 +70,12 @@ const SelectedRegionsList = ({
 export const Default: StoryObj<RegionMultiSelectProps> = {
   render: (args) => {
     const SelectWrapper = () => {
-      const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+      const [selectedRegionsIds, setSelectedRegionsIds] = useState<string[]>(
+        []
+      );
 
       const handleSelectionChange = (selectedIds: string[]) => {
-        debugger;
-        setSelectedRegions(selectedIds);
+        setSelectedRegionsIds(selectedIds);
       };
 
       return (
@@ -78,7 +83,8 @@ export const Default: StoryObj<RegionMultiSelectProps> = {
           <RegionMultiSelect
             {...args}
             handleSelection={handleSelectionChange}
-            selectedIds={selectedRegions}
+            selectedIds={selectedRegionsIds}
+            sortRegionOptions={sortRegionOptions}
           />
         </Box>
       );
@@ -90,7 +96,7 @@ export const Default: StoryObj<RegionMultiSelectProps> = {
 
 const meta: Meta<RegionMultiSelectProps> = {
   args: {
-    RenderSelectedRegionsList: SelectedRegionsList,
+    SelectedRegionsList,
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',

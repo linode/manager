@@ -153,6 +153,11 @@ export const getRegionOptionAvailability = ({
   return regionWithUnavailability.unavailable.includes(currentCapability);
 };
 
+/**
+ * This utility function takes an array of region IDs and returns an array of corresponding RegionSelectOption objects.
+ *
+ * @returns An array of RegionSelectOption objects corresponding to the selected region IDs.
+ */
 export const getSelectedRegionsByIds = ({
   accountAvailabilityData,
   currentCapability,
