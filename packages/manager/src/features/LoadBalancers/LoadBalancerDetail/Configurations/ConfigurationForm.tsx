@@ -24,7 +24,7 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 import { RoutesTable } from '../Routes/RoutesTable';
-import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
+import { AddCertificateDrawer } from './AddCertificateDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 import {
@@ -34,7 +34,11 @@ import {
   protocolOptions,
 } from './constants';
 
-import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
+import type {
+  CertificateConfig,
+  Configuration,
+  ConfigurationPayload,
+} from '@linode/api-v4';
 
 interface EditProps {
   configuration: Configuration;
@@ -57,7 +61,7 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     loadbalancerId: string;
   }>();
 
-  const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
+  const [isAddCertDrawerOpen, setIsAddCertDrawerOpen] = useState(false);
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -120,23 +124,25 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
 
   const handleRemoveCert = (index: number) => {
     formik.setFieldTouched('certificates');
-    formik.values.certificates.splice(index, 1);
-    formik.setFieldValue('certificates', formik.values.certificates);
+    const newCerts = [...formik.values.certificates];
+    newCerts.splice(index, 1);
+    formik.setFieldValue('certificates', newCerts);
   };
 
   const handleRemoveRoute = (index: number) => {
     if (!formik.values.route_ids) {
       return;
     }
-    formik.values.route_ids.splice(index, 1);
-    formik.setFieldValue('route_ids', formik.values.route_ids);
+    const newRouteIds = [...formik.values.route_ids];
+    newRouteIds.splice(index, 1);
+    formik.setFieldValue('route_ids', newRouteIds);
   };
 
-  const handleAddCerts = (certificates: Configuration['certificates']) => {
+  const handleAddCerts = (certificate: CertificateConfig) => {
     formik.setFieldTouched('certificates');
     formik.setFieldValue('certificates', [
       ...formik.values.certificates,
-      ...certificates,
+      certificate,
     ]);
   };
 
@@ -228,13 +234,10 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             />
             <Box mt={2}>
               <Button
-                onClick={() => {
-                  setIsApplyCertDialogOpen(true);
-                }}
                 buttonType="outlined"
+                onClick={() => setIsAddCertDrawerOpen(true)}
               >
-                Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
-                Certificates
+                Add Certificate
               </Button>
             </Box>
           </Stack>
@@ -307,11 +310,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         onClose={() => setIsAddRouteDrawerOpen(false)}
         open={isAddRouteDrawerOpen}
       />
-      <ApplyCertificatesDrawer
+      <AddCertificateDrawer
         loadbalancerId={loadbalancerId}
         onAdd={handleAddCerts}
-        onClose={() => setIsApplyCertDialogOpen(false)}
-        open={isApplyCertDialogOpen}
+        onClose={() => setIsAddCertDrawerOpen(false)}
+        open={isAddCertDrawerOpen}
       />
       {mode === 'edit' && (
         <DeleteConfigurationDialog

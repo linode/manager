@@ -23,6 +23,7 @@ describe('CPUMetrics', () => {
           {
             data: mockMetrics,
             format: formatPercentage,
+            handleLegendClick: vi.fn(),
             legendColor: 'blue',
             legendTitle: 'Legend Title',
           },
@@ -40,6 +41,7 @@ describe('CPUMetrics', () => {
           {
             data: mockMetrics,
             format: formatPercentage,
+            handleLegendClick: vi.fn(),
             legendColor: 'blue',
             legendTitle: 'Legend Title',
           },
@@ -59,6 +61,7 @@ describe('CPUMetrics', () => {
           {
             data: mockMetrics,
             format: formatPercentage,
+            handleLegendClick: vi.fn(),
             legendColor: 'blue',
             legendTitle: 'Legend Title',
           },
@@ -77,6 +80,7 @@ describe('CPUMetrics', () => {
           {
             data: mockMetrics,
             format: formatPercentage,
+            handleLegendClick: vi.fn(),
             legendColor: 'blue',
             legendTitle: 'Legend Title',
           },
@@ -96,12 +100,14 @@ describe('CPUMetrics', () => {
           {
             data: mockMetrics,
             format: formatPercentage,
+            handleLegendClick: vi.fn(),
             legendColor: 'blue',
             legendTitle: 'Legend Title 1',
           },
           {
             data: { average: 90, last: 100, length: 0, max: 80, total: 110 },
             format: formatPercentage,
+            handleLegendClick: vi.fn(),
             legendColor: 'red',
             legendTitle: 'Legend Title 2',
           },

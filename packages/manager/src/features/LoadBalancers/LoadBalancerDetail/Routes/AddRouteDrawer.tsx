@@ -174,7 +174,7 @@ const AddNewRouteForm = (props: AddNewRouteFormProps) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          label: 'Create Route',
+          label: 'Create and Add',
           loading: isLoading,
           type: 'submit',
         }}

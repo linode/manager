@@ -1,16 +1,24 @@
 import type { Grant, Grants } from '@linode/api-v4';
+import { profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
+  mockAddUser,
   mockGetUser,
   mockGetUserGrants,
   mockGetUsers,
   mockUpdateUser,
   mockUpdateUserGrants,
 } from 'support/intercepts/account';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 
 // Message shown when user has unrestricted account acess.
@@ -222,8 +230,9 @@ describe('User permission management', () => {
 
     ui.toast.assertMessage('User permissions successfully saved.');
 
-    // Smoke tests to confirm that "Global Permissions" and "Specific Permissions"
+    // Smoke tests to confirm that "General Permissions" and "Specific Permissions"
     // sections are visible.
+    cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('not.exist');
     cy.get('[data-qa-global-section]')
       .should('be.visible')
@@ -253,8 +262,8 @@ describe('User permission management', () => {
       .should('be.visible')
       .click();
 
+    cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('be.visible');
-    cy.findByText('Global Permissions').should('not.exist');
     cy.findByText('Billing Access').should('not.exist');
     cy.findByText('Specific Permissions').should('not.exist');
   });
@@ -471,5 +480,428 @@ describe('User permission management', () => {
             });
         });
       });
+  });
+
+  it('disables Read-Write and defaults to Read Only Billing Access for child account users with Parent/Child feature flag', () => {
+    const mockProfile = profileFactory.build({
+      username: 'unrestricted-child-user',
+    });
+
+    const mockActiveUser = accountUserFactory.build({
+      username: 'unrestricted-child-user',
+      restricted: false,
+      user_type: 'child',
+    });
+
+    const mockRestrictedUser = {
+      ...mockActiveUser,
+      restricted: true,
+      username: 'restricted-child-user',
+    };
+
+    const mockUserGrants = grantsFactory.build({
+      global: { account_access: 'read_write' },
+    });
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
+    mockGetUser(mockActiveUser);
+    mockGetUserGrants(mockActiveUser.username, mockUserGrants);
+    mockGetProfile(mockProfile);
+
+    // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+    cy.findByText(mockRestrictedUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('User Permissions')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.visitWithLogin(
+      `/account/users/${mockRestrictedUser.username}/permissions`
+    );
+    mockGetUser(mockRestrictedUser);
+    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    cy.get('[data-qa-global-section]')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that 'Read-Write' Billing Access is disabled and 'Read Only' Billing Access is selected by default.
+        cy.get(`[data-qa-select-card-heading="Read-Write"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'disabled');
+        assertBillingAccessSelected('Read Only');
+
+        // Switch billing access to "None" and confirm that "Read Only" has been deselected.
+        selectBillingAccess('None');
+        cy.get(`[data-qa-select-card-heading="Read Only"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'data-qa-selection-card-checked', 'false');
+
+        ui.button
+          .findByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+  });
+
+  it('disables "Read Only" and "None" and defaults to "Read Write" Billing Access for "Proxy" account users with Parent/Child feature flag', () => {
+    const mockProfile = profileFactory.build({
+      username: 'proxy-user',
+    });
+
+    const mockActiveUser = accountUserFactory.build({
+      username: 'proxy-user',
+      restricted: false,
+      user_type: 'proxy',
+    });
+
+    const mockRestrictedUser = {
+      ...mockActiveUser,
+      restricted: true,
+      username: 'restricted-proxy-user',
+    };
+
+    const mockUserGrants = grantsFactory.build({
+      global: { account_access: 'read_write' },
+    });
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
+    mockGetUser(mockActiveUser);
+    mockGetUserGrants(mockActiveUser.username, mockUserGrants);
+    mockGetProfile(mockProfile);
+    mockGetUser(mockRestrictedUser);
+    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
+
+    // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+    cy.findByText(mockRestrictedUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('User Permissions')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.url().should(
+      'endWith',
+      `/account/users/${mockRestrictedUser.username}/permissions`
+    );
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    cy.get('[data-qa-global-section]')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that 'Read-Write' Billing Access is enabled
+        cy.get(`[data-qa-select-card-heading="Read-Write"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('be.enabled');
+        assertBillingAccessSelected('Read-Write');
+
+        // Confirm that 'Read Only' and 'None' Billing Access are disabled
+        cy.get(`[data-qa-select-card-heading="Read Only"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'disabled');
+
+        cy.get(`[data-qa-select-card-heading="None"]`)
+          .closest('[data-qa-selection-card]')
+          .should('be.visible')
+          .should('have.attr', 'disabled');
+      });
+  });
+
+  it('can add users with full access', () => {
+    const mockUser = accountUserFactory.build({
+      username: randomLabel(),
+      restricted: false,
+    });
+
+    const username = randomLabel();
+    const newUser = accountUserFactory.build({
+      username: username,
+      email: `${username}@test.com`,
+      restricted: false,
+    });
+
+    const mockUserGrantsUpdated = grantsFactory.build();
+    const mockUserGrants = {
+      ...mockUserGrantsUpdated,
+      global: undefined,
+    };
+
+    mockGetUsers([mockUser]).as('getUsers');
+    mockGetUser(mockUser);
+    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockAddUser(newUser).as('addUser');
+
+    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that the "Users & Grants" page initially lists the main user
+    cy.findByText(mockUser.username).should('be.visible');
+
+    mockGetUsers([mockUser, newUser]).as('getUsers');
+
+    // "Add a User" button shows up and is clickable
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // "Add a User" drawer shows up
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // the drawer has been closed
+    cy.findByText('Add a User').should('not.exist');
+    // cancel button will not add a new user
+    cy.findByText(newUser.username).should('not.exist');
+
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // "x" button will not add a new user
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // the drawer has been closed
+    cy.findByText('Add a User').should('not.exist');
+    // no new user is added
+    cy.findByText(newUser.username).should('not.exist');
+
+    // new user should be added and shown in the user list
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // confirm to add a new user
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        // an inline error message will be displayed when username or email is not specified
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Username is required.').should('be.visible');
+        cy.findByText('Email address is required.').should('be.visible');
+
+        // type username
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+
+        // an inline error message will be displayed when the email address is invalid
+        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Must be a valid Email address.').should('be.visible');
+
+        // type email address
+        cy.get('[id="email"]')
+          .click()
+          .clear()
+          .type(`${newUser.username}@test.com{enter}`);
+
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // Cloud Manager passes "restricted: false" in the request payload
+    cy.wait('@addUser').then((intercept) => {
+      expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
+    });
+    cy.wait('@getUsers');
+
+    // the new user is displayed in the user list
+    cy.findByText(newUser.username).should('be.visible');
+
+    // no redirect occurs
+    cy.url().should('endWith', '/users');
+  });
+
+  it('can add users with restricted access', () => {
+    const mockUser = accountUserFactory.build({
+      username: randomLabel(),
+      restricted: false,
+    });
+
+    const username = randomLabel();
+    const newUser = accountUserFactory.build({
+      username: username,
+      email: `${username}@test.com`,
+      restricted: true,
+    });
+
+    const mockUserGrantsUpdated = grantsFactory.build();
+    const mockUserGrants = {
+      ...mockUserGrantsUpdated,
+      global: undefined,
+    };
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockUser]).as('getUsers');
+    mockGetUser(mockUser);
+    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockAddUser(newUser).as('addUser');
+
+    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that the "Users & Grants" page initially lists the main user
+    cy.findByText(mockUser.username).should('be.visible');
+
+    mockGetUsers([mockUser, newUser]).as('getUsers');
+
+    // "Add a User" button shows up and is clickable
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // "Add a User" drawer shows up
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // "x" or cancel button will not add a new user
+    cy.findByText(newUser.username).should('not.exist');
+
+    // new user should be added and shown in the user list
+    cy.findByText('Add a User')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // confirm to add a new user
+    ui.drawer
+      .findByTitle('Add a User')
+      .should('be.visible')
+      .within(() => {
+        // an inline error message will be displayed when username or email is not specified
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Username is required.').should('be.visible');
+        cy.findByText('Email address is required.').should('be.visible');
+
+        // type username
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+
+        // an inline error message will be displayed when the email address is invalid
+        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Must be a valid Email address.').should('be.visible');
+
+        // type email address
+        cy.get('[id="email"]')
+          .click()
+          .clear()
+          .type(`${newUser.username}@test.com{enter}`);
+
+        // toggle to disable full access
+        cy.get('[data-qa-create-restricted="true"]')
+          .should('be.visible')
+          .click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Add User')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // Cloud Manager passes "restricted: true" in the request payload
+    cy.wait('@addUser').then((intercept) => {
+      expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
+    });
+    cy.wait('@getUsers');
+    cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    // the new user is displayed in the user list
+    cy.findByText(newUser.username).should('be.visible');
+
+    // redirects to the new user's "User Permissions" page
+    cy.url().should('endWith', `/users/${newUser.username}/permissions`);
   });
 });

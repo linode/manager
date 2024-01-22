@@ -28,12 +28,12 @@ describe('EditRouteDrawer (AGLB full create flow)', () => {
       ...initialValues,
       configurations: [
         {
-          service_targets: [],
           certificates: [],
           label: 'test',
           port: 8080,
           protocol: 'http',
           routes: [{ label: 'test-1', protocol: 'http', rules: [] }],
+          service_targets: [],
         },
       ],
     };
@@ -58,11 +58,11 @@ describe('EditRouteDrawer (AGLB full create flow)', () => {
       values.configurations![0].routes![0].label
     );
 
-    expect(saveButton).toBeDisabled();
+    expect(saveButton).toHaveAttribute('aria-disabled', 'true');
 
     userEvent.type(routeLabelTextField, 'my-new-label');
 
-    expect(saveButton).toBeEnabled();
+    expect(saveButton).toHaveAttribute('aria-disabled', 'false');
 
     userEvent.click(saveButton!);
   });
