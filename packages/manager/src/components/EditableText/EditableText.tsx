@@ -119,6 +119,10 @@ interface Props {
    */
   onEdit: (text: string) => Promise<any>;
   /**
+   * Additional function to run when the pencil icon is clicked (won't change default behavior)
+   */
+  onOpenEdit?: () => void;
+  /**
    * The text inside the textbox
    */
   text: string;
@@ -137,6 +141,7 @@ export const EditableText = (props: PassThroughProps) => {
     labelLink,
     onCancel,
     onEdit,
+    onOpenEdit,
     text: propText,
     ...rest
   } = props;
@@ -146,7 +151,10 @@ export const EditableText = (props: PassThroughProps) => {
   }, [propText]);
 
   React.useEffect(() => {
-    onCancel();
+    if (!isEditing) {
+      onCancel();
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditing]);
 
@@ -156,6 +164,9 @@ export const EditableText = (props: PassThroughProps) => {
 
   const openEdit = () => {
     setIsEditing(true);
+    if (onOpenEdit) {
+      onOpenEdit();
+    }
   };
 
   const finishEditing = () => {

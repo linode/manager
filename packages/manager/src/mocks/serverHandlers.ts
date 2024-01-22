@@ -1954,7 +1954,7 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+  rest.put('*/placement/groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }

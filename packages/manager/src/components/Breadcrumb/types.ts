@@ -13,4 +13,5 @@ export interface EditableProps {
   errorText?: string;
   onCancel: () => void;
   onEdit: (value: string) => Promise<any>;
+  onOpenEdit?: () => void;
 }

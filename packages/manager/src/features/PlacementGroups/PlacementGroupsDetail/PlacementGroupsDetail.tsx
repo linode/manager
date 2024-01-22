@@ -35,6 +35,7 @@ export const PlacementGroupsDetail = () => {
     reset,
   } = useMutatePlacementGroup(placementGroupId);
   const errorText = getErrorStringOrDefault(updatePlacementGroupError ?? '');
+  const [isEditingLabel, setIsEditingLabel] = React.useState<boolean>(false);
 
   if (!placementGroup) {
     return <NotFound />;
@@ -61,38 +62,45 @@ export const PlacementGroupsDetail = () => {
       title: `Linodes (${linodeCount})`,
     },
   ];
-
-  const handleLabelChange = (newLabel: string) => {
-    if (updatePlacementGroupError) {
-      reset();
-    }
-    return updatePlacementGroup({ label: newLabel });
-  };
-
-  const resetEditableLabel = () => {
-    return placementGroup.label;
-  };
-
   const { affinity_type, label } = placementGroup;
   const affinityLabel = getAffinityLabel(affinity_type);
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
+  const resetEditableLabel = () => {
+    setIsEditingLabel(false);
+
+    return `${label} (${affinityLabel})`;
+  };
+
+  const handleLabelEdit = (newLabel: string) => {
+    setIsEditingLabel(false);
+
+    if (updatePlacementGroupError) {
+      reset();
+    }
+
+    return updatePlacementGroup({ label: newLabel });
+  };
+
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment segment={label} />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            editableTextTitle: `${placementGroup?.label} (${affinityLabel})`,
+            editableTextTitle: isEditingLabel
+              ? label
+              : `${label} (${affinityLabel})`,
             errorText,
             onCancel: resetEditableLabel,
-            onEdit: handleLabelChange,
+            onEdit: handleLabelEdit,
+            onOpenEdit: () => setIsEditingLabel(true),
           },
-          pathname: `/placement-groups/${placementGroup.label}`,
+          pathname: `/placement-groups/${label}`,
         }}
         docsLabel="Docs"
-        docsLink=""
-        title="Placement Group Details"
+        docsLink="TODO VM_Placement: add doc link"
+        title="Placement Group Detail"
       />
       <Tabs
         index={tabIndex === -1 ? 0 : tabIndex}
@@ -101,14 +109,10 @@ export const PlacementGroupsDetail = () => {
         <TabLinkList tabs={tabs} />
 
         <TabPanels>
-          <SafeTabPanel index={0}>
-            <>{/* something */}</>
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <>{/* something */}</>
-          </SafeTabPanel>
+          <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
+          <SafeTabPanel index={1}>TODO VM_Placement: linode list</SafeTabPanel>
         </TabPanels>
       </Tabs>
-    </React.Fragment>
+    </>
   );
 };
