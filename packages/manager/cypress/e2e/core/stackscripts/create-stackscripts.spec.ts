@@ -300,7 +300,7 @@ describe('Create stackscripts', () => {
       { label: 'Debian 12', sel: 'linode/debian12' },
       { label: 'Fedora 38', sel: 'linode/fedora38' },
       { label: 'Rocky Linux 9', sel: 'linode/rocky9' },
-      { label: 'Ubuntu 23.04', sel: 'linode/ubuntu23.04' },
+      { label: 'Ubuntu 23.10', sel: 'linode/ubuntu23.10' },
     ];
 
     interceptCreateStackScript().as('createStackScript');
