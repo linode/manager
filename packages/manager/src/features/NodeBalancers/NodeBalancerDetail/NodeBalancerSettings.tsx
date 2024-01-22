@@ -9,22 +9,18 @@ import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { useFlags } from 'src/hooks/useFlags';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
+import { useGrants } from 'src/queries/profile';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
-import { Profile } from '@linode/api-v4';
 
-interface Props {
-  profile: Profile | undefined;
-}
-
-export const NodeBalancerSettings = (props: Props) => {
-  const { profile } = props;
+export const NodeBalancerSettings = () => {
+  const { data: grants } = useGrants();
   const flags = useFlags();
   const theme = useTheme();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -32,7 +28,7 @@ export const NodeBalancerSettings = (props: Props) => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const displayFirewallInfoText = attachedFirewallData?.results === 0;
-  const isRestricted = profile?.restricted;
+  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
 
   const {
     error: labelError,
@@ -80,6 +76,7 @@ export const NodeBalancerSettings = (props: Props) => {
       <Accordion defaultExpanded heading="NodeBalancer Label">
         <TextField
           data-qa-label-panel
+          disabled={isRestricted}
           errorText={labelError?.[0].reason}
           label="Label"
           onChange={(e) => setLabel(e.target.value)}
@@ -89,7 +86,7 @@ export const NodeBalancerSettings = (props: Props) => {
         <Button
           buttonType="primary"
           data-qa-label-save
-          disabled={label === nodebalancer.label}
+          disabled={isRestricted || label === nodebalancer.label}
           loading={isUpdatingLabel}
           onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
@@ -113,6 +110,7 @@ export const NodeBalancerSettings = (props: Props) => {
             ),
           }}
           data-qa-connection-throttle
+          disabled={isRestricted}
           errorText={throttleError?.[0].reason}
           label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
@@ -142,6 +140,7 @@ export const NodeBalancerSettings = (props: Props) => {
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
+          disabled={isRestricted}
           onClick={() => setIsDeleteDialogOpen(true)}
         >
           Delete

@@ -14,11 +14,12 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -31,7 +32,7 @@ export const NodeBalancerDetail = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const [label, setLabel] = React.useState<string>();
-  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const {
     error: updateError,
@@ -39,6 +40,8 @@ export const NodeBalancerDetail = () => {
   } = useNodebalancerUpdateMutation(id);
 
   const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
+
+  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -109,6 +112,9 @@ export const NodeBalancerDetail = () => {
         title={nodeBalancerLabel}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+      {isRestricted && (
+        <Notice text={RESTRICTED_ACCESS_NOTICE} important variant="warning" />
+      )}
       <Tabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),
@@ -120,17 +126,17 @@ export const NodeBalancerDetail = () => {
 
         <TabPanels>
           <SafeTabPanel index={0}>
-            <NodeBalancerSummary profile={profile} />
+            <NodeBalancerSummary />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <NodeBalancerConfigurations
+              grants={grants}
               nodeBalancerLabel={nodebalancer.label}
               nodeBalancerRegion={nodebalancer.region}
-              profile={profile}
             />
           </SafeTabPanel>
           <SafeTabPanel index={2}>
-            <NodeBalancerSettings profile={profile} />
+            <NodeBalancerSettings />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

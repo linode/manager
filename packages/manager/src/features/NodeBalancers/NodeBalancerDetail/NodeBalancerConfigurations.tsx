@@ -62,7 +62,7 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from '../types';
-import type { Profile } from '@linode/api-v4';
+import type { Grants } from '@linode/api-v4';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -88,9 +88,9 @@ const StyledConfigsButton = styled(Button, {
 }));
 
 interface Props {
+  grants: Grants | undefined;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
-  profile: Profile | undefined;
 }
 
 interface MatchProps {
@@ -161,7 +161,7 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
 };
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   render() {
-    const { nodeBalancerLabel } = this.props;
+    const { grants, nodeBalancerLabel } = this.props;
     const {
       configErrors,
       configSubmitting,
@@ -169,6 +169,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       hasUnsavedConfig,
       panelMessages,
     } = this.state;
+
+    const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
 
     return (
       <div>
@@ -185,6 +187,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <StyledConfigsButton
               buttonType="outlined"
               data-qa-add-config
+              disabled={isRestricted}
               onClick={() => this.addNodeBalancerConfig()}
             >
               {configs.length === 0
@@ -618,6 +621,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     },
     idx: number
   ) => {
+    const { grants } = this.props;
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
@@ -629,6 +633,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const isExpanded = expandedConfigId
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
+
+    const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
 
     const L = {
       algorithmLens: lensTo(['algorithm']),
@@ -689,6 +695,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           checkPassive={view(L.checkPassiveLens, this.state)}
           checkPath={view(L.checkPathLens, this.state)}
           configIdx={idx}
+          disabled={isRestricted}
           errors={configErrors[idx]}
           forEdit
           healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}

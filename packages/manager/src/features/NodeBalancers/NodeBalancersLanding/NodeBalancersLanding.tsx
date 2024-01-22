@@ -6,6 +6,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,14 +15,15 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { useGrants } from 'src/queries/profile';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
-
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
@@ -35,6 +37,9 @@ export const NodeBalancersLanding = () => {
 
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const { data: grants } = useGrants();
+
+  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -86,11 +91,15 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
+        disabledCreateButton={isRestricted}
         docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"
         onButtonClick={() => history.push('/nodebalancers/create')}
         title="NodeBalancers"
       />
+      {isRestricted && (
+        <Notice important text={RESTRICTED_ACCESS_NOTICE} variant="warning" />
+      )}
       <Table>
         <TableHead>
           <TableRow>

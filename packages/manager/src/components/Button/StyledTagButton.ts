@@ -28,7 +28,11 @@ export const StyledTagButton = styled(Button, {
 export const StyledPlusIcon = styled(Plus, {
   label: 'StyledPlusIcon',
 })(({ theme, ...props }) => ({
-  color: props.disabled ? theme.color.disabledText : theme.color.tagIcon,
+  color: props.disabled
+    ? theme.name === 'dark'
+      ? '#5c6470'
+      : theme.color.disabledText
+    : theme.color.tagIcon,
   height: '10px',
   width: '10px',
 }));

@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-
+import { useGrants } from 'src/queries/profile';
 interface Props {
   label: string;
   nodeBalancerId: number;
@@ -18,8 +18,10 @@ export const NodeBalancerActionMenu = (props: Props) => {
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const history = useHistory();
+  const { data: grants } = useGrants();
 
   const { label, nodeBalancerId, toggleDialog } = props;
+  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
 
   const actions: Action[] = [
     {
@@ -35,6 +37,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
       title: 'Settings',
     },
     {
+      disabled: isRestricted,
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
       },
@@ -49,6 +52,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
           return (
             <InlineMenuAction
               actionText={action.title}
+              disabled={action.disabled}
               key={action.title}
               onClick={action.onClick}
             />
