@@ -44,7 +44,7 @@ describe('LinodeIPAddressRow', () => {
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {
-    const { findByRole, getAllByRole } = renderWithTheme(
+    const { findByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
           isVPCOnlyLinode={true}
@@ -56,21 +56,18 @@ describe('LinodeIPAddressRow', () => {
       )
     );
 
-    const buttons = getAllByRole('button');
-
-    const deleteBtn = buttons[1];
-    expect(deleteBtn).toBeDisabled();
-    const deleteBtnTooltip = buttons[2];
-    fireEvent.mouseEnter(deleteBtnTooltip);
+    const deleteBtn = getByTestId('action-menu-item-delete');
+    expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
+    fireEvent.mouseEnter(deleteBtn);
     const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
     expect(publicIpsUnassignedTooltip).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
     );
 
-    const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).toBeDisabled();
-    const editRDNSBtnTooltip = buttons[4];
-    fireEvent.mouseEnter(editRDNSBtnTooltip);
+    const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
+    expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
+
+    fireEvent.mouseEnter(editRDNSBtn);
     const publicIpsUnassignedTooltip2 = await findByRole(/tooltip/);
     expect(publicIpsUnassignedTooltip2).toContainHTML(
       PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
@@ -93,8 +90,9 @@ describe('LinodeIPAddressRow', () => {
     const buttons = getAllByRole('button');
 
     const deleteBtn = buttons[1];
-    expect(deleteBtn).not.toBeDisabled();
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+
     const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).not.toBeDisabled();
+    expect(editRDNSBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

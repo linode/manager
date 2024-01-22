@@ -76,11 +76,11 @@ describe('Debounced Search Text Field', () => {
   });
 
   it('hides the label', () => {
-    const screen = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       <DebouncedSearchTextField {...props} hideLabel={true} />
     );
 
-    const label = screen.queryByText(labelVal);
+    const label = getByTestId('inputLabelWrapper');
     expect(label).toBeInTheDocument();
     expect(label?.className).toContain('visually-hidden');
   });

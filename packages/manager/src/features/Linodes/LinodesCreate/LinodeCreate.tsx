@@ -235,6 +235,23 @@ export class LinodeCreate extends React.PureComponent<
     this.props.setTab(getInitialType());
   }
 
+  componentDidUpdate(prevProps: any) {
+    if (this.props.location.search === prevProps.location.search) {
+      return;
+    }
+
+    // This is for the case where a user is already on the create flow and click the "Marketplace" link in the PrimaryNav.
+    // Because it is the same route, the component will not unmount and remount, so we need to manually update the tab state.
+    // This fix provides an isolated solution for this specific case.
+    // Hard to make this dynamic without a larger refactor because the relationship between the tabs and the query params is not straightforward at all.
+    // ex: "One-Click" is `fromApp` creationType, and `fromImage` applies to both "Distributions" and "Images" creation flows so getting the index of the tab
+    // based on the query param is not reliable.
+    // It would be wise to consider rethinking this logic when we refactor the Linode Create flow. (M3-7572)
+    if (getInitialType() === 'fromApp') {
+      this.handleTabChange(1);
+    }
+  }
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -434,7 +451,11 @@ export class LinodeCreate extends React.PureComponent<
               variant="error"
             />
           )}
-          <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
+          <Tabs
+            defaultIndex={selectedTab}
+            index={selectedTab}
+            onChange={this.handleTabChange}
+          >
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
               <SafeTabPanel index={0}>

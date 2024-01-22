@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import Check from 'src/assets/icons/monitor-ok.svg';
 import { Radio } from 'src/components/Radio/Radio';
+import { Tooltip } from 'src/components/Tooltip';
 
 interface RadioButton extends HTMLInputElement {
   name: string;
@@ -15,11 +16,20 @@ interface AccessCellProps {
   onChange: (e: React.SyntheticEvent<RadioButton>) => void;
   scope: string;
   scopeDisplay: string;
+  tooltipText?: string;
   viewOnly: boolean;
 }
 
 export const AccessCell = React.memo((props: AccessCellProps) => {
-  const { active, disabled, onChange, scope, scopeDisplay, viewOnly } = props;
+  const {
+    active,
+    disabled,
+    onChange,
+    scope,
+    scopeDisplay,
+    tooltipText,
+    viewOnly,
+  } = props;
 
   if (viewOnly) {
     if (!active) {
@@ -36,7 +46,7 @@ export const AccessCell = React.memo((props: AccessCellProps) => {
     );
   }
 
-  return (
+  const radioBtn = (
     <Radio
       inputProps={{
         'aria-label': `${scope} for ${scopeDisplay}`,
@@ -48,6 +58,14 @@ export const AccessCell = React.memo((props: AccessCellProps) => {
       onChange={onChange}
       value={scope}
     />
+  );
+
+  return tooltipText ? (
+    <Tooltip placement="top" title={tooltipText}>
+      <span>{radioBtn}</span>
+    </Tooltip>
+  ) : (
+    radioBtn
   );
 });
 

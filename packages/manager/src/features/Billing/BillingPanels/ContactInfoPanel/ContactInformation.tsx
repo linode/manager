@@ -5,6 +5,11 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
+import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
+import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccountUser } from 'src/queries/accountUsers';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 import {
   BillingActionButton,
@@ -69,6 +74,16 @@ const ContactInformation = (props: Props) => {
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
+  const flags = useFlags();
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+  const { data: user } = useAccountUser(profile?.username ?? '');
+  const isChildUser =
+    flags.parentChildAccountAccess && user?.user_type === 'child';
+
+  const isRestrictedUser =
+    isChildUser || grants?.global.account_access === 'read_only';
+
   const handleEditDrawerOpen = React.useCallback(
     () => setEditContactDrawerOpen(true),
     [setEditContactDrawerOpen]
@@ -114,6 +129,11 @@ const ContactInformation = (props: Props) => {
       }),
   };
 
+  const conditionalTooltipText = getDisabledTooltipText({
+    isChildUser,
+    isRestrictedUser,
+  });
+
   return (
     <Grid md={6} xs={12}>
       <BillingPaper data-qa-contact-summary variant="outlined">
@@ -124,8 +144,14 @@ const ContactInformation = (props: Props) => {
               history.push('/account/billing/edit');
               handleEditDrawerOpen();
             }}
+            data-testid="edit-contact-info"
+            disableFocusRipple
+            disableRipple
+            disableTouchRipple
+            disabled={isRestrictedUser}
+            tooltipText={conditionalTooltipText}
           >
-            Edit
+            {EDIT_BILLING_CONTACT}
           </BillingActionButton>
         </BillingBox>
 

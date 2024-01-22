@@ -120,13 +120,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   ),
                 filterLinodesWithBackups
               )(linodesData)}
-              notice={{
-                level: 'warning',
-                text: `This newly created Linode will be created with
+              notices={[
+                {
+                  level: 'warning',
+                  text: `This newly created Linode will be created with
                           the same password and SSH Keys (if any) as the original Linode.
                           Also note that this Linode will need to be manually booted after it finishes
                           provisioning.`,
-              }}
+                },
+              ]}
               disabled={disabled}
               error={hasErrorFor('linode_id')}
               handleSelection={this.handleLinodeSelect}

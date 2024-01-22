@@ -10,12 +10,12 @@ describe('AppDetailDrawer component', () => {
       <AppDetailDrawer
         onClose={() => {}}
         open={true}
-        stackScriptLabel="MongoDB Cluster "
+        stackScriptLabel="Galera Cluster "
       />
     );
 
     const innerHTML = queryByTestId('app-name')?.innerHTML;
-    expect(innerHTML).toBe('MongoDB Cluster');
+    expect(innerHTML).toBe('Galera Cluster');
   });
 
   it("should not have a title ending in 'Cluster' if the app is not a cluster", () => {
@@ -23,12 +23,12 @@ describe('AppDetailDrawer component', () => {
       <AppDetailDrawer
         onClose={() => {}}
         open={true}
-        stackScriptLabel="MongoDB "
+        stackScriptLabel="Docker "
       />
     );
 
     const innerHTML = queryByTestId('app-name')?.innerHTML;
-    expect(innerHTML).toBe('MongoDB');
+    expect(innerHTML).toBe('Docker');
   });
 
   it('should not logically break if the stackScriptLabel for a cluster does not have the expected spaces', () => {
@@ -36,11 +36,11 @@ describe('AppDetailDrawer component', () => {
       <AppDetailDrawer
         onClose={() => {}}
         open={true}
-        stackScriptLabel="MongoDB Cluster"
+        stackScriptLabel="Galera Cluster"
       />
     );
 
     const innerHTML = queryByTestId('app-name')?.innerHTML;
-    expect(innerHTML).toBe('MongoDB Cluster');
+    expect(innerHTML).toBe('Galera Cluster');
   });
 });

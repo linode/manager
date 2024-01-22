@@ -13,6 +13,8 @@ export interface GraphTabledDataProps {
   hiddenDatasets: number[];
 }
 
+// @todo recharts: delete this file when we decide recharts is stable (new version is AccessibleAreaChart)
+
 /**
  * This component is used to provide an accessible representation of the data
  * It does not care about styles, it only cares about presenting the data in bare HTML tables,

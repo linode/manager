@@ -9,6 +9,9 @@ const envVarName = 'CY_TEST_SUITE';
  * If `CY_TEST_SUITE` is undefined or invalid, the 'core' test suite will be run
  * by default.
  *
+ * The resolved test suite name can be read by tests and other plugins via
+ * `Cypress.env('cypress_test_suite')`.
+ *
  * @returns Cypress configuration object.
  */
 export const configureTestSuite: CypressPlugin = (_on, config) => {
@@ -32,6 +35,7 @@ export const configureTestSuite: CypressPlugin = (_on, config) => {
     }
   })();
 
+  config.env['cypress_test_suite'] = suiteName;
   config.specPattern = `cypress/e2e/${suiteName}/**/*.spec.{ts,tsx}`;
   return config;
 };

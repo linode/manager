@@ -10,15 +10,9 @@ type StyledTableCellPropsProps = TableCellProps & {
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
-  shouldForwardProp: omittedProps(['isDisabled']),
-})<{ isDisabled?: boolean }>(({ isDisabled, theme }) => ({
-  '& tr ': {
-    opacity: isDisabled ? 0.4 : 1,
-  },
+})(({ theme }) => ({
   borderLeft: `1px solid ${theme.borderColors.borderTable}`,
   borderRight: `1px solid ${theme.borderColors.borderTable}`,
-  cursor: isDisabled ? 'not-allowed' : 'inherit',
-  opacity: isDisabled ? 0.5 : 1,
   overflowX: 'hidden',
 }));
 

@@ -108,13 +108,26 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) =>
       `Database ${e.entity!.label}'s credentials have been reset.`,
   },
+  database_degraded: {
+    notification: (e) => `Database ${e.entity!.label} has been degraded.`,
+  },
   database_delete: {
     notification: (e) => `Database ${e.entity!.label} has been deleted.`,
+  },
+  database_failed: {
+    notification: (e) => `Database ${e.entity!.label} failed to update.`,
   },
   database_low_disk_space: {
     finished: (e) =>
       `Low disk space alert for database ${e.entity!.label} has cleared.`,
     notification: (e) => `Database ${e.entity!.label} has low disk space.`,
+  },
+  database_scale: {
+    failed: (e) => `Database ${e.entity!.label} could not be scaled up.`,
+    finished: (e) => `Database ${e.entity!.label} has been scaled up.`,
+    scheduled: (e) =>
+      `Database ${e.entity!.label} is scheduled for scaling up.`,
+    started: (e) => `Database ${e.entity!.label} is scaling up.`,
   },
   database_update: {
     finished: (e) => `Database ${e.entity!.label} has been updated.`,
@@ -665,6 +678,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   oauth_client_update: {
     notification: (e) => `OAuth App ${e.entity!.label} has been updated.`,
+  },
+  obj_access_key_create: {
+    notification: (e) => `Access Key ${e.entity!.label} has been created.`,
+  },
+  obj_access_key_delete: {
+    notification: (e) => `Access Key ${e.entity!.label} has been deleted.`,
+  },
+  obj_access_key_update: {
+    notification: (e) => `Access Key ${e.entity!.label} has been updated.`,
   },
   password_reset: {
     failed: (e) => `Password reset failed for Linode ${e.entity!.label}.`,

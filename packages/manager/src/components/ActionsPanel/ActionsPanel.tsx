@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import cx from 'classnames';
 import * as React from 'react';
+import { useStyles } from 'tss-react/mui';
 
 import { Button, ButtonProps } from 'src/components/Button/Button';
 
@@ -33,9 +33,10 @@ export const ActionsPanel = (props: ActionPanelProps) => {
     className,
     primaryButtonProps,
     secondaryButtonProps,
-
     ...rest
   } = props;
+
+  const { cx } = useStyles();
 
   const primaryButtonDataQAProp = `data-qa-${primaryButtonProps?.['data-testid']}`;
   const secondaryButtonDataQAProp = `data-qa-${secondaryButtonProps?.['data-testid']}`;

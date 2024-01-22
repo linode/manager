@@ -11,14 +11,15 @@ import { makeResponse } from 'support/util/response';
 import type {
   Account,
   AccountSettings,
+  Agreements,
   CancelAccount,
   EntityTransfer,
+  Grants,
   Invoice,
   InvoiceItem,
   Payment,
   PaymentMethod,
   User,
-  Grants,
 } from '@linode/api-v4';
 
 /**
@@ -88,6 +89,17 @@ export const mockGetUser = (user: User): Cypress.Chainable<null> => {
     apiMatcher(`account/users/${user.username}`),
     makeResponse(user)
   );
+};
+
+/**
+ * Intercepts POST request to add an account user and mocks response.
+ *
+ * @param user - New user account info with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAddUser = (user: User): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('account/users'), makeResponse(user));
 };
 
 /**
@@ -449,5 +461,21 @@ export const mockCancelAccountError = (
     'POST',
     apiMatcher('account/cancel'),
     makeErrorResponse(errorMessage, status)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch the account agreements and mocks the response.
+ *
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAccountAgreements = (
+  agreements: Agreements
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/agreements`),
+    makeResponse(agreements)
   );
 };

@@ -85,6 +85,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
           return (
             <InlineMenuAction
               actionText={action.title}
+              aria-label={`${action.title} ${props.firewallLabel}`}
               disabled={action.disabled}
               key={action.title}
               onClick={action.onClick}
