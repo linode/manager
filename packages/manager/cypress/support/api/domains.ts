@@ -1,5 +1,10 @@
-import { Domain, deleteDomain, getDomains } from '@linode/api-v4';
-import { domainFactory } from 'src/factories';
+import {
+  Domain,
+  deleteDomain,
+  getDomains,
+  CreateDomainPayload,
+} from '@linode/api-v4';
+import { createDomainPayloadFactory } from 'src/factories';
 import { isTestLabel } from 'support/api/common';
 import { oauthToken, pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
@@ -24,10 +29,10 @@ export const deleteAllTestDomains = async (): Promise<void> => {
   await Promise.all(deletionPromises);
 };
 
-const makeDomainCreateReq = (domain?: Domain) => {
-  const domainData: Domain = domain
-    ? domain
-    : domainFactory.build({
+const makeDomainCreateReq = (domainPayload?: CreateDomainPayload) => {
+  const domainData: CreateDomainPayload = domainPayload
+    ? domainPayload
+    : createDomainPayloadFactory.build({
         domain: randomDomainName(),
         soa_email: 'admin@example.com',
         type: 'master',
