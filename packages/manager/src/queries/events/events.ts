@@ -11,7 +11,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
 import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import {
@@ -154,16 +154,12 @@ export const useEventsPoller = () => {
       return getEvents({}, filter).then((data) => data.data);
     },
     queryKey: ['events', 'poller', hasFetchedInitialEvents],
-    // The /v4/account/events endpoint has a rate-limit of 400 requets per minute.
-    // If we request events every 5 seconds, we will make 12 calls in 1 minute.
-    // If we request events every 2.5 seconds, we will make 24 calls in 1 minute.
-    // If we request events every 1 second, we will make 60 calls in 1 minute.
     refetchInterval: (data) => {
-      const hasEventsStillInProgress = data?.some(isInProgressEvent);
-      if (hasEventsStillInProgress) {
-        return 5_000;
+      const hasInProgressEvents = data?.some(isInProgressEvent);
+      if (hasInProgressEvents) {
+        return POLLING_INTERVALS.IN_PROGRESS;
       }
-      return 16_000;
+      return POLLING_INTERVALS.DEFAULT;
     },
   });
 
