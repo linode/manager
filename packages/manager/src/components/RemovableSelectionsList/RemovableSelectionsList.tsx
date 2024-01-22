@@ -18,6 +18,7 @@ import {
   StyledNoAssignedLinodesBox,
   StyledScrollBox,
 } from './RemovableSelectionsList.style';
+import { Chip } from '../Chip';
 
 export type RemovableItem = {
   id: number;
@@ -227,11 +228,11 @@ const determineNoneSingleOrMultipleWithChip = (
   ));
 
   return (
-    <>
+    <span style={{ alignItems: 'center', display: 'inline-flex' }}>
       {dataArray[0]}{' '}
       <Tooltip placement="bottom" title={remainingData}>
-        <span>+{remainingData.length}</span>
+        <Chip clickable inTable label={`+${remainingData.length}`} />
       </Tooltip>
-    </>
+    </span>
   );
 };
