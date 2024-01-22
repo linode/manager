@@ -6,7 +6,9 @@ import { useHistory } from 'react-router-dom';
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useGrants } from 'src/queries/profile';
+import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { useFeatureRestriction } from 'src/hooks/useFeatureRestriction';
+
 interface Props {
   label: string;
   nodeBalancerId: number;
@@ -16,12 +18,13 @@ interface Props {
 export const NodeBalancerActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
-
   const history = useHistory();
-  const { data: grants } = useGrants();
 
   const { label, nodeBalancerId, toggleDialog } = props;
-  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+  const isRestricted = useFeatureRestriction({
+    grantType: 'nodebalancer',
+    id: nodeBalancerId,
+  });
 
   const actions: Action[] = [
     {
@@ -42,6 +45,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
         toggleDialog(nodeBalancerId, label);
       },
       title: 'Delete',
+      tooltip: isRestricted ? RESTRICTED_ACCESS_NOTICE : undefined,
     },
   ];
 

@@ -15,6 +15,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { useFeatureRestriction } from 'src/hooks/useFeatureRestriction';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
@@ -41,7 +42,10 @@ export const NodeBalancerDetail = () => {
 
   const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
-  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+  const isRestricted = useFeatureRestriction({
+    grantType: 'nodebalancer',
+    id: nodebalancer?.id,
+  });
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -113,7 +117,7 @@ export const NodeBalancerDetail = () => {
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {isRestricted && (
-        <Notice text={RESTRICTED_ACCESS_NOTICE} important variant="warning" />
+        <Notice important text={RESTRICTED_ACCESS_NOTICE} variant="warning" />
       )}
       <Tabs
         index={Math.max(

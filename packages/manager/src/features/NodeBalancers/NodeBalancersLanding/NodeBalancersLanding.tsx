@@ -19,7 +19,7 @@ import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
@@ -38,8 +38,13 @@ export const NodeBalancersLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
   const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
 
-  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+  // NodeBalancer creation is possible for restricted accounts,
+  // contingent on the ability to add Linodes.
+  const isRestricted =
+    Boolean(profile?.restricted) &&
+    !(grants?.global.add_nodebalancers && grants?.global.add_linodes);
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {

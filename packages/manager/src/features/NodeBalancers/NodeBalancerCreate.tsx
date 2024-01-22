@@ -30,6 +30,7 @@ import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
+import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
@@ -126,8 +127,11 @@ const NodeBalancerCreate = () => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
+  // NodeBalancer creation is possible for restricted accounts,
+  // contingent on the ability to add Linodes.
   const disabled =
-    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
+    Boolean(profile?.restricted) &&
+    !(grants?.global.add_nodebalancers && grants?.global.add_linodes);
 
   const addNodeBalancer = () => {
     if (disabled) {
@@ -464,11 +468,9 @@ const NodeBalancerCreate = () => {
       )}
       {disabled && (
         <Notice
-          text={
-            "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
-          }
           important
           spacingTop={16}
+          text={RESTRICTED_ACCESS_NOTICE}
           variant="error"
         />
       )}
@@ -518,6 +520,7 @@ const NodeBalancerCreate = () => {
               <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
             </Typography>
           }
+          disabled={disabled}
           entityType="nodebalancer"
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
@@ -639,7 +642,7 @@ const NodeBalancerCreate = () => {
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          disabled={showGDPRCheckbox && !hasSignedAgreement}
+          disabled={(showGDPRCheckbox && !hasSignedAgreement) || disabled}
           loading={isLoading}
           onClick={onCreate}
         >

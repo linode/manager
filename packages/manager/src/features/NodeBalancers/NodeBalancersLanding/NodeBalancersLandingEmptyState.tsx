@@ -5,19 +5,34 @@ import { useHistory } from 'react-router-dom';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
+import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 export const NodeBalancerLandingEmptyState = () => {
   const history = useHistory();
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+
+  // NodeBalancer creation is possible for restricted accounts,
+  // contingent on the ability to add Linodes.
+  const isRestricted =
+    Boolean(profile?.restricted) &&
+    !(grants?.global.add_nodebalancers && grants?.global.add_linodes);
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
+      {isRestricted && (
+        <Notice important text={RESTRICTED_ACCESS_NOTICE} variant="warning" />
+      )}
       <StyledPlaceholder
         buttonProps={[
           {
             children: 'Create NodeBalancer',
+            disabled: isRestricted,
             onClick: () => history.push('/nodebalancers/create'),
           },
         ]}

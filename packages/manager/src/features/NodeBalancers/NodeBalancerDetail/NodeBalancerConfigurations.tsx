@@ -161,7 +161,13 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
 };
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   render() {
-    const { grants, nodeBalancerLabel } = this.props;
+    const {
+      grants,
+      match: {
+        params: { nodeBalancerId },
+      },
+      nodeBalancerLabel,
+    } = this.props;
     const {
       configErrors,
       configSubmitting,
@@ -170,7 +176,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       panelMessages,
     } = this.state;
 
-    const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+    const isRestricted = Boolean(
+      grants?.nodebalancer?.some(
+        (grant) =>
+          grant.id === Number(nodeBalancerId) &&
+          grant.permissions === 'read_only'
+      )
+    );
 
     return (
       <div>
@@ -621,7 +633,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     },
     idx: number
   ) => {
-    const { grants } = this.props;
+    const {
+      grants,
+      match: {
+        params: { nodeBalancerId },
+      },
+    } = this.props;
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
@@ -634,7 +651,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
 
-    const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+    const isRestricted = Boolean(
+      grants?.nodebalancer?.some(
+        (grant) =>
+          grant.id === Number(nodeBalancerId) &&
+          grant.permissions === 'read_only'
+      )
+    );
 
     const L = {
       algorithmLens: lensTo(['algorithm']),
