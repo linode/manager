@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
+import { Chip } from 'src/components/Chip';
 import { IconButton } from 'src/components/IconButton';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,11 +15,11 @@ import {
   SelectedOptionsList,
   SelectedOptionsListItem,
   StyledBoxShadowWrapper,
+  StyledItemWithPlusChip,
   StyledLabel,
   StyledNoAssignedLinodesBox,
   StyledScrollBox,
 } from './RemovableSelectionsList.style';
-import { Chip } from '../Chip';
 
 export type RemovableItem = {
   id: number;
@@ -228,11 +229,11 @@ const determineNoneSingleOrMultipleWithChip = (
   ));
 
   return (
-    <span style={{ alignItems: 'center', display: 'inline-flex' }}>
+    <StyledItemWithPlusChip>
       {dataArray[0]}{' '}
       <Tooltip placement="bottom" title={remainingData}>
         <Chip clickable inTable label={`+${remainingData.length}`} />
       </Tooltip>
-    </span>
+    </StyledItemWithPlusChip>
   );
 };
