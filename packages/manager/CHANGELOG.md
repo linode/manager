@@ -13,11 +13,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Sold out chips for GPU and Premium CPU plans ([#10013](https://github.com/linode/manager/pull/10013))
 - Cloud Manager Documentation microsite with Vitepress ([#10027](https://github.com/linode/manager/pull/10027))
 - Proper support for OBJ Access Key events ([#10038](https://github.com/linode/manager/pull/10038))
+- Support VPC in Access Token drawers ([#10024](https://github.com/linode/manager/pull/10024))
 
 ### Changed:
 
 - Styling of Toggles and Radios in dark mode ([#10020](https://github.com/linode/manager/pull/10020))
-- Deprecate Ark, TF2, Terraria, Percona, Mist, MagicSpam and BitNinja from Markeplace Apps ([#10046](https://github.com/linode/manager/pull/10046))
+- Deprecate Ark, TF2, Terraria, Percona, Mist, MagicSpam and BitNinja from Marketplace Apps ([#10046](https://github.com/linode/manager/pull/10046))
 - Update user title and emote icons on Support Ticket page ([#10054](https://github.com/linode/manager/pull/10054))
 - Update Cloud Manager LICENSE ([#10067](https://github.com/linode/manager/pull/10067))
 - Remove unified migrations feature flag ([#10074](https://github.com/linode/manager/pull/10074))
@@ -55,7 +56,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Upcoming Features:
 
-- Support VPC in Access Token drawers ([#10024](https://github.com/linode/manager/pull/10024))
 - Add AGLB Endpoint Health ([#10008](https://github.com/linode/manager/pull/10008))
 - Add child account access column and disable delete account button when account has child accounts ([#10025](https://github.com/linode/manager/pull/10025))
 - Add parent/proxy 'Switch Account' button and drawer to user profile dropdown menu  ([#10031](https://github.com/linode/manager/pull/10031))
