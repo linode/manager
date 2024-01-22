@@ -5,6 +5,10 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
+import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
+import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
+import { useFlags } from 'src/hooks/useFlags';
+import { useGrants } from 'src/queries/profile';
 
 import {
   BillingActionButton,
@@ -12,6 +16,8 @@ import {
   BillingPaper,
 } from '../../BillingDetail';
 import BillingContactDrawer from './EditBillingContactDrawer';
+
+import type { Profile } from '@linode/api-v4';
 
 interface Props {
   address1: string;
@@ -23,6 +29,7 @@ interface Props {
   firstName: string;
   lastName: string;
   phone: string;
+  profile: Profile | undefined;
   state: string;
   taxId: string;
   zip: string;
@@ -52,6 +59,7 @@ const ContactInformation = (props: Props) => {
     firstName,
     lastName,
     phone,
+    profile,
     state,
     taxId,
     zip,
@@ -68,6 +76,15 @@ const ContactInformation = (props: Props) => {
   ] = React.useState<boolean>(false);
 
   const [focusEmail, setFocusEmail] = React.useState(false);
+
+  const flags = useFlags();
+  const { data: grants } = useGrants();
+
+  const isChildUser =
+    flags.parentChildAccountAccess && profile?.user_type === 'child';
+
+  const isRestrictedUser =
+    isChildUser || grants?.global.account_access === 'read_only';
 
   const handleEditDrawerOpen = React.useCallback(
     () => setEditContactDrawerOpen(true),
@@ -114,6 +131,11 @@ const ContactInformation = (props: Props) => {
       }),
   };
 
+  const conditionalTooltipText = getDisabledTooltipText({
+    isChildUser,
+    isRestrictedUser,
+  });
+
   return (
     <Grid md={6} xs={12}>
       <BillingPaper data-qa-contact-summary variant="outlined">
@@ -124,8 +146,14 @@ const ContactInformation = (props: Props) => {
               history.push('/account/billing/edit');
               handleEditDrawerOpen();
             }}
+            data-testid="edit-contact-info"
+            disableFocusRipple
+            disableRipple
+            disableTouchRipple
+            disabled={isRestrictedUser}
+            tooltipText={conditionalTooltipText}
           >
-            Edit
+            {EDIT_BILLING_CONTACT}
           </BillingActionButton>
         </BillingBox>
 

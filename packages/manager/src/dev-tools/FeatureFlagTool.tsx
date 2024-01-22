@@ -15,15 +15,15 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aglb', label: 'AGLB' },
   { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
   { flag: 'dcGetWell', label: 'DC Get Well' },
+  { flag: 'linodeCloneUIChanges', label: 'Linode Clone UI Changes' },
   { flag: 'metadata', label: 'Metadata' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'unifiedMigrations', label: 'Unified Migrations' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
-  { flag: 'vmPlacement', label: 'VM Placement' },
+  { flag: 'vmPlacement', label: 'Placement Groups' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
