@@ -71,6 +71,12 @@ export const useLoadBalancerCertificateCreateMutation = (
     (data) => createLoadbalancerCertificate(loadbalancerId, data),
     {
       onSuccess(certificate) {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'certificates',
+        ]);
         queryClient.setQueryData(
           [
             QUERY_KEY,
@@ -82,12 +88,6 @@ export const useLoadBalancerCertificateCreateMutation = (
           ],
           certificate
         );
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'certificates',
-        ]);
       },
     }
   );

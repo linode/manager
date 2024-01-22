@@ -996,7 +996,7 @@ export const LinodeConfigDialog = (props: Props) => {
               )}
               {values.interfaces.map((thisInterface, idx) => {
                 return (
-                  <>
+                  <React.Fragment key={`${idx}-interface`}>
                     {unrecommendedConfigNoticeSelector({
                       _interface: thisInterface,
                       primaryInterfaceIndex,
@@ -1035,7 +1035,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       vpcIPv4={thisInterface.ipv4?.vpc}
                       vpcId={thisInterface.vpc_id}
                     />
-                  </>
+                  </React.Fragment>
                 );
               })}
             </Grid>

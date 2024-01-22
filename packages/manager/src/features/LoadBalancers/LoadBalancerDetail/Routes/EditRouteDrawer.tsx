@@ -40,6 +40,7 @@ export const EditRouteDrawer = (props: Props) => {
     initialValues: {
       label: route?.label,
       protocol: route?.protocol,
+      rules: route?.rules, // We shouldn't have to do this, but the API clears out the rules if this isnt passed
     },
     async onSubmit(values) {
       try {

@@ -10,10 +10,11 @@
   width: 60px;
   transition: all 0.3s;
   z-index: 1;
+  overflow: auto;
 }
 
 #dev-tools:hover {
-  height: 300px;
+  height: 325px;
   width: 100%;
   opacity: 0.9;
 }

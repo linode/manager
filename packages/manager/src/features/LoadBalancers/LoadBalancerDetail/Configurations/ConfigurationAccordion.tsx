@@ -14,12 +14,20 @@ interface Props {
 
 export const ConfigurationAccordion = (props: Props) => {
   const { configuration } = props;
-  const { configurationId } = useParams<{ configurationId: string }>();
+  const { configurationId, loadbalancerId } = useParams<{
+    configurationId: string;
+    loadbalancerId: string;
+  }>();
 
   return (
     <Accordion
+      heading={
+        <ConfigurationAccordionHeader
+          configuration={configuration}
+          loadbalancerId={Number(loadbalancerId)}
+        />
+      }
       defaultExpanded={configuration.id === Number(configurationId)}
-      heading={<ConfigurationAccordionHeader configuration={configuration} />}
       headingProps={{ sx: { width: '100%' } }}
     >
       <ConfigurationForm configuration={configuration} mode="edit" />

@@ -12,6 +12,7 @@ export * from './managed.schema';
 export * from './networking.schema';
 export * from './nodebalancers.schema';
 export * from './objectStorageKeys.schema';
+export * from './placement-groups.schema';
 export * from './profile.schema';
 export * from './records.schema';
 export * from './stackscripts.schema';

@@ -140,29 +140,6 @@ export const oneClickApps: OCA[] = [
     website: 'https://appwrite.io/',
   },
   {
-    alt_description: 'Prehistoric, open world survival crafting game.',
-    alt_name: 'Survival game',
-    categories: ['Games'],
-    colors: {
-      end: '030303',
-      start: '0e0b08',
-    },
-    description: `In Ark: Survival Evolved, you are placed on a series of fictional islands inhabited by dinosaurs and other prehistoric animals. Ark is an ongoing battle where animals and other players have the ability to destroy you. You must build structures, farm resources, breed dinosaurs, and even set up
-      trading hubs with neighboring tribes. Hosting an Ark server gives you control of the entire game. You can define the leveling speed, the amount of players, and the types of weapons available.`,
-    logo_url: 'ark@1x.svg',
-    name: 'Ark',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/ark-survival-evolved/',
-        title:
-          'Deploy an ARK Survival Evolved Server through the Linode Marketplace',
-      },
-    ],
-    summary: `Multiplayer action-survival game. You have only one objective: survive.`,
-    website: 'https://survivetheark.com/',
-  },
-  {
     alt_description: 'Free internet radio station management and hosting.',
     alt_name: 'Online radio station builder',
     categories: ['Media and Entertainment'],
@@ -204,28 +181,6 @@ export const oneClickApps: OCA[] = [
     summary:
       'Browser Exploitation Framework (BeEF) is an open source web browser penetration tool.',
     website: 'https://github.com/beefproject/beef',
-  },
-  {
-    alt_description:
-      'Server and application security including web application firewall and IP reputation protection.',
-    alt_name: 'Server security tools',
-    categories: ['Security'],
-    colors: {
-      end: '2a2a29',
-      start: 'c32127',
-    },
-    description: `Add a critical layer of security to your server with a built-in web application firewall, inbound and outbound DoS detection, and real time IP reputation protection.`,
-    logo_url: 'bitninja.svg',
-    name: 'BitNinja',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/bitninja/',
-        title: 'Deploy BitNinja through the Linode Marketplace',
-      },
-    ],
-    summary: 'Full-stack server protection suite.',
-    website: 'https://doc.bitninja.io/',
   },
   {
     alt_description:
@@ -341,29 +296,6 @@ export const oneClickApps: OCA[] = [
     summary:
       'The leading hosting automation platform that has simplified site and server management for 20 years.',
     website: 'https://www.cpanel.net/',
-  },
-  {
-    alt_description:
-      'Counter Strike: Global Offensive, classic first person shooter game.',
-    alt_name: 'FPS game',
-    categories: ['Games'],
-    colors: {
-      end: '50545f',
-      start: 'f29e1b',
-    },
-    description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists. The teams compete against each other to complete objectives or to eliminate the opposing team. A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location, so you and your friends can play with low latency. Up to 64 players can be hosted on a single server.`,
-    logo_url: 'csgo2.svg',
-    name: 'CS:GO',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/counter-strike-go/',
-        title:
-          'Deploy Counter-Strike Global Offensive through the Linode Marketplace',
-      },
-    ],
-    summary: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
-    website: 'https://blog.counter-strike.net/index.php/about/',
   },
   {
     alt_description:
@@ -1101,28 +1033,6 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.liveswitch.io/',
   },
   {
-    alt_description: 'Server-level spam prevention tool.',
-    alt_name: 'Anti-spam email security',
-    categories: ['Security'],
-    colors: {
-      end: 'f4ac45',
-      start: '9c001b',
-    },
-    description: `MagicSpam stops inbound spam from entering your server right at the SMTP layer to lower bandwidth and overhead, as well as secure mailboxes on your server from being compromised and used to send outbound spam. MagicSpam installs directly onto the email server without any need to change A/MX records to protect unlimited users and domains, and integrates natively with your control panel interface.`,
-    logo_url: 'magicspam.svg',
-    name: 'MagicSpam',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/magicspam/',
-        title: 'Deploy Magicspam through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Powerful anti-spam and email security solution for control panels (including cPanel and Plesk).',
-    website: 'https://www.magicspam.com/anti-spam-features.php',
-  },
-  {
     alt_description: 'FFmpeg encoder plugins.',
     alt_name: 'Premium video encoding',
     categories: ['Media and Entertainment'],
@@ -1344,70 +1254,6 @@ export const oneClickApps: OCA[] = [
     ],
     summary: `Build, explore, and adventure in your own 3D generated world.`,
     website: 'https://www.minecraft.net/',
-  },
-  {
-    alt_description: 'Multicloud deployment management tool.',
-    alt_name: 'Multicloud control panel',
-    categories: ['Control Panels'],
-    colors: {
-      end: '0099cb',
-      start: '424242',
-    },
-    description: `Streamline infrastructure management in one UI or by using the Mist.io RESTful API.`,
-    logo_url: 'mistio.svg',
-    name: 'Mist.io',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mistio/',
-        title: 'Deploy Mist.io through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Open source, unified interface and management platform for multi-cloud deployments.',
-    website: 'https://mist.io/',
-  },
-  {
-    alt_description: 'Popular document database.',
-    alt_name: 'NoSQL database',
-    categories: ['Databases'],
-    colors: {
-      end: '136149',
-      start: '28aa52',
-    },
-    description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
-    logo_url: 'mongodb.svg',
-    name: 'MongoDB',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb/',
-        title: 'Deploy MongoDB with Marketplace Apps',
-      },
-    ],
-    summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
-    website: 'https://www.mongodb.com/',
-  },
-  {
-    alt_description: 'Popular document database.',
-    alt_name: 'NoSQL database',
-    categories: ['Databases'],
-    colors: {
-      end: '136149',
-      start: '28aa52',
-    },
-    description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
-    logo_url: 'mongodbmarketplaceocc.svg',
-    name: 'MongoDB Cluster',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb-cluster/',
-        title: 'Deploy MongoDB Cluster with Marketplace Apps',
-      },
-    ],
-    summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
-    website: 'https://www.mongodb.com/',
   },
   {
     alt_description: 'Open source course builder and education tool.',
@@ -1754,30 +1600,6 @@ export const oneClickApps: OCA[] = [
     ],
     summary: 'Simple yet scalable open source ticket management.',
     website: 'https://peppermint.sh/',
-  },
-  {
-    alt_description: 'Visual MySQL/MariaDB database monitoring.',
-    alt_name: 'Database monitoring app',
-    categories: ['Monitoring'],
-    colors: {
-      end: 'fcb42f',
-      start: 'c41d13',
-    },
-    description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
-    logo_url: 'percona.svg',
-    name: 'Percona (PMM)',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/percona-monitoring-management/',
-        title:
-          'Deploy Percona Monitoring and Management (PMM) through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
-    website:
-      'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
   },
   {
     alt_description:
@@ -2295,49 +2117,6 @@ export const oneClickApps: OCA[] = [
     ],
     summary: 'Relational database for unstructured data.',
     website: 'https://www.superinsight.ai/',
-  },
-  {
-    alt_description: '2D open world survival crafting game.',
-    alt_name: 'World building game',
-    categories: ['Games'],
-    colors: {
-      end: '40924a',
-      start: '936543',
-    },
-    description: `Terraria generates unique environments where a player begins by digging for ore, and the further they dig the more adventure they find. Multiplayer mode can be either cooperative or PvP. Hosting your own Terraria server gives you control over the world, the players, and the objectives. Your world, your rules.`,
-    logo_url: 'terraria.svg',
-    name: 'Terraria',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/terraria/',
-        title: 'Deploy Terraria through the Linode Marketplace',
-      },
-    ],
-    summary: `Adventure, collect resources, build structures, and battle enemies in this wildly creative two-dimensional sandbox game.`,
-    website: 'https://terraria.org/',
-  },
-  {
-    alt_description: 'Team Fortress 2, classic first person shooter game.',
-    alt_name: 'FPS game',
-    categories: ['Games'],
-    colors: {
-      end: '873d0c',
-      start: 'b95b26',
-    },
-    description: `Team Fortress 2 is a team-based multiplayer first-person shooter. In TF2, you and your team choose from a number of hero classes and different game modes, ensuring a unique in-game experience every match.
-      Setting up a personal game server puts you in control of what game modes and maps you use, as well as a variety of other settings to customize your experience.`,
-    logo_url: 'tf2.svg',
-    name: 'TF2',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/team-fortress-2/',
-        title: 'Deploy a Team Fortress 2 Server through the Linode Marketplace',
-      },
-    ],
-    summary: `Choose from 9 unique classes in this highly original FPS. Compete against players around the world in a variety of modes such as capture the flag, king of the hill, and more.`,
-    website: 'http://www.teamfortress.com/',
   },
   {
     alt_description:

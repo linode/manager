@@ -5,13 +5,12 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SubnetFieldState } from 'src/utilities/subnets';
 
+import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
 import { MultipleSubnetInput } from '../MultipleSubnetInput';
 import {
   StyledBodyTypography,
   StyledHeaderTypography,
 } from './VPCCreateForm.styles';
-
-import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
 
 interface Props {
   disabled?: boolean;

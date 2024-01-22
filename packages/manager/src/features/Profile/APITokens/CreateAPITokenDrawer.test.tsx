@@ -46,10 +46,10 @@ describe('Create API Token Drawer', () => {
 
     const submitBtn = getByTestId('create-button');
     expect(submitBtn).toBeVisible();
-    expect(submitBtn).toBeEnabled();
+    expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
 
     const cancelBtn = getByText(/Cancel/);
-    expect(cancelBtn).toBeEnabled();
+    expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
   });
 
@@ -113,6 +113,26 @@ describe('Create API Token Drawer', () => {
 
     const childScope = queryByText('Child Account Access');
     expect(childScope).not.toBeInTheDocument();
+  });
+
+  it('Should show the VPC scope with the VPC feature flag on', () => {
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
+      flags: { vpc: true },
+    });
+    const vpcScope = getByText('VPCs');
+    expect(vpcScope).toBeInTheDocument();
+  });
+
+  it('Should not show the VPC scope with the VPC feature flag off', () => {
+    const { queryByText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { vpc: false },
+      }
+    );
+
+    const vpcScope = queryByText('VPCs');
+    expect(vpcScope).not.toBeInTheDocument();
   });
 
   it('Should close when Cancel is pressed', () => {

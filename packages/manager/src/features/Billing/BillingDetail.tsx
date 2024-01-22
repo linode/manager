@@ -103,13 +103,12 @@ export const BillingBox = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-export const BillingActionButton = styled(Button)(({ theme }) => ({
-  '&:hover, &:focus': {
-    backgroundColor: 'transparent',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-  },
-  color: theme.textColors.linkActiveLight,
+export const BillingActionButton = styled(Button)(({ theme, ...props }) => ({
+  ...(!props.disabled && {
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
+  }),
   fontFamily: theme.font.bold,
   fontSize: '.875rem',
   minHeight: 'unset',
