@@ -18,6 +18,7 @@ import {
   doesEventMatchAPIFilter,
   generatePollingFilter,
   getExistingEventDataForPollingFilterGenerator,
+  isInProgressEvent,
 } from 'src/queries/events/event.helpers';
 
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
@@ -101,28 +102,12 @@ export const useEventsPoller = () => {
 
   const { events } = useEventsInfiniteQuery();
 
+  const hasFetchedInitialEvents = events !== undefined;
+
   const [mountTimestamp] = useState<string>(() =>
     DateTime.fromMillis(Date.now(), { zone: 'utc' }).toFormat(
       ISO_DATETIME_NO_TZ_FORMAT
     )
-  );
-
-  // If the user has events, poll for new events based on the most recent event's created time.
-  // If the user has no events, poll events from the time the app mounted.
-  const latestEventTime =
-    events && events.length > 0 ? events[0].created : mountTimestamp;
-
-  const {
-    eventsThatAlreadyHappenedAtTheFilterTime,
-    inProgressEvents,
-  } = getExistingEventDataForPollingFilterGenerator(events, latestEventTime);
-
-  const hasFetchedInitialEvents = events !== undefined;
-
-  const filter = generatePollingFilter(
-    latestEventTime,
-    inProgressEvents,
-    eventsThatAlreadyHappenedAtTheFilterTime
   );
 
   useQuery({
@@ -137,13 +122,49 @@ export const useEventsPoller = () => {
         }
       }
     },
-    queryFn: () => getEvents({}, filter).then((data) => data.data),
+    queryFn: () => {
+      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
+        'events',
+        'infinite',
+        undefined,
+      ]);
+      const events = data?.pages.reduce(
+        (events, page) => [...events, ...page.data],
+        []
+      );
+      // If the user has events, poll for new events based on the most recent event's created time.
+      // If the user has no events, poll events from the time the app mounted.
+      const latestEventTime =
+        events && events.length > 0 ? events[0].created : mountTimestamp;
+
+      const {
+        eventsThatAlreadyHappenedAtTheFilterTime,
+        inProgressEvents,
+      } = getExistingEventDataForPollingFilterGenerator(
+        events,
+        latestEventTime
+      );
+
+      const filter = generatePollingFilter(
+        latestEventTime,
+        inProgressEvents,
+        eventsThatAlreadyHappenedAtTheFilterTime
+      );
+
+      return getEvents({}, filter).then((data) => data.data);
+    },
     queryKey: ['events', 'poller', hasFetchedInitialEvents],
     // The /v4/account/events endpoint has a rate-limit of 400 requets per minute.
     // If we request events every 5 seconds, we will make 12 calls in 1 minute.
     // If we request events every 2.5 seconds, we will make 24 calls in 1 minute.
     // If we request events every 1 second, we will make 60 calls in 1 minute.
-    refetchInterval: inProgressEvents.length > 0 ? 2_500 : 16_000,
+    refetchInterval: (data) => {
+      const hasEventsStillInProgress = data?.some(isInProgressEvent);
+      if (hasEventsStillInProgress) {
+        return 5_000;
+      }
+      return 16_000;
+    },
   });
 
   return null;
@@ -160,7 +181,7 @@ export const useEventsPollingActions = () => {
   const queryClient = useQueryClient();
 
   const resetEventsPolling = () =>
-    queryClient.invalidateQueries(['events', 'poller']);
+    queryClient.invalidateQueries(['events', 'poller', true]);
 
   return {
     /**
