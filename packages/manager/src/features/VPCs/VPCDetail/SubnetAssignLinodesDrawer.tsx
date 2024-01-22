@@ -157,7 +157,9 @@ export const SubnetAssignLinodesDrawer = (
     );
 
     const interfacePayload: InterfacePayload = {
-      ip_ranges: ipRanges.map((ipRange) => ipRange.address),
+      ip_ranges: ipRanges
+        .map((ipRange) => ipRange.address)
+        .filter((ipRange) => ipRange !== ''),
       ipam_address: null,
       ipv4: {
         nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
