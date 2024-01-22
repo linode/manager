@@ -1937,7 +1937,13 @@ export const handlers = [
       return res(ctx.status(404));
     }
 
-    return res(ctx.json(placementGroupFactory.build()));
+    return res(
+      ctx.json(
+        placementGroupFactory.build({
+          id: 1,
+        })
+      )
+    );
   }),
   rest.post('*/placement/groups', (req, res, ctx) => {
     return res(
