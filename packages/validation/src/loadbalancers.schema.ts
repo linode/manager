@@ -2,6 +2,14 @@ import { number, object, string, array } from 'yup';
 
 const LABEL_REQUIRED = 'Label is required.';
 
+const matchFieldOptions = [
+  'always_match',
+  'path_prefix',
+  'query',
+  'header',
+  'method',
+];
+
 export const CreateCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
   key: string().when('type', {
@@ -26,16 +34,12 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
-const CertificateEntrySchema = object({
+export const CertificateEntrySchema = object({
   id: number()
     .typeError('Certificate ID must be a number.')
     .required('Certificate ID is required.')
     .min(0, 'Certificate ID is required.'),
   hostname: string().required('A Host Header is required.'),
-});
-
-export const CertificateConfigSchema = object({
-  certificates: array(CertificateEntrySchema),
 });
 
 export const EndpointSchema = object({
@@ -50,8 +54,12 @@ export const EndpointSchema = object({
 
 const HealthCheckSchema = object({
   protocol: string().oneOf(['http', 'tcp']),
-  interval: number().typeError('Interval must be a number.').min(1, 'Interval must be greater than zero.'),
-  timeout: number().typeError('Timeout must be a number.').min(1, 'Timeout must be greater than zero.'),
+  interval: number()
+    .typeError('Interval must be a number.')
+    .min(1, 'Interval must be greater than zero.'),
+  timeout: number()
+    .typeError('Timeout must be a number.')
+    .min(1, 'Timeout must be greater than zero.'),
   unhealthy_threshold: number()
     .typeError('Unhealthy Threshold must be a number.')
     .min(1, 'Unhealthy Threshold must be greater than zero.'),
@@ -59,7 +67,11 @@ const HealthCheckSchema = object({
     .typeError('Healthy Threshold must be a number.')
     .min(1, 'Healthy Threshold must be greater than zero.'),
   path: string().nullable(),
-  host: string().nullable(),
+  host: string().when('protocol', {
+    is: 'tcp',
+    then: (o) => o.nullable(),
+    otherwise: (o) => o.required('Health Check host is required.'),
+  }),
 });
 
 export const CreateServiceTargetSchema = object({
@@ -111,7 +123,7 @@ const TCPMatchConditionSchema = object({
 const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
   object({
     match_field: string()
-      .oneOf(['path_prefix', 'query', 'header', 'method', 'host'])
+      .oneOf(matchFieldOptions)
       .required('Match field is required.'),
     match_value: string().required('Match value is required.'),
     session_stickiness_cookie: string().nullable(),
@@ -229,9 +241,7 @@ const CreateLoadBalancerServiceTargetSchema = object({
 const CreateLoadBalancerRuleSchema = object({
   match_condition: object().shape({
     hostname: string().required(),
-    match_field: string()
-      .oneOf(['path_prefix', 'host', 'query', 'hostname', 'header', 'method'])
-      .required(),
+    match_field: string().oneOf(matchFieldOptions).required(),
     match_value: string().required(),
     session_stickiness_cookie: string(),
     session_stickiness_ttl: number().integer(),

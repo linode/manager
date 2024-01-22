@@ -1,4 +1,3 @@
-import { Stack } from 'src/components/Stack';
 import React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -6,10 +5,14 @@ import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccountUser, useAccountUserGrants } from 'src/queries/accountUsers';
+import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { UsersActionMenu } from './UsersActionMenu';
@@ -22,6 +25,14 @@ interface Props {
 }
 
 export const UserRow = ({ onDelete, user }: Props) => {
+  const flags = useFlags();
+  const { data: grants } = useAccountUserGrants(user.username);
+  const { data: profile } = useProfile();
+  const { data: activeUser } = useAccountUser(profile?.username ?? '');
+
+  const showChildAccountAccessCol =
+    flags.parentChildAccountAccess && activeUser?.user_type === 'parent';
+
   return (
     <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
       <TableCell>
@@ -36,6 +47,13 @@ export const UserRow = ({ onDelete, user }: Props) => {
         <TableCell>{user.email}</TableCell>
       </Hidden>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
+      {showChildAccountAccessCol && (
+        <Hidden lgDown>
+          <TableCell>
+            {grants?.global?.child_account_access ? 'Enabled' : 'Disabled'}
+          </TableCell>
+        </Hidden>
+      )}
       <Hidden lgDown>
         <TableCell>
           <LastLogin last_login={user.last_login} />

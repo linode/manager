@@ -6,11 +6,12 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useCreateSubnetMutation } from 'src/queries/vpcs';
+import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,
+  getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
 import { SubnetNode } from '../VPCCreate/SubnetNode';
@@ -26,8 +27,14 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { data: vpc } = useVPCQuery(vpcId, open);
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
+
+  const recommendedIPv4 = getRecommendedSubnetIPv4(
+    DEFAULT_SUBNET_IPV4_VALUE,
+    vpc?.subnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
+  );
 
   const [errorMap, setErrorMap] = React.useState<
     Record<string, string | undefined>
@@ -41,18 +48,18 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const onCreateSubnet = async () => {
     try {
-      await createSubnet({ label: values.label, ipv4: values.ip.ipv4 });
+      await createSubnet({ ipv4: values.ip.ipv4, label: values.label });
       onClose();
     } catch (errors) {
       const newErrors = getErrorMap(['label', 'ipv4'], errors);
       setErrorMap(newErrors);
       setValues({
-        label: values.label,
-        labelError: newErrors.label,
         ip: {
           ...values.ip,
           ipv4Error: newErrors.ipv4,
         },
+        label: values.label,
+        labelError: newErrors.label,
       });
     }
   };
@@ -60,12 +67,12 @@ export const SubnetCreateDrawer = (props: Props) => {
   const { dirty, handleSubmit, resetForm, setValues, values } = useFormik({
     enableReinitialize: true,
     initialValues: {
+      ip: {
+        availIPv4s: 256,
+        ipv4: recommendedIPv4,
+      },
       // @TODO VPC: add IPv6 when that is supported
       label: '',
-      ip: {
-        ipv4: DEFAULT_SUBNET_IPV4_VALUE,
-        availIPv4s: 256,
-      },
     } as SubnetFieldState,
     onSubmit: onCreateSubnet,
     validateOnBlur: false,
@@ -79,7 +86,7 @@ export const SubnetCreateDrawer = (props: Props) => {
       reset();
       setErrorMap({});
     }
-  }, [open]);
+  }, [open, reset, resetForm]);
 
   return (
     <Drawer onClose={onClose} open={open} title={'Create Subnet'}>
@@ -96,10 +103,10 @@ export const SubnetCreateDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit}>
         <SubnetNode
-          disabled={userCannotAddSubnet}
           onChange={(subnetState) => {
             setValues(subnetState);
           }}
+          disabled={userCannotAddSubnet}
           subnet={values}
         />
         <ActionsPanel
@@ -108,8 +115,8 @@ export const SubnetCreateDrawer = (props: Props) => {
             disabled: !dirty || userCannotAddSubnet,
             label: 'Create Subnet',
             loading: isLoading,
-            type: 'submit',
             onClick: onCreateSubnet,
+            type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
         />

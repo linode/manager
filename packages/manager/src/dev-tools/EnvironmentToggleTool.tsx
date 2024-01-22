@@ -68,7 +68,7 @@ export const EnvironmentToggleTool = () => {
             setSelectedOption(Math.max(selectedIndex, 0));
           }}
           defaultValue={currentEnvLabel}
-          style={{ marginRight: 8 }}
+          style={{ marginRight: 8, maxWidth: '100%' }}
         >
           <option disabled value="">
             Select an environment
