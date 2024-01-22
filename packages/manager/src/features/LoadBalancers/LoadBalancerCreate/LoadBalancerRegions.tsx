@@ -20,9 +20,6 @@ export const LoadBalancerRegions = ({ sx }: Props) => {
         <Typography variant="h2">Regions</Typography>
         <Stack spacing={1}>
           <Typography>
-            Where this Load Balancer instance will be deployed.
-          </Typography>
-          <Typography>
             <BetaChip
               component="span"
               sx={{ marginLeft: '0 !important', marginRight: '8px !important' }}

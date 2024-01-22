@@ -11,9 +11,9 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 
+import { LoadBalancerRegions } from '../../LoadBalancerCreate/LoadBalancerRegions';
 import { EditLoadBalancerConfigurations } from './EditLoadBalancerConfigurations';
 import { EditLoadBalancerLabel } from './EditLoadBalancerLabel';
-import { EditLoadBalancerRegions } from './EditLoadBalancerRegions';
 import {
   StyledButton,
   StyledMainGridItem,
@@ -48,7 +48,7 @@ export const LoadBalancerSummary = () => {
         <StyledMainGridItem lg={9} md={8} xs={12}>
           <Stack spacing={3}>
             <EditLoadBalancerLabel />
-            <EditLoadBalancerRegions />
+            <LoadBalancerRegions />
             <EditLoadBalancerConfigurations />
           </Stack>
         </StyledMainGridItem>
