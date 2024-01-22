@@ -3,8 +3,8 @@
 
 ### Changed:
 
-- Revised createObjectStorageKeysSchema to include optional 'regions' field ([#10063](https://github.com/linode/manager/pull/10063))
-- Made `allow_list` not required for updateDatabaseSchema and added optional `type` property ([#9869](https://github.com/linode/manager/pull/9869))
+- Revise createObjectStorageKeysSchema to include optional 'regions' field ([#10063](https://github.com/linode/manager/pull/10063))
+- Make `allow_list` not required for updateDatabaseSchema and added optional `type` property ([#9869](https://github.com/linode/manager/pull/9869))
 
 ## [2024-01-08] - v0.37.0
 

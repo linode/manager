@@ -8,7 +8,7 @@
 
 ### Changed:
 
-- Adjusted several OBJ types to accommodate forthcoming API changes ([#9996](https://github.com/linode/manager/pull/9996))
+- Adjust several OBJ types to accommodate forthcoming API changes ([#9996](https://github.com/linode/manager/pull/9996))
 
 ## [2024-01-08] - v0.107.0
 
