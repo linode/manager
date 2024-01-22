@@ -5,6 +5,7 @@
 import type {
   AccountSettings,
   ObjectStorageCluster,
+  ObjectStorageClusterID,
   Region,
 } from '@linode/api-v4';
 import {
@@ -91,14 +92,17 @@ describe('Object Storage enrollment', () => {
     // Clusters with special pricing are currently hardcoded rather than
     // retrieved via API, so we have to mock the cluster API request to correspond
     // with that hardcoded data.
+    //
+    // Because the IDs used in the mocks don't correspond with any actual clusters,
+    // we have to cast them as `ObjectStorageClusterID` to satisfy TypeScript.
     const mockClusters: ObjectStorageCluster[] = [
       // Regions with special pricing.
       objectStorageClusterFactory.build({
-        id: 'br-gru-0',
+        id: 'br-gru-0' as ObjectStorageClusterID,
         region: 'br-gru',
       }),
       objectStorageClusterFactory.build({
-        id: 'id-cgk-1',
+        id: 'id-cgk-1' as ObjectStorageClusterID,
         region: 'id-cgk',
       }),
       // A region that does not have special pricing.
