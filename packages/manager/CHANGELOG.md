@@ -23,6 +23,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Remove unified migrations feature flag ([#10074](https://github.com/linode/manager/pull/10074))
 - Right align chart tooltip data points ([#10078](https://github.com/linode/manager/pull/10078))
 - Update OBJ types used in several Object Storage components ([#9996](https://github.com/linode/manager/pull/9996))
+- Replace Linode details Analytics tab with Recharts ([#10037, #10001](https://github.com/linode/manager/pull/10037))
+- Replace Managed summary charts with Recharts ([#10001](https://github.com/linode/manager/pull/10001))
 
 ### Fixed:
 
@@ -54,8 +56,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Upcoming Features:
 
 - Support VPC in Access Token drawers ([#10024](https://github.com/linode/manager/pull/10024))
-- Replace Managed summary charts with Recharts ([#10001](https://github.com/linode/manager/pull/10001))
-- Replace Linode details Analytics tab with Recharts ([#10037](https://github.com/linode/manager/pull/10037))
 - Add AGLB Endpoint Health ([#10008](https://github.com/linode/manager/pull/10008))
 - Add child account access column and disable delete account button when account has child accounts ([#10025](https://github.com/linode/manager/pull/10025))
 - Add parent/proxy 'Switch Account' button and drawer to user profile dropdown menu  ([#10031](https://github.com/linode/manager/pull/10031))
