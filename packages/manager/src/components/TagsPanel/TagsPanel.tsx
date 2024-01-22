@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import Plus from 'src/assets/icons/plusSign.svg';
+import {
+  StyledPlusIcon,
+  StyledTagButton,
+} from 'src/components/Button/StyledTagButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Tag } from 'src/components/Tag/Tag';
@@ -162,6 +165,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
           className={classes.selectTag}
           creatable
           createOptionPosition="first"
+          disabled={disabled}
           escapeClearsValue
           hideLabel
           isLoading={userTagsLoading}
@@ -178,14 +182,14 @@ export const TagsPanel = (props: TagsPanelProps) => {
             [classes.hasError]: tagError.length > 0,
           })}
         >
-          <button
-            className={classes.addTagButton}
+          <StyledTagButton
+            buttonType="outlined"
+            disabled={disabled}
+            endIcon={<StyledPlusIcon disabled={disabled} />}
             onClick={toggleTagInput}
-            title="Add a tag"
           >
             Add a tag
-            <Plus />
-          </button>
+          </StyledTagButton>
         </div>
       )}
       <div className={classes.tagsPanelItemWrapper}>

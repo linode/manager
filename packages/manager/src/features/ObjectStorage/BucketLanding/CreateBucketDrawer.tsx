@@ -123,7 +123,6 @@ export const CreateBucketDrawer = (props: Props) => {
         {isRestrictedUser && (
           <Notice
             data-qa-permissions-notice
-            important
             text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
             variant="error"
           />

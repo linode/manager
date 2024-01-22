@@ -1,3 +1,4 @@
+import { Profile } from '@linode/api-v4/';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -7,16 +8,20 @@ import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useFlags } from 'src/hooks/useFlags';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-export const SummaryPanel = () => {
+interface Props {
+  profile: Profile | undefined;
+}
+export const SummaryPanel = (props: Props) => {
+  const { profile } = props;
   const flags = useFlags();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
@@ -29,6 +34,7 @@ export const SummaryPanel = () => {
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
+  const isRestricted = profile?.restricted;
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
@@ -127,6 +133,7 @@ export const SummaryPanel = () => {
           Tags
         </StyledTitle>
         <TagsPanel
+          disabled={isRestricted}
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
         />

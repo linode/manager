@@ -18,6 +18,7 @@ import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -30,6 +31,7 @@ export const NodeBalancerDetail = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const [label, setLabel] = React.useState<string>();
+  const { data: profile } = useProfile();
 
   const {
     error: updateError,
@@ -118,16 +120,17 @@ export const NodeBalancerDetail = () => {
 
         <TabPanels>
           <SafeTabPanel index={0}>
-            <NodeBalancerSummary />
+            <NodeBalancerSummary profile={profile} />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <NodeBalancerConfigurations
               nodeBalancerLabel={nodebalancer.label}
               nodeBalancerRegion={nodebalancer.region}
+              profile={profile}
             />
           </SafeTabPanel>
           <SafeTabPanel index={2}>
-            <NodeBalancerSettings />
+            <NodeBalancerSettings profile={profile} />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

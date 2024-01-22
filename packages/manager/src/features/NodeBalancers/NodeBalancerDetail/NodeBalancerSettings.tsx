@@ -17,8 +17,14 @@ import {
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
+import { Profile } from '@linode/api-v4';
 
-export const NodeBalancerSettings = () => {
+interface Props {
+  profile: Profile | undefined;
+}
+
+export const NodeBalancerSettings = (props: Props) => {
+  const { profile } = props;
   const flags = useFlags();
   const theme = useTheme();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -26,6 +32,7 @@ export const NodeBalancerSettings = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const displayFirewallInfoText = attachedFirewallData?.results === 0;
+  const isRestricted = profile?.restricted;
 
   const {
     error: labelError,

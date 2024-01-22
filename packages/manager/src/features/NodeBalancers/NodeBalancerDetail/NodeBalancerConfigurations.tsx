@@ -62,6 +62,7 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from '../types';
+import type { Profile } from '@linode/api-v4';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -89,6 +90,7 @@ const StyledConfigsButton = styled(Button, {
 interface Props {
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
+  profile: Profile | undefined;
 }
 
 interface MatchProps {

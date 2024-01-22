@@ -1,3 +1,4 @@
+import { Profile } from '@linode/api-v4/';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -9,7 +10,12 @@ import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
 import { SummaryPanel } from './SummaryPanel';
 import { TablesPanel } from './TablesPanel';
 
-export const NodeBalancerSummary = () => {
+interface Props {
+  profile: Profile | undefined;
+}
+
+export const NodeBalancerSummary = (props: Props) => {
+  const { profile } = props;
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
@@ -22,7 +28,7 @@ export const NodeBalancerSummary = () => {
           <TablesPanel />
         </StyledMainGridItem>
         <StyledSidebarGridItem lg={3} md={4} xs={12}>
-          <SummaryPanel />
+          <SummaryPanel profile={profile} />
         </StyledSidebarGridItem>
       </Grid>
     </div>
