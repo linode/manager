@@ -1,21 +1,19 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { IconButton } from 'src/components/IconButton';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
+import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
   SelectedOptionsHeader,
   SelectedOptionsList,
   SelectedOptionsListItem,
   StyledBoxShadowWrapper,
-  StyledItemWithPlusChip,
   StyledLabel,
   StyledNoAssignedLinodesBox,
   StyledScrollBox,
@@ -205,35 +203,5 @@ export const RemovableSelectionsList = (
         </StyledNoAssignedLinodesBox>
       )}
     </>
-  );
-};
-
-const determineNoneSingleOrMultipleWithChip = (
-  dataArray: string[]
-): JSX.Element | string => {
-  if (dataArray.length === 0) {
-    return 'None';
-  }
-
-  if (dataArray.length === 1) {
-    return dataArray[0];
-  }
-
-  const allDataExceptFirstElement = dataArray.slice(1);
-
-  const remainingData = allDataExceptFirstElement.map((datum) => (
-    <>
-      <span key={datum}>{datum}</span>
-      <br />
-    </>
-  ));
-
-  return (
-    <StyledItemWithPlusChip>
-      {dataArray[0]}{' '}
-      <Tooltip placement="bottom" title={remainingData}>
-        <Chip clickable inTable label={`+${remainingData.length}`} />
-      </Tooltip>
-    </StyledItemWithPlusChip>
   );
 };

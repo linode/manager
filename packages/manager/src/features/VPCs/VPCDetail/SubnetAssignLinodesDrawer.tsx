@@ -1,4 +1,5 @@
 import { appendConfigInterface } from '@linode/api-v4';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -78,6 +79,7 @@ export const SubnetAssignLinodesDrawer = (
   const newInterface = React.useRef<Interface>();
   const removedLinodeId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
+  const theme = useTheme();
 
   const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
     Record<string, string | undefined>
@@ -131,7 +133,7 @@ export const SubnetAssignLinodesDrawer = (
 
   // Moved the list of linodes that are currently assignable to a subnet into a state variable (linodeOptionsToAssign)
   // and update that list whenever this subnet or the list of all linodes in this subnet's region changes. This takes
-  // care of the MUI invalid value warning that was occuring before in the Linodes autocomplete [M3-6752]
+  // care of the MUI invalid value warning that was occurring before in the Linodes autocomplete [M3-6752]
   React.useEffect(() => {
     if (linodes) {
       setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
@@ -503,6 +505,13 @@ export const SubnetAssignLinodesDrawer = (
             {((linodeConfigs.length > 1 && values.selectedConfig) ||
               linodeConfigs.length === 1) && (
               <AssignIPRanges
+                sx={{
+                  marginBottom: theme.spacing(),
+                  marginTop:
+                    linodeConfigs.length > 1
+                      ? theme.spacing(2)
+                      : theme.spacing(),
+                }}
                 handleIPRangeChange={handleIPRangeChange}
                 ipRanges={values.ipRanges}
                 ipRangesError={assignLinodesErrors['ip_ranges']}

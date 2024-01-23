@@ -11,18 +11,21 @@ import {
 } from 'src/features/VPCs/constants';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
+import type { SxProps } from '@mui/material/styles';
+
 interface Props {
   handleIPRangeChange: (ips: ExtendedIP[]) => void;
   ipRanges: ExtendedIP[];
   ipRangesError?: string;
+  sx?: SxProps;
 }
 
 export const AssignIPRanges = (props: Props) => {
-  const { handleIPRangeChange, ipRanges, ipRangesError } = props;
+  const { handleIPRangeChange, ipRanges, ipRangesError, sx } = props;
 
   return (
     <>
-      <Divider />
+      <Divider sx={{ ...sx }} />
       {ipRangesError && (
         <Notice important text={ipRangesError} variant="error" />
       )}
