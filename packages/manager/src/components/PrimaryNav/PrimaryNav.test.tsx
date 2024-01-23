@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { accountFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -69,5 +70,67 @@ describe('PrimaryNav', () => {
     });
 
     expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
+  });
+
+  it('should show ACLB if the feature flag is on, but there is not an account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    server.use(
+      rest.get('*/account', (req, res, ctx) => {
+        return res(ctx.json(account));
+      })
+    );
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { aglb: true },
+    });
+
+    const loadbalancerNavItem = await findByText('Global Load Balancers');
+
+    expect(loadbalancerNavItem).toBeVisible();
+  });
+
+  /**
+   * I find this case to bit a bit crazy, but we do this to allow us to see
+   * ACLB in "lower" environments (dev) without needing the customer tag.
+   */
+  it('should show ACLB if the feature flag is off, but the account has the capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Load Balancer'],
+    });
+
+    server.use(
+      rest.get('*/account', (req, res, ctx) => {
+        return res(ctx.json(account));
+      })
+    );
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { aglb: false },
+    });
+
+    const loadbalancerNavItem = await findByText('Global Load Balancers');
+
+    expect(loadbalancerNavItem).toBeVisible();
+  });
+
+  it('should not show ACLB if the feature flag is off and there is no account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    server.use(
+      rest.get('*/account', (req, res, ctx) => {
+        return res(ctx.json(account));
+      })
+    );
+
+    const { queryByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { aglb: false },
+    });
+
+    expect(queryByText('Global Load Balancers')).not.toBeInTheDocument();
   });
 });

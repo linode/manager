@@ -11,7 +11,7 @@ export const useIsACLBEnabled = () => {
   const flags = useFlags();
 
   const isACLBEnabled =
-    account?.capabilities.includes('Akamai Cloud Load Balancer') && flags.aglb;
+    account?.capabilities.includes('Akamai Cloud Load Balancer') || flags.aglb;
 
   return { isACLBEnabled };
 };
