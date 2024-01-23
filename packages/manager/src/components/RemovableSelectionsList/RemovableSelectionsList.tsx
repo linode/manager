@@ -9,6 +9,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
+import { TableRowEmpty } from '../TableRowEmpty/TableRowEmpty';
 import {
   SelectedOptionsHeader,
   SelectedOptionsList,
@@ -188,19 +189,37 @@ export const RemovableSelectionsList = (
     </Table>
   );
 
+  const tableWithoutData = (
+    <Table>
+      <TableHead>
+        <TableRow>
+          {tableHeaders?.map((thisHeader) => (
+            <TableCell key={`removable-selections-list-header-${thisHeader}`}>
+              {thisHeader}
+            </TableCell>
+          ))}
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableRowEmpty colSpan={4} message={noDataText} />
+    </Table>
+  );
+
   return (
     <>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
-        !tableHeaders || tableHeaders.length === 0 ? (
+        !tableHeaders ? (
           selectedOptionsJSX
         ) : (
           tableOfSelectedOptions
         )
-      ) : (
+      ) : !tableHeaders ? (
         <StyledNoAssignedLinodesBox maxWidth={maxWidth}>
           <StyledLabel>{noDataText}</StyledLabel>
         </StyledNoAssignedLinodesBox>
+      ) : (
+        tableWithoutData
       )}
     </>
   );
