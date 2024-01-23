@@ -53,6 +53,8 @@ const SelectLinodePanel = (props: Props) => {
     string | undefined
   >(undefined);
 
+  // Capture the selected linode when this component mounts,
+  // so it doesn't change when the user selects a different one.
   const [preselectedLinodeID] = React.useState(
     flags.linodeCloneUIChanges && selectedLinodeID
   );
