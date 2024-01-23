@@ -46,7 +46,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const linodeGrant = grants?.linode.find(
     (grant: Grant) => grant.id === linode.id
@@ -76,7 +76,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
           volumeId: values.volume_id,
         });
         onClose();
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar(`Volume attachment started`, {
           variant: 'info',
         });

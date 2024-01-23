@@ -54,7 +54,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -160,7 +160,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     return migrateLinode({
       region: selectedRegion,
     }).then(() => {
-      resetEventsPolling();
+      checkForNewEvents();
       sendMigrationInitiatedEvent(
         region,
         selectedRegion,

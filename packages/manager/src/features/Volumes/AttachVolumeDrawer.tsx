@@ -37,7 +37,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: grants } = useGrants();
 
@@ -50,7 +50,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         volumeId: volume?.id ?? -1,
         ...values,
       }).then(() => {
-        resetEventsPolling();
+        checkForNewEvents();
         handleClose();
         enqueueSnackbar(`Volume attachment started`, {
           variant: 'info',

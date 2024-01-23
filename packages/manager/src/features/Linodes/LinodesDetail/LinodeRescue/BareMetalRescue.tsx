@@ -26,7 +26,7 @@ export const BareMetalRescue = (props: Props) => {
     linodeId !== undefined && isOpen
   );
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   React.useEffect(() => {
     if (isOpen) {
@@ -44,7 +44,7 @@ export const BareMetalRescue = (props: Props) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
         });
-        resetEventsPolling();
+        checkForNewEvents();
         onClose();
       })
       .catch((err) => {

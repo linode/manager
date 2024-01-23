@@ -870,7 +870,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
 
         /** reset the Events polling */
-        this.props.resetEventsPolling();
+        this.props.checkForNewEvents();
 
         // If a VPC was assigned, invalidate the query so that the relevant VPC data
         // gets displayed in the LinodeEntityDetail

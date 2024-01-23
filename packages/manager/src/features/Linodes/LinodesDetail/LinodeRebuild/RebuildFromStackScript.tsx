@@ -73,7 +73,7 @@ export const RebuildFromStackScript = (props: Props) => {
     isLoading: isLoadingPreferences,
   } = usePreferences();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -129,7 +129,7 @@ export const RebuildFromStackScript = (props: Props) => {
     })
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
-        resetEventsPolling();
+        checkForNewEvents();
 
         setSubmitting(false);
 

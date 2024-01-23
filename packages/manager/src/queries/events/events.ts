@@ -173,16 +173,22 @@ export const useEventsPoller = () => {
 export const useEventsPollingActions = () => {
   const queryClient = useQueryClient();
 
-  const resetEventsPolling = () =>
+  const checkForNewEvents = () => {
+    // Invalidating the event poller will cause useEventsPoller's `queryFn`
+    // to re-run and pull down any new events.
     queryClient.invalidateQueries(['events', 'poller']);
+  };
 
   return {
     /**
-     * Sets the polling interval to 1 second so that events get polled faster temporarily
+     * Makes a request to `/v4/account/events` to check for any new events.
      *
-     * The polling backoff will start over from 1 second.
+     * This function is intended to be called *after* initiating a long-running
+     * event (like Linode create) so that Cloud Manager sees the new event and starts
+     * polling at a faster rate. We do this to give Cloud Manager users a more
+     * "realtime" feeling experience.
      */
-    resetEventsPolling,
+    checkForNewEvents,
   };
 };
 

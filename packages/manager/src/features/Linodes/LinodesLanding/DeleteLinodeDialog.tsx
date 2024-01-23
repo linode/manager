@@ -29,7 +29,7 @@ export const DeleteLinodeDialog = (props: Props) => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const enableVPCActions = isFeatureEnabled(
     'VPCs',
@@ -80,7 +80,7 @@ export const DeleteLinodeDialog = (props: Props) => {
       });
     }
     onClose();
-    resetEventsPolling();
+    checkForNewEvents();
 
     if (onSuccess) {
       onSuccess();

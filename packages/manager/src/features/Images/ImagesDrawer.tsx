@@ -102,7 +102,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
     permissionedLinodes: availableLinodes,
   } = useImageAndLinodeGrantCheck();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);
@@ -230,7 +230,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
               return;
             }
 
-            resetEventsPolling();
+            checkForNewEvents();
 
             setSubmitting(false);
 

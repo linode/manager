@@ -24,7 +24,7 @@ export const CancelBackupsDialog = (props: Props) => {
     mutateAsync: cancelBackups,
   } = useLinodeBackupsCancelMutation(linodeId);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const onCancelBackups = async () => {
     await cancelBackups();
@@ -32,7 +32,7 @@ export const CancelBackupsDialog = (props: Props) => {
       variant: 'info',
     });
     onClose();
-    resetEventsPolling();
+    checkForNewEvents();
     sendBackupsDisabledEvent();
   };
 

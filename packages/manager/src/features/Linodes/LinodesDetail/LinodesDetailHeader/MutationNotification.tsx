@@ -24,7 +24,7 @@ export const MutationNotification = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: currentTypeInfo } = useTypeQuery(
     linode?.type ?? '',
@@ -52,7 +52,7 @@ export const MutationNotification = (props: Props) => {
   const initMutation = () => {
     startMutation().then(() => {
       setIsMutationDrawerOpen(false);
-      resetEventsPolling();
+      checkForNewEvents();
       enqueueSnackbar('Linode upgrade has been initiated.', {
         variant: 'info',
       });

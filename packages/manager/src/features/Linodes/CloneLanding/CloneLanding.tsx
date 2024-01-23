@@ -59,7 +59,7 @@ const CloneLanding = () => {
   const location = useLocation();
   const theme = useTheme();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const linodeId = Number(_linodeId);
 
@@ -242,7 +242,7 @@ const CloneLanding = () => {
     request()
       .then(() => {
         setSubmitting(false);
-        resetEventsPolling();
+        checkForNewEvents();
         history.push(`/linodes/${linodeId}/configurations`);
       })
       .catch((errors) => {

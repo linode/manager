@@ -29,7 +29,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const validationSchema = ResizeVolumeSchema(volume?.size ?? -1);
 
@@ -61,7 +61,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
       resizeVolume({ size: Number(values.size), volumeId: volume?.id ?? -1 })
         .then((_) => {
           setSubmitting(false);
-          resetEventsPolling();
+          checkForNewEvents();
           enqueueSnackbar(`Volume scheduled to be resized.`, {
             variant: 'success',
           });

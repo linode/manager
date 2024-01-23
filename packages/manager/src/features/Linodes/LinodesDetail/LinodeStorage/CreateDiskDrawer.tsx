@@ -51,7 +51,7 @@ export const CreateDiskDrawer = (props: Props) => {
   const { linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
 
@@ -94,7 +94,7 @@ export const CreateDiskDrawer = (props: Props) => {
             : values;
 
         await createDisk(cleanedValues);
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar(`Started creation of disk ${values.label}`, {
           variant: 'success',
         });

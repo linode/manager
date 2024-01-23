@@ -45,7 +45,7 @@ export const ResizeDiskDrawer = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { mutateAsync: resizeDisk, reset } = useLinodeDiskResizeMutation(
     linodeId,
@@ -66,7 +66,7 @@ export const ResizeDiskDrawer = (props: Props) => {
     async onSubmit(values, helpers) {
       try {
         await resizeDisk(values);
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar('Disk queued for resizing.', { variant: 'success' });
         onClose();
       } catch (e) {

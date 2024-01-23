@@ -80,7 +80,7 @@ export const PowerActionsDialog = (props: Props) => {
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
@@ -119,7 +119,7 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
-    resetEventsPolling();
+    checkForNewEvents();
     onClose();
   };
 

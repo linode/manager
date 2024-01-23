@@ -49,11 +49,11 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const handleEnableBackups = async () => {
     await enableBackups();
-    resetEventsPolling();
+    checkForNewEvents();
     enqueueSnackbar('Backups are being enabled for this Linode.', {
       variant: 'success',
     });

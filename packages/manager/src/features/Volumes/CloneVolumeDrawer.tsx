@@ -31,7 +31,7 @@ export const CloneVolumeDrawer = (props: Props) => {
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: grants } = useGrants();
 
@@ -58,7 +58,7 @@ export const CloneVolumeDrawer = (props: Props) => {
       try {
         await cloneVolume({ label: values.label, volumeId: volume?.id ?? -1 });
         onClose();
-        resetEventsPolling();
+        checkForNewEvents();
       } catch (error) {
         handleFieldErrors(setErrors, error);
         handleGeneralErrors(

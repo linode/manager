@@ -21,11 +21,11 @@ export const BootConfigDialog = (props: Props) => {
 
   const { error, isLoading, mutateAsync } = useRebootLinodeMutation(linodeId);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const onBoot = async () => {
     await mutateAsync({ config_id: config?.id ?? -1 });
-    resetEventsPolling();
+    checkForNewEvents();
     enqueueSnackbar(`Successfully booted config ${config?.label}`, {
       variant: 'success',
     });

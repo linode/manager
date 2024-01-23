@@ -102,7 +102,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
@@ -173,7 +173,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       label,
     })
       .then((_) => {
-        resetEventsPolling();
+        checkForNewEvents();
 
         setSubmitting(false);
 

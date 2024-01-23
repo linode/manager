@@ -25,7 +25,7 @@ export const CaptureSnapshot = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const {
     error: snapshotError,
@@ -47,7 +47,7 @@ export const CaptureSnapshot = (props: Props) => {
       });
       setIsSnapshotConfirmationDialogOpen(false);
       formikHelpers.resetForm();
-      resetEventsPolling();
+      checkForNewEvents();
     },
   });
 

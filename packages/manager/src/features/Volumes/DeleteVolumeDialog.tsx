@@ -21,12 +21,12 @@ export const DeleteVolumeDialog = (props: Props) => {
     mutateAsync: deleteVolume,
   } = useDeleteVolumeMutation();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const onDelete = () => {
     deleteVolume({ id: volume?.id ?? -1 }).then(() => {
       onClose();
-      resetEventsPolling();
+      checkForNewEvents();
     });
   };
 

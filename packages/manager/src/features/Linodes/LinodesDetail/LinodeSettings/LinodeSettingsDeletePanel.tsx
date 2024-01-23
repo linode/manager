@@ -26,7 +26,7 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
     mutateAsync: deleteLinode,
   } = useDeleteLinodeMutation(linodeId);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const history = useHistory();
 
@@ -34,7 +34,7 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
 
   const onDelete = async () => {
     await deleteLinode();
-    resetEventsPolling();
+    checkForNewEvents();
     history.push('/linodes');
   };
 

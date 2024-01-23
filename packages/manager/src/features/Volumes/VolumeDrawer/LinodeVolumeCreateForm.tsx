@@ -57,7 +57,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const disabled = profile?.restricted && !grants?.global.add_volumes;
 
@@ -90,7 +90,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           size: maybeCastToNumber(size),
           tags,
         });
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar(`Volume scheduled for creation.`, {
           variant: 'success',
         });

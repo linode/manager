@@ -20,7 +20,7 @@ export const DetachVolumeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: linode } = useLinodeQuery(
     volume?.linode_id ?? -1,
@@ -36,7 +36,7 @@ export const DetachVolumeDialog = (props: Props) => {
   const onDetach = () => {
     detachVolume({ id: volume?.id ?? -1 }).then(() => {
       onClose();
-      resetEventsPolling();
+      checkForNewEvents();
       enqueueSnackbar(`Volume detachment started`, {
         variant: 'info',
       });

@@ -142,7 +142,7 @@ export const StandardRescueDialog = (props: Props) => {
     deviceMap
   );
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -173,7 +173,7 @@ export const StandardRescueDialog = (props: Props) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
         });
-        resetEventsPolling();
+        checkForNewEvents();
         onClose();
       })
       .catch((errorResponse: APIError[]) => {

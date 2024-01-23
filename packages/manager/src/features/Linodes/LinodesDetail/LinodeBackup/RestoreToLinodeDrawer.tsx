@@ -31,7 +31,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const {
     data: linodes,
@@ -69,7 +69,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         `Started restoring Linode ${selectedLinodeOption?.label} from a backup`,
         { variant: 'info' }
       );
-      resetEventsPolling();
+      checkForNewEvents();
       onClose();
     },
   });

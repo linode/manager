@@ -79,7 +79,7 @@ export const RebuildFromImage = (props: Props) => {
     isLoading: isLoadingPreferences,
   } = usePreferences();
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
@@ -155,7 +155,7 @@ export const RebuildFromImage = (props: Props) => {
     rebuildLinode(linodeId, params)
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
-        resetEventsPolling();
+        checkForNewEvents();
 
         setSubmitting(false);
 

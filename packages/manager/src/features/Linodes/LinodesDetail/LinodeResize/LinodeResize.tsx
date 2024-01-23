@@ -85,7 +85,7 @@ export const LinodeResize = (props: Props) => {
     mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
 
-  const { resetEventsPolling } = useEventsPollingActions();
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: regionsData } = useRegionsQuery();
 
@@ -117,7 +117,7 @@ export const LinodeResize = (props: Props) => {
         migration_type: values.migration_type,
         type: values.type,
       });
-      resetEventsPolling();
+      checkForNewEvents();
       enqueueSnackbar('Linode queued for resize.', {
         variant: 'info',
       });
