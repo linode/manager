@@ -1,19 +1,14 @@
-import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { Link } from 'src/components/Link';
-import { Tooltip } from 'src/components/Tooltip';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
+import { RegionOption } from './RegionOption';
 import {
-  SelectedIcon,
   StyledAutocompleteContainer,
   StyledFlagContainer,
-  StyledListItem,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
@@ -21,7 +16,6 @@ import type {
   RegionSelectOption,
   RegionSelectProps,
 } from './RegionSelect.types';
-import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 /**
  * A specific select for regions.
@@ -104,74 +98,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           setSelectedRegion(null);
         }}
         renderOption={(props, option, { selected }) => {
-          const isDisabledMenuItem =
-            Boolean(flags.dcGetWell) && Boolean(option.unavailable);
           return (
-            <Tooltip
-              PopperProps={{
-                sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
-              }}
-              title={
-                isDisabledMenuItem ? (
-                  <>
-                    There may be limited capacity in this region.{' '}
-                    <Link to="https://www.linode.com/global-infrastructure/availability">
-                      Learn more
-                    </Link>
-                    .
-                  </>
-                ) : (
-                  ''
-                )
-              }
-              disableFocusListener={!isDisabledMenuItem}
-              disableHoverListener={!isDisabledMenuItem}
-              disableTouchListener={!isDisabledMenuItem}
-              enterDelay={200}
-              enterNextDelay={200}
-              enterTouchDelay={200}
-              key={option.value}
-            >
-              <StyledListItem
-                {...props}
-                className={
-                  isDisabledMenuItem
-                    ? `${props.className} Mui-disabled`
-                    : props.className
-                }
-                componentsProps={{
-                  root: {
-                    'data-qa-option': option.value,
-                    'data-testid': option.value,
-                  } as ListItemComponentsPropsOverrides,
-                }}
-                onClick={(e) =>
-                  isDisabledMenuItem
-                    ? e.preventDefault()
-                    : props.onClick
-                    ? props.onClick(e)
-                    : null
-                }
-                aria-disabled={undefined}
-              >
-                <>
-                  <Box alignItems="center" display="flex" flexGrow={1}>
-                    <StyledFlagContainer>
-                      <Flag country={option.data.country} />
-                    </StyledFlagContainer>
-                    {option.label}
-                    {isDisabledMenuItem && (
-                      <Box sx={visuallyHidden}>
-                        Disabled option - There may be limited capacity in this
-                        region. Learn more at
-                        https://www.linode.com/global-infrastructure/availability.
-                      </Box>
-                    )}
-                  </Box>
-                  {selected && <SelectedIcon visible={selected} />}
-                </>
-              </StyledListItem>
-            </Tooltip>
+            <RegionOption option={option} props={props} selected={selected} />
           );
         }}
         textFieldProps={{
