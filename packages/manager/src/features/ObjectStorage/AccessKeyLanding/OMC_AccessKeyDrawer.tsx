@@ -6,7 +6,7 @@ import {
   ObjectStorageKeyRequest,
   Scope,
 } from '@linode/api-v4/lib/object-storage';
-import { omc_createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
@@ -153,7 +153,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     },
     validateOnBlur: true,
     validateOnChange: false,
-    validationSchema: omc_createObjectStorageKeysSchema,
+    validationSchema: createObjectStorageKeysSchema,
   });
 
   const beforeSubmit = () => {

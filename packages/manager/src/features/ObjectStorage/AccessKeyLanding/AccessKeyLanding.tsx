@@ -102,7 +102,7 @@ export const AccessKeyLanding = (props: Props) => {
     setStatus(null);
     setSubmitting(true);
 
-    createObjectStorageKeys(values, isObjMultiClusterFlagEnabled)
+    createObjectStorageKeys(values)
       .then((data) => {
         setSubmitting(false);
 

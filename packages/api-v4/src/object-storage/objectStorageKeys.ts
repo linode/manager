@@ -1,7 +1,4 @@
-import {
-  createObjectStorageKeysSchema,
-  omc_createObjectStorageKeysSchema,
-} from '@linode/validation/lib/objectStorageKeys.schema';
+import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -35,19 +32,11 @@ export const getObjectStorageKeys = (params?: Params, filters?: Filter) =>
  *
  * Creates an Object Storage key
  */
-export const createObjectStorageKeys = (
-  data: ObjectStorageKeyRequest,
-  isObjMultiClusterFlagEnabled: boolean = false
-) =>
+export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
   Request<ObjectStorageKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}/object-storage/keys`),
-    setData(
-      data,
-      isObjMultiClusterFlagEnabled
-        ? omc_createObjectStorageKeysSchema
-        : createObjectStorageKeysSchema
-    )
+    setData(data, createObjectStorageKeysSchema)
   );
 
 /**
