@@ -9,7 +9,6 @@ import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
@@ -37,7 +36,6 @@ export const ViewAPITokenDrawer = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
-  const { data: user } = useAccountUser(profile?.username ?? '');
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
@@ -64,7 +62,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
 
   // Filter permissions for all users except parent user accounts.
   const showFilteredPermissions =
-    (flags.parentChildAccountAccess && user?.user_type !== 'parent') ||
+    (flags.parentChildAccountAccess && profile?.user_type !== 'parent') ||
     Boolean(!flags.parentChildAccountAccess);
 
   const filteredPermissions = allPermissions.filter(
