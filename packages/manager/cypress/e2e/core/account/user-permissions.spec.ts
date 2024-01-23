@@ -925,6 +925,12 @@ describe('User permission management', () => {
       global: undefined,
     };
 
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
     mockGetUsers([mockUser, additionalUser]).as('getUsers');
     mockGetUser(mockUser);
     mockGetUserGrants(mockUser.username, mockUserGrants);
@@ -958,7 +964,7 @@ describe('User permission management', () => {
     cy.findByText(mockUser.username).should('be.visible');
     cy.findByText(additionalUser.username).should('be.visible');
 
-    // clickl the "x" button will dismiss the dialog and do nothing
+    // clicking the "x" button will dismiss the dialog and do nothing
     cy.findByText(additionalUser.username)
       .should('be.visible')
       .closest('tr')
@@ -994,6 +1000,9 @@ describe('User permission management', () => {
     cy.wait(['@deleteUser', '@getUsers']);
 
     // the user is deleted
+    ui.toast.assertMessage(
+      `User ${additionalUser.username} has been deleted successfully.`
+    );
     cy.findByText(additionalUser.username).should('not.exist');
   });
 });
