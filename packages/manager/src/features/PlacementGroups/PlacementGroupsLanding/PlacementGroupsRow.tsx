@@ -63,7 +63,7 @@ export const PlacementGroupsRow = React.memo(
     return (
       <TableRow
         ariaLabel={`Placement Group ${label}`}
-        data-testid={`placement-groups-${id}`}
+        data-testid={`placement-group-${id}`}
       >
         <TableCell>
           <Link
