@@ -9,18 +9,17 @@ import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
-  const { data: grants } = useGrants();
   const flags = useFlags();
   const theme = useTheme();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -28,7 +27,11 @@ export const NodeBalancerSettings = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const displayFirewallInfoText = attachedFirewallData?.results === 0;
-  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+
+  const isRestricted = useIsResourceRestricted({
+    grantType: 'nodebalancer',
+    id: nodebalancer?.id,
+  });
 
   const {
     error: labelError,

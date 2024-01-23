@@ -7,18 +7,17 @@ import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
-  const { data: grants } = useGrants();
   const flags = useFlags();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
@@ -31,7 +30,11 @@ export const SummaryPanel = () => {
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
-  const isRestricted = grants?.nodebalancer?.[0]?.permissions === 'read_only';
+
+  const isRestricted = useIsResourceRestricted({
+    grantType: 'nodebalancer',
+    id: nodebalancer?.id,
+  });
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
