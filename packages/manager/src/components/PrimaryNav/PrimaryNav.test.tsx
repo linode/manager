@@ -92,10 +92,6 @@ describe('PrimaryNav', () => {
     expect(loadbalancerNavItem).toBeVisible();
   });
 
-  /**
-   * I find this case to bit a bit crazy, but we do this to allow us to see
-   * ACLB in "lower" environments (dev) without needing the customer tag.
-   */
   it('should show ACLB if the feature flag is off, but the account has the capability', async () => {
     const account = accountFactory.build({
       capabilities: ['Akamai Cloud Load Balancer'],
