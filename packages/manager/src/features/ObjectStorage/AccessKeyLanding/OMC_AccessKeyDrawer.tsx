@@ -24,7 +24,7 @@ import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
-import { AccessKeyRegions } from './AccessKeyRegions';
+import { AccessKeyRegions } from './AccessKeyRegions/AccessKeyRegions';
 import { LimitedAccessControls } from './LimitedAccessControls';
 import { MODE } from './types';
 
