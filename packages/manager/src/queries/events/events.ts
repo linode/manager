@@ -1,6 +1,6 @@
 import { getEvents, markEventSeen } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { useRef } from 'react';
 import {
   InfiniteData,
   QueryClient,
@@ -104,10 +104,8 @@ export const useEventsPoller = () => {
 
   const hasFetchedInitialEvents = events !== undefined;
 
-  const [mountTimestamp] = useState<string>(() =>
-    DateTime.fromMillis(Date.now(), { zone: 'utc' }).toFormat(
-      ISO_DATETIME_NO_TZ_FORMAT
-    )
+  const mountTimestamp = useRef(
+    DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
   );
 
   useQuery({
@@ -135,7 +133,9 @@ export const useEventsPoller = () => {
       // If the user has events, poll for new events based on the most recent event's created time.
       // If the user has no events, poll events from the time the app mounted.
       const latestEventTime =
-        events && events.length > 0 ? events[0].created : mountTimestamp;
+        events && events.length > 0
+          ? events[0].created
+          : mountTimestamp.current;
 
       const {
         eventsThatAlreadyHappenedAtTheFilterTime,
