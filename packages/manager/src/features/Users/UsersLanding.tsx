@@ -1,20 +1,14 @@
-import { User } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
@@ -25,6 +19,9 @@ import { useProfile } from 'src/queries/profile';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UserRow } from './UserRow';
+import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
+import { UsersLandingTableBody } from './UsersLandingTableBody';
+import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 export const UsersLanding = () => {
   const flags = useFlags();
@@ -53,8 +50,9 @@ export const UsersLanding = () => {
   const nonProxyUsers =
     users?.data.filter((user) => user.user_type !== 'proxy') ?? [];
 
-  const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && profile?.user_type === 'parent';
+  const showChildAccountAccessCol = Boolean(
+    flags.parentChildAccountAccess && profile?.user_type === 'parent'
+  );
   const numCols = showChildAccountAccessCol ? 6 : 5;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
@@ -94,92 +92,6 @@ export const UsersLanding = () => {
     ));
   };
 
-  const renderProxyTableHeader = () => {
-    return (
-      <TableRow>
-        <TableSortCell
-          active={order.orderBy === 'username'}
-          direction={order.order}
-          handleClick={order.handleOrderChange}
-          label="username"
-        >
-          Username
-        </TableSortCell>
-        <Hidden smDown>
-          <TableSortCell
-            active={order.orderBy === 'email'}
-            direction={order.order}
-            handleClick={order.handleOrderChange}
-            label="email"
-          >
-            Email Address
-          </TableSortCell>
-        </Hidden>
-        <TableCell>Account Access</TableCell>
-        <TableCell />
-      </TableRow>
-    );
-  };
-
-  const renderTableHeader = () => {
-    return (
-      <TableRow>
-        <TableSortCell
-          active={order.orderBy === 'username'}
-          direction={order.order}
-          handleClick={order.handleOrderChange}
-          label="username"
-        >
-          Username
-        </TableSortCell>
-        <Hidden smDown>
-          <TableSortCell
-            active={order.orderBy === 'email'}
-            direction={order.order}
-            handleClick={order.handleOrderChange}
-            label="email"
-          >
-            Email Address
-          </TableSortCell>
-        </Hidden>
-        <TableCell>Account Access</TableCell>
-        {showChildAccountAccessCol && (
-          <Hidden lgDown>
-            <TableCell>Child Account Access</TableCell>
-          </Hidden>
-        )}
-        <Hidden lgDown>
-          <TableCell>Last Login</TableCell>
-        </Hidden>
-        <TableCell />
-      </TableRow>
-    );
-  };
-
-  const renderTableBody = (users: User[]) => {
-    if (isLoading) {
-      return (
-        <TableRowLoading
-          columns={numCols}
-          responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
-          rows={1}
-        />
-      );
-    }
-
-    if (error) {
-      return <TableRowError colSpan={numCols} message={error[0].reason} />;
-    }
-
-    if (!users || users.length === 0) {
-      return <TableRowEmpty colSpan={numCols} />;
-    }
-
-    return users.map((user) => (
-      <UserRow key={user.username} onDelete={onDelete} user={user} />
-    ));
-  };
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
@@ -199,15 +111,23 @@ export const UsersLanding = () => {
       )}
       {showProxyUserTable && (
         <Table aria-label="List of Business Partners">
-          <TableHead>{renderProxyTableHeader()}</TableHead>
-          <TableBody>{renderTableBody(proxyUsers)}</TableBody>
+          <UsersLandingProxyTableHead order={order} />
+          <TableBody>
+            <UsersLandingTableBody
+              error={error}
+              isLoading={isLoading}
+              numCols={numCols}
+              onDelete={onDelete}
+              users={proxyUsers}
+            />
+          </TableBody>
         </Table>
       )}
       <Box
         sx={(theme) => ({
           alignItems: 'center',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: showProxyUserTable ? 'space-between' : 'flex-end',
           marginBottom: theme.spacing(2),
           marginTop: theme.spacing(3),
         })}
@@ -236,11 +156,22 @@ export const UsersLanding = () => {
         />
       </Box>
       <Table aria-label="List of Users">
-        <TableHead>{renderTableHeader()}</TableHead>
+        <UsersLandingTableHead
+          order={order}
+          showChildAccountAccessCol={showChildAccountAccessCol}
+        />
         <TableBody>
-          {flags.parentChildAccountAccess
-            ? renderTableBody(nonProxyUsers)
-            : renderTableContent()}
+          {flags.parentChildAccountAccess ? (
+            <UsersLandingTableBody
+              error={error}
+              isLoading={isLoading}
+              numCols={numCols}
+              onDelete={onDelete}
+              users={nonProxyUsers}
+            />
+          ) : (
+            renderTableContent()
+          )}
         </TableBody>
       </Table>
       <PaginationFooter
