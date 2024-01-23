@@ -60,7 +60,7 @@ describe('Domains empty landing page', () => {
           .should('be.enabled')
           .click();
       });
-    cy.findByText('Remote Nameserver').should('not.be.visible');
+    cy.findByText('Remote Nameserver').should('not.exist');
 
     // confirms clicking on 'Create Domain' button
     ui.button
