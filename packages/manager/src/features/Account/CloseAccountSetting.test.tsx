@@ -18,7 +18,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+  const actual = await vi.importActual('src/queries/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -26,7 +26,7 @@ vi.mock('src/queries/profile', async () => {
 });
 
 vi.mock('src/queries/account', async () => {
-  const actual = await vi.importActual<any>('src/queries/account');
+  const actual = await vi.importActual('src/queries/account');
   return {
     ...actual,
     useChildAccounts: queryMocks.useChildAccounts,
