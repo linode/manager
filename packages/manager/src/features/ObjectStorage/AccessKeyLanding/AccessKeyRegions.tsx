@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { StyledFlagContainer } from 'src/components/RegionSelect/RegionSelect.styles';
-import { RegionsMultiSelect } from 'src/components/RegionSelect/RegionsMultiSelect';
 import {
   RemovableItem,
   RemovableSelectionsList,
@@ -79,11 +79,11 @@ export const AccessKeyRegions = (props: Props) => {
   const errorText = error || regionsError?.[0]?.reason;
 
   return (
-    <RegionsMultiSelect
+    <RegionMultiSelect
       handleSelection={(ids) => {
         onChange(ids);
       }}
-      RenderSelectedRegionsList={SelectedRegionsList}
+      SelectedRegionsList={SelectedRegionsList}
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
