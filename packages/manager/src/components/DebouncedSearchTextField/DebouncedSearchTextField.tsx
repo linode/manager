@@ -74,7 +74,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
       return () => clearTimeout(timeout);
     }
     return undefined;
-  }, [textFieldValue]);
+  }, [debounceTime, onSearch, textFieldValue]);
 
   return (
     <TextField
