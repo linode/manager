@@ -7,6 +7,8 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 
+import { IconButton } from '../IconButton';
+
 export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;
   /**
@@ -83,9 +85,19 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
           </InputAdornment>
         ) : (
           clearable && (
-            <InputAdornment position="end">
-              <StyledClearIcon onClick={() => setTextFieldValue('')} />
-            </InputAdornment>
+            <IconButton
+              aria-label="Clear"
+              onClick={() => setTextFieldValue('')}
+              size="small"
+            >
+              <Clear
+                sx={(theme) => ({
+                  '&&': {
+                    color: theme.color.grey1,
+                  },
+                })}
+              />
+            </IconButton>
           )
         ),
         startAdornment: (
@@ -113,11 +125,4 @@ const StyledSearchIcon = styled(Search)(({ theme }) => ({
   '&&, &&:hover': {
     color: theme.color.grey1,
   },
-}));
-
-const StyledClearIcon = styled(Clear)(({ theme }) => ({
-  '&&': {
-    color: theme.color.grey1,
-  },
-  cursor: 'pointer',
 }));
