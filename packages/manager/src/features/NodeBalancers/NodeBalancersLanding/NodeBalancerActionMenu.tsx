@@ -7,7 +7,7 @@ import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
-import { useFeatureRestriction } from 'src/hooks/useFeatureRestriction';
+import { useIsFeatureRestricted } from 'src/hooks/useIsFeatureRestricted';
 
 interface Props {
   label: string;
@@ -21,7 +21,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
   const history = useHistory();
 
   const { label, nodeBalancerId, toggleDialog } = props;
-  const isRestricted = useFeatureRestriction({
+  const isRestricted = useIsFeatureRestricted({
     grantType: 'nodebalancer',
     id: nodeBalancerId,
   });

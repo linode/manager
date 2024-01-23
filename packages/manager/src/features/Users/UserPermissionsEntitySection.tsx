@@ -21,20 +21,7 @@ import { createDisplayPage } from 'src/components/Paginate';
 import { Typography } from 'src/components/Typography';
 import { useTheme } from '@mui/material/styles';
 import { StyledGrantsTable } from './UserPermissionsEntitySection.styles';
-
-export const entityNameMap: Record<GrantType, string> = {
-  linode: 'Linodes',
-  stackscript: 'StackScripts',
-  image: 'Images',
-  volume: 'Volumes',
-  nodebalancer: 'NodeBalancers',
-  domain: 'Domains',
-  longview: 'Longview Clients',
-  firewall: 'Firewalls',
-  database: 'Databases',
-  vpc: 'VPCs',
-};
-
+import {grantTypeMap} from 'src/features/Account/constants'
 interface Props {
   entity: GrantType;
   grants: Grant[] | undefined;
@@ -76,7 +63,7 @@ export const UserPermissionsEntitySection = React.memo(
             }}
             data-qa-permissions-header={entity}
           >
-            {entityNameMap[entity]}
+            {grantTypeMap[entity]}
           </Typography>
         )}
         <StyledGrantsTable aria-label="User Permissions" noBorder>

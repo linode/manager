@@ -15,7 +15,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
-import { useFeatureRestriction } from 'src/hooks/useFeatureRestriction';
+import { useIsFeatureRestricted } from 'src/hooks/useIsFeatureRestricted';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
@@ -42,7 +42,7 @@ export const NodeBalancerDetail = () => {
 
   const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
-  const isRestricted = useFeatureRestriction({
+  const isRestricted = useIsFeatureRestricted({
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
   });
