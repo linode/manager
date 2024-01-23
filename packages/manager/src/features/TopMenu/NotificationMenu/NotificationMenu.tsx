@@ -38,7 +38,7 @@ const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
 
 const NotificationIconBadge = styled('div')(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.color.green,
+  backgroundColor: theme.palette.success.dark,
   borderRadius: '50%',
   color: 'white',
   display: 'flex',
