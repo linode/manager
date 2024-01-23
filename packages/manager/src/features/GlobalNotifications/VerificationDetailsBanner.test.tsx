@@ -1,6 +1,5 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -23,12 +22,10 @@ vi.mock('react-router-dom', async () => {
 describe('VerificationDetailsBanner', () => {
   it('renders without errors', () => {
     const { getByText } = renderWithTheme(
-      <BrowserRouter>
-        <VerificationDetailsBanner
-          hasSecurityQuestions={true}
-          hasVerifiedPhoneNumber={true}
-        />
-      </BrowserRouter>
+      <VerificationDetailsBanner
+        hasSecurityQuestions={true}
+        hasVerifiedPhoneNumber={true}
+      />
     );
 
     expect(
@@ -40,12 +37,10 @@ describe('VerificationDetailsBanner', () => {
 
   it('renders warning notice when security questions are missing', () => {
     const { getByTestId } = renderWithTheme(
-      <BrowserRouter>
-        <VerificationDetailsBanner
-          hasSecurityQuestions={false}
-          hasVerifiedPhoneNumber={true}
-        />
-      </BrowserRouter>
+      <VerificationDetailsBanner
+        hasSecurityQuestions={false}
+        hasVerifiedPhoneNumber={true}
+      />
     );
 
     // Ensure that the warning notice is rendered
@@ -54,12 +49,10 @@ describe('VerificationDetailsBanner', () => {
 
   it('renders warning notice when phone number is not verified', () => {
     const { getByTestId } = renderWithTheme(
-      <BrowserRouter>
-        <VerificationDetailsBanner
-          hasSecurityQuestions={true}
-          hasVerifiedPhoneNumber={false}
-        />
-      </BrowserRouter>
+      <VerificationDetailsBanner
+        hasSecurityQuestions={true}
+        hasVerifiedPhoneNumber={false}
+      />
     );
 
     // Ensure that the warning notice is rendered
@@ -68,12 +61,10 @@ describe('VerificationDetailsBanner', () => {
 
   it('triggers history push on button click', () => {
     const { getByTestId } = renderWithTheme(
-      <BrowserRouter>
-        <VerificationDetailsBanner
-          hasSecurityQuestions={false}
-          hasVerifiedPhoneNumber={true}
-        />
-      </BrowserRouter>
+      <VerificationDetailsBanner
+        hasSecurityQuestions={false}
+        hasVerifiedPhoneNumber={true}
+      />
     );
 
     // Trigger button click
