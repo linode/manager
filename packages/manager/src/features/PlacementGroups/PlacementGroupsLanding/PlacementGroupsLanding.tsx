@@ -23,6 +23,7 @@ import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
+import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -63,15 +64,21 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
+  const onOpenCreateDrawer = () => {
+    history.push('/placement-groups/create');
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  // if (placementGroups?.results === 0) {
-  //   return {
-  //     /* TODO VM_Placement: add <PlacementGroupsEmptyState /> */
-  //   };
-  // }
+  if (placementGroups?.results === 0) {
+    return (
+      <PlacementGroupsLandingEmptyState
+        openCreatePlacementGroupDrawer={onOpenCreateDrawer}
+      />
+    );
+  }
 
   if (error) {
     return (
@@ -83,10 +90,6 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
     );
   }
-
-  const onOpenCreateDrawer = () => {
-    history.push('/placement-groups/create');
-  };
 
   const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
