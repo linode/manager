@@ -35,7 +35,6 @@ export const PlacementGroupsDetail = () => {
     reset,
   } = useMutatePlacementGroup(placementGroupId);
   const errorText = getErrorStringOrDefault(updatePlacementGroupError ?? '');
-  const [isEditingLabel, setIsEditingLabel] = React.useState<boolean>(false);
 
   if (!placementGroup) {
     return <NotFound />;
@@ -67,14 +66,10 @@ export const PlacementGroupsDetail = () => {
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const resetEditableLabel = () => {
-    setIsEditingLabel(false);
-
     return `${label} (${affinityLabel})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {
-    setIsEditingLabel(false);
-
     if (updatePlacementGroupError) {
       reset();
     }
@@ -88,13 +83,11 @@ export const PlacementGroupsDetail = () => {
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            editableTextTitle: isEditingLabel
-              ? label
-              : `${label} (${affinityLabel})`,
+            editableTextTitle: label,
+            editableTextTitleSuffix: `(${affinityLabel})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,
-            onOpenEdit: () => setIsEditingLabel(true),
           },
           pathname: `/placement-groups/${label}`,
         }}

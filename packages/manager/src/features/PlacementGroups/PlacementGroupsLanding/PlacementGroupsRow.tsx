@@ -68,9 +68,10 @@ export const PlacementGroupsRow = React.memo(
         <TableCell>
           <Link
             data-testid={`link-to-placement-group-${id}`}
+            style={{ marginRight: 8 }}
             to={`/placement-groups/${id}`}
           >
-            {label} ({affinityLabel}) &nbsp;
+            {label} ({affinityLabel})
           </Link>
           {!compliant && (
             <Typography component="span" sx={{ whiteSpace: 'nowrap' }}>

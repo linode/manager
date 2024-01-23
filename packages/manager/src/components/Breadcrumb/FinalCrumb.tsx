@@ -24,8 +24,8 @@ export const FinalCrumb = React.memo((props: Props) => {
         labelLink={labelOptions && labelOptions.linkTo}
         onCancel={onEditHandlers.onCancel}
         onEdit={onEditHandlers.onEdit}
-        onOpenEdit={onEditHandlers.onOpenEdit}
         text={onEditHandlers.editableTextTitle}
+        textSuffix={onEditHandlers.editableTextTitleSuffix}
       />
     );
   }

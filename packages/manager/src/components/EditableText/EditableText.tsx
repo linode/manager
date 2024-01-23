@@ -119,13 +119,13 @@ interface Props {
    */
   onEdit: (text: string) => Promise<any>;
   /**
-   * Additional function to run when the pencil icon is clicked (won't change default behavior)
-   */
-  onOpenEdit?: () => void;
-  /**
    * The text inside the textbox
    */
   text: string;
+  /**
+   * Optional suffix to append to the text when it is not in editing mode
+   */
+  textSuffix?: string;
 }
 
 type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
@@ -141,8 +141,8 @@ export const EditableText = (props: PassThroughProps) => {
     labelLink,
     onCancel,
     onEdit,
-    onOpenEdit,
     text: propText,
+    textSuffix,
     ...rest
   } = props;
 
@@ -164,9 +164,6 @@ export const EditableText = (props: PassThroughProps) => {
 
   const openEdit = () => {
     setIsEditing(true);
-    if (onOpenEdit) {
-      onOpenEdit();
-    }
   };
 
   const finishEditing = () => {
@@ -203,7 +200,11 @@ export const EditableText = (props: PassThroughProps) => {
     }
   };
   const labelText = (
-    <H1Header className={classes.root} data-qa-editable-text title={text} />
+    <H1Header
+      className={classes.root}
+      data-qa-editable-text
+      title={`${text} ${textSuffix || ''}`}
+    />
   );
 
   return !isEditing && !errorText ? (
