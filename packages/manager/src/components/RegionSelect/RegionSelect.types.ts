@@ -47,7 +47,7 @@ export interface RegionMultiSelectProps
     'label' | 'onChange' | 'options'
   > {
   SelectedRegionsList?: React.ComponentType<{
-    onRemove: (option: RegionSelectOption) => void;
+    onRemove: (region: string) => void;
     selectedRegions: RegionSelectOption[];
   }>;
   currentCapability: Capabilities | undefined;

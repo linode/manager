@@ -11,7 +11,7 @@ import {
 import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface SelectedRegionsProps {
-  onRemove: (data: RegionSelectOption) => void;
+  onRemove: (region: string) => void;
   selectedRegions: RegionSelectOption[];
 }
 
@@ -41,7 +41,7 @@ export const SelectedRegionsList = ({
   selectedRegions,
 }: SelectedRegionsProps) => {
   const handleRemove = (item: RemovableItem) => {
-    onRemove(item.data);
+    onRemove(item.value);
   };
 
   return (
