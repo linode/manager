@@ -7,7 +7,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { InputLabel } from 'src/components/InputLabel';
+import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -126,6 +128,21 @@ export const MultipleIPInput = React.memo((props: Props) => {
     return null;
   }
 
+  const addIPButton = forVPCIPv4Ranges ? (
+    <StyledLinkButtonBox>
+      <LinkButton onClick={addNewInput}>{buttonText}</LinkButton>
+    </StyledLinkButtonBox>
+  ) : (
+    <Button
+      buttonType="secondary"
+      className={classes.addIP}
+      compactX
+      onClick={addNewInput}
+    >
+      {buttonText ?? 'Add an IP'}
+    </Button>
+  );
+
   return (
     <div className={cx(classes.root, className)}>
       {tooltip ? (
@@ -196,14 +213,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
           </Grid>
         </Grid>
       ))}
-      <Button
-        buttonType="secondary"
-        className={classes.addIP}
-        compactX
-        onClick={addNewInput}
-      >
-        {buttonText ?? 'Add an IP'}
-      </Button>
+      {addIPButton}
     </div>
   );
 });
