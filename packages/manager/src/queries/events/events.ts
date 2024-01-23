@@ -84,7 +84,7 @@ export const useEventsInfiniteQuery = (filter?: Filter) => {
 export const useInProgressEvents = () => {
   return useQuery<Event[], APIError[]>({
     enabled: false,
-    queryKey: ['events', 'poller', true],
+    queryKey: ['events', 'poller'],
   });
 };
 
@@ -153,7 +153,7 @@ export const useEventsPoller = () => {
 
       return getEvents({}, filter).then((data) => data.data);
     },
-    queryKey: ['events', 'poller', hasFetchedInitialEvents],
+    queryKey: ['events', 'poller'],
     refetchInterval: (data) => {
       const hasInProgressEvents = data?.some(isInProgressEvent);
       if (hasInProgressEvents) {
@@ -167,17 +167,14 @@ export const useEventsPoller = () => {
 };
 
 /**
- * This hook manages the events polling interval.
- *
- * This hook should be used in application components that need to change
- * the events polling interval. It performs actions, but does not return any state
- * in hopes to prevent extra rendering.
+ * This hook returns functions that allow us to interact
+ * with our events polling system.
  */
 export const useEventsPollingActions = () => {
   const queryClient = useQueryClient();
 
   const resetEventsPolling = () =>
-    queryClient.invalidateQueries(['events', 'poller', true]);
+    queryClient.invalidateQueries(['events', 'poller']);
 
   return {
     /**
