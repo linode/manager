@@ -22,6 +22,7 @@ import { UserRow } from './UserRow';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
+import { User } from '@linode/api-v4';
 
 export const UsersLanding = () => {
   const flags = useFlags();
@@ -46,15 +47,22 @@ export const UsersLanding = () => {
   const showProxyUserTable =
     flags.parentChildAccountAccess &&
     (profile?.user_type === 'child' || profile?.user_type === 'proxy');
-  const proxyUsers =
-    users?.data.filter((user) => user.user_type === 'proxy') ?? [];
-  const nonProxyUsers =
-    users?.data.filter((user) => user.user_type !== 'proxy') ?? [];
-
   const showChildAccountAccessCol = Boolean(
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
   );
   const numCols = showChildAccountAccessCol ? 6 : 5;
+
+  const { nonProxyUsers, proxyUsers } = users?.data.reduce(
+    (acc: { nonProxyUsers: User[]; proxyUsers: User[] }, user: User) => {
+      if (user.user_type === 'proxy') {
+        acc.proxyUsers.push(user);
+      } else {
+        acc.nonProxyUsers.push(user);
+      }
+      return acc;
+    },
+    { nonProxyUsers: [], proxyUsers: [] }
+  ) ?? { nonProxyUsers: [], proxyUsers: [] };
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -68,7 +76,7 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
-  // TODO: Parent/Child - M3-7559 remove once feature is live in production.
+  // TODO: Parent/Child - M3-7559 remove this function once feature is live in production.
   const renderTableContent = () => {
     if (isLoading) {
       return (
