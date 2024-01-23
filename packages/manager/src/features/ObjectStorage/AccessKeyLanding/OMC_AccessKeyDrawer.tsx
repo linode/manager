@@ -21,6 +21,7 @@ import { useAccountSettings } from 'src/queries/accountSettings';
 import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
+import { sortByString } from 'src/utilities/sort-by';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -48,8 +49,9 @@ export interface FormState {
  * Helpers for converting a list of buckets
  * on the user's account into a list of
  * bucket_access in the shape the API will expect,
- * sorted by cluster.
+ * sorted by region.
  */
+
 export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
   a: Scope,
   b: Scope
@@ -58,15 +60,12 @@ export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
     return 0;
   }
 
-  if (regionLookup[a.region].label > regionLookup[b.region].label) {
-    return 1;
-  }
-  if (regionLookup[a.region].label < regionLookup[b.region].label) {
-    return -1;
-  }
-  return 0;
+  return sortByString(
+    regionLookup[a.region].label,
+    regionLookup[b.region].label,
+    'asc'
+  );
 };
-
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}

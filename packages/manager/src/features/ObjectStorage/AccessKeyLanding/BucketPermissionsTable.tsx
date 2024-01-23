@@ -96,7 +96,9 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
           <TableCell data-qa-perm-read sx={{ minWidth: '100px' }}>
             Read Only
           </TableCell>
-          <TableCell data-qa-perm-rw>Read/Write</TableCell>
+          <TableCell data-qa-perm-rw sx={{ minWidth: '100px' }}>
+            Read/Write
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
