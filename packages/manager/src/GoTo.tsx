@@ -8,6 +8,7 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useFlags } from './hooks/useFlags';
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   input: {
@@ -64,6 +65,8 @@ export const GoTo = React.memo((props: Props) => {
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
   const flags = useFlags();
 
+  const { isACLBEnabled } = useIsACLBEnabled();
+
   const onSelect = (item: Item<string>) => {
     routerHistory.push(item.value);
     props.onClose();
@@ -87,7 +90,7 @@ export const GoTo = React.memo((props: Props) => {
       },
       {
         display: 'Load Balancers',
-        hide: !flags.aglb,
+        hide: !isACLBEnabled,
         href: '/loadbalancers',
       },
       {
