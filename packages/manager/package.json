@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.109.1",
+  "version": "1.110.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -209,7 +209,7 @@
     "ts-node": "^10.9.2",
     "vite": "^5.0.7",
     "vite-plugin-svgr": "^3.2.0",
-    "vitest": "^1.0.4"
+    "vitest": "^1.2.0"
   },
   "browserslist": [
     ">1%",

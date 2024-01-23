@@ -41,12 +41,12 @@ export interface RegionSelectProps
   width?: number;
 }
 
-export interface RegionsMultiSelectProps
+export interface RegionMultiSelectProps
   extends Omit<
     EnhancedAutocompleteProps<RegionSelectOption, false>,
     'label' | 'onChange' | 'options'
   > {
-  RenderSelectedRegionsList?: React.ComponentType<{
+  SelectedRegionsList?: React.ComponentType<{
     onRemove: (option: RegionSelectOption) => void;
     selectedRegions: RegionSelectOption[];
   }>;
@@ -58,6 +58,7 @@ export interface RegionsMultiSelectProps
   regions: Region[];
   required?: boolean;
   selectedIds: string[];
+  sortRegionOptions?: (a: RegionSelectOption, b: RegionSelectOption) => number;
   width?: number;
 }
 
