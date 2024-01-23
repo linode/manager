@@ -6,7 +6,7 @@ import { PlacementGroup } from '@linode/api-v4';
 export const getAffinityLabel = (
   affinityType: PlacementGroup['affinity_type']
 ): string => {
-  return affinityType === 'affinity' ? 'Affinity' : 'Anti-Affinity';
+  return affinityType === 'affinity' ? 'Affinity' : 'Anti-affinity';
 };
 
 /**

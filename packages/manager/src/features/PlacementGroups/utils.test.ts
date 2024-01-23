@@ -5,8 +5,8 @@ describe('getAffinityLabel', () => {
     expect(getAffinityLabel('affinity')).toBe('Affinity');
   });
 
-  it('returns "Anti-Affinity" for "anti-affinity" type', () => {
-    expect(getAffinityLabel('anti_affinity')).toBe('Anti-Affinity');
+  it('returns "Anti-affinity" for "anti_affinity" type', () => {
+    expect(getAffinityLabel('anti_affinity')).toBe('Anti-affinity');
   });
 });
 
