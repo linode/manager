@@ -43,6 +43,8 @@ export const AuthenticationSettings = () => {
     }
 
     const { focusSecurityQuestions, focusTel } = location.state;
+
+    // Determine the target ref based on the location state values
     const targetRef = focusTel
       ? phoneNumberRef
       : focusSecurityQuestions
@@ -59,6 +61,8 @@ export const AuthenticationSettings = () => {
 
       currentTargetRef.focus();
 
+      // Using a short timeout here to ensure the element
+      // is in the DOM before scrolling
       setTimeout(() => {
         if (currentTargetRef) {
           currentTargetRef.scrollIntoView();
