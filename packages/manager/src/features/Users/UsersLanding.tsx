@@ -44,7 +44,8 @@ export const UsersLanding = () => {
   const isRestrictedUser = profile?.restricted;
 
   const showProxyUserTable =
-    flags.parentChildAccountAccess && profile?.user_type === 'child';
+    flags.parentChildAccountAccess &&
+    (profile?.user_type === 'child' || profile?.user_type === 'proxy');
   const proxyUsers =
     users?.data.filter((user) => user.user_type === 'proxy') ?? [];
   const nonProxyUsers =
