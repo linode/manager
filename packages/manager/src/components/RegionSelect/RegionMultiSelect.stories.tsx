@@ -50,9 +50,9 @@ const SelectedRegionsList = ({
   onRemove,
   selectedRegions,
 }: SelectedRegionsProps) => {
-  const handleRemove = (data: RemovableItem) => {
-    onRemove((data as unknown) as RegionSelectOption);
-  };
+ const handleRemove = (item: RemovableItem) => {
+    onRemove(item.data);
+ };
 
   return (
     <RemovableSelectionsList
