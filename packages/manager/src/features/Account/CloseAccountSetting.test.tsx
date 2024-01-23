@@ -10,7 +10,7 @@ import {
   PARENT_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from './constants';
 
-// Mock the useProfile hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useProfile hook to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
