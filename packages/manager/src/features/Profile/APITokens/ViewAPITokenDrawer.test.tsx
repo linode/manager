@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
@@ -9,16 +9,16 @@ import { basePerms } from './utils';
 
 import type { UserType } from '@linode/api-v4';
 
-// Mock the useAccountUser hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useProfile hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
-  useAccountUser: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
+vi.mock('src/queries/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile');
   return {
     ...actual,
-    useAccountUser: queryMocks.useAccountUser,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -48,8 +48,8 @@ describe('View API Token Drawer', () => {
 
   it('should show all permissions as read/write with wildcard scopes', () => {
     // We want to show all perms for this test, even perms specific to Parent/Child accounts.
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
     });
 
     const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
@@ -65,8 +65,8 @@ describe('View API Token Drawer', () => {
 
   it('should show all permissions as none with no scopes', () => {
     // We want to show all perms for this test, even perms specific to Parent/Child accounts.
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
     });
 
     const { getByTestId } = renderWithTheme(
@@ -83,8 +83,8 @@ describe('View API Token Drawer', () => {
 
   it('only account has read/write, all others are none', () => {
     // We want to show all perms for this test, even perms specific to Parent/Child accounts.
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
     });
 
     const { getByTestId } = renderWithTheme(
@@ -106,8 +106,8 @@ describe('View API Token Drawer', () => {
 
   it('check table for more complex permissions', () => {
     // We want to show all perms for this test, even perms specific to Parent/Child accounts.
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'parent' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
     });
 
     const { getByTestId } = renderWithTheme(
@@ -171,8 +171,8 @@ describe('View API Token Drawer', () => {
       userType: UserType | null,
       enableFeatureFlag = true
     ) => {
-      queryMocks.useAccountUser.mockReturnValue({
-        data: accountUserFactory.build({ user_type: userType }),
+      queryMocks.useProfile.mockReturnValue({
+        data: profileFactory.build({ user_type: userType }),
       });
 
       return renderWithTheme(<ViewAPITokenDrawer {...props} />, {
@@ -193,15 +193,15 @@ describe('View API Token Drawer', () => {
       testChildScopeNotDisplayed('parent', false);
     });
 
-    it('should not display the Child Account Access scope for a user account without a parent role', () => {
+    it('should not display the Child Account Access scope for a user account without a parent uer type', () => {
       testChildScopeNotDisplayed(null);
     });
 
-    it('should not display the Child Account Access scope for "proxy" user role', () => {
+    it('should not display the Child Account Access scope for "proxy" user type', () => {
       testChildScopeNotDisplayed('proxy');
     });
 
-    it('should not display the Child Account Access scope for "child" user role', () => {
+    it('should not display the Child Account Access scope for "child" user type', () => {
       testChildScopeNotDisplayed('child');
     });
   });
