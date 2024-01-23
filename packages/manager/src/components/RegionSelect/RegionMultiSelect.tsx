@@ -114,7 +114,12 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
 
             // Render regular options
             return (
-              <RegionOption option={option} props={props} selected={selected} />
+              <RegionOption
+                key={option.value}
+                option={option}
+                props={props}
+                selected={selected}
+              />
             );
           }}
           textFieldProps={{

@@ -99,7 +99,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         }}
         renderOption={(props, option, { selected }) => {
           return (
-            <RegionOption option={option} props={props} selected={selected} />
+            <RegionOption
+              key={option.value}
+              option={option}
+              props={props}
+              selected={selected}
+            />
           );
         }}
         textFieldProps={{
