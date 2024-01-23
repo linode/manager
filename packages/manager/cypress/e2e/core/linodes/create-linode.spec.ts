@@ -371,7 +371,7 @@ describe('create linode', () => {
     });
   });
 
-  it.only('assigns a VPC to the linode during create flow', () => {
+  it('assigns a VPC to the linode during create flow', () => {
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     const region: Region = getRegionById('us-southeast');
