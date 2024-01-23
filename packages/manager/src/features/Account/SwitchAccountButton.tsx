@@ -5,7 +5,7 @@ import { Button, ButtonProps } from 'src/components/Button/Button';
 
 export const SwitchAccountButton = (props: ButtonProps) => {
   return (
-    <Button startIcon={<SwapIcon />} {...props}>
+    <Button startIcon={<SwapIcon data-testid="swap-icon" />} {...props}>
       Switch Account
     </Button>
   );
