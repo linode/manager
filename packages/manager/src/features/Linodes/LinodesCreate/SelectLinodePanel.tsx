@@ -136,6 +136,10 @@ const SelectLinodePanel = (props: Props) => {
               </Typography>
               {flags.linodeCloneUIChanges && (
                 <DebouncedSearchTextField
+                  customValue={{
+                    onChange: setUserSearchText,
+                    value: searchText,
+                  }}
                   sx={{
                     marginBottom: theme.spacing(1),
                     width: '330px',
@@ -145,9 +149,7 @@ const SelectLinodePanel = (props: Props) => {
                   expand={true}
                   hideLabel
                   label=""
-                  onSearch={setUserSearchText}
                   placeholder="Search"
-                  value={searchText}
                 />
               )}
               <StyledBox>

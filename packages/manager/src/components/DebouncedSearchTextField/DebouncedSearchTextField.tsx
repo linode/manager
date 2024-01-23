@@ -39,7 +39,7 @@ export interface DebouncedSearchProps extends TextFieldProps {
   /**
    * Function to perform when searching for query
    */
-  onSearch: (query: string) => void;
+  onSearch?: (query: string) => void;
   placeholder?: string;
 }
 
@@ -68,7 +68,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
   React.useEffect(() => {
     if (textFieldValue != undefined) {
       const timeout = setTimeout(
-        () => onSearch(textFieldValue),
+        () => onSearch && onSearch(textFieldValue),
         debounceTime !== undefined ? debounceTime : 400
       );
       return () => clearTimeout(timeout);
@@ -114,6 +114,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
       label={label}
       onChange={(e) => setTextFieldValue(e.target.value)}
       placeholder={placeholder || 'Filter by query'}
+      value={textFieldValue}
       {...restOfTextFieldProps}
     />
   );
