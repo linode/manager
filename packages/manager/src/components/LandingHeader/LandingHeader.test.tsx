@@ -81,7 +81,10 @@ describe('LandingHeader', () => {
       />
     );
 
-    expect(getByText('Create My Entity').closest('button')).toBeDisabled();
+    expect(getByText('Create My Entity').closest('button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should render custom crumb path based removeCrumbX prop', () => {

@@ -1,9 +1,9 @@
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
-import { fireEvent } from '@testing-library/react';
 
 const props = {
   onClose: vi.fn(),
@@ -13,7 +13,7 @@ const props = {
 
 describe('Create Subnet Drawer', () => {
   it('should render title, label, ipv4 input, ipv4 availability, and action buttons', () => {
-    const { getByTestId, getAllByText, getByText } = renderWithTheme(
+    const { getAllByText, getByTestId, getByText } = renderWithTheme(
       <SubnetCreateDrawer {...props} />
     );
 
@@ -35,7 +35,7 @@ describe('Create Subnet Drawer', () => {
     expect(saveButton).toBeVisible();
 
     const cancelBtn = getByText(/Cancel/);
-    expect(cancelBtn).toBeEnabled();
+    expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
   });
 
@@ -43,7 +43,7 @@ describe('Create Subnet Drawer', () => {
     const { getByText } = renderWithTheme(<SubnetCreateDrawer {...props} />);
 
     const cancelBtn = getByText(/Cancel/);
-    expect(cancelBtn).toBeEnabled();
+    expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
 
     fireEvent.click(cancelBtn);

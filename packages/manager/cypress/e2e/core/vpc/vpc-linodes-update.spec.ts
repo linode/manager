@@ -156,7 +156,8 @@ describe('VPC assign/unassign flows', () => {
         cy.findByLabelText('Linodes')
           .should('be.visible')
           .click()
-          .type(mockLinode.label);
+          .type(mockLinode.label)
+          .should('have.value', mockLinode.label);
 
         ui.autocompletePopper
           .findByTitle(mockLinode.label)

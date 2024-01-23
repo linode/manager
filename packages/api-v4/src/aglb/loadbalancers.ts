@@ -10,6 +10,7 @@ import { Filter, Params, ResourcePage } from '../types';
 import type {
   CreateBasicLoadbalancerPayload,
   CreateLoadbalancerPayload,
+  LoadBalancerEndpointHealth,
   Loadbalancer,
   UpdateLoadbalancerPayload,
 } from './types';
@@ -36,6 +37,17 @@ export const getLoadbalancers = (params?: Params, filter?: Filter) =>
 export const getLoadbalancer = (id: number) =>
   Request<Loadbalancer>(
     setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
+    setMethod('GET')
+  );
+
+/**
+ * getLoadbalancerEndpointHealth
+ *
+ * Returns the general endpoint health of an Akamai Global Load Balancer
+ */
+export const getLoadbalancerEndpointHealth = (id: number) =>
+  Request<LoadBalancerEndpointHealth>(
+    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}/endpoints-health`),
     setMethod('GET')
   );
 

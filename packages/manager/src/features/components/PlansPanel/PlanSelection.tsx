@@ -1,13 +1,16 @@
 import * as React from 'react';
 
+import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
+import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -21,16 +24,15 @@ import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
-import type { PriceObject, Region } from '@linode/api-v4';
-import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-
-interface Props {
+import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   header?: string;
   idx: number;
   isCreate?: boolean;
+  isPlanSoldOut: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   selectedDiskSize?: number;
@@ -47,13 +49,14 @@ const getDisabledClass = (
   return disabledClasses.includes(typeClass);
 };
 
-export const PlanSelection = (props: Props) => {
+export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
     disabled,
     disabledClasses,
     idx,
     isCreate,
+    isPlanSoldOut,
     linodeID,
     onSelect,
     selectedDiskSize,
@@ -86,9 +89,9 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // DC Dynamic price logic - DB creation flow is out of scope
-  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
-  const price: PriceObject | undefined = !isDatabaseCreateFlow
+  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
+  const isDatabaseFlow = location.pathname.includes('/databases');
+  const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(type, selectedRegionId)
     : type.price;
   type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
@@ -100,15 +103,23 @@ export const PlanSelection = (props: Props) => {
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
+          aria-disabled={
+            isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
+          }
+          disabled={
+            isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
+          }
           onClick={() =>
-            !isSamePlan && !disabled && !isDisabledClass
+            !isSamePlan &&
+            !disabled &&
+            !isPlanSoldOut &&
+            !isDisabledClass &&
+            !planTooSmall
               ? onSelect(type.id)
               : undefined
           }
-          aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
-          disabled={isSamePlan || planTooSmall || isDisabledClass}
           key={type.id}
         >
           <StyledRadioCell>
@@ -121,7 +132,12 @@ export const PlanSelection = (props: Props) => {
                       !planTooSmall &&
                       type.id === String(selectedId)
                     }
-                    disabled={planTooSmall || disabled || isDisabledClass}
+                    disabled={
+                      planTooSmall ||
+                      disabled ||
+                      isPlanSoldOut ||
+                      isDisabledClass
+                    }
                     id={type.id}
                     onChange={() => onSelect(type.id)}
                   />
@@ -133,7 +149,18 @@ export const PlanSelection = (props: Props) => {
             )}
           </StyledRadioCell>
           <TableCell data-qa-plan-name>
-            {type.heading}{' '}
+            {type.heading} &nbsp;
+            {isPlanSoldOut && (
+              <Tooltip
+                data-testid="sold-out-chip"
+                placement="right-start"
+                title={PLAN_IS_SOLD_OUT_COPY}
+              >
+                <span>
+                  <Chip label="Sold Out" />
+                </span>
+              </Tooltip>
+            )}
             {(isSamePlan || type.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"
@@ -199,13 +226,31 @@ export const PlanSelection = (props: Props) => {
       {/* Displays SelectionCard for small screens */}
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
+          disabled={
+            planTooSmall ||
+            isSamePlan ||
+            disabled ||
+            isPlanSoldOut ||
+            isDisabledClass
+          }
+          headingDecoration={
+            isSamePlan || type.id === selectedLinodePlanType ? (
+              <StyledChip
+                aria-label="This is your current plan"
+                data-qa-current-plan
+                label="Current Plan"
+              />
+            ) : undefined
+          }
+          subheadings={[
+            ...type.subHeadings,
+            isPlanSoldOut ? <Chip label="Sold Out" /> : '',
+          ]}
           checked={type.id === String(selectedId)}
-          disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
-          subheadings={type.subHeadings}
-          tooltip={tooltip}
+          tooltip={isPlanSoldOut ? PLAN_IS_SOLD_OUT_COPY : tooltip}
         />
       </Hidden>
     </React.Fragment>

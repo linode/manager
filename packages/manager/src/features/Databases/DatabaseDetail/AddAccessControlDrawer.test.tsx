@@ -66,11 +66,11 @@ describe('Add Access Controls drawer', () => {
     );
 
     // Before making a change to the IP addresses, the "Add Inbound Sources" button should be disabled.
-    expect(addAccessControlsButton).toBeDisabled();
+    expect(addAccessControlsButton).toHaveAttribute('aria-disabled', 'true');
 
     const addAnIPButton = getByText('Add an IP');
     fireEvent.click(addAnIPButton);
 
-    expect(addAccessControlsButton).toBeEnabled();
+    expect(addAccessControlsButton).toHaveAttribute('aria-disabled', 'false');
   });
 });

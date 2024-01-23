@@ -42,7 +42,12 @@ type Policy =
   | 'random'
   | 'maglev';
 
-export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
+export type MatchField =
+  | 'always_match'
+  | 'path_prefix'
+  | 'query'
+  | 'header'
+  | 'method';
 
 export interface RoutePayload {
   label: string;
@@ -195,4 +200,43 @@ export interface UpdateCertificatePayload {
   certificate?: string;
   label?: string;
   type?: CertificateType;
+}
+
+export interface LoadBalancerEndpointHealth {
+  id: number;
+  healthy_endpoints: number;
+  total_endpoints: number;
+  timestamp: string;
+}
+
+export interface EndpointHealth {
+  id: number;
+  label: string;
+  url: string;
+  type: string;
+  healthy_endpoints: number;
+  total_endpoints: number;
+  timestamp: string;
+}
+
+export interface ConfigurationsEndpointHealth {
+  /**
+   * The id of the AGLB
+   */
+  id: number;
+  /**
+   * An array of health data for each configuration on the AGLB
+   */
+  configurations: EndpointHealth[];
+}
+
+export interface ServiceTargetsEndpointHealth {
+  /**
+   * The id of the AGLB
+   */
+  id: number;
+  /**
+   * An array of health data for each service target on the AGLB
+   */
+  service_targets: EndpointHealth[];
 }

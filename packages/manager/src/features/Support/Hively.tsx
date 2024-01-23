@@ -69,7 +69,7 @@ export const Hively = (props: Props) => {
         >
           <img
             src={
-              'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
+              'https://secure.teamhively.com/system/smileys/icons/000/000/841/px_25/Happy_square_gradient_icon.png?1704911301'
             }
             alt="Happy face emoji"
           />
@@ -82,7 +82,7 @@ export const Hively = (props: Props) => {
         >
           <img
             src={
-              'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
+              'https://secure.teamhively.com/system/smileys/icons/000/000/842/px_25/Neutral_square_gradient_icon.png?1704911301'
             }
             alt="Indifferent face emoji"
           />
@@ -95,7 +95,7 @@ export const Hively = (props: Props) => {
         >
           <img
             src={
-              'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
+              'https://secure.teamhively.com/system/smileys/icons/000/000/843/px_25/Unhappy_square_gradient_icon.png?1704911301'
             }
             alt="Sad Face emoji"
           />

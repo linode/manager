@@ -9,17 +9,20 @@ import type {
   RulePayload,
 } from '@linode/api-v4';
 
-export const matchFieldMap: Record<MatchField, string> = {
+type CustomerFacingMatchFieldOption = Exclude<MatchField, 'always_match'>;
+
+export const matchFieldMap: Record<CustomerFacingMatchFieldOption, string> = {
   header: 'HTTP Header',
-  host: 'Host',
   method: 'HTTP Method',
   path_prefix: 'Path',
   query: 'Query String',
 };
 
-export const matchValuePlaceholder: Record<MatchField, string> = {
+export const matchValuePlaceholder: Record<
+  CustomerFacingMatchFieldOption,
+  string
+> = {
   header: 'x-my-header=this',
-  host: 'example.com',
   method: 'POST',
   path_prefix: '/my-path',
   query: '?my-query-param=this',

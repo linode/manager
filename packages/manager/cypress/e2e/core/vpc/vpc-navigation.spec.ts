@@ -28,22 +28,4 @@ describe('VPC navigation', () => {
 
     cy.url().should('endWith', '/vpcs');
   });
-
-  /*
-   * - Confirms that VPC sidebar nav item is not shown when feature is disabled.
-   */
-  it('does not show VPC navigation item when feature is disabled', () => {
-    // TODO Delete this test when VPC feature flag is removed from codebase.
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    cy.visitWithLogin('/linodes');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
-
-    ui.nav.find().within(() => {
-      cy.findByText('VPC').should('not.exist');
-    });
-  });
 });

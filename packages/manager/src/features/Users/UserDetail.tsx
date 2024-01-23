@@ -250,10 +250,10 @@ export const UserDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <UserPermissions
+              accountUsername={profile?.username}
               clearNewUser={clearNewUser}
-              currentUser={profile?.username}
+              currentUsername={username}
               queryClient={queryClient}
-              username={username}
             />
           </SafeTabPanel>
         </TabPanels>

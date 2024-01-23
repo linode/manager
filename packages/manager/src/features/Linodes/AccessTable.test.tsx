@@ -13,6 +13,7 @@ describe('AccessTable', () => {
   it('should disable copy button and display help icon tooltip if isVPCOnlyLinode is true', async () => {
     const { findByRole, getAllByRole } = renderWithTheme(
       <AccessTable
+        gridSize={{ lg: 6, xs: 12 }}
         isVPCOnlyLinode={true}
         rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
         title={'Public IP Addresses'}
@@ -38,6 +39,7 @@ describe('AccessTable', () => {
   it('should not disable copy button if isVPCOnlyLinode is false', () => {
     const { getAllByRole } = renderWithTheme(
       <AccessTable
+        gridSize={{ lg: 6, xs: 12 }}
         isVPCOnlyLinode={false}
         rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
         title={'Public IP Addresses'}

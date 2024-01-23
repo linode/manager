@@ -2,6 +2,7 @@ import React from 'react';
 
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
+import { grantsFactory } from 'src/factories/grants';
 import { rest, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
@@ -26,6 +27,7 @@ describe('UserRow', () => {
     expect(getByText(user.username)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
   });
+
   it('renders "Full" if the user is unrestricted', () => {
     const user = accountUserFactory.build({ restricted: false });
 
@@ -35,6 +37,7 @@ describe('UserRow', () => {
 
     expect(getByText('Full')).toBeVisible();
   });
+
   it('renders "Limited" if the user is restricted', () => {
     const user = accountUserFactory.build({ restricted: true });
 
@@ -44,6 +47,88 @@ describe('UserRow', () => {
 
     expect(getByText('Limited')).toBeVisible();
   });
+
+  it('renders "Enabled" if a user on an active parent account has Child Account Access', async () => {
+    // Mock the additional user on the parent account.
+    const user = accountUserFactory.build();
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: true } })
+          )
+        );
+      }),
+      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+    expect(await findByText('Enabled')).toBeVisible();
+  });
+
+  it('renders "Disabled" if a user on an active parent account does not have Child Account Access', async () => {
+    // Mock the additional user on the parent account.
+    const user = accountUserFactory.build();
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: false } })
+          )
+        );
+      }),
+      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+    expect(await findByText('Disabled')).toBeVisible();
+  });
+
+  it('does not render the Child Account Access column for an active non-parent user', async () => {
+    // Mock the additional user on the parent account.
+    const user = accountUserFactory.build();
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: true } })
+          )
+        );
+      }),
+      // Mock the active account, which must NOT be of `parent` user type to hide the Child Account Access column.
+      rest.get('*/account/users/*', (req, res, ctx) => {
+        return res(ctx.json(accountUserFactory.build({ user_type: null })));
+      })
+    );
+
+    const { queryByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+    expect(queryByText('Child Account Access')).not.toBeInTheDocument();
+  });
+
   it('renders "Never" if last_login is null', () => {
     const user = accountUserFactory.build({ last_login: null });
 

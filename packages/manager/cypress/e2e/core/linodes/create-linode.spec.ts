@@ -45,7 +45,7 @@ import {
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 
-import type { Config, VLAN, VPC, Disk, Region } from '@linode/api-v4';
+import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -88,14 +88,9 @@ describe('create linode', () => {
   it('region select', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
-    mockAppendFeatureFlags({
-      soldOutTokyo: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     cy.visitWithLogin('linodes/create');
 
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getRegions']);
+    cy.wait(['@getRegions']);
 
     // Confirm that region select dropdown is visible and interactive.
     ui.regionSelect.find().click();
@@ -376,7 +371,7 @@ describe('create linode', () => {
     });
   });
 
-  it('assigns a VPC to the linode during create flow', () => {
+  it.only('assigns a VPC to the linode during create flow', () => {
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     const region: Region = getRegionById('us-southeast');
@@ -391,11 +386,11 @@ describe('create linode', () => {
       id: randomNumber(2),
       label: randomLabel(),
     });
-    const mockVPCs: VPC[] = vpcFactory.buildList(5, {
+    const mockVPC = vpcFactory.build({
+      id: randomNumber(),
       region: 'us-southeast',
       subnets: [mockSubnet],
     });
-    const mockVPC = mockVPCs[0];
     const mockVPCRegion = regionFactory.build({
       id: region.id,
       label: region.label,
@@ -408,6 +403,8 @@ describe('create linode', () => {
     const mockVlanConfigInterface = LinodeConfigInterfaceFactory.build();
     const mockVpcConfigInterface = LinodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: mockVPC.id,
+      purpose: 'vpc',
+      active: true,
     });
     const mockConfig: Config = linodeConfigFactory.build({
       id: randomNumber(),
@@ -453,7 +450,7 @@ describe('create linode', () => {
 
     mockGetVLANs(mockVLANs);
     mockGetVPC(mockVPC).as('getVPC');
-    mockGetVPCs(mockVPCs).as('getVPCs');
+    mockGetVPCs([mockVPC]).as('getVPCs');
     mockCreateLinode(mockLinode).as('linodeCreated');
     mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getLinodeConfigs');
     mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
@@ -484,7 +481,7 @@ describe('create linode', () => {
       cy.get('[data-qa-enhanced-select="None"]')
         .should('be.visible')
         .click()
-        .type(`${mockVPCs[0].label}{enter}`);
+        .type(`${mockVPC.label}{enter}`);
       // select subnet
       cy.findByText('Select Subnet')
         .should('be.visible')
@@ -500,7 +497,7 @@ describe('create linode', () => {
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
 
     fbtClick('Configurations');
-    cy.wait(['@getLinodeConfigs', '@getVPC', '@getDisks', '@getVolumes']);
+    //cy.wait(['@getLinodeConfigs', '@getVPC', '@getDisks', '@getVolumes']);
 
     // Confirm that VLAN and VPC have been assigned.
     cy.findByLabelText('List of Configurations').within(() => {

@@ -13,7 +13,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { HeaderProps } from './LinodeEntityDetail';
+import type { HeaderProps } from './LinodeEntityDetailHeader';
 
 // ---------------------------------------------------------------------
 // Header Styles
@@ -100,26 +100,8 @@ export const StyledColumnLabelGrid = styled(Grid, {
   fontFamily: theme.font.bold,
 }));
 
-export const StyledRightColumnGrid = styled(Grid, {
-  label: 'StyledRightColumnGrid',
-})(({ theme }) => ({
-  flexBasis: '75%',
-  flexWrap: 'nowrap',
-  paddingBottom: 0,
-  paddingRight: 0,
-  [theme.breakpoints.down('md')]: {
-    flexDirection: 'column',
-  },
-}));
-
 export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
   ({ theme }) => ({
-    '& > div': {
-      flexBasis: '50%',
-      [theme.breakpoints.down('md')]: {
-        flexBasis: '100%',
-      },
-    },
     '& p': {
       color: theme.textColors.tableStatic,
     },

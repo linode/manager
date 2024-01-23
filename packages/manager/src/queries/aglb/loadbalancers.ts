@@ -2,6 +2,7 @@ import {
   createBasicLoadbalancer,
   deleteLoadbalancer,
   getLoadbalancer,
+  getLoadbalancerEndpointHealth,
   getLoadbalancers,
   updateLoadbalancer,
 } from '@linode/api-v4';
@@ -11,6 +12,7 @@ import type {
   APIError,
   CreateBasicLoadbalancerPayload,
   Filter,
+  LoadBalancerEndpointHealth,
   Loadbalancer,
   Params,
   ResourcePage,
@@ -33,6 +35,14 @@ export const useLoadBalancerQuery = (id: number, enabled = true) => {
     () => getLoadbalancer(id),
     { enabled }
   );
+};
+
+export const useLoadBalancerEndpointHealthQuery = (id: number) => {
+  return useQuery<LoadBalancerEndpointHealth, APIError[]>({
+    queryFn: () => getLoadbalancerEndpointHealth(id),
+    queryKey: [QUERY_KEY, 'aglb', id, 'endpoint-health'],
+    refetchInterval: 10_000,
+  });
 };
 
 export const useLoadBalancerMutation = (id: number) => {

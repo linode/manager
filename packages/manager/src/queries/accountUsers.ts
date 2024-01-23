@@ -1,4 +1,9 @@
-import { deleteUser, getUser, getUsers } from '@linode/api-v4/lib/account';
+import {
+  deleteUser,
+  getGrants,
+  getUser,
+  getUsers,
+} from '@linode/api-v4/lib/account';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from 'src/queries/profile';
@@ -8,6 +13,7 @@ import { queryKey } from './account';
 import type {
   APIError,
   Filter,
+  Grants,
   Params,
   ResourcePage,
   User,
@@ -32,6 +38,13 @@ export const useAccountUser = (username: string) => {
     () => getUser(username),
     // Enable the query if the user is not on the blocklist
     { enabled: !getIsBlocklistedUser(username) }
+  );
+};
+
+export const useAccountUserGrants = (username: string) => {
+  return useQuery<Grants, APIError[]>(
+    [queryKey, 'users', 'grants', username],
+    () => getGrants(username)
   );
 };
 

@@ -15,6 +15,8 @@ import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
+import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
+import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUser } from 'src/queries/accountUsers';
@@ -75,6 +77,7 @@ export const UserMenu = React.memo(() => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -109,6 +112,9 @@ export const UserMenu = React.memo(() => {
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
   const showCompanyName =
     flags.parentChildAccountAccess && user?.user_type !== null && companyName;
+  const isAccountSwitchable =
+    flags.parentChildAccountAccess &&
+    (user?.user_type === 'parent' || user?.user_type === 'proxy');
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -235,18 +241,38 @@ export const UserMenu = React.memo(() => {
           },
         }}
         anchorEl={anchorEl}
+        data-testid={id}
         id={id}
         marginThreshold={0}
         onClose={handleClose}
         open={open}
+        // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
+        sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
+          {isAccountSwitchable && (
+            <Typography>You are currently logged in as:</Typography>
+          )}
           <Typography
             color={(theme) => theme.textColors.headlineStatic}
             fontSize="1.1rem"
           >
-            <strong>{userName}</strong>
+            <strong>{isAccountSwitchable ? companyName : userName}</strong>
           </Typography>
+          {
+            isAccountSwitchable && (
+              <SwitchAccountButton
+                buttonType="outlined"
+                onClick={() => setIsDrawerOpen(true)}
+              />
+            )
+            // TODO: Parent/Child - M3-7430
+            /* {(isProxyTokenError || isParentTokenError) && (
+            <Notice variant="error">
+              There was an error switching accounts.
+            </Notice>
+          )} */
+          }
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
@@ -294,6 +320,11 @@ export const UserMenu = React.memo(() => {
           )}
         </Stack>
       </Popover>
+      <SwitchAccountDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        username={userName}
+      />
     </>
   );
 });

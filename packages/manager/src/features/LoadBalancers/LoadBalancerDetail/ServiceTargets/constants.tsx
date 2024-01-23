@@ -82,7 +82,7 @@ export const SERVICE_TARGET_COPY = {
     },
     Healthcheck: {
       Description:
-        'When enabled, health checks query the service targets by performing TCP connections or by making HTTP/S requests. For TCP, a service target is considered healthy and able to accept incoming requests when there is a successful TCP handshake with the service target. When HTTP/S is used to validate health status, the service target is considered healthy when requests to its path or host return a 2xx or 3xx status code response.',
+        'Health checks query the service targets by performing TCP connections or by making HTTP/S requests. For TCP, a service target is considered healthy and able to accept incoming requests when there is a successful TCP handshake with the service target. When HTTP/S is used to validate health status, the service target is considered healthy when requests to its path or host return a 2xx or 3xx status code response.',
       Healthy:
         'The number of consecutive health checks that must be successful in order to consider a service target as healthy. Minimum value is 1.',
       Host: (

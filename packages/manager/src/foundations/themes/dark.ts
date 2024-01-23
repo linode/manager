@@ -189,12 +189,26 @@ export const darkTheme: ThemeOptions = {
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
+          '&[aria-disabled="true"]': {
+            backgroundColor: '#454b54',
+            color: '#5c6470',
+          },
+        },
+        containedSecondary: {
+          '&[aria-disabled="true"]': {
+            color: '#c9cacb',
+          },
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: 'transparent !important',
+            backgroundColor: 'transparent',
             border: '1px solid #fff',
             color: '#fff',
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: '#454b54',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            color: '#5c6470',
           },
           color: customDarkModeOptions.textColors.linkActiveLight,
         },
@@ -208,6 +222,9 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover': {
             backgroundColor: '#000',
+          },
+          '&[aria-disabled="true"]': {
+            cursor: 'not-allowed',
           },
           color: primaryColors.main,
         },
@@ -416,6 +433,40 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiRadio: {
+      styleOverrides: {
+        colorSecondary: {
+          '&$checked': {
+            '&:hover': {
+              backgroundColor: 'rgba(36, 83, 233, 0.04)',
+            },
+            color: primaryColors.main,
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(36, 83, 233, 0.04)',
+          },
+          color: primaryColors.main,
+        },
+        root: ({ theme }) => ({
+          '& .defaultFill': {
+            '& circle': {
+              color: '#ccc',
+            },
+            color: '#55595c',
+            fill: '#53575a',
+          },
+          '&.Mui-disabled': {
+            '& .defaultFill': {
+              color: '#ccc',
+              opacity: 0.15,
+            },
+          },
+          '&:hover': {
+            color: theme.palette.primary.main,
+          },
+        }),
+      },
+    },
     MuiSelect: {
       styleOverrides: {},
     },
@@ -425,6 +476,21 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: '#32363c',
           boxShadow: '0 0 5px #222',
           color: primaryColors.text,
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          '& .Mui-disabled': {
+            '& + .MuiSwitch-track': {
+              opacity: '.5 !important',
+            },
+            opacity: 0.5,
+          },
+        },
+        track: {
+          backgroundColor: '#55595c',
         },
       },
     },
@@ -542,15 +608,13 @@ export const darkTheme: ThemeOptions = {
       user: `rgb(81, 166, 245)`,
       wait: `rgb(145, 199, 237)`,
     },
+    darkGreen: `rgb(16, 162, 29)`,
     diskIO: {
       read: `rgb(255, 196, 105)`,
       swap: `rgb(238, 44, 44)`,
       write: `rgb(255, 179, 77)`,
     },
-    network: {
-      inbound: `rgb(16, 162, 29)`,
-      outbound: `rgb(49, 206, 62)`,
-    },
+    lightGreen: `rgb(49, 206, 62)`,
     purple: `rgb(217, 176, 217)`,
     red: `rgb(255, 99, 60)`,
     yellow: `rgb(255, 220, 125)`,

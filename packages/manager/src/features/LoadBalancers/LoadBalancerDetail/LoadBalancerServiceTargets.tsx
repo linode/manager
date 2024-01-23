@@ -37,9 +37,9 @@ export const LoadBalancerServiceTargets = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [
-    selectedServiceTarget,
-    setSelectedServiceTarget,
-  ] = useState<ServiceTarget>();
+    selectedServiceTargetId,
+    setSelectedServiceTargetId,
+  ] = useState<number>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -58,12 +58,12 @@ export const LoadBalancerServiceTargets = () => {
 
   const handleEditServiceTarget = (serviceTarget: ServiceTarget) => {
     setIsDrawerOpen(true);
-    setSelectedServiceTarget(serviceTarget);
+    setSelectedServiceTargetId(serviceTarget.id);
   };
 
   const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
     setIsDeleteDialogOpen(true);
-    setSelectedServiceTarget(serviceTarget);
+    setSelectedServiceTargetId(serviceTarget.id);
   };
 
   // If the user types in a search query, filter results by label.
@@ -78,6 +78,10 @@ export const LoadBalancerServiceTargets = () => {
       page_size: pagination.pageSize,
     },
     filter
+  );
+
+  const selectedServiceTarget = data?.data.find(
+    (serviceTarget) => serviceTarget.id === selectedServiceTargetId
   );
 
   if (isLoading) {
@@ -131,6 +135,9 @@ export const LoadBalancerServiceTargets = () => {
             >
               Label
             </TableSortCell>
+            <Hidden mdDown>
+              <TableCell>Endpoints</TableCell>
+            </Hidden>
             <TableSortCell
               active={orderBy === 'protocol'}
               direction={order}
@@ -192,7 +199,7 @@ export const LoadBalancerServiceTargets = () => {
       <ServiceTargetDrawer
         onClose={() => {
           setIsDrawerOpen(false);
-          setSelectedServiceTarget(undefined);
+          setSelectedServiceTargetId(undefined);
         }}
         loadbalancerId={Number(loadbalancerId)}
         open={isDrawerOpen}

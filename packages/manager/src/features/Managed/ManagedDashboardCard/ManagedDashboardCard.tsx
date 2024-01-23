@@ -73,9 +73,7 @@ export const ManagedDashboardCard = () => {
             <MonitorTickets issues={issues || []} />
           </Grid>
         </StyledStatusGrid>
-        <Grid className="p0" sm={8} xs={12}>
-          <ManagedChartPanel />
-        </Grid>
+        <ManagedChartPanel />
       </StyledOuterContainerGrid>
     </StyledDashboardCard>
   );

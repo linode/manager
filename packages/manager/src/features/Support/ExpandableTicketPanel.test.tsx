@@ -26,12 +26,12 @@ const props = {
 
 describe('Expandable ticket panel', () => {
   describe('Panel component', () => {
-    it('should display "Linode Expert" if the ticket or reply has from_linode', () => {
+    it('should display "Customer Support" if the ticket or reply has from_linode', () => {
       renderWithTheme(<ExpandableTicketPanel {...props} />);
-      expect(screen.getByText('Linode Expert')).toBeInTheDocument();
+      expect(screen.getByText('Customer Support')).toBeInTheDocument();
     });
 
-    it('should not display "Linode Expert" if the reply is from the Linode account', () => {
+    it('should not display "Customer Support" if the reply is from the Linode account', () => {
       const replyFromLinode = {
         ...supportReplyFactory.build({
           created_by: 'Linode',
@@ -42,10 +42,10 @@ describe('Expandable ticket panel', () => {
       renderWithTheme(
         <ExpandableTicketPanel {...props} reply={replyFromLinode} />
       );
-      expect(screen.queryByText('Linode Expert')).toBeNull();
+      expect(screen.queryByText('Customer Support')).toBeNull();
     });
 
-    it('should not display "Linode Expert" if the reply is from the Linode Trust & Safety account', () => {
+    it('should not display "Customer Support" if the reply is from the Linode Trust & Safety account', () => {
       const replyFromLinode = {
         ...supportReplyFactory.build({
           created_by: 'Linode Trust & Safety',
@@ -56,7 +56,7 @@ describe('Expandable ticket panel', () => {
       renderWithTheme(
         <ExpandableTicketPanel {...props} reply={replyFromLinode} />
       );
-      expect(screen.queryByText('Linode Expert')).toBeNull();
+      expect(screen.queryByText('Customer Support')).toBeNull();
     });
   });
   describe('shouldRenderHively function', () => {

@@ -33,7 +33,7 @@ describe('LinodeSettingsLabelPanel', () => {
     });
 
     // Verify that the save button is disabled (because the label is unmodified)
-    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
   it('should disable the input if the `isReadOnly` prop is true', async () => {

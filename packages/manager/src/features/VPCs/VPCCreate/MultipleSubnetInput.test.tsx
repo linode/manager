@@ -46,7 +46,7 @@ describe('MultipleSubnetInput', () => {
     expect(props.onChange).toHaveBeenCalledWith([
       ...props.subnets,
       {
-        ip: { availIPv4s: 256, ipv4: '10.0.4.0/24', ipv4Error: '' },
+        ip: { availIPv4s: 256, ipv4: '10.0.1.0/24', ipv4Error: '' },
         label: '',
         labelError: '',
       },

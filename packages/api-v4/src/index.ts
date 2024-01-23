@@ -26,6 +26,8 @@ export * from './nodebalancers';
 
 export * from './object-storage';
 
+export * from './placement-groups';
+
 export * from './profile';
 
 export * from './regions';

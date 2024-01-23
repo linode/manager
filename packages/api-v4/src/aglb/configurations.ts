@@ -10,6 +10,7 @@ import { BETA_API_ROOT } from '../constants';
 import type {
   Configuration,
   ConfigurationPayload,
+  ConfigurationsEndpointHealth,
   UpdateConfigurationPayload,
 } from './types';
 import {
@@ -52,6 +53,23 @@ export const getLoadbalancerConfiguration = (
       `${BETA_API_ROOT}/aglb/${encodeURIComponent(
         loadbalancerId
       )}/configurations/${encodeURIComponent(configurationId)}`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * getLoadbalancerConfigurationsEndpointHealth
+ *
+ * Returns endpoint health for an Akamai Global Load Balancer configuration
+ */
+export const getLoadbalancerConfigurationsEndpointHealth = (
+  loadbalancerId: number
+) =>
+  Request<ConfigurationsEndpointHealth>(
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/configurations/endpoints-health`
     ),
     setMethod('GET')
   );

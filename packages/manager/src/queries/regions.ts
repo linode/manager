@@ -27,10 +27,13 @@ const getAllRegionsRequest = () =>
 
 // Region Availability queries
 
-export const useRegionsAvailabilitiesQuery = () =>
+export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
   useQuery<RegionAvailability[], APIError[]>(
     queryKey,
-    getAllRegionAvailabilitiesRequest
+    getAllRegionAvailabilitiesRequest,
+    {
+      enabled,
+    }
   );
 
 const getAllRegionAvailabilitiesRequest = () =>

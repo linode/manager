@@ -14,7 +14,8 @@ import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeEntityDetail, getSubnetsString } from './LinodeEntityDetail';
+import { LinodeEntityDetail } from './LinodeEntityDetail';
+import { getSubnetsString } from './LinodeEntityDetailBody';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 
 const queryClient = queryClientFactory();

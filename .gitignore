@@ -139,3 +139,6 @@ nohup.out
 packages/manager/bundle_analyzer_report.html
 
 **/manager/src/dev-tools/*.local.*
+
+# vitepress
+docs/.vitepress/cache

@@ -40,7 +40,10 @@ describe('KubeCheckoutBar', () => {
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
     await findByText(LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE);
-    expect(getByText('Create Cluster').closest('button')).toBeDisabled();
+    expect(getByText('Create Cluster').closest('button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should render a section for each pool', async () => {

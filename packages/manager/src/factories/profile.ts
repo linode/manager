@@ -25,6 +25,7 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
   timezone: 'Asia/Shanghai',
   two_factor_auth: false,
   uid: 9999,
+  user_type: null,
   username: 'mock-user',
   verified_phone_number: '+15555555555',
 });

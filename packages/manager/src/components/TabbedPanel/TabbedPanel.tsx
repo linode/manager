@@ -1,3 +1,4 @@
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import React, { useEffect, useState } from 'react';
@@ -9,11 +10,13 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import { Box } from '../Box';
 
 export interface Tab {
+  disabled?: boolean;
   render: (props: any) => JSX.Element | null;
   title: string;
 }
@@ -31,6 +34,7 @@ interface TabbedPanelProps {
   noPadding?: boolean;
   rootClass?: string;
   sx?: SxProps;
+  tabDisabledMessage?: string;
   tabs: Tab[];
   value?: number;
 }
@@ -51,6 +55,13 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   } = props;
 
   const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
+
+  const sxHelpIcon = {
+    height: 20,
+    m: 0.5,
+    verticalAlign: 'sub',
+    width: 20,
+  };
 
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
@@ -89,8 +100,18 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
         <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
-              <StyledTab key={`tabs-${tab.title}-${idx}`}>
+              <StyledTab
+                disabled={tab.disabled}
+                key={`tabs-${tab.title}-${idx}`}
+              >
                 {tab.title}
+                {tab.disabled && props.tabDisabledMessage && (
+                  <Tooltip title={props.tabDisabledMessage}>
+                    <span>
+                      <HelpOutline fontSize="small" sx={sxHelpIcon} />
+                    </span>
+                  </Tooltip>
+                )}
               </StyledTab>
             ))}
           </StyledTabList>

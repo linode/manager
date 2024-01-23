@@ -6,7 +6,8 @@ export type Permission = [string, number];
 
 export const basePerms = [
   'account',
-  'child_account',
+  // TODO: Parent/Child - add this scope once API code is in prod.
+  // 'child_account',
   'databases',
   'domains',
   'events',
@@ -20,11 +21,13 @@ export const basePerms = [
   'object_storage',
   'stackscripts',
   'volumes',
+  'vpc',
 ] as const;
 
 export const basePermNameMap: Record<string, string> = {
   account: 'Account',
-  child_account: 'Child Account Access',
+  // TODO: Parent/Child - add this scope once API code is in prod.
+  // child_account: 'Child Account Access',
   databases: 'Databases',
   domains: 'Domains',
   events: 'Events',
@@ -38,6 +41,7 @@ export const basePermNameMap: Record<string, string> = {
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes',
+  vpc: 'VPCs',
 };
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
@@ -190,4 +194,24 @@ export const allScopesAreTheSame = (scopes: Permission[]) => {
 export const isWayInTheFuture = (time: string) => {
   const wayInTheFuture = DateTime.local().plus({ years: 100 }).toISO();
   return isPast(wayInTheFuture)(time);
+};
+
+/**
+ * Used to remove a permission
+ * @param basePermNameMap an object consisting of API perm keys and their
+ * corresponding names in Cloud
+ * @param perm an object consisting of a perm name and a boolean indicating
+ * whether it should be included in basePermNameMap or not
+ * @returns a copy of basePermNameMap (either unedited or with the specified perm removed)
+ */
+export const getPermsNameMap = (
+  basePermNameMap: Record<string, string>,
+  perm: { name: string; shouldBeIncluded: boolean }
+) => {
+  const basePermNameMapCopy = { ...basePermNameMap };
+  if (basePermNameMapCopy[perm.name] && !perm.shouldBeIncluded) {
+    delete basePermNameMapCopy[perm.name];
+  }
+
+  return basePermNameMapCopy;
 };
