@@ -14,7 +14,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsFeatureRestricted } from 'src/hooks/useIsFeatureRestricted';
 import {
   useNodeBalancerQuery,
@@ -117,7 +117,11 @@ export const NodeBalancerDetail = () => {
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {isRestricted && (
-        <Notice important text={RESTRICTED_ACCESS_NOTICE} variant="warning" />
+        <Notice
+          important
+          text={getRestrictedResourceText('NodeBalancers')}
+          variant="warning"
+        />
       )}
       <Tabs
         index={Math.max(

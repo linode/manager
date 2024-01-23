@@ -30,7 +30,6 @@ import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import {

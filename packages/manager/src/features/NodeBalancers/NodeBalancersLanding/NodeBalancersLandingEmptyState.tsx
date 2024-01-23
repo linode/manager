@@ -8,7 +8,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
-import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 export const NodeBalancerLandingEmptyState = () => {
@@ -26,7 +26,11 @@ export const NodeBalancerLandingEmptyState = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
       {isRestricted && (
-        <Notice important text={RESTRICTED_ACCESS_NOTICE} variant="warning" />
+        <Notice
+          important
+          text={getRestrictedResourceText('NodeBalancers')}
+          variant="warning"
+        />
       )}
       <StyledPlaceholder
         buttonProps={[

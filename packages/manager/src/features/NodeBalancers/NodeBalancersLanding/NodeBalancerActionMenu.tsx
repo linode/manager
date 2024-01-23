@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsFeatureRestricted } from 'src/hooks/useIsFeatureRestricted';
 
 interface Props {
@@ -45,7 +45,9 @@ export const NodeBalancerActionMenu = (props: Props) => {
         toggleDialog(nodeBalancerId, label);
       },
       title: 'Delete',
-      tooltip: isRestricted ? RESTRICTED_ACCESS_NOTICE : undefined,
+      tooltip: isRestricted
+        ? getRestrictedResourceText('NodeBalancers')
+        : undefined,
     },
   ];
 

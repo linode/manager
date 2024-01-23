@@ -15,7 +15,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import { RESTRICTED_ACCESS_NOTICE } from 'src/features/Account/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
@@ -103,7 +103,11 @@ export const NodeBalancersLanding = () => {
         title="NodeBalancers"
       />
       {isRestricted && (
-        <Notice important text={RESTRICTED_ACCESS_NOTICE} variant="warning" />
+        <Notice
+          important
+          text={getRestrictedResourceText('NodeBalancers')}
+          variant="warning"
+        />
       )}
       <Table>
         <TableHead>

@@ -21,7 +21,8 @@ import { createDisplayPage } from 'src/components/Paginate';
 import { Typography } from 'src/components/Typography';
 import { useTheme } from '@mui/material/styles';
 import { StyledGrantsTable } from './UserPermissionsEntitySection.styles';
-import {grantTypeMap} from 'src/features/Account/constants'
+import { grantTypeMap } from 'src/features/Account/constants';
+
 interface Props {
   entity: GrantType;
   grants: Grant[] | undefined;
