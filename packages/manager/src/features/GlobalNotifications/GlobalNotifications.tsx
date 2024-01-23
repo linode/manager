@@ -4,6 +4,7 @@ import * as React from 'react';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
+import { useProfile } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
 
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
@@ -14,14 +15,9 @@ import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
-import type { Profile } from '@linode/api-v4';
-
-export const GlobalNotifications = ({
-  profile,
-}: {
-  profile: Profile | undefined;
-}) => {
+export const GlobalNotifications = () => {
   const flags = useFlags();
+  const { data: profile } = useProfile();
   const { data: securityQuestions } = useSecurityQuestions();
   const suppliedMaintenances = flags.apiMaintenance?.maintenances; // The data (ID, and sometimes the title and body) we supply regarding maintenance events in LD.
   const isChildAccount =
