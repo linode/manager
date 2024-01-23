@@ -27,10 +27,6 @@ export const VerificationDetailsBanner = ({
     focusOptions.focusTel = true;
   }
 
-  if (!hasVerifiedPhoneNumber) {
-    focusOptions.focusTel = true;
-  }
-
   return (
     <Notice important spacing={1} variant="warning">
       <Box
