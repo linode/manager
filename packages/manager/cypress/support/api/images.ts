@@ -7,7 +7,7 @@ import { depaginate } from 'support/util/paginate';
 import { isTestLabel } from './common';
 
 export const createMockImage = (
-  data?: any,
+  data?: Image,
   eol = null,
   label = 'cy-test-image',
   id = 'private/99999999'

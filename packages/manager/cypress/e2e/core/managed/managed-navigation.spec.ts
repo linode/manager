@@ -26,6 +26,7 @@ import {
   visitUrlWithManagedDisabled,
   visitUrlWithManagedEnabled,
 } from 'support/api/managed';
+import type { UserPreferences } from '@linode/api-v4';
 
 // Array of URLs to all Managed-related pages.
 const managedURLs = [
@@ -39,8 +40,8 @@ const managedURLs = [
 // User preferences object to ensure that nav sidebar is open.
 const userPreferences = userPreferencesFactory.build({
   // `false` corresponds to the sidebar being open.
-  desktop_sidebar_open: false as any,
-});
+  desktop_sidebar_open: false,
+} as Partial<UserPreferences>);
 
 describe('Managed navigation', () => {
   /*

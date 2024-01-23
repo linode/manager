@@ -1,5 +1,5 @@
-import type { AxiosError } from 'axios';
 import type { APIError } from '@linode/api-v4';
+import type { AxiosError } from 'axios';
 
 type LinodeApiV4Error = {
   errors: APIError[];
@@ -70,7 +70,7 @@ const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
  *
  * @returns A new error with added information in message, or `e`.
  */
-const enhanceError = (e: any) => {
+const enhanceError = (e: Error) => {
   // Check for most specific error types first.
   if (isLinodeApiError(e)) {
     // If `e` is a Linode APIv4 error response, show the status code, error messages,

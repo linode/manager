@@ -291,7 +291,7 @@ describe('linode landing checks', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@getLinodes');
 
-    // Check 'Group by Tag' button works as expected that can be visiable, enabled and clickable
+    // Check 'Group by Tag' button works as expected that can be visible, enabled and clickable
     getVisible('[aria-label="Toggle group by tag"]')
       .should('be.enabled')
       .click();
@@ -337,9 +337,7 @@ describe('linode landing checks', () => {
   });
 
   it('checks summary view for linode table', () => {
-    const mockPreferencesListView = userPreferencesFactory.build({
-      linodes_view_style: 'list' as any,
-    });
+    const mockPreferencesListView = userPreferencesFactory.build();
 
     const mockPreferencesSummaryView = {
       ...mockPreferencesListView,
