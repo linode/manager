@@ -5,7 +5,6 @@ import { profileFactory } from 'src/factories/profile';
 import { DisplaySettings } from 'src/features/Profile/DisplaySettings/DisplaySettings';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-// Mock the useProfile hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
