@@ -1,4 +1,4 @@
-import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+import { Interface, LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -52,7 +52,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
 
   const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
-  const { isVPCOnlyLinode } = useVPCConfigInterface(linodeID);
+  const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(
+    linodeID
+  );
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -119,7 +121,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   }
 
   const renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(ips);
+    const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -288,13 +290,15 @@ export interface IPDisplay {
 
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse
+  ipResponse?: LinodeIPsResponse,
+  configInterfaceWithVPC?: Interface
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
   }
 
   const { ipv4, ipv6 } = ipResponse;
+  console.log(configInterfaceWithVPC);
 
   const ipDisplay = [
     ...mapIPv4Display(ipv4.public, 'Public'),
@@ -302,6 +306,25 @@ export const ipResponseToDisplayRows = (
     ...mapIPv4Display(ipv4.reserved, 'Reserved'),
     ...mapIPv4Display(ipv4.shared, 'Shared'),
   ];
+
+  if (configInterfaceWithVPC && configInterfaceWithVPC.ipv4?.vpc) {
+    ipDisplay.push(
+      ipToDisplay(
+        {
+          address: configInterfaceWithVPC.ipv4.vpc,
+          gateway: '',
+          linode_id: 10,
+          prefix: 10,
+          public: false,
+          rdns: '',
+          region: '',
+          subnet_mask: '',
+          type: 'ipv4',
+        },
+        'VPC'
+      )
+    );
+  }
 
   if (ipv6?.slaac) {
     ipDisplay.push(ipToDisplay(ipv6.slaac, 'SLAAC'));
@@ -349,7 +372,8 @@ type ipKey =
   | 'Public'
   | 'Reserved'
   | 'SLAAC'
-  | 'Shared';
+  | 'Shared'
+  | 'VPC';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
