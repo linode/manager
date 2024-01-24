@@ -84,7 +84,7 @@ export const PlacementGroupsDetail = () => {
         breadcrumbProps={{
           onEditHandlers: {
             editableTextTitle: label,
-            editableTextTitleSuffix: `(${affinityLabel})`,
+            editableTextTitleSuffix: ` (${affinityLabel})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,
