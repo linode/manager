@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -69,9 +68,11 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
       <Box
         sx={(theme) => ({
           [theme.breakpoints.down('md')]: {
+            alignItems: 'flex-start',
             flexDirection: 'column',
           },
         })}
+        alignItems="flex-end"
         display="flex"
         justifyContent="space-between"
       >
@@ -88,7 +89,6 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           label={label}
           onBlur={(e) => setValue(e.target.value)}
           onChange={(e) => setValue(e.target.value)}
-          tooltipText={tooltipText ? tooltipText : undefined}
           trimmed={trimmed}
           value={value}
         />
@@ -98,12 +98,17 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
             label: `Update ${label}`,
             loading: submitting,
             onClick: handleSubmit,
-            sx: (theme: Theme) => ({
+            sx: () => ({
+              margin: '0 !important', // Investigate why I can't override with `!important`
               minWidth: 180,
-              [theme.breakpoints.up('md')]: {
-                marginTop: 2,
-              },
             }),
+            tooltipText:
+              tooltipText && typeof tooltipText === 'string'
+                ? tooltipText
+                : undefined,
+          }}
+          sx={{
+            padding: 0,
           }}
         />
       </Box>
