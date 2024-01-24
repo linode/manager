@@ -26,6 +26,7 @@ const pageSizeOverride = {
  *
  * @returns Promise that resolves to an array containing created Linode and Volume.
  */
+// TODO Uncomment `createAndAtttachVolume` once volume detach tests are unskipped, or delete if tests are removed.
 // const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
 //   const commonRegion = chooseRegion();
 //   const linodeRequest = createLinodeRequestFactory.build({
