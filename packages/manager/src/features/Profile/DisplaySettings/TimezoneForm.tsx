@@ -87,6 +87,12 @@ export const TimezoneForm = (props: Props) => {
         </StyledLoggedInAsCustomerNotice>
       ) : null}
       <StyledRootContainer
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            alignItems: 'flex-start',
+            flexDirection: 'column',
+          },
+        })}
         alignItems="flex-end"
         display="flex"
         justifyContent="space-between"
@@ -114,7 +120,6 @@ export const TimezoneForm = (props: Props) => {
             },
           }}
           sx={{
-            margin: 0,
             padding: 0,
           }}
         />
