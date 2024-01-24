@@ -18,7 +18,7 @@ interface LabelAndTagsProps {
 export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
   const theme = useTheme();
   const flags = useFlags();
-  const showPlacementGroups = Boolean(!flags.vmPlacement);
+  const showPlacementGroups = Boolean(flags.vmPlacement);
   const { error, labelFieldProps, region, tagsInputProps } = props;
 
   return (
@@ -42,8 +42,9 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
       {showPlacementGroups ? (
         <PlacementGroupsSelect
-        // onSelectionChange={ }
-        // value={values ?? null}
+          // onSelectionChange={ }
+          // value={values ?? null}
+          region={region}
         />
       ) : null}
     </Paper>

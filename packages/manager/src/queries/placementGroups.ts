@@ -33,9 +33,10 @@ export const useAllPlacementGroupsQuery = (enabled = true) =>
     queryKey: [queryKey, 'all'],
   });
 
+// Make `params` and `filter` optional or keep `useAllPlacementGroupsQuery`
 export const usePlacementGroupsQuery = (
-  params: Params,
-  filter: Filter,
+  params?: Params,
+  filter?: Filter,
   enabled: boolean = true
 ) =>
   useQuery<ResourcePage<PlacementGroup>, APIError[]>({
