@@ -136,8 +136,8 @@ describe('Migrate linodes', () => {
    * - Confirms DC-specific pricing UI flow works as expected during Linode migration.
    * - Confirms that pricing comparison is not shown in "Region" section if migration occurs in a DC with the same price structure.
    */
-  it('shows DC-specific pricing information when migrating linodes within the same DC', () => {
-    const initialRegion = getRegionById('us-southeast');
+  it('shows DC-specific pricing information when migrating linodes to similarly priced DCs', () => {
+    const initialRegion = getRegionById('eu-central');
     const newRegion = getRegionById('us-central');
 
     const mockLinode = linodeFactory.build({
