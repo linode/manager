@@ -18,6 +18,7 @@ import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSor
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useProfile } from 'src/queries/profile';
@@ -54,6 +55,7 @@ const PREFERENCE_KEY = 'api-tokens';
 export const APITokenTable = (props: Props) => {
   const { title, type } = props;
 
+  const flags = useFlags();
   const { data: profile } = useProfile();
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -80,7 +82,9 @@ export const APITokenTable = (props: Props) => {
     { '+order': order, '+order_by': orderBy }
   );
 
-  const isProxyUser = profile?.user_type === 'proxy';
+  const isProxyUser = Boolean(
+    flags.parentChildAccountAccess && profile?.user_type === 'proxy'
+  );
 
   const [isCreateOpen, setIsCreateOpen] = React.useState<boolean>(false);
   const [isRevokeOpen, setIsRevokeOpen] = React.useState<boolean>(false);
