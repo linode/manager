@@ -18,7 +18,7 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: securityQuestions } = useSecurityQuestions();
+  const { data: securityQuestions } = useSecurityQuestions({ enabled: isChildAccount });
   const suppliedMaintenances = flags.apiMaintenance?.maintenances; // The data (ID, and sometimes the title and body) we supply regarding maintenance events in LD.
   const isChildAccount =
     Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'child';
