@@ -43,84 +43,84 @@ export interface DebouncedSearchProps extends TextFieldProps {
   placeholder?: string;
 }
 
-const DebouncedSearch = (props: DebouncedSearchProps) => {
-  const {
-    InputProps,
-    className,
-    clearable,
-    customValue,
-    debounceTime,
-    defaultValue,
-    hideLabel,
-    isSearching,
-    label,
-    onSearch,
-    placeholder,
-    ...restOfTextFieldProps
-  } = props;
+export const DebouncedSearchTextField = React.memo(
+  (props: DebouncedSearchProps) => {
+    const {
+      InputProps,
+      className,
+      clearable,
+      customValue,
+      debounceTime,
+      defaultValue,
+      hideLabel,
+      isSearching,
+      label,
+      onSearch,
+      placeholder,
+      ...restOfTextFieldProps
+    } = props;
 
-  // Manage the textfield state if customValue is not provided
-  const managedValue = React.useState<string | undefined>();
-  const [textFieldValue, setTextFieldValue] = customValue
-    ? [customValue.value, customValue.onChange]
-    : managedValue;
+    // Manage the textfield state if customValue is not provided
+    const managedValue = React.useState<string | undefined>();
+    const [textFieldValue, setTextFieldValue] = customValue
+      ? [customValue.value, customValue.onChange]
+      : managedValue;
 
-  React.useEffect(() => {
-    if (textFieldValue != undefined) {
-      const timeout = setTimeout(
-        () => onSearch && onSearch(textFieldValue),
-        debounceTime !== undefined ? debounceTime : 400
-      );
-      return () => clearTimeout(timeout);
-    }
-    return undefined;
-  }, [debounceTime, onSearch, textFieldValue]);
+    React.useEffect(() => {
+      if (textFieldValue != undefined) {
+        const timeout = setTimeout(
+          () => onSearch && onSearch(textFieldValue),
+          debounceTime !== undefined ? debounceTime : 400
+        );
+        return () => clearTimeout(timeout);
+      }
+      return undefined;
+    }, [debounceTime, onSearch, textFieldValue]);
 
-  return (
-    <TextField
-      InputProps={{
-        endAdornment: isSearching ? (
-          <InputAdornment position="end">
-            <CircleProgress mini={true} />
-          </InputAdornment>
-        ) : (
-          clearable && (
-            <IconButton
-              aria-label="Clear"
-              onClick={() => setTextFieldValue('')}
-              size="small"
-            >
-              <Clear
-                sx={(theme) => ({
-                  '&&': {
-                    color: theme.color.grey1,
-                  },
-                })}
-              />
-            </IconButton>
-          )
-        ),
-        startAdornment: (
-          <InputAdornment position="end">
-            <StyledSearchIcon />
-          </InputAdornment>
-        ),
-        ...InputProps,
-      }}
-      className={className}
-      data-qa-debounced-search
-      defaultValue={defaultValue}
-      hideLabel={hideLabel}
-      label={label}
-      onChange={(e) => setTextFieldValue(e.target.value)}
-      placeholder={placeholder || 'Filter by query'}
-      value={textFieldValue}
-      {...restOfTextFieldProps}
-    />
-  );
-};
-
-export const DebouncedSearchTextField = React.memo(DebouncedSearch);
+    return (
+      <TextField
+        InputProps={{
+          endAdornment: isSearching ? (
+            <InputAdornment position="end">
+              <CircleProgress mini={true} />
+            </InputAdornment>
+          ) : (
+            clearable && (
+              <IconButton
+                aria-label="Clear"
+                onClick={() => setTextFieldValue('')}
+                size="small"
+              >
+                <Clear
+                  sx={(theme) => ({
+                    '&&': {
+                      color: theme.color.grey1,
+                    },
+                  })}
+                />
+              </IconButton>
+            )
+          ),
+          startAdornment: (
+            <InputAdornment position="end">
+              <StyledSearchIcon />
+            </InputAdornment>
+          ),
+          ...InputProps,
+        }}
+        className={className}
+        data-qa-debounced-search
+        defaultValue={defaultValue}
+        hideLabel={hideLabel}
+        label={label}
+        onChange={(e) => setTextFieldValue(e.target.value)}
+        placeholder={placeholder || 'Filter by query'}
+        value={textFieldValue}
+        {...restOfTextFieldProps}
+      />
+    );
+  }
+);
 
 const StyledSearchIcon = styled(Search)(({ theme }) => ({
   '&&, &&:hover': {
