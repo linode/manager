@@ -111,7 +111,7 @@ describe('Editable Text', () => {
 
   it('appends a suffix to the text when provided', () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <EditableText {...props} textSuffix="suffix" />
+      <EditableText {...props} textSuffix=" suffix" />
     );
 
     const text = getByText('Edit this suffix');
