@@ -86,7 +86,11 @@ export const TimezoneForm = (props: Props) => {
           </Typography>
         </StyledLoggedInAsCustomerNotice>
       ) : null}
-      <StyledRootContainer display="flex" justifyContent="space-between">
+      <StyledRootContainer
+        alignItems="flex-end"
+        display="flex"
+        justifyContent="space-between"
+      >
         <Select
           data-qa-tz-select
           defaultValue={defaultTimeZone}
@@ -104,9 +108,14 @@ export const TimezoneForm = (props: Props) => {
             loading: isLoading,
             onClick: onSubmit,
             sx: {
+              margin: '0 !important', // Investigate why I can't override without `!important`
               marginTop: (theme: Theme) => (theme.breakpoints.up('md') ? 2 : 0),
               minWidth: 180,
             },
+          }}
+          sx={{
+            margin: 0,
+            padding: 0,
           }}
         />
       </StyledRootContainer>
