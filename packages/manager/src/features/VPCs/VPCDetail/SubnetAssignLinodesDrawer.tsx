@@ -13,7 +13,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
+import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -544,7 +544,7 @@ export const SubnetAssignLinodesDrawer = (
             />
           ))
         : null}
-      <RemovableSelectionsList
+      <RemovableSelectionsListTable
         onRemove={(data) => {
           handleUnassignLinode(data as LinodeAndConfigData);
           setUnassignLinodesErrors([]);
