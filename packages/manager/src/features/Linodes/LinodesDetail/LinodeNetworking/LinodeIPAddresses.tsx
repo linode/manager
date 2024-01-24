@@ -326,6 +326,25 @@ export const ipResponseToDisplayRows = (
     );
   }
 
+  if (configInterfaceWithVPC && configInterfaceWithVPC.ipv4?.nat_1_1) {
+    ipDisplay.push(
+      ipToDisplay(
+        {
+          address: configInterfaceWithVPC.ipv4.nat_1_1,
+          gateway: '',
+          linode_id: 10,
+          prefix: 10,
+          public: false,
+          rdns: '',
+          region: '',
+          subnet_mask: '',
+          type: 'ipv4',
+        },
+        'VPC_NAT'
+      )
+    );
+  }
+
   if (ipv6?.slaac) {
     ipDisplay.push(ipToDisplay(ipv6.slaac, 'SLAAC'));
   }
@@ -373,7 +392,8 @@ type ipKey =
   | 'Reserved'
   | 'SLAAC'
   | 'Shared'
-  | 'VPC';
+  | 'VPC'
+  | 'VPC_NAT';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
@@ -398,6 +418,8 @@ export const createType = (ip: IPAddress, key: ipKey) => {
 
   if (key === 'Reserved') {
     type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
+  } else if (key === 'VPC_NAT') {
+    type = `VPC ${type}NAT`;
   } else {
     type += key;
   }

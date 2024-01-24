@@ -9,4 +9,4 @@ export type IPTypes =
   | 'IPv6 – Link Local'
   | 'IPv6 – Range'
   | 'IPv6 – SLAAC'
-  | 'VPC IPv4 - NAT';
+  | 'VPC IPv4 – NAT';
