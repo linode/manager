@@ -22,6 +22,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreate/PlacementGroupCreateDrawer';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
@@ -64,6 +65,15 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
+  const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+  };
+
+  const onClosePlacementGroupCreateDrawer = () => {
+    history.replace('/placement-groups');
+  };
+
+  const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
   const onOpenCreateDrawer = () => {
     history.push('/placement-groups/create');
   };
@@ -92,10 +102,6 @@ export const PlacementGroupsLanding = React.memo(() => {
   }
 
   const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-  };
-
-  const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
   };
 
@@ -189,7 +195,10 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       {/* TODO VM_Placement: add delete dialog */}
-      {/* TODO VM_Placement: add create/edit drawer */}
+      <PlacementGroupsCreateDrawer
+        onClose={onClosePlacementGroupCreateDrawer}
+        open={isPlacementGroupCreateDrawerOpen}
+      />
     </>
   );
 });

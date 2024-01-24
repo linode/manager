@@ -72,6 +72,7 @@ export type AccountCapability =
   | 'Object Storage Access Key Regions'
   | 'Object Storage'
   | 'Vlans'
+  | 'VM Placement'
   | 'VPCs';
 
 export interface AccountAvailability {
