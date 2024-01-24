@@ -99,7 +99,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
             loading: submitting,
             onClick: handleSubmit,
             sx: () => ({
-              margin: '0 !important', // TODO: Investigate why I can't override without `!important`
+              margin: '0',
               minWidth: 180,
             }),
             tooltipText:
