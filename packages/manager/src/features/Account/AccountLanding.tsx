@@ -13,7 +13,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 import AccountLogins from './AccountLogins';
@@ -48,7 +47,6 @@ const AccountLanding = () => {
   const { data: account } = useAccount();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
 
   const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
@@ -118,7 +116,7 @@ const AccountLanding = () => {
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
     flags.parentChildAccountAccess &&
-    (user?.user_type === 'parent' || user?.user_type === 'proxy');
+    (profile?.user_type === 'parent' || profile?.user_type === 'proxy');
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -174,7 +172,7 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
-        isProxyUser={user?.user_type === 'proxy'}
+        isProxyUser={profile?.user_type === 'proxy'}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
       />
