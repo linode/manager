@@ -151,10 +151,7 @@ export const EditableText = (props: PassThroughProps) => {
   }, [propText]);
 
   React.useEffect(() => {
-    if (!isEditing) {
-      onCancel();
-    }
-
+    onCancel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditing]);
 
