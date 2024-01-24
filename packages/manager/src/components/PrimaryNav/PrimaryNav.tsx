@@ -192,7 +192,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Global Load Balancers',
           hide: !flags.aglb,
           href: '/loadbalancers',
-          // TODO AGLB: replace icon when available
           icon: <LoadBalancer />,
           isBeta: true,
         },
