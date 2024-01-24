@@ -61,7 +61,7 @@ interface SubnetAssignLinodesDrawerProps {
 
 type LinodeAndConfigData = Linode & {
   configId: number;
-  interfaceId: number;
+  interfaceData: Interface | undefined;
   linodeConfigLabel: string;
 };
 
@@ -193,7 +193,7 @@ export const SubnetAssignLinodesDrawer = (
 
       // We're storing this in a ref to access this later in order
       // to update `assignedLinodesAndConfigData` with the new
-      // interfaceId without causing a re-render
+      // interface data without causing a re-render
       newInterface.current = _newInterface;
 
       await invalidateQueries({
@@ -236,12 +236,12 @@ export const SubnetAssignLinodesDrawer = (
   };
 
   const handleUnassignLinode = async (data: LinodeAndConfigData) => {
-    const { configId, id: linodeId, interfaceId } = data;
+    const { configId, id: linodeId, interfaceData } = data;
     removedLinodeId.current = linodeId;
     try {
       await unassignLinode({
         configId,
-        interfaceId,
+        interfaceId: interfaceData?.id ?? -1,
         linodeId,
         subnetId: subnet?.id ?? -1,
         vpcId,
@@ -312,7 +312,6 @@ export const SubnetAssignLinodesDrawer = (
         ...values.selectedLinode,
         configId,
         interfaceData: newInterface?.current,
-        interfaceId: newInterface?.current?.id ?? -1,
         // Create a label that combines Linode label and configuration label (if available)
         linodeConfigLabel: `${values.selectedLinode.label}${
           values.selectedConfig?.label
