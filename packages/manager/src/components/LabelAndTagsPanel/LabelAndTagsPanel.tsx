@@ -42,9 +42,9 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
       {showPlacementGroups ? (
         <PlacementGroupsSelect
-          // onSelectionChange={ }
-          // value={values ?? null}
-          region={region}
+        // onSelectionChange={ }
+        // value={values ?? null}
+        // region={region}
         />
       ) : null}
     </Paper>

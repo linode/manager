@@ -38,54 +38,54 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     renderOption,
     renderOptionLabel,
     sx,
-    region,
+    // region,
     value,
   } = props;
 
-  const placementGroups: readonly PlacementGroupsSelectOption[] = [
-    { affinity_type: 'anti_affinity', optionLabel: 'PG-1' },
-    { affinity_type: 'anti_affinity', optionLabel: 'PG-2' },
-    { affinity_type: 'affinity', optionLabel: 'PG-3' },
-  ];
+  // const placementGroups: readonly PlacementGroupsSelectOption[] = [
+  //   { affinity_type: 'anti_affinity', optionLabel: 'PG-1' },
+  //   { affinity_type: 'anti_affinity', optionLabel: 'PG-2' },
+  //   { affinity_type: 'affinity', optionLabel: 'PG-3' },
+  // ];
 
-  const {
-    data: placementGroups,
-    error,
-    isLoading,
-  } = useAllPlacementGroupsQuery();
+  // const {
+  //   data: placementGroups,
+  //   error,
+  //   isLoading,
+  // } = useAllPlacementGroupsQuery();
 
-  // <h3>....</h3>
   return (
-    <Autocomplete
-      getOptionLabel={(placementGroup: PlacementGroup) =>
-        renderOptionLabel
-          ? renderOptionLabel(placementGroup)
-          : `${placementGroup.optionLabel} (${placementGroup.affinity_type === 'affinity'
-            ? 'Affinity'
-            : 'Anti-Affinity'
-          })`
-      }
-      noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
-      }
-      renderOption={
-        renderOption
-          ? (props, option, { selected }) => {
-            return (
-              <li data-qa-placement-group-option>
-                {renderOption(option, selected)}
-              </li>
-            );
-          }
-          : undefined
-      }
-      data-testid="placement-groups-select"
-      id={id}
-      label={label ?? 'Placement Group'}
-      options={placementGroups}
-      placeholder="Select a Placement Group"
-      sx={sx}
-    />
+    <h3>.... ⏳ .... ⏳ .... ⏳</h3>
+    // <Autocomplete
+    //   getOptionLabel={(placementGroup: PlacementGroup) =>
+    //     renderOptionLabel
+    //       ? renderOptionLabel(placementGroup)
+    //       : `${placementGroup.label} (${placementGroup.affinity_type === 'affinity'
+    //         ? 'Affinity'
+    //         : 'Anti-Affinity'
+    //       })`
+    //   }
+    //   noOptionsText={
+    //     noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+    //   }
+    //   // renderOption={
+    //   //   renderOption
+    //   //     ? (props, option, { selected }) => {
+    //   //       return (
+    //   //         <li data-qa-placement-group-option>
+    //   //           {renderOption(option, selected)}
+    //   //         </li>
+    //   //       );
+    //   //     }
+    //   //     : undefined
+    //   // }
+    //   data-testid="placement-groups-select"
+    //   id={id}
+    //   label={'Placement Group'}
+    //   // options={placementGroups}
+    //   placeholder="Select a Placement Group"
+    //   sx={sx}
+    // />
   );
 };
 

@@ -12,13 +12,14 @@
 }
 // const getSelectedPlacementGroupValue = {};
 
-('Placement Groups in ${regionFromSelectedId?.label}');
-
-const noOptionsMessage = () => {
-  if (placementGroupsInRegion === 0) {
-    return 'There are no Placement Groups in this region';
-  }
-  if (linode_ids.length === 10) {
-    return "This Placement Group doesn't have capacity";
-  }
-};
+// After filtering pg per regions
+// const getPlacementGroupsInRegion;
+// const noOptionsMessage = () => {
+//   if (getPlacementGroupsInRegion === 0) {
+//     return `There are no Placement Groups in this region`;
+//   }
+//   if (linode_ids.length === 10) {
+//     return `This Placement Group doesn't have capacity`;
+//   }
+//   return `Placement Groups in ${regionFromSelectedId?.label}`;
+// };
