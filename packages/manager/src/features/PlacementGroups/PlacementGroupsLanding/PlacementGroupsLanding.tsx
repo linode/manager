@@ -34,7 +34,7 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const [_selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
     PlacementGroup | undefined
   >();
   const [query, setQuery] = React.useState<string>('');
@@ -64,6 +64,10 @@ export const PlacementGroupsLanding = React.memo(() => {
     params,
     filter
   );
+
+  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+  };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
@@ -100,10 +104,6 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
     );
   }
-
-  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-  };
 
   return (
     <>
@@ -194,11 +194,15 @@ export const PlacementGroupsLanding = React.memo(() => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {/* TODO VM_Placement: add delete dialog */}
       <PlacementGroupsCreateDrawer
+        currentPlacementGroup={selectedPlacementGroup}
+        mode="edit"
         onClose={onClosePlacementGroupCreateDrawer}
         open={isPlacementGroupCreateDrawerOpen}
+        selectedAffinityType="anti_affinity"
+        selectedRegionId="us-east"
       />
+      {/* TODO VM_Placement: add delete dialog */}
     </>
   );
 });

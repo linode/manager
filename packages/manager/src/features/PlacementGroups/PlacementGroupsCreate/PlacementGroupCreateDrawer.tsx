@@ -1,6 +1,5 @@
 import { createPlacementGroupSchema } from '@linode/validation';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -12,7 +11,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
+import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -22,30 +21,22 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import type {
-  CreatePlacementGroupPayload,
-  PlacementGroup,
-} from '@linode/api-v4';
+  PlacementGroupCreateProps,
+  PlacementGroupEditProps,
+} from '../types';
+import type { CreatePlacementGroupPayload } from '@linode/api-v4';
 
-interface Props {
-  onClose: () => void;
-  onPlacementGroupCreated?: (placementGroup: PlacementGroup) => void;
-  open: boolean;
-  selectedRegion?: string;
-}
-
-const initialValues: CreatePlacementGroupPayload = {
-  affinity_type: 'affinity',
-  label: '',
-  region: '',
-};
+type Props = PlacementGroupCreateProps | PlacementGroupEditProps;
 
 export const PlacementGroupsCreateDrawer = (props: Props) => {
-  const theme = useTheme();
   const {
+    currentPlacementGroup,
+    mode,
     onClose,
     onPlacementGroupCreated,
     open,
-    // selectedRegion
+    selectedAffinityType,
+    selectedRegionId,
   } = props;
   const queryClient = useQueryClient();
   const { data: regions } = useRegionsQuery();
@@ -59,43 +50,36 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
     handleSubmit,
     isSubmitting,
     resetForm,
-    // setFieldValue,
+    setFieldValue,
     status,
     values,
   } = useFormik({
-    initialValues,
+    initialValues: {
+      affinity_type: '',
+      label: '',
+      region: '',
+    },
     onSubmit(
       values: CreatePlacementGroupPayload,
       { setErrors, setStatus, setSubmitting }
     ) {
-      // Clear drawer error state
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
 
-      // if (payload.label === '') {
-      //   payload.label = undefined;
-      // }
-
       mutateAsync(payload)
         .then((response) => {
           setSubmitting(false);
-          queryClient.invalidateQueries([firewallQueryKey]);
-          enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
-            variant: 'success',
-          });
+          // Invalidate Placement Groups Queries
+          queryClient.invalidateQueries([placementGroupQueryKey]);
 
-          // Invalidate for Linodes
-          // if (payload.devices?.linodes) {
-          //   payload.devices.linodes.forEach((linodeId) => {
-          //     queryClient.invalidateQueries([
-          //       linodesQueryKey,
-          //       'linode',
-          //       linodeId,
-          //       'firewalls',
-          //     ]);
-          //   });
-          // }
+          // Show snackbar notification
+          enqueueSnackbar(
+            `Placement Group ${payload.label} successfully created`,
+            {
+              variant: 'success',
+            }
+          );
 
           if (onPlacementGroupCreated) {
             onPlacementGroupCreated(response);
@@ -111,7 +95,7 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
           handleGeneralErrors(
             mapErrorToStatus,
             err,
-            'Error creating Firewall.'
+            'Error creating Placement Group.'
           );
         });
     },
@@ -128,12 +112,8 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
     }
   }, [open, resetForm]);
 
-  const generalError =
-    status?.generalError ||
-    errors.label ||
-    errors.affinity_type ||
-    errors.region;
-
+  const generalError = status?.generalError;
+  const isEditMode = mode === 'edit';
   const affinityTypeOptions: {
     label: string;
     value: CreatePlacementGroupPayload['affinity_type'];
@@ -142,8 +122,12 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
     { label: 'Anti-affinity', value: 'anti_affinity' },
   ];
 
+  const drawerTitle = isEditMode
+    ? `Edit Placement Group ${currentPlacementGroup?.label}`
+    : 'Create Placement Group';
+
   return (
-    <Drawer onClose={onClose} open={open} title={'Create Placement Group'}>
+    <Drawer onClose={onClose} open={open} title={drawerTitle}>
       <Grid>
         {generalError ? <Notice text={generalError} variant="error" /> : null}
         <form onSubmit={handleSubmit}>
@@ -151,7 +135,7 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
             inputProps={{
               autoFocus: true,
             }}
-            aria-label="Label for your new Firewall"
+            aria-label="Label for new Placement Group"
             disabled={false}
             errorText={errors.label}
             label="Label"
@@ -162,15 +146,26 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
             value={values.label}
           />
           <RegionSelect
+            handleSelection={(selection) => {
+              setFieldValue('region', selection);
+            }}
             currentCapability="Linodes" // TODO VM_Placement: change to Placement Groups when available
-            handleSelection={() => null}
+            disabled={isEditMode}
+            errorText={errors.region}
             regions={regions ?? []}
-            selectedId={values.region}
+            selectedId={selectedRegionId ?? values.region}
           />
           <Autocomplete
+            onChange={(_, value) => {
+              setFieldValue('affinity_type', value?.value ?? '');
+            }}
             value={affinityTypeOptions.find(
-              (option) => option.value === values.affinity_type
+              (option) =>
+                option.value === selectedAffinityType ?? values.affinity_type
             )}
+            // defaultValue={selectedAffinityType ?? undefined}
+            disabled={isEditMode}
+            errorText={errors.affinity_type}
             label="Affinity Type"
             options={affinityTypeOptions}
             placeholder="Select an Affinity Type"
@@ -188,7 +183,6 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
               label: 'Cancel',
               onClick: onClose,
             }}
-            style={{ marginTop: theme.spacing(3) }}
           />
         </form>
       </Grid>
