@@ -251,6 +251,7 @@ export const EditableText = (props: PassThroughProps) => {
           value={text}
         />
         <Button
+          aria-label="Save"
           className={classes.button}
           data-qa-save-edit
           onClick={finishEditing}
@@ -258,6 +259,7 @@ export const EditableText = (props: PassThroughProps) => {
           <Check className={classes.icon} />
         </Button>
         <Button
+          aria-label="Cancel"
           className={classes.button}
           data-qa-cancel-edit
           onClick={cancelEditing}
