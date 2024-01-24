@@ -100,7 +100,7 @@ export const RuleDrawer = (props: Props) => {
           // append a new rule to the end.
           rules: isEditMode
             ? existingRules
-            : [...existingRules, normalizedRule],
+            : [normalizedRule, ...existingRules],
         });
         onClose();
       } catch (errors) {
