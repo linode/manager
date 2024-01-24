@@ -1,4 +1,4 @@
-import { Theme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -115,7 +115,6 @@ export const TimezoneForm = (props: Props) => {
             onClick: onSubmit,
             sx: {
               margin: '0',
-              marginTop: (theme: Theme) => (theme.breakpoints.up('md') ? 2 : 0),
               minWidth: 180,
             },
           }}

@@ -98,10 +98,10 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
             label: `Update ${label}`,
             loading: submitting,
             onClick: handleSubmit,
-            sx: () => ({
+            sx: {
               margin: '0',
               minWidth: 180,
-            }),
+            },
             tooltipText:
               tooltipText && typeof tooltipText === 'string'
                 ? tooltipText
