@@ -25,6 +25,14 @@ import type {
 
 export const queryKey = 'placement-groups';
 
+export const useAllPlacementGroupsQuery = (enabled = true) =>
+  useQuery<ResourcePage<PlacementGroup>, APIError[]>({
+    enabled,
+    keepPreviousData: true,
+    queryFn: () => getPlacementGroups(),
+    queryKey: [queryKey, 'all'],
+  });
+
 export const usePlacementGroupsQuery = (
   params: Params,
   filter: Filter,
