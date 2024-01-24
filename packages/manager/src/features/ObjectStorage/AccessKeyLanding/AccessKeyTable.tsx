@@ -57,7 +57,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
 
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -102,7 +102,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             <StyledCopyIcon text={eachKey.access_key} />
           </Typography>
         </TableCell>
-        {isObjMultiClusterFlagEnabled && regionsLookup && (
+        {isObjMultiClusterEnabled && regionsLookup && (
           <TableCell>
             {`${regionsLookup[eachKey?.regions[0]?.id].label}: ${
               eachKey?.regions[0]?.s3_endpoint
@@ -147,7 +147,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
           <TableRow data-qa-table-head>
             <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
             <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
-            {isObjMultiClusterFlagEnabled && (
+            {isObjMultiClusterEnabled && (
               <StyledLabelCell data-qa-header-key>
                 Regions/S3 Hostnames
               </StyledLabelCell>
@@ -158,7 +158,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
         </TableHead>
         <TableBody>{renderContent()}</TableBody>
       </Table>
-      {isObjMultiClusterFlagEnabled && (
+      {isObjMultiClusterEnabled && (
         <HostNamesDrawer
           onClose={() => setShowHostNamesDrawers(false)}
           open={showHostNamesDrawer}

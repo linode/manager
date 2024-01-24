@@ -151,7 +151,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
             </TableCell>
           </StyledRadioRow>
         )}
-        {!bucket_access?.length ? (
+        {bucket_access.length === 0 ? (
           <TableRowEmpty
             message={
               !selectedRegions?.length

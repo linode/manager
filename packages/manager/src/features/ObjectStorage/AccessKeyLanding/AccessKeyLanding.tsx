@@ -88,7 +88,7 @@ export const AccessKeyLanding = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -277,7 +277,7 @@ export const AccessKeyLanding = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {isObjMultiClusterFlagEnabled ? (
+      {isObjMultiClusterEnabled ? (
         <OMC_AccessKeyDrawer
           isRestrictedUser={props.isRestrictedUser}
           mode={mode}

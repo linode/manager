@@ -40,7 +40,7 @@ export const SecretTokenDialog = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -71,7 +71,7 @@ export const SecretTokenDialog = (props: Props) => {
         spacingTop={8}
         variant="warning"
       />
-      {isObjMultiClusterFlagEnabled && (
+      {isObjMultiClusterEnabled && (
         <div>
           <CopyAll
             text={
@@ -84,7 +84,7 @@ export const SecretTokenDialog = (props: Props) => {
           />
         </div>
       )}
-      {isObjMultiClusterFlagEnabled && (
+      {isObjMultiClusterEnabled && (
         <Box
           sx={(theme) => ({
             '.copyIcon': {

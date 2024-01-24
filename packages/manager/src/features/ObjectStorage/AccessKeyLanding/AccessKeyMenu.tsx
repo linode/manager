@@ -24,7 +24,7 @@ export const AccessKeyMenu = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -53,7 +53,7 @@ export const AccessKeyMenu = (props: Props) => {
 
   return (
     <StyledInlineActionsContainer>
-      {isObjMultiClusterFlagEnabled ? (
+      {isObjMultiClusterEnabled ? (
         <ActionMenu
           actionsList={actions}
           ariaLabel={`Action menu for Object Storage Key ${props.label}`}

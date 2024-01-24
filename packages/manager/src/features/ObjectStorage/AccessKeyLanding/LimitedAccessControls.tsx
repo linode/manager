@@ -27,7 +27,7 @@ export const LimitedAccessControls = React.memo((props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -51,7 +51,7 @@ export const LimitedAccessControls = React.memo((props: Props) => {
         also create new buckets, but will not have access to the buckets they
         create.
       </Typography>
-      {isObjMultiClusterFlagEnabled ? (
+      {isObjMultiClusterEnabled ? (
         <BucketPermissionsTable checked={checked} {...rest} />
       ) : (
         <AccessTable checked={checked} {...rest} />
