@@ -8,6 +8,7 @@ import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
 import type {
+  Grants,
   OAuthClient,
   Profile,
   SecurityQuestionsData,
@@ -46,7 +47,24 @@ export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
 export const mockUpdateProfile = (
   profile: Profile
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', apiMatcher(`profile`), makeResponse(profile));
+  return cy.intercept('PUT', apiMatcher('profile'), makeResponse(profile));
+};
+
+/**
+ * Intercepts GET request to fetch profile grants and mocks response.
+ *
+ * @param grants - Grants object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetProfileGrants = (
+  grants: Grants
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/grants'),
+    makeResponse(grants)
+  );
 };
 
 /**

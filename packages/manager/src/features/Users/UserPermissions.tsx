@@ -59,10 +59,10 @@ import {
   entityNameMap,
 } from './UserPermissionsEntitySection';
 interface Props {
+  accountUsername?: string;
   clearNewUser: () => void;
-  currentUser?: string;
+  currentUsername?: string;
   queryClient: QueryClient;
-  username?: string;
 }
 
 interface TabInfo {
@@ -71,10 +71,8 @@ interface TabInfo {
 }
 
 interface State {
-  childAccountAccessEnabled: boolean;
   errors?: APIError[];
   grants?: Grants;
-  isAccountAccessRestricted: boolean;
   isSavingEntity: boolean;
   isSavingGlobal: boolean;
   loading: boolean;
@@ -87,6 +85,7 @@ interface State {
   /* Large Account Support */
   showTabs?: boolean;
   tabs?: string[];
+  userType: null | string;
   vpcEnabled: boolean;
 }
 
@@ -98,7 +97,7 @@ type CombinedProps = Props &
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.getUserGrants();
-    this.checkAndEnableChildAccountAccess();
+    this.getUserType();
 
     if (this.props.flags.vpc) {
       this.setState({ vpcEnabled: true });
@@ -108,19 +107,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.username !== this.props.username) {
+    if (prevProps.currentUsername !== this.props.currentUsername) {
       this.getUserGrants();
-      this.checkAndEnableChildAccountAccess();
+      this.getUserType();
     }
   }
 
   render() {
     const { loading } = this.state;
-    const { username } = this.props;
+    const { currentUsername } = this.props;
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment={`${username} - Permissions`} />
+        <DocumentTitleSegment segment={`${currentUsername} - Permissions`} />
         {loading ? <CircleProgress /> : this.renderBody()}
       </React.Fragment>
     );
@@ -151,42 +150,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       /* apply all of them at once */
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
-      }
-    }
-  };
-
-  checkAndEnableChildAccountAccess = async () => {
-    const { currentUser: currentUsername, flags } = this.props;
-
-    // Current user is the active user on the account.
-    if (currentUsername) {
-      try {
-        const currentUser = await getUser(currentUsername);
-
-        const isChildAccount = currentUser.user_type === 'child';
-        const isParentAccount = currentUser.user_type === 'parent';
-        const isFeatureFlagOn = flags.parentChildAccountAccess;
-
-        // A parent user account should have a toggleable `child_account_access` grant for its restricted users.
-        this.setState({
-          childAccountAccessEnabled: Boolean(
-            isParentAccount && isFeatureFlagOn
-          ),
-        });
-
-        // A child user account should have no more than `read_only` billing (account) access.
-        // Since API returns `read_write` for child users' `account_access` grant, we must manually disable the `read_write` Billing Access permission.
-        this.setState({
-          isAccountAccessRestricted: Boolean(isChildAccount && isFeatureFlagOn),
-        });
-      } catch (error) {
-        this.setState({
-          errors: getAPIErrorOrDefault(
-            error,
-            'Unknown error occurred while fetching user permissions. Try again later.'
-          ),
-        });
-        scrollErrorIntoView();
       }
     }
   };
@@ -245,9 +208,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
 
   getUserGrants = () => {
-    const { username } = this.props;
-    if (username) {
-      getGrants(username)
+    const { currentUsername } = this.props;
+    if (currentUsername) {
+      getGrants(currentUsername)
         .then((grants) => {
           if (grants.global) {
             const { showTabs, tabs } = this.getTabInformation(grants);
@@ -282,6 +245,29 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
+  getUserType = async () => {
+    const { currentUsername } = this.props;
+
+    // Current user is the user whose permissions are currently being viewed.
+    if (currentUsername) {
+      try {
+        const user = await getUser(currentUsername);
+
+        this.setState({
+          userType: user.user_type,
+        });
+      } catch (error) {
+        this.setState({
+          errors: getAPIErrorOrDefault(
+            error,
+            'Unknown error occurred while fetching user permissions. Try again later.'
+          ),
+        });
+        scrollErrorIntoView();
+      }
+    }
+  };
+
   globalBooleanPerms = [
     'add_linodes',
     'add_nodebalancers',
@@ -304,13 +290,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   onChangeRestricted = () => {
-    const { username } = this.props;
+    const { currentUsername } = this.props;
     this.setState({
       errors: [],
       loadingGrants: true,
     });
-    if (username) {
-      updateUser(username, { restricted: !this.state.restricted })
+    if (currentUsername) {
+      updateUser(currentUsername, { restricted: !this.state.restricted })
         .then((user) => {
           this.setState({
             restricted: user.restricted,
@@ -368,7 +354,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderBillingPerm = () => {
-    const { grants } = this.state;
+    const { grants, userType } = this.state;
+    const isChildUser = userType === 'child';
+    const isProxyUser = userType === 'proxy';
+
     if (!(grants && grants.global)) {
       return null;
     }
@@ -400,6 +389,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={grants.global.account_access === null}
             data-qa-billing-access="None"
+            disabled={isProxyUser}
             heading="None"
             onClick={this.billingPermOnClick(null)}
             subheadings={['The user cannot view any billing information.']}
@@ -407,24 +397,23 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={
               grants.global.account_access === 'read_only' ||
-              (this.state.isAccountAccessRestricted &&
-                Boolean(this.state.grants?.global.account_access))
+              (isChildUser && Boolean(this.state.grants?.global.account_access))
             }
             data-qa-billing-access="Read Only"
+            disabled={isProxyUser}
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
           />
           <SelectionCard
             checked={
-              grants.global.account_access === 'read_write' &&
-              !this.state.isAccountAccessRestricted
+              grants.global.account_access === 'read_write' && !isChildUser
             }
             subheadings={[
               'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails.',
             ]}
             data-qa-billing-access="Read-Write"
-            disabled={this.state.isAccountAccessRestricted}
+            disabled={isChildUser}
             heading="Read-Write"
             onClick={this.billingPermOnClick('read_write')}
           />
@@ -434,7 +423,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderBody = () => {
-    const { currentUser, username } = this.props;
+    const { accountUsername, currentUsername } = this.props;
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
@@ -459,13 +448,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <StyledSubHeaderGrid>
               <Toggle
                 tooltipText={
-                  username === currentUser
+                  currentUsername === accountUsername
                     ? 'You cannot restrict the current active user.'
                     : ''
                 }
                 aria-label="Toggle Full Account Access"
                 checked={!restricted}
-                disabled={username === currentUser}
+                disabled={currentUsername === accountUsername}
                 onChange={this.onChangeRestricted}
               />
             </StyledSubHeaderGrid>
@@ -504,7 +493,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       permDescriptionMap['add_vpcs'] = 'Can add VPCs to this account';
     }
 
-    if (this.state.childAccountAccessEnabled) {
+    if (this.state.userType === 'parent') {
       permDescriptionMap['child_account_access'] =
         'Enable child account access';
     }
@@ -531,7 +520,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderGlobalPerms = () => {
     const { grants, isSavingGlobal } = this.state;
     if (
-      this.state.childAccountAccessEnabled &&
+      this.state.userType === 'parent' &&
       !this.globalBooleanPerms.includes('child_account_access')
     ) {
       this.globalBooleanPerms.push('child_account_access');
@@ -698,9 +687,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   savePermsType = (type: string) => () => {
     this.setState({ errors: undefined });
-    const { clearNewUser, username } = this.props;
+    const { clearNewUser, currentUsername } = this.props;
     const { grants } = this.state;
-    if (!username || !(grants && grants[type])) {
+    if (!currentUsername || !(grants && grants[type])) {
       return this.setState({
         errors: [
           {
@@ -714,7 +703,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     if (type === 'global') {
       this.setState({ isSavingGlobal: true });
-      updateGrants(username, { global: grants.global })
+      updateGrants(currentUsername, { global: grants.global })
         .then((grantsResponse) => {
           this.setState(
             compose<State, State, State>(
@@ -751,9 +740,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   saveSpecificGrants = () => {
     this.setState({ errors: undefined, isSavingEntity: true });
-    const { username } = this.props;
+    const { currentUsername } = this.props;
     const { grants } = this.state;
-    if (!username || !grants) {
+    if (!currentUsername || !grants) {
       return this.setState({
         errors: [
           {
@@ -766,7 +755,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     // You would think ramda could do a TS omit, but I guess not
     const requestPayload = omit(['global'], grants) as Omit<Grants, 'global'>;
-    updateGrants(username, requestPayload)
+    updateGrants(currentUsername, requestPayload)
       .then((grantsResponse) => {
         /* build array of update fns */
         let updateFns = this.entityPerms.map((entity) => {
@@ -823,13 +812,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
-    childAccountAccessEnabled: false,
-    isAccountAccessRestricted: false,
     isSavingEntity: false,
     isSavingGlobal: false,
     loading: true,
     loadingGrants: false,
     setAllPerm: 'null',
+    userType: null,
     vpcEnabled: false,
   };
 }

@@ -85,9 +85,11 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .should('be.visible')
         .type(configuration.label);
 
-      ui.button.findByTitle('Apply Certificates').should('be.visible').click();
+      ui.button.findByTitle('Add Certificate').should('be.visible').click();
 
-      ui.drawer.findByTitle('Apply Certificates').within(() => {
+      ui.drawer.findByTitle('Add Certificate').within(() => {
+        cy.findByLabelText('Add Existing Certificate').click();
+
         cy.findByLabelText('Host Header').should('be.visible').type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
@@ -98,7 +100,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
           .click();
 
         ui.button
-          .findByTitle('Save')
+          .findByTitle('Add')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -312,9 +314,11 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .should('be.visible')
         .type('test');
 
-      ui.button.findByTitle('Apply Certificates').should('be.visible').click();
+      ui.button.findByTitle('Add Certificate').should('be.visible').click();
 
-      ui.drawer.findByTitle('Apply Certificates').within(() => {
+      ui.drawer.findByTitle('Add Certificate').within(() => {
+        cy.findByLabelText('Add Existing Certificate').click();
+
         cy.findByLabelText('Host Header').should('be.visible').type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
@@ -325,7 +329,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
           .click();
 
         ui.button
-          .findByTitle('Save')
+          .findByTitle('Add')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -412,12 +416,14 @@ describe('Akamai Global Load Balancer configurations page', () => {
       cy.findByLabelText('Port').should('be.visible').clear().type('444');
 
       ui.button
-        .findByTitle('Apply More Certificates')
+        .findByTitle('Add Certificate')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
-      ui.drawer.findByTitle('Apply Certificates').within(() => {
+      ui.drawer.findByTitle('Add Certificate').within(() => {
+        cy.findByLabelText('Add Existing Certificate').click();
+
         cy.findByLabelText('Host Header').type('example-1.com');
 
         cy.findByLabelText('Certificate').click();
@@ -425,7 +431,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
         ui.autocompletePopper.findByTitle(certificates[1].label).click();
 
         ui.button
-          .findByTitle('Save')
+          .findByTitle('Add')
           .should('be.visible')
           .should('be.enabled')
           .click();
