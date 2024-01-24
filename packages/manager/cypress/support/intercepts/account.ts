@@ -19,6 +19,7 @@ import type {
   InvoiceItem,
   Payment,
   PaymentMethod,
+  Token,
   User,
 } from '@linode/api-v4';
 
@@ -467,6 +468,7 @@ export const mockCancelAccountError = (
 /**
  * Intercepts GET request to fetch the account agreements and mocks the response.
  *
+ * @param agreements - Agreements with which to mock response.
  *
  * @returns Cypress chainable.
  */
@@ -477,5 +479,41 @@ export const mockGetAccountAgreements = (
     'GET',
     apiMatcher(`account/agreements`),
     makeResponse(agreements)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch child accounts and mocks the response.
+ *
+ * @param childAccounts - Child account objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetChildAccounts = (
+  childAccounts: Account[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/child-accounts*'),
+    paginateResponse(childAccounts)
+  );
+};
+
+/**
+ * Intercepts POST request to create a child account token and mocks the response.
+ *
+ * @param childAccount - Child account for which to create a token.
+ * @param childAccountToken - Token object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateChildAccountToken = (
+  childAccount: Account,
+  childAccountToken: Token
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/child-accounts/${childAccount.euuid}/token`),
+    makeResponse(childAccountToken)
   );
 };
