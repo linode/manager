@@ -1,5 +1,9 @@
 import { Interface, LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
-import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import {
+  IPAddress,
+  IPRange,
+  VPCIPAddress,
+} from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -121,7 +125,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   }
 
   const renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
+    const ipDisplay = ipResponseToDisplayRows(ips);
+
+    if (configInterfaceWithVPC) {
+      ipDisplay.push(
+        ...(vpcConfigInterfaceToDisplayRows(
+          configInterfaceWithVPC
+        ) as IPDisplay[])
+      );
+    }
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -288,17 +300,35 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
+const vpcConfigInterfaceToDisplayRows = (configInterfaceWithVPC: Interface) => {
+  const ipDisplay: VPCIPAddress[] = [];
+
+  if (configInterfaceWithVPC.ipv4?.vpc) {
+    ipDisplay.push({
+      address: configInterfaceWithVPC.ipv4.vpc,
+      type: 'IPv4 – VPC',
+    });
+  }
+
+  if (configInterfaceWithVPC.ipv4?.nat_1_1) {
+    ipDisplay.push({
+      address: configInterfaceWithVPC.ipv4.nat_1_1,
+      type: 'VPC IPv4 – NAT',
+    });
+  }
+
+  return ipDisplay;
+};
+
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse,
-  configInterfaceWithVPC?: Interface
+  ipResponse?: LinodeIPsResponse
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
   }
 
   const { ipv4, ipv6 } = ipResponse;
-  console.log(configInterfaceWithVPC);
 
   const ipDisplay = [
     ...mapIPv4Display(ipv4.public, 'Public'),
@@ -306,44 +336,6 @@ export const ipResponseToDisplayRows = (
     ...mapIPv4Display(ipv4.reserved, 'Reserved'),
     ...mapIPv4Display(ipv4.shared, 'Shared'),
   ];
-
-  if (configInterfaceWithVPC && configInterfaceWithVPC.ipv4?.vpc) {
-    ipDisplay.push(
-      ipToDisplay(
-        {
-          address: configInterfaceWithVPC.ipv4.vpc,
-          gateway: '',
-          linode_id: 10,
-          prefix: 10,
-          public: false,
-          rdns: '',
-          region: '',
-          subnet_mask: '',
-          type: 'ipv4',
-        },
-        'VPC'
-      )
-    );
-  }
-
-  if (configInterfaceWithVPC && configInterfaceWithVPC.ipv4?.nat_1_1) {
-    ipDisplay.push(
-      ipToDisplay(
-        {
-          address: configInterfaceWithVPC.ipv4.nat_1_1,
-          gateway: '',
-          linode_id: 10,
-          prefix: 10,
-          public: false,
-          rdns: '',
-          region: '',
-          subnet_mask: '',
-          type: 'ipv4',
-        },
-        'VPC_NAT'
-      )
-    );
-  }
 
   if (ipv6?.slaac) {
     ipDisplay.push(ipToDisplay(ipv6.slaac, 'SLAAC'));
@@ -391,9 +383,7 @@ type ipKey =
   | 'Public'
   | 'Reserved'
   | 'SLAAC'
-  | 'Shared'
-  | 'VPC'
-  | 'VPC_NAT';
+  | 'Shared';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
@@ -418,8 +408,6 @@ export const createType = (ip: IPAddress, key: ipKey) => {
 
   if (key === 'Reserved') {
     type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
-  } else if (key === 'VPC_NAT') {
-    type = `VPC ${type}NAT`;
   } else {
     type += key;
   }
