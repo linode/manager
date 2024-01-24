@@ -9,6 +9,7 @@ import type {
   GetRegionOptionAvailability,
   GetRegionOptions,
   GetSelectedRegionById,
+  GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
@@ -150,4 +151,27 @@ export const getRegionOptionAvailability = ({
   }
 
   return regionWithUnavailability.unavailable.includes(currentCapability);
+};
+
+/**
+ * This utility function takes an array of region IDs and returns an array of corresponding RegionSelectOption objects.
+ *
+ * @returns An array of RegionSelectOption objects corresponding to the selected region IDs.
+ */
+export const getSelectedRegionsByIds = ({
+  accountAvailabilityData,
+  currentCapability,
+  regions,
+  selectedRegionIds,
+}: GetSelectedRegionsByIdsArgs): RegionSelectOption[] => {
+  return selectedRegionIds
+    .map((selectedRegionId) =>
+      getSelectedRegionById({
+        accountAvailabilityData,
+        currentCapability,
+        regions,
+        selectedRegionId,
+      })
+    )
+    .filter((region): region is RegionSelectOption => !!region);
 };
