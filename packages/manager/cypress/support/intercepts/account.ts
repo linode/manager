@@ -122,6 +122,21 @@ export const mockUpdateUser = (
 };
 
 /**
+ * Intercepts DELETE request to remove account user.
+ *
+ * @param username - Username of user to delete.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteUser = (username: string): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`account/users/${username}`),
+    makeResponse()
+  );
+};
+
+/**
  * Intercepts GET request to fetch account user grants and mocks response.
  *
  * @param username - Username of user for which to fetch grants.
