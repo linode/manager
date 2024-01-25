@@ -1,3 +1,4 @@
+import { User } from '@linode/api-v4';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -22,7 +23,6 @@ import { UserRow } from './UserRow';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
-import { User } from '@linode/api-v4';
 
 export const UsersLanding = () => {
   const flags = useFlags();
