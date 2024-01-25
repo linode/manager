@@ -19,6 +19,7 @@ import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
@@ -91,8 +92,7 @@ export const AddNewMenu = () => {
       description: 'Ensure your services are highly available',
       entity: 'Global Load Balancer',
       hide: !flags.aglb,
-      // TODO AGLB: Change this icon to the AGLB icon when available
-      icon: DomainIcon,
+      icon: LoadBalancerIcon,
       link: '/loadbalancers/create',
     },
     {
