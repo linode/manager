@@ -272,13 +272,9 @@ describe('Personal access tokens', () => {
       .should('be.disabled')
       .click();
 
-    cy.findByRole('tooltip')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(
-          'You can only create tokens for your own company.'
-        ).should('be.visible');
-      });
+    ui.tooltip
+      .findByText('You can only create tokens for your own company.')
+      .should('be.visible');
 
     // Find token in list, confirm "Rename" is disabled and tooltip displays.
     cy.findByText(proxyToken.label)
@@ -292,13 +288,9 @@ describe('Personal access tokens', () => {
           .click();
       });
 
-    cy.findByRole('tooltip')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Only company users can edit API tokens.').should(
-          'be.visible'
-        );
-      });
+    ui.tooltip
+      .findByText('Only company users can edit API tokens.')
+      .should('be.visible');
 
     // Confirm that token has not been renamed, initiate revocation.
     cy.findByText(proxyToken.label)
