@@ -301,7 +301,9 @@ interface VPCIPAddress {
   type: IPTypes;
 }
 
-const vpcConfigInterfaceToDisplayRows = (configInterfaceWithVPC: Interface) => {
+export const vpcConfigInterfaceToDisplayRows = (
+  configInterfaceWithVPC: Interface
+) => {
   const ipDisplay: VPCIPAddress[] = [];
 
   if (configInterfaceWithVPC.ipv4?.vpc) {
