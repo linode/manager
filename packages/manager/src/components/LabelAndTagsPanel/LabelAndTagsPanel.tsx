@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -11,7 +12,8 @@ import { useFlags } from 'src/hooks/useFlags';
 interface LabelAndTagsProps {
   error?: string;
   labelFieldProps?: TextFieldProps;
-  region?: string;
+  regions?: Region[];
+  selectedId?: string;
   tagsInputProps?: TagsInputProps;
 }
 
@@ -19,7 +21,11 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
   const theme = useTheme();
   const flags = useFlags();
   const showPlacementGroups = Boolean(flags.vmPlacement);
-  const { error, labelFieldProps, region, tagsInputProps } = props;
+  const { error, labelFieldProps, regions, selectedId, tagsInputProps } = props;
+
+  const labelString = regions
+    ?.filter((region) => region.id === selectedId)
+    .map((item) => item.label);
 
   return (
     <Paper
@@ -42,9 +48,14 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
       {showPlacementGroups ? (
         <PlacementGroupsSelect
-        // onSelectionChange={ }
-        // value={values ?? null}
-        // region={region}
+          // onSelectionChange={ }
+          // value={values ?? null}
+          // region={region}
+          label={
+            selectedId
+              ? `Placement Groups in ${labelString}(${selectedId})`
+              : 'Placement Group'
+          }
         />
       ) : null}
     </Paper>

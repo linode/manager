@@ -615,7 +615,8 @@ export class LinodeCreate extends React.PureComponent<
                 : undefined
             }
             data-qa-label-and-tags-panel
-            region={this.props.selectedRegionID}
+            regions={regionsData!}
+            selectedId={this.props.selectedRegionID}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (

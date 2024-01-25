@@ -1,3 +1,4 @@
+import { PlacementGroup } from '@linode/api-v4';
 {
   /* TODO VM_Placement: Add utility functions in this file */
 }
@@ -23,3 +24,8 @@
 //   }
 //   return `Placement Groups in ${regionFromSelectedId?.label}`;
 // };
+export const getAffinityLabel = (
+  affinityType: PlacementGroup['affinity_type']
+): string => {
+  return affinityType === 'affinity' ? 'Affinity' : 'Anti-affinity';
+};
