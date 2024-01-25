@@ -11,6 +11,7 @@ import {
   mockGetUsers,
   mockUpdateUser,
   mockUpdateUserGrants,
+  mockDeleteUser,
 } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
@@ -889,5 +890,99 @@ describe('User permission management', () => {
 
     // redirects to the new user's "User Permissions" page
     cy.url().should('endWith', `/users/${newUser.username}/permissions`);
+  });
+
+  it('can delete users', () => {
+    const mockUser = accountUserFactory.build({
+      username: randomLabel(),
+      restricted: false,
+    });
+
+    const username = randomLabel();
+    const additionalUser = accountUserFactory.build({
+      username: username,
+      email: `${username}@test.com`,
+      restricted: false,
+    });
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockUser, additionalUser]).as('getUsers');
+    mockGetUser(mockUser);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
+    mockGetUserGrantsUnrestrictedAccess(additionalUser.username);
+    mockDeleteUser(additionalUser.username).as('deleteUser');
+
+    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    mockGetUsers([mockUser]).as('getUsers');
+
+    // Confirm that the "Users & Grants" page initially lists the main and additional users
+    cy.findByText(mockUser.username).should('be.visible');
+    cy.findByText(additionalUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // the "Confirm Deletion" dialog opens
+    ui.dialog.findByTitle('Confirm Deletion').within(() => {
+      ui.button.findByTitle('Cancel').should('be.visible').click();
+    });
+    // click the "Cancel" button will do nothing
+    cy.findByText(mockUser.username).should('be.visible');
+    cy.findByText(additionalUser.username).should('be.visible');
+
+    // clicking the "x" button will dismiss the dialog and do nothing
+    cy.findByText(additionalUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    ui.dialog.findByTitle('Confirm Deletion').within(() => {
+      cy.get('[data-testid="CloseIcon"]').should('be.visible').click();
+    });
+    cy.findByText(mockUser.username).should('be.visible');
+    cy.findByText(additionalUser.username).should('be.visible');
+
+    // delete the user
+    cy.findByText(additionalUser.username)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // the "Confirm Deletion" dialog opens
+    ui.dialog.findByTitle('Confirm Deletion').within(() => {
+      ui.button.findByTitle('Delete').should('be.visible').click();
+    });
+    cy.wait(['@deleteUser', '@getUsers']);
+
+    // the user is deleted
+    ui.toast.assertMessage(
+      `User ${additionalUser.username} has been deleted successfully.`
+    );
+    cy.findByText(additionalUser.username).should('not.exist');
   });
 });
