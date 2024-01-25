@@ -202,7 +202,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                         isVPCOnlyLinode={
                           isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
                         }
-                        key={ipDisplay.address}
+                        key={`${ipDisplay.address}-${ipDisplay.type}`}
                         linodeId={linodeID}
                         readOnly={readOnly}
                       />
