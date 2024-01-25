@@ -91,15 +91,23 @@ const mockChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
+  /*
+   * Tests to confirm that Parent account users can switch to Child accounts as expected.
+   */
   describe('From Parent to Child', () => {
     beforeEach(() => {
-      // @TODO Remove feature flag mocks after feature launch and clean-up.
+      // @TODO M3-7554, M3-7559: Remove feature flag mocks after feature launch and clean-up.
       mockAppendFeatureFlags({
         parentChildAccountAccess: makeFeatureFlagData(true),
       });
       mockGetFeatureFlagClientstream();
     });
 
+    /*
+     * - Confirms that Parent account user can switch to Child account from Account Billing page.
+     * - Confirms that Child account information is displayed in user menu button after switch.
+     * - Confirms that Cloud updates local storage auth values upon account switch.
+     */
     it('can switch from Parent account to Child account from Billing page', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
@@ -155,6 +163,12 @@ describe('Parent/Child account switching', () => {
       );
     });
 
+    /*
+     * - Confirms that Parent account user can switch to Child account using the user menu.
+     * - Confirms that Parent account information is initially displayed in user menu button.
+     * - Confirms that Child account information is displayed in user menu button after switch.
+     * - Confirms that Cloud updates local storage auth values upon account switch.
+     */
     it('can switch from Parent account to Child account using user menu', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
@@ -228,6 +242,11 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Cloud handles account switching errors gracefully.
    */
   describe('Error flows', () => {
+    /*
+     * - Confirms error handling upon failure to fetch child accounts.
+     * - Confirms "Try Again" button can be used to re-fetch child accounts successfully.
+     * - Confirms error handling upon failure to create child account token.
+     */
     it('handles account switching API errors', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
