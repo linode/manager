@@ -11,6 +11,7 @@ import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import LoadBalancer from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
@@ -191,8 +192,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Global Load Balancers',
           hide: !flags.aglb,
           href: '/loadbalancers',
-          // TODO AGLB: replace icon when available
-          icon: <Domain />,
+          icon: <LoadBalancer />,
           isBeta: true,
         },
         {
