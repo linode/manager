@@ -249,7 +249,7 @@ describe('Personal access tokens', () => {
     cy.visitWithLogin('/profile/tokens');
     cy.wait(['@getTokens', '@getAppTokens']);
 
-    // Find 'Create a Personal Access Token' button, confirm it is disabled, and tooltip displays.
+    // Find 'Create a Personal Access Token' button, confirm it is disabled and tooltip displays.
     ui.button
       .findByTitle('Create a Personal Access Token')
       .should('be.visible')
@@ -264,7 +264,7 @@ describe('Personal access tokens', () => {
         ).should('be.visible');
       });
 
-    // Find token in list, confirm "Rename" is disabled, and tooltip displays.
+    // Find token in list, confirm "Rename" is disabled and tooltip displays.
     cy.findByText(proxyToken.label)
       .should('be.visible')
       .closest('tr')
@@ -284,7 +284,7 @@ describe('Personal access tokens', () => {
         );
       });
 
-    // Confirm that token has been renamed, initiate revocation.
+    // Confirm that token has not been renamed, initiate revocation.
     cy.findByText(proxyToken.label)
       .should('be.visible')
       .closest('tr')
