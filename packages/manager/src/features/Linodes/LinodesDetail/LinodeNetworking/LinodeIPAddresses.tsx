@@ -1,9 +1,5 @@
 import { Interface, LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
-import {
-  IPAddress,
-  IPRange,
-  VPCIPAddress,
-} from '@linode/api-v4/lib/networking';
+import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -300,6 +296,11 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
+interface VPCIPAddress {
+  address: string;
+  type: IPTypes;
+}
+
 const vpcConfigInterfaceToDisplayRows = (configInterfaceWithVPC: Interface) => {
   const ipDisplay: VPCIPAddress[] = [];
 
@@ -314,6 +315,15 @@ const vpcConfigInterfaceToDisplayRows = (configInterfaceWithVPC: Interface) => {
     ipDisplay.push({
       address: configInterfaceWithVPC.ipv4.nat_1_1,
       type: 'VPC IPv4 – NAT',
+    });
+  }
+
+  if (configInterfaceWithVPC.ip_ranges) {
+    configInterfaceWithVPC.ip_ranges.forEach((ip_range) => {
+      ipDisplay.push({
+        address: ip_range,
+        type: 'IPv4 – VPC – Range',
+      });
     });
   }
 

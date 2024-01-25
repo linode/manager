@@ -10,11 +10,6 @@ export interface IPAddress {
   region: string;
 }
 
-export interface VPCIPAddress {
-  address: string;
-  type: string;
-}
-
 export interface IPRangeBaseData {
   range: string;
   region: string;
