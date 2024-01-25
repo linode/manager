@@ -7,8 +7,10 @@ import { accountUserFactory } from '@src/factories/accountUsers';
 import { DateTime } from 'luxon';
 import {
   mockCreateChildAccountToken,
+  mockCreateChildAccountTokenError,
   mockGetAccount,
   mockGetChildAccounts,
+  mockGetChildAccountsError,
   mockGetUser,
 } from 'support/intercepts/account';
 import {
@@ -22,116 +24,247 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 
+/**
+ * Confirms expected username and company name are shown in user menu button and yields the button.
+ *
+ * @param username - Username to expect in user menu button.
+ * @param companyName - Company name to expect in user menu button.
+ *
+ * @returns Cypress chainable that yields the user menu button.
+ */
+const assertUserMenuButton = (username: string, companyName: string) => {
+  return ui.userMenuButton
+    .find()
+    .should('be.visible')
+    .within(() => {
+      cy.findByText(username).should('be.visible');
+      cy.findByText(companyName).should('be.visible');
+    });
+};
+
+/**
+ * Confirms that expected authentication values are set in Local Storage.
+ *
+ * @param token - Authentication token value to assert.
+ * @param expiry - Authentication expiry value to assert.
+ * @param scopes - Authentication scope value to assert.
+ */
+const assertAuthLocalStorage = (
+  token: string,
+  expiry: string,
+  scopes: string
+) => {
+  assertLocalStorageValue('authentication/token', token);
+  assertLocalStorageValue('authentication/expire', expiry);
+  assertLocalStorageValue('authentication/scopes', scopes);
+};
+
+const mockParentAccount = accountFactory.build({
+  company: 'Parent Company',
+});
+
+const mockParentProfile = profileFactory.build({
+  username: randomLabel(),
+  user_type: 'parent',
+});
+
+const mockParentUser = accountUserFactory.build({
+  username: mockParentProfile.username,
+  user_type: 'parent',
+});
+
+const mockChildAccount = accountFactory.build({
+  company: 'Child Company',
+});
+
+const mockChildAccountToken = appTokenFactory.build({
+  id: randomNumber(),
+  created: DateTime.now().toISO(),
+  expiry: DateTime.now().plus({ hours: 1 }).toISO(),
+  label: `${mockChildAccount.company}_proxy`,
+  scopes: '*',
+  token: randomString(32),
+  website: undefined,
+  thumbnail_url: undefined,
+});
+
+const mockErrorMessage = 'An unknown error has occurred.';
+
 describe('Parent/Child account switching', () => {
-  it('can switch from Parent account to Child account', () => {
-    const mockParentAccount = accountFactory.build({
-      company: 'Parent Company',
-    });
-    const mockParentProfile = profileFactory.build({
-      username: randomLabel(),
-      user_type: 'parent',
-    });
-    const mockParentUser = accountUserFactory.build({
-      username: mockParentProfile.username,
-      user_type: 'parent',
-    });
-
-    const mockChildAccount = accountFactory.build({
-      company: 'Child Company',
-    });
-
-    const mockChildAccountToken = appTokenFactory.build({
-      id: randomNumber(),
-      created: DateTime.now().toISO(),
-      expiry: DateTime.now().plus({ hours: 1 }).toISO(),
-      label: `${mockChildAccount.company}_proxy`,
-      scopes: '*',
-      token: randomString(32),
-      website: undefined,
-      thumbnail_url: undefined,
-    });
-
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    });
-    mockGetFeatureFlagClientstream();
-    mockGetProfile(mockParentProfile);
-    mockGetAccount(mockParentAccount);
-    mockGetChildAccounts([mockChildAccount]);
-    mockGetUser(mockParentUser);
-
-    cy.visitWithLogin('/');
-
-    // Confirm that Parent account username and company name are shown in user
-    // menu button, then click the button.
-    ui.userMenuButton
-      .find()
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(mockParentProfile.username).should('be.visible');
-        cy.findByText(mockParentAccount.company).should('be.visible');
-      })
-      .click();
-
-    // Click "Switch Account" button in user menu.
-    ui.userMenu
-      .find()
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Switch Account')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+  describe('From Parent to Child', () => {
+    beforeEach(() => {
+      // @TODO Remove feature flag mocks after feature launch and clean-up.
+      mockAppendFeatureFlags({
+        parentChildAccountAccess: makeFeatureFlagData(true),
       });
+      mockGetFeatureFlagClientstream();
+    });
 
-    // Click mock company name in "Switch Account" drawer.
-    mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
-      'switchAccount'
-    );
-    ui.drawer
-      .findByTitle('Switch Account')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(mockChildAccount.company).should('be.visible').click();
-      });
+    it('can switch from Parent account to Child account from Billing page', () => {
+      mockGetProfile(mockParentProfile);
+      mockGetAccount(mockParentAccount);
+      mockGetChildAccounts([mockChildAccount]);
+      mockGetUser(mockParentUser);
 
-    cy.wait('@switchAccount');
+      cy.visitWithLogin('/account/billing');
 
-    // Confirm that Cloud Manager updates local storage authentication values.
-    assertLocalStorageValue(
-      'authentication/token',
-      mockChildAccountToken.token
-    );
-    assertLocalStorageValue(
-      'authentication/expire',
-      mockChildAccountToken.expiry
-    );
-    assertLocalStorageValue(
-      'authentication/scopes',
-      mockChildAccountToken.scopes
-    );
+      // Confirm that "Switch Account" button is present, then click it.
+      ui.button
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-    // From this point forward, we will not have a valid test account token stored in local storage,
-    // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
-    // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
-    // individual requests as needed.
-    mockAllApiRequests();
-    mockGetAccount(mockChildAccount);
-    mockGetProfile(mockParentProfile);
-    mockGetUser(mockParentUser);
+      mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
+        'switchAccount'
+      );
 
-    // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-    // TODO Add assertions for toast upon account switch.
-    // This probably involves updating the Axios interceptor to use the new auth token, and possibly involves invalidating React Query cache.
-    cy.reload();
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(mockChildAccount.company).should('be.visible').click();
+        });
 
-    ui.userMenuButton
-      .find()
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(mockParentProfile.username).should('be.visible');
-        cy.findByText(mockChildAccount.company).should('be.visible');
-      });
+      cy.wait('@switchAccount');
+
+      // Confirm that Cloud Manager updates local storage authentication values.
+      assertAuthLocalStorage(
+        mockChildAccountToken.token,
+        mockChildAccountToken.expiry,
+        mockChildAccountToken.scopes
+      );
+
+      // From this point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+
+      // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
+      // TODO Add assertions for toast upon account switch.
+      cy.reload();
+
+      // Confirm expected username and company are shown in user menu button.
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockChildAccount.company
+      );
+    });
+
+    it('can switch from Parent account to Child account using user menu', () => {
+      mockGetProfile(mockParentProfile);
+      mockGetAccount(mockParentAccount);
+      mockGetChildAccounts([mockChildAccount]);
+      mockGetUser(mockParentUser);
+
+      cy.visitWithLogin('/');
+
+      // Confirm that Parent account username and company name are shown in user
+      // menu button, then click the button.
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockParentAccount.company
+      ).click();
+
+      // Click "Switch Account" button in user menu.
+      ui.userMenu
+        .find()
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Switch Account')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Click mock company name in "Switch Account" drawer.
+      mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
+        'switchAccount'
+      );
+
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(mockChildAccount.company).should('be.visible').click();
+        });
+
+      cy.wait('@switchAccount');
+
+      // Confirm that Cloud Manager updates local storage authentication values.
+      assertAuthLocalStorage(
+        mockChildAccountToken.token,
+        mockChildAccountToken.expiry,
+        mockChildAccountToken.scopes
+      );
+
+      // From this point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+
+      // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
+      // TODO Add assertions for toast upon account switch.
+      cy.reload();
+
+      // Confirm expected username and company are shown in user menu button.
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockChildAccount.company
+      );
+    });
+  });
+
+  /*
+   * Tests to confirm that Cloud handles account switching errors gracefully.
+   */
+  describe('Error flows', () => {
+    it('handles account switching API errors', () => {
+      mockGetProfile(mockParentProfile);
+      mockGetAccount(mockParentAccount);
+      mockGetChildAccountsError('An unknown error has occurred', 500);
+      mockGetUser(mockParentUser);
+
+      cy.visitWithLogin('/account/billing');
+      ui.button
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          // Confirm error message upon failure to fetch child accounts.
+          cy.findByText('Unable to load data.').should('be.visible');
+          cy.findByText(
+            'Try again or contact support if the issue persists.'
+          ).should('be.visible');
+
+          // Click "Try Again" button and mock a successful response.
+          mockGetChildAccounts([mockChildAccount]);
+          ui.button
+            .findByTitle('Try again')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Click child company and mock an error.
+          // Confirm that Cloud Manager displays the error message in the drawer.
+          mockCreateChildAccountTokenError(mockChildAccount, mockErrorMessage);
+          cy.findByText(mockChildAccount.company).click();
+          cy.findByText(mockErrorMessage).should('be.visible');
+        });
+    });
   });
 });
