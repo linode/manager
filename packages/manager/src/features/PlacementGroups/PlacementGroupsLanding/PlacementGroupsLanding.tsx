@@ -23,6 +23,7 @@ import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
+import { PlacementGroupsRenameDrawer } from '../PlacementGroupsRenameDrawer';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
@@ -34,7 +35,7 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const [_selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
     PlacementGroup | undefined
   >();
   const [query, setQuery] = React.useState<string>('');
@@ -78,7 +79,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     setSelectedPlacementGroup(placementGroup);
   };
 
-  const onClosePlacementGroupCreateDrawer = () => {
+  const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
     setSelectedPlacementGroup(undefined);
   };
@@ -198,8 +199,15 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
-        onClose={onClosePlacementGroupCreateDrawer}
+        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+        onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
+      />
+      <PlacementGroupsRenameDrawer
+        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+        onClose={onClosePlacementGroupDrawer}
+        open={Boolean(selectedPlacementGroup)}
+        selectedPlacementGroup={selectedPlacementGroup}
       />
       {/* TODO VM_Placement: add delete dialog */}
     </>

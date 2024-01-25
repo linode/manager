@@ -33,10 +33,10 @@ export const PlacementGroupsRow = React.memo(
   }: PlacementGroupsRowProps) => {
     const {
       affinity_type,
+      capacity,
       compliant,
       id,
       label,
-      limits,
       linode_ids,
     } = placementGroup;
     const { data: regions } = useRegionsQuery();
@@ -91,7 +91,7 @@ export const PlacementGroupsRow = React.memo(
             displayText={`${linodeCount}`}
             minWidth={200}
           />
-          &nbsp; of {limits}
+          &nbsp; of {capacity}
         </TableCell>
         <Hidden smDown>
           <TableCell>{regionLabel}</TableCell>

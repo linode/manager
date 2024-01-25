@@ -1,6 +1,7 @@
 import { PlacementGroup } from '@linode/api-v4';
 
 export type PlacementGroupsDrawerPropsBase = {
+  numberOfPlacementGroupsCreated: number;
   onClose: () => void;
   open: boolean;
 };

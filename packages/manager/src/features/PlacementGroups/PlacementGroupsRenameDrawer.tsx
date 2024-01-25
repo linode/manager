@@ -18,18 +18,18 @@ import {
 import { PlacementGroupsDrawerContent } from './PlacementGroupDrawerContent';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
 
-import type { PlacementGroupsCreateDrawerProps } from './types';
+import type { PlacementGroupsRenameDrawerProps } from './types';
 import type { CreatePlacementGroupPayload } from '@linode/api-v4';
 
-export const PlacementGroupsCreateDrawer = (
-  props: PlacementGroupsCreateDrawerProps
+export const PlacementGroupsRenameDrawer = (
+  props: PlacementGroupsRenameDrawerProps
 ) => {
   const {
     numberOfPlacementGroupsCreated,
     onClose,
-    onPlacementGroupCreated,
+    onPlacementGroupRenamed,
     open,
-    selectedRegionId,
+    selectedPlacementGroup,
   } = props;
   const queryClient = useQueryClient();
   const { data: regions } = useRegionsQuery();
@@ -50,9 +50,11 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: '' as CreatePlacementGroupPayload['affinity_type'],
+      affinity_type:
+        selectedPlacementGroup?.affinity_type ??
+        ('' as CreatePlacementGroupPayload['affinity_type']),
       label: '',
-      region: selectedRegionId ?? '',
+      region: selectedPlacementGroup?.region ?? '',
     },
     onSubmit(
       values: CreatePlacementGroupPayload,
@@ -76,8 +78,8 @@ export const PlacementGroupsCreateDrawer = (
             }
           );
 
-          if (onPlacementGroupCreated) {
-            onPlacementGroupCreated(response);
+          if (onPlacementGroupRenamed) {
+            onPlacementGroupRenamed(response);
           }
           onClose();
         })
@@ -116,7 +118,7 @@ export const PlacementGroupsCreateDrawer = (
   }));
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create Placement Group">
+    <Drawer onClose={onClose} open={open} title="Rename Placement Group">
       <PlacementGroupsDrawerContent
         formik={{
           errors,
@@ -136,7 +138,6 @@ export const PlacementGroupsCreateDrawer = (
         onClose={onClose}
         open={open}
         regions={regions ?? []}
-        selectedRegionId={selectedRegionId}
       />
     </Drawer>
   );
