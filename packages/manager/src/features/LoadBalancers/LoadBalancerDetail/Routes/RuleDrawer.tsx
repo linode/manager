@@ -97,7 +97,7 @@ export const RuleDrawer = (props: Props) => {
           label: route?.label,
           protocol: route?.protocol,
           // If we are editing, send the updated rules, otherwise
-          // append a new rule to the end.
+          // append a new rule to the beginning.
           rules: isEditMode
             ? existingRules
             : [normalizedRule, ...existingRules],
