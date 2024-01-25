@@ -1,3 +1,4 @@
+import { AffinityType } from '@linode/api-v4';
 import { createPlacementGroupSchema } from '@linode/validation';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
@@ -10,9 +11,10 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
+import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -20,24 +22,13 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import type {
-  PlacementGroupCreateProps,
-  PlacementGroupEditProps,
-} from '../types';
+import type { PlacementGroupsCreateDrawerProps } from './types';
 import type { CreatePlacementGroupPayload } from '@linode/api-v4';
 
-type Props = PlacementGroupCreateProps | PlacementGroupEditProps;
-
-export const PlacementGroupsCreateDrawer = (props: Props) => {
-  const {
-    currentPlacementGroup,
-    mode,
-    onClose,
-    onPlacementGroupCreated,
-    open,
-    selectedAffinityType,
-    selectedRegionId,
-  } = props;
+export const PlacementGroupsCreateDrawer = (
+  props: PlacementGroupsCreateDrawerProps
+) => {
+  const { onClose, onPlacementGroupCreated, open, selectedRegionId } = props;
   const queryClient = useQueryClient();
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useCreatePlacementGroup();
@@ -54,10 +45,11 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
     status,
     values,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       affinity_type: '',
       label: '',
-      region: '',
+      region: selectedRegionId ?? '',
     },
     onSubmit(
       values: CreatePlacementGroupPayload,
@@ -113,77 +105,72 @@ export const PlacementGroupsCreateDrawer = (props: Props) => {
   }, [open, resetForm]);
 
   const generalError = status?.generalError;
-  const isEditMode = mode === 'edit';
+
   const affinityTypeOptions: {
     label: string;
-    value: CreatePlacementGroupPayload['affinity_type'];
-  }[] = [
-    { label: 'Affinity', value: 'affinity' },
-    { label: 'Anti-affinity', value: 'anti_affinity' },
-  ];
-
-  const drawerTitle = isEditMode
-    ? `Edit Placement Group ${currentPlacementGroup?.label}`
-    : 'Create Placement Group';
+    value: string;
+  }[] = Object.entries(AffinityType).map(([key, value]) => ({
+    label: value,
+    value: key as CreatePlacementGroupPayload['affinity_type'],
+  }));
 
   return (
-    <Drawer onClose={onClose} open={open} title={drawerTitle}>
+    <Drawer onClose={onClose} open={open} title="Create Placement Group">
       <Grid>
         {generalError ? <Notice text={generalError} variant="error" /> : null}
         <form onSubmit={handleSubmit}>
-          <TextField
-            inputProps={{
-              autoFocus: true,
-            }}
-            aria-label="Label for new Placement Group"
-            disabled={false}
-            errorText={errors.label}
-            label="Label"
-            name="label"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            required
-            value={values.label}
-          />
-          <RegionSelect
-            handleSelection={(selection) => {
-              setFieldValue('region', selection);
-            }}
-            currentCapability="Linodes" // TODO VM_Placement: change to Placement Groups when available
-            disabled={isEditMode}
-            errorText={errors.region}
-            regions={regions ?? []}
-            selectedId={selectedRegionId ?? values.region}
-          />
-          <Autocomplete
-            onChange={(_, value) => {
-              setFieldValue('affinity_type', value?.value ?? '');
-            }}
-            value={affinityTypeOptions.find(
-              (option) =>
-                option.value === selectedAffinityType ?? values.affinity_type
-            )}
-            // defaultValue={selectedAffinityType ?? undefined}
-            disabled={isEditMode}
-            errorText={errors.affinity_type}
-            label="Affinity Type"
-            options={affinityTypeOptions}
-            placeholder="Select an Affinity Type"
-          />
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              // disabled: userCannotAddVPC,
-              label: 'Create Placement Group',
-              loading: isSubmitting,
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: onClose,
-            }}
-          />
+          <Stack spacing={1}>
+            <TextField
+              inputProps={{
+                autoFocus: true,
+              }}
+              aria-label="Label for new Placement Group"
+              disabled={false}
+              errorText={errors.label}
+              label="Label"
+              name="label"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.label}
+            />
+            <RegionSelect
+              handleSelection={(selection) => {
+                setFieldValue('region', selection);
+              }}
+              currentCapability="Linodes" // TODO VM_Placement: change to Placement Groups when available
+              disabled={Boolean(selectedRegionId)}
+              errorText={errors.region}
+              regions={regions ?? []}
+              selectedId={selectedRegionId ?? values.region}
+            />
+            <Autocomplete
+              onChange={(_, value) => {
+                setFieldValue('affinity_type', value?.value ?? '');
+              }}
+              value={affinityTypeOptions.find(
+                (option) => option.value === values.affinity_type
+              )}
+              errorText={errors.affinity_type}
+              label="Affinity Type"
+              options={affinityTypeOptions}
+              placeholder="Select an Affinity Type"
+            />
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                // disabled: userCannotAddVPC,
+                label: 'Create Placement Group',
+                loading: isSubmitting,
+                type: 'submit',
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'cancel',
+                label: 'Cancel',
+                onClick: onClose,
+              }}
+              sx={{ pt: 4 }}
+            />
+          </Stack>
         </form>
       </Grid>
     </Drawer>

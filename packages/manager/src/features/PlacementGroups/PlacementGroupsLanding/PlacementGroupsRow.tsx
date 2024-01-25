@@ -1,3 +1,4 @@
+import { AffinityType } from '@linode/api-v4';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +13,7 @@ import { Typography } from 'src/components/Typography';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 
-import { getAffinityLabel, getPlacementGroupLinodeCount } from '../utils';
+import { getPlacementGroupLinodeCount } from '../utils';
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -47,8 +48,6 @@ export const PlacementGroupsRow = React.memo(
     const listOfAssignedLinodes = linodes?.data.filter((linode) =>
       linode_ids.includes(linode.id)
     );
-    const affinityLabel = getAffinityLabel(affinity_type);
-
     const actions: Action[] = [
       {
         onClick: handleRenamePlacementGroup,
@@ -71,7 +70,7 @@ export const PlacementGroupsRow = React.memo(
             style={{ marginRight: 8 }}
             to={`/placement-groups/${id}`}
           >
-            {label} ({affinityLabel})
+            {label} ({AffinityType[affinity_type]})
           </Link>
           {!compliant && (
             <Typography component="span" sx={{ whiteSpace: 'nowrap' }}>

@@ -22,7 +22,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreate/PlacementGroupCreateDrawer';
+import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
@@ -34,7 +34,7 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+  const [_selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
     PlacementGroup | undefined
   >();
   const [query, setQuery] = React.useState<string>('');
@@ -65,8 +65,13 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
+  const handleCreatePlacementGroup = () => {
+    history.push('/placement-groups/create');
+  };
+
   const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
+    history.push('/placement-groups/rename');
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
@@ -75,12 +80,10 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   const onClosePlacementGroupCreateDrawer = () => {
     history.replace('/placement-groups');
+    setSelectedPlacementGroup(undefined);
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
-  const onOpenCreateDrawer = () => {
-    history.push('/placement-groups/create');
-  };
 
   if (isLoading) {
     return <CircleProgress />;
@@ -89,7 +92,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   if (placementGroups?.results === 0) {
     return (
       <PlacementGroupsLandingEmptyState
-        openCreatePlacementGroupDrawer={onOpenCreateDrawer}
+        openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
       />
     );
   }
@@ -117,7 +120,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         breadcrumbProps={{ pathname: '/placement-groups' }}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
-        onButtonClick={onOpenCreateDrawer}
+        onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
       />
       <Typography sx={{ mb: 4, mt: 2 }}>
@@ -195,12 +198,8 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
-        currentPlacementGroup={selectedPlacementGroup}
-        mode="edit"
         onClose={onClosePlacementGroupCreateDrawer}
         open={isPlacementGroupCreateDrawerOpen}
-        selectedAffinityType="anti_affinity"
-        selectedRegionId="us-east"
       />
       {/* TODO VM_Placement: add delete dialog */}
     </>
