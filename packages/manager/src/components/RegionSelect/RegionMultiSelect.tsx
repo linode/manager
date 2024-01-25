@@ -78,9 +78,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     [accountAvailability, currentCapability, regions]
   );
 
-  const handleRemoveOption = (optionToRemove: RegionSelectOption) => {
+  const handleRemoveOption = (regionToRemove: string) => {
     const updatedSelectedOptions = selectedRegions.filter(
-      (option) => option.value !== optionToRemove.value
+      (option) => option.value !== regionToRemove
     );
     const updatedSelectedIds = updatedSelectedOptions.map(
       (region) => region.value
