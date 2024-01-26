@@ -10,7 +10,7 @@ import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
+import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -25,6 +25,7 @@ import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 import type {
   APIError,
   DeleteLinodeConfigInterfacePayload,
+  Interface,
   Linode,
   UpdateConfigInterfacePayload,
 } from '@linode/api-v4';
@@ -36,6 +37,14 @@ interface Props {
   subnet?: Subnet;
   vpcId: number;
 }
+
+type ConfigInterfaceAndLinodeData = { id: number } & {
+  configId: number;
+  interfaceData: Interface;
+  interfaceId: number;
+  label: string;
+  linodeId: number;
+};
 
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({ onClose, open, singleLinodeToBeUnassigned, subnet, vpcId }: Props) => {
@@ -53,9 +62,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
+
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
       singleLinodeToBeUnassigned ? [singleLinodeToBeUnassigned] : []
     );
+    const [
+      selectedLinodesAndConfigData,
+      setSelectedLinodesAndConfigData,
+    ] = React.useState<ConfigInterfaceAndLinodeData[]>([]);
+
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
     const [
@@ -127,7 +142,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
                 return {
                   configId: configWithVpcInterface.id,
+                  id: linode.id,
+                  interfaceData: vpcInterface,
                   interfaceId: vpcInterface.id,
+                  label: linode.label,
                   linodeId: linode.id,
                 };
               }
@@ -136,12 +154,26 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           );
 
           // Filter out any null values and ensure item conforms to type using `is` type guard.
-          const filteredConfigInterfaces = updatedConfigInterfaces.filter(
+          const _selectedLinodesAndConfigData = updatedConfigInterfaces.filter(
+            (item): item is ConfigInterfaceAndLinodeData => item !== null
+          );
+
+          // Remove interface property for the DeleteLinodeConfigInterfacePayload data
+          const _updatedConfigInterfaces = updatedConfigInterfaces.map(
+            (item) => ({
+              configId: item?.configId,
+              interfaceId: item?.interfaceId,
+              linodeId: item?.linodeId,
+            })
+          );
+
+          const filteredConfigInterfaces = _updatedConfigInterfaces.filter(
             (item): item is DeleteLinodeConfigInterfacePayload => item !== null
           );
 
           // Update the state with the new data
           setConfigInterfacesToDelete([...filteredConfigInterfaces]);
+          setSelectedLinodesAndConfigData([..._selectedLinodesAndConfigData]);
         } catch (error) {
           // Capture errors if the promise.all fails
           hasError.current = true;
@@ -168,13 +200,22 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       csvRef.current.link.click();
     };
 
-    const handleRemoveLinode = (optionToRemove: Linode) => {
+    const handleRemoveLinode = (
+      optionToRemove: ConfigInterfaceAndLinodeData
+    ) => {
       setSelectedLinodes((prevSelectedLinodes) =>
         prevSelectedLinodes.filter((option) => option.id !== optionToRemove.id)
       );
+
       setConfigInterfacesToDelete((prevInterfacesToDelete) =>
         prevInterfacesToDelete.filter(
           (option) => option.linodeId !== optionToRemove.id
+        )
+      );
+
+      setSelectedLinodesAndConfigData((prevSelectedLinodesAndConfigData) =>
+        prevSelectedLinodesAndConfigData.filter(
+          (option) => option.id !== optionToRemove.id
         )
       );
     };
@@ -284,12 +325,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               />
             )}
             <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-              <RemovableSelectionsList
+              <RemovableSelectionsListTable
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
                 isRemovable={!Boolean(singleLinodeToBeUnassigned)}
-                noDataText={'Select Linodes to be Unassigned from Subnet.'}
+                noDataText="Select Linodes to be Unassigned from Subnet."
                 onRemove={handleRemoveLinode}
-                selectionData={selectedLinodes}
+                selectionData={selectedLinodesAndConfigData}
+                tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
               />
             </Box>
             {selectedLinodes.length > 0 && (
