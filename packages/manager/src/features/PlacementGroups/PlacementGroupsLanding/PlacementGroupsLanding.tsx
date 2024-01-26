@@ -72,7 +72,7 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
-    history.push('/placement-groups/rename');
+    history.push(`/placement-groups/rename/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
@@ -85,6 +85,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
+  const isPlacementGroupRenameDrawerOpen = location.pathname.includes('rename');
 
   if (isLoading) {
     return <CircleProgress />;
@@ -206,7 +207,7 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsRenameDrawer
         numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
         onClose={onClosePlacementGroupDrawer}
-        open={Boolean(selectedPlacementGroup)}
+        open={isPlacementGroupRenameDrawerOpen}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       {/* TODO VM_Placement: add delete dialog */}

@@ -8,21 +8,23 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 
+import { affinityTypeOptions } from './utils';
+
 import type {
   CreatePlacementGroupPayload,
   PlacementGroup,
+  RenamePlacementGroupPayload,
 } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4';
 import type { FormikProps } from 'formik';
 
 interface Props {
-  affinityTypeOptions: {
-    label: string;
-    value: string;
-  }[];
-  formik: FormikProps<CreatePlacementGroupPayload>;
-  maxNumberOfPlacementGroups: number;
-  numberOfPlacementGroupsCreated: number;
+  formik: FormikProps<
+    CreatePlacementGroupPayload & RenamePlacementGroupPayload
+  >;
+  maxNumberOfPlacementGroups?: number;
+  mode: 'create' | 'rename';
+  numberOfPlacementGroupsCreated?: number;
   onClose: () => void;
   open: boolean;
   regions: Region[];
@@ -32,9 +34,9 @@ interface Props {
 
 export const PlacementGroupsDrawerContent = (props: Props) => {
   const {
-    affinityTypeOptions,
     formik,
     maxNumberOfPlacementGroups,
+    mode,
     numberOfPlacementGroupsCreated,
     onClose,
     open,
@@ -63,7 +65,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
   }, [open, resetForm]);
 
   const generalError = status?.generalError;
-  const isRenameDrawer = !Boolean(selectedPlacementGroup);
+  const isRenameDrawer = mode === 'rename';
 
   return (
     <Grid>
@@ -81,7 +83,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
             name="label"
             onBlur={handleBlur}
             onChange={handleChange}
-            value={values.label}
+            value={selectedPlacementGroup?.label ?? values.label}
           />
           <RegionSelect
             handleSelection={(selection) => {
@@ -97,9 +99,11 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
             onChange={(_, value) => {
               setFieldValue('affinity_type', value?.value ?? '');
             }}
-            value={affinityTypeOptions.find(
-              (option) => option.value === values.affinity_type
-            )}
+            value={
+              affinityTypeOptions.find(
+                (option) => option.value === values.affinity_type
+              ) ?? null
+            }
             disabled={isRenameDrawer}
             errorText={errors.affinity_type}
             label="Affinity Type"
@@ -111,7 +115,10 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
               'data-testid': 'submit',
               disabled:
                 !isRenameDrawer &&
-                numberOfPlacementGroupsCreated >= maxNumberOfPlacementGroups,
+                numberOfPlacementGroupsCreated &&
+                maxNumberOfPlacementGroups
+                  ? numberOfPlacementGroupsCreated >= maxNumberOfPlacementGroups
+                  : false,
               label: `${isRenameDrawer ? 'Rename' : 'Create'} Placement Group`,
               loading: isSubmitting,
               tooltipText:

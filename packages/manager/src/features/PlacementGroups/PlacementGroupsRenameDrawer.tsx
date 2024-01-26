@@ -1,12 +1,11 @@
-import { AffinityType } from '@linode/api-v4';
-import { createPlacementGroupSchema } from '@linode/validation';
+import { renamePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import { Drawer } from 'src/components/Drawer';
-import { useCreatePlacementGroup } from 'src/queries/placementGroups';
+import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -16,16 +15,20 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import { PlacementGroupsDrawerContent } from './PlacementGroupDrawerContent';
-import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
 
 import type { PlacementGroupsRenameDrawerProps } from './types';
-import type { CreatePlacementGroupPayload } from '@linode/api-v4';
+import type {
+  CreatePlacementGroupPayload,
+  RenamePlacementGroupPayload,
+} from '@linode/api-v4';
+
+type PlacementGroupDrawerFormikProps = RenamePlacementGroupPayload &
+  CreatePlacementGroupPayload;
 
 export const PlacementGroupsRenameDrawer = (
   props: PlacementGroupsRenameDrawerProps
 ) => {
   const {
-    numberOfPlacementGroupsCreated,
     onClose,
     onPlacementGroupRenamed,
     open,
@@ -33,7 +36,9 @@ export const PlacementGroupsRenameDrawer = (
   } = props;
   const queryClient = useQueryClient();
   const { data: regions } = useRegionsQuery();
-  const { mutateAsync } = useCreatePlacementGroup();
+  const { mutateAsync } = useMutatePlacementGroup(
+    selectedPlacementGroup?.id ?? -1
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -47,19 +52,14 @@ export const PlacementGroupsRenameDrawer = (
     status,
     values,
     ...rest
-  } = useFormik({
+  } = useFormik<PlacementGroupDrawerFormikProps>({
     enableReinitialize: true,
     initialValues: {
-      affinity_type:
-        selectedPlacementGroup?.affinity_type ??
-        ('' as CreatePlacementGroupPayload['affinity_type']),
-      label: '',
+      affinity_type: selectedPlacementGroup?.affinity_type as CreatePlacementGroupPayload['affinity_type'],
+      label: selectedPlacementGroup?.label ?? '',
       region: selectedPlacementGroup?.region ?? '',
     },
-    onSubmit(
-      values: CreatePlacementGroupPayload,
-      { setErrors, setStatus, setSubmitting }
-    ) {
+    onSubmit(values, { setErrors, setStatus, setSubmitting }) {
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
@@ -72,7 +72,7 @@ export const PlacementGroupsRenameDrawer = (
 
           // Show snackbar notification
           enqueueSnackbar(
-            `Placement Group ${payload.label} successfully created`,
+            `Placement Group ${payload.label} successfully renamed`,
             {
               variant: 'success',
             }
@@ -92,13 +92,13 @@ export const PlacementGroupsRenameDrawer = (
           handleGeneralErrors(
             mapErrorToStatus,
             err,
-            'Error creating Placement Group.'
+            'Error renaming Placement Group.'
           );
         });
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: createPlacementGroupSchema,
+    validationSchema: renamePlacementGroupSchema,
   });
 
   React.useEffect(() => {
@@ -109,16 +109,12 @@ export const PlacementGroupsRenameDrawer = (
     }
   }, [open, resetForm]);
 
-  const affinityTypeOptions: {
-    label: string;
-    value: string;
-  }[] = Object.entries(AffinityType).map(([key, value]) => ({
-    label: value,
-    value: key as CreatePlacementGroupPayload['affinity_type'],
-  }));
-
   return (
-    <Drawer onClose={onClose} open={open} title="Rename Placement Group">
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={`Rename Placement Group ${selectedPlacementGroup?.label}`}
+    >
       <PlacementGroupsDrawerContent
         formik={{
           errors,
@@ -132,9 +128,7 @@ export const PlacementGroupsRenameDrawer = (
           values,
           ...rest,
         }}
-        affinityTypeOptions={affinityTypeOptions}
-        maxNumberOfPlacementGroups={MAX_NUMBER_OF_PLACEMENT_GROUPS}
-        numberOfPlacementGroupsCreated={numberOfPlacementGroupsCreated}
+        mode="rename"
         onClose={onClose}
         open={open}
         regions={regions ?? []}

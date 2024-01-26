@@ -1,4 +1,3 @@
-import { AffinityType } from '@linode/api-v4';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -107,14 +106,6 @@ export const PlacementGroupsCreateDrawer = (
     }
   }, [open, resetForm]);
 
-  const affinityTypeOptions: {
-    label: string;
-    value: string;
-  }[] = Object.entries(AffinityType).map(([key, value]) => ({
-    label: value,
-    value: key as CreatePlacementGroupPayload['affinity_type'],
-  }));
-
   return (
     <Drawer onClose={onClose} open={open} title="Create Placement Group">
       <PlacementGroupsDrawerContent
@@ -130,8 +121,8 @@ export const PlacementGroupsCreateDrawer = (
           values,
           ...rest,
         }}
-        affinityTypeOptions={affinityTypeOptions}
         maxNumberOfPlacementGroups={MAX_NUMBER_OF_PLACEMENT_GROUPS}
+        mode="create"
         numberOfPlacementGroupsCreated={numberOfPlacementGroupsCreated}
         onClose={onClose}
         open={open}

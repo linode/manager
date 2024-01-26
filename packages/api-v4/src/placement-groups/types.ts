@@ -22,7 +22,7 @@ export type CreatePlacementGroupPayload = Pick<
   'label' | 'affinity_type' | 'region'
 >;
 
-export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
+export type RenamePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 
 /**
  * Since the API expects an array of ONE linode id, we'll use a tuple here.

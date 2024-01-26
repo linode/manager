@@ -9,7 +9,7 @@ export const createPlacementGroupSchema = object({
   region: string().required('Region is required.'),
 });
 
-export const updatePlacementGroupSchema = object({
+export const renamePlacementGroupSchema = object({
   label: string().required('Label is required.'),
 });
 
