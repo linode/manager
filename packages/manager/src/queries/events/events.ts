@@ -266,7 +266,7 @@ export const updateEventsQueries = (
 /**
  * Updates a events infinite query with incoming events from our polling
  *
- * This method should do two things with incomming events
+ * This method should do two things with incoming events
  * - If the events is already in the cache, update it
  * - If the event is new, append it to the top of the first page.
  */
