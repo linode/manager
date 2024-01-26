@@ -121,15 +121,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   }
 
   const renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(ips);
-
-    if (configInterfaceWithVPC) {
-      ipDisplay.push(
-        ...(vpcConfigInterfaceToDisplayRows(
-          configInterfaceWithVPC
-        ) as IPDisplay[])
-      );
-    }
+    const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -296,35 +288,40 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
-interface VPCIPAddress {
-  address: string;
-  type: IPTypes;
-}
-
 export const vpcConfigInterfaceToDisplayRows = (
   configInterfaceWithVPC: Interface
 ) => {
-  const ipDisplay: VPCIPAddress[] = [];
+  const ipDisplay: IPDisplay[] = [];
 
-  if (configInterfaceWithVPC.ipv4?.vpc) {
+  const { ip_ranges, ipv4 } = configInterfaceWithVPC;
+  const emptyProps = {
+    gateway: '',
+    rdns: '',
+    subnetMask: '',
+  };
+
+  if (ipv4?.vpc) {
     ipDisplay.push({
-      address: configInterfaceWithVPC.ipv4.vpc,
+      address: ipv4.vpc,
       type: 'IPv4 – VPC',
+      ...emptyProps,
     });
   }
 
-  if (configInterfaceWithVPC.ipv4?.nat_1_1) {
+  if (ipv4?.nat_1_1) {
     ipDisplay.push({
-      address: configInterfaceWithVPC.ipv4.nat_1_1,
+      address: ipv4.nat_1_1,
       type: 'VPC IPv4 – NAT',
+      ...emptyProps,
     });
   }
 
-  if (configInterfaceWithVPC.ip_ranges) {
-    configInterfaceWithVPC.ip_ranges.forEach((ip_range) => {
+  if (ip_ranges) {
+    ip_ranges.forEach((ip_range) => {
       ipDisplay.push({
         address: ip_range,
         type: 'IPv4 – VPC – Range',
+        ...emptyProps,
       });
     });
   }
@@ -334,7 +331,8 @@ export const vpcConfigInterfaceToDisplayRows = (
 
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse
+  ipResponse?: LinodeIPsResponse,
+  configInterfaceWithVPC?: Interface
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
@@ -355,6 +353,10 @@ export const ipResponseToDisplayRows = (
 
   if (ipv6?.link_local) {
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
+  }
+
+  if (configInterfaceWithVPC) {
+    ipDisplay.push(...vpcConfigInterfaceToDisplayRows(configInterfaceWithVPC));
   }
 
   // IPv6 ranges and pools to display in the networking table

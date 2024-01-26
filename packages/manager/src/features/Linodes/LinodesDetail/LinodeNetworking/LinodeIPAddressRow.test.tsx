@@ -53,12 +53,9 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          gateway={''}
           isVPCOnlyLinode={false}
           linodeId={1}
-          rdns={''}
           readOnly={false}
-          subnetMask={''}
           {...handlers}
           {...ipDisplayVPC}
         />
