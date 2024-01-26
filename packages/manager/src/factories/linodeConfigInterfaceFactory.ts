@@ -15,7 +15,7 @@ export const LinodeConfigInterfaceFactoryWithVPC = Factory.Sync.makeFactory<Inte
   {
     active: false,
     id: Factory.each((i) => i),
-    ip_ranges: ['192.0.2.0/24'],
+    ip_ranges: ['192.0.2.0/24', '192.0.3.0/24'],
     ipam_address: '10.0.0.1/24',
     ipv4: {
       nat_1_1: 'some nat',
