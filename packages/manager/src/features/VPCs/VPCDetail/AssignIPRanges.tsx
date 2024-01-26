@@ -26,9 +26,7 @@ export const AssignIPRanges = (props: Props) => {
   return (
     <>
       <Divider sx={{ ...sx }} />
-      {ipRangesError && (
-        <Notice important text={ipRangesError} variant="error" />
-      )}
+      {ipRangesError && <Notice text={ipRangesError} variant="error" />}
       <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
         {ASSIGN_IPV4_RANGES_TITLE}
       </Typography>
