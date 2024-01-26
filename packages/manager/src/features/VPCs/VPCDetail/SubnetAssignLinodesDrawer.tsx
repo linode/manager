@@ -433,6 +433,7 @@ export const SubnetAssignLinodesDrawer = (
             setFieldValue('selectedLinode', selected);
             setAssignLinodesErrors({});
           }}
+          checkIsOptionEqualToValue
           disabled={userCannotAssignLinodes}
           label="Linode"
           // We only want to be able to assign linodes that were not already assigned to this subnet
