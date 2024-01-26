@@ -356,6 +356,10 @@ export const ipResponseToDisplayRows = (
   }
 
   if (configInterfaceWithVPC) {
+    if (configInterfaceWithVPC.ipv4?.nat_1_1) {
+      // Hide the Public IPv4 row as the address will only be usable on the VPC interface with 1:1 NAT
+      ipDisplay.shift();
+    }
     ipDisplay.push(...vpcConfigInterfaceToDisplayRows(configInterfaceWithVPC));
   }
 

@@ -122,3 +122,19 @@ describe('LinodeIPAddressRow', () => {
     expect(editRDNSBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 });
+
+describe('ipResponseToDisplayRows', () => {
+  it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
+    const ipDisplays = ipResponseToDisplayRows(
+      ips,
+      LinodeConfigInterfaceFactoryWithVPC.build()
+    );
+
+    expect(
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'IPv4 – Public')
+    ).toBeUndefined();
+    expect(
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC IPv4 – NAT')
+    ).toBeDefined();
+  });
+});
