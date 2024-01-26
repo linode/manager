@@ -72,7 +72,11 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
         <CopyTooltip copyableText disabled={isVPCOnlyLinode} text={address} />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
-      <TableCell data-qa-ip-address parentColumn="Type">
+      <TableCell
+        data-qa-ip-address
+        parentColumn="Type"
+        sx={{ whiteSpace: 'nowrap' }}
+      >
         {type}
       </TableCell>
       <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
