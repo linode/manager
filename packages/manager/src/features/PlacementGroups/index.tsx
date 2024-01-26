@@ -11,12 +11,11 @@ const PlacementGroupsLanding = React.lazy(() =>
   }))
 );
 
-// TODO VM_Placement: add <PlacementGroupsDetail />
-// const PlacementGroupDetail = React.lazy(() =>
-//   import('./PlacementGroupDetail/PlacementGroupDetail').then((module) => ({
-//     default: module.PlacementGroupsDetail,
-//   }))
-// );
+const PlacementGroupsDetail = React.lazy(() =>
+  import('./PlacementGroupsDetail/PlacementGroupsDetail').then((module) => ({
+    default: module.PlacementGroupsDetail,
+  }))
+);
 
 export const PlacementGroups = () => {
   const { path } = useRouteMatch();
@@ -32,10 +31,7 @@ export const PlacementGroups = () => {
             exact
             path={`${path}/create`}
           />
-          {/*
-            // TODO VM_Placement: add <PlacementGroupsDetail />
-            <Route component={FirewallDetail} path={`${path}/:id/:tab?`} />
-          */}
+          <Route component={PlacementGroupsDetail} path={`${path}/:id/:tab?`} />
           <Route component={PlacementGroupsLanding} />
         </Switch>
       </React.Fragment>

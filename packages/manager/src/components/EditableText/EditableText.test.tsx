@@ -108,4 +108,26 @@ describe('Editable Text', () => {
     fireEvent.click(saveButton);
     expect(props.onEdit).toHaveBeenCalled();
   });
+
+  it('appends a suffix to the text when provided', () => {
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <EditableText {...props} textSuffix=" suffix" />
+    );
+
+    const text = getByText('Edit this suffix');
+    expect(text).toBeVisible();
+
+    const editButton = getByRole('button', { name: BUTTON_LABEL });
+    expect(editButton).toBeInTheDocument();
+
+    fireEvent.click(editButton);
+    const textfield = getByTestId('textfield-input');
+
+    expect(textfield).toHaveValue('Edit this');
+
+    const closeButton = getByTestId(CLOSE_BUTTON_ICON);
+    fireEvent.click(closeButton);
+
+    expect(getByText('Edit this suffix')).toBeVisible();
+  });
 });
