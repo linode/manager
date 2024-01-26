@@ -29,7 +29,12 @@ export const AssignIPRanges = (props: Props) => {
       {ipRangesError && (
         <Notice important text={ipRangesError} variant="error" />
       )}
-      <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+      <Typography
+        sx={(theme) => ({
+          fontFamily: theme.font.bold,
+          paddingBottom: theme.spacing(),
+        })}
+      >
         {ASSIGN_IPV4_RANGES_TITLE}
       </Typography>
       <Typography variant="body1">
