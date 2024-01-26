@@ -7,6 +7,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
+import { PasswordExpiryBanner } from './PasswordExpiryBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import { RegionStatusBanner } from './RegionStatusBanner';
@@ -30,6 +31,7 @@ export const GlobalNotifications = () => {
 
   return (
     <>
+      <PasswordExpiryBanner />
       <EmailBounceNotificationSection />
       <RegionStatusBanner />
       <AbuseTicketBanner />

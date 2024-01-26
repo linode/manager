@@ -1,5 +1,3 @@
-import type { UserType } from '../account';
-
 export interface Referrals {
   code: string;
   url: string;
@@ -19,6 +17,7 @@ export interface Profile {
   referrals: Referrals;
   ip_whitelist_enabled: boolean;
   lish_auth_method: 'password_keys' | 'keys_only' | 'disabled';
+  password_expiry_timestamp: number;
   authentication_type: TPAProvider;
   authorized_keys: string[];
   two_factor_auth: boolean;

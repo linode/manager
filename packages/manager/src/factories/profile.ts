@@ -5,9 +5,11 @@ import {
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
 import * as Factory from 'factory.ts';
+import { PASSWORD_EXPIRY_NOTIFICATION_DAYS } from 'src/constants';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   authentication_type: 'password',
+  password_expiry_timestamp: PASSWORD_EXPIRY_NOTIFICATION_DAYS,
   authorized_keys: [],
   email: 'mock-user@linode.com',
   email_notifications: false,
