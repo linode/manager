@@ -96,7 +96,7 @@
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
-    "typecheck": "tsc",
+    "typecheck": "tsc --noEmit && tsc -p cypress --noEmit",
     "coverage": "vitest run --coverage && open coverage/index.html",
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
@@ -127,6 +127,7 @@
     "@testing-library/react-hooks": "~3.4.1",
     "@testing-library/user-event": "^12.1.1",
     "@types/braintree-web": "^3.75.23",
+    "@types/chai-string": "^1.4.5",
     "@types/chart.js": "^2.9.21",
     "@types/css-mediaquery": "^0.1.1",
     "@types/enzyme": "^3.9.3",
