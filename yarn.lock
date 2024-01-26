@@ -4351,6 +4351,18 @@
     "@types/googlepay" "*"
     "@types/paypal-checkout-components" "*"
 
+"@types/chai-string@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@types/chai-string/-/chai-string-1.4.5.tgz#988ff37526386e9c354219b163d7ecf81bab8d2d"
+  integrity sha512-IecXRMSnpUvRnTztdpSdjcmcW7EdNme65bfDCQMi7XrSEPGmyDYYTEfc5fcactWDA6ioSm8o7NUqg9QxjBCCEw==
+  dependencies:
+    "@types/chai" "*"
+
+"@types/chai@*":
+  version "4.3.11"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.11.tgz#e95050bf79a932cb7305dd130254ccdf9bde671c"
+  integrity sha512-qQR1dr2rGIHYlJulmr8Ioq3De0Le9E4MJ5AiaeAETJJpndT1uUNHsGFK3L/UIu+rbkQSdj8J/w2bCsBZc/Y5fQ==
+
 "@types/chart.js@^2.9.21":
   version "2.9.37"
   resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.37.tgz#8af70862b154fedf938b5b87debdb3a70f6e3208"

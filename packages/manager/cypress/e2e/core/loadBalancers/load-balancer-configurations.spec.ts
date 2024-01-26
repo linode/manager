@@ -171,7 +171,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .findByTitle(configuration.protocol.toUpperCase())
         .click();
 
-      cy.findByLabelText('Port').clear().type(configuration.port);
+      cy.findByLabelText('Port').clear().type(`${configuration.port}`);
 
       // Certificates do not apply to HTTP, so make sure there is not mention of them
       cy.findByText('Details')
@@ -241,7 +241,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .findByTitle(configuration.protocol.toUpperCase())
         .click();
 
-      cy.findByLabelText('Port').clear().type(configuration.port);
+      cy.findByLabelText('Port').clear().type(`${configuration.port}`);
 
       // Certificates do not apply to HTTP, so make sure there is not mention of them
       cy.findByText('Details')

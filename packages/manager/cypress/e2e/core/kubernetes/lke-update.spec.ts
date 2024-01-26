@@ -233,7 +233,7 @@ describe('LKE cluster updates', () => {
 
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
-      id: mockKubeLinode.instance_id,
+      id: mockKubeLinode.instance_id ?? undefined,
     });
 
     const recycleWarningSubstrings = [
@@ -484,7 +484,7 @@ describe('LKE cluster updates', () => {
     const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
       (node: PoolNodeResponse): Linode => {
         return linodeFactory.build({
-          id: node.instance_id,
+          id: node.instance_id ?? undefined,
           ipv4: [randomIp()],
         });
       }
@@ -809,7 +809,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
       (node: PoolNodeResponse): Linode => {
         return linodeFactory.build({
-          id: node.instance_id,
+          id: node.instance_id ?? undefined,
           ipv4: [randomIp()],
           region: dcSpecificPricingRegion.id,
           type: dcPricingMockLinodeTypes[0].id,

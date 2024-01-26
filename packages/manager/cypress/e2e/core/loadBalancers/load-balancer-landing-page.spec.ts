@@ -18,7 +18,6 @@ import {
 } from 'support/intercepts/load-balancers';
 import type { Loadbalancer } from '@linode/api-v4';
 import { chooseRegion } from 'support/util/regions';
-import { getRegionById } from 'support/util/regions';
 
 /**
  * Navigates to the AGLB landing page using breadcrumb navigation.

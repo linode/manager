@@ -1,7 +1,7 @@
 import { containsClick, containsVisible, getVisible } from '../helpers';
 import { waitForAppLoad } from './common';
 
-export const loadAppNoLogin = (path) => waitForAppLoad(path, false);
+export const loadAppNoLogin = (path: string) => waitForAppLoad(path, false);
 
 /* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
@@ -24,8 +24,22 @@ const waitDoubleRerender = () => {
   cy.wait(500);
 };
 
+interface GoWithUI {
+  go: () => void;
+  name: string;
+}
+
+export interface Page {
+  assertIsLoaded: () => void;
+  first?: boolean;
+  goWithUI?: GoWithUI[];
+  name: string;
+  skip?: boolean;
+  url: string;
+}
+
 // List of Routes and validator of the route
-export const pages = [
+export const pages: Page[] = [
   {
     assertIsLoaded: () =>
       cy.findByText('Choose a Distribution').should('be.visible'),

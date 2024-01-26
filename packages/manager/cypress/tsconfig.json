@@ -1,27 +1,32 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": false,
-    "strict": true,
-    "skipLibCheck": true,
-    "noImplicitAny": false,
-    "target": "es6",
-    "moduleResolution": "node",
-    "module": "esnext",
-    "lib": ["es6", "dom"],
     "baseUrl": "..",
-    "jsx": "react",
     "paths": {
-      "@src/*": ["src/*"],
+      "src/*": ["./src/*"],
+      "@src/*": ["./src/*"],
       "support/*": ["cypress/support/*"],
-      "@linode/api-v4/lib": ["../api-v4/lib/index.js"],
-      "@linode/api-v4/lib/*": ["../api-v4/lib/index.js"],
-      "@linode/api-v4/types": ["../api-v4/lib/index.d.ts"],
-      "@linode/validation/lib": ["../validation/lib/index.js"],
-      "@linode/validation/lib/*": ["../validation/lib/index.js"],
-      "@linode/validation/types": ["../validation/lib/index.d.ts"]
     },
-    "types": ["cypress", "cypress-file-upload", "@testing-library/cypress", "cypress-real-events"]
+    "types": [
+      "cypress",
+      "cypress-file-upload",
+      "@testing-library/cypress",
+      "cypress-real-events",
+      "vite/client"
+    ]
   },
-  "include": ["../cypress/**/*.ts"]
+  "include": [
+    // Include `foundations/themes/index.ts` so that type declarations made for MUI theme type
+    // are available from within Cypress. This is important if a Cypress test imports a component
+    // that uses a custom theme property.
+    "../src/foundations/themes/index.ts",
+
+    // Include `env.d.ts` so that types declarations for loaders (.svg files, for example) are
+    // available from within Cypress.
+    "../src/env.d.ts",
+
+    // Include remaining Cypress files.
+    // "../cypress/**/*.ts",
+    "../cypress/**/*"
+  ]
 }
