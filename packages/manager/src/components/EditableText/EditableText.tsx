@@ -200,7 +200,7 @@ export const EditableText = (props: PassThroughProps) => {
     <H1Header
       className={classes.root}
       data-qa-editable-text
-      title={`${text}${textSuffix ? textSuffix : ''}`}
+      title={`${text}${textSuffix ?? ''}`}
     />
   );
 

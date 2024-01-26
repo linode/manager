@@ -82,6 +82,12 @@ export const PlacementGroupsDetail = () => {
       <DocumentTitleSegment segment={label} />
       <LandingHeader
         breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Placement Groups',
+              position: 1,
+            },
+          ],
           onEditHandlers: {
             editableTextTitle: label,
             editableTextTitleSuffix: ` (${affinityLabel})`,
