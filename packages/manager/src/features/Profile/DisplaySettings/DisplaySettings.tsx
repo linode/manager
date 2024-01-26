@@ -65,7 +65,8 @@ export const DisplaySettings = () => {
     </>
   );
 
-  const restrictedProxyUserTooltip = 'Proxy users cannot update this field.';
+  const restrictedProxyUserTooltip =
+    'This account type cannot update this field.';
 
   return (
     <Paper>

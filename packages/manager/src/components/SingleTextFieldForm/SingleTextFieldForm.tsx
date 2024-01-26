@@ -78,12 +78,11 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
       >
         <TextField
           {...textFieldProps}
-          sx={(theme) => ({
-            minWidth: 415,
-            [theme.breakpoints.down('md')]: {
-              minWidth: 'auto',
+          containerProps={{
+            sx: {
+              width: '100%',
             },
-          })}
+          }}
           disabled={disabled}
           errorText={fieldError}
           label={label}
@@ -108,6 +107,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
                 : undefined,
           }}
           sx={{
+            flexShrink: 0,
             padding: 0,
           }}
         />
