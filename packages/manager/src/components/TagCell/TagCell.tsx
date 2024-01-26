@@ -8,6 +8,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import { AddTag } from './AddTag';
@@ -20,7 +21,7 @@ interface TagCellProps {
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
-const checkOverflow = (el: any) => {
+const checkOverflow = (el: HTMLElement) => {
   const curOverflow = el.style.overflow;
 
   if (!curOverflow || curOverflow === 'visible') {
@@ -28,6 +29,13 @@ const checkOverflow = (el: any) => {
   }
 
   const isOverflowing = el.clientWidth < el.scrollWidth;
+
+  console.log(
+    'Checking overflow',
+    el.clientWidth,
+    el.scrollWidth,
+    isOverflowing
+  );
 
   el.style.overflow = curOverflow;
 
@@ -40,18 +48,24 @@ const TagCell = (props: TagCellProps) => {
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const overflowRef = React.useCallback(
-    (node) => {
-      if (node !== null) {
-        setOverflow(checkOverflow(node));
+
+  const elRef = React.useRef<HTMLDivElement | null>(null);
+
+  const windowDimensions = useWindowDimensions();
+
+  React.useLayoutEffect(() => {
+    const interval = setInterval(checkOverflow, 5, elRef.current);
+    return clearInterval(interval);
+  }, []);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (elRef.current) {
+        setOverflow(checkOverflow(elRef.current));
       }
-    },
-    // The function doesn't care about tags directly,
-    // but if the tags list changes we want to check to see if
-    // the overflow state has changed.
-    // eslint-disable-next-line
-    [tags]
-  );
+    }, 10);
+    return () => clearTimeout(timeout);
+  });
 
   const handleAddTag = async (tag: string) => {
     await updateTags([...tags, tag]);
@@ -86,7 +100,7 @@ const TagCell = (props: TagCellProps) => {
         />
       ) : (
         <>
-          <StyledTagListDiv hasOverflow={hasOverflow} ref={overflowRef}>
+          <StyledTagListDiv hasOverflow={hasOverflow} ref={elRef}>
             {tags.map((thisTag) => (
               <StyledTag
                 colorVariant="lightBlue"
