@@ -1937,7 +1937,13 @@ export const handlers = [
       return res(ctx.status(404));
     }
 
-    return res(ctx.json(placementGroupFactory.build()));
+    return res(
+      ctx.json(
+        placementGroupFactory.build({
+          id: 1,
+        })
+      )
+    );
   }),
   rest.post('*/placement/groups', (req, res, ctx) => {
     return res(
@@ -1948,7 +1954,7 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+  rest.put('*/placement/groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }

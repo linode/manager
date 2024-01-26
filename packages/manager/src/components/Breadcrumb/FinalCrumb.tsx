@@ -25,6 +25,7 @@ export const FinalCrumb = React.memo((props: Props) => {
         onCancel={onEditHandlers.onCancel}
         onEdit={onEditHandlers.onEdit}
         text={onEditHandlers.editableTextTitle}
+        textSuffix={onEditHandlers.editableTextTitleSuffix}
       />
     );
   }
