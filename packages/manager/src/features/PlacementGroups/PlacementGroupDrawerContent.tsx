@@ -30,6 +30,7 @@ interface Props {
   regions: Region[];
   selectedPlacementGroup?: PlacementGroup;
   selectedRegionId?: string;
+  setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PlacementGroupsDrawerContent = (props: Props) => {
@@ -43,6 +44,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
     regions,
     selectedPlacementGroup,
     selectedRegionId,
+    setIsFormDirty,
   } = props;
   const {
     errors,
@@ -59,10 +61,14 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       resetForm();
-      // setGeneralSubnetErrorsFromAPI([]);
-      // setGeneralAPIError(undefined);
     }
   }, [open, resetForm]);
+
+  React.useEffect(() => {
+    if (isSubmitting) {
+      setIsFormDirty(true);
+    }
+  }, [isSubmitting]);
 
   const generalError = status?.generalError;
   const isRenameDrawer = mode === 'rename';

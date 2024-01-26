@@ -40,6 +40,7 @@ export const PlacementGroupsRenameDrawer = (
     selectedPlacementGroup?.id ?? -1
   );
   const { enqueueSnackbar } = useSnackbar();
+  const [isFormDirty, setIsFormDirty] = React.useState<boolean>(false);
 
   const {
     errors,
@@ -60,11 +61,13 @@ export const PlacementGroupsRenameDrawer = (
       region: selectedPlacementGroup?.region ?? '',
     },
     onSubmit(values, { setErrors, setStatus, setSubmitting }) {
+      setIsFormDirty(false);
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
+      const { label } = payload;
 
-      mutateAsync(payload)
+      mutateAsync({ label })
         .then((response) => {
           setSubmitting(false);
           // Invalidate Placement Groups Queries
@@ -97,17 +100,9 @@ export const PlacementGroupsRenameDrawer = (
         });
     },
     validateOnBlur: false,
-    validateOnChange: false,
+    validateOnChange: isFormDirty,
     validationSchema: renamePlacementGroupSchema,
   });
-
-  React.useEffect(() => {
-    if (open) {
-      resetForm();
-      // setGeneralSubnetErrorsFromAPI([]);
-      // setGeneralAPIError(undefined);
-    }
-  }, [open, resetForm]);
 
   return (
     <Drawer
@@ -132,6 +127,7 @@ export const PlacementGroupsRenameDrawer = (
         onClose={onClose}
         open={open}
         regions={regions ?? []}
+        setIsFormDirty={setIsFormDirty}
       />
     </Drawer>
   );

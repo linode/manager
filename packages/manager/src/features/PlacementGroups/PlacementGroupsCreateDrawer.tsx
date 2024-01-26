@@ -34,6 +34,7 @@ export const PlacementGroupsCreateDrawer = (
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
+  const [isFormDirty, setIsFormDirty] = React.useState<boolean>(false);
 
   const {
     errors,
@@ -57,6 +58,7 @@ export const PlacementGroupsCreateDrawer = (
       values: CreatePlacementGroupPayload,
       { setErrors, setStatus, setSubmitting }
     ) {
+      setIsFormDirty(false);
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
@@ -64,10 +66,8 @@ export const PlacementGroupsCreateDrawer = (
       mutateAsync(payload)
         .then((response) => {
           setSubmitting(false);
-          // Invalidate Placement Groups Queries
           queryClient.invalidateQueries([placementGroupQueryKey]);
 
-          // Show snackbar notification
           enqueueSnackbar(
             `Placement Group ${payload.label} successfully created`,
             {
@@ -94,17 +94,9 @@ export const PlacementGroupsCreateDrawer = (
         });
     },
     validateOnBlur: false,
-    validateOnChange: false,
+    validateOnChange: isFormDirty,
     validationSchema: createPlacementGroupSchema,
   });
-
-  React.useEffect(() => {
-    if (open) {
-      resetForm();
-      // setGeneralSubnetErrorsFromAPI([]);
-      // setGeneralAPIError(undefined);
-    }
-  }, [open, resetForm]);
 
   return (
     <Drawer onClose={onClose} open={open} title="Create Placement Group">
@@ -128,6 +120,7 @@ export const PlacementGroupsCreateDrawer = (
         open={open}
         regions={regions ?? []}
         selectedRegionId={selectedRegionId}
+        setIsFormDirty={setIsFormDirty}
       />
     </Drawer>
   );

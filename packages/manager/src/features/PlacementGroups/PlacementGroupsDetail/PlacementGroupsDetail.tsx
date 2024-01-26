@@ -37,6 +37,10 @@ export const PlacementGroupsDetail = () => {
   } = useMutatePlacementGroup(placementGroupId);
   const errorText = getErrorStringOrDefault(updatePlacementGroupError ?? '');
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
   if (!placementGroup) {
     return <NotFound />;
   }
@@ -45,10 +49,6 @@ export const PlacementGroupsDetail = () => {
     return (
       <ErrorState errorText="There was a problem retrieving your Placement Group. Please try again." />
     );
-  }
-
-  if (isLoading) {
-    return <CircleProgress />;
   }
 
   const linodeCount = getPlacementGroupLinodeCount(placementGroup);
