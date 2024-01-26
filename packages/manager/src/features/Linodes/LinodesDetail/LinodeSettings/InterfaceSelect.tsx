@@ -18,11 +18,14 @@ import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
+  additionalIPv4RangesForVPC?: ExtendedIP[];
   errors: VPCInterfaceErrors & OtherInterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
+  handleIPRangeChange: (ips: ExtendedIP[]) => void;
   ipamAddress?: null | string;
   label?: null | string;
   purpose: ExtendedPurpose;
@@ -63,9 +66,11 @@ type CombinedProps = Props & VPCState;
 
 export const InterfaceSelect = (props: CombinedProps) => {
   const {
+    additionalIPv4RangesForVPC,
     errors,
     fromAddonsPanel,
     handleChange,
+    handleIPRangeChange,
     ipamAddress,
     label,
     nattedIPv4Address,
@@ -154,6 +159,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
       });
     }
   };
+
+  // @TODO VPC: IPv4 Range
+  // const handleIPv4RangeChange = (ipv4Range: ExtendedIP[]) => {
+  //   handleIPRangeChange(ipv4Range);
+  // };
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
@@ -386,11 +396,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
             }
-            additionalIPv4RangesForVPC={[]} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
+            additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
-            handleIPv4RangeChange={() => null} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
+            handleIPv4RangeChange={handleIPRangeChange} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}

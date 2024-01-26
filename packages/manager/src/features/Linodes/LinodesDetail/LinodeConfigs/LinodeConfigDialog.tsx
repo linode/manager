@@ -64,6 +64,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
@@ -116,6 +117,7 @@ interface Props {
 }
 
 const defaultInterface = {
+  ip_ranges: [],
   ipam_address: '',
   label: '',
   purpose: 'none',
@@ -183,6 +185,7 @@ const interfacesToState = (interfaces?: Interface[]) => {
   const interfacesPayload = interfaces.map(
     ({
       id,
+      ip_ranges,
       ipam_address,
       ipv4,
       label,
@@ -192,6 +195,7 @@ const interfacesToState = (interfaces?: Interface[]) => {
       vpc_id,
     }) => ({
       id,
+      ip_ranges,
       ipam_address,
       ipv4,
       label,
@@ -640,6 +644,13 @@ export const LinodeConfigDialog = (props: Props) => {
     [setFieldValue]
   );
 
+  const handleIPRangeChange = React.useCallback(
+    (_ipRanges: ExtendedIP[]) => {
+      setFieldValue('ip_ranges', _ipRanges);
+    },
+    [setFieldValue]
+  );
+
   const handleToggleCustomRoot = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setUseCustomRoot(e.target.checked);
@@ -995,6 +1006,10 @@ export const LinodeConfigDialog = (props: Props) => {
                 </>
               )}
               {values.interfaces.map((thisInterface, idx) => {
+                const thisInterfaceIPRanges: ExtendedIP[] = (
+                  thisInterface.ip_ranges ?? []
+                ).map((ip_range) => ({ address: ip_range }));
+
                 return (
                   <React.Fragment key={`${idx}-interface`}>
                     {unrecommendedConfigNoticeSelector({
@@ -1021,6 +1036,8 @@ export const LinodeConfigDialog = (props: Props) => {
                       handleChange={(newInterface: Interface) =>
                         handleInterfaceChange(idx, newInterface)
                       }
+                      additionalIPv4RangesForVPC={thisInterfaceIPRanges}
+                      handleIPRangeChange={handleIPRangeChange}
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
