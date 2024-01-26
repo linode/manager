@@ -22,7 +22,7 @@ import {
   mockUpdateLoadBalancerCertificate,
   mockUploadLoadBalancerCertificate,
 } from 'support/intercepts/load-balancers';
-import { Loadbalancer, Certificate } from '@linode/api-v4/types';
+import { Loadbalancer, Certificate } from '@linode/api-v4';
 
 /**
  * Deletes the TLS / Service Target certificate in the AGLB landing page.
@@ -258,10 +258,11 @@ describe('Akamai Global Load Balancer certificates page', () => {
       type: 'downstream',
       certificate: mockCertificate.trim(),
     });
+
+    const mockNewLoadBalancerKey = 'mock-new-key';
     const mockNewLoadBalancerCertTls = certificateFactory.build({
       label: 'my-updated-tls-cert',
       certificate: 'mock-new-cert',
-      key: 'mock-new-key',
       type: 'downstream',
     });
 
@@ -270,10 +271,9 @@ describe('Akamai Global Load Balancer certificates page', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
-    mockGetLoadBalancerCertificates(
-      mockLoadBalancer.id,
-      mockLoadBalancerCertTls
-    ).as('getCertificates');
+    mockGetLoadBalancerCertificates(mockLoadBalancer.id, [
+      mockLoadBalancerCertTls,
+    ]).as('getCertificates');
 
     cy.visitWithLogin(`/loadbalancers/${mockLoadBalancer.id}/certificates`);
     cy.wait([
@@ -342,11 +342,9 @@ describe('Akamai Global Load Balancer certificates page', () => {
 
         cy.findByLabelText('TLS Certificate')
           .click()
-          .type(mockNewLoadBalancerCertTls.certificate);
+          .type(mockNewLoadBalancerCertTls.certificate!);
 
-        cy.findByLabelText('Private Key')
-          .click()
-          .type(mockNewLoadBalancerCertTls.key);
+        cy.findByLabelText('Private Key').click().type(mockNewLoadBalancerKey);
 
         ui.buttonGroup
           .findButtonByTitle('Update Certificate')
@@ -378,10 +376,9 @@ describe('Akamai Global Load Balancer certificates page', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
-    mockGetLoadBalancerCertificates(
-      mockLoadBalancer.id,
-      mockLoadBalancerCertServiceTarget
-    ).as('getCertificates');
+    mockGetLoadBalancerCertificates(mockLoadBalancer.id, [
+      mockLoadBalancerCertServiceTarget,
+    ]).as('getCertificates');
 
     cy.visitWithLogin(`/loadbalancers/${mockLoadBalancer.id}/certificates`);
     cy.wait([
@@ -445,7 +442,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
         // Update certificate.
         cy.findByLabelText('Server Certificate')
           .click()
-          .type(mockNewLoadBalancerCertServiceTarget.certificate);
+          .type(mockNewLoadBalancerCertServiceTarget.certificate!);
 
         ui.buttonGroup
           .findButtonByTitle('Update Certificate')
@@ -516,9 +513,6 @@ describe('Akamai Global Load Balancer certificates page', () => {
     const mockLoadBalancerCertsTls = certificateFactory.buildList(1, {
       type: randomItem(['ca', 'downstream']),
     });
-    const mockLoadBalancerAfterDeleteCertsTls = mockLoadBalancerCertsTls.slice(
-      1
-    );
 
     mockAppendFeatureFlags({
       aglb: makeFeatureFlagData(true),

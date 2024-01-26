@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/types';
+import { Notification } from '@linode/api-v4';
 import { notificationFactory } from '@src/factories/notification';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { getClick } from 'support/helpers';

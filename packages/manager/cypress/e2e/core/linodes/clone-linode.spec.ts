@@ -55,8 +55,7 @@ describe('clone linode', () => {
     const newLinodeLabel = `${linodePayload.label}-clone`;
 
     cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
-      const linodeRegion = getRegionById(linodePayload.region);
-      const linodeRegionLabel = `${linodeRegion.label} (${linodeRegion.id})`;
+      const linodeRegion = getRegionById(linodePayload.region!);
 
       interceptCloneLinode(linode.id).as('cloneLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
