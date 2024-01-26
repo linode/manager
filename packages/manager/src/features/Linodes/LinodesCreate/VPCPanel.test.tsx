@@ -17,9 +17,11 @@ afterEach(() => {
 });
 
 const props = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   autoassignIPv4WithinVPC: true,
   from: 'linodeCreate' as VPCPanelProps['from'],
+  handleIPv4RangeChange: vi.fn(),
   handleSelectVPC: vi.fn(),
   handleSubnetChange: vi.fn(),
   handleVPCIPv4Change: vi.fn(),
