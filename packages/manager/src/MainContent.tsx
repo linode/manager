@@ -159,8 +159,10 @@ const Help = React.lazy(() =>
 const SearchLanding = React.lazy(
   () => import('src/features/Search/SearchLanding')
 );
-const EventsLanding = React.lazy(
-  () => import('src/features/Events/EventsLanding')
+const EventsLanding = React.lazy(() =>
+  import('src/features/Events/EventsLanding').then((module) => ({
+    default: module.EventsLanding,
+  }))
 );
 const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')

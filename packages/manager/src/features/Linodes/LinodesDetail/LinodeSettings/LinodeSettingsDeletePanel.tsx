@@ -6,7 +6,7 @@ import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useDeleteLinodeMutation,
   useLinodeQuery,
@@ -26,13 +26,15 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
     mutateAsync: deleteLinode,
   } = useDeleteLinodeMutation(linodeId);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const history = useHistory();
 
   const [open, setOpen] = React.useState<boolean>(false);
 
   const onDelete = async () => {
     await deleteLinode();
-    resetEventsPolling();
+    checkForNewEvents();
     history.push('/linodes');
   };
 
