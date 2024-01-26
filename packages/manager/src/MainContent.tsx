@@ -336,7 +336,7 @@ export const MainContent = () => {
                         />
                         <Route component={Volumes} path="/volumes" />
                         <Redirect path="/volumes*" to="/volumes" />
-                        {flags.aglb && (
+                        {flags.aclb && (
                           <Route
                             component={LoadBalancers}
                             path="/loadbalancer*"

@@ -36,11 +36,11 @@ export const LoadBalancers = () => {
       <ProductInformationBanner bannerLocation="LoadBalancers" />
       <Switch>
         {/**
-         * TODO: AGLB - remove alternative create flow
+         * TODO: ACLB - remove alternative create flow
          */}
         <Route
           component={
-            flags.aglbFullCreateFlow
+            flags.aclbFullCreateFlow
               ? LoadBalancerCreate
               : LoadBalancerBasicCreate
           }

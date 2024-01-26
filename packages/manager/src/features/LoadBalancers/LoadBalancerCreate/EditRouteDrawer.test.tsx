@@ -9,7 +9,7 @@ import {
   initialValues,
 } from './LoadBalancerCreate';
 
-describe('EditRouteDrawer (AGLB full create flow)', () => {
+describe('EditRouteDrawer (ACLB full create flow)', () => {
   it('renders a title', () => {
     const { getByText } = renderWithThemeAndFormik(
       <EditRouteDrawer

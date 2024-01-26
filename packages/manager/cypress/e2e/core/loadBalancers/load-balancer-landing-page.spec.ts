@@ -21,7 +21,7 @@ import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
 
 /**
- * Navigates to the AGLB landing page using breadcrumb navigation.
+ * Navigates to the ACLB landing page using breadcrumb navigation.
  *
  * Asserts that the URL has updated to reflect navigation.
  */
@@ -35,7 +35,7 @@ const returnToLandingPage = () => {
 
 describe('Akamai Cloud Load Balancer landing page', () => {
   /*
-   * - Confirms that load balancers are listed on the AGLB landing page.
+   * - Confirms that load balancers are listed on the ACLB landing page.
    * - Confirms that clicking a load balancer label directs to its details pages.
    * - Confirms that Create Loadbalancer button is present and enabled.
    * - Confirms that load balancer action menu items are present.
@@ -57,9 +57,9 @@ describe('Akamai Cloud Load Balancer landing page', () => {
       }),
     ];
 
-    // TODO Delete feature flag mocks when AGLB feature flag goes away.
+    // TODO Delete feature flag mocks when ACLB feature flag goes away.
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
@@ -74,7 +74,7 @@ describe('Akamai Cloud Load Balancer landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // TODO: AGLB - Confirm that regions from the API are listed for load balancer
+          // TODO: ACLB - Confirm that regions from the API are listed for load balancer
           // loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
           //   const regionLabel = getRegionById(loadbalancerRegion).label;
           //   cy.findByText(regionLabel, { exact: false }).should('be.visible');
@@ -96,7 +96,7 @@ describe('Akamai Cloud Load Balancer landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // TODO: AGLB - Confirm that regions from the API are listed for load balancer
+          // TODO: ACLB - Confirm that regions from the API are listed for load balancer
           // loadbalancerMock.regions.forEach((loadbalancerRegion: string) => {
           //   const regionLabel = getRegionById(loadbalancerRegion).label;
           //   cy.findByText(regionLabel, { exact: false }).should('be.visible');
@@ -132,8 +132,8 @@ describe('Akamai Cloud Load Balancer landing page', () => {
 
 describe('Delete', () => {
   /*
-   * - Confirms that Deleting a load balancer from the AGLB landing page.
-   * - Confirms AGLB landing page reverts to its empty state when all of the load balancers have been deleted.
+   * - Confirms that Deleting a load balancer from the ACLB landing page.
+   * - Confirms ACLB landing page reverts to its empty state when all of the load balancers have been deleted.
    */
   it('Delete a Load Balancer from landing page.', () => {
     const chosenRegion = chooseRegion();
@@ -152,9 +152,9 @@ describe('Delete', () => {
       }),
     ];
 
-    // TODO Delete feature flag mocks when AGLB feature flag goes away.
+    // TODO Delete feature flag mocks when ACLB feature flag goes away.
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
@@ -233,9 +233,9 @@ describe('Delete', () => {
       }),
     ];
 
-    // TODO Delete feature flag mocks when AGLB feature flag goes away.
+    // TODO Delete feature flag mocks when ACLB feature flag goes away.
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');

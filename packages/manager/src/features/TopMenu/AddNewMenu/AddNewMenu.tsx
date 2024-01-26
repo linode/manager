@@ -88,10 +88,10 @@ export const AddNewMenu = () => {
       link: '/volumes/create',
     },
     {
-      // TODO AGLB: Replace with AGLB copy when available
+      // TODO ACLB: Replace with ACLB copy when available
       description: 'Ensure your services are highly available',
       entity: 'Cloud Load Balancer',
-      hide: !flags.aglb,
+      hide: !flags.aclb,
       icon: LoadBalancerIcon,
       link: '/loadbalancers/create',
     },

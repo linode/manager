@@ -2,7 +2,7 @@
  * @file Integration tests for Akamai Cloud Load Balancer summary page.
  */
 
-import { loadbalancerFactory, configurationFactory } from '@src/factories/aglb';
+import { loadbalancerFactory, configurationFactory } from '@src/factories/aclb';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -22,7 +22,7 @@ describe('Akamai Cloud Load Balancer details page', () => {
     const mockLoadBalancer = loadbalancerFactory.build();
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
 
     mockGetFeatureFlagClientstream().as('getClientStream');
@@ -51,8 +51,8 @@ describe('Akamai Cloud Load Balancer details page', () => {
 
 describe('Delete', () => {
   /*
-   * Deleting a load balancer from the AGLB load balancer details page "Settings" tab (route: /loadbalancers/:id/settings)
-   * Confirms User is redirected to AGLB landing page upon deleting from Load Balancer details page "Settings" tab, and load balancer is not listed on the landing page.
+   * Deleting a load balancer from the ACLB load balancer details page "Settings" tab (route: /loadbalancers/:id/settings)
+   * Confirms User is redirected to ACLB landing page upon deleting from Load Balancer details page "Settings" tab, and load balancer is not listed on the landing page.
    */
 
   // Test case for deleting a load balancer from the Settings tab.
@@ -78,7 +78,7 @@ describe('Delete', () => {
     mockGetLoadBalancers(loadbalancerMocks).as('getLoadBalancers');
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
 
     mockGetFeatureFlagClientstream().as('getClientStream');

@@ -188,9 +188,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Volume />,
         },
         {
-          betaChipClassName: 'beta-chip-aglb',
+          betaChipClassName: 'beta-chip-aclb',
           display: 'Cloud Load Balancers',
-          hide: !flags.aglb,
+          hide: !flags.aclb,
           href: '/loadbalancers',
           icon: <LoadBalancer />,
           isBeta: true,
@@ -297,7 +297,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
-      flags.aglb,
+      flags.aclb,
       flags.vmPlacement,
       showVPCs,
     ]

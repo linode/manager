@@ -87,7 +87,7 @@ export const GoTo = React.memo((props: Props) => {
       },
       {
         display: 'Load Balancers',
-        hide: !flags.aglb,
+        hide: !flags.aclb,
         href: '/loadbalancers',
       },
       {

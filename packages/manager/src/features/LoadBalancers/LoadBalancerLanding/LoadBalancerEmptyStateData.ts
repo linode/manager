@@ -1,4 +1,4 @@
-import { AGLB_DOCS } from '../constants';
+import { ACLB_DOCS } from '../constants';
 
 import type {
   ResourcesHeaders,
@@ -17,16 +17,16 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview',
-      to: AGLB_DOCS.Overview,
+      to: ACLB_DOCS.Overview,
     },
     {
       text: 'Getting Started',
-      to: AGLB_DOCS.GettingStarted,
+      to: ACLB_DOCS.GettingStarted,
     },
   ],
   moreInfo: {
     text: 'Guides',
-    to: AGLB_DOCS.Guides,
+    to: ACLB_DOCS.Guides,
   },
   title: 'Getting Started Guides',
 };
@@ -35,16 +35,16 @@ export const resourcesLinks: ResourcesLinkSection = {
   links: [
     {
       text: 'Resources',
-      to: AGLB_DOCS.Resouces,
+      to: ACLB_DOCS.Resouces,
     },
     {
       text: 'Developers',
-      to: AGLB_DOCS.Developers,
+      to: ACLB_DOCS.Developers,
     },
   ],
   moreInfo: {
     text: 'Guides',
-    to: AGLB_DOCS.Guides,
+    to: ACLB_DOCS.Guides,
   },
   title: 'Resources',
 };

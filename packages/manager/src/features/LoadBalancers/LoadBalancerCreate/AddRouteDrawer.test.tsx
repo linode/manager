@@ -7,7 +7,7 @@ import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 import { AddRouteDrawer } from './AddRouteDrawer';
 import { initialValues } from './LoadBalancerCreate';
 
-describe('AddRouteDrawer (AGLB full create flow)', () => {
+describe('AddRouteDrawer (ACLB full create flow)', () => {
   it('renders a title', () => {
     const { getByText } = renderWithThemeAndFormik(
       <AddRouteDrawer

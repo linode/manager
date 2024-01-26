@@ -11,7 +11,7 @@ import {
 import { Routes } from './Routes';
 import { handlers } from './LoadBalancerConfiguration.test';
 
-describe('Routes (AGLB full create flow)', () => {
+describe('Routes (ACLB full create flow)', () => {
   it('renders a title and an add button', () => {
     const { getByText } = renderWithThemeAndFormik(
       <Routes configurationIndex={0} handlers={handlers} />,

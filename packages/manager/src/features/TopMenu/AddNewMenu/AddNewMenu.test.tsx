@@ -13,7 +13,7 @@ vi.mock('src/hooks/useFlags', async () => {
     ...actual,
     __esModule: true,
     useFlags: vi.fn().mockReturnValue({
-      aglb: false,
+      aclb: false,
       databases: false,
     }),
   };

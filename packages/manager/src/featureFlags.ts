@@ -40,8 +40,8 @@ interface TaxCollectionBanner {
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
-  aglb: boolean;
-  aglbFullCreateFlow: boolean;
+  aclb: boolean;
+  aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databaseScaleUp: boolean;

@@ -25,7 +25,7 @@ import {
 import { Loadbalancer, Certificate } from '@linode/api-v4/types';
 
 /**
- * Deletes the TLS / Service Target certificate in the AGLB landing page.
+ * Deletes the TLS / Service Target certificate in the ACLB landing page.
  *
  * @param loadBalancer - The load balancer that contains the certificate to be deleted.
  * @param certificatesDeleteBefore - The array of certificates to be displayed before deleting.
@@ -39,7 +39,7 @@ const deleteCertificate = (
   certificatesDeleteAfter: Certificate[]
 ) => {
   mockAppendFeatureFlags({
-    aglb: makeFeatureFlagData(true),
+    aclb: makeFeatureFlagData(true),
   }).as('getFeatureFlags');
   mockGetFeatureFlagClientstream().as('getClientStream');
   mockGetLoadBalancer(loadBalancer).as('getLoadBalancer');
@@ -113,7 +113,7 @@ describe('Akamai Cloud Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -185,7 +185,7 @@ describe('Akamai Cloud Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -266,7 +266,7 @@ describe('Akamai Cloud Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -374,7 +374,7 @@ describe('Akamai Cloud Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -521,7 +521,7 @@ describe('Akamai Cloud Load Balancer certificates page', () => {
     );
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');

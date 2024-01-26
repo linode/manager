@@ -1,5 +1,5 @@
 /**
- * @file Integration tests related to Cloud Manager AGLB Service Target management.
+ * @file Integration tests related to Cloud Manager ACLB Service Target management.
  */
 
 import {
@@ -27,10 +27,10 @@ import { chooseRegion } from 'support/util/regions';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 
 describe('Akamai Cloud Load Balancer service targets', () => {
-  // TODO Remove this `beforeEach()` hook and related `cy.wait()` calls when `aglb` feature flag goes away.
+  // TODO Remove this `beforeEach()` hook and related `cy.wait()` calls when `aclb` feature flag goes away.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
   });

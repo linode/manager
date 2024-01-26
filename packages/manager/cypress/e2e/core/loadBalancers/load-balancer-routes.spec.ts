@@ -28,7 +28,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const routes = routeFactory.buildList(1, { protocol: 'http' });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -73,7 +73,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const routes = routeFactory.buildList(1, { protocol: 'http' });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -118,7 +118,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -172,7 +172,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -284,7 +284,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -367,7 +367,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -442,7 +442,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -510,7 +510,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -585,7 +585,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       const routes = routeFactory.buildList(1, { protocol: 'http' });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');

@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { AGLB_DOCS } from '../../constants';
+import { ACLB_DOCS } from '../../constants';
 
 import type { Configuration } from '@linode/api-v4';
 
@@ -41,7 +41,7 @@ export const CONFIGURATION_COPY = {
   Protocol: (
     <Typography>
       Set to either TCP, HTTP, or HTTPS. See{' '}
-      <Link to={AGLB_DOCS.Protocols}>Available Protocols</Link> for information.
+      <Link to={ACLB_DOCS.Protocols}>Available Protocols</Link> for information.
     </Typography>
   ),
   configuration:
