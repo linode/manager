@@ -6,7 +6,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -96,19 +95,18 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'NodeBalancers',
+          }),
+        }}
         disabledCreateButton={isRestricted}
         docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"
         onButtonClick={() => history.push('/nodebalancers/create')}
         title="NodeBalancers"
       />
-      {isRestricted && (
-        <Notice
-          important
-          text={getRestrictedResourceText('NodeBalancers')}
-          variant="warning"
-        />
-      )}
       <Table>
         <TableHead>
           <TableRow>

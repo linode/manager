@@ -118,8 +118,10 @@ export const NodeBalancerDetail = () => {
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {isRestricted && (
         <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'NodeBalancers',
+          })}
           important
-          text={getRestrictedResourceText('NodeBalancers')}
           variant="warning"
         />
       )}

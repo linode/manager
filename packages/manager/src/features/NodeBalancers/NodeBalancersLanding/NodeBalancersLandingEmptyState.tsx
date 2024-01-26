@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -25,19 +24,16 @@ export const NodeBalancerLandingEmptyState = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
-      {isRestricted && (
-        <Notice
-          important
-          text={getRestrictedResourceText('NodeBalancers')}
-          variant="warning"
-        />
-      )}
       <StyledPlaceholder
         buttonProps={[
           {
             children: 'Create NodeBalancer',
             disabled: isRestricted,
             onClick: () => history.push('/nodebalancers/create'),
+            tooltipText: getRestrictedResourceText({
+              action: 'create',
+              resourceType: 'NodeBalancers',
+            }),
           },
         ]}
         icon={NodeBalancer}

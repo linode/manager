@@ -3,8 +3,17 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 import type { Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
-export const getRestrictedResourceText = (resourceType: GrantTypeMap) => {
-  return `Access restricted for ${resourceType}. Please contact your account administrator to request the necessary permissions.`;
+type ActionType = 'create' | 'delete' | 'edit' | 'view';
+
+interface GetRestrictedResourceText {
+  action?: ActionType;
+  resourceType: GrantTypeMap;
+}
+export const getRestrictedResourceText = ({
+  action = 'edit',
+  resourceType,
+}: GetRestrictedResourceText) => {
+  return `You don't have permissions to ${action} ${resourceType}. Please contact your account administrator to request the necessary permissions.`;
 };
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY

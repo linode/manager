@@ -46,7 +46,10 @@ export const NodeBalancerActionMenu = (props: Props) => {
       },
       title: 'Delete',
       tooltip: isRestricted
-        ? getRestrictedResourceText('NodeBalancers')
+        ? getRestrictedResourceText({
+            action: 'delete',
+            resourceType: 'NodeBalancers',
+          })
         : undefined,
     },
   ];
@@ -61,6 +64,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
               disabled={action.disabled}
               key={action.title}
               onClick={action.onClick}
+              tooltip={action.tooltip}
             />
           );
         })}

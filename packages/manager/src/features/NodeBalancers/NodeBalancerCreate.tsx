@@ -468,9 +468,12 @@ const NodeBalancerCreate = () => {
       )}
       {disabled && (
         <Notice
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'NodeBalancers',
+          })}
           important
           spacingTop={16}
-          text={getRestrictedResourceText('NodeBalancers')}
           variant="error"
         />
       )}
