@@ -115,21 +115,21 @@ describe('doesEventMatchAPIFilter', () => {
     expect(doesEventMatchAPIFilter(event, filter)).toBe(true);
   });
 
-  it('should return true because the incomming entity matches the API filter', () => {
+  it('should return true because the incoming entity matches the API filter', () => {
     const event = eventFactory.build({ entity: { id: 1, type: 'linode' } });
     const filter = { 'entity.id': 1, 'entity.type': 'linode' };
 
     expect(doesEventMatchAPIFilter(event, filter)).toBe(true);
   });
 
-  it('should return false because the incomming event does not match the API filter', () => {
+  it('should return false because the incoming event does not match the API filter', () => {
     const event = eventFactory.build({ entity: { id: 1, type: 'linode' } });
     const filter = { 'entity.id': 2, 'entity.type': 'linode' };
 
     expect(doesEventMatchAPIFilter(event, filter)).toBe(false);
   });
 
-  it('should return false because the incomming event does not match the API filter', () => {
+  it('should return false because the incoming event does not match the API filter', () => {
     const event = eventFactory.build({ entity: null });
     const filter = { 'entity.id': 2, 'entity.type': 'linode' };
 
