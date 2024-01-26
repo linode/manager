@@ -1,14 +1,4 @@
-import { getAffinityLabel, getPlacementGroupLinodeCount } from './utils';
-
-describe('getAffinityLabel', () => {
-  it('returns "Affinity" for "affinity" type', () => {
-    expect(getAffinityLabel('affinity')).toBe('Affinity');
-  });
-
-  it('returns "Anti-affinity" for "anti_affinity" type', () => {
-    expect(getAffinityLabel('anti_affinity')).toBe('Anti-affinity');
-  });
-});
+import { getPlacementGroupLinodeCount } from './utils';
 
 describe('getPlacementGroupLinodeCount', () => {
   it('returns the length of the linode_ids array', () => {
