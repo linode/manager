@@ -1,31 +1,19 @@
 import { PlacementGroup } from '@linode/api-v4';
-{
-  /* TODO VM_Placement: Add utility functions in this file */
-}
 
-{
-  /* TODO VM_Placement: Function to format the option label */
-}
-// const getPlacementGroupOptions = {};
-
-{
-  /* TODO VM_Placement: Function to set the value of the selected option */
-}
-// const getSelectedPlacementGroupValue = {};
-
-// After filtering pg per regions
-// const getPlacementGroupsInRegion;
-// const noOptionsMessage = () => {
-//   if (getPlacementGroupsInRegion === 0) {
-//     return `There are no Placement Groups in this region`;
-//   }
-//   if (linode_ids.length === 10) {
-//     return `This Placement Group doesn't have capacity`;
-//   }
-//   return `Placement Groups in ${regionFromSelectedId?.label}`;
-// };
 export const getAffinityLabel = (
   affinityType: PlacementGroup['affinity_type']
 ): string => {
   return affinityType === 'affinity' ? 'Affinity' : 'Anti-affinity';
+};
+
+export const getPlacementGroupLinodeCount = (
+  placementGroup: PlacementGroup
+): number => {
+  return placementGroup.linode_ids.length;
+};
+
+export const getPlacementGroupsCount = (
+  placementGroupOptions: PlacementGroup[] | undefined
+): boolean => {
+  return !!placementGroupOptions?.length;
 };

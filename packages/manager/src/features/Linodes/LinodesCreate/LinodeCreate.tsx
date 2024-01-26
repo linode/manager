@@ -350,10 +350,11 @@ export class LinodeCreate extends React.PureComponent<
           this.state.numberOfNodes
         );
 
-        typeDisplayInfoCopy.details = `${this.state.numberOfNodes
-          } Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(
-            monthlyPrice
-          )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
+        typeDisplayInfoCopy.details = `${
+          this.state.numberOfNodes
+        } Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(
+          monthlyPrice
+        )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);
@@ -366,9 +367,9 @@ export class LinodeCreate extends React.PureComponent<
     const backupsMonthlyPrice:
       | PriceObject['monthly']
       | undefined = getMonthlyBackupsPrice({
-        region: selectedRegionID,
-        type,
-      });
+      region: selectedRegionID,
+      type,
+    });
 
     if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
       displaySections.push(
@@ -616,7 +617,7 @@ export class LinodeCreate extends React.PureComponent<
             }
             data-qa-label-and-tags-panel
             regions={regionsData!}
-            selectedId={this.props.selectedRegionID}
+            selectedRegionID={this.props.selectedRegionID}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (

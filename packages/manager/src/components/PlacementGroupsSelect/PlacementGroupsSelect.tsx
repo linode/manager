@@ -4,23 +4,32 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
-import { getAffinityLabel } from './PlacementGroups.utils';
+import {
+  getAffinityLabel,
+  getPlacementGroupLinodeCount,
+  getPlacementGroupsCount,
+} from './PlacementGroups.utils';
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
+  errorText?: string;
   id?: string;
   label: string;
+  loading?: boolean;
   noOptionsMessage?: string;
+  onBlur?: (e: React.FocusEvent) => void;
   onSelectionChange?: (selected: PlacementGroup | null) => void;
-  options?: PlacementGroup[];
   region?: string;
   renderOption?: (
     placementGroup: PlacementGroup,
     selected: boolean
   ) => JSX.Element;
   renderOptionLabel?: (placementGroups: PlacementGroup) => string;
+  selectedRegionID?: string;
   sx?: SxProps;
 }
 
@@ -28,13 +37,12 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     id,
     label,
+    loading,
     noOptionsMessage,
-    // onSelectionChange,
-    options,
+    onBlur,
     renderOption,
     renderOptionLabel,
-    sx,
-    // region,
+    selectedRegionID,
   } = props;
 
   const {
@@ -43,36 +51,96 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     isLoading,
   } = useAllPlacementGroupsQuery();
 
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+    PlacementGroup | null | undefined
+  >();
+
+  const [placementGroupError, setPlacementGroupError] = React.useState('');
+
+  React.useEffect(() => {
+    if (selectedPlacementGroup) {
+      setSelectedPlacementGroup(selectedPlacementGroup);
+    } else {
+      setSelectedPlacementGroup(null);
+    }
+  }, [selectedPlacementGroup]);
+
+  const placementGroupsOptions = placementGroups?.data.filter(
+    (placementGroup) => placementGroup.region === selectedRegionID
+  );
+
+  React.useEffect(() => {
+    if (getPlacementGroupsCount(placementGroupsOptions)) {
+      setPlacementGroupError('');
+    } else {
+      setPlacementGroupError('There are no Placement Groups in this region');
+    }
+  }, [placementGroupsOptions, selectedRegionID]);
+
+  const handlePlacementGroupChange = (selection: PlacementGroup) => {
+    setSelectedPlacementGroup(selection);
+    checkPlacementGroupCapacity(selection);
+  };
+
+  const checkPlacementGroupCapacity = (placementGroup: PlacementGroup) => {
+    if (getPlacementGroupLinodeCount(placementGroup) > 9) {
+      setPlacementGroupError(`This Placement Group doesn't have any capacity`);
+    } else {
+      setPlacementGroupError('');
+    }
+  };
+
   return (
-    <Autocomplete
-      getOptionLabel={(placementGroups: PlacementGroup) =>
-        renderOptionLabel
-          ? renderOptionLabel(placementGroups)
-          : `${placementGroups.label} (${getAffinityLabel(
-            placementGroups.affinity_type
-          )})`
-      }
-      noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
-      }
-      renderOption={
-        renderOption
-          ? (props, option, { selected }) => {
-            return (
-              <li data-qa-placement-group-option>
-                {renderOption(option, selected)}
-              </li>
-            );
-          }
-          : undefined
-      }
-      data-testid="placement-groups-select"
-      id={id}
-      label={label}
-      options={options || (placementGroups?.data ?? [])}
-      placeholder="Select a Placement Group"
-      sx={sx}
-    />
+    <>
+      {!selectedRegionID ? (
+        <Notice
+          dataTestId="placement-groups-no-region-notice"
+          spacingBottom={0}
+          spacingTop={16}
+          variant="warning"
+        >
+          <Typography>
+            <b>Select a region above to see available Placement Groups.</b>
+          </Typography>
+        </Notice>
+      ) : null}
+      <Autocomplete
+        getOptionLabel={(placementGroupsOptions: PlacementGroup) =>
+          renderOptionLabel
+            ? renderOptionLabel(placementGroupsOptions)
+            : `${placementGroupsOptions.label} (${getAffinityLabel(
+                placementGroupsOptions.affinity_type
+              )})`
+        }
+        noOptionsText={
+          noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+        }
+        onChange={(_, selectedOption: PlacementGroup) => {
+          handlePlacementGroupChange(selectedOption);
+        }}
+        renderOption={
+          renderOption
+            ? (props, option, { selected }) => {
+                return (
+                  <li {...props} data-qa-placement-group-option>
+                    {renderOption(option, selected)}
+                  </li>
+                );
+              }
+            : undefined
+        }
+        clearOnBlur={false}
+        data-testid="placement-groups-select"
+        errorText={placementGroupError}
+        id={id}
+        label={label}
+        loading={isLoading || loading}
+        onBlur={onBlur}
+        options={placementGroupsOptions ?? []}
+        placeholder="Select a Placement Group"
+        value={selectedPlacementGroup}
+      />
+    </>
   );
 };
 
