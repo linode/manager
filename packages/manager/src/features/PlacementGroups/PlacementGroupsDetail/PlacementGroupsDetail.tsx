@@ -1,3 +1,4 @@
+import { AffinityType } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -17,7 +18,7 @@ import {
 } from 'src/queries/placementGroups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { getAffinityLabel, getPlacementGroupLinodeCount } from '../utils';
+import { getPlacementGroupLinodeCount } from '../utils';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
@@ -62,11 +63,10 @@ export const PlacementGroupsDetail = () => {
     },
   ];
   const { affinity_type, label } = placementGroup;
-  const affinityLabel = getAffinityLabel(affinity_type);
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const resetEditableLabel = () => {
-    return `${label} (${affinityLabel})`;
+    return `${label} (${AffinityType[affinity_type]})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {
@@ -90,7 +90,7 @@ export const PlacementGroupsDetail = () => {
           ],
           onEditHandlers: {
             editableTextTitle: label,
-            editableTextTitleSuffix: ` (${affinityLabel})`,
+            editableTextTitleSuffix: ` (${AffinityType[affinity_type]})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,
