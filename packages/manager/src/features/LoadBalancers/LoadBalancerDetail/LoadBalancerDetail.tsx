@@ -110,7 +110,7 @@ export const LoadBalancerDetail = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Global Load Balancers',
+              label: 'Cloud Load Balancers',
               position: 1,
             },
           ],

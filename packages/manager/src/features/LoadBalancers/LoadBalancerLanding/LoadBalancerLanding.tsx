@@ -104,10 +104,10 @@ export const LoadBalancerLanding = () => {
             createButtonText="Create Load Balancer"
             docsLabel="Docs"
             docsLink={AGLB_DOCS.GettingStarted}
-            entity="Global Load Balancers"
+            entity="Cloud Load Balancers"
             onButtonClick={createLoadBalancer}
             removeCrumbX={1}
-            title="Global Load Balancers"
+            title="Cloud Load Balancers"
           />
 
           <Table>

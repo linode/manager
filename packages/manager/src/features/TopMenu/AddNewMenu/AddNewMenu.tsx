@@ -90,7 +90,7 @@ export const AddNewMenu = () => {
     {
       // TODO AGLB: Replace with AGLB copy when available
       description: 'Ensure your services are highly available',
-      entity: 'Global Load Balancer',
+      entity: 'Cloud Load Balancer',
       hide: !flags.aglb,
       icon: LoadBalancerIcon,
       link: '/loadbalancers/create',

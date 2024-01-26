@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer routes page.
+ * @file Integration tests for Akamai Cloud Load Balancer routes page.
  */
 
 import {
@@ -21,7 +21,7 @@ import {
   mockUpdateRouteError,
 } from 'support/intercepts/load-balancers';
 
-describe('Akamai Global Load Balancer routes page', () => {
+describe('Akamai Cloud Load Balancer routes page', () => {
   describe('create route', () => {
     it('can create a route', () => {
       const loadbalancer = loadbalancerFactory.build();

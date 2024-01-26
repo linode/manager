@@ -46,7 +46,7 @@ type NavEntity =
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Global Load Balancers'
+  | 'Cloud Load Balancers'
   | 'Help & Support'
   | 'Images'
   | 'Kubernetes'
@@ -189,7 +189,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           betaChipClassName: 'beta-chip-aglb',
-          display: 'Global Load Balancers',
+          display: 'Cloud Load Balancers',
           hide: !flags.aglb,
           href: '/loadbalancers',
           icon: <LoadBalancer />,

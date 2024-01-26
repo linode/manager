@@ -26,7 +26,7 @@ import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 
-describe('Akamai Global Load Balancer service targets', () => {
+describe('Akamai Cloud Load Balancer service targets', () => {
   // TODO Remove this `beforeEach()` hook and related `cy.wait()` calls when `aglb` feature flag goes away.
   beforeEach(() => {
     mockAppendFeatureFlags({

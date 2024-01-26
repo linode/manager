@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer navigation.
+ * @file Integration tests for Akamai Cloud Load Balancer navigation.
  */
 
 import {
@@ -27,13 +27,13 @@ import { getRegionById } from 'support/util/regions';
  */
 const returnToLandingPage = () => {
   ui.entityHeader.find().within(() => {
-    cy.findByText('Global Load Balancers').should('be.visible').click();
+    cy.findByText('Cloud Load Balancers').should('be.visible').click();
   });
 
   cy.url().should('endWith', '/loadbalancers');
 };
 
-describe('Akamai Global Load Balancer landing page', () => {
+describe('Akamai Cloud Load Balancer landing page', () => {
   /*
    * - Confirms that load balancers are listed on the AGLB landing page.
    * - Confirms that clicking a load balancer label directs to its details pages.
@@ -200,7 +200,7 @@ describe('Delete', () => {
 
     cy.get('[data-qa-header]')
       .should('be.visible')
-      .should('have.text', 'Global Load Balancers');
+      .should('have.text', 'Cloud Load Balancers');
 
     cy.findByText(
       'Scalable Layer 4 and Layer 7 load balancer to route and manage enterprise traffic between clients and your distributed applications and networks globally.'
@@ -209,7 +209,7 @@ describe('Delete', () => {
 
     // Create button exists and navigates user to create page.
     ui.button
-      .findByTitle('Create Global Load Balancer')
+      .findByTitle('Create Cloud Load Balancer')
       .should('be.visible')
       .should('be.enabled');
 

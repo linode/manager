@@ -68,7 +68,7 @@ describe('AddNewMenu', () => {
     const createButton = getByText('Create');
     fireEvent.click(createButton);
 
-    ['Global Load Balancer', 'Database'].forEach((createMenuItem: string) => {
+    ['Cloud Load Balancer', 'Database'].forEach((createMenuItem: string) => {
       const hiddenMenuItem = queryByText(createMenuItem);
       expect(hiddenMenuItem).toBeNull();
     });

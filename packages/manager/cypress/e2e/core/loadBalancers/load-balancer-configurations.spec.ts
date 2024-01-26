@@ -23,7 +23,7 @@ import {
 } from 'support/intercepts/load-balancers';
 import { ui } from 'support/ui';
 
-describe('Akamai Global Load Balancer configurations page', () => {
+describe('Akamai Cloud Load Balancer configurations page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aglb: makeFeatureFlagData(true),

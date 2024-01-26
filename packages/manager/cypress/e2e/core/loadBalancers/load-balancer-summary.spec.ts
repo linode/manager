@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer summary page.
+ * @file Integration tests for Akamai Cloud Load Balancer summary page.
  */
 
 import { loadbalancerFactory, configurationFactory } from '@src/factories/aglb';
@@ -17,7 +17,7 @@ import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 
-describe('Akamai Global Load Balancer details page', () => {
+describe('Akamai Cloud Load Balancer details page', () => {
   it('renders all tabs and basic loadbalancer info', () => {
     const mockLoadBalancer = loadbalancerFactory.build();
 

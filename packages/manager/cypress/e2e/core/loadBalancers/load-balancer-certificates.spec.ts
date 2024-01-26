@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer certificates page.
+ * @file Integration tests for Akamai Cloud Load Balancer certificates page.
  */
 
 import {
@@ -94,7 +94,7 @@ const deleteCertificate = (
   }
 };
 
-describe('Akamai Global Load Balancer certificates page', () => {
+describe('Akamai Cloud Load Balancer certificates page', () => {
   let mockLoadBalancer: Loadbalancer;
 
   before(() => {

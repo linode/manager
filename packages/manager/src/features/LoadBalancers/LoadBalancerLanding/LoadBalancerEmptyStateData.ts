@@ -10,7 +10,7 @@ export const headers: ResourcesHeaders = {
   description:
     'Scalable Layer 4 and Layer 7 load balancer to route and manage enterprise traffic between clients and your distributed applications and networks globally.',
   subtitle: 'BETA',
-  title: 'Global Load Balancers',
+  title: 'Cloud Load Balancers',
 };
 
 export const gettingStartedGuides: ResourcesLinkSection = {

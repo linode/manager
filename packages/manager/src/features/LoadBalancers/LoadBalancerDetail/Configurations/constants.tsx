@@ -35,7 +35,7 @@ export const protocolOptions = [
 
 export const CONFIGURATION_COPY = {
   Certificates:
-    'TLS termination certificates create an encrypted link between your clients and Global Load Balancer, and terminate incoming traffic on the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over encrypted TLS connections. Responses from your service targets to your clients are also encrypted.',
+    'TLS termination certificates create an encrypted link between your clients and Cloud Load Balancer, and terminate incoming traffic on the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over encrypted TLS connections. Responses from your service targets to your clients are also encrypted.',
   Port:
     'Set the inbound port value that the load balancer listens on to whichever port the client will connect to. The port can be 1-65535.',
   Protocol: (
