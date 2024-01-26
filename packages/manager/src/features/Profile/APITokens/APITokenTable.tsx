@@ -18,8 +18,10 @@ import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSor
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useProfile } from 'src/queries/profile';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
@@ -53,6 +55,8 @@ const PREFERENCE_KEY = 'api-tokens';
 export const APITokenTable = (props: Props) => {
   const { title, type } = props;
 
+  const flags = useFlags();
+  const { data: profile } = useProfile();
   const { handleOrderChange, order, orderBy } = useOrder(
     {
       order: 'desc',
@@ -76,6 +80,10 @@ export const APITokenTable = (props: Props) => {
       page_size: pagination.pageSize,
     },
     { '+order': order, '+order_by': orderBy }
+  );
+
+  const isProxyUser = Boolean(
+    flags.parentChildAccountAccess && profile?.user_type === 'proxy'
   );
 
   const [isCreateOpen, setIsCreateOpen] = React.useState<boolean>(false);
@@ -169,6 +177,7 @@ export const APITokenTable = (props: Props) => {
         </TableCell>
         <TableCell actionCell>
           <APITokenMenu
+            isProxyUser={isProxyUser}
             isThirdPartyAccessToken={title === 'Third Party Access Tokens'}
             openEditDrawer={openEditDrawer}
             openRevokeDialog={openRevokeDialog}
@@ -197,6 +206,12 @@ export const APITokenTable = (props: Props) => {
         <StyledAddNewWrapper>
           {type === 'Personal Access Token' && (
             <AddNewLink
+              disabledReason={
+                isProxyUser
+                  ? 'You can only create tokens for your own company.'
+                  : undefined
+              }
+              disabled={isProxyUser}
               label="Create a Personal Access Token"
               onClick={() => setIsCreateOpen(true)}
             />
