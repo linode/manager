@@ -2,14 +2,7 @@ import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
-import { TableRowEmpty } from '../TableRowEmpty/TableRowEmpty';
 import {
   SelectedOptionsHeader,
   SelectedOptionsList,
@@ -63,10 +56,6 @@ export interface RemovableSelectionsListProps {
    * The data to display in the list
    */
   selectionData: RemovableItem[];
-  /**
-   * Headers for the table containing the list of selected options
-   */
-  tableHeaders?: string[];
 }
 
 export const RemovableSelectionsList = (
@@ -81,7 +70,6 @@ export const RemovableSelectionsList = (
     onRemove,
     preferredDataLabel,
     selectionData,
-    tableHeaders,
   } = props;
 
   // used to determine when to display a box-shadow to indicate scrollability
@@ -98,128 +86,46 @@ export const RemovableSelectionsList = (
     onRemove(selection);
   };
 
-  // Used for non-table version
-  const selectedOptionsJSX = (
-    <StyledBoxShadowWrapper
-      displayShadow={listHeight > maxHeight}
-      maxWidth={maxWidth}
-    >
-      <StyledScrollBox maxHeight={maxHeight} maxWidth={maxWidth}>
-        <SelectedOptionsList isRemovable={isRemovable} ref={listRef}>
-          {selectionData.map((selection) => (
-            <SelectedOptionsListItem alignItems="center" key={selection.id}>
-              <StyledLabel>
-                {preferredDataLabel
-                  ? selection[preferredDataLabel]
-                  : selection.label}
-              </StyledLabel>
-              {isRemovable && (
-                <IconButton
-                  aria-label={`remove ${
-                    preferredDataLabel
-                      ? selection[preferredDataLabel]
-                      : selection.label
-                  }`}
-                  disableRipple
-                  onClick={() => handleOnClick(selection)}
-                  size="medium"
-                >
-                  <Close />
-                </IconButton>
-              )}
-            </SelectedOptionsListItem>
-          ))}
-        </SelectedOptionsList>
-      </StyledScrollBox>
-    </StyledBoxShadowWrapper>
-  );
-
-  // Used for table version
-  const selectedOptionsJSXForTable = (
-    <>
-      {selectionData.map((selection) => (
-        <TableRow key={selection.id}>
-          <TableCell>
-            <StyledLabel>
-              {preferredDataLabel
-                ? selection[preferredDataLabel]
-                : selection.label}
-            </StyledLabel>
-          </TableCell>
-          <TableCell>{selection.interfaceData?.ipv4?.vpc ?? null}</TableCell>
-          <TableCell>
-            {determineNoneSingleOrMultipleWithChip(
-              selection.interfaceData?.ip_ranges ?? []
-            )}
-          </TableCell>
-          <TableCell>
-            {isRemovable && (
-              <IconButton
-                aria-label={`remove ${
-                  preferredDataLabel
-                    ? selection[preferredDataLabel]
-                    : selection.label
-                }`}
-                disableRipple
-                onClick={() => handleOnClick(selection)}
-                size="medium"
-              >
-                <Close />
-              </IconButton>
-            )}
-          </TableCell>
-        </TableRow>
-      ))}
-    </>
-  );
-
-  const tableOfSelectedOptions = (
-    <Table>
-      <TableHead>
-        <TableRow>
-          {tableHeaders?.map((thisHeader) => (
-            <TableCell key={`removable-selections-list-header-${thisHeader}`}>
-              {thisHeader}
-            </TableCell>
-          ))}
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>{selectedOptionsJSXForTable}</TableBody>
-    </Table>
-  );
-
-  const tableWithoutData = (
-    <Table>
-      <TableHead>
-        <TableRow>
-          {tableHeaders?.map((thisHeader) => (
-            <TableCell key={`removable-selections-list-header-${thisHeader}`}>
-              {thisHeader}
-            </TableCell>
-          ))}
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableRowEmpty colSpan={4} message={noDataText} />
-    </Table>
-  );
-
   return (
     <>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
-        !tableHeaders ? (
-          selectedOptionsJSX
-        ) : (
-          tableOfSelectedOptions
-        )
-      ) : !tableHeaders ? (
+        <StyledBoxShadowWrapper
+          displayShadow={listHeight > maxHeight}
+          maxWidth={maxWidth}
+        >
+          <StyledScrollBox maxHeight={maxHeight} maxWidth={maxWidth}>
+            <SelectedOptionsList isRemovable={isRemovable} ref={listRef}>
+              {selectionData.map((selection) => (
+                <SelectedOptionsListItem alignItems="center" key={selection.id}>
+                  <StyledLabel>
+                    {preferredDataLabel
+                      ? selection[preferredDataLabel]
+                      : selection.label}
+                  </StyledLabel>
+                  {isRemovable && (
+                    <IconButton
+                      aria-label={`remove ${
+                        preferredDataLabel
+                          ? selection[preferredDataLabel]
+                          : selection.label
+                      }`}
+                      disableRipple
+                      onClick={() => handleOnClick(selection)}
+                      size="medium"
+                    >
+                      <Close />
+                    </IconButton>
+                  )}
+                </SelectedOptionsListItem>
+              ))}
+            </SelectedOptionsList>
+          </StyledScrollBox>
+        </StyledBoxShadowWrapper>
+      ) : (
         <StyledNoAssignedLinodesBox maxWidth={maxWidth}>
           <StyledLabel>{noDataText}</StyledLabel>
         </StyledNoAssignedLinodesBox>
-      ) : (
-        tableWithoutData
       )}
     </>
   );
