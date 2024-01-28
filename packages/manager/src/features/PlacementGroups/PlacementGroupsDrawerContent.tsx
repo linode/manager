@@ -68,7 +68,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
     if (isSubmitting) {
       setIsFormDirty(true);
     }
-  }, [isSubmitting]);
+  }, [isSubmitting, setIsFormDirty]);
 
   const generalError = status?.generalError;
   const isRenameDrawer = mode === 'rename';

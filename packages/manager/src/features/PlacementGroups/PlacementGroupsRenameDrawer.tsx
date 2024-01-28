@@ -14,16 +14,12 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupDrawerContent';
+import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 
-import type { PlacementGroupsRenameDrawerProps } from './types';
 import type {
-  CreatePlacementGroupPayload,
-  RenamePlacementGroupPayload,
-} from '@linode/api-v4';
-
-type PlacementGroupDrawerFormikProps = RenamePlacementGroupPayload &
-  CreatePlacementGroupPayload;
+  PlacementGroupDrawerFormikProps,
+  PlacementGroupsRenameDrawerProps,
+} from './types';
 
 export const PlacementGroupsRenameDrawer = (
   props: PlacementGroupsRenameDrawerProps
@@ -56,7 +52,7 @@ export const PlacementGroupsRenameDrawer = (
   } = useFormik<PlacementGroupDrawerFormikProps>({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: selectedPlacementGroup?.affinity_type as CreatePlacementGroupPayload['affinity_type'],
+      affinity_type: selectedPlacementGroup?.affinity_type as PlacementGroupDrawerFormikProps['affinity_type'],
       label: selectedPlacementGroup?.label ?? '',
       region: selectedPlacementGroup?.region ?? '',
     },
@@ -65,15 +61,15 @@ export const PlacementGroupsRenameDrawer = (
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
+      // This is a bit of an outlier. We only need to pass the label since that' the only value the API accepts.
+      // Meanwhile formik is still keeping track of the other values since we're showing them in the UI.
       const { label } = payload;
 
       mutateAsync({ label })
         .then((response) => {
           setSubmitting(false);
-          // Invalidate Placement Groups Queries
           queryClient.invalidateQueries([placementGroupQueryKey]);
 
-          // Show snackbar notification
           enqueueSnackbar(
             `Placement Group ${payload.label} successfully renamed`,
             {

@@ -14,11 +14,13 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupDrawerContent';
+import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
 
-import type { PlacementGroupsCreateDrawerProps } from './types';
-import type { CreatePlacementGroupPayload } from '@linode/api-v4';
+import type {
+  PlacementGroupDrawerFormikProps,
+  PlacementGroupsCreateDrawerProps,
+} from './types';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -50,12 +52,12 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: '' as CreatePlacementGroupPayload['affinity_type'],
+      affinity_type: '' as PlacementGroupDrawerFormikProps['affinity_type'],
       label: '',
       region: selectedRegionId ?? '',
     },
     onSubmit(
-      values: CreatePlacementGroupPayload,
+      values: PlacementGroupDrawerFormikProps,
       { setErrors, setStatus, setSubmitting }
     ) {
       setIsFormDirty(false);
