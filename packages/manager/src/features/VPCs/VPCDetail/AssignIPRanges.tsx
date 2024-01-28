@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
@@ -26,19 +27,12 @@ export const AssignIPRanges = (props: Props) => {
   return (
     <>
       <Divider sx={{ ...sx }} />
-      {ipRangesError && (
-        <Notice important text={ipRangesError} variant="error" />
-      )}
-      <Typography
-        sx={(theme) => ({
-          fontFamily: theme.font.bold,
-          paddingBottom: theme.spacing(),
-        })}
-      >
+      {ipRangesError && <Notice text={ipRangesError} variant="error" />}
+      <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
         {ASSIGN_IPV4_RANGES_TITLE}
       </Typography>
       <Typography variant="body1">
-        {ASSIGN_IPV4_RANGES_DESCRIPTION}{' '}
+        <StyledDescription>{ASSIGN_IPV4_RANGES_DESCRIPTION}</StyledDescription>
         <Link to="https://www.linode.com/docs/guides/how-to-understand-ip-addresses/">
           Learn more
         </Link>
@@ -55,3 +49,7 @@ export const AssignIPRanges = (props: Props) => {
     </>
   );
 };
+
+const StyledDescription = styled('span')(() => ({
+  marginRight: '5px',
+}));
