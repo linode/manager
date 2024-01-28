@@ -38,13 +38,11 @@ interface Props {
   vpcId: number;
 }
 
-type ConfigInterfaceAndLinodeData = { id: number } & {
+interface ConfigInterfaceAndLinodeData extends Linode {
   configId: number;
   interfaceData: Interface;
   interfaceId: number;
-  label: string;
-  linodeId: number;
-};
+}
 
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({ onClose, open, singleLinodeToBeUnassigned, subnet, vpcId }: Props) => {
@@ -141,12 +139,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 }
 
                 return {
+                  ...linode,
                   configId: configWithVpcInterface.id,
-                  id: linode.id,
+
                   interfaceData: vpcInterface,
                   interfaceId: vpcInterface.id,
-                  label: linode.label,
-                  linodeId: linode.id,
                 };
               }
               return null;
@@ -163,7 +160,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             (item) => ({
               configId: item?.configId,
               interfaceId: item?.interfaceId,
-              linodeId: item?.linodeId,
+              linodeId: item?.id,
             })
           );
 
@@ -334,7 +331,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
               />
             </Box>
-            {selectedLinodes.length > 0 && (
+            {selectedLinodesAndConfigData.length > 0 && (
               <DownloadCSV
                 sx={{
                   alignItems: 'flex-start',
@@ -345,7 +342,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 }}
                 buttonType="styledLink"
                 csvRef={csvRef}
-                data={selectedLinodes}
+                data={selectedLinodesAndConfigData}
                 filename={`linodes-unassigned-${formattedDate}.csv`}
                 headers={SUBNET_LINODE_CSV_HEADERS}
                 onClick={downloadCSV}
