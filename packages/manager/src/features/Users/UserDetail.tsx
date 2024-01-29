@@ -19,6 +19,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { queryKey } from 'src/queries/account';
+import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -26,11 +27,12 @@ import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile';
 
 export const UserDetail = () => {
-  const { username: usernameParam } = useParams<{ username: string }>();
+  const { username: currentUsername } = useParams<{ username: string }>();
   const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();
 
   const { data: profile, refetch: refreshProfile } = useProfile();
+  const { data: user } = useAccountUser(currentUsername ?? '');
 
   const queryClient = useQueryClient();
 
@@ -62,17 +64,17 @@ export const UserDetail = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      routeName: `/account/users/${usernameParam}/profile`,
+      routeName: `/account/users/${currentUsername}/profile`,
       title: 'User Profile',
     },
     {
-      routeName: `/account/users/${usernameParam}/permissions`,
+      routeName: `/account/users/${currentUsername}/permissions`,
       title: 'User Permissions',
     },
   ];
 
   React.useEffect(() => {
-    getUser(usernameParam)
+    getUser(currentUsername)
       .then((user) => {
         setOriginalUsername(user.username);
         setUsername(user.username);
@@ -193,6 +195,8 @@ export const UserDetail = () => {
     history.push(tabs[index].routeName);
   };
 
+  const isProxyUser = user?.user_type === 'proxy';
+
   if (error) {
     return (
       <React.Fragment>
@@ -221,7 +225,7 @@ export const UserDetail = () => {
         )}
         onChange={navToURL}
       >
-        <TabLinkList tabs={tabs} />
+        {!isProxyUser && <TabLinkList tabs={tabs} />}
 
         {createdUsername && (
           <Notice
