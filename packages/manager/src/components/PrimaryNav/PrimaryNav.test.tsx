@@ -87,7 +87,7 @@ describe('PrimaryNav', () => {
       flags: { aclb: true },
     });
 
-    const loadbalancerNavItem = await findByText('Global Load Balancers');
+    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
 
     expect(loadbalancerNavItem).toBeVisible();
   });
@@ -107,7 +107,7 @@ describe('PrimaryNav', () => {
       flags: { aclb: false },
     });
 
-    const loadbalancerNavItem = await findByText('Global Load Balancers');
+    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
 
     expect(loadbalancerNavItem).toBeVisible();
   });
@@ -127,6 +127,6 @@ describe('PrimaryNav', () => {
       flags: { aclb: false },
     });
 
-    expect(queryByText('Global Load Balancers')).not.toBeInTheDocument();
+    expect(queryByText('Cloud Load Balancers')).not.toBeInTheDocument();
   });
 });
