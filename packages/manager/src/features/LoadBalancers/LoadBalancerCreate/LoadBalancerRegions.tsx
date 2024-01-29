@@ -25,7 +25,7 @@ export const LoadBalancerRegions = ({ sx }: Props) => {
               sx={{ marginLeft: '0 !important', marginRight: '8px !important' }}
             />
             Load Balancers will be automatically provisioned in these 5 Regions.
-            No charges with be incurred.
+            No charges will be incurred.
           </Typography>
         </Stack>
         <Regions />
