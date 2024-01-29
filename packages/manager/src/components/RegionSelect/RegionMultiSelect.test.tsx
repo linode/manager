@@ -22,7 +22,7 @@ const regionsAtlanta = regionFactory.buildList(1, {
   label: 'Atlanta, GA',
 });
 interface SelectedRegionsProps {
-  onRemove: (data: RegionSelectOption) => void;
+  onRemove: (region: string) => void;
   selectedRegions: RegionSelectOption[];
 }
 const SelectedRegionsList = ({
@@ -33,7 +33,7 @@ const SelectedRegionsList = ({
     {selectedRegions.map((region, index) => (
       <li aria-label={region.label} key={index}>
         {region.label}
-        <button onClick={() => onRemove(region)}>Remove</button>
+        <button onClick={() => onRemove(region.value)}>Remove</button>
       </li>
     ))}
   </ul>

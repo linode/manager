@@ -8,8 +8,8 @@ import { Box, BoxProps } from '../Box';
 
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
-  'data-testid'?: string;
   'data-qa-form-data-loading'?: boolean;
+  'data-testid'?: string;
   label: string;
 }
 
@@ -77,9 +77,6 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   },
   '& > :only-child': {
     marginRight: 0,
-  },
-  '& > button': {
-    marginBottom: spacing(1),
   },
   justifyContent: 'flex-end',
   marginTop: spacing(1),

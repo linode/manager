@@ -23,11 +23,11 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 
 import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const queryKey = 'images';
 
@@ -126,7 +126,7 @@ export const useAllImagesQuery = (
 export const useUploadImageQuery = (payload: ImageUploadPayload) =>
   useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
 
-export const imageEventsHandler = ({ event, queryClient }: EventWithStore) => {
+export const imageEventsHandler = ({ event, queryClient }: EventHandlerData) => {
   const { action, entity, status } = event;
 
   // Keep the getAll query up to date so that when we have to use it, it contains accurate data

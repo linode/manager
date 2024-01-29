@@ -1,4 +1,4 @@
-import type { CreditCardData } from '@linode/api-v4/types';
+import type { CreditCardData } from '@linode/api-v4';
 import { paymentMethodFactory } from '@src/factories/accountPayment';
 import {
   mockSetDefaultPaymentMethod,

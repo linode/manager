@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useDeleteVolumeMutation } from 'src/queries/volumes';
 
 interface Props {
@@ -21,10 +21,12 @@ export const DeleteVolumeDialog = (props: Props) => {
     mutateAsync: deleteVolume,
   } = useDeleteVolumeMutation();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const onDelete = () => {
     deleteVolume({ id: volume?.id ?? -1 }).then(() => {
       onClose();
-      resetEventsPolling();
+      checkForNewEvents();
     });
   };
 
