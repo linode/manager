@@ -177,6 +177,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
           direction="row"
           justifyContent="center"
           key={`domain-transfer-ip-${idx}`}
+          maxWidth={forVPCIPv4Ranges ? '415px' : undefined}
           spacing={2}
         >
           <Grid xs={11}>

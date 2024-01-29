@@ -386,9 +386,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
             }
+            additionalIPv4RangesForVPC={[]} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
+            handleIPv4RangeChange={() => null} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
