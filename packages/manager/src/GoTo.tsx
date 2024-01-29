@@ -6,6 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
@@ -60,6 +61,7 @@ export const GoTo = React.memo(() => {
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
   const flags = useFlags();
 
+  const { isACLBEnabled } = useIsACLBEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
   const onClose = () => {
@@ -89,7 +91,7 @@ export const GoTo = React.memo(() => {
       },
       {
         display: 'Load Balancers',
-        hide: !flags.aglb,
+        hide: !isACLBEnabled,
         href: '/loadbalancers',
       },
       {

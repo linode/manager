@@ -31,6 +31,7 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -223,6 +224,8 @@ export const MainContent = () => {
     account?.capabilities ?? []
   );
 
+  const { isACLBEnabled } = useIsACLBEnabled();
+
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
   const shouldDisplayMainContentBanner =
@@ -338,7 +341,7 @@ export const MainContent = () => {
                         />
                         <Route component={Volumes} path="/volumes" />
                         <Redirect path="/volumes*" to="/volumes" />
-                        {flags.aglb && (
+                        {isACLBEnabled && (
                           <Route
                             component={LoadBalancers}
                             path="/loadbalancer*"

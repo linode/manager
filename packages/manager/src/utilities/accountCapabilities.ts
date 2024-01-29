@@ -1,28 +1,22 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
-import { curry } from 'ramda';
+import type { AccountCapability } from '@linode/api-v4';
 
 /**
- * Determines if a feature should be enabled. If the feature is returned from account.capabilities or if it is explicitly enabled
- * in an environment variable (from Jenkins or .env), enable the feature.
+ * Determines if a feature should be enabled.
  *
- * Curried to make later feature functions easier to write. Usage:
+ * @returns true if the feature is returned from account.capabilities **or** if it is explicitly enabled
+ * by a feature flag
  *
- * const isMyFeatureEnabled = isFeatureEnabled('Feature two');
- * isMyFeatureEnabled(ENV_VAR, account.capabilities)
+ * We use "or" instead of "and" here to allow us to enable features in "lower" environments
+ * without needing the customer capability.
  *
- * or, since we have access to environment variables from this file:
- *
- * const isMyFeatureEnabled = isFeatureEnabled('feature name', ENV_VAR);
- *
- * isMyFeatureEnabled(['Feature one', 'Feature two']) // true
+ * If you need to launch a production feature, but have it be gated,
+ * you would turn the flag *off* for that environment, but have the API return
+ * the account capability.
  */
-
-export const isFeatureEnabled = curry(
-  (
-    featureName: AccountCapability,
-    environmentVar: boolean,
-    capabilities: AccountCapability[]
-  ) => {
-    return environmentVar || capabilities.indexOf(featureName) > -1;
-  }
-);
+export const isFeatureEnabled = (
+  featureName: AccountCapability,
+  isFeatureFlagEnabled: boolean,
+  capabilities: AccountCapability[]
+) => {
+  return isFeatureFlagEnabled || capabilities.includes(featureName);
+};
