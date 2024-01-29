@@ -5,6 +5,13 @@ import { sortByString } from 'src/utilities/sort-by';
 
 import { FormState } from './OMC_AccessKeyDrawer';
 
+/**
+ * Generates an update payload based on changes in form values.
+ *
+ * @param {FormState} updatedValues - The current state of the form.
+ * @param {FormState} initialValues - The initial state of the form for comparison.
+ * @returns An object containing the fields that have changed.
+ */
 export const generateUpdatePayload = (
   updatedValues: FormState,
   initialValues: FormState
@@ -35,6 +42,14 @@ export const generateUpdatePayload = (
   return updatePayload;
 };
 
+/**
+ * Determines if there have been any changes in the label or regions
+ * between the updated form values and the initial values.
+ *
+ * @param {FormState} updatedValues - The current state of the form.
+ * @param {ObjectStorageKey} initialValues - The initial values for comparison.
+ * @returns {boolean} True if there are changes in label or regions, false otherwise.
+ */
 export const hasLabelOrRegionsChanged = (
   updatedValues: FormState,
   initialValues: ObjectStorageKey
