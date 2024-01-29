@@ -13,7 +13,7 @@ import { Typography } from 'src/components/Typography';
 import { getNextLabel } from 'src/utilities/stringUtils';
 
 import { SERVICE_TARGET_COPY } from '../LoadBalancerDetail/ServiceTargets/constants';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 import { ServiceTargetForm } from './ServiceTargetForm';
 
 interface Props {

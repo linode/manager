@@ -15,7 +15,7 @@ import { getNextLabel } from 'src/utilities/stringUtils';
 
 import { ROUTE_COPY } from '../LoadBalancerDetail/Routes/constants';
 import { getRouteProtocolFromConfigurationProtocol } from '../LoadBalancerDetail/Routes/utils';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 import type { Configuration, Route, RoutePayload } from '@linode/api-v4';
 

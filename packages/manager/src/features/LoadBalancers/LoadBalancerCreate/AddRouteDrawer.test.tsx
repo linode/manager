@@ -5,7 +5,7 @@ import React from 'react';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { AddRouteDrawer } from './AddRouteDrawer';
-import { initialValues } from './LoadBalancerCreate';
+import { initialValues } from './LoadBalancerCreateFormWrapper';
 
 describe('AddRouteDrawer (AGLB full create flow)', () => {
   it('renders a title', () => {

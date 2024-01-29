@@ -8,7 +8,7 @@ import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
 import {
   LoadBalancerCreateFormData,
   initialValues,
-} from './LoadBalancerCreate';
+} from './LoadBalancerCreateFormWrapper';
 
 import type { Handlers } from './LoadBalancerConfigurations';
 
