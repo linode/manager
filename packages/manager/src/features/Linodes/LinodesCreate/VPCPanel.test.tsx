@@ -107,7 +107,12 @@ describe('VPCPanel', () => {
   });
 
   it('should have the VPC IPv4 auto-assign checkbox checked by default', async () => {
-    const _props = { ...props, region: 'us-east', selectedVPCId: 5 };
+    const _props = {
+      ...props,
+      region: 'us-east',
+      selectedSubnetId: 2,
+      selectedVPCId: 5,
+    };
 
     server.use(
       rest.get('*/regions', (req, res, ctx) => {
@@ -236,6 +241,7 @@ describe('VPCPanel', () => {
       ...props,
       autoassignIPv4WithinVPC: false,
       region: 'us-east',
+      selectedSubnetId: 2,
       selectedVPCId: 5,
       vpcIPv4AddressOfLinode: '10.0.4.3',
     };
@@ -271,6 +277,7 @@ describe('VPCPanel', () => {
       ...props,
       assignPublicIPv4Address: true,
       region: 'us-east',
+      selectedSubnetId: 2,
       selectedVPCId: 5,
     };
 

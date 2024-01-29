@@ -305,7 +305,6 @@ const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
   );
 };
 
-// determineNoneSingleOrMultipleWithChip
 const getIPRangesCellContents = (
   configs: Config[],
   loading: boolean,
