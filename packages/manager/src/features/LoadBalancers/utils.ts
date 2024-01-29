@@ -13,7 +13,7 @@ export const useIsACLBEnabled = () => {
 
   const isACLBEnabled = isFeatureEnabled(
     'Akamai Cloud Load Balancer',
-    Boolean(flags.aglb),
+    Boolean(flags.aclb),
     account?.capabilities ?? []
   );
 

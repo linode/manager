@@ -23,10 +23,10 @@ import {
 } from 'support/intercepts/load-balancers';
 import { ui } from 'support/ui';
 
-describe('Akamai Global Load Balancer configurations page', () => {
+describe('Akamai Cloud Load Balancer configurations page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
   });
@@ -446,7 +446,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
       cy.wait('@updateConfiguration');
     });
 
-    it('can remove a route from an AGLB configuration', () => {
+    it('can remove a route from an ACLB configuration', () => {
       const routes = routeFactory.buildList(3);
       const configuration = configurationFactory.build({
         protocol: 'http',

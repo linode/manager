@@ -13,7 +13,7 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Intercepts GET request to fetch an AGLB load balancer and mocks response.
+ * Intercepts GET request to fetch an ACLB load balancer and mocks response.
  *
  * @param loadBalancer - Load balancer with which to mock response.
  *
@@ -28,7 +28,7 @@ export const mockGetLoadBalancer = (loadBalancer: Loadbalancer) => {
 };
 
 /**
- * Intercepts GET request to retrieve AGLB load balancers and mocks response.
+ * Intercepts GET request to retrieve ACLB load balancers and mocks response.
  *
  * @param loadBalancers - Load balancers with which to mock response.
  *
@@ -43,7 +43,7 @@ export const mockGetLoadBalancers = (loadBalancers: Loadbalancer[]) => {
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer.
+ * Intercepts DELETE requests to delete an ACLB load balancer.
  *
  * @param loadBalancerId - ID of load balancer for which to delete.
  *
@@ -54,7 +54,7 @@ export const mockDeleteLoadBalancer = (loadBalancerId: number) => {
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer and mocks HTTP 500 error response.
+ * Intercepts DELETE requests to delete an ACLB load balancer and mocks HTTP 500 error response.
  *
  * @param loadBalancerId - ID of load balancer for which to delete.
  * @param message - Optional error message with which to respond.
@@ -74,7 +74,7 @@ export const mockDeleteLoadBalancerError = (
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer configurations and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer configurations and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock configurations.
  * @param configurations - Load balancer configurations with which to mock response.
@@ -93,7 +93,7 @@ export const mockGetLoadBalancerConfigurations = (
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer configuration.
+ * Intercepts DELETE requests to delete an ACLB load balancer configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to delete the configuration.
  * @param configId - ID of the configuration being deleted.
@@ -112,7 +112,7 @@ export const mockDeleteLoadBalancerConfiguration = (
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer configuration and returns an error.
+ * Intercepts DELETE requests to delete an ACLB load balancer configuration and returns an error.
  *
  * @param loadBalancerId - ID of load balancer for which to delete the configuration.
  * @param configId - ID of the configuration being deleted.
@@ -132,10 +132,10 @@ export const mockDeleteLoadBalancerConfigurationError = (
 };
 
 /**
- * Intercepts POST request to create an AGLB configuration.
+ * Intercepts POST request to create an ACLB configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to create the configuration.
- * @param configuration - The AGLB configuration being created.
+ * @param configuration - The ACLB configuration being created.
  *
  * @returns Cypress chainable.
  */
@@ -151,10 +151,10 @@ export const mockCreateLoadBalancerConfiguration = (
 };
 
 /**
- * Intercepts PUT request to update an AGLB configuration.
+ * Intercepts PUT request to update an ACLB configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to update the configuration.
- * @param configuration - The AGLB configuration being updated.
+ * @param configuration - The ACLB configuration being updated.
  *
  * @returns Cypress chainable.
  */
@@ -170,10 +170,10 @@ export const mockUpdateLoadBalancerConfiguration = (
 };
 
 /**
- * Intercepts PUT request to update an AGLB configuration.
+ * Intercepts PUT request to update an ACLB configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to update the configuration.
- * @param configuration - The AGLB configuration being updated.
+ * @param configuration - The ACLB configuration being updated.
  *
  * @returns Cypress chainable.
  */
@@ -190,7 +190,7 @@ export const mockUpdateLoadBalancerConfigurationError = (
 };
 
 /**
- * Intercepts POST request to create an AGLB configuration and returns an error.
+ * Intercepts POST request to create an ACLB configuration and returns an error.
  *
  * @param loadBalancerId - ID of load balancer for which to create the configuration.
  * @param errors - Array of API errors to mock.
@@ -209,7 +209,7 @@ export const mockCreateLoadBalancerConfigurationError = (
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer certificates and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer certificates and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  * @param certificates - Load balancer certificates with which to mock response.
@@ -228,7 +228,7 @@ export const mockGetLoadBalancerCertificates = (
 };
 
 /**
- * Intercepts POST request to upload an AGLB load balancer certificate and mocks a success response.
+ * Intercepts POST request to upload an ACLB load balancer certificate and mocks a success response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  *
@@ -246,7 +246,7 @@ export const mockUploadLoadBalancerCertificate = (
 };
 
 /**
- * Intercepts DELETE request to delete an AGLB load balancer certificate and mocks a success response.
+ * Intercepts DELETE request to delete an ACLB load balancer certificate and mocks a success response.
  *
  * @param loadBalancerId - ID of load balancer for which to delete certificates.
  * @param certificateId - ID of certificate for which to remove.
@@ -265,7 +265,7 @@ export const mockDeleteLoadBalancerCertificate = (
 };
 
 /**
- * Intercepts GET request to retrieve AGLB service targets and mocks HTTP 500 error response.
+ * Intercepts GET request to retrieve ACLB service targets and mocks HTTP 500 error response.
  *
  * @param loadBalancerId - ID of load balancer for which to delete certificates.
  * @param certificateId - ID of certificate for which to remove.
@@ -288,7 +288,7 @@ export const mockDeleteLoadBalancerCertificateError = (
 };
 
 /**
- * Intercepts PUT request to update an AGLB load balancer certificate and mocks a success response.
+ * Intercepts PUT request to update an ACLB load balancer certificate and mocks a success response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  *
@@ -306,13 +306,13 @@ export const mockUpdateLoadBalancerCertificate = (
 };
 
 /**
- * Intercepts GET request to retrieve AGLB service targets and mocks response.
+ * Intercepts GET request to retrieve ACLB service targets and mocks response.
  *
  * @param serviceTargets - Service targets with which to mock response.
  *
  * @returns Cypress chainable.
  */
-// TODO: AGLB - We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
+// TODO: ACLB - We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
 export const mockGetServiceTargets = (
   loadBalancer: Loadbalancer,
   serviceTargets: ServiceTarget[]
@@ -325,7 +325,7 @@ export const mockGetServiceTargets = (
 };
 
 /**
- * Intercepts GET request to retrieve AGLB service targets and mocks HTTP 500 error response.
+ * Intercepts GET request to retrieve ACLB service targets and mocks HTTP 500 error response.
  *
  * @param message - Optional error message with which to respond.
  *
@@ -395,7 +395,7 @@ export const mockCreateRoute = (loadBalancer: Loadbalancer, route: Route) => {
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer routes and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer routes and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  * @param routes - Load balancer routes with which to mock response.
@@ -414,7 +414,7 @@ export const mockGetLoadBalancerRoutes = (
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer service targets and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer service targets and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  * @param serviceTargets - Load balancer service targets with which to mock response.

@@ -19,7 +19,7 @@ import type {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4';
 
-export const QUERY_KEY = 'aglbs';
+export const QUERY_KEY = 'aclbs';
 
 export const useLoadBalancersQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Loadbalancer>, APIError[]>(
@@ -31,7 +31,7 @@ export const useLoadBalancersQuery = (params?: Params, filter?: Filter) => {
 
 export const useLoadBalancerQuery = (id: number, enabled = true) => {
   return useQuery<Loadbalancer, APIError[]>(
-    [QUERY_KEY, 'aglb', id],
+    [QUERY_KEY, 'aclb', id],
     () => getLoadbalancer(id),
     { enabled }
   );
@@ -40,7 +40,7 @@ export const useLoadBalancerQuery = (id: number, enabled = true) => {
 export const useLoadBalancerEndpointHealthQuery = (id: number) => {
   return useQuery<LoadBalancerEndpointHealth, APIError[]>({
     queryFn: () => getLoadbalancerEndpointHealth(id),
-    queryKey: [QUERY_KEY, 'aglb', id, 'endpoint-health'],
+    queryKey: [QUERY_KEY, 'aclb', id, 'endpoint-health'],
     refetchInterval: 10_000,
   });
 };
@@ -51,7 +51,7 @@ export const useLoadBalancerMutation = (id: number) => {
     (data) => updateLoadbalancer(id, data),
     {
       onSuccess(data) {
-        queryClient.setQueryData([QUERY_KEY, 'aglb', id], data);
+        queryClient.setQueryData([QUERY_KEY, 'aclb', id], data);
         queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
       },
     }
@@ -64,7 +64,7 @@ export const useLoadBalancerBasicCreateMutation = () => {
     (data) => createBasicLoadbalancer(data),
     {
       onSuccess(data) {
-        queryClient.setQueryData([QUERY_KEY, 'aglb', data.id], data);
+        queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);
         queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
       },
     }
@@ -75,7 +75,7 @@ export const useLoadBalancerDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteLoadbalancer(id), {
     onSuccess() {
-      queryClient.removeQueries([QUERY_KEY, 'aglb', id]);
+      queryClient.removeQueries([QUERY_KEY, 'aclb', id]);
       queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
     },
   });

@@ -3,8 +3,6 @@ import { Formik } from 'formik';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import type {
   ConfigurationPayload,
   CreateLoadbalancerPayload,
@@ -14,12 +12,6 @@ import type {
 const LoadBalancerCreate = React.lazy(() =>
   import('./LoadBalancerCreate').then((module) => ({
     default: module.LoadBalancerCreate,
-  }))
-);
-
-const LoadBalancerBasicCreate = React.lazy(() =>
-  import('./LoadBalancerBasicCreate').then((module) => ({
-    default: module.LoadBalancerBasicCreate,
   }))
 );
 
@@ -52,8 +44,6 @@ export const initialValues: LoadBalancerCreateFormData = {
 };
 
 export const LoadBalancerCreateFormWrapper = () => {
-  const flags = useFlags();
-
   const handleSubmit = (values: LoadBalancerCreateFormData) => {
     // Handle form submission
   };
@@ -64,27 +54,17 @@ export const LoadBalancerCreateFormWrapper = () => {
       onSubmit={handleSubmit}
       validationSchema={CreateLoadBalancerSchema}
     >
-      {() => (
-        <Switch>
-          <Route
-            render={() =>
-              flags.aglbFullCreateFlow ? (
-                <LoadBalancerCreate />
-              ) : (
-                <LoadBalancerBasicCreate />
-              )
-            }
-            exact
-            path="/loadbalancers/create"
-          />
-          {flags.aglbFullCreateFlow && (
-            <Route
-              path="/loadbalancers/create/summary"
-              render={() => <LoadBalancerSummary />}
-            />
-          )}
-        </Switch>
-      )}
+      <Switch>
+        <Route
+          component={LoadBalancerCreate}
+          exact
+          path="/loadbalancers/create"
+        />
+        <Route
+          component={LoadBalancerSummary}
+          path="/loadbalancers/create/summary"
+        />
+      </Switch>
     </Formik>
   );
 };

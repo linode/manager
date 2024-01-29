@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer certificates page.
+ * @file Integration tests for Akamai Cloud Load Balancer certificates page.
  */
 
 import {
@@ -25,7 +25,7 @@ import {
 import { Loadbalancer, Certificate } from '@linode/api-v4';
 
 /**
- * Deletes the TLS / Service Target certificate in the AGLB landing page.
+ * Deletes the TLS / Service Target certificate in the ACLB landing page.
  *
  * @param loadBalancer - The load balancer that contains the certificate to be deleted.
  * @param certificatesDeleteBefore - The array of certificates to be displayed before deleting.
@@ -39,7 +39,7 @@ const deleteCertificate = (
   certificatesDeleteAfter: Certificate[]
 ) => {
   mockAppendFeatureFlags({
-    aglb: makeFeatureFlagData(true),
+    aclb: makeFeatureFlagData(true),
   }).as('getFeatureFlags');
   mockGetFeatureFlagClientstream().as('getClientStream');
   mockGetLoadBalancer(loadBalancer).as('getLoadBalancer');
@@ -94,7 +94,7 @@ const deleteCertificate = (
   }
 };
 
-describe('Akamai Global Load Balancer certificates page', () => {
+describe('Akamai Cloud Load Balancer certificates page', () => {
   let mockLoadBalancer: Loadbalancer;
 
   before(() => {
@@ -113,7 +113,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -185,7 +185,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -267,7 +267,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -372,7 +372,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');
@@ -515,7 +515,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
     });
 
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLoadBalancer(mockLoadBalancer).as('getLoadBalancer');

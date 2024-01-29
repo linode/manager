@@ -84,10 +84,10 @@ describe('PrimaryNav', () => {
     );
 
     const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aglb: true },
+      flags: { aclb: true },
     });
 
-    const loadbalancerNavItem = await findByText('Global Load Balancers');
+    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
 
     expect(loadbalancerNavItem).toBeVisible();
   });
@@ -104,10 +104,10 @@ describe('PrimaryNav', () => {
     );
 
     const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aglb: false },
+      flags: { aclb: false },
     });
 
-    const loadbalancerNavItem = await findByText('Global Load Balancers');
+    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
 
     expect(loadbalancerNavItem).toBeVisible();
   });
@@ -124,9 +124,9 @@ describe('PrimaryNav', () => {
     );
 
     const { queryByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aglb: false },
+      flags: { aclb: false },
     });
 
-    expect(queryByText('Global Load Balancers')).not.toBeInTheDocument();
+    expect(queryByText('Cloud Load Balancers')).not.toBeInTheDocument();
   });
 });

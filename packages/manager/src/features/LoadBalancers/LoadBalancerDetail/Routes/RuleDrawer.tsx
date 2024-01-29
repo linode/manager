@@ -49,7 +49,7 @@ interface Props {
 }
 
 /**
- * Drawer used for *adding* and *editing* AGLB rules
+ * Drawer used for *adding* and *editing* ACLB rules
  */
 export const RuleDrawer = (props: Props) => {
   const {

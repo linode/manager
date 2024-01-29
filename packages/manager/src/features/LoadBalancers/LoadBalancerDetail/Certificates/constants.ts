@@ -22,7 +22,7 @@ export const CERTIFICATES_COPY = {
       'TLS certificates terminate incoming traffic to the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over TLS connections. ',
   },
   Edit: {
-    // TODO: AGLB - figure out what this should be
+    // TODO: ACLB - figure out what this should be
     ca: 'You can edit this cert here.',
     downstream:
       'TLS certificates terminate incoming traffic to the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over TLS connections.',

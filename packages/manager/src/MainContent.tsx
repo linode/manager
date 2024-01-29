@@ -30,8 +30,8 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useGlobalErrors } from './hooks/useGlobalErrors';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
