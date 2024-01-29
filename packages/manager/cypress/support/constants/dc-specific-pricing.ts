@@ -51,6 +51,11 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
           id: 'us-west',
           monthly: 4.17,
         },
+        {
+          hourly: 0.006,
+          id: 'us-southeast',
+          monthly: 4.67,
+        },
       ],
     },
   },
@@ -68,6 +73,11 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       // which otherwise may not include the actual regions which have DC-specific pricing applied.
       id: 'us-west',
       monthly: 12.2,
+    },
+    {
+      hourly: 0.006,
+      id: 'us-southeast',
+      monthly: 4.67,
     },
   ],
 });
@@ -91,6 +101,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
             hourly: 0.0056,
             id: 'us-west',
             monthly: 4.17,
+          },
+          {
+            hourly: 0.006,
+            id: 'us-southeast',
+            monthly: 4.67,
           },
         ],
       },
