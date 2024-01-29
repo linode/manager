@@ -10,8 +10,7 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import {
   getAffinityLabel,
-  // getPlacementGroupLinodeCount,
-  // getPlacementGroupsCount,
+  placementGroupHasCapacity,
 } from './PlacementGroups.utils';
 
 export interface PlacementGroupsSelectProps {
@@ -22,7 +21,6 @@ export interface PlacementGroupsSelectProps {
   loading?: boolean;
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
-
   region?: string;
   renderOption?: (
     placementGroup: PlacementGroup,
@@ -46,11 +44,8 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     selectedRegionID,
   } = props;
 
-  const handlePlacementGroupChange = (selection: PlacementGroup) => {
-    setSelectedPlacementGroup(selection);
-  };
-
   const [inputValue, setInputValue] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const [
     selectedPlacementGroup,
@@ -68,15 +63,27 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   );
 
   React.useEffect(() => {
-    /** We want to clear the input value when the value prop changes to null.
-     * This is for use cases where a user changes their region and the Linode
+    /** We want to clear the input value when the value prop changes.
+     * This is for use cases where a user changes their region and the Placement Group
      * they had selected is no longer available.
      */
-    if (placementGroupsOptions?.length === 0) {
+    if (placementGroupsOptions?.length) {
+      setErrorMessage('');
+    } else {
       setSelectedPlacementGroup(null);
+      setErrorMessage('There are no Placement Groups in this region');
       setInputValue('');
     }
-  }, [inputValue, placementGroupsOptions, selectedRegionID]);
+  }, [placementGroupsOptions, selectedRegionID]);
+
+  const handlePlacementGroupChange = (selection: PlacementGroup) => {
+    setSelectedPlacementGroup(selection);
+    if (placementGroupHasCapacity(selection)) {
+      setErrorMessage('');
+    } else {
+      setErrorMessage(`This Placement Group doesn't have any capacity`);
+    }
+  };
 
   return (
     <>
@@ -120,7 +127,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         clearOnBlur={false}
         data-testid="placement-groups-select"
         disableClearable={!clearable}
-        // errorText={placementGroupError}
+        errorText={errorMessage}
         id={id}
         inputValue={inputValue}
         label={label}
@@ -141,9 +148,8 @@ const getDefaultNoOptionsMessage = (
 ) => {
   if (error) {
     return 'An error occurred while fetching your Placement Groups';
-  } else if (loading) {
-    return 'Loading your Placement Groups...';
-  } else {
-    return 'No available Placement Groups';
   }
+  return loading
+    ? 'Loading your Placement Groups...'
+    : 'No available Placement Groups';
 };
