@@ -30,15 +30,6 @@ interface RuleRowProps {
   totalRules: number;
 }
 
-const getExecutionLabel = (index: number, total: number) => {
-  if (index === 0) {
-    return 'First';
-  } else if (index === total - 1) {
-    return 'Last';
-  }
-  return index + 1;
-};
-
 export const RuleRow = (props: RuleRowProps) => {
   const {
     index,
@@ -77,7 +68,7 @@ export const RuleRow = (props: RuleRowProps) => {
               }}
             >
               <StyledDragIndicator aria-label="Drag indicator icon" />
-              {getExecutionLabel(index, totalRules)}
+              {index + 1}
             </Box>
             <Box
               sx={{
