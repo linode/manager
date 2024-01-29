@@ -6,7 +6,7 @@ import { sortByString } from 'src/utilities/sort-by';
 import { FormState } from './OMC_AccessKeyDrawer';
 
 /**
- * Generates an update payload based on changes in form values.
+ * Generates an update payload for edit access key based on changes in form values.
  *
  * @param {FormState} updatedValues - The current state of the form.
  * @param {FormState} initialValues - The initial state of the form for comparison.
