@@ -1,5 +1,4 @@
 import { Region } from '@linode/api-v4/lib/regions';
-// import { PlacementGroup } from '@linode/api-v4';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -30,9 +29,15 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
     tagsInputProps,
   } = props;
 
-  const labelString = regions
-    ?.filter((region) => region.id === selectedRegionID)
-    .map((item) => item.label);
+  const [labelString, setLabelString] = React.useState<string | undefined>('');
+
+  React.useEffect(() => {
+    const tempStr = regions
+      ?.filter((region) => region.id === selectedRegionID)
+      .map((item) => item.label)
+      .join('');
+    setLabelString(tempStr);
+  }, [regions, selectedRegionID]);
 
   return (
     <Paper

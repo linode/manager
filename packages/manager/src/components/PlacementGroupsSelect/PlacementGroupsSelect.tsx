@@ -10,8 +10,8 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import {
   getAffinityLabel,
-  getPlacementGroupLinodeCount,
-  getPlacementGroupsCount,
+  // getPlacementGroupLinodeCount,
+  // getPlacementGroupsCount,
 } from './PlacementGroups.utils';
 
 export interface PlacementGroupsSelectProps {
@@ -22,7 +22,7 @@ export interface PlacementGroupsSelectProps {
   loading?: boolean;
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
-  onSelectionChange?: (selected: PlacementGroup | null) => void;
+
   region?: string;
   renderOption?: (
     placementGroup: PlacementGroup,
@@ -35,6 +35,7 @@ export interface PlacementGroupsSelectProps {
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
+    clearable = true,
     id,
     label,
     loading,
@@ -45,50 +46,37 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     selectedRegionID,
   } = props;
 
+  const handlePlacementGroupChange = (selection: PlacementGroup) => {
+    setSelectedPlacementGroup(selection);
+  };
+
+  const [inputValue, setInputValue] = React.useState('');
+
+  const [
+    selectedPlacementGroup,
+    setSelectedPlacementGroup,
+  ] = React.useState<PlacementGroup | null>();
+
   const {
     data: placementGroups,
     error,
     isLoading,
   } = useAllPlacementGroupsQuery();
 
-  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
-    PlacementGroup | null | undefined
-  >();
-
-  const [placementGroupError, setPlacementGroupError] = React.useState('');
-
-  React.useEffect(() => {
-    if (selectedPlacementGroup) {
-      setSelectedPlacementGroup(selectedPlacementGroup);
-    } else {
-      setSelectedPlacementGroup(null);
-    }
-  }, [selectedPlacementGroup]);
-
   const placementGroupsOptions = placementGroups?.data.filter(
     (placementGroup) => placementGroup.region === selectedRegionID
   );
 
   React.useEffect(() => {
-    if (getPlacementGroupsCount(placementGroupsOptions)) {
-      setPlacementGroupError('');
-    } else {
-      setPlacementGroupError('There are no Placement Groups in this region');
+    /** We want to clear the input value when the value prop changes to null.
+     * This is for use cases where a user changes their region and the Linode
+     * they had selected is no longer available.
+     */
+    if (placementGroupsOptions?.length === 0) {
+      setSelectedPlacementGroup(null);
+      setInputValue('');
     }
-  }, [placementGroupsOptions, selectedRegionID]);
-
-  const handlePlacementGroupChange = (selection: PlacementGroup) => {
-    setSelectedPlacementGroup(selection);
-    checkPlacementGroupCapacity(selection);
-  };
-
-  const checkPlacementGroupCapacity = (placementGroup: PlacementGroup) => {
-    if (getPlacementGroupLinodeCount(placementGroup) > 9) {
-      setPlacementGroupError(`This Placement Group doesn't have any capacity`);
-    } else {
-      setPlacementGroupError('');
-    }
-  };
+  }, [inputValue, placementGroupsOptions, selectedRegionID]);
 
   return (
     <>
@@ -131,11 +119,14 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         }
         clearOnBlur={false}
         data-testid="placement-groups-select"
-        errorText={placementGroupError}
+        disableClearable={!clearable}
+        // errorText={placementGroupError}
         id={id}
+        inputValue={inputValue}
         label={label}
         loading={isLoading || loading}
         onBlur={onBlur}
+        onInputChange={(_, newValue) => setInputValue(newValue)}
         options={placementGroupsOptions ?? []}
         placeholder="Select a Placement Group"
         value={selectedPlacementGroup}
