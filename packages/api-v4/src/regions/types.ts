@@ -13,7 +13,6 @@ export type Capabilities =
   | 'Object Storage'
   | 'Premium Plans'
   | 'Vlans'
-  | 'VM Placement'
   | 'VPCs';
 
 export interface DNSResolvers {

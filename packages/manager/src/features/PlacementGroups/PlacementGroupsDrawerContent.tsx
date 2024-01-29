@@ -10,18 +10,12 @@ import { TextField } from 'src/components/TextField';
 
 import { affinityTypeOptions } from './utils';
 
-import type {
-  CreatePlacementGroupPayload,
-  PlacementGroup,
-  RenamePlacementGroupPayload,
-} from '@linode/api-v4';
-import type { Region } from '@linode/api-v4';
+import type { PlacementGroupDrawerFormikProps } from './types';
+import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { FormikProps } from 'formik';
 
 interface Props {
-  formik: FormikProps<
-    CreatePlacementGroupPayload & RenamePlacementGroupPayload
-  >;
+  formik: FormikProps<PlacementGroupDrawerFormikProps>;
   maxNumberOfPlacementGroups?: number;
   mode: 'create' | 'rename';
   numberOfPlacementGroupsCreated?: number;
