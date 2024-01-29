@@ -8,6 +8,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
+import { useMutationObserver } from 'src/hooks/useMutationObserver';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
 
@@ -30,13 +31,6 @@ const checkOverflow = (el: HTMLElement) => {
 
   const isOverflowing = el.clientWidth < el.scrollWidth;
 
-  console.log(
-    'Checking overflow',
-    el.clientWidth,
-    el.scrollWidth,
-    isOverflowing
-  );
-
   el.style.overflow = curOverflow;
 
   return isOverflowing;
@@ -45,27 +39,32 @@ const checkOverflow = (el: HTMLElement) => {
 const TagCell = (props: TagCellProps) => {
   const { sx, tags, updateTags } = props;
 
-  const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const elRef = React.useRef<HTMLDivElement | null>(null);
+  const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
+
+  // In production, a parent element sometimes is briefly
+  // set to display: none, breaking overflow detection.
+  // On mount, find the parent and listen for changes.
+  const renderParent = React.useMemo(() => {
+    let parent: HTMLElement | null = elRef;
+    while (parent != null && parent.style.display != 'none') {
+      parent = parent.parentElement;
+    }
+    return parent;
+  }, [elRef]);
 
   const windowDimensions = useWindowDimensions();
+  const lastMutations = useMutationObserver(renderParent, { attributes: true });
 
-  React.useLayoutEffect(() => {
-    const interval = setInterval(checkOverflow, 5, elRef.current);
-    return clearInterval(interval);
-  }, []);
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (elRef.current) {
-        setOverflow(checkOverflow(elRef.current));
-      }
-    }, 10);
-    return () => clearTimeout(timeout);
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const hasOverflow = React.useMemo(() => !!elRef && checkOverflow(elRef), [
+    windowDimensions,
+    lastMutations,
+    tags,
+    elRef,
+  ]);
 
   const handleAddTag = async (tag: string) => {
     await updateTags([...tags, tag]);
@@ -100,7 +99,7 @@ const TagCell = (props: TagCellProps) => {
         />
       ) : (
         <>
-          <StyledTagListDiv hasOverflow={hasOverflow} ref={elRef}>
+          <StyledTagListDiv hasOverflow={hasOverflow} ref={setElRef}>
             {tags.map((thisTag) => (
               <StyledTag
                 colorVariant="lightBlue"
