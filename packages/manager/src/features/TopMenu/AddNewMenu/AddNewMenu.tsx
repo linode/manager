@@ -25,6 +25,7 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
+import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
@@ -66,6 +67,8 @@ export const AddNewMenu = () => {
     account?.capabilities ?? []
   );
 
+  const { isACLBEnabled } = useIsACLBEnabled();
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -91,7 +94,7 @@ export const AddNewMenu = () => {
       // TODO AGLB: Replace with AGLB copy when available
       description: 'Ensure your services are highly available',
       entity: 'Global Load Balancer',
-      hide: !flags.aglb,
+      hide: !isACLBEnabled,
       icon: LoadBalancerIcon,
       link: '/loadbalancers/create',
     },

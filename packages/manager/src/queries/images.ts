@@ -126,7 +126,10 @@ export const useAllImagesQuery = (
 export const useUploadImageQuery = (payload: ImageUploadPayload) =>
   useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
 
-export const imageEventsHandler = ({ event, queryClient }: EventHandlerData) => {
+export const imageEventsHandler = ({
+  event,
+  queryClient,
+}: EventHandlerData) => {
   const { action, entity, status } = event;
 
   // Keep the getAll query up to date so that when we have to use it, it contains accurate data
