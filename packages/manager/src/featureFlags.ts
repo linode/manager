@@ -49,7 +49,6 @@ export interface Flags {
   dcGetWell: boolean;
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
-  kubernetesDashboardAvailability: boolean;
   linodeCloneUIChanges: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
