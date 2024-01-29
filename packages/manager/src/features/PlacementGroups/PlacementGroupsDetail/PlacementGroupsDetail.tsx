@@ -109,7 +109,9 @@ export const PlacementGroupsDetail = () => {
 
         <TabPanels>
           <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
-          <SafeTabPanel index={1}>TODO VM_Placement: linode list</SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <PlacementGroupsLinodes placementGroup={placementGroup} />
+          </SafeTabPanel>
         </TabPanels>
       </Tabs>
     </>
