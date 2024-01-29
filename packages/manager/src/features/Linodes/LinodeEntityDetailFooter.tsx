@@ -153,12 +153,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           sx={{
-            [theme.breakpoints.down('lg')]: {
-              '& > button': {
-                marginRight: theme.spacing(0.5),
-              },
-              flexDirection: 'row-reverse',
-            },
+            width: '100%',
           }}
           listAllTags={openTagDrawer}
           tags={linodeTags}
