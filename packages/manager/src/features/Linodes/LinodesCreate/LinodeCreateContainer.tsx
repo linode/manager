@@ -69,6 +69,7 @@ import {
 } from 'src/utilities/formatRegion';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -85,11 +86,12 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   attachedVLANLabel: null | string;
   authorized_users: string[];
@@ -140,6 +142,7 @@ type CombinedProps = WithSnackbarProps &
   WithAccountSettingsProps;
 
 const defaultState: State = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   attachedVLANLabel: '',
   authorized_users: [],
@@ -277,6 +280,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
+            handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
@@ -513,6 +517,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   handleVPCIPv4Change = (IPv4: string) => {
     this.setState({ vpcIPv4AddressOfLinode: IPv4 });
+  };
+
+  handleVPCIPv4RangesChange = (ranges: ExtendedIP[]) => {
+    this.setState({ additionalIPv4RangesForVPC: ranges });
   };
 
   params = getQueryParamsFromQueryString(this.props.location.search) as Record<
