@@ -24,6 +24,7 @@ import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
+import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
@@ -42,11 +43,11 @@ type NavEntity =
   | 'Account'
   | 'Account'
   | 'Betas'
+  | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Cloud Load Balancers'
   | 'Help & Support'
   | 'Images'
   | 'Kubernetes'
@@ -145,6 +146,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     account?.capabilities ?? []
   );
 
+  const { isACLBEnabled } = useIsACLBEnabled();
+
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
       setEnableObjectPrefetch(true);
@@ -190,7 +193,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         {
           betaChipClassName: 'beta-chip-aclb',
           display: 'Cloud Load Balancers',
-          hide: !flags.aclb,
+          hide: !isACLBEnabled,
           href: '/loadbalancers',
           icon: <LoadBalancer />,
           isBeta: true,
@@ -297,7 +300,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
-      flags.aclb,
+      isACLBEnabled,
       flags.vmPlacement,
       showVPCs,
     ]

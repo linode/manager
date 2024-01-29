@@ -60,6 +60,7 @@ export interface Account {
 export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
+  | 'Akamai Cloud Load Balancer'
   | 'Block Storage'
   | 'Cloud Firewall'
   | 'Kubernetes'
