@@ -41,7 +41,6 @@ const TagCell = (props: TagCellProps) => {
 
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-
   const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
 
   // In production, a parent element sometimes is briefly
@@ -58,6 +57,8 @@ const TagCell = (props: TagCellProps) => {
   const windowDimensions = useWindowDimensions();
   const lastMutations = useMutationObserver(renderParent, { attributes: true });
 
+  // Dependencies are not used explicitly for overflow detection but
+  // changes in these values may indicate the overflow state has changed.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const hasOverflow = React.useMemo(() => !!elRef && checkOverflow(elRef), [
     windowDimensions,

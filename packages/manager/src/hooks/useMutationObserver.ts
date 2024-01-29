@@ -12,9 +12,7 @@ export const useMutationObserver = (
     if (el == null) {
       return;
     }
-    const observer = new MutationObserver((mutations) => {
-      setLastMutations(mutations);
-    });
+    const observer = new MutationObserver(setLastMutations);
     observer.observe(el, options);
     return () => {
       observer.disconnect();
