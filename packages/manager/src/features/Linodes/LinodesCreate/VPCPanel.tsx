@@ -347,7 +347,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   )}
                   <AssignIPRanges
                     handleIPRangeChange={handleIPv4RangeChange}
-                    includeDescriptionInTooltip={fromLinodeConfig}
                     ipRanges={additionalIPv4RangesForVPC}
                     ipRangesError={''}
                     sx={{}}
