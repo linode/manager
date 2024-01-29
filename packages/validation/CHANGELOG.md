@@ -1,3 +1,10 @@
+## [2024-01-31] - v0.39.0
+
+
+### Changed:
+
+- ip_ranges field in LinodeInterfaceSchema no longer limited to 1 element ([#10089](https://github.com/linode/manager/pull/10089))
+
 ## [2024-01-22] - v0.38.0
 
 

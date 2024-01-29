@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-01-31] - v1.111.0
+
+
+### Added:
+
+- Support for IPv4 Ranges in VPC 'Assign Linodes to subnet' drawer ([#10089](https://github.com/linode/manager/pull/10089))
+- VPC IPv4 address and range to Linode IP Address Table ([#10108](https://github.com/linode/manager/pull/10108))
+- Support for VPC IPv4 Ranges data in Unassign Linodes drawer ([#10114](https://github.com/linode/manager/pull/10114))
+- Support for VPC IPv4 Ranges in Linode Create flow and 'VPC IPv4 Ranges' column to inner Subnets table on VPC Detail page ([#10116](https://github.com/linode/manager/pull/10116))
+
 ## [2024-01-22] - v1.110.0
 
 
