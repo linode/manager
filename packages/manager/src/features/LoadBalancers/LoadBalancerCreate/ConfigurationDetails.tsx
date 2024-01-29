@@ -17,7 +17,7 @@ import {
 } from '../LoadBalancerDetail/Configurations/constants';
 
 import type { Handlers } from './LoadBalancerConfigurations';
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   handlers: Handlers;
@@ -102,11 +102,7 @@ export const ConfigurationDetails = ({ index }: Props) => {
         </Stack>
       </Stack>
       <TextField
-        errorText={
-          touched.configurations?.[index]?.label
-            ? getIn(errors, `configurations[${index}].label`)
-            : ''
-        }
+        errorText={getIn(errors, `configurations[${index}].label`) ?? ''}
         inputId={`configuration-${index}-label`}
         label="Configuration Label"
         labelTooltipText={CONFIGURATION_COPY.configuration}
