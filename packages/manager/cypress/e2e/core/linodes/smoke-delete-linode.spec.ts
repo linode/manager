@@ -4,7 +4,7 @@ import { createLinodeRequestFactory } from '@src/factories/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
-import { Linode } from '@linode/api-v4/types';
+import { Linode } from '@linode/api-v4';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { randomLabel } from 'support/util/random';
 import { getClick, getVisible } from 'support/helpers';

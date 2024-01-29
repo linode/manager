@@ -1,6 +1,6 @@
 import type { VolumeRequestPayload } from '@linode/api-v4';
 import { createVolume } from '@linode/api-v4';
-import { Volume } from '@linode/api-v4/types';
+import { Volume } from '@linode/api-v4';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptResizeVolume } from 'support/intercepts/volumes';

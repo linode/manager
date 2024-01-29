@@ -7,7 +7,7 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-import { Token, Profile } from '@linode/api-v4/types';
+import { Token, Profile } from '@linode/api-v4';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';

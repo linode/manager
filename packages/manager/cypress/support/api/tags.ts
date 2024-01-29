@@ -1,5 +1,5 @@
 import { deleteTag, getTags } from '@linode/api-v4/lib/tags';
-import { Tag } from '@linode/api-v4/types';
+import { Tag } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { entityTag } from 'support/constants/cypress';
 import { depaginate } from 'support/util/paginate';
