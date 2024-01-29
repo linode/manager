@@ -5,6 +5,20 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useFlags } from 'src/hooks/useFlags';
 
+const LoadBalancerBasicCreate = React.lazy(() =>
+  import('./LoadBalancerCreate/LoadBalancerBasicCreate').then((module) => ({
+    default: module.LoadBalancerBasicCreate,
+  }))
+);
+
+const LoadBalancerCreateFormWrapper = React.lazy(() =>
+  import('./LoadBalancerCreate/LoadBalancerCreateFormWrapper').then(
+    (module) => ({
+      default: module.LoadBalancerCreateFormWrapper,
+    })
+  )
+);
+
 const LoadBalancerLanding = React.lazy(() =>
   import('./LoadBalancerLanding/LoadBalancerLanding').then((module) => ({
     default: module.LoadBalancerLanding,
@@ -14,18 +28,6 @@ const LoadBalancerLanding = React.lazy(() =>
 const LoadBalancerDetail = React.lazy(() =>
   import('./LoadBalancerDetail/LoadBalancerDetail').then((module) => ({
     default: module.LoadBalancerDetail,
-  }))
-);
-
-const LoadBalancerCreate = React.lazy(() =>
-  import('./LoadBalancerCreate/LoadBalancerCreate').then((module) => ({
-    default: module.LoadBalancerCreate,
-  }))
-);
-
-const LoadBalancerBasicCreate = React.lazy(() =>
-  import('./LoadBalancerCreate/LoadBalancerBasicCreate').then((module) => ({
-    default: module.LoadBalancerBasicCreate,
   }))
 );
 
@@ -41,7 +43,7 @@ export const LoadBalancers = () => {
         <Route
           component={
             flags.aclbFullCreateFlow
-              ? LoadBalancerCreate
+              ? LoadBalancerCreateFormWrapper
               : LoadBalancerBasicCreate
           }
           path="/loadbalancers/create"

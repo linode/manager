@@ -10,8 +10,8 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { usePrevious } from 'src/hooks/usePrevious';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -142,6 +142,8 @@ export const StandardRescueDialog = (props: Props) => {
     deviceMap
   );
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [APIError, setAPIError] = React.useState<string>('');
@@ -171,7 +173,7 @@ export const StandardRescueDialog = (props: Props) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
         });
-        resetEventsPolling();
+        checkForNewEvents();
         onClose();
       })
       .catch((errorResponse: APIError[]) => {

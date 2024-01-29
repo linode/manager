@@ -267,7 +267,7 @@ export const ConfigurationSchema = object({
     then: (o) =>
       o.of(
         object({
-          label: string().required(),
+          label: string().required(LABEL_REQUIRED),
           protocol: string().oneOf(['tcp']).required(),
           rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })

@@ -29,7 +29,7 @@ import {
   protocolOptions,
 } from '../LoadBalancerDetail/ServiceTargets/constants';
 import { ACLB_DOCS } from '../constants';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   configurationIndex: number;
