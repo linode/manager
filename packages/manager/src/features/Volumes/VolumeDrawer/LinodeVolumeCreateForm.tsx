@@ -10,7 +10,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
@@ -57,6 +57,8 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const disabled = profile?.restricted && !grants?.global.add_volumes;
 
   const {
@@ -88,7 +90,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           size: maybeCastToNumber(size),
           tags,
         });
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar(`Volume scheduled for creation.`, {
           variant: 'success',
         });

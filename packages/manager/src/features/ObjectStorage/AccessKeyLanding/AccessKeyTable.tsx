@@ -1,8 +1,12 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import {
+  ObjectStorageKey,
+  RegionS3EndpointAndID,
+} from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
+import React, { useState } from 'react';
 
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -13,8 +17,14 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { AccessKeyMenu } from './AccessKeyMenu';
+import { HostNamesDrawer } from './HostNamesDrawer';
 import { OpenAccessDrawer } from './types';
 
 export interface AccessKeyTableProps {
@@ -35,6 +45,23 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     openDrawer,
     openRevokeDialog,
   } = props;
+
+  const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
+    false
+  );
+  const [hostNames, setHostNames] = useState<RegionS3EndpointAndID[]>([]);
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+  const { data: regionsData } = useRegionsQuery();
+
+  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   const renderContent = () => {
     if (isRestrictedUser) {
@@ -75,6 +102,27 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             <StyledCopyIcon text={eachKey.access_key} />
           </Typography>
         </TableCell>
+        {isObjMultiClusterEnabled && regionsLookup && (
+          <TableCell>
+            {`${regionsLookup[eachKey?.regions[0]?.id].label}: ${
+              eachKey?.regions[0]?.s3_endpoint
+            } `}
+            {eachKey?.regions?.length === 1 && (
+              <StyledCopyIcon text={eachKey?.regions[0]?.s3_endpoint} />
+            )}
+            {eachKey.regions.length > 1 && (
+              <StyledLinkButton
+                onClick={() => {
+                  setHostNames(eachKey.regions);
+                  setShowHostNamesDrawers(true);
+                }}
+                type="button"
+              >
+                and {eachKey.regions.length - 1} more...
+              </StyledLinkButton>
+            )}
+          </TableCell>
+        )}
         <TableCell>
           <AccessKeyMenu
             label={eachKey.label}
@@ -88,22 +136,36 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   };
 
   return (
-    <Table
-      aria-label="List of Object Storage Access Keys"
-      colCount={2}
-      data-testid="data-qa-access-key-table"
-      rowCount={data?.length}
-    >
-      <TableHead>
-        <TableRow data-qa-table-head>
-          <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
-          <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
-          {/* empty cell for kebab menu */}
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>{renderContent()}</TableBody>
-    </Table>
+    <>
+      <Table
+        aria-label="List of Object Storage Access Keys"
+        colCount={2}
+        data-testid="data-qa-access-key-table"
+        rowCount={data?.length}
+      >
+        <TableHead>
+          <TableRow data-qa-table-head>
+            <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
+            <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
+            {isObjMultiClusterEnabled && (
+              <StyledLabelCell data-qa-header-key>
+                Regions/S3 Hostnames
+              </StyledLabelCell>
+            )}
+            {/* empty cell for kebab menu */}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
+      {isObjMultiClusterEnabled && (
+        <HostNamesDrawer
+          onClose={() => setShowHostNamesDrawers(false)}
+          open={showHostNamesDrawer}
+          regions={hostNames}
+        />
+      )}
+    </>
   );
 };
 

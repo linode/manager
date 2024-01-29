@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useDetachVolumeMutation } from 'src/queries/volumes';
 
@@ -19,6 +19,8 @@ export const DetachVolumeDialog = (props: Props) => {
   const { onClose, open, volume } = props;
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: linode } = useLinodeQuery(
     volume?.linode_id ?? -1,
@@ -34,7 +36,7 @@ export const DetachVolumeDialog = (props: Props) => {
   const onDetach = () => {
     detachVolume({ id: volume?.id ?? -1 }).then(() => {
       onClose();
-      resetEventsPolling();
+      checkForNewEvents();
       enqueueSnackbar(`Volume detachment started`, {
         variant: 'info',
       });
