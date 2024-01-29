@@ -233,14 +233,10 @@ export const useAllKubernetesNodePoolQuery = (
   );
 };
 
-export const useKubernetesDashboardQuery = (
-  clusterID: number,
-  enabled: boolean = false
-) => {
+export const useKubernetesDashboardQuery = (clusterId: number) => {
   return useQuery<KubernetesDashboardResponse, APIError[]>(
-    [queryKey, 'cluster', clusterID, 'dashboard'],
-    () => getKubernetesClusterDashboard(clusterID),
-    { enabled }
+    [queryKey, 'cluster', clusterId, 'dashboard'],
+    () => getKubernetesClusterDashboard(clusterId)
   );
 };
 
