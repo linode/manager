@@ -25,7 +25,7 @@ interface Props {
   errors: VPCInterfaceErrors & OtherInterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
-  handleIPRangeChange: (ips: ExtendedIP[]) => void;
+  handleIPRangeChange?: (ips: ExtendedIP[]) => void;
   ipamAddress?: null | string;
   label?: null | string;
   purpose: ExtendedPurpose;
@@ -385,36 +385,38 @@ export const InterfaceSelect = (props: CombinedProps) => {
       {purpose === 'vlan' &&
         regionHasVLANs !== false &&
         enclosingJSXForVLANFields(jsxSelectVLAN, jsxIPAMForVLAN)}
-      {purpose === 'vpc' && regionHasVPCs !== false && (
-        <Grid xs={isSmallBp ? 12 : 6}>
-          <VPCPanel
-            toggleAssignPublicIPv4Address={() =>
-              setAutoAssignLinodeIPv4(
-                (autoAssignLinodeIPv4) => !autoAssignLinodeIPv4
-              )
-            }
-            toggleAutoassignIPv4WithinVPCEnabled={() =>
-              setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
-            }
-            additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
-            assignPublicIPv4Address={autoAssignLinodeIPv4}
-            autoassignIPv4WithinVPC={autoAssignVPCIPv4}
-            from="linodeConfig"
-            handleIPv4RangeChange={handleIPRangeChange} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
-            handleSelectVPC={handleVPCLabelChange}
-            handleSubnetChange={handleSubnetChange}
-            handleVPCIPv4Change={handleVPCIPv4Input}
-            publicIPv4Error={errors.publicIPv4Error}
-            region={region}
-            selectedSubnetId={subnetId}
-            selectedVPCId={vpcId}
-            subnetError={errors.subnetError}
-            vpcIPv4AddressOfLinode={vpcIPv4}
-            vpcIPv4Error={errors.vpcIPv4Error}
-            vpcIdError={errors.vpcError}
-          />
-        </Grid>
-      )}
+      {purpose === 'vpc' &&
+        regionHasVPCs !== false &&
+        handleIPRangeChange !== undefined && (
+          <Grid xs={isSmallBp ? 12 : 6}>
+            <VPCPanel
+              toggleAssignPublicIPv4Address={() =>
+                setAutoAssignLinodeIPv4(
+                  (autoAssignLinodeIPv4) => !autoAssignLinodeIPv4
+                )
+              }
+              toggleAutoassignIPv4WithinVPCEnabled={() =>
+                setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
+              }
+              additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
+              assignPublicIPv4Address={autoAssignLinodeIPv4}
+              autoassignIPv4WithinVPC={autoAssignVPCIPv4}
+              from="linodeConfig"
+              handleIPv4RangeChange={handleIPRangeChange} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
+              handleSelectVPC={handleVPCLabelChange}
+              handleSubnetChange={handleSubnetChange}
+              handleVPCIPv4Change={handleVPCIPv4Input}
+              publicIPv4Error={errors.publicIPv4Error}
+              region={region}
+              selectedSubnetId={subnetId}
+              selectedVPCId={vpcId}
+              subnetError={errors.subnetError}
+              vpcIPv4AddressOfLinode={vpcIPv4}
+              vpcIPv4Error={errors.vpcIPv4Error}
+              vpcIdError={errors.vpcError}
+            />
+          </Grid>
+        )}
 
       {!fromAddonsPanel && (
         <Divider

@@ -1,6 +1,7 @@
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -37,38 +38,44 @@ export const AssignIPRanges = (props: Props) => {
 
   return (
     <>
-      <Divider sx={{ ...sx }} />
+      <Divider sx={sx} />
       {ipRangesError && (
         <Notice important text={ipRangesError} variant="error" />
       )}
-      <Typography
-        sx={(theme) => ({
-          fontFamily: theme.font.bold,
-        })}
+      <Box
+        alignItems={includeDescriptionInTooltip ? 'center' : 'flex-start'}
+        display="flex"
+        flexDirection={includeDescriptionInTooltip ? 'row' : 'column'}
       >
-        {ASSIGN_IPV4_RANGES_TITLE}
-      </Typography>
-      {includeDescriptionInTooltip ? (
-        <TooltipIcon
-          sxTooltipIcon={{
-            marginLeft: theme.spacing(0.5),
-            padding: theme.spacing(0.5),
-          }}
-          text={
-            <>
-              {ASSIGN_IPV4_RANGES_DESCRIPTION}{' '}
-              <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
-            </>
-          }
-          interactive
-          status="help"
-        />
-      ) : (
-        <Typography variant="body1">
-          {ASSIGN_IPV4_RANGES_DESCRIPTION}{' '}
-          <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
+        <Typography sx={{ fontFamily: theme.font.bold }}>
+          {ASSIGN_IPV4_RANGES_TITLE}
         </Typography>
-      )}
+        {includeDescriptionInTooltip ? (
+          <TooltipIcon
+            sxTooltipIcon={{
+              marginLeft: theme.spacing(0.5),
+              padding: theme.spacing(0.5),
+            }}
+            text={
+              <>
+                <StyledDescription>
+                  {ASSIGN_IPV4_RANGES_DESCRIPTION}
+                </StyledDescription>
+                <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
+              </>
+            }
+            interactive
+            status="help"
+          />
+        ) : (
+          <Typography variant="body1">
+            <StyledDescription>
+              {ASSIGN_IPV4_RANGES_DESCRIPTION}
+            </StyledDescription>
+            <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
+          </Typography>
+        )}
+      </Box>
       <MultipleIPInput
         buttonText="Add IPv4 Range"
         forVPCIPv4Ranges
@@ -80,3 +87,7 @@ export const AssignIPRanges = (props: Props) => {
     </>
   );
 };
+
+const StyledDescription = styled('span')(() => ({
+  marginRight: '5px',
+}));
