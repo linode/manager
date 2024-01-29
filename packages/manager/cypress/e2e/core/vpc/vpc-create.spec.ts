@@ -27,7 +27,6 @@ import {
   randomNumber,
   randomString,
 } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';

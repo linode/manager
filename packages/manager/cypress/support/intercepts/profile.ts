@@ -15,7 +15,7 @@ import type {
   SecurityQuestionsPayload,
   Token,
   UserPreferences,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch user profile.

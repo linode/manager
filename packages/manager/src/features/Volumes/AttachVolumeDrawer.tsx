@@ -10,8 +10,8 @@ import Select, { Item } from 'src/components/EnhancedSelect';
 import { FormControl } from 'src/components/FormControl';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
@@ -37,6 +37,8 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const { data: grants } = useGrants();
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
@@ -48,7 +50,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         volumeId: volume?.id ?? -1,
         ...values,
       }).then(() => {
-        resetEventsPolling();
+        checkForNewEvents();
         handleClose();
         enqueueSnackbar(`Volume attachment started`, {
           variant: 'info',

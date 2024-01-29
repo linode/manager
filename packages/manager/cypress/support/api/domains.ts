@@ -1,4 +1,10 @@
-import { Domain, deleteDomain, getDomains } from '@linode/api-v4';
+import {
+  Domain,
+  deleteDomain,
+  getDomains,
+  CreateDomainPayload,
+} from '@linode/api-v4';
+import { createDomainPayloadFactory } from 'src/factories';
 import { isTestLabel } from 'support/api/common';
 import { oauthToken, pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
@@ -23,14 +29,14 @@ export const deleteAllTestDomains = async (): Promise<void> => {
   await Promise.all(deletionPromises);
 };
 
-const makeDomainCreateReq = (domain) => {
-  const domainData = domain
-    ? domain
-    : {
+const makeDomainCreateReq = (domainPayload?: CreateDomainPayload) => {
+  const domainData: CreateDomainPayload = domainPayload
+    ? domainPayload
+    : createDomainPayloadFactory.build({
         domain: randomDomainName(),
         soa_email: 'admin@example.com',
         type: 'master',
-      };
+      });
 
   return cy.request({
     auth: {
@@ -47,7 +53,7 @@ const makeDomainCreateReq = (domain) => {
  * @param domain if undefined will use default
  * @returns domain object
  */
-export const createDomain = (domain = undefined) => {
+export const createDomain = (domain?: Domain) => {
   return makeDomainCreateReq(domain).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Domain ${resp.body.label} successfully`, resp);

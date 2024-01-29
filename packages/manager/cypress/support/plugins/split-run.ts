@@ -6,7 +6,7 @@ import { globSync } from 'glob';
 
 import type { CypressPlugin } from './plugin';
 
-export const splitCypressRun: CypressPlugin = (on, config) => {
+export const splitCypressRun: CypressPlugin = (_on, config) => {
   const splitRunEnabled = config?.env?.['CY_TEST_SPLIT_RUN'];
   const splitRunTotalRunners = config?.env?.['CY_TEST_SPLIT_RUN_TOTAL'];
   const splitRunRunnerIndex = config?.env?.['CY_TEST_SPLIT_RUN_INDEX'];
@@ -52,7 +52,6 @@ export const splitCypressRun: CypressPlugin = (on, config) => {
       Runner: runner,
       'Total Runners': totalRunners,
     });
-
-    return config;
   }
+  return config;
 };
