@@ -93,9 +93,16 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   if (placementGroups?.results === 0) {
     return (
-      <PlacementGroupsLandingEmptyState
-        openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
-      />
+      <>
+        <PlacementGroupsLandingEmptyState
+          openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
+        />
+        <PlacementGroupsCreateDrawer
+          numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+          onClose={onClosePlacementGroupDrawer}
+          open={isPlacementGroupCreateDrawerOpen}
+        />
+      </>
     );
   }
 
