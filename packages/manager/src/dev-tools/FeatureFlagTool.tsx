@@ -12,8 +12,8 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'aglb', label: 'AGLB' },
-  { flag: 'aglbFullCreateFlow', label: 'AGLB Full Create Flow' },
+  { flag: 'aclb', label: 'ACLB' },
+  { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'dcGetWell', label: 'DC Get Well' },
   { flag: 'linodeCloneUIChanges', label: 'Linode Clone UI Changes' },
   { flag: 'metadata', label: 'Metadata' },

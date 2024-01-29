@@ -15,8 +15,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import {
-  AGLB_DOCS,
-  AGLB_FEEDBACK_FORM_URL,
+  ACLB_DOCS,
+  ACLB_FEEDBACK_FORM_URL,
 } from 'src/features/LoadBalancers/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -99,15 +99,15 @@ export const LoadBalancerLanding = () => {
       ) : (
         <>
           <LandingHeader
-            betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
+            betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
             breadcrumbProps={{ pathname: '/loadbalancers' }}
             createButtonText="Create Load Balancer"
             docsLabel="Docs"
-            docsLink={AGLB_DOCS.GettingStarted}
-            entity="Global Load Balancers"
+            docsLink={ACLB_DOCS.GettingStarted}
+            entity="Cloud Load Balancers"
             onButtonClick={createLoadBalancer}
             removeCrumbX={1}
-            title="Global Load Balancers"
+            title="Cloud Load Balancers"
           />
 
           <Table>
