@@ -112,19 +112,25 @@ export const RemovableSelectionsListTable = (
       ))
     );
 
+  const tableHeadersJSX = tableHeaders.map((thisHeader, idx) => {
+    const lastHeader = idx === tableHeaders.length - 1;
+
+    return (
+      <TableCell
+        colSpan={lastHeader ? 2 : 1}
+        key={`removable-selections-list-header-${thisHeader}`}
+      >
+        {thisHeader}
+      </TableCell>
+    );
+  });
+
   return (
     <>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       <Table>
         <TableHead>
-          <TableRow>
-            {tableHeaders.map((thisHeader) => (
-              <TableCell key={`removable-selections-list-header-${thisHeader}`}>
-                {thisHeader}
-              </TableCell>
-            ))}
-            <TableCell />
-          </TableRow>
+          <TableRow>{tableHeadersJSX}</TableRow>
         </TableHead>
         <TableBody>{selectedOptionsJSX}</TableBody>
       </Table>
