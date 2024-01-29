@@ -11,3 +11,15 @@ export const createObjectStorageKeysSchema = object({
     .min(1, 'Regions must include at least one region')
     .notRequired(),
 });
+
+export const updateObjectStorageKeysSchema = object({
+  label: string()
+    .notRequired()
+    .min(3, 'Label must be between 3 and 50 characters.')
+    .max(50, 'Label must be between 3 and 50 characters.')
+    .trim(),
+  regions: array()
+    .of(string())
+    .min(1, 'Regions must include at least one region')
+    .notRequired(),
+});

@@ -4,6 +4,7 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
+  UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { Formik } from 'formik';
@@ -33,7 +34,10 @@ export interface AccessKeyDrawerProps {
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
-  onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
+  onSubmit: (
+    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
+    formikProps: any
+  ) => void;
   open: boolean;
 }
 

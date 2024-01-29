@@ -23,7 +23,7 @@ export const AccessKeyMenu = (props: Props) => {
       onClick: () => {
         openDrawer('editing', objectStorageKey);
       },
-      title: 'Edit Label',
+      title: isObjMultiClusterEnabled ? 'Edit' : 'Edit Label',
     },
     {
       onClick: () => {
