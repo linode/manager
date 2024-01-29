@@ -21,7 +21,6 @@ export interface PlacementGroupsSelectProps {
   loading?: boolean;
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
-  region?: string;
   renderOption?: (
     placementGroup: PlacementGroup,
     selected: boolean
@@ -45,7 +44,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   } = props;
 
   const [inputValue, setInputValue] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
 
   const [
     selectedPlacementGroup,
@@ -62,28 +60,20 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     (placementGroup) => placementGroup.region === selectedRegionID
   );
 
-  React.useEffect(() => {
-    /** We want to clear the input value when the value prop changes.
-     * This is for use cases where a user changes their region and the Placement Group
-     * they had selected is no longer available.
-     */
-    if (placementGroupsOptions?.length) {
-      setErrorMessage('');
-    } else {
-      setSelectedPlacementGroup(null);
-      setErrorMessage('There are no Placement Groups in this region');
-      setInputValue('');
-    }
-  }, [placementGroupsOptions, selectedRegionID]);
-
   const handlePlacementGroupChange = (selection: PlacementGroup) => {
     setSelectedPlacementGroup(selection);
-    if (placementGroupHasCapacity(selection)) {
-      setErrorMessage('');
-    } else {
-      setErrorMessage(`This Placement Group doesn't have any capacity`);
-    }
   };
+
+  let errorText;
+  if (selectedRegionID && placementGroupsOptions?.length === 0) {
+    errorText = 'There are no Placement Groups in this region';
+  }
+  if (
+    selectedPlacementGroup &&
+    !placementGroupHasCapacity(selectedPlacementGroup)
+  ) {
+    errorText = `This Placement Group doesn't have any capacity`;
+  }
 
   return (
     <>
@@ -127,7 +117,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         clearOnBlur={false}
         data-testid="placement-groups-select"
         disableClearable={!clearable}
-        errorText={errorMessage}
+        errorText={errorText}
         id={id}
         inputValue={inputValue}
         label={label}
