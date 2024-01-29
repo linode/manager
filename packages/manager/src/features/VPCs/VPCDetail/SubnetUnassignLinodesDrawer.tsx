@@ -346,7 +346,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 filename={`linodes-unassigned-${formattedDate}.csv`}
                 headers={SUBNET_LINODE_CSV_HEADERS}
                 onClick={downloadCSV}
-                text={'Download List of Unassigned Linodes (.csv)'}
+                text={'Download List of Linodes to be Unassigned (.csv)'}
               />
             )}
             <ActionsPanel
