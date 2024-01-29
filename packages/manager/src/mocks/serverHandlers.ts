@@ -551,7 +551,7 @@ export const handlers = [
     const profile = profileFactory.build({
       restricted: false,
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
-      user_type: 'child',
+      user_type: 'parent',
     });
     return res(ctx.json(profile));
   }),
