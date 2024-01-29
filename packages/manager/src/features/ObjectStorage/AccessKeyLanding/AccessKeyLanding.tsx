@@ -1,7 +1,6 @@
 import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
-  UpdateObjectStorageKeyRequest,
   createObjectStorageKeys,
   revokeObjectStorageKey,
   updateObjectStorageKey,
@@ -25,9 +24,7 @@ import {
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
 } from 'src/utilities/analytics';
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { sortByString } from 'src/utilities/sort-by';
 
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable';
