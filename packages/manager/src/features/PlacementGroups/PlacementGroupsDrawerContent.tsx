@@ -53,10 +53,9 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
   } = formik;
 
   React.useEffect(() => {
-    if (open) {
-      resetForm();
-    }
-  }, [open, resetForm]);
+    resetForm();
+    setIsFormDirty(false);
+  }, [open, resetForm, setIsFormDirty]);
 
   React.useEffect(() => {
     if (isSubmitting) {
