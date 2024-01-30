@@ -27,7 +27,8 @@ export const ROUTE_COPY = {
       method: 'The request methods include: DELETE, GET, HEAD, POST, and PUT.',
       path_prefix:
         'The format of the path rule is: /pathname1/pathame2. The initial slash is required, but the trailing slash is not.',
-      path_regex: '[need copy]',
+      path_regex:
+        'Match is on a path without any query string, using a regular expression (regex).',
       query:
         'The format for query string is: ?name=value. The query string name must be preceded by a question mark (?).',
     },

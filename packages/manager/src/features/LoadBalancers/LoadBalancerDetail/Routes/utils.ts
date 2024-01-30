@@ -27,7 +27,7 @@ export const matchValuePlaceholder: Record<
   header: 'x-my-header:this',
   method: 'POST',
   path_prefix: '/my-path',
-  path_regex: '/static/.*[.](jpg|png)',
+  path_regex: '/my\\-path/.*[.](jpg|png)',
   query: '?my-query-param=this',
 };
 
