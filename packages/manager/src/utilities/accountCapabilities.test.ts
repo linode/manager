@@ -1,47 +1,23 @@
 import { isFeatureEnabled } from './accountCapabilities';
 
-const isObjectStorageEnabled = isFeatureEnabled('Object Storage');
-
-describe('isObjectStorageEnabled', () => {
-  beforeEach(() => {
-    vi.resetModules();
-  });
-  describe('when "Object Storage EAP" is NOT in beta_programs...', () => {
-    it("returns `false` when OBJ isn't enabled for the environment", () => {
-      expect(isObjectStorageEnabled(false, [])).toBe(false);
-      expect(isObjectStorageEnabled(false, ['Hello', 'World'] as any)).toBe(
-        false
-      );
-    });
-
-    it('returns `true` when OBJ is enabled for the environment', () => {
-      expect(isObjectStorageEnabled(true, [])).toBe(true);
-      expect(isObjectStorageEnabled(true, ['Hello', 'World'] as any)).toBe(
-        true
-      );
-    });
+describe('isFeatureEnabled', () => {
+  it('returns `false` when both the flag is off and the item is not in account capabilities', () => {
+    expect(isFeatureEnabled('Object Storage', false, [])).toBe(false);
   });
 
-  describe('when "Object Storage EAP" IS in beta_programs', () => {
-    it('returns `true` if OBJ is disabled for environment', () => {
-      expect(isObjectStorageEnabled(false, ['Object Storage'])).toBe(true);
-      expect(
-        isObjectStorageEnabled(false, [
-          'Hello',
-          'World',
-          'Object Storage',
-        ] as any)
-      ).toBe(true);
-    });
-    it('returns `true` if OBJ is enabled for environment', () => {
-      expect(isObjectStorageEnabled(false, ['Object Storage'])).toBe(true);
-      expect(
-        isObjectStorageEnabled(false, [
-          'Hello',
-          'World',
-          'Object Storage',
-        ] as any)
-      ).toBe(true);
-    });
+  it('returns `true` when the flag is on, but the capability is not present', () => {
+    expect(isFeatureEnabled('Object Storage', true, [])).toBe(true);
+  });
+
+  it('returns `true` when the flag is off, but the account capability is present', () => {
+    expect(isFeatureEnabled('Object Storage', false, ['Object Storage'])).toBe(
+      true
+    );
+  });
+
+  it('returns `true` when both the flag is on and the account capability is present', () => {
+    expect(isFeatureEnabled('Object Storage', true, ['Object Storage'])).toBe(
+      true
+    );
   });
 });

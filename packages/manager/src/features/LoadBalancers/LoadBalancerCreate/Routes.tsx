@@ -3,21 +3,27 @@ import { useFormikContext } from 'formik';
 import React, { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import {
+  CollapsibleTable,
+  TableItem,
+} from 'src/components/CollapsibleTable/CollapsibleTable';
+import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
+import { RulesTable } from './RulesTable';
+
 import type { Handlers } from './LoadBalancerConfigurations';
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   configurationIndex: number;
@@ -35,12 +41,88 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
   const configuration = values.configurations![configurationIndex];
 
   const handleRemoveRoute = (index: number) => {
-    configuration.routes!.splice(index, 1);
-    setFieldValue(
-      `configurations[${configurationIndex}].routes`,
-      configuration.routes
-    );
+    const newRoutes = [...configuration.routes!];
+    newRoutes.splice(index, 1);
+    setFieldValue(`configurations[${configurationIndex}].routes`, newRoutes);
   };
+
+  const getTableItems = (): TableItem[] => {
+    if (configuration.routes?.length === 0) {
+      return [];
+    }
+
+    return configuration
+      .routes!.filter((route) => {
+        if (query) {
+          return route.label.includes(query);
+        }
+        return true;
+      })
+      .map((route, index) => {
+        const OuterTableCells = (
+          <>
+            <Hidden mdDown>
+              <TableCell>{route.rules.length}</TableCell>
+            </Hidden>
+            <Hidden smDown>
+              <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>
+            </Hidden>
+            <TableCell actionCell>
+              <InlineMenuAction
+                onClick={() =>
+                  handlers.handleAddRule(configurationIndex, index)
+                }
+                actionText="Add Rule"
+              />
+              <ActionMenu
+                actionsList={[
+                  {
+                    onClick: () =>
+                      handlers.handleEditRoute(index, configurationIndex),
+                    title: 'Edit Label',
+                  },
+                  {
+                    onClick: () => handleRemoveRoute(index),
+                    title: 'Remove',
+                  },
+                ]}
+                ariaLabel={`Action Menu for Route ${route.label}`}
+              />
+            </TableCell>
+          </>
+        );
+
+        const InnerTable = (
+          <RulesTable
+            onEditRule={(ruleIndex) =>
+              handlers.handleEditRule(configurationIndex, index, ruleIndex)
+            }
+            configurationIndex={configurationIndex}
+            routeIndex={index}
+          />
+        );
+
+        return {
+          InnerTable,
+          OuterTableCells,
+          id: index,
+          label: route.label,
+        };
+      });
+  };
+
+  const RoutesTableRowHead = (
+    <TableRow>
+      <TableCell>Route Label</TableCell>
+      <Hidden mdDown>
+        <TableCell>Rules</TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>Protocol</TableCell>
+      </Hidden>
+      <TableCell></TableCell>
+    </TableRow>
+  );
 
   return (
     <Stack padding={1} spacing={1}>
@@ -80,49 +162,13 @@ export const Routes = ({ configurationIndex, handlers }: Props) => {
             value={query}
           />
         </Stack>
-        <Table sx={{ width: '99%' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Route Label</TableCell>
-              <TableCell>Rules</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {configuration.routes!.length === 0 && (
-              <TableRowEmpty colSpan={5} />
-            )}
-            {configuration.routes
-              ?.filter((route) => {
-                if (query) {
-                  return route.label.includes(query);
-                }
-                return true;
-              })
-              .map((route, index) => (
-                <TableRow key={route.label}>
-                  <TableCell>{route.label}</TableCell>
-                  <TableCell>{route.rules.length}</TableCell>
-                  <TableCell actionCell>
-                    <ActionMenu
-                      actionsList={[
-                        {
-                          onClick: () =>
-                            handlers.handleEditRoute(index, configurationIndex),
-                          title: 'Edit Label',
-                        },
-                        {
-                          onClick: () => handleRemoveRoute(index),
-                          title: 'Remove',
-                        },
-                      ]}
-                      ariaLabel={`Action Menu for Route ${route.label}`}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <Box maxWidth="99%">
+          <CollapsibleTable
+            TableItems={getTableItems()}
+            TableRowEmpty={<TableRowEmpty colSpan={4} message={'No Routes'} />}
+            TableRowHead={RoutesTableRowHead}
+          />
+        </Box>
       </Stack>
     </Stack>
   );

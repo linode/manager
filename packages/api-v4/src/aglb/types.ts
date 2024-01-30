@@ -18,7 +18,7 @@ export interface CreateLoadbalancerPayload {
 }
 
 /**
- * TODO: AGLB - remove when we move to full creation flow
+ * TODO: ACLB - remove when we move to full creation flow
  */
 export interface CreateBasicLoadbalancerPayload {
   label: string;
@@ -221,22 +221,22 @@ export interface EndpointHealth {
 
 export interface ConfigurationsEndpointHealth {
   /**
-   * The id of the AGLB
+   * The id of the ACLB
    */
   id: number;
   /**
-   * An array of health data for each configuration on the AGLB
+   * An array of health data for each configuration on the ACLB
    */
   configurations: EndpointHealth[];
 }
 
 export interface ServiceTargetsEndpointHealth {
   /**
-   * The id of the AGLB
+   * The id of the ACLB
    */
   id: number;
   /**
-   * An array of health data for each service target on the AGLB
+   * An array of health data for each service target on the ACLB
    */
   service_targets: EndpointHealth[];
 }
