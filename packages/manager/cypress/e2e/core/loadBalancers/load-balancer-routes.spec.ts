@@ -527,7 +527,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
         '@getRoutes',
       ]);
 
-      cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+      cy.findByLabelText(`expand route-${routes[0].id} row`).click();
 
       ui.actionMenu.findByTitle('Action Menu for Rule 0').click();
 
@@ -600,7 +600,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
       ]);
 
       // Expand the route table
-      cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+      cy.findByLabelText(`expand route-${routes[0].id} row`).click();
 
       // Verify all rules are shown
       for (const rule of routes[0].rules) {

@@ -1,5 +1,5 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -25,12 +25,12 @@ export const CollapsibleRow = (props: Props) => {
       <StyledOuterTableRow>
         <TableCell component="th" scope="row">
           <IconButton
-            aria-label={`${label} expand row`}
+            aria-label={`expand ${label} row`}
             onClick={() => setOpen(!open)}
             size="small"
             sx={{ padding: 1 }}
           >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
           {label}
         </TableCell>
