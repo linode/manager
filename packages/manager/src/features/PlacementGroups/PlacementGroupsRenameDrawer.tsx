@@ -5,8 +5,9 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import { Drawer } from 'src/components/Drawer';
-import { useMutatePlacementGroup } from 'src/queries/placementGroups';
+import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
+import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -36,7 +37,10 @@ export const PlacementGroupsRenameDrawer = (
     selectedPlacementGroup?.id ?? -1
   );
   const { enqueueSnackbar } = useSnackbar();
-  const [isFormDirty, setIsFormDirty] = React.useState<boolean>(false);
+  const {
+    hasFormBeenSubmitted,
+    setHasFormBeenSubmitted,
+  } = useFormValidateOnChange();
 
   const {
     errors,
@@ -57,7 +61,7 @@ export const PlacementGroupsRenameDrawer = (
       region: selectedPlacementGroup?.region ?? '',
     },
     onSubmit(values, { setErrors, setStatus, setSubmitting }) {
-      setIsFormDirty(false);
+      setHasFormBeenSubmitted(false);
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
@@ -96,7 +100,7 @@ export const PlacementGroupsRenameDrawer = (
         });
     },
     validateOnBlur: false,
-    validateOnChange: isFormDirty,
+    validateOnChange: hasFormBeenSubmitted,
     validationSchema: renamePlacementGroupSchema,
   });
 
@@ -123,7 +127,7 @@ export const PlacementGroupsRenameDrawer = (
         onClose={onClose}
         open={open}
         regions={regions ?? []}
-        setIsFormDirty={setIsFormDirty}
+        setHasFormBeenSubmitted={setHasFormBeenSubmitted}
       />
     </Drawer>
   );

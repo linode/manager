@@ -5,8 +5,9 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import { Drawer } from 'src/components/Drawer';
-import { useCreatePlacementGroup } from 'src/queries/placementGroups';
+import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
+import { useCreatePlacementGroup } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -36,7 +37,10 @@ export const PlacementGroupsCreateDrawer = (
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
-  const [isFormDirty, setIsFormDirty] = React.useState<boolean>(false);
+  const {
+    hasFormBeenSubmitted,
+    setHasFormBeenSubmitted,
+  } = useFormValidateOnChange();
 
   const {
     errors,
@@ -60,7 +64,7 @@ export const PlacementGroupsCreateDrawer = (
       values: PlacementGroupDrawerFormikProps,
       { setErrors, setStatus, setSubmitting }
     ) {
-      setIsFormDirty(false);
+      setHasFormBeenSubmitted(false);
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
@@ -96,7 +100,7 @@ export const PlacementGroupsCreateDrawer = (
         });
     },
     validateOnBlur: false,
-    validateOnChange: isFormDirty,
+    validateOnChange: hasFormBeenSubmitted,
     validationSchema: createPlacementGroupSchema,
   });
 
@@ -122,7 +126,7 @@ export const PlacementGroupsCreateDrawer = (
         open={open}
         regions={regions ?? []}
         selectedRegionId={selectedRegionId}
-        setIsFormDirty={setIsFormDirty}
+        setHasFormBeenSubmitted={setHasFormBeenSubmitted}
       />
     </Drawer>
   );

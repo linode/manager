@@ -24,7 +24,7 @@ interface Props {
   regions: Region[];
   selectedPlacementGroup?: PlacementGroup;
   selectedRegionId?: string;
-  setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
+  setHasFormBeenSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PlacementGroupsDrawerContent = (props: Props) => {
@@ -38,7 +38,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
     regions,
     selectedPlacementGroup,
     selectedRegionId,
-    setIsFormDirty,
+    setHasFormBeenSubmitted,
   } = props;
   const {
     errors,
@@ -54,14 +54,14 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
 
   React.useEffect(() => {
     resetForm();
-    setIsFormDirty(false);
-  }, [open, resetForm, setIsFormDirty]);
+    setHasFormBeenSubmitted(false);
+  }, [open, resetForm]);
 
   React.useEffect(() => {
     if (isSubmitting) {
-      setIsFormDirty(true);
+      setHasFormBeenSubmitted(isSubmitting);
     }
-  }, [isSubmitting, setIsFormDirty]);
+  }, [isSubmitting]);
 
   const generalError = status?.generalError;
   const isRenameDrawer = mode === 'rename';

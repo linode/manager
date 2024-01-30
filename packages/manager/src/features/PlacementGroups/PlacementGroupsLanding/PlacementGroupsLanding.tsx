@@ -67,12 +67,12 @@ export const PlacementGroupsLanding = React.memo(() => {
   );
 
   const handleCreatePlacementGroup = () => {
-    history.push('/placement-groups/create');
+    history.replace('/placement-groups/create');
   };
 
   const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
-    history.push(`/placement-groups/rename/${placementGroup.id}`);
+    history.replace(`/placement-groups/rename/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {

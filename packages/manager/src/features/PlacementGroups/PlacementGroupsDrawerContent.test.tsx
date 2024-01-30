@@ -28,7 +28,7 @@ describe('PlacementGroupsDrawerContent', () => {
         open={true}
         regions={[]}
         selectedPlacementGroup={placementGroupFactory.build()}
-        setIsFormDirty={vi.fn()}
+        setHasFormBeenSubmitted={vi.fn()}
       />
     );
 
