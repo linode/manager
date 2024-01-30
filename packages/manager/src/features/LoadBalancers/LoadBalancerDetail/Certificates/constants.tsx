@@ -46,16 +46,16 @@ export const CERTIFICATES_COPY = {
   Tabs: {
     ca: (
       <>
-        Used by the load balancer to terminate the connection and decrypt
-        request from clients. Apply these certificate(s) in the{' '}
-        <Link to="../configurations">Configurations</Link> tab.
+        Used by the load balancer to accept responses from your service target
+        endpoints. Apply these certificate(s) in the{' '}
+        <Link to="../service-targets">Service Targets</Link> tab.
       </>
     ),
     downstream: (
       <>
-        Used by the load balancer to accept responses from your service target
-        endpoints. Apply these certificate(s) in the{' '}
-        <Link to="../service-targets">Service Targets</Link> tab.
+        Used by the load balancer to terminate the connection and decrypt
+        request from clients. Apply these certificate(s) in the{' '}
+        <Link to="../configurations">Configurations</Link> tab.
       </>
     ),
   },
