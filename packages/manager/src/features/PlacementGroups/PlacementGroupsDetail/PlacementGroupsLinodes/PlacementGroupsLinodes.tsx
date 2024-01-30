@@ -12,12 +12,12 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
+import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
 } from '../../constants';
 import { hasPlacementGroupReachedCapacity } from '../../utils';
-import { PlacementGroupsAssignLinodesDrawer } from '../PlacementGroupsAssignLinodesDrawer';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Linode, PlacementGroup } from '@linode/api-v4';
