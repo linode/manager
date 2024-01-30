@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { regionFactory } from 'src/factories';
+import { linodeFactory } from 'src/factories';
 import { placementGroupFactory } from 'src/factories';
 import {
   renderWithTheme,
