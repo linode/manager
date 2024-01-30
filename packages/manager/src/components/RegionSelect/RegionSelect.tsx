@@ -57,9 +57,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     RegionSelectOption | null | undefined
   >(regionFromSelectedId);
 
-  const handleRegionChange = (selection: RegionSelectOption) => {
+  const handleRegionChange = (selection: RegionSelectOption | null) => {
     setSelectedRegion(selection);
-    handleSelection(selection?.value);
+    handleSelection(selection?.value || '');
   };
 
   React.useEffect(() => {
@@ -94,8 +94,11 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         onChange={(_, selectedOption: RegionSelectOption) => {
           handleRegionChange(selectedOption);
         }}
-        onKeyDown={() => {
-          setSelectedRegion(null);
+        onKeyDown={(e) => {
+          if (e.key !== 'Tab') {
+            setSelectedRegion(null);
+            handleRegionChange(null);
+          }
         }}
         renderOption={(props, option, { selected }) => {
           return (

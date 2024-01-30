@@ -22,6 +22,8 @@ import { usePagination } from 'src/hooks/usePagination';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
+import { PlacementGroupsRenameDrawer } from '../PlacementGroupsRenameDrawer';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
@@ -33,7 +35,7 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const [_selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
     PlacementGroup | undefined
   >();
   const [query, setQuery] = React.useState<string>('');
@@ -64,9 +66,26 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
-  const onOpenCreateDrawer = () => {
-    history.push('/placement-groups/create');
+  const handleCreatePlacementGroup = () => {
+    history.replace('/placement-groups/create');
   };
+
+  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+    history.replace(`/placement-groups/rename/${placementGroup.id}`);
+  };
+
+  const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+  };
+
+  const onClosePlacementGroupDrawer = () => {
+    history.replace('/placement-groups');
+    setSelectedPlacementGroup(undefined);
+  };
+
+  const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
+  const isPlacementGroupRenameDrawerOpen = location.pathname.includes('rename');
 
   if (isLoading) {
     return <CircleProgress />;
@@ -74,9 +93,16 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   if (placementGroups?.results === 0) {
     return (
-      <PlacementGroupsLandingEmptyState
-        openCreatePlacementGroupDrawer={onOpenCreateDrawer}
-      />
+      <>
+        <PlacementGroupsLandingEmptyState
+          openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
+        />
+        <PlacementGroupsCreateDrawer
+          numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+          onClose={onClosePlacementGroupDrawer}
+          open={isPlacementGroupCreateDrawerOpen}
+        />
+      </>
     );
   }
 
@@ -91,14 +117,6 @@ export const PlacementGroupsLanding = React.memo(() => {
     );
   }
 
-  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-  };
-
-  const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-  };
-
   return (
     <>
       <LandingHeader
@@ -111,7 +129,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         breadcrumbProps={{ pathname: '/placement-groups' }}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
-        onButtonClick={onOpenCreateDrawer}
+        onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
       />
       <Typography sx={{ mb: 4, mt: 2 }}>
@@ -188,8 +206,18 @@ export const PlacementGroupsLanding = React.memo(() => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+      <PlacementGroupsCreateDrawer
+        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+        onClose={onClosePlacementGroupDrawer}
+        open={isPlacementGroupCreateDrawerOpen}
+      />
+      <PlacementGroupsRenameDrawer
+        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+        onClose={onClosePlacementGroupDrawer}
+        open={isPlacementGroupRenameDrawerOpen}
+        selectedPlacementGroup={selectedPlacementGroup}
+      />
       {/* TODO VM_Placement: add delete dialog */}
-      {/* TODO VM_Placement: add create/edit drawer */}
     </>
   );
 });
