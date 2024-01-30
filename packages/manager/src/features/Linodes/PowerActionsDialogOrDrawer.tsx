@@ -8,7 +8,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useBootLinodeMutation,
@@ -80,6 +80,8 @@ export const PowerActionsDialog = (props: Props) => {
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
   );
@@ -117,7 +119,7 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
-    resetEventsPolling();
+    checkForNewEvents();
     onClose();
   };
 

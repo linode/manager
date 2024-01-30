@@ -9,7 +9,7 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomHex } from 'support/util/random';
-import { OAuthClient } from '@linode/api-v4/types';
+import type { OAuthClient } from '@linode/api-v4';
 
 /**
  * Creates an OAuth App with the given parameters.

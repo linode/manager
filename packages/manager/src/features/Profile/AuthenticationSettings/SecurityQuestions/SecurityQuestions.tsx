@@ -17,7 +17,11 @@ import {
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 
-export const SecurityQuestions = () => {
+export const SecurityQuestions = ({
+  securityQuestionRef,
+}: {
+  securityQuestionRef?: React.RefObject<HTMLInputElement>;
+}) => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {
     isLoading: isUpdating,
@@ -140,6 +144,7 @@ export const SecurityQuestions = () => {
           index={0}
           onEdit={() => onEdit(0)}
           questionResponse={values.security_questions[0]}
+          securityQuestionRef={securityQuestionRef}
           {...qaProps}
         />
         <QuestionAndAnswerPair

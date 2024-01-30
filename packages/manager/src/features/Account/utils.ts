@@ -1,6 +1,6 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type { Grants, Profile, Token, GlobalGrantTypes } from '@linode/api-v4';
+import type { GlobalGrantTypes, Grants, Profile, Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
 type ActionType = 'create' | 'delete' | 'edit' | 'view';

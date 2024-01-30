@@ -62,7 +62,7 @@ describe('Account invoices', () => {
         to: DateTime.now().minus({ days: i }).plus({ hours }).toISO(),
         quantity,
         region: chooseRegion().id,
-        unit_price: randomNumber(5, 300) / 10000,
+        unit_price: `${randomNumber(5, 300) / 10000}`,
         label: `${itemType} ${randomNumber(
           1,
           24

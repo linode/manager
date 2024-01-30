@@ -379,7 +379,7 @@ const aglb = [
     const body = req.body as any;
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
-    // TODO: AGLB - figure out if this is still accurate
+    // TODO: ACLB - figure out if this is still accurate
     return res(ctx.json(loadbalancerFactory.build({ id, ...body })));
   }),
   rest.delete('*/v4beta/aglb/:id', (req, res, ctx) => {
@@ -552,7 +552,7 @@ export const handlers = [
     const profile = profileFactory.build({
       restricted: false,
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
-      user_type: 'parent',
+      user_type: 'proxy',
     });
     return res(ctx.json(profile));
   }),
@@ -1937,7 +1937,13 @@ export const handlers = [
       return res(ctx.status(404));
     }
 
-    return res(ctx.json(placementGroupFactory.build()));
+    return res(
+      ctx.json(
+        placementGroupFactory.build({
+          id: 1,
+        })
+      )
+    );
   }),
   rest.post('*/placement/groups', (req, res, ctx) => {
     return res(
@@ -1948,7 +1954,7 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+  rest.put('*/placement/groups/:placementGroupId', (req, res, ctx) => {
     if (req.params.placementGroupId === 'undefined') {
       return res(ctx.status(404));
     }

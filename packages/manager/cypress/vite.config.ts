@@ -1,11 +1,15 @@
 import { defineConfig } from 'vite';
+import { URL } from 'url';
+
+// ESM-friendly alternative to `__dirname`.
+const DIRNAME = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@src': `${__dirname}/../src`,
-      src: `${__dirname}/../src`,
-      support: `${__dirname}/../cypress/support`,
+      '@src': `${DIRNAME}/../src`,
+      src: `${DIRNAME}/../src`,
+      support: `${DIRNAME}/../cypress/support`,
     },
   },
 });

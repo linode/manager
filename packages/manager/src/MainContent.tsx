@@ -30,6 +30,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -159,8 +160,10 @@ const Help = React.lazy(() =>
 const SearchLanding = React.lazy(
   () => import('src/features/Search/SearchLanding')
 );
-const EventsLanding = React.lazy(
-  () => import('src/features/Events/EventsLanding')
+const EventsLanding = React.lazy(() =>
+  import('src/features/Events/EventsLanding').then((module) => ({
+    default: module.EventsLanding,
+  }))
 );
 const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')
@@ -220,6 +223,8 @@ export const MainContent = () => {
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
+
+  const { isACLBEnabled } = useIsACLBEnabled();
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
@@ -336,7 +341,7 @@ export const MainContent = () => {
                         />
                         <Route component={Volumes} path="/volumes" />
                         <Redirect path="/volumes*" to="/volumes" />
-                        {flags.aglb && (
+                        {isACLBEnabled && (
                           <Route
                             component={LoadBalancers}
                             path="/loadbalancer*"
