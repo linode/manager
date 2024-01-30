@@ -22,7 +22,6 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import { Subscription } from 'rxjs/Subscription';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -329,8 +328,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       });
     this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
-
-  eventsSubscription$: Subscription;
 
   generateTypes = (): IType[] => [
     /** SOA Record */

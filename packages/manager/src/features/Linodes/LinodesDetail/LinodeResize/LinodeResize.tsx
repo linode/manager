@@ -17,10 +17,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { useFlags } from 'src/hooks/useFlags';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -43,8 +42,6 @@ import {
 } from './LinodeResize.utils';
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
-import type { ButtonProps } from 'src/components/Button/Button';
-
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
@@ -59,7 +56,6 @@ const migrationTypeOptions: { [key in MigrationTypes]: key } = {
 
 export const LinodeResize = (props: Props) => {
   const { linodeId, onClose, open } = props;
-  const flags = useFlags();
   const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
@@ -89,6 +85,8 @@ export const LinodeResize = (props: Props) => {
     mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const { data: regionsData } = useRegionsQuery();
 
   const hostMaintenance = linode?.status === 'stopped';
@@ -99,9 +97,7 @@ export const LinodeResize = (props: Props) => {
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {
       allow_auto_disk_resize: shouldEnableAutoResizeDiskOption(disks ?? [])[1],
-      migration_type: flags.unifiedMigrations
-        ? migrationTypeOptions.warm
-        : undefined,
+      migration_type: migrationTypeOptions.warm,
       type: '',
     },
     async onSubmit(values) {
@@ -118,12 +114,10 @@ export const LinodeResize = (props: Props) => {
        */
       await resizeLinode({
         allow_auto_disk_resize: values.allow_auto_disk_resize && !isSmaller,
-        migration_type: flags.unifiedMigrations
-          ? values.migration_type
-          : undefined,
+        migration_type: values.migration_type,
         type: values.type,
       });
-      resetEventsPolling();
+      checkForNewEvents();
       enqueueSnackbar('Linode queued for resize.', {
         variant: 'info',
       });
@@ -187,18 +181,6 @@ export const LinodeResize = (props: Props) => {
 
   const error = getError(resizeError);
 
-  const resizeButtonProps: ButtonProps =
-    flags.unifiedMigrations &&
-    formik.values.migration_type === 'warm' &&
-    !isLinodeOffline
-      ? {
-          onClick: () => formik.handleSubmit(),
-        }
-      : {
-          loading: isLoading,
-          type: 'submit',
-        };
-
   return (
     <Dialog
       fullHeight
@@ -247,14 +229,11 @@ export const LinodeResize = (props: Props) => {
             types={currentTypes.map(extendType)}
           />
         </Box>
-
-        {flags.unifiedMigrations && (
-          <UnifiedMigrationPanel
-            formik={formik}
-            isLinodeOffline={isLinodeOffline}
-            migrationTypeOptions={migrationTypeOptions}
-          />
-        )}
+        <UnifiedMigrationPanel
+          formik={formik}
+          isLinodeOffline={isLinodeOffline}
+          migrationTypeOptions={migrationTypeOptions}
+        />
         <Typography
           sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
           variant="h2"
@@ -344,7 +323,8 @@ export const LinodeResize = (props: Props) => {
             }
             buttonType="primary"
             data-qa-resize
-            {...resizeButtonProps}
+            loading={isLoading}
+            type="submit"
           >
             Resize Linode
           </Button>

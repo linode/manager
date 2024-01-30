@@ -14,7 +14,8 @@ import {
   sxBox,
   sxItemSpacing,
 } from '../LoadBalancerDetail/RulesTable.styles';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   configurationIndex: number;

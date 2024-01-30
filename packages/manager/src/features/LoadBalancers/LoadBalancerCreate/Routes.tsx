@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import React, { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import {
   CollapsibleTable,
@@ -22,8 +23,7 @@ import { Typography } from 'src/components/Typography';
 import { RulesTable } from './RulesTable';
 
 import type { Handlers } from './LoadBalancerConfigurations';
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
-import { Box } from 'src/components/Box';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   configurationIndex: number;

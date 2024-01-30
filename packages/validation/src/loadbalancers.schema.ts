@@ -34,16 +34,12 @@ export const UpdateCertificateSchema = object().shape(
   [['certificate', 'key']]
 );
 
-const CertificateEntrySchema = object({
+export const CertificateEntrySchema = object({
   id: number()
     .typeError('Certificate ID must be a number.')
     .required('Certificate ID is required.')
     .min(0, 'Certificate ID is required.'),
   hostname: string().required('A Host Header is required.'),
-});
-
-export const CertificateConfigSchema = object({
-  certificates: array(CertificateEntrySchema),
 });
 
 export const EndpointSchema = object({
@@ -271,7 +267,7 @@ export const ConfigurationSchema = object({
     then: (o) =>
       o.of(
         object({
-          label: string().required(),
+          label: string().required(LABEL_REQUIRED),
           protocol: string().oneOf(['tcp']).required(),
           rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
@@ -289,13 +285,13 @@ export const ConfigurationSchema = object({
 
 export const CreateLoadBalancerSchema = object({
   label: string().min(1, 'Label must not be empty.').required(LABEL_REQUIRED),
-  // tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
+  // tags: array().of(string()), // TODO: ACLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
   configurations: array().of(ConfigurationSchema),
 });
 
 /**
- * TODO: AGLB - remove this create schema
+ * TODO: ACLB - remove this create schema
  */
 export const CreateBasicLoadbalancerSchema = object({
   label: string()

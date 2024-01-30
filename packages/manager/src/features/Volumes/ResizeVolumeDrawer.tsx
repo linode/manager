@@ -7,7 +7,7 @@ import React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
@@ -28,6 +28,8 @@ export const ResizeVolumeDrawer = (props: Props) => {
   const { onClose: _onClose, open, volume } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const validationSchema = ResizeVolumeSchema(volume?.size ?? -1);
 
@@ -59,7 +61,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
       resizeVolume({ size: Number(values.size), volumeId: volume?.id ?? -1 })
         .then((_) => {
           setSubmitting(false);
-          resetEventsPolling();
+          checkForNewEvents();
           enqueueSnackbar(`Volume scheduled to be resized.`, {
             variant: 'success',
           });

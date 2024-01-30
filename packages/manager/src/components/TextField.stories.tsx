@@ -38,6 +38,16 @@ export const Number: Story = {
   render: (args) => <TextField {...args} />,
 };
 
+export const WithTooltip: Story = {
+  args: {
+    label: 'Label',
+    labelTooltipText: 'Tooltip Text',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+  },
+  render: (args) => <TextField {...args} />,
+};
+
 export const WithAdornment: Story = {
   args: {
     InputProps: {

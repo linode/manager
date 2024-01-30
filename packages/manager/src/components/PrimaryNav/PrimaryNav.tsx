@@ -11,9 +11,11 @@ import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import LoadBalancer from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
+import PlacementGroups from 'src/assets/icons/entityIcons/placement-groups.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
@@ -22,6 +24,7 @@ import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
+import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
@@ -40,11 +43,11 @@ type NavEntity =
   | 'Account'
   | 'Account'
   | 'Betas'
+  | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Global Load Balancers'
   | 'Help & Support'
   | 'Images'
   | 'Kubernetes'
@@ -54,6 +57,7 @@ type NavEntity =
   | 'Marketplace'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Groups'
   | 'StackScripts'
   | 'VPC'
   | 'Volumes';
@@ -142,6 +146,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     account?.capabilities ?? []
   );
 
+  const { isACLBEnabled } = useIsACLBEnabled();
+
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
       setEnableObjectPrefetch(true);
@@ -172,17 +178,24 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Linode />,
         },
         {
+          betaChipClassName: 'beta-chip-placement-groups',
+          display: 'Placement Groups',
+          hide: !flags.vmPlacement,
+          href: '/placement-groups',
+          icon: <PlacementGroups />,
+          isBeta: true,
+        },
+        {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />,
         },
         {
-          betaChipClassName: 'beta-chip-aglb',
-          display: 'Global Load Balancers',
-          hide: !flags.aglb,
+          betaChipClassName: 'beta-chip-aclb',
+          display: 'Cloud Load Balancers',
+          hide: !isACLBEnabled,
           href: '/loadbalancers',
-          // TODO AGLB: replace icon when available
-          icon: <Domain />,
+          icon: <LoadBalancer />,
           isBeta: true,
         },
         {
@@ -195,7 +208,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !showVPCs,
           href: '/vpcs',
           icon: <VPC />,
-          isBeta: true,
+          isBeta: flags.vpc, // @TODO VPC: after VPC enters GA, remove this property entirely
         },
         {
           display: 'Firewalls',
@@ -287,7 +300,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
-      flags.aglb,
+      isACLBEnabled,
+      flags.vmPlacement,
       showVPCs,
     ]
   );

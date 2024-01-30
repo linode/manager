@@ -1,16 +1,19 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -28,7 +31,7 @@ interface Props {
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: ExtendedLinode[];
-  notice?: Notice;
+  notices?: Notice[];
   selectedLinodeID?: number;
 }
 
@@ -39,9 +42,39 @@ const SelectLinodePanel = (props: Props) => {
     handleSelection,
     header,
     linodes,
-    notice,
+    notices,
     selectedLinodeID,
   } = props;
+
+  const flags = useFlags();
+
+  const theme = useTheme();
+  const [userSearchText, setUserSearchText] = React.useState<
+    string | undefined
+  >(undefined);
+
+  // Capture the selected linode when this component mounts,
+  // so it doesn't change when the user selects a different one.
+  const [preselectedLinodeID] = React.useState(
+    flags.linodeCloneUIChanges && selectedLinodeID
+  );
+
+  const searchText = React.useMemo(
+    () =>
+      userSearchText !== undefined
+        ? userSearchText
+        : linodes.find((linode) => linode.id === preselectedLinodeID)?.label ||
+          '',
+    [linodes, preselectedLinodeID, userSearchText]
+  );
+
+  const filteredLinodes = React.useMemo(
+    () =>
+      linodes.filter((linode) =>
+        linode.label.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [linodes, searchText]
+  );
 
   const renderCard = (linode: ExtendedLinode) => {
     return (
@@ -59,7 +92,7 @@ const SelectLinodePanel = (props: Props) => {
   };
 
   return (
-    <Paginate data={linodes}>
+    <Paginate data={filteredLinodes}>
       {({
         count,
         data: linodesData,
@@ -71,13 +104,54 @@ const SelectLinodePanel = (props: Props) => {
         return (
           <>
             <StyledPaper data-qa-select-linode-panel>
-              {error && <Notice text={error} variant="error" />}
-              {notice && !disabled && (
-                <Notice text={notice.text} variant={notice.level} />
-              )}
-              <Typography data-qa-select-linode-header variant="h2">
+              <Stack gap={0.5} mb={2}>
+                {error && (
+                  <Notice
+                    spacingBottom={0}
+                    spacingTop={0}
+                    text={error}
+                    variant="error"
+                  />
+                )}
+                {notices &&
+                  !disabled &&
+                  notices.map((notice, i) => (
+                    <Notice
+                      key={i}
+                      spacingBottom={0}
+                      spacingTop={0}
+                      text={notice.text}
+                      variant={notice.level}
+                    />
+                  ))}
+              </Stack>
+              <Typography
+                marginBottom={
+                  flags.linodeCloneUIChanges ? theme.spacing(2) : undefined
+                }
+                data-qa-select-linode-header
+                variant="h2"
+              >
                 {!!header ? header : 'Select Linode'}
               </Typography>
+              {flags.linodeCloneUIChanges && (
+                <DebouncedSearchTextField
+                  customValue={{
+                    onChange: setUserSearchText,
+                    value: searchText,
+                  }}
+                  sx={{
+                    marginBottom: theme.spacing(1),
+                    width: '330px',
+                  }}
+                  clearable
+                  debounceTime={0}
+                  expand={true}
+                  hideLabel
+                  label=""
+                  placeholder="Search"
+                />
+              )}
               <StyledBox>
                 <Grid container spacing={2}>
                   {linodesData.map((linode) => {

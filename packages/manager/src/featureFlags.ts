@@ -40,8 +40,8 @@ interface TaxCollectionBanner {
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
-  aglb: boolean;
-  aglbFullCreateFlow: boolean;
+  aclb: boolean;
+  aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databaseScaleUp: boolean;
@@ -49,7 +49,7 @@ export interface Flags {
   dcGetWell: boolean;
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
-  kubernetesDashboardAvailability: boolean;
+  linodeCloneUIChanges: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
@@ -69,7 +69,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  unifiedMigrations: boolean;
   vmPlacement: boolean;
   vpc: boolean;
 }
@@ -143,6 +142,7 @@ export type ProductInformationBannerLocation =
   | 'Managed'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Groups'
   | 'StackScripts'
   | 'VPC'
   | 'Volumes';

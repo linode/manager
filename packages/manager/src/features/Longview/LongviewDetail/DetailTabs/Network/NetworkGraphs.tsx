@@ -78,13 +78,13 @@ export const NetworkGraphs = (props: Props) => {
               <LongviewLineGraph
                 data={[
                   {
-                    backgroundColor: theme.graphs.network.inbound,
+                    backgroundColor: theme.graphs.darkGreen,
                     borderColor: 'transparent',
                     data: _convertData(rx_bytes, start, end),
                     label: 'Inbound',
                   },
                   {
-                    backgroundColor: theme.graphs.network.outbound,
+                    backgroundColor: theme.graphs.lightGreen,
                     borderColor: 'transparent',
                     data: _convertData(tx_bytes, start, end),
                     label: 'Outbound',

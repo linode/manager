@@ -18,12 +18,14 @@ import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
+import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
+import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
@@ -65,6 +67,8 @@ export const AddNewMenu = () => {
     account?.capabilities ?? []
   );
 
+  const { isACLBEnabled } = useIsACLBEnabled();
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -87,12 +91,11 @@ export const AddNewMenu = () => {
       link: '/volumes/create',
     },
     {
-      // TODO AGLB: Replace with AGLB copy when available
+      // TODO ACLB: Replace with ACLB copy when available
       description: 'Ensure your services are highly available',
-      entity: 'Global Load Balancer',
-      hide: !flags.aglb,
-      // TODO AGLB: Change this icon to the AGLB icon when available
-      icon: DomainIcon,
+      entity: 'Cloud Load Balancer',
+      hide: !isACLBEnabled,
+      icon: LoadBalancerIcon,
       link: '/loadbalancers/create',
     },
     {

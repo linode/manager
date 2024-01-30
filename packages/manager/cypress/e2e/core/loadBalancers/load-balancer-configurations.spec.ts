@@ -23,10 +23,10 @@ import {
 } from 'support/intercepts/load-balancers';
 import { ui } from 'support/ui';
 
-describe('Akamai Global Load Balancer configurations page', () => {
+describe('Akamai Cloud Load Balancer configurations page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
   });
@@ -85,9 +85,11 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .should('be.visible')
         .type(configuration.label);
 
-      ui.button.findByTitle('Apply Certificates').should('be.visible').click();
+      ui.button.findByTitle('Add Certificate').should('be.visible').click();
 
-      ui.drawer.findByTitle('Apply Certificates').within(() => {
+      ui.drawer.findByTitle('Add Certificate').within(() => {
+        cy.findByLabelText('Add Existing Certificate').click();
+
         cy.findByLabelText('Host Header').should('be.visible').type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
@@ -98,7 +100,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
           .click();
 
         ui.button
-          .findByTitle('Save')
+          .findByTitle('Add')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -169,7 +171,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .findByTitle(configuration.protocol.toUpperCase())
         .click();
 
-      cy.findByLabelText('Port').clear().type(configuration.port);
+      cy.findByLabelText('Port').clear().type(`${configuration.port}`);
 
       // Certificates do not apply to HTTP, so make sure there is not mention of them
       cy.findByText('Details')
@@ -239,7 +241,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .findByTitle(configuration.protocol.toUpperCase())
         .click();
 
-      cy.findByLabelText('Port').clear().type(configuration.port);
+      cy.findByLabelText('Port').clear().type(`${configuration.port}`);
 
       // Certificates do not apply to HTTP, so make sure there is not mention of them
       cy.findByText('Details')
@@ -312,9 +314,11 @@ describe('Akamai Global Load Balancer configurations page', () => {
         .should('be.visible')
         .type('test');
 
-      ui.button.findByTitle('Apply Certificates').should('be.visible').click();
+      ui.button.findByTitle('Add Certificate').should('be.visible').click();
 
-      ui.drawer.findByTitle('Apply Certificates').within(() => {
+      ui.drawer.findByTitle('Add Certificate').within(() => {
+        cy.findByLabelText('Add Existing Certificate').click();
+
         cy.findByLabelText('Host Header').should('be.visible').type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
@@ -325,7 +329,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
           .click();
 
         ui.button
-          .findByTitle('Save')
+          .findByTitle('Add')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -412,12 +416,14 @@ describe('Akamai Global Load Balancer configurations page', () => {
       cy.findByLabelText('Port').should('be.visible').clear().type('444');
 
       ui.button
-        .findByTitle('Apply More Certificates')
+        .findByTitle('Add Certificate')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
-      ui.drawer.findByTitle('Apply Certificates').within(() => {
+      ui.drawer.findByTitle('Add Certificate').within(() => {
+        cy.findByLabelText('Add Existing Certificate').click();
+
         cy.findByLabelText('Host Header').type('example-1.com');
 
         cy.findByLabelText('Certificate').click();
@@ -425,7 +431,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
         ui.autocompletePopper.findByTitle(certificates[1].label).click();
 
         ui.button
-          .findByTitle('Save')
+          .findByTitle('Add')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -440,7 +446,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
       cy.wait('@updateConfiguration');
     });
 
-    it('can remove a route from an AGLB configuration', () => {
+    it('can remove a route from an ACLB configuration', () => {
       const routes = routeFactory.buildList(3);
       const configuration = configurationFactory.build({
         protocol: 'http',

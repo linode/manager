@@ -148,11 +148,11 @@ const createTabs = (
                 <AreaChart
                   areas={[
                     {
-                      color: theme.graphs.network.inbound,
+                      color: theme.graphs.darkGreen,
                       dataKey: 'Network Traffic In',
                     },
                     {
-                      color: theme.graphs.network.outbound,
+                      color: theme.graphs.lightGreen,
                       dataKey: 'Network Traffic Out',
                     },
                   ]}
@@ -173,13 +173,13 @@ const createTabs = (
                 <LineGraph
                   data={[
                     {
-                      backgroundColor: theme.graphs.network.inbound,
+                      backgroundColor: theme.graphs.darkGreen,
                       borderColor: 'transparent',
                       data: formatData(data.net_in),
                       label: 'Network Traffic In',
                     },
                     {
-                      backgroundColor: theme.graphs.network.outbound,
+                      backgroundColor: theme.graphs.lightGreen,
                       borderColor: 'transparent',
                       data: formatData(data.net_out),
                       label: 'Network Traffic Out',

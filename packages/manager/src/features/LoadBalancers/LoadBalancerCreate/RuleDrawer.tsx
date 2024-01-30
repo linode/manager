@@ -33,7 +33,7 @@ import {
   timeUnitOptions,
 } from '../LoadBalancerDetail/Routes/utils';
 
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 import type { RuleCreatePayload, ServiceTargetPayload } from '@linode/api-v4';
 
 interface Props {
