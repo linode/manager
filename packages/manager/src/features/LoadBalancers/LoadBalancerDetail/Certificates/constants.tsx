@@ -20,20 +20,10 @@ export const initialValues = {
 
 export const CERTIFICATES_COPY = {
   Create: {
-    ca: (
-      <>
-        Used by the load balancer to accept responses from your service target
-        endpoints. Apply these certificate(s) in the{' '}
-        <Link to="../service-targets">Service Targets</Link> tab.
-      </>
-    ),
-    downstream: (
-      <>
-        Used by your load balancer to terminate the connection and decrypt
-        request from clients. Apply these certificate(s) in the{' '}
-        <Link to="../configurations">Configurations</Link> tab.
-      </>
-    ),
+    ca:
+      'For HTTPS, used by the load balancer to accept responses from your endpoints in your Service Target. This is the certificate installed on your endpoints.',
+    downstream:
+      'TLS certificates terminate incoming traffic to the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over TLS connections. ',
   },
   Description:
     'For HTTPS Cloud Load Balancers, a TLS termination certificate is required. To redirect web connections over port 443/HTTPS, upload your generated certificates for your domains.',
