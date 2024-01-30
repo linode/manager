@@ -19,7 +19,8 @@ export const MatchTypeInfo = () => {
       title: 'Path Prefix',
     },
     {
-      description: '[need copy]',
+      description:
+        'Match is on the prefix of a network path using regular expressions (regex).',
       title: 'Path Regex',
     },
     {
