@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlacementGroupsRenameDrawer } from './PlacementGroupsRenameDrawer';
 
 describe('PlacementGroupsCreateDrawer', () => {
-  it('should render have the proper fields populated with PG values, and disabled', () => {
+  it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', () => {
     const { getByLabelText } = renderWithTheme(
       <PlacementGroupsRenameDrawer
         selectedPlacementGroup={placementGroupFactory.build({

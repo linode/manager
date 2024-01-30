@@ -12,7 +12,7 @@ const commonProps = {
 };
 
 describe('PlacementGroupsCreateDrawer', () => {
-  it('should render have its fields enabled', () => {
+  it('should render and have its fields enabled', () => {
     const { getByLabelText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         numberOfPlacementGroupsCreated={0}
