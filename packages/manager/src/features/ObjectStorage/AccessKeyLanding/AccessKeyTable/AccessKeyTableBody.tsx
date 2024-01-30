@@ -4,7 +4,7 @@ import {
   RegionS3EndpointAndID,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
-import { TableBody } from 'src/components/TableBody';
+
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
@@ -50,7 +50,7 @@ export const AccessKeyTableBody = ({
   }
 
   return (
-    <TableBody>
+    <>
       {data && data.length > 0 ? (
         <AccessKeyTableRows
           objectStorageKeys={data}
@@ -62,6 +62,6 @@ export const AccessKeyTableBody = ({
       ) : (
         <TableRowEmpty colSpan={12} />
       )}
-    </TableBody>
+    </>
   );
 };

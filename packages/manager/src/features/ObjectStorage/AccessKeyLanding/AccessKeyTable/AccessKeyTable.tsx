@@ -11,6 +11,7 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableBody } from 'src/components/TableBody';
 
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -75,16 +76,18 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             <TableCell />
           </TableRow>
         </TableHead>
-        <AccessKeyTableBody
-          data={data}
-          error={error}
-          isLoading={isLoading}
-          isRestrictedUser={isRestrictedUser}
-          openDrawer={openDrawer}
-          openRevokeDialog={openRevokeDialog}
-          setHostNames={setHostNames}
-          setShowHostNamesDrawers={setShowHostNamesDrawers}
-        />
+        <TableBody>
+          <AccessKeyTableBody
+            data={data}
+            error={error}
+            isLoading={isLoading}
+            isRestrictedUser={isRestrictedUser}
+            openDrawer={openDrawer}
+            openRevokeDialog={openRevokeDialog}
+            setHostNames={setHostNames}
+            setShowHostNamesDrawers={setShowHostNamesDrawers}
+          />
+        </TableBody>
       </Table>
       {isObjMultiClusterEnabled && (
         <HostNamesDrawer
