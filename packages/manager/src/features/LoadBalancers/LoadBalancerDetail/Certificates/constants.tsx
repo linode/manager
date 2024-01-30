@@ -1,3 +1,7 @@
+import React from 'react';
+
+import { Link } from 'src/components/Link';
+
 import type { Certificate } from '@linode/api-v4';
 
 export const initialValues = {
@@ -16,10 +20,20 @@ export const initialValues = {
 
 export const CERTIFICATES_COPY = {
   Create: {
-    ca:
-      'For HTTPS, used by the load balancer to accept responses from your endpoints in your Service Target. This is the certificate installed on your endpoints.',
-    downstream:
-      'TLS certificates terminate incoming traffic to the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over TLS connections. ',
+    ca: (
+      <>
+        Used by the load balancer to accept responses from your service target
+        endpoints. Apply these certificate(s) in the{' '}
+        <Link to="../service-targets">Service Targets</Link> tab.`
+      </>
+    ),
+    downstream: (
+      <>
+        Used by your load balancer to terminate the connection and decrypt
+        request from clients. Apply these certificate(s) in the{' '}
+        <Link to="../configurations">Configurations</Link> tab.
+      </>
+    ),
   },
   Edit: {
     // TODO: ACLB - figure out what this should be

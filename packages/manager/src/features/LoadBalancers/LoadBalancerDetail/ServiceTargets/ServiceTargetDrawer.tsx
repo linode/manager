@@ -145,9 +145,6 @@ export const ServiceTargetDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>
-      {!isEditMode && (
-        <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
-      )}
       <form onSubmit={formik.handleSubmit}>
         {generalCreateErrors && (
           <Notice

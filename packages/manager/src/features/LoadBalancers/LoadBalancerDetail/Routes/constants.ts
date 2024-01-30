@@ -1,5 +1,7 @@
 export const ROUTE_COPY = {
-  Description: {
+  Description:
+    'Routes assigned to a load balancer’s configuration, define how incoming requests are directed to service targets.',
+  Protocol: {
     http:
       'For HTTP and HTTPS load balancers, in addition to setting the percentage of incoming requests to a target, other match conditions such as the url path prefix can be added to the route rules. ',
     main:

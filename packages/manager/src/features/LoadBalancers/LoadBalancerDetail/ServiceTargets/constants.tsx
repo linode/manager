@@ -64,7 +64,7 @@ export const initialValues: ServiceTargetPayload = {
 
 export const SERVICE_TARGET_COPY = {
   Description:
-    'Configuration for a new service target and its endpoints that the load balancer directs incoming requests to.',
+    'Service targets consist of a group of endpoints. Requests are directed to service targets using configured routes.',
   Tooltips: {
     Algorithm:
       'Policy type that decides how the load balancer allocates new connections across your service targets.',
