@@ -45,6 +45,7 @@ type Policy =
 export type MatchField =
   | 'always_match'
   | 'path_prefix'
+  | 'path_regex'
   | 'query'
   | 'header'
   | 'method';

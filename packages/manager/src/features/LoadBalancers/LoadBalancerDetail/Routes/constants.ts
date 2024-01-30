@@ -23,11 +23,11 @@ export const ROUTE_COPY = {
         'For TCP load balancers, a rule consists of service targets and the percentage of incoming requests that should be directed to each target. Add as many service targets as required, but the percentages for all targets must total 100%.',
     },
     MatchValue: {
-      header: 'The format for http header is: X-name=value.',
-      host: '',
+      header: 'The format for http header is: X-name:value.',
       method: 'The request methods include: DELETE, GET, HEAD, POST, and PUT.',
       path_prefix:
         'The format of the path rule is: /pathname1/pathame2. The initial slash is required, but the trailing slash is not.',
+      path_regex: '[need copy]',
       query:
         'The format for query string is: ?name=value. The query string name must be preceded by a question mark (?).',
     },
