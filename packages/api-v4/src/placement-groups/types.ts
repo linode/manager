@@ -1,17 +1,17 @@
 import type { Region } from '../regions/types';
 
-export enum AffinityType {
-  // eslint-disable-next-line no-unused-vars
-  affinity = 'Affinity',
-  // eslint-disable-next-line no-unused-vars
-  anti_affinity = 'Anti-affinity',
-}
+export const AFFINITY_TYPES = {
+  affinity: 'Affinity',
+  anti_affinity: 'Anti-affinity',
+} as const;
+
+export type AffinityType = keyof typeof AFFINITY_TYPES;
 
 export interface PlacementGroup {
   id: number;
   label: string;
   region: Region['id'];
-  affinity_type: keyof typeof AffinityType;
+  affinity_type: AffinityType;
   compliant: boolean;
   linode_ids: number[];
   capacity: number;

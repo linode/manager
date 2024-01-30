@@ -1,4 +1,4 @@
-import { AffinityType } from '@linode/api-v4';
+import { AFFINITY_TYPES } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -66,7 +66,7 @@ export const PlacementGroupsDetail = () => {
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const resetEditableLabel = () => {
-    return `${label} (${AffinityType[affinity_type]})`;
+    return `${label} (${AFFINITY_TYPES[affinity_type]})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {
@@ -90,7 +90,7 @@ export const PlacementGroupsDetail = () => {
           ],
           onEditHandlers: {
             editableTextTitle: label,
-            editableTextTitleSuffix: ` (${AffinityType[affinity_type]})`,
+            editableTextTitleSuffix: ` (${AFFINITY_TYPES[affinity_type]})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,

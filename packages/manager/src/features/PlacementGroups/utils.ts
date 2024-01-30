@@ -1,5 +1,5 @@
 import { PlacementGroup } from '@linode/api-v4';
-import { AffinityType } from '@linode/api-v4/lib/placement-groups';
+import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 
 import type { CreatePlacementGroupPayload } from '@linode/api-v4';
 
@@ -15,7 +15,7 @@ export const getPlacementGroupLinodeCount = (
 /**
  * Helper to populate the affinity_type select options.
  */
-export const affinityTypeOptions = Object.entries(AffinityType).map(
+export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
   ([key, value]) => ({
     label: value,
     value: key as CreatePlacementGroupPayload['affinity_type'],

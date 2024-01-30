@@ -1,4 +1,4 @@
-import { AffinityType } from '@linode/api-v4';
+import { AFFINITY_TYPES } from '@linode/api-v4';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -70,7 +70,7 @@ export const PlacementGroupsRow = React.memo(
             style={{ marginRight: 8 }}
             to={`/placement-groups/${id}`}
           >
-            {label} ({AffinityType[affinity_type]})
+            {label} ({AFFINITY_TYPES[affinity_type]})
           </Link>
           {!compliant && (
             <Typography component="span" sx={{ whiteSpace: 'nowrap' }}>
