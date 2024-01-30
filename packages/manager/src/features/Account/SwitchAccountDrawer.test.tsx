@@ -32,7 +32,7 @@ describe('SwitchAccountDrawer', () => {
 
   it('should include a link to switch back to the parent account if the active user is a proxy user', async () => {
     server.use(
-      rest.get('*/account/profile/*', (req, res, ctx) => {
+      rest.get('*/profile', (req, res, ctx) => {
         return res(ctx.json(profileFactory.build({ user_type: 'proxy' })));
       })
     );
