@@ -113,6 +113,8 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
             primaryButtonProps={{
               'data-testid': 'submit',
               disabled:
+                // TODO VM_Placement: we may want to move this logic to the create button in the landing page
+                // We just need to wait to wait to see how we're going to get the max number of PGs (account/region)
                 !isRenameDrawer &&
                 numberOfPlacementGroupsCreated &&
                 maxNumberOfPlacementGroups
