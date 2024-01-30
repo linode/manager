@@ -31,7 +31,8 @@ export const SummaryPanel = () => {
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
-  const isRestricted = useIsResourceRestricted({
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
   });
@@ -133,7 +134,7 @@ export const SummaryPanel = () => {
           Tags
         </StyledTitle>
         <TagsPanel
-          disabled={isRestricted}
+          disabled={isNodeBalancerReadOnly}
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
         />

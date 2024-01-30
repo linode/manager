@@ -7,7 +7,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  getRestrictedResourceText,
+  isRestrictedGlobalGrantType,
+} from 'src/features/Account/utils';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 export const NodeBalancerLandingEmptyState = () => {
@@ -15,11 +18,11 @@ export const NodeBalancerLandingEmptyState = () => {
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
 
-  // NodeBalancer creation is possible for restricted accounts,
-  // contingent on the ability to add Linodes.
-  const isRestricted =
-    Boolean(profile?.restricted) &&
-    !(grants?.global.add_nodebalancers && grants?.global.add_linodes);
+  const isRestricted = isRestrictedGlobalGrantType({
+    globalGrantType: 'add_nodebalancers',
+    grants,
+    profile,
+  });
 
   return (
     <React.Fragment>
@@ -32,6 +35,7 @@ export const NodeBalancerLandingEmptyState = () => {
             onClick: () => history.push('/nodebalancers/create'),
             tooltipText: getRestrictedResourceText({
               action: 'create',
+              isSingular: false,
               resourceType: 'NodeBalancers',
             }),
           },

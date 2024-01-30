@@ -13,16 +13,16 @@ import { Button } from './Button';
 export const StyledTagButton = styled(Button, {
   label: 'StyledTagButton',
 })(({ theme, ...props }) => ({
+  border: 'none',
+  fontSize: '0.875rem',
   ...(!props.disabled && {
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: theme.color.tagButton,
       border: 'none',
     },
+    backgroundColor: theme.color.tagButton,
+    color: theme.textColors.linkActiveLight,
   }),
-  backgroundColor: theme.color.tagButton,
-  border: 'none',
-  color: theme.textColors.linkActiveLight,
-  fontSize: '0.875rem',
 }));
 
 export const StyledPlusIcon = styled(Plus, {

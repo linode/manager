@@ -28,7 +28,8 @@ export const NodeBalancerSettings = () => {
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const displayFirewallInfoText = attachedFirewallData?.results === 0;
 
-  const isRestricted = useIsResourceRestricted({
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
   });
@@ -79,7 +80,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="NodeBalancer Label">
         <TextField
           data-qa-label-panel
-          disabled={isRestricted}
+          disabled={isNodeBalancerReadOnly}
           errorText={labelError?.[0].reason}
           label="Label"
           onChange={(e) => setLabel(e.target.value)}
@@ -89,7 +90,7 @@ export const NodeBalancerSettings = () => {
         <Button
           buttonType="primary"
           data-qa-label-save
-          disabled={isRestricted || label === nodebalancer.label}
+          disabled={isNodeBalancerReadOnly || label === nodebalancer.label}
           loading={isUpdatingLabel}
           onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
@@ -113,7 +114,7 @@ export const NodeBalancerSettings = () => {
             ),
           }}
           data-qa-connection-throttle
-          disabled={isRestricted}
+          disabled={isNodeBalancerReadOnly}
           errorText={throttleError?.[0].reason}
           label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
@@ -143,7 +144,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
-          disabled={isRestricted}
+          disabled={isNodeBalancerReadOnly}
           onClick={() => setIsDeleteDialogOpen(true)}
         >
           Delete

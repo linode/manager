@@ -14,7 +14,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  getRestrictedResourceText,
+  isRestrictedGlobalGrantType,
+} from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
@@ -39,11 +42,11 @@ export const NodeBalancersLanding = () => {
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
 
-  // NodeBalancer creation is possible for restricted accounts,
-  // contingent on the ability to add Linodes.
-  const isRestricted =
-    Boolean(profile?.restricted) &&
-    !(grants?.global.add_nodebalancers && grants?.global.add_linodes);
+  const isRestricted = isRestrictedGlobalGrantType({
+    globalGrantType: 'add_nodebalancers',
+    grants,
+    profile,
+  });
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -98,6 +101,7 @@ export const NodeBalancersLanding = () => {
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
+            isSingular: false,
             resourceType: 'NodeBalancers',
           }),
         }}

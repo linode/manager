@@ -170,7 +170,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       panelMessages,
     } = this.state;
 
-    const isRestricted = this.isRestrictedUser();
+    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
 
     return (
       <div>
@@ -187,7 +187,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <StyledConfigsButton
               buttonType="outlined"
               data-qa-add-config
-              disabled={isRestricted}
+              disabled={isNodeBalancerReadOnly}
               onClick={() => this.addNodeBalancerConfig()}
             >
               {configs.length === 0
@@ -545,7 +545,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return true;
   };
 
-  isRestrictedUser = () => {
+  isNodeBalancerReadOnly = () => {
     const { grants } = this.props;
     const { nodeBalancerId } = this.props.match.params;
     return Boolean(
@@ -645,7 +645,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
 
-    const isRestricted = this.isRestrictedUser();
+    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
 
     const L = {
       algorithmLens: lensTo(['algorithm']),
@@ -706,7 +706,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           checkPassive={view(L.checkPassiveLens, this.state)}
           checkPath={view(L.checkPathLens, this.state)}
           configIdx={idx}
-          disabled={isRestricted}
+          disabled={isNodeBalancerReadOnly}
           errors={configErrors[idx]}
           forEdit
           healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}

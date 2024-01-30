@@ -42,7 +42,8 @@ export const NodeBalancerDetail = () => {
 
   const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
-  const isRestricted = useIsResourceRestricted({
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
   });
@@ -116,7 +117,7 @@ export const NodeBalancerDetail = () => {
         title={nodeBalancerLabel}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-      {isRestricted && (
+      {isNodeBalancerReadOnly && (
         <Notice
           text={getRestrictedResourceText({
             resourceType: 'NodeBalancers',

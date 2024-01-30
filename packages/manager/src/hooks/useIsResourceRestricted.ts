@@ -9,7 +9,7 @@ import type { Grant, GrantLevel, GrantType, Grants } from '@linode/api-v4';
  * Admin-created resources may be restricted, but those created by the restricted user are editable.
  */
 export const useIsResourceRestricted = ({
-  grantLevel = 'read_only',
+  grantLevel,
   grantType,
   id,
 }: {

@@ -21,7 +21,9 @@ export const NodeBalancerActionMenu = (props: Props) => {
   const history = useHistory();
 
   const { label, nodeBalancerId, toggleDialog } = props;
-  const isRestricted = useIsResourceRestricted({
+
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodeBalancerId,
   });
@@ -40,12 +42,12 @@ export const NodeBalancerActionMenu = (props: Props) => {
       title: 'Settings',
     },
     {
-      disabled: isRestricted,
+      disabled: isNodeBalancerReadOnly,
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
       },
       title: 'Delete',
-      tooltip: isRestricted
+      tooltip: isNodeBalancerReadOnly
         ? getRestrictedResourceText({
             action: 'delete',
             resourceType: 'NodeBalancers',
