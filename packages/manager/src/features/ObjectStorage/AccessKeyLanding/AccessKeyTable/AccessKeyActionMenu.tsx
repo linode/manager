@@ -9,7 +9,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from './types';
+import { OpenAccessDrawer } from '../types';
 
 interface Props {
   label: string;
@@ -18,7 +18,7 @@ interface Props {
   openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
-export const AccessKeyMenu = (props: Props) => {
+export const AccessKeyActionMenu = (props: Props) => {
   const { objectStorageKey, openDrawer, openRevokeDialog } = props;
 
   const flags = useFlags();
