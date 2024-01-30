@@ -63,6 +63,7 @@ export const AuthenticationSettings = () => {
 
       // Using a short timeout here to ensure the element
       // is in the DOM before scrolling
+      // TODO: Look into mutation observer to remove the need for this timeout
       setTimeout(() => {
         if (currentTargetRef) {
           currentTargetRef.scrollIntoView();
