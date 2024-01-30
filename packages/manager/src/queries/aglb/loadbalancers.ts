@@ -1,5 +1,6 @@
 import {
   createBasicLoadbalancer,
+  createLoadbalancer,
   deleteLoadbalancer,
   getLoadbalancer,
   getLoadbalancerEndpointHealth,
@@ -11,6 +12,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import type {
   APIError,
   CreateBasicLoadbalancerPayload,
+  CreateLoadbalancerPayload,
   Filter,
   LoadBalancerEndpointHealth,
   Loadbalancer,
@@ -69,6 +71,17 @@ export const useLoadBalancerBasicCreateMutation = () => {
       },
     }
   );
+};
+
+export const useLoadBalancerCreateMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Loadbalancer, APIError[], CreateLoadbalancerPayload>({
+    mutationFn: createLoadbalancer,
+    onSuccess(data) {
+      queryClient.setQueryData([QUERY_KEY, 'aglb', data.id], data);
+      queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+    },
+  });
 };
 
 export const useLoadBalancerDeleteMutation = (id: number) => {

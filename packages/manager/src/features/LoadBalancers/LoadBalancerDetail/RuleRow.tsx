@@ -14,7 +14,7 @@ import {
   sxItemSpacing,
 } from './RulesTable.styles';
 
-import type { Rule } from '@linode/api-v4';
+import type { Rule, RuleCreatePayload } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 const screenReaderMessage =
@@ -26,7 +26,7 @@ interface RuleRowProps {
   onEditRule: () => void;
   onMoveDown: () => void;
   onMoveUp: () => void;
-  rule: Rule;
+  rule: Rule | RuleCreatePayload;
   totalRules: number;
 }
 
