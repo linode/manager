@@ -65,6 +65,14 @@ export const initialValues: ServiceTargetPayload = {
 export const SERVICE_TARGET_COPY = {
   Description:
     'Service targets consist of a group of endpoints. Requests are directed to service targets using configured routes.',
+  Headers: {
+    Algorithm:
+      'Decides how the load balancer allocates new connections across your service targets. Cloud Load Balancer also has a geo-proximity feature for selecting the optimum endpoint.',
+    Certificate:
+      'The certificate installed on your endpoints that are used by the load balancer to accept responses from this Service Target.',
+    HealthCheck:
+      'Queries endpoints by performing TCP connections or by making HTTP/S requests. When there is a successful TCP handshake or the host returns a 2xx or 3xx status code, the endpoint is considered healthy (Up).',
+  },
   Tooltips: {
     Endpoints: {
       Capacity:

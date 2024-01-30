@@ -185,11 +185,7 @@ export const ServiceTargetDrawer = (props: Props) => {
         />
         <Divider spacingBottom={16} spacingTop={16} />
         <Typography variant="h3">Algorithm</Typography>
-        <Typography mt={1}>
-          Decides how the load balancer allocates new connections across your
-          service targets. Cloud Load Balancer also has a geo-proximity feature
-          for selecting the optimum endpoint.
-        </Typography>
+        <Typography mt={1}>{SERVICE_TARGET_COPY.Headers.Algorithm}</Typography>
         <Autocomplete
           onChange={(e, selected) =>
             formik.setFieldValue('load_balancing_policy', selected.value)
@@ -234,10 +230,7 @@ export const ServiceTargetDrawer = (props: Props) => {
               <Typography variant="h3">
                 Service Target CA Certificate
               </Typography>
-              <Typography>
-                The certificate installed on your endpoints that are used by the
-                load balancer to accept responses from this Service Target.
-              </Typography>
+              <Typography>{SERVICE_TARGET_COPY.Headers.Certificate}</Typography>
             </Stack>
             <CertificateSelect
               onChange={(cert) =>
@@ -253,12 +246,7 @@ export const ServiceTargetDrawer = (props: Props) => {
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack spacing={1}>
           <Typography variant="h3">Health Checks</Typography>
-          <Typography>
-            Queries endpoints by performing TCP connections or by making HTTP/S
-            requests. When there is a successful TCP handshake or the host
-            returns a 2xx or 3xx status code, the endpoint is considered healthy
-            (Up).
-          </Typography>
+          <Typography>{SERVICE_TARGET_COPY.Headers.HealthCheck}</Typography>
         </Stack>
         <RadioGroup
           onChange={(_, value) =>
