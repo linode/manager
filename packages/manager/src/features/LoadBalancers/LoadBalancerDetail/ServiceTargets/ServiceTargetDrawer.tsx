@@ -352,7 +352,7 @@ export const ServiceTargetDrawer = (props: Props) => {
                   ? formik.errors.healthcheck?.host
                   : undefined
               }
-              label="Hostname Match (optional)"
+              label="Hostname Match"
               labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host}
               name="healthcheck.host"
               onBlur={formik.handleBlur}
