@@ -19,6 +19,7 @@ import {
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getPlacementGroupLinodeCount } from '../utils';
+import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();

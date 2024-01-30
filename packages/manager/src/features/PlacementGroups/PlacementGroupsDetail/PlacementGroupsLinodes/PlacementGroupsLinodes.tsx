@@ -32,7 +32,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
     return null;
   }
 
-  const { limits } = placementGroup; // TODO VM_Placement - this will be "capacity" once M3-7614 is merged
+  const { capacity } = placementGroup; // TODO VM_Placement - this will be "capacity" once M3-7614 is merged
 
   const filter = (value: string) => {
     setSearchText(value);
@@ -47,7 +47,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <Typography>
         The following Linodes have been assigned to this Placement Group. A
         Linode can only be assigned to a single Placement Group. <br />
-        Limit of Linodes for this Placement Group: {limits}
+        Limit of Linodes for this Placement Group: {capacity}
       </Typography>
 
       <DebouncedSearchTextField

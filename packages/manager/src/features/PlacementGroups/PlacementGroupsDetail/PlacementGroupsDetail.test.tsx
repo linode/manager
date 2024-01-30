@@ -64,6 +64,6 @@ describe('PlacementGroupsLanding', () => {
     expect(getByText(/my first pg \(Anti-affinity\)/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
     expect(getByRole('tab', { name: 'Summary' })).toBeInTheDocument();
-    expect(getByRole('tab', { name: 'Linodes (3)' })).toBeInTheDocument();
+    expect(getByRole('tab', { name: 'Linodes (4)' })).toBeInTheDocument();
   });
 });
