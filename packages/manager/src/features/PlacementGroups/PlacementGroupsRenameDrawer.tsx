@@ -65,7 +65,7 @@ export const PlacementGroupsRenameDrawer = (
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
-      // This is a bit of an outlier. We only need to pass the label since that' the only value the API accepts.
+      // This is a bit of an outlier. We only need to pass the label since that's the only value the API accepts.
       // Meanwhile formik is still keeping track of the other values since we're showing them in the UI.
       const { label } = payload;
 
@@ -108,7 +108,7 @@ export const PlacementGroupsRenameDrawer = (
     <Drawer
       onClose={onClose}
       open={open}
-      title={`Rename Placement Group ${selectedPlacementGroup?.label}`}
+      title={`Rename Placement Group ${selectedPlacementGroup?.label ?? ''}`}
     >
       <PlacementGroupsDrawerContent
         formik={{

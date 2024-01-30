@@ -5,14 +5,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
+const commonProps = {
+  onClose: vi.fn(),
+  onPlacementGroupCreated: vi.fn(),
+  open: true,
+};
+
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render have its fields enabled', () => {
     const { getByLabelText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         numberOfPlacementGroupsCreated={0}
-        onClose={vi.fn()}
-        onPlacementGroupCreated={vi.fn()}
-        open={true}
+        {...commonProps}
       />
     );
 
@@ -25,9 +29,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         numberOfPlacementGroupsCreated={0}
-        onClose={vi.fn()}
-        onPlacementGroupCreated={vi.fn()}
-        open={true}
+        {...commonProps}
       />
     );
 
@@ -45,9 +47,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     const { getByTestId } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         numberOfPlacementGroupsCreated={5}
-        onClose={vi.fn()}
-        onPlacementGroupCreated={vi.fn()}
-        open={true}
+        {...commonProps}
       />
     );
 
@@ -58,10 +58,8 @@ describe('PlacementGroupsCreateDrawer', () => {
     const { getByLabelText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         numberOfPlacementGroupsCreated={0}
-        onClose={vi.fn()}
-        onPlacementGroupCreated={vi.fn()}
-        open={true}
         selectedRegionId="us-east"
+        {...commonProps}
       />
     );
 
