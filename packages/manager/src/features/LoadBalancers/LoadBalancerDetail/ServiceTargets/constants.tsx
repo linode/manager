@@ -39,9 +39,9 @@ export const algorithmOptions = [
 ];
 
 export const protocolOptions = [
-  { label: 'TCP', value: 'tcp' },
-  { label: 'HTTP', value: 'http' },
   { label: 'HTTPS', value: 'https' },
+  { label: 'HTTP', value: 'http' },
+  { label: 'TCP', value: 'tcp' },
 ];
 
 export const initialValues: ServiceTargetPayload = {
@@ -66,17 +66,13 @@ export const SERVICE_TARGET_COPY = {
   Description:
     'Service targets consist of a group of endpoints. Requests are directed to service targets using configured routes.',
   Tooltips: {
-    Algorithm:
-      'Policy type that decides how the load balancer allocates new connections across your service targets.',
-    Certificate:
-      'Service target CA certificates are installed on your endpoints. Cloud Load Balancer uses these certificates to verify responses from your service targets to your clients.',
     Endpoints: {
       Capacity:
         'The maximum number of requests/second that can be directed to this endpoint. If the actual number of requests/second exceeds the configured capacity value, requests are distributed to the other endpoints.',
       Host:
-        'Optional host header for HTTP/S requests to the endpoint. Not used to look up the IP address in the DNS.',
+        'The host header for HTTP/S requests to the endpoint. This host header is not used to look up the IP address in the DNS.',
       IP:
-        'The private IP address of the endpoint on a Compute Instance (Linode). For non-Linode endpoints, enter the public IPv4 or IPv6 address. Do not use 127.0.0.0/8 for the endpoint IP address.',
+        'Select the Compute Instance (Linode). For non-Linode endpoints, enter the public IPv4 or IPv6 address.',
       Port:
         'The service target port that the load balancer directs incoming requests to. This is the port that the application is listening on.',
     },
@@ -85,18 +81,8 @@ export const SERVICE_TARGET_COPY = {
         'Health checks query the service targets by performing TCP connections or by making HTTP/S requests. For TCP, a service target is considered healthy and able to accept incoming requests when there is a successful TCP handshake with the service target. When HTTP/S is used to validate health status, the service target is considered healthy when requests to its path or host return a 2xx or 3xx status code response.',
       Healthy:
         'The number of consecutive health checks that must be successful in order to consider a service target as healthy. Minimum value is 1.',
-      Host: (
-        <Stack spacing={1}>
-          <Typography>
-            When the Protocol is set to HTTP/S, enter the request host for the
-            health check.
-          </Typography>
-          <Typography>
-            Health Check Host is not applicable when the health check Protocol
-            is set to TCP.
-          </Typography>
-        </Stack>
-      ),
+      Host:
+        'Additional hostname match that is used in the routing decision. Wildcards (*) are supported with the Path Regex Match Type.',
       Interval:
         'The number of seconds between health checks for this service target. Minimum value is 1.',
       Path: (
@@ -137,8 +123,8 @@ export const SERVICE_TARGET_COPY = {
       <Box>
         The protocol this target is configured to serve.
         <ul>
+          <li>HTTPS requires TLS certificates.</li>
           <li>The HTTP and TCP protocols do not support TLS certificates.</li>
-          <li> HTTPS requires TLS certificates.</li>
         </ul>
       </Box>
     ),
