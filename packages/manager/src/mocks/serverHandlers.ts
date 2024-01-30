@@ -99,6 +99,7 @@ import {
   vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
+import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
@@ -1417,6 +1418,22 @@ export const handlers = [
           stackscript: grantFactory.buildList(30),
           volume: grantFactory.buildList(100),
         })
+      )
+    );
+  }),
+  rest.get('*/account/logins', (req, res, ctx) => {
+    const failedRestrictedAccountLogin = accountLoginFactory.build({
+      restricted: true,
+      status: 'failed',
+    });
+    const successfulAccountLogins = accountLoginFactory.buildList(25);
+
+    return res(
+      ctx.json(
+        makeResourcePage([
+          failedRestrictedAccountLogin,
+          ...successfulAccountLogins,
+        ])
       )
     );
   }),

@@ -69,10 +69,12 @@ const AccountLogins = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const isRestrictedChildUser =
-    flags.parentChildAccountAccess && profile?.user_type === 'child';
+  const isRestrictedChildUser = Boolean(
+    flags.parentChildAccountAccess && profile?.user_type === 'child'
+  );
   const isAccountAccessRestricted =
-    isRestrictedChildUser || grants?.global.account_access !== 'read_write';
+    isRestrictedChildUser ||
+    (profile?.restricted && grants?.global.account_access !== 'read_write');
 
   const renderTableContent = () => {
     if (isLoading) {
