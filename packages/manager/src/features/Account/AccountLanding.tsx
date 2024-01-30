@@ -54,6 +54,8 @@ const AccountLanding = () => {
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
   const isAkamaiAccount = account?.billing_source === 'akamai';
+  const isProxyUser = profile?.user_type === 'proxy';
+  const isParentUser = profile?.user_type === 'parent';
 
   const tabs = [
     {
@@ -115,8 +117,7 @@ const AccountLanding = () => {
 
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
-    flags.parentChildAccountAccess &&
-    (profile?.user_type === 'parent' || profile?.user_type === 'proxy');
+    flags.parentChildAccountAccess && (isParentUser || isProxyUser);
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -172,7 +173,7 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
-        isProxyUser={profile?.user_type === 'proxy'}
+        isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
       />
