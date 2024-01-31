@@ -17,7 +17,7 @@ export const ROUTE_COPY = {
         'Rules set the conditions that are used for target selection. TCP rules include the percentage of incoming requests that should be directed to each target.',
     },
     Hostname:
-      'The hostname of the target where the rule applies. If a hostname is not specified, the rule applies to all targets. Wildcards (*) are supported.',
+      'Additional hostname match that is used in the routing decision. Wildcards (*) are supported with the Path Regex Match Type.',
     MatchRule: {
       http:
         'A rule consists of a match type, and a pattern to match on called a match value. Each rule can specify only one field or pattern pair.',

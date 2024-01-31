@@ -90,7 +90,7 @@ export const SERVICE_TARGET_COPY = {
       Healthy:
         'The number of consecutive health checks that must be successful in order to consider a service target as healthy. Minimum value is 1.',
       Host:
-        'Additional hostname match that is used in the routing decision. Wildcards (*) are supported with the Path Regex Match Type.',
+        'When the Health Checks Protocol is set to HTTP, this is the host header sent in the health check request.',
       Interval:
         'The number of seconds between health checks for this service target. Minimum value is 1.',
       Path: (
