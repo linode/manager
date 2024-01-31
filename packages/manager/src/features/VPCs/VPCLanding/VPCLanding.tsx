@@ -13,11 +13,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  VPC_DOCS_LINK,
-  VPC_FEEDBACK_FORM_URL,
-  VPC_LABEL,
-} from 'src/features/VPCs/constants';
+import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
@@ -96,7 +92,6 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
-        betaFeedbackLink={VPC_FEEDBACK_FORM_URL}
         createButtonText="Create VPC"
         docsLink={VPC_DOCS_LINK}
         onButtonClick={createVPC}
