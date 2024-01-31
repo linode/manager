@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-01-31] - v1.110.3
+
+### Fix:
+- Enable `Can add VPCs to this account` for user permissions
+
 ## [2024-01-31] - v1.110.2
 
 ### Changed:
