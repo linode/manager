@@ -14,7 +14,7 @@ export const getRestrictedResourceText = ({
   action = 'edit',
   isSingular = true,
   resourceType,
-}: GetRestrictedResourceText) => {
+}: GetRestrictedResourceText): string => {
   const resource = isSingular
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
@@ -30,7 +30,7 @@ export const isRestrictedGlobalGrantType = ({
   globalGrantType: GlobalGrantTypes;
   grants: Grants | undefined;
   profile: Profile | undefined;
-}) => {
+}): boolean => {
   return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
 };
 
