@@ -200,7 +200,7 @@ describe('Akamai Cloud Load Balancer service targets', () => {
           .should('be.visible')
           .click();
 
-        cy.findByLabelText('Health Check Host')
+        cy.findByLabelText('Health Check Host Header')
           .scrollIntoView()
           .should('be.visible')
           .type('example.com');
@@ -378,7 +378,7 @@ describe('Akamai Cloud Load Balancer service targets', () => {
           mockServiceTarget.healthcheck.path
         );
 
-        cy.findByLabelText('Health Check Host', { exact: false }).should(
+        cy.findByLabelText('Health Check Host Header', { exact: false }).should(
           'have.value',
           mockServiceTarget.healthcheck.host
         );

@@ -52,7 +52,7 @@ describe('RuleDrawer', () => {
       <RuleDrawer {...props} ruleIndexToEdit={0} />
     );
 
-    const hostnameField = getByLabelText('Hostname (optional)');
+    const hostnameField = getByLabelText('Hostname Match (optional)');
     expect(hostnameField).toHaveDisplayValue(
       props.route.rules[0].match_condition.hostname!
     );

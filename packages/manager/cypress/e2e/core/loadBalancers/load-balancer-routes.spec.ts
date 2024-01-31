@@ -539,7 +539,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
         .findByTitle('Edit Rule')
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Hostname (optional)')
+          cy.findByLabelText('Hostname Match (optional)')
             .should('have.value', routes[0].rules[0].match_condition.hostname)
             .clear()
             .type('example.com');

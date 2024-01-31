@@ -145,9 +145,6 @@ export const ServiceTargetDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>
-      {!isEditMode && (
-        <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
-      )}
       <form onSubmit={formik.handleSubmit}>
         {generalCreateErrors && (
           <Notice
@@ -186,6 +183,9 @@ export const ServiceTargetDrawer = (props: Props) => {
           onChange={(_, { value }) => formik.setFieldValue('protocol', value)}
           options={protocolOptions}
         />
+        <Divider spacingBottom={16} spacingTop={16} />
+        <Typography variant="h3">Algorithm</Typography>
+        <Typography mt={1}>{SERVICE_TARGET_COPY.Headers.Algorithm}</Typography>
         <Autocomplete
           onChange={(e, selected) =>
             formik.setFieldValue('load_balancing_policy', selected.value)
@@ -203,9 +203,6 @@ export const ServiceTargetDrawer = (props: Props) => {
               </li>
             );
           }}
-          textFieldProps={{
-            labelTooltipText: SERVICE_TARGET_COPY.Tooltips.Algorithm,
-          }}
           value={algorithmOptions.find(
             (option) => option.value === formik.values.load_balancing_policy
           )}
@@ -215,8 +212,11 @@ export const ServiceTargetDrawer = (props: Props) => {
           options={algorithmOptions}
         />
         <Divider spacingBottom={24} spacingTop={24} />
-        <Typography sx={{ marginBottom: 2 }} variant="h3">
+        <Typography mb={1} variant="h3">
           Endpoints
+        </Typography>
+        <Typography mb={2}>
+          The destination where the load balancer sends requests.{' '}
         </Typography>
         <EndpointTable
           endpoints={formik.values.endpoints}
@@ -226,14 +226,11 @@ export const ServiceTargetDrawer = (props: Props) => {
         {formik.values.protocol === 'https' && (
           <>
             <Divider spacingBottom={12} spacingTop={24} />
-            <Stack alignItems="center" direction="row">
+            <Stack spacing={1}>
               <Typography variant="h3">
                 Service Target CA Certificate
               </Typography>
-              <TooltipIcon
-                status="help"
-                text={SERVICE_TARGET_COPY.Tooltips.Certificate}
-              />
+              <Typography>{SERVICE_TARGET_COPY.Headers.Certificate}</Typography>
             </Stack>
             <CertificateSelect
               onChange={(cert) =>
@@ -247,12 +244,9 @@ export const ServiceTargetDrawer = (props: Props) => {
           </>
         )}
         <Divider spacingBottom={12} spacingTop={24} />
-        <Stack alignItems="center" direction="row">
+        <Stack spacing={1}>
           <Typography variant="h3">Health Checks</Typography>
-          <TooltipIcon
-            status="help"
-            text={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Description}
-          />
+          <Typography>{SERVICE_TARGET_COPY.Headers.HealthCheck}</Typography>
         </Stack>
         <RadioGroup
           onChange={(_, value) =>
@@ -358,12 +352,12 @@ export const ServiceTargetDrawer = (props: Props) => {
                   ? formik.errors.healthcheck?.host
                   : undefined
               }
-              label="Health Check Host"
+              label="Health Check Host Header"
               labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host}
               name="healthcheck.host"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              placeholder="example.org"
+              placeholder="check.endpoint.org"
               value={formik.values.healthcheck.host}
             />
           </>

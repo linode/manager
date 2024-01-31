@@ -111,10 +111,12 @@ export const AddNewCertificateForm = (props: AddCertificateDrawerProps) => {
       />
       <TextField
         errorText={formik.touched.hostname ? formik.errors.hostname : undefined}
-        label="Host Header"
+        label="Server Name Indication (SNI) Hostname"
+        labelTooltipText="The request host header sent by the client. This host header tells the load balancer which certificate to use when responding back to the client."
         name="hostname"
         onBlur={formik.handleBlur}
         onChange={formik.handleChange}
+        placeholder="www.example.org"
         value={formik.values.hostname}
       />
       <ActionsPanel
