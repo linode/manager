@@ -5,6 +5,16 @@ import { sortByString } from 'src/utilities/sort-by';
 
 import { FormState } from './OMC_AccessKeyDrawer';
 
+type UpdatePayload =
+  | { label: FormState['label']; regions: FormState['regions'] }
+  | { label: FormState['label'] }
+  | { regions: FormState['regions'] }
+  | {};
+
+const sortRegionOptions = (a: string, b: string) => {
+  return sortByString(a, b, 'asc');
+};
+
 /**
  * Generates an update payload for edit access key based on changes in form values.
  *
@@ -15,12 +25,8 @@ import { FormState } from './OMC_AccessKeyDrawer';
 export const generateUpdatePayload = (
   updatedValues: FormState,
   initialValues: FormState
-) => {
+): UpdatePayload => {
   let updatePayload = {};
-
-  const sortRegionOptions = (a: string, b: string) => {
-    return sortByString(a, b, 'asc');
-  };
 
   const labelChanged = updatedValues.label !== initialValues.label;
   const regionsChanged = !areArraysEqual(
@@ -53,11 +59,7 @@ export const generateUpdatePayload = (
 export const hasLabelOrRegionsChanged = (
   updatedValues: FormState,
   initialValues: ObjectStorageKey
-) => {
-  const sortRegionOptions = (a: string, b: string) => {
-    return sortByString(a, b, 'asc');
-  };
-
+): boolean => {
   const regionsChanged = !areArraysEqual(
     [...updatedValues.regions].sort(sortRegionOptions),
     [...initialValues.regions?.map((region) => region.id)].sort(
