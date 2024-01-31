@@ -183,7 +183,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !flags.vmPlacement,
           href: '/placement-groups',
           icon: <PlacementGroups />,
-          isBeta: true,
+          isBeta: flags.vmPlacement,
         },
         {
           display: 'Volumes',
@@ -196,7 +196,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isACLBEnabled,
           href: '/loadbalancers',
           icon: <LoadBalancer />,
-          isBeta: true,
+          isBeta: flags.aclb,
         },
         {
           display: 'NodeBalancers',
