@@ -10,7 +10,7 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import {
   getAffinityLabel,
-  placementGroupHasCapacity,
+  getPlacementGroupLinodeCount,
 } from './PlacementGroups.utils';
 
 export interface PlacementGroupsSelectProps {
@@ -48,7 +48,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const [
     selectedPlacementGroup,
     setSelectedPlacementGroup,
-  ] = React.useState<PlacementGroup | null>();
+  ] = React.useState<PlacementGroup>();
 
   const {
     data: placementGroups,
@@ -68,9 +68,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   if (selectedRegionID && placementGroupsOptions?.length === 0) {
     errorText = 'There are no Placement Groups in this region';
   }
+
   if (
     selectedPlacementGroup &&
-    !placementGroupHasCapacity(selectedPlacementGroup)
+    getPlacementGroupLinodeCount(selectedPlacementGroup) >=
+      selectedPlacementGroup.capacity
   ) {
     errorText = `This Placement Group doesn't have any capacity`;
   }
