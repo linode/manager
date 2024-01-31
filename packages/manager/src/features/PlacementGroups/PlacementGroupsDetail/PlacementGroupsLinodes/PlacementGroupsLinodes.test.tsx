@@ -17,7 +17,7 @@ describe('PlacementGroupsLanding', () => {
     ).toBeInTheDocument();
   });
 
-  it('features the linodes table and its filter field and a create button', () => {
+  it('features the linodes table, a filter field, a create button and a docs link', () => {
     const placementGroup = placementGroupFactory.build({
       capacity: 2,
       linode_ids: [1],
