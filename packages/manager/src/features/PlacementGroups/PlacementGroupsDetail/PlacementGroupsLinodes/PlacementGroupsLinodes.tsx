@@ -81,7 +81,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
         <Grid>
           <Button
             buttonType="primary"
-            data-testid="add-device-button"
+            data-testid="add-linode-to-placement-group-button"
             disabled={hasPlacementGroupReachedCapacity(placementGroup)}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
             // onClick={handleOpen} TODO VM_Placement: add onClick prop when drawer is ready
@@ -90,7 +90,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
           </Button>
         </Grid>
       </Grid>
-
       <PlacementGroupsLinodesTable
         error={linodesError ?? []}
         linodes={filteredLinodes ?? []}
