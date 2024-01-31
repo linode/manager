@@ -9,6 +9,7 @@ import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useNodeBalancerQuery,
@@ -26,6 +27,12 @@ export const NodeBalancerSettings = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const displayFirewallInfoText = attachedFirewallData?.results === 0;
+
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'nodebalancer',
+    id: nodebalancer?.id,
+  });
 
   const {
     error: labelError,
@@ -73,6 +80,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="NodeBalancer Label">
         <TextField
           data-qa-label-panel
+          disabled={isNodeBalancerReadOnly}
           errorText={labelError?.[0].reason}
           label="Label"
           onChange={(e) => setLabel(e.target.value)}
@@ -82,7 +90,7 @@ export const NodeBalancerSettings = () => {
         <Button
           buttonType="primary"
           data-qa-label-save
-          disabled={label === nodebalancer.label}
+          disabled={isNodeBalancerReadOnly || label === nodebalancer.label}
           loading={isUpdatingLabel}
           onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
@@ -106,6 +114,7 @@ export const NodeBalancerSettings = () => {
             ),
           }}
           data-qa-connection-throttle
+          disabled={isNodeBalancerReadOnly}
           errorText={throttleError?.[0].reason}
           label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
@@ -135,6 +144,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
+          disabled={isNodeBalancerReadOnly}
           onClick={() => setIsDeleteDialogOpen(true)}
         >
           Delete

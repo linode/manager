@@ -16,7 +16,7 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
@@ -50,6 +50,8 @@ export interface Props {
 export const CreateDiskDrawer = (props: Props) => {
   const { linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
 
@@ -92,7 +94,7 @@ export const CreateDiskDrawer = (props: Props) => {
             : values;
 
         await createDisk(cleanedValues);
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar(`Started creation of disk ${values.label}`, {
           variant: 'success',
         });

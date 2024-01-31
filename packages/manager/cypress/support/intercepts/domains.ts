@@ -5,7 +5,7 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
-import type { Domain, DomainRecord, ZoneFile } from '@linode/api-v4/types';
+import type { Domain, DomainRecord, ZoneFile } from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Domain.
@@ -73,7 +73,7 @@ export const mockImportDomain = (domain: Domain): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockGetDomain = (
-  domainId: string,
+  domainId: number,
   domain: Domain
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher(`domains/${domainId}`), domain);
@@ -88,7 +88,7 @@ export const mockGetDomain = (
  * @returns Cypress chainable.
  */
 export const mockGetDomainZoneFile = (
-  domainId: string,
+  domainId: number,
   zoneFile: ZoneFile
 ): Cypress.Chainable<null> => {
   return cy.intercept(

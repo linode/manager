@@ -7,6 +7,7 @@ import {
   mockAddUser,
   mockGetUser,
   mockGetUserGrants,
+  mockGetUserGrantsUnrestrictedAccess,
   mockGetUsers,
   mockUpdateUser,
   mockUpdateUserGrants,
@@ -191,14 +192,11 @@ describe('User permission management', () => {
     };
 
     const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
 
+    // Initially mock user with unrestricted account access.
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser).as('getUser');
-    mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username).as('getUserGrants');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
     cy.visitWithLogin('/account/users');
@@ -258,7 +256,7 @@ describe('User permission management', () => {
 
     // Re-enable unrestricted account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     cy.findByLabelText('Toggle Full Account Access')
       .should('be.visible')
       .click();
@@ -561,22 +559,30 @@ describe('User permission management', () => {
       });
   });
 
-  it('disables "Read Only" and "None" and defaults to "Read Write" Billing Access for "Proxy" account users with Parent/Child feature flag', () => {
-    const mockProfile = profileFactory.build({
+  /**
+   * Confirm the Users & Grants and User Permissions pages flow for a child account viewing a proxy user.
+   * Confirm that "Business partner settings" and "User settings" sections are present on the Users & Grants page.
+   * Confirm that proxy accounts are listed under "Business partner settings".
+   * Confirm that clicking the "Manage Access" button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
+   * Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
+   * Confirm that proxy accounts default to "Read Write" Billing Access and have disabled "Read Only" and "None" options.
+   */
+  it('tests the users landing and user permissions flow for a child account viewing a proxy user ', () => {
+    const mockChildProfile = profileFactory.build({
       username: 'proxy-user',
+      user_type: 'child',
     });
 
-    const mockActiveUser = accountUserFactory.build({
-      username: 'proxy-user',
+    const mockChildUser = accountUserFactory.build({
       restricted: false,
-      user_type: 'proxy',
+      user_type: 'child',
     });
 
-    const mockRestrictedUser = {
-      ...mockActiveUser,
+    const mockRestrictedProxyUser = accountUserFactory.build({
       restricted: true,
+      user_type: 'proxy',
       username: 'restricted-proxy-user',
-    };
+    });
 
     const mockUserGrants = grantsFactory.build({
       global: { account_access: 'read_write' },
@@ -588,32 +594,46 @@ describe('User permission management', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
-    mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
-    mockGetUser(mockActiveUser);
-    mockGetUserGrants(mockActiveUser.username, mockUserGrants);
-    mockGetProfile(mockProfile);
-    mockGetUser(mockRestrictedUser);
-    mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
+    mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
+    mockGetUser(mockChildUser);
+    mockGetUserGrants(mockChildUser.username, mockUserGrants);
+    mockGetProfile(mockChildProfile);
+    mockGetUser(mockRestrictedProxyUser);
+    mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
-    // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
+    // Navigate to Users & Grants page and confirm "Business partner settings" and "User settings" sections are visible.
     cy.visitWithLogin('/account/users');
     cy.wait('@getUsers');
-    cy.findByText(mockRestrictedUser.username)
+    cy.findByText('Business partner settings').should('be.visible');
+    cy.findByText('User settings').should('be.visible');
+
+    // Find mock restricted proxy user under "Business partner settings", click its "Manage Access" button.
+    cy.findByLabelText('List of Business Partners')
       .should('be.visible')
-      .closest('tr')
       .within(() => {
-        ui.button
-          .findByTitle('User Permissions')
+        cy.findByText(mockRestrictedProxyUser.username)
           .should('be.visible')
-          .should('be.enabled')
-          .click();
+          .closest('tr')
+          .within(() => {
+            ui.button
+              .findByTitle('Manage Access')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
       });
 
+    // Confirm button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
     cy.url().should(
       'endWith',
-      `/account/users/${mockRestrictedUser.username}/permissions`
+      `/account/users/${mockRestrictedProxyUser.username}/permissions`
     );
     cy.wait(['@getClientStream', '@getFeatureFlags']);
+
+    cy.findByText('Business Partner Permissions').should('be.visible');
+
+    // Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
+    expect(cy.findByText('User Profile').should('not.exist'));
 
     cy.get('[data-qa-global-section]')
       .should('be.visible')
@@ -651,15 +671,9 @@ describe('User permission management', () => {
       restricted: false,
     });
 
-    const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
-
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
@@ -792,12 +806,6 @@ describe('User permission management', () => {
       restricted: true,
     });
 
-    const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
-
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
       parentChildAccountAccess: makeFeatureFlagData(false),
@@ -806,7 +814,7 @@ describe('User permission management', () => {
 
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
@@ -919,12 +927,6 @@ describe('User permission management', () => {
       restricted: false,
     });
 
-    const mockUserGrantsUpdated = grantsFactory.build();
-    const mockUserGrants = {
-      ...mockUserGrantsUpdated,
-      global: undefined,
-    };
-
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
       parentChildAccountAccess: makeFeatureFlagData(false),
@@ -933,8 +935,8 @@ describe('User permission management', () => {
 
     mockGetUsers([mockUser, additionalUser]).as('getUsers');
     mockGetUser(mockUser);
-    mockGetUserGrants(mockUser.username, mockUserGrants);
-    mockGetUserGrants(additionalUser.username, mockUserGrants);
+    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
+    mockGetUserGrantsUnrestrictedAccess(additionalUser.username);
     mockDeleteUser(additionalUser.username).as('deleteUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.

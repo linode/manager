@@ -60,6 +60,7 @@ export interface Account {
 export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
+  | 'Akamai Cloud Load Balancer'
   | 'Block Storage'
   | 'Cloud Firewall'
   | 'Kubernetes'
@@ -410,7 +411,6 @@ export interface Event {
   time_remaining: null | string;
   username: string | null;
   secondary_entity: Entity | null;
-  _initial?: boolean;
   message: string | null;
 }
 /**

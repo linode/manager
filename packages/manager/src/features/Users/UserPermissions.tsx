@@ -40,6 +40,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+import { grantTypeMap } from 'src/features/Account/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -54,10 +55,7 @@ import {
   StyledSubHeaderGrid,
   StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
-import {
-  UserPermissionsEntitySection,
-  entityNameMap,
-} from './UserPermissionsEntitySection';
+import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
 interface Props {
   accountUsername?: string;
   clearNewUser: () => void;
@@ -427,6 +425,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
+    const isProxyUser = this.state.userType === 'proxy';
 
     return (
       <Box sx={{ marginTop: (theme) => theme.spacing(4) }}>
@@ -442,7 +441,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           >
             <StyledHeaderGrid>
               <Typography data-qa-restrict-access={restricted} variant="h2">
-                General Permissions
+                {isProxyUser ? 'Business Partner' : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledSubHeaderGrid>
@@ -630,7 +629,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <Tabs>
               <TabList>
                 {this.state.tabs?.map((entity) => (
-                  <Tab key={`${entity}-tab`}>{entityNameMap[entity]}</Tab>
+                  <Tab key={`${entity}-tab`}>{grantTypeMap[entity]}</Tab>
                 ))}
               </TabList>
               <TabPanels>

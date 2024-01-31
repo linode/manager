@@ -14,7 +14,7 @@ import {
   sxItemSpacing,
 } from './RulesTable.styles';
 
-import type { Rule } from '@linode/api-v4';
+import type { Rule, RuleCreatePayload } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 const screenReaderMessage =
@@ -26,18 +26,9 @@ interface RuleRowProps {
   onEditRule: () => void;
   onMoveDown: () => void;
   onMoveUp: () => void;
-  rule: Rule;
+  rule: Rule | RuleCreatePayload;
   totalRules: number;
 }
-
-const getExecutionLabel = (index: number, total: number) => {
-  if (index === 0) {
-    return 'First';
-  } else if (index === total - 1) {
-    return 'Last';
-  }
-  return index + 1;
-};
 
 export const RuleRow = (props: RuleRowProps) => {
   const {
@@ -77,7 +68,7 @@ export const RuleRow = (props: RuleRowProps) => {
               }}
             >
               <StyledDragIndicator aria-label="Drag indicator icon" />
-              {getExecutionLabel(index, totalRules)}
+              {index + 1}
             </Box>
             <Box
               sx={{
