@@ -90,7 +90,9 @@ describe('Akamai Cloud Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Certificate').within(() => {
         cy.findByLabelText('Add Existing Certificate').click();
 
-        cy.findByLabelText('Host Header').should('be.visible').type('*');
+        cy.findByLabelText('Server Name Indication (SNI) Hostname')
+          .should('be.visible')
+          .type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
 
@@ -319,7 +321,9 @@ describe('Akamai Cloud Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Certificate').within(() => {
         cy.findByLabelText('Add Existing Certificate').click();
 
-        cy.findByLabelText('Host Header').should('be.visible').type('*');
+        cy.findByLabelText('Server Name Indication (SNI) Hostname')
+          .should('be.visible')
+          .type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
 
@@ -424,7 +428,9 @@ describe('Akamai Cloud Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Certificate').within(() => {
         cy.findByLabelText('Add Existing Certificate').click();
 
-        cy.findByLabelText('Host Header').type('example-1.com');
+        cy.findByLabelText('Server Name Indication (SNI) Hostname').type(
+          'example-1.com'
+        );
 
         cy.findByLabelText('Certificate').click();
 
