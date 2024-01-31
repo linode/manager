@@ -27,7 +27,7 @@ import {
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import { AccessKeyDrawer } from './AccessKeyDrawer';
-import { AccessKeyTable } from './AccessKeyTable';
+import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';

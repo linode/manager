@@ -103,6 +103,7 @@ export const NodeBalancerDetail = () => {
     <React.Fragment>
       <LandingHeader
         breadcrumbProps={{
+          crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           firstAndLastOnly: true,
           onEditHandlers: {
             editableTextTitle: nodeBalancerLabel,

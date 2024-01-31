@@ -460,6 +460,7 @@ const NodeBalancerCreate = () => {
           breadcrumbDataAttrs: {
             'data-qa-create-nodebalancer-header': true,
           },
+          crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           pathname: '/nodebalancers/create',
         }}
         title="Create"
