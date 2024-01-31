@@ -11,7 +11,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import {
