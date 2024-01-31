@@ -39,12 +39,16 @@ import '../../../public/fonts/fonts.css';
  * @param jsx - React Component to mount.
  * @param theme - Cloud Manager theme to apply. Defaults to `light`.
  */
-const mountWithTheme = (jsx: React.ReactNode, theme: ThemeName = 'light') => {
+const mountWithTheme = (
+  jsx: React.ReactNode,
+  theme: ThemeName = 'light',
+  flags: any = {}
+) => {
   const queryClient = queryClientFactory();
   const store = storeFactory();
   const launchDarkly = {
     flagKeyMap: {},
-    flags: {},
+    flags,
   };
 
   return mount(
