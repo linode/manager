@@ -1,6 +1,38 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type { Token } from '@linode/api-v4';
+import type { GlobalGrantTypes, Grants, Profile, Token } from '@linode/api-v4';
+import type { GrantTypeMap } from 'src/features/Account/types';
+
+type ActionType = 'create' | 'delete' | 'edit' | 'view';
+
+interface GetRestrictedResourceText {
+  action?: ActionType;
+  isSingular?: boolean;
+  resourceType: GrantTypeMap;
+}
+export const getRestrictedResourceText = ({
+  action = 'edit',
+  isSingular = true,
+  resourceType,
+}: GetRestrictedResourceText): string => {
+  const resource = isSingular
+    ? 'this ' + resourceType.replace(/s$/, '')
+    : resourceType;
+
+  return `You don't have permissions to ${action} ${resource}. Please contact your account administrator to request the necessary permissions.`;
+};
+
+export const isRestrictedGlobalGrantType = ({
+  globalGrantType,
+  grants,
+  profile,
+}: {
+  globalGrantType: GlobalGrantTypes;
+  grants: Grants | undefined;
+  profile: Profile | undefined;
+}): boolean => {
+  return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+};
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
 // ================================================================

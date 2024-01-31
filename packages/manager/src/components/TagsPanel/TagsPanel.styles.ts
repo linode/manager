@@ -15,26 +15,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'flex-start',
     width: '100%',
   },
-  addTagButton: {
-    '& svg': {
-      color: theme.color.tagIcon,
-      height: 10,
-      marginLeft: 10,
-      width: 10,
-    },
-    alignItems: 'center',
-    backgroundColor: theme.color.tagButton,
-    border: 'none',
-    borderRadius: 3,
-    color: theme.textColors.linkActiveLight,
-    cursor: 'pointer',
-    display: 'flex',
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-    justifyContent: 'center',
-    padding: '7px 10px',
-    whiteSpace: 'nowrap',
-  },
   errorNotice: {
     '& .noticeText': {
       fontFamily: '"LatoWeb", sans-serif',
