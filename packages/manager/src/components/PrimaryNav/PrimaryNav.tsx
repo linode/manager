@@ -195,7 +195,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !showVPCs,
           href: '/vpcs',
           icon: <VPC />,
-          isBeta: true,
+          isBeta: flags.vpc,
         },
         {
           display: 'Firewalls',
