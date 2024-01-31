@@ -198,7 +198,7 @@ export const ServiceTargetForm = (props: Props) => {
             />
             Upload service target endpoint CA certificates after the load
             balancer is created and the protocol is HTTPS.{' '}
-            <Link to={ACLB_DOCS.Certificates}>Learn more.</Link>
+            <Link to={ACLB_DOCS.ServiceTargetCertificates}>Learn more.</Link>
           </Typography>
         </>
       )}
