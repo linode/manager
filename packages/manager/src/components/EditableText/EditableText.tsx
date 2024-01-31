@@ -9,7 +9,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { H1Header } from 'src/components/H1Header/H1Header';
-import { fadeIn } from 'src/styles/keyframes';
 
 import { TextField, TextFieldProps } from '../TextField';
 
@@ -63,7 +62,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
           color: theme.color.grey1,
         },
       },
-      border: '1px solid transparent',
+      borderLeft: '1px solid transparent',
     },
     input: {
       fontFamily: theme.font.bold,
@@ -92,7 +91,6 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
       wordBreak: 'break-all',
     },
     textField: {
-      animation: `${fadeIn} .3s ease-in-out forwards`,
       margin: 0,
     },
     underlineOnHover: {
