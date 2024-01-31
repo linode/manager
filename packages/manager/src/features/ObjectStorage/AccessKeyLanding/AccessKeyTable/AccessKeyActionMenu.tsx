@@ -18,9 +18,12 @@ interface Props {
   openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
-export const AccessKeyActionMenu = (props: Props) => {
-  const { objectStorageKey, openDrawer, openRevokeDialog } = props;
-
+export const AccessKeyActionMenu = ({
+  label,
+  objectStorageKey,
+  openDrawer,
+  openRevokeDialog,
+}: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
@@ -56,7 +59,7 @@ export const AccessKeyActionMenu = (props: Props) => {
       {isObjMultiClusterEnabled ? (
         <ActionMenu
           actionsList={actions}
-          ariaLabel={`Action menu for Object Storage Key ${props.label}`}
+          ariaLabel={`Action menu for Object Storage Key ${label}`}
         />
       ) : (
         <>
@@ -72,7 +75,7 @@ export const AccessKeyActionMenu = (props: Props) => {
           <Hidden mdUp>
             <ActionMenu
               actionsList={actions}
-              ariaLabel={`Action menu for Object Storage Key ${props.label}`}
+              ariaLabel={`Action menu for Object Storage Key ${label}`}
             />
           </Hidden>
         </>
