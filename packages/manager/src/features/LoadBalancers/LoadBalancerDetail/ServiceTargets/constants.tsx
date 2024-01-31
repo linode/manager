@@ -69,7 +69,7 @@ export const SERVICE_TARGET_COPY = {
     Algorithm:
       'Policy type that decides how the load balancer allocates new connections across your service targets.',
     Certificate:
-      'Service target CA certificates are installed on your endpoints. Global Load Balancer uses these certificates to verify responses from your service targets to your clients.',
+      'Service target CA certificates are installed on your endpoints. Cloud Load Balancer uses these certificates to verify responses from your service targets to your clients.',
     Endpoints: {
       Capacity:
         'The maximum number of requests/second that can be directed to this endpoint. If the actual number of requests/second exceeds the configured capacity value, requests are distributed to the other endpoints.',

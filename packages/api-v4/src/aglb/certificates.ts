@@ -20,7 +20,7 @@ import {
 /**
  * getLoadbalancerCertificates
  *
- * Returns a paginated list of Akamai Global Load Balancer certificates
+ * Returns a paginated list of Akamai Cloud Load Balancer certificates
  */
 export const getLoadbalancerCertificates = (
   loadbalancerId: number,
@@ -39,7 +39,7 @@ export const getLoadbalancerCertificates = (
 /**
  * getLoadbalancerCertificate
  *
- * Returns an Akamai Global Load Balancer certificate
+ * Returns an Akamai Cloud Load Balancer certificate
  */
 export const getLoadbalancerCertificate = (
   loadbalancerId: number,
@@ -57,7 +57,7 @@ export const getLoadbalancerCertificate = (
 /**
  * createLoadbalancerCertificate
  *
- * Creates an Akamai Global Load Balancer certificate
+ * Creates an Akamai Cloud Load Balancer certificate
  */
 export const createLoadbalancerCertificate = (
   loadbalancerId: number,
@@ -74,7 +74,7 @@ export const createLoadbalancerCertificate = (
 /**
  * updateLoadbalancerCertificate
  *
- * Updates an Akamai Global Load Balancer certificate
+ * Updates an Akamai Cloud Load Balancer certificate
  */
 export const updateLoadbalancerCertificate = (
   loadbalancerId: number,
@@ -94,7 +94,7 @@ export const updateLoadbalancerCertificate = (
 /**
  * deleteLoadbalancerCertificate
  *
- * Deletes an Akamai Global Load Balancer certificate
+ * Deletes an Akamai Cloud Load Balancer certificate
  */
 export const deleteLoadbalancerCertificate = (
   loadbalancerId: number,

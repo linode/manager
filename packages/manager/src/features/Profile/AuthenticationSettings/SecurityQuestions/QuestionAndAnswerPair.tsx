@@ -15,6 +15,7 @@ interface Props {
   onEdit: () => void;
   options: Item<number>[];
   questionResponse: SecurityQuestion | undefined;
+  securityQuestionRef?: React.RefObject<HTMLInputElement>;
   setFieldValue: (field: string, value: SecurityQuestion | number) => void;
 }
 
@@ -25,6 +26,7 @@ export const QuestionAndAnswerPair = (props: Props) => {
     onEdit,
     options,
     questionResponse,
+    securityQuestionRef,
     setFieldValue,
     ...rest
   } = props;
@@ -46,6 +48,7 @@ export const QuestionAndAnswerPair = (props: Props) => {
           handleChange={handleChange}
           isReadOnly={!edit}
           questionResponse={questionResponse}
+          securityQuestionRef={securityQuestionRef}
           {...rest}
         />
       </StyledAnswerContainer>

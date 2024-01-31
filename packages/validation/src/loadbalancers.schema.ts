@@ -230,7 +230,7 @@ const CreateLoadBalancerServiceTargetSchema = object({
   percentage: number().integer().required(),
   label: string().required(),
   endpoints: array().of(CreateLoadBalancerEndpointSchema).required(),
-  certificate_id: number().integer(),
+  certificate_id: number().integer().nullable(),
   load_balancing_policy: string()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev'])
     .required(),
@@ -238,13 +238,13 @@ const CreateLoadBalancerServiceTargetSchema = object({
 });
 
 // Rule Schema
-const CreateLoadBalancerRuleSchema = object({
+export const CreateLoadBalancerRuleSchema = object({
   match_condition: object().shape({
-    hostname: string().required(),
+    hostname: string().nullable(),
     match_field: string().oneOf(matchFieldOptions).required(),
     match_value: string().required(),
-    session_stickiness_cookie: string(),
-    session_stickiness_ttl: number().integer(),
+    session_stickiness_cookie: string().nullable(),
+    session_stickiness_ttl: number().integer().nullable(),
   }),
   service_targets: array().of(CreateLoadBalancerServiceTargetSchema).required(),
 });
@@ -267,7 +267,7 @@ export const ConfigurationSchema = object({
     then: (o) =>
       o.of(
         object({
-          label: string().required(),
+          label: string().required(LABEL_REQUIRED),
           protocol: string().oneOf(['tcp']).required(),
           rules: array().of(CreateLoadBalancerRuleSchema).required(),
         })
@@ -285,13 +285,13 @@ export const ConfigurationSchema = object({
 
 export const CreateLoadBalancerSchema = object({
   label: string().min(1, 'Label must not be empty.').required(LABEL_REQUIRED),
-  // tags: array().of(string()), // TODO: AGLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
+  // tags: array().of(string()), // TODO: ACLB - Should confirm on this with API team. Assuming this will be out of scope for Beta.
   regions: array().of(string()).required(),
   configurations: array().of(ConfigurationSchema),
 });
 
 /**
- * TODO: AGLB - remove this create schema
+ * TODO: ACLB - remove this create schema
  */
 export const CreateBasicLoadbalancerSchema = object({
   label: string()

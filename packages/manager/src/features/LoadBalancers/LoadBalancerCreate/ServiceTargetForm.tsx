@@ -28,8 +28,8 @@ import {
   initialValues,
   protocolOptions,
 } from '../LoadBalancerDetail/ServiceTargets/constants';
-import { AGLB_DOCS } from '../constants';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { ACLB_DOCS } from '../constants';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   configurationIndex: number;
@@ -201,7 +201,7 @@ export const ServiceTargetForm = (props: Props) => {
             />
             Upload service target endpoint CA certificates after the load
             balancer is created and the protocol is HTTPS.{' '}
-            <Link to={AGLB_DOCS.Certificates}>Learn more.</Link>
+            <Link to={ACLB_DOCS.Certificates}>Learn more.</Link>
           </Typography>
         </>
       )}
