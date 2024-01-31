@@ -12,6 +12,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 
 import type { APIError, Linode } from '@linode/api-v4';
@@ -29,10 +30,7 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
   const orderStatusKey = 'status';
 
   const _error = error
-    ? getAPIErrorOrDefault(
-        error,
-        'Unable to retrieve Linodes for this Placement Group'
-      )
+    ? getAPIErrorOrDefault(error, PLACEMENT_GROUP_LINODES_ERROR_MESSAGE)
     : undefined;
 
   return (

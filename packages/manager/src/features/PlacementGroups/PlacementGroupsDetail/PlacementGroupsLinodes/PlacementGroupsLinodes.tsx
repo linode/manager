@@ -8,7 +8,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
@@ -41,23 +40,11 @@ export const PlacementGroupsLinodes = (props: Props) => {
     setFilteredLinodes(placementGroupLinodes || []);
   }, [allLinodes]);
 
-  if (!placementGroup || linodesError) {
-    return (
-      <ErrorState
-        errorText={
-          linodesError
-            ? getAPIErrorOrDefault(
-                linodesError,
-                PLACEMENT_GROUP_LINODES_ERROR_MESSAGE
-              )[0].reason
-            : PLACEMENT_GROUP_LINODES_ERROR_MESSAGE
-        }
-      />
-    );
+  if (!placementGroup) {
+    return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
   }
 
   const { capacity } = placementGroup;
-
   const filter = (value: string) => {
     setSearchText(value);
     const filtered = placementGroupLinodes?.filter((linode: Linode) => {
@@ -97,7 +84,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
             data-testid="add-device-button"
             disabled={hasPlacementGroupReachedCapacity(placementGroup)}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
-            // onClick={handleOpen} TODO Vm_placement: add onClick prop when drawer is ready
+            // onClick={handleOpen} TODO VM_Placement: add onClick prop when drawer is ready
           >
             Add Linode to Placement Group
           </Button>
@@ -105,12 +92,12 @@ export const PlacementGroupsLinodes = (props: Props) => {
       </Grid>
 
       <PlacementGroupsLinodesTable
-        error={[]}
-        linodes={filteredLinodes || []}
+        error={linodesError ?? []}
+        linodes={filteredLinodes ?? []}
         loading={linodesLoading}
       />
-      {/* ADD LINODES DRAWER */}
-      {/* UNASSIGN LINODE DRAWER */}
+      {/* TODO VM_Placement: ADD LINODES DRAWER */}
+      {/* TODO VM_Placement: UNASSIGN LINODE DRAWER */}
     </Stack>
   );
 };
