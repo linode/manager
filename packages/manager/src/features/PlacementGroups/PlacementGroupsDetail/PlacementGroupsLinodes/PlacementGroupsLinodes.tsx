@@ -45,6 +45,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
   }
 
   const { capacity } = placementGroup;
+
   const filter = (value: string) => {
     setSearchText(value);
     const filtered = placementGroupLinodes?.filter((linode: Linode) => {
@@ -58,7 +59,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <Box sx={{ py: 2 }}>
         <Typography>
           The following Linodes have been assigned to this Placement Group. A
-          Linode can only be assigned to a single Placement Group.{' '}
+          Linode can only be assigned to a single Placement Group.
         </Typography>
         <Typography sx={{ mt: 1 }}>
           Limit of Linodes for this Placement Group: {capacity}

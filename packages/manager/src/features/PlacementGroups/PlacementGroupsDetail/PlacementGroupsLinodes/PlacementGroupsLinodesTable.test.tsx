@@ -23,7 +23,7 @@ describe('PlacementGroupsLanding', () => {
     expect(getByText(/not found/i)).toBeInTheDocument();
   });
 
-  it('renders a loading skeleton', () => {
+  it('renders a loading skeleton based on the loading prop', () => {
     const { getByTestId } = renderWithTheme(
       <PlacementGroupsLinodesTable {...defaultProps} loading />
     );

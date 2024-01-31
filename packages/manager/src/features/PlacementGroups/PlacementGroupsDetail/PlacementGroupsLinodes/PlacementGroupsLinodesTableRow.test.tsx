@@ -14,7 +14,7 @@ const defaultProps = {
 };
 
 describe('PlacementGroupsLanding', () => {
-  it('should feature the right data', () => {
+  it('should feature the right table row data', () => {
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(<PlacementGroupsLinodesTableRow {...defaultProps} />)
     );

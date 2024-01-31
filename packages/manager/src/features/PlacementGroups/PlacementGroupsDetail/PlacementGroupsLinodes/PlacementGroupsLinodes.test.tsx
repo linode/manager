@@ -17,7 +17,7 @@ describe('PlacementGroupsLanding', () => {
     ).toBeInTheDocument();
   });
 
-  it('features the linodes table and its filter field and a create button', () => {
+  it('features the linodes table, a filter field, a create button and a docs link', () => {
     const placementGroup = placementGroupFactory.build({
       capacity: 2,
       linode_ids: [1],
@@ -35,7 +35,7 @@ describe('PlacementGroupsLanding', () => {
     expect(getByTestId('placement-group-linode-list')).toBeInTheDocument();
   });
 
-  it('has its create button disabled if the placement group has reached capacity', () => {
+  it('has a disabled create button if the placement group has reached capacity', () => {
     const placementGroup = placementGroupFactory.build({
       capacity: 1,
       linode_ids: [1],
