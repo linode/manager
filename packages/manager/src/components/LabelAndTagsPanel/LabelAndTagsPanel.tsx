@@ -7,6 +7,7 @@ import { Paper } from 'src/components/Paper';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
 interface LabelAndTagsProps {
@@ -29,15 +30,7 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
     tagsInputProps,
   } = props;
 
-  const [labelString, setLabelString] = React.useState<string | undefined>('');
-
-  React.useEffect(() => {
-    const tempStr = regions
-      ?.filter((region) => region.id === selectedRegionID)
-      .map((item) => item.label)
-      .join('');
-    setLabelString(tempStr);
-  }, [regions, selectedRegionID]);
+  const regionLabel = regions?.find((r) => r.id === selectedRegionID)?.label;
 
   return (
     <Paper
@@ -58,16 +51,30 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
         noMarginTop
       />
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
-      {showPlacementGroups ? (
-        <PlacementGroupsSelect
-          label={
-            selectedRegionID
-              ? `Placement Groups in ${labelString}(${selectedRegionID})`
-              : 'Placement Group'
-          }
-          selectedRegionID={selectedRegionID}
-        />
-      ) : null}
+      {showPlacementGroups && (
+        <>
+          {!selectedRegionID && (
+            <Notice
+              dataTestId="placement-groups-no-region-notice"
+              spacingBottom={0}
+              spacingTop={16}
+              variant="warning"
+            >
+              <Typography>
+                <b>Select a region above to see available Placement Groups.</b>
+              </Typography>
+            </Notice>
+          )}
+          <PlacementGroupsSelect
+            label={
+              selectedRegionID
+                ? `Placement Groups in ${regionLabel}(${selectedRegionID})`
+                : 'Placement Group'
+            }
+            selectedRegionID={selectedRegionID}
+          />
+        </>
+      )}
     </Paper>
   );
 };

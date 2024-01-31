@@ -4,8 +4,6 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import {
@@ -78,59 +76,45 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   }
 
   return (
-    <>
-      {!selectedRegionID ? (
-        <Notice
-          dataTestId="placement-groups-no-region-notice"
-          spacingBottom={0}
-          spacingTop={16}
-          variant="warning"
-        >
-          <Typography>
-            <b>Select a region above to see available Placement Groups.</b>
-          </Typography>
-        </Notice>
-      ) : null}
-      <Autocomplete
-        getOptionLabel={(placementGroupsOptions: PlacementGroup) =>
-          renderOptionLabel
-            ? renderOptionLabel(placementGroupsOptions)
-            : `${placementGroupsOptions.label} (${getAffinityLabel(
-                placementGroupsOptions.affinity_type
-              )})`
-        }
-        noOptionsText={
-          noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
-        }
-        onChange={(_, selectedOption: PlacementGroup) => {
-          handlePlacementGroupChange(selectedOption);
-        }}
-        renderOption={
-          renderOption
-            ? (props, option, { selected }) => {
-                return (
-                  <li {...props} data-qa-placement-group-option>
-                    {renderOption(option, selected)}
-                  </li>
-                );
-              }
-            : undefined
-        }
-        clearOnBlur={false}
-        data-testid="placement-groups-select"
-        disableClearable={!clearable}
-        errorText={errorText}
-        id={id}
-        inputValue={inputValue}
-        label={label}
-        loading={isLoading || loading}
-        onBlur={onBlur}
-        onInputChange={(_, newValue) => setInputValue(newValue)}
-        options={placementGroupsOptions ?? []}
-        placeholder="Select a Placement Group"
-        value={selectedPlacementGroup}
-      />
-    </>
+    <Autocomplete
+      getOptionLabel={(placementGroupsOptions: PlacementGroup) =>
+        renderOptionLabel
+          ? renderOptionLabel(placementGroupsOptions)
+          : `${placementGroupsOptions.label} (${getAffinityLabel(
+              placementGroupsOptions.affinity_type
+            )})`
+      }
+      noOptionsText={
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+      }
+      onChange={(_, selectedOption: PlacementGroup) => {
+        handlePlacementGroupChange(selectedOption);
+      }}
+      renderOption={
+        renderOption
+          ? (props, option, { selected }) => {
+              return (
+                <li {...props} data-qa-placement-group-option>
+                  {renderOption(option, selected)}
+                </li>
+              );
+            }
+          : undefined
+      }
+      clearOnBlur={false}
+      data-testid="placement-groups-select"
+      disableClearable={!clearable}
+      errorText={errorText}
+      id={id}
+      inputValue={inputValue}
+      label={label}
+      loading={isLoading || loading}
+      onBlur={onBlur}
+      onInputChange={(_, newValue) => setInputValue(newValue)}
+      options={placementGroupsOptions ?? []}
+      placeholder="Select a Placement Group"
+      value={selectedPlacementGroup}
+    />
   );
 };
 
