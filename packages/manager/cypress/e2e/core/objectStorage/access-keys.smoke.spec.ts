@@ -11,10 +11,20 @@ import {
   mockCreateAccessKey,
   mockDeleteAccessKey,
   mockGetAccessKeys,
+  mockGetBucketsForRegion,
+  mockGetClusters,
 } from 'support/intercepts/object-storage';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import {
+  randomDomainName,
+  randomLabel,
+  randomNumber,
+  randomString,
+} from 'support/util/random';
 import { ui } from 'support/ui';
+import { regionFactory } from 'src/factories';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { buildArray } from 'support/util/arrays';
 
 describe('object storage access keys smoke tests', () => {
   /*
@@ -131,5 +141,137 @@ describe('object storage access keys smoke tests', () => {
 
     cy.wait(['@deleteKey', '@getKeys']);
     cy.findByText('No items to display.').should('be.visible');
+  });
+
+  describe('Object Storage Multicluster feature enabled', () => {
+    beforeEach(() => {
+      mockAppendFeatureFlags({
+        objMultiCluster: makeFeatureFlagData(true),
+      });
+      mockGetFeatureFlagClientstream();
+    });
+
+    it.only('can create unlimited access keys with OBJ Multicluster', () => {
+      // const mockRegion = regionFactory.build({
+      //   id: `us-${randomString(5)}`,
+      //   label: 'mock-obj-region',
+      //   capabilities: ['Object Storage'],
+      // });
+
+      // const mockObjRegions = regionFactory.buildList(3, {
+      //   // id: `us-${randomString(5)}`,
+      //   id: Factory.each(() => `us-${randomString(5)}`),
+      //   label: Factory.each(() => `mock-obj-region-${randomString(5)}`),
+      //   capabilities: ['Object Storage'],
+
+      // });
+
+      const mockObjRegions = buildArray(3, () => {
+        return regionFactory.build({
+          id: `us-${randomString(5)}`,
+          label: `mock-obj-region-${randomString(5)}`,
+          capabilities: ['Object Storage'],
+        });
+      });
+
+      const mockAccessKey = objectStorageKeyFactory.build({
+        id: randomNumber(10000, 99999),
+        label: randomLabel(),
+        access_key: randomString(20),
+        secret_key: randomString(39),
+        regions: mockObjRegions.map((mockObjRegion) => ({
+          id: mockObjRegion.id,
+          s3_endpoint: randomDomainName(),
+        })),
+      });
+
+      const mockRegionsNoObj = regionFactory.buildList(3, {
+        capabilities: [],
+      });
+
+      const mockRegions = [...mockObjRegions, ...mockRegionsNoObj];
+
+      mockGetAccessKeys([]);
+      mockCreateAccessKey(mockAccessKey).as('createAccessKey');
+      mockGetRegions(mockRegions);
+      mockRegions.forEach((region) => {
+        mockGetBucketsForRegion(region.id, []);
+      });
+
+      cy.visitWithLogin('/object-storage/access-keys');
+
+      ui.button
+        .findByTitle('Create Access Key')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockGetAccessKeys([mockAccessKey]);
+      ui.drawer
+        .findByTitle('Create Access Key')
+        .should('be.visible')
+        .within(() => {
+          cy.contains('Label (required)')
+            .should('be.visible')
+            .click()
+            .type(mockAccessKey.label);
+
+          cy.contains('Regions (required)').should('be.visible').click();
+
+          // Select each region with the OBJ capability.
+          mockObjRegions.forEach((mockRegion) => {
+            cy.contains('Regions (required)').type(mockRegion.label);
+            ui.autocompletePopper
+              .findByTitle(`${mockRegion.label} (${mockRegion.id})`)
+              .should('be.visible')
+              .click();
+          });
+
+          // Close the regions drop-down.
+          cy.contains('Regions (required)')
+            .should('be.visible')
+            .click()
+            .type('{esc}');
+
+          // TODO Confirm expected regions are shown.
+          ui.buttonGroup
+            .findButtonByTitle('Create Access Key')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@createAccessKey');
+      ui.dialog
+        .findByTitle('Access Keys')
+        .should('be.visible')
+        .within(() => {
+          // TODO Add assertions for S3 hostnames
+          cy.get('input[id="access-key"]')
+            .should('be.visible')
+            .should('have.value', mockAccessKey.access_key);
+          cy.get('input[id="secret-key"]')
+            .should('be.visible')
+            .should('have.value', mockAccessKey.secret_key);
+
+          ui.button
+            .findByTitle('I Have Saved My Secret Key')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.findByText(mockAccessKey.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          // TODO Add assertions for regions/S3 hostnames
+          cy.findByText(mockAccessKey.access_key).should('be.visible');
+        });
+    });
+
+    it('can create limited access keys with OBJ Multicluster', () => {});
+
+    it('can update access keys with OBJ Multicluster', () => {});
   });
 });

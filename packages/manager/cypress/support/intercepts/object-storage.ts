@@ -51,6 +51,17 @@ export const mockGetBuckets = (
   );
 };
 
+export const mockGetBucketsForRegion = (
+  regionId: string,
+  buckets: ObjectStorageBucket[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/buckets/${regionId}*`),
+    paginateResponse(buckets)
+  );
+};
+
 /**
  * Intercepts POST request to create bucket.
  *
