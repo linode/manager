@@ -18,6 +18,7 @@ import {
   ACLB_DOCS,
   ACLB_FEEDBACK_FORM_URL,
 } from 'src/features/LoadBalancers/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
@@ -32,6 +33,7 @@ const preferenceKey = 'loadbalancers';
 
 export const LoadBalancerLanding = () => {
   const history = useHistory();
+  const flags = useFlags();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
@@ -99,7 +101,7 @@ export const LoadBalancerLanding = () => {
       ) : (
         <>
           <LandingHeader
-            betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
+            betaFeedbackLink={flags.aclb ? ACLB_FEEDBACK_FORM_URL : undefined}
             breadcrumbProps={{ pathname: '/loadbalancers' }}
             createButtonText="Create Load Balancer"
             docsLabel="Docs"

@@ -18,6 +18,7 @@ import {
   ACLB_DOCS,
   ACLB_FEEDBACK_FORM_URL,
 } from 'src/features/LoadBalancers/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
 const LoadBalancerSummary = React.lazy(() =>
@@ -59,6 +60,7 @@ export const LoadBalancerDetail = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
   const location = useLocation();
   const { path, url } = useRouteMatch();
+  const flags = useFlags();
 
   const id = Number(loadbalancerId);
 
@@ -117,7 +119,7 @@ export const LoadBalancerDetail = () => {
           labelOptions: { noCap: true },
           pathname: `/loadbalancers/${loadbalancer?.label}`,
         }}
-        betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
+        betaFeedbackLink={flags.aclb ? ACLB_FEEDBACK_FORM_URL : undefined}
         docsLabel="Docs"
         docsLink={ACLB_DOCS.GettingStarted}
       />

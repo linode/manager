@@ -13,6 +13,7 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { ACLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLoadBalancerBasicCreateMutation } from 'src/queries/aglb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -26,6 +27,7 @@ export const LoadBalancerBasicCreate = () => {
 
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
 
   const formik = useFormik({
     initialValues: {
@@ -64,7 +66,7 @@ export const LoadBalancerBasicCreate = () => {
           ],
           pathname: location.pathname,
         }}
-        betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
+        betaFeedbackLink={flags.aclb ? ACLB_FEEDBACK_FORM_URL : undefined}
         title="Create"
       />
       <Stack spacing={3}>
