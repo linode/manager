@@ -166,6 +166,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '40%' }}
             >
               Label
             </TableSortCell>
@@ -180,7 +181,7 @@ export const PlacementGroupsLanding = React.memo(() => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

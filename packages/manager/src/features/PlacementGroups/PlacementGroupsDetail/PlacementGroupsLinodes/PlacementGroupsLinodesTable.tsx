@@ -5,6 +5,7 @@ import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
@@ -23,6 +24,9 @@ export interface Props {
 export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
   const { error, linodes } = props;
 
+  const orderLinodeKey = 'linode:label';
+  const orderStatusKey = 'linode:status';
+
   const _error = error
     ? getAPIErrorOrDefault(
         error,
@@ -30,10 +34,8 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
       )
     : undefined;
 
-  const orderKey = 'linode:label';
-
   return (
-    <OrderBy data={linodes} order={'asc'} orderBy={orderKey}>
+    <OrderBy data={linodes} order={'asc'} orderBy={orderLinodeKey}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
@@ -49,15 +51,25 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
                 <TableHead>
                   <TableRow>
                     <TableSortCell
-                      active={orderBy === orderKey}
-                      colSpan={2}
+                      active={orderBy === orderLinodeKey}
                       data-qa-placement-group-linode-header
                       direction={order}
                       handleClick={handleOrderChange}
-                      label={orderKey}
+                      label={orderLinodeKey}
+                      sx={{ width: '30%' }}
                     >
                       Linode
                     </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === orderStatusKey}
+                      data-qa-placement-group-linode-status-header
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={orderStatusKey}
+                    >
+                      Linode Status
+                    </TableSortCell>
+                    <TableCell />
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -77,7 +89,7 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
               </Table>
               <PaginationFooter
                 count={count}
-                eventCategory="Firewall Devices Table"
+                eventCategory="Placement Group Linodes Table"
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 page={page}

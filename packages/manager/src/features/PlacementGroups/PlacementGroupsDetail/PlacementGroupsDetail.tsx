@@ -107,7 +107,6 @@ export const PlacementGroupsDetail = () => {
         onChange={(i) => history.push(tabs[i].routeName)}
       >
         <TabLinkList tabs={tabs} />
-
         <TabPanels>
           <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
           <SafeTabPanel index={1}>

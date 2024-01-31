@@ -1,11 +1,15 @@
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
+import { MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE } from '../../constants';
+import { hasPlacementGroupReachedCapacity } from '../../utils';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Linode, PlacementGroup } from '@linode/api-v4';
@@ -32,7 +36,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
     return null;
   }
 
-  const { capacity } = placementGroup; // TODO VM_Placement - this will be "capacity" once M3-7614 is merged
+  const { capacity } = placementGroup;
 
   const filter = (value: string) => {
     setSearchText(value);
@@ -44,32 +48,41 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Typography>
-        The following Linodes have been assigned to this Placement Group. A
-        Linode can only be assigned to a single Placement Group. <br />
-        Limit of Linodes for this Placement Group: {capacity}
-      </Typography>
+      <Box sx={{ py: 2 }}>
+        <Typography>
+          The following Linodes have been assigned to this Placement Group. A
+          Linode can only be assigned to a single Placement Group.{' '}
+        </Typography>
+        <Typography sx={{ mt: 1 }}>
+          Limit of Linodes for this Placement Group: {capacity}
+        </Typography>
+      </Box>
 
-      <DebouncedSearchTextField
-        onSearch={(value) => {
-          filter(value);
-        }}
-        debounceTime={400}
-        expand={true}
-        hideLabel
-        label=""
-        placeholder={`Search Linodes`}
-        value={searchText}
-      />
-
-      <Button
-        buttonType="primary"
-        data-testid="add-device-button"
-        // disabled={disabled}
-        // onClick={handleOpen}
-      >
-        Add Linode to Placement Group
-      </Button>
+      <Grid container justifyContent="space-between">
+        <Grid flexGrow={1}>
+          <DebouncedSearchTextField
+            onSearch={(value) => {
+              filter(value);
+            }}
+            debounceTime={250}
+            hideLabel
+            label="Search Linodes"
+            placeholder={`Search Linodes`}
+            value={searchText}
+          />
+        </Grid>
+        <Grid>
+          <Button
+            buttonType="primary"
+            data-testid="add-device-button"
+            disabled={hasPlacementGroupReachedCapacity(placementGroup)}
+            tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
+            // onClick={handleOpen} TODO Vm_placement: add onClick prop when drawer is ready
+          >
+            Add Linode to Placement Group
+          </Button>
+        </Grid>
+      </Grid>
 
       <PlacementGroupsLinodesTable error={[]} linodes={filteredLinodes || []} />
       {/* ADD LINODES DRAWER */}
