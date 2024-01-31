@@ -19,13 +19,14 @@ import type { APIError, Linode } from '@linode/api-v4';
 export interface Props {
   error?: APIError[];
   linodes: Linode[];
+  loading: boolean;
 }
 
 export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
-  const { error, linodes } = props;
+  const { error, linodes, loading } = props;
 
-  const orderLinodeKey = 'linode:label';
-  const orderStatusKey = 'linode:status';
+  const orderLinodeKey = 'label';
+  const orderStatusKey = 'status';
 
   const _error = error
     ? getAPIErrorOrDefault(
@@ -76,7 +77,7 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
                   <TableContentWrapper
                     error={_error}
                     length={paginatedAndOrderedLinodes.length}
-                    loading={false}
+                    loading={loading}
                   >
                     {paginatedAndOrderedLinodes.map((linode) => (
                       <PlacementGroupsLinodesTableRow

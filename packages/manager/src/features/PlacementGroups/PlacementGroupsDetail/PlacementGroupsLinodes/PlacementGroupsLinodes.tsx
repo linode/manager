@@ -4,11 +4,16 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE } from '../../constants';
+import {
+  MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
+  PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
+} from '../../constants';
 import { hasPlacementGroupReachedCapacity } from '../../utils';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
@@ -20,7 +25,11 @@ interface Props {
 
 export const PlacementGroupsLinodes = (props: Props) => {
   const { placementGroup } = props;
-  const { data: allLinodes } = useAllLinodesQuery();
+  const {
+    data: allLinodes,
+    error: linodesError,
+    isLoading: linodesLoading,
+  } = useAllLinodesQuery();
   const [searchText, setSearchText] = React.useState('');
   const [filteredLinodes, setFilteredLinodes] = React.useState<Linode[]>([]);
 
@@ -32,8 +41,19 @@ export const PlacementGroupsLinodes = (props: Props) => {
     setFilteredLinodes(placementGroupLinodes || []);
   }, [allLinodes]);
 
-  if (!placementGroup) {
-    return null;
+  if (!placementGroup || linodesError) {
+    return (
+      <ErrorState
+        errorText={
+          linodesError
+            ? getAPIErrorOrDefault(
+                linodesError,
+                PLACEMENT_GROUP_LINODES_ERROR_MESSAGE
+              )[0].reason
+            : PLACEMENT_GROUP_LINODES_ERROR_MESSAGE
+        }
+      />
+    );
   }
 
   const { capacity } = placementGroup;
@@ -84,7 +104,11 @@ export const PlacementGroupsLinodes = (props: Props) => {
         </Grid>
       </Grid>
 
-      <PlacementGroupsLinodesTable error={[]} linodes={filteredLinodes || []} />
+      <PlacementGroupsLinodesTable
+        error={[]}
+        linodes={filteredLinodes || []}
+        loading={linodesLoading}
+      />
       {/* ADD LINODES DRAWER */}
       {/* UNASSIGN LINODE DRAWER */}
     </Stack>
