@@ -20,7 +20,7 @@ export const MatchTypeInfo = () => {
     },
     {
       description:
-        'Match is on the prefix of a network path using regular expressions (regex).',
+        'Match is on a path using regular expression (RE2 syntax). Not applicable for query string parameters.',
       title: 'Path Regex',
     },
     {
