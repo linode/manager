@@ -44,7 +44,7 @@ export const CERTIFICATES_COPY = {
     downstream: (
       <>
         Used by the load balancer to terminate the connection and decrypt
-        request from clients. Apply these certificate(s) in the{' '}
+        requests from clients. Apply these certificate(s) in the{' '}
         <Link to="../configurations">Configurations</Link> tab.
       </>
     ),
