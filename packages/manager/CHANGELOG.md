@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-01-31] - v1.110.2
+
+### Changed:
+- Remove VPC beta feedback link
+
+## [2024-01-31] - v1.110.1
+
+### Changed:
+- Updated VPC flag for primary navigation
+
 ## [2024-01-22] - v1.110.0
 
 

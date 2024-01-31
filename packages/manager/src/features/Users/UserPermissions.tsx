@@ -40,6 +40,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+import { grantTypeMap } from 'src/features/Account/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -54,10 +55,7 @@ import {
   StyledSubHeaderGrid,
   StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
-import {
-  UserPermissionsEntitySection,
-  entityNameMap,
-} from './UserPermissionsEntitySection';
+import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
 interface Props {
   accountUsername?: string;
   clearNewUser: () => void;
@@ -631,7 +629,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <Tabs>
               <TabList>
                 {this.state.tabs?.map((entity) => (
-                  <Tab key={`${entity}-tab`}>{entityNameMap[entity]}</Tab>
+                  <Tab key={`${entity}-tab`}>{grantTypeMap[entity]}</Tab>
                 ))}
               </TabList>
               <TabPanels>

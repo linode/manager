@@ -1955,7 +1955,7 @@ export const handlers = [
     );
   }),
   rest.put('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === 'undefined') {
+    if (req.params.placementGroupId === '-1') {
       return res(ctx.status(404));
     }
 

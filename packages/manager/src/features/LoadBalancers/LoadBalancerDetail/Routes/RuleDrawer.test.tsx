@@ -58,7 +58,7 @@ describe('RuleDrawer', () => {
     );
 
     const matchTypeField = getByLabelText('Match Type');
-    expect(matchTypeField).toHaveDisplayValue('Path');
+    expect(matchTypeField).toHaveDisplayValue('Path Prefix');
 
     const matchValueField = getByLabelText('Match Value');
     expect(matchValueField).toHaveDisplayValue(
