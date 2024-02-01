@@ -5,6 +5,7 @@ const LABEL_REQUIRED = 'Label is required.';
 const matchFieldOptions = [
   'always_match',
   'path_prefix',
+  'path_regex',
   'query',
   'header',
   'method',
