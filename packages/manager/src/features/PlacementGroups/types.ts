@@ -1,4 +1,5 @@
 import {
+  AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
   RenamePlacementGroupPayload,
@@ -22,3 +23,8 @@ export type PlacementGroupsRenameDrawerProps = PlacementGroupsDrawerPropsBase & 
 
 export type PlacementGroupDrawerFormikProps = RenamePlacementGroupPayload &
   CreatePlacementGroupPayload;
+
+export type PlacementGroupsAssignLinodesDrawerProps = PlacementGroupsDrawerPropsBase & {
+  onLinodeAddedToPlacementGroup?: (placementGroup: PlacementGroup) => void;
+  selectedPlacementGroup: PlacementGroup | undefined;
+};

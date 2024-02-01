@@ -37,6 +37,10 @@ export const PlacementGroups = () => {
             path={`${path}/rename/:id`}
           />
           <Route component={PlacementGroupsDetail} path={`${path}/:id/:tab?`} />
+          <Route
+            component={PlacementGroupsDetail}
+            path={`${path}/:id/linodes/assign`}
+          />
           <Route component={PlacementGroupsLanding} />
         </Switch>
       </React.Fragment>
