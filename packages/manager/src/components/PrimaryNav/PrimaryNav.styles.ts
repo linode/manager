@@ -16,16 +16,6 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       textDecoration: 'none',
     },
     chip: {
-      '&.beta-chip-aclb': {
-        bottom: -2,
-        left: 70,
-        position: 'absolute',
-      },
-      '&.beta-chip-placement-groups': {
-        bottom: -2,
-        left: 52,
-        position: 'absolute',
-      },
       marginTop: 2,
     },
     divider: {
@@ -46,8 +36,8 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       alignItems: 'center',
       color: '#fff',
       display: 'flex',
-      fontFamily: 'LatoWebBold', // we keep this bold at all times
-      fontSize: '1rem',
+      fontFamily: 'LatoWeb', // we keep this bold at all times
+      fontSize: '14px',
       opacity: 1,
       position: 'relative',
       transition: theme.transitions.create(['color']),
@@ -94,7 +84,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       cursor: 'pointer',
       display: 'flex',
       minWidth: SIDEBAR_WIDTH,
-      padding: '8px 16px',
+      padding: '8px 13px',
       position: 'relative',
       transition: theme.transitions.create(['background-color']),
     },
@@ -107,23 +97,23 @@ const useStyles = makeStyles<void, 'linkItem'>()(
     },
     logoAkamaiCollapsed: {
       background: theme.bg.primaryNavPaper,
-      width: 96,
+      width: 83,
     },
     logoContainer: {
+      lineHeight: 0,
       // when the nav is collapsed, but hovered by the user, make the logo full sized
       'nav:hover & > svg ': {
         '& .akamai-logo-name': {
           opacity: 1,
         },
-        width: 128,
+        width: 83,
       },
     },
     logoItemAkamai: {
       alignItems: 'center',
       display: 'flex',
-      height: 68,
-      paddingLeft: 12,
-      paddingTop: 12,
+      height: 50,
+      paddingLeft: 13,
       transition: 'padding-left .03s linear',
     },
     logoItemAkamaiCollapsed: {
@@ -144,6 +134,9 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         minHeight: 72,
       },
       width: '100%',
+    },
+    navLinkItem: {
+      lineHeight: 0,
     },
   })
 );
