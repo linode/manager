@@ -9,7 +9,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 
-import { useAccountUser } from './accountUsers';
 import { queryPresets } from './base';
 
 import type {
@@ -54,7 +53,6 @@ export const useChildAccounts = ({
   params,
 }: RequestOptions) => {
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
@@ -63,7 +61,7 @@ export const useChildAccounts = ({
     () => getChildAccounts({ filter, headers, params }),
     {
       enabled:
-        (Boolean(user?.user_type === 'parent') && !profile?.restricted) ||
+        (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
         Boolean(grants?.global?.child_account_access) ||
         hasExplicitAuthToken,
       keepPreviousData: true,
@@ -73,7 +71,6 @@ export const useChildAccounts = ({
 
 export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
 
@@ -82,7 +79,7 @@ export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
     () => getChildAccount({ euuid }),
     {
       enabled:
-        (Boolean(user?.user_type === 'parent') && !profile?.restricted) ||
+        (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
         Boolean(grants?.global?.child_account_access) ||
         hasExplicitAuthToken,
     }
