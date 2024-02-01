@@ -61,6 +61,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add Placement Groups Landing Page empty state ([#10075](https://github.com/linode/manager/pull/10075))
 
 
+## [2024-01-31] - v1.110.3
+
+### Fix:
+- Enable `Can add VPCs to this account` for user permissions
+
 ## [2024-01-31] - v1.110.2
 
 ### Changed:
