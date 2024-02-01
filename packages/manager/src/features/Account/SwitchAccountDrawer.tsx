@@ -62,7 +62,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           headers:
             userType === 'proxy'
               ? {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: token,
                 }
               : undefined,
         });
@@ -105,8 +105,8 @@ export const SwitchAccountDrawer = (props: Props) => {
         // We don't need to worry about this if we're a proxy user.
         if (!isProxyUser) {
           const parentToken = {
-            expiry: getStorage('authenication/expire'),
-            scopes: getStorage('authenication/scopes'),
+            expiry: getStorage('authentication/expire'),
+            scopes: getStorage('authentication/scopes'),
             token: currentTokenWithBearer ?? '',
           };
 
