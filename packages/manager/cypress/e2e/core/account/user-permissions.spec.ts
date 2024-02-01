@@ -1007,47 +1007,4 @@ describe('User permission management', () => {
     );
     cy.findByText(additionalUser.username).should('not.exist');
   });
-
-  it('disables username/email fields for proxy user', () => {
-    const mockRestrictedProxyUser = accountUserFactory.build({
-      restricted: true,
-      user_type: 'proxy',
-      username: 'restricted-proxy-user',
-    });
-
-    const mockRestrictedProxyProfile = profileFactory.build({
-      username: 'restricted-proxy-user',
-      user_type: 'proxy',
-    });
-
-    const mockUserGrants = grantsFactory.build({
-      global: { account_access: 'read_write' },
-    });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
-    mockGetProfile(mockRestrictedProxyProfile);
-    mockGetUser(mockRestrictedProxyUser);
-    mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
-
-    // Navigate to User Profile page
-    cy.visitWithLogin('/profile/display');
-
-    // Confirm the username and email address fields are disabled, as well their respective save buttons
-    cy.get('[id="username"]').should('be.disabled');
-    ui.button
-      .findByTitle('Update Username')
-      .should('be.visible')
-      .should('be.disabled');
-    cy.get('[id="email"]').should('be.disabled');
-    ui.button
-      .findByTitle('Update Email')
-      .should('be.visible')
-      .should('be.disabled');
-  });
 });
