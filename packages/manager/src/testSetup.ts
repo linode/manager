@@ -1,9 +1,8 @@
+import matchers from '@testing-library/jest-dom/matchers';
 import Enzyme from 'enzyme';
 // @ts-expect-error not a big deal, we can suffer
 import Adapter from 'enzyme-adapter-react-16';
-
 import { expect } from 'vitest';
-import matchers from '@testing-library/jest-dom/matchers';
 
 // // Enzyme React 17 adapter.
 // Enzyme.configure({ adapter: new Adapter() });
@@ -60,3 +59,73 @@ vi.mock('highlight.js/lib/highlight', () => ({
     registerLanguage: vi.fn(),
   },
 }));
+
+/**
+ ***************************************
+ *  Custom matchers & matchers overrides
+ ***************************************
+ */
+
+/**
+ * Matcher override for toBeDisabled and toBeEnabled
+ */
+const ariaDisabled = 'aria-disabled';
+expect.extend({
+  toBeDisabled(element: HTMLElement) {
+    const isAriaDisabled = element.getAttribute(ariaDisabled) === 'true';
+    const disabledMessage = `expected ${element?.tagName} to be disabled`;
+
+    if (element?.tagName.toLowerCase() === 'input') {
+      return isAriaDisabled
+        ? {
+            message: () => disabledMessage,
+            pass: true,
+          }
+        : {
+            message: () => disabledMessage,
+            pass: false,
+          };
+    } else {
+      const isDisabled = element.hasAttribute('disabled');
+      return isDisabled
+        ? {
+            message: () => disabledMessage,
+            pass: true,
+          }
+        : {
+            message: () => disabledMessage,
+            pass: false,
+          };
+    }
+  },
+  toBeEnabled(element) {
+    const isAriaEnabled = !(
+      element.getAttribute(ariaDisabled) &&
+      element.getAttribute(ariaDisabled) === 'true'
+    );
+    const enabledMessage = `expected ${element.tagName} to be enabled`;
+
+    if (element.tagName.toLowerCase() === 'button') {
+      return isAriaEnabled
+        ? {
+            message: () => enabledMessage,
+            pass: true,
+          }
+        : {
+            message: () => enabledMessage,
+            pass: false,
+          };
+    } else {
+      const isEnabled = !element.hasAttribute('disabled');
+      return isEnabled
+        ? {
+            message: () => enabledMessage,
+            pass: true,
+          }
+        : {
+            message: () => enabledMessage,
+            pass: false,
+          };
+    }
+  },
+});
