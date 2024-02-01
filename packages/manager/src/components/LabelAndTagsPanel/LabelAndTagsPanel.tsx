@@ -67,7 +67,7 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
           )}
           <PlacementGroupsSelect
             label={
-              selectedRegionID
+              selectedRegionID && regionLabel
                 ? `Placement Groups in ${regionLabel}(${selectedRegionID})`
                 : 'Placement Group'
             }

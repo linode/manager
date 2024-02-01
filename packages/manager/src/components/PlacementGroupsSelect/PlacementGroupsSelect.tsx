@@ -4,12 +4,8 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { getPlacementGroupLinodeCount } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
-
-import {
-  getAffinityLabel,
-  getPlacementGroupLinodeCount,
-} from './PlacementGroups.utils';
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
@@ -80,9 +76,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       getOptionLabel={(placementGroupsOptions: PlacementGroup) =>
         renderOptionLabel
           ? renderOptionLabel(placementGroupsOptions)
-          : `${placementGroupsOptions.label} (${getAffinityLabel(
-              placementGroupsOptions.affinity_type
-            )})`
+          : `${placementGroupsOptions.label} (${placementGroupsOptions.affinity_type})`
       }
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
