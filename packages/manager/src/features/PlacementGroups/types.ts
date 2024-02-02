@@ -1,5 +1,4 @@
 import {
-  AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
   RenamePlacementGroupPayload,

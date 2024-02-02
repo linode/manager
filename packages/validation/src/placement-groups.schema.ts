@@ -19,9 +19,9 @@ export const renamePlacementGroupSchema = object({
  * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
  */
 export const assignLinodesToPlacementGroupSchema = object({
-  linodeIds: array().of(number().max(1, 'Only one Linode id is supported.')),
+  linodes: array().of(number().max(1, 'Only one Linode id is supported.')),
 });
 
 export const unassignLinodesFromPlacementGroupSchema = object({
-  linodeIds: array().of(number().max(1, 'Only one Linode id is supported.')),
+  linodes: array().of(number().max(1, 'Only one Linode id is supported.')),
 });

@@ -20,9 +20,7 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
     pickRandom([7, 8, 9]),
     43,
   ]),
-  region: Factory.each(() =>
-    pickRandom(['us-east', 'us-southeast', 'ca-central'])
-  ),
+  region: 'us-east',
 });
 
 export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<CreatePlacementGroupPayload>(
