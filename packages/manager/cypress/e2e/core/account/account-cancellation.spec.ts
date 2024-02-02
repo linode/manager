@@ -39,8 +39,6 @@ describe('Account cancellation', () => {
    * - Confirms that Cloud Manager shows a survey CTA which directs the user to the expected URL.
    */
   it('users can cancel account', () => {
-    throw new Error('This test has been broken temporarily on purpose');
-
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-user',
