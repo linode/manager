@@ -30,15 +30,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
     isLoading: linodesLoading,
   } = useAllLinodesQuery();
   const [searchText, setSearchText] = React.useState('');
-  const [filteredLinodes, setFilteredLinodes] = React.useState<Linode[]>([]);
-
-  const placementGroupLinodes = allLinodes?.filter((linode: Linode) => {
-    return placementGroup?.linode_ids.includes(linode.id);
-  });
-
-  React.useEffect(() => {
-    setFilteredLinodes(placementGroupLinodes || []);
-  }, [allLinodes]);
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
@@ -46,12 +37,22 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   const { capacity } = placementGroup;
 
-  const filter = (value: string) => {
-    setSearchText(value);
-    const filtered = placementGroupLinodes?.filter((linode: Linode) => {
-      return linode.label.toLowerCase().includes(value.toLowerCase());
+  const getLinodesList = () => {
+    if (!allLinodes) {
+      return [];
+    }
+
+    const placementGroupLinodes = allLinodes.filter((linode) => {
+      return placementGroup?.linode_ids.includes(linode.id);
     });
-    setFilteredLinodes(filtered ?? []);
+
+    if (searchText) {
+      return placementGroupLinodes.filter((linode: Linode) => {
+        return linode.label.toLowerCase().includes(searchText.toLowerCase());
+      });
+    }
+
+    return placementGroupLinodes;
   };
 
   return (
@@ -70,7 +71,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
         <Grid flexGrow={1}>
           <DebouncedSearchTextField
             onSearch={(value) => {
-              filter(value);
+              setSearchText(value);
             }}
             debounceTime={250}
             hideLabel
@@ -84,8 +85,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
             disabled={hasPlacementGroupReachedCapacity(placementGroup)}
+            // onClick={TODO VM_Placement: open assign linode drawer}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
-            // onClick={handleOpen} TODO VM_Placement: add onClick prop when drawer is ready
           >
             Add Linode to Placement Group
           </Button>
@@ -93,10 +94,10 @@ export const PlacementGroupsLinodes = (props: Props) => {
       </Grid>
       <PlacementGroupsLinodesTable
         error={linodesError ?? []}
-        linodes={filteredLinodes ?? []}
+        linodes={getLinodesList() ?? []}
         loading={linodesLoading}
       />
-      {/* TODO VM_Placement: ADD LINODES DRAWER */}
+      {/* TODO VM_Placement: ASSIGN LINODE DRAWER */}
       {/* TODO VM_Placement: UNASSIGN LINODE DRAWER */}
     </Stack>
   );
