@@ -1,7 +1,5 @@
 import {
-  assignLinodesToPlacementGroupSchema,
   createPlacementGroupSchema,
-  unassignLinodesFromPlacementGroupSchema,
   renamePlacementGroupSchema,
 } from '@linode/validation';
 import { API_ROOT } from '../constants';
@@ -111,7 +109,7 @@ export const deletePlacementGroup = (placementGroupId: number) =>
  */
 export const assignLinodesToPlacementGroup = (
   placementGroupId: number,
-  linodeIds: AssignLinodesToPlacementGroupPayload['linodes']
+  payload: AssignLinodesToPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -120,7 +118,7 @@ export const assignLinodesToPlacementGroup = (
       )}/assign`
     ),
     setMethod('POST'),
-    setData(linodeIds, assignLinodesToPlacementGroupSchema)
+    setData(payload)
   );
 
 /**
@@ -135,7 +133,7 @@ export const assignLinodesToPlacementGroup = (
  */
 export const unassignLinodesFromPlacementGroup = (
   placementGroupId: number,
-  linodeIds: UnassignLinodesFromPlacementGroupPayload['linodes']
+  paload: UnassignLinodesFromPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -144,5 +142,5 @@ export const unassignLinodesFromPlacementGroup = (
       )}/unassign`
     ),
     setMethod('POST'),
-    setData(linodeIds, unassignLinodesFromPlacementGroupSchema)
+    setData(paload)
   );

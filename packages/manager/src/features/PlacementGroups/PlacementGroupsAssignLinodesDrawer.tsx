@@ -1,10 +1,6 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
-import { assignLinodesToPlacementGroupSchema } from '@linode/validation';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -15,13 +11,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAssignLinodesToPlacementGroup } from 'src/queries/placementGroups';
-import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 
@@ -37,87 +27,27 @@ export const PlacementGroupsAssignLinodesDrawer = (
 ) => {
   const {
     onClose,
-    onLinodeAddedToPlacementGroup,
+    // onLinodeAddedToPlacementGroup,
     open,
     selectedPlacementGroup,
   } = props;
-  const queryClient = useQueryClient();
   const { data: linodes } = useAllLinodesQuery();
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useAssignLinodesToPlacementGroup(
-    selectedPlacementGroup?.id ?? -1
+    selectedPlacementGroup?.id ?? 0
   );
-  const { enqueueSnackbar } = useSnackbar();
   const [linodesSelectOptions, setLinodesSelectOptions] = React.useState<
     Linode[]
   >([]);
-  const [selectedLinode, setSelectedLinode] = React.useState<
-    Linode | undefined
-  >(undefined);
+  const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
+    null
+  );
   const [localLinodesSelection, setLocalLinodesSelection] = React.useState<
     Linode[]
   >([]);
-
-  const {
-    // errors,
-    handleSubmit,
-    isSubmitting,
-    resetForm,
-    setFieldValue,
-    status,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      linodes: null as AssignLinodesToPlacementGroupPayload['linodes'] | null,
-    },
-    onSubmit(
-      values: AssignLinodesToPlacementGroupPayload,
-      { setErrors, setStatus, setSubmitting }
-    ) {
-      setStatus(undefined);
-      setErrors({});
-      const payload = { ...values };
-
-      mutateAsync(payload)
-        .then((response) => {
-          setSubmitting(false);
-          queryClient.invalidateQueries([placementGroupQueryKey]);
-
-          enqueueSnackbar(
-            `Linode ${payload.linodes[0]} successfully assigned to Placement Group.`,
-            {
-              variant: 'success',
-            }
-          );
-
-          if (onLinodeAddedToPlacementGroup) {
-            onLinodeAddedToPlacementGroup(response);
-          }
-          onClose();
-        })
-        .catch((err) => {
-          const mapErrorToStatus = () =>
-            setStatus({ generalError: getErrorMap([], err).none });
-
-          setSubmitting(false);
-          handleFieldErrors(setErrors, err);
-          handleGeneralErrors(
-            mapErrorToStatus,
-            err,
-            'Error assigning Linode to Placement Group.'
-          );
-        });
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    validationSchema: assignLinodesToPlacementGroupSchema,
-  });
-
-  const generalError = status?.generalError;
-
-  React.useEffect(() => {
-    resetForm();
-  }, [open, resetForm]);
+  const [generalError, setGeneralError] = React.useState<string | undefined>(
+    undefined
+  );
 
   React.useEffect(() => {
     const linodesFilteredByRegion = linodes?.filter(
@@ -152,21 +82,33 @@ export const PlacementGroupsAssignLinodesDrawer = (
       ? `Add Linodes to Placement Group ${label} (${AFFINITY_TYPES[affinity_type]})`
       : 'Add Linodes to Placement Group';
 
-  const onAssignLinode = (linode: Linode) => {
-    setLocalLinodesSelection([...localLinodesSelection, linode]);
-    setFieldValue('linodes', [linode.id]);
-  };
+  // const onAssignLinode = (linode: Linode) => {
+  //   setLocalLinodesSelection([...localLinodesSelection, linode]);
+  //   setFieldValue('linodes', linode.id);
+  // };
 
-  const onFormSubmit = (e: React.SyntheticEvent<HTMLElement>) => {
+  const onFormSubmit = async (e: React.SyntheticEvent<HTMLElement>) => {
     e.preventDefault();
 
     if (!selectedLinode) {
       return;
     }
 
-    onAssignLinode(selectedLinode);
-    setSelectedLinode(undefined);
-    handleSubmit();
+    setLocalLinodesSelection([...localLinodesSelection, selectedLinode]);
+
+    const payload: AssignLinodesToPlacementGroupPayload = {
+      linodes: [selectedLinode.id],
+    };
+
+    try {
+      await mutateAsync(payload);
+    } catch (error) {
+      setGeneralError(
+        error
+          ? error[0].reason
+          : 'An error occurred while adding the Linode to the group'
+      );
+    }
   };
 
   return (
@@ -186,23 +128,22 @@ export const PlacementGroupsAssignLinodesDrawer = (
             </Typography>
             <LinodeSelect
               onSelectionChange={(value) => {
-                setFieldValue('linodes', value?.id ?? null);
-                setSelectedLinode(value ?? undefined);
+                setSelectedLinode(value);
               }}
               disabled={false}
+              // errorText={errors?.linodes?.[0] ?? ''}
               helperText="Only displaying Linodes that aren’t assigned to a Placement Group"
               label={linodeSelectLabel}
               options={linodesSelectOptions}
-              // errorText={errorMap.defaultLinode}
               value={selectedLinode?.id ?? null}
             />
 
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
-                disabled: !selectedLinode,
+                // disabled: !selectedLinode,
                 label: 'Add Linode',
-                loading: isSubmitting,
+                // loading: isSubmitting,
                 type: 'submit',
               }}
               sx={{ pt: 2 }}
