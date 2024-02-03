@@ -10,7 +10,10 @@ import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAssignLinodesToPlacementGroup } from 'src/queries/placementGroups';
+import {
+  useAssignLinodesToPlacementGroup,
+  useUnassignLinodesFromPlacementGroup,
+} from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
@@ -20,6 +23,7 @@ import type {
   AssignLinodesToPlacementGroupPayload,
   Linode,
   Region,
+  UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
 
 export const PlacementGroupsAssignLinodesDrawer = (
@@ -33,12 +37,12 @@ export const PlacementGroupsAssignLinodesDrawer = (
   } = props;
   const { data: linodes } = useAllLinodesQuery();
   const { data: regions } = useRegionsQuery();
-  const { mutateAsync } = useAssignLinodesToPlacementGroup(
-    selectedPlacementGroup?.id ?? 0
+  const { mutateAsync: assignLinodes } = useAssignLinodesToPlacementGroup(
+    selectedPlacementGroup?.id ?? -1
   );
-  const [linodesSelectOptions, setLinodesSelectOptions] = React.useState<
-    Linode[]
-  >([]);
+  const { mutateAsync: unassignLinodes } = useUnassignLinodesFromPlacementGroup(
+    selectedPlacementGroup?.id ?? -1
+  );
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
@@ -50,16 +54,30 @@ export const PlacementGroupsAssignLinodesDrawer = (
   );
 
   React.useEffect(() => {
-    const linodesFilteredByRegion = linodes?.filter(
-      (linode) => linode.region === selectedPlacementGroup?.region
-    );
+    if (!open) {
+      return;
+    }
 
-    const selection = linodesFilteredByRegion?.filter(
-      (linode) => !localLinodesSelection.find((l) => l.id === linode.id)
-    );
+    setSelectedLinode(null);
+    setLocalLinodesSelection([]);
+    setGeneralError(undefined);
+  }, [open]);
 
-    setLinodesSelectOptions(selection ?? []);
-  }, [linodes, localLinodesSelection, selectedPlacementGroup]);
+  const getLinodeSelectOptions = (): Linode[] => {
+    return (
+      linodes?.filter((linode) => {
+        const isInRegion = linode.region === selectedPlacementGroup?.region;
+        const isNotAlreadyAssigned = !selectedPlacementGroup?.linode_ids.includes(
+          linode.id as number
+        );
+        const isNotAssignedInDrawer = !localLinodesSelection.find(
+          (l) => l.id === linode.id
+        );
+
+        return isInRegion && isNotAlreadyAssigned && isNotAssignedInDrawer;
+      }) ?? []
+    );
+  };
 
   if (!linodes) {
     return null;
@@ -87,8 +105,9 @@ export const PlacementGroupsAssignLinodesDrawer = (
   //   setFieldValue('linodes', linode.id);
   // };
 
-  const onFormSubmit = async (e: React.SyntheticEvent<HTMLElement>) => {
+  const handleAssignLinode = async (e: React.SyntheticEvent<HTMLElement>) => {
     e.preventDefault();
+    setSelectedLinode(null);
 
     if (!selectedLinode) {
       return;
@@ -101,12 +120,32 @@ export const PlacementGroupsAssignLinodesDrawer = (
     };
 
     try {
-      await mutateAsync(payload);
+      await assignLinodes(payload);
+    } catch (error) {
+      setGeneralError(
+        error?.[0]?.reason
+          ? error[0].reason
+          : 'An error occurred while adding the Linode to the group'
+      );
+    }
+  };
+
+  const handleUnassignLinode = (linode: Linode) => {
+    setLocalLinodesSelection(
+      localLinodesSelection.filter((l) => l.id !== linode.id)
+    );
+
+    const payload: UnassignLinodesFromPlacementGroupPayload = {
+      linodes: [linode.id],
+    };
+
+    try {
+      unassignLinodes(payload);
     } catch (error) {
       setGeneralError(
         error
-          ? error[0].reason
-          : 'An error occurred while adding the Linode to the group'
+          ? error?.[0]?.reason
+          : 'An error occurred while removing the Linode from the group'
       );
     }
   };
@@ -115,7 +154,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>
       <Grid>
         {generalError ? <Notice text={generalError} variant="error" /> : null}
-        <form onSubmit={onFormSubmit}>
+        <form onSubmit={handleAssignLinode}>
           <Stack spacing={1}>
             <Typography>
               A Linode can only be assigned to a single Placement Group.
@@ -134,14 +173,14 @@ export const PlacementGroupsAssignLinodesDrawer = (
               // errorText={errors?.linodes?.[0] ?? ''}
               helperText="Only displaying Linodes that aren’t assigned to a Placement Group"
               label={linodeSelectLabel}
-              options={linodesSelectOptions}
+              options={getLinodeSelectOptions()}
               value={selectedLinode?.id ?? null}
             />
 
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
-                // disabled: !selectedLinode,
+                disabled: !selectedLinode,
                 label: 'Add Linode',
                 // loading: isSubmitting,
                 type: 'submit',
@@ -154,14 +193,20 @@ export const PlacementGroupsAssignLinodesDrawer = (
                   <Typography component="span">{selection.label}</Typography>
                 );
               }}
-              onRemove={(data) => {
-                // handleUnassignLinode(data as LinodeAndConfigData);
-                // setUnassignLinodesErrors([]);
+              onRemove={(data: Linode) => {
+                handleUnassignLinode(data);
               }}
               headerText={`Linodes Assigned to Placement Group`}
               noDataText={'No Linodes have been assigned.'}
               preferredDataLabel="linodeConfigLabel"
               selectionData={localLinodesSelection}
+            />
+            <ActionsPanel
+              primaryButtonProps={{
+                label: 'Done',
+                onClick: onClose,
+              }}
+              sx={{ pt: 2 }}
             />
           </Stack>
         </form>
