@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
@@ -11,12 +12,15 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
+  useAllPlacementGroupsQuery,
   useAssignLinodesToPlacementGroup,
   useUnassignLinodesFromPlacementGroup,
 } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
+import { hasPlacementGroupReachedCapacity } from './utils';
+import { getLinodesFromAllPlacementGroups } from './utils';
 
 import type { PlacementGroupsAssignLinodesDrawerProps } from './types';
 import type {
@@ -37,6 +41,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
   } = props;
   const { data: linodes } = useAllLinodesQuery();
   const { data: regions } = useRegionsQuery();
+  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { mutateAsync: assignLinodes } = useAssignLinodesToPlacementGroup(
     selectedPlacementGroup?.id ?? -1
   );
@@ -63,11 +68,15 @@ export const PlacementGroupsAssignLinodesDrawer = (
     setGeneralError(undefined);
   }, [open]);
 
+  const linodesFromAllPlacementGroups = getLinodesFromAllPlacementGroups(
+    allPlacementGroups
+  );
   const getLinodeSelectOptions = (): Linode[] => {
     return (
       linodes?.filter((linode) => {
         const isInRegion = linode.region === selectedPlacementGroup?.region;
-        const isNotAlreadyAssigned = !selectedPlacementGroup?.linode_ids.includes(
+        // TODO: it should not be assigned to ANY placement group, not just the current one
+        const isNotAlreadyAssigned = !linodesFromAllPlacementGroups.includes(
           linode.id as number
         );
         const isNotAssignedInDrawer = !localLinodesSelection.find(
@@ -100,10 +109,20 @@ export const PlacementGroupsAssignLinodesDrawer = (
       ? `Add Linodes to Placement Group ${label} (${AFFINITY_TYPES[affinity_type]})`
       : 'Add Linodes to Placement Group';
 
-  // const onAssignLinode = (linode: Linode) => {
-  //   setLocalLinodesSelection([...localLinodesSelection, linode]);
-  //   setFieldValue('linodes', linode.id);
-  // };
+  const removableSelectionsListLabel = (
+    <>
+      <FormLabel htmlFor="pg-linode-removable-list">
+        {label && affinity_type
+          ? `Linodes Assigned to Placement Group ${label}
+        (${AFFINITY_TYPES[affinity_type]})`
+          : 'Linodes Assigned to Placement Group'}
+      </FormLabel>
+      <Typography fontSize="0.8rem">
+        Maximum Number of Linodes for this group:{' '}
+        {selectedPlacementGroup.capacity}
+      </Typography>
+    </>
+  );
 
   const handleAssignLinode = async (e: React.SyntheticEvent<HTMLElement>) => {
     e.preventDefault();
@@ -169,8 +188,6 @@ export const PlacementGroupsAssignLinodesDrawer = (
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
-              disabled={false}
-              // errorText={errors?.linodes?.[0] ?? ''}
               helperText="Only displaying Linodes that aren’t assigned to a Placement Group"
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
@@ -180,9 +197,10 @@ export const PlacementGroupsAssignLinodesDrawer = (
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
-                disabled: !selectedLinode,
+                disabled:
+                  !selectedLinode ||
+                  hasPlacementGroupReachedCapacity(selectedPlacementGroup),
                 label: 'Add Linode',
-                // loading: isSubmitting,
                 type: 'submit',
               }}
               sx={{ pt: 2 }}
@@ -196,13 +214,16 @@ export const PlacementGroupsAssignLinodesDrawer = (
               onRemove={(data: Linode) => {
                 handleUnassignLinode(data);
               }}
-              headerText={`Linodes Assigned to Placement Group`}
+              headerText={removableSelectionsListLabel}
+              id="pg-linode-removable-list"
               noDataText={'No Linodes have been assigned.'}
               preferredDataLabel="linodeConfigLabel"
               selectionData={localLinodesSelection}
+              sx={{ pt: 2 }}
             />
             <ActionsPanel
               primaryButtonProps={{
+                buttonType: 'outlined',
                 label: 'Done',
                 onClick: onClose,
               }}
