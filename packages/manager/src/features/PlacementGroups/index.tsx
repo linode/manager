@@ -39,6 +39,7 @@ export const PlacementGroups = () => {
           <Route component={PlacementGroupsDetail} path={`${path}/:id/:tab?`} />
           <Route
             component={PlacementGroupsDetail}
+            exact
             path={`${path}/:id/linodes/assign`}
           />
           <Route component={PlacementGroupsLanding} />

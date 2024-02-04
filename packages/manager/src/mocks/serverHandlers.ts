@@ -2017,7 +2017,10 @@ export const handlers = [
       affinity_type: 'anti_affinity',
       id: Number(req.params.placementGroupId) ?? -1,
       label: 'pg-1',
-      linode_ids: [...[0, 1, 2, 3, 43], (req.body as any).linodes[0]],
+      linode_ids: [
+        ...[0, 1, 2, 3, 5, 6, 7, 8, 43],
+        (req.body as any).linodes[0],
+      ],
     });
 
     return res(ctx.json(response));
@@ -2033,7 +2036,7 @@ export const handlers = [
         affinity_type: 'anti_affinity',
         id: Number(req.params.placementGroupId) ?? -1,
         label: 'pg-1',
-        linode_ids: [0, 1, 2, 3, 43],
+        linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
       });
 
       return res(ctx.json(response));

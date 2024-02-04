@@ -13,7 +13,7 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   compliant: Factory.each(() => pickRandom([true, false])),
   id: Factory.each((id) => id),
   label: Factory.each((id) => `pg-${id}`),
-  linode_ids: [0, 1, 2, 3, 43],
+  linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
   region: 'us-east',
 });
 

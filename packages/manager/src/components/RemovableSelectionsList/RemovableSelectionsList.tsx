@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
 
 import {
@@ -12,7 +13,6 @@ import {
   StyledNoAssignedLinodesBox,
   StyledScrollBox,
 } from './RemovableSelectionsList.style';
-import { Box } from 'src/components/Box';
 
 import type { SxProps, Theme } from '@mui/material';
 
@@ -105,7 +105,7 @@ export const RemovableSelectionsList = (
   };
 
   return (
-    <Box sx={sx}>
+    <Box data-testid={id} sx={sx}>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
         <StyledBoxShadowWrapper
