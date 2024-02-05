@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-// TODO: AGLB - This is just a placeholder icon for now.
+// TODO: ACLB - This is just a placeholder icon for now.
 import DocsIcon from 'src/assets/icons/docs.svg';
 // will be updated with relevant icon once we get from UX
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
@@ -56,12 +56,12 @@ export const LoadBalancerLandingEmptyState = () => {
       )}
       buttonProps={[
         {
-          children: 'Create Global Load Balancer',
+          children: 'Create Cloud Load Balancer',
           onClick: () => {
             sendEvent({
               action: 'Click:button',
               category: linkAnalyticsEvent.category,
-              label: 'Global Load Balancers',
+              label: 'Cloud Load Balancers',
             });
             push('/loadbalancers/create');
           },

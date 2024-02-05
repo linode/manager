@@ -8,7 +8,7 @@ import {
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 import { stackScriptFactory } from '@src/factories';
-import { StackScript } from '@linode/api-v4/types';
+import { StackScript } from '@linode/api-v4';
 
 // StackScript fixture paths.
 const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';

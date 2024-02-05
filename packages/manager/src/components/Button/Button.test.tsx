@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -44,7 +44,7 @@ describe('Button', () => {
 
   it('should display the tooltip if disabled and tooltipText is true', async () => {
     const { getByTestId } = renderWithTheme(
-      <Button disabled tooltipText="Test">
+      <Button disabled tooltipText="Test tooltip">
         Test
       </Button>
     );
@@ -53,6 +53,11 @@ describe('Button', () => {
     expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
 
     fireEvent.mouseOver(button);
-    await expect(screen.getByText('Test')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Test tooltip')).toBeVisible();
   });
 });

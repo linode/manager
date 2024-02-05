@@ -4,12 +4,11 @@ import { Provider } from 'react-redux';
 
 import { linodes } from 'src/__data__/linodes';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
 
 import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,

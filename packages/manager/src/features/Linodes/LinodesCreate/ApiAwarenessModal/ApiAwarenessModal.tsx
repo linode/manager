@@ -1,6 +1,6 @@
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
-import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
-import useEvents from 'src/hooks/useEvents';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import { generateCurlCommand } from 'src/utilities/generate-cURL';
 import { generateCLICommand } from 'src/utilities/generate-cli';
@@ -32,16 +32,16 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const theme = useTheme();
   const history = useHistory();
-  const { events } = useEvents();
+  const { data: events } = useInProgressEvents();
 
-  const createdLinode = events.filter(
+  const linodeCreationEvent = events?.find(
     (event) =>
       (event.action === 'linode_create' || event.action === 'linode_clone') &&
       event.entity?.label === payLoad.label &&
       (event.status === 'scheduled' || event.status === 'started')
   );
 
-  const isLinodeCreated = createdLinode.length === 1;
+  const isLinodeCreated = linodeCreationEvent !== undefined;
 
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
@@ -70,7 +70,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   useEffect(() => {
     if (isLinodeCreated && isOpen) {
       onClose();
-      history.replace(`/linodes/${createdLinode[0].entity?.id}`);
+      history.replace(`/linodes/${linodeCreationEvent.entity?.id}`);
     }
   }, [isLinodeCreated]);
 

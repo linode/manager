@@ -31,11 +31,10 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { EventWithStore } from 'src/events';
-
 import { Grants } from '../../../api-v4/lib';
 import { queryKey as accountQueryKey } from './account';
 import { queryPresets } from './base';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import type { RequestOptions } from '@linode/api-v4';
 
@@ -160,7 +159,7 @@ export const useDeleteSSHKeyMutation = (id: number) => {
   });
 };
 
-export const sshKeyEventHandler = (event: EventWithStore) => {
+export const sshKeyEventHandler = (event: EventHandlerData) => {
   // This event handler is a bit agressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 

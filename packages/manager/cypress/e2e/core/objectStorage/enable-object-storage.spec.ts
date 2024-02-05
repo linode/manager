@@ -2,7 +2,12 @@
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
 
-import type { Region } from '@linode/api-v4';
+import type {
+  AccountSettings,
+  ObjectStorageCluster,
+  ObjectStorageClusterID,
+  Region,
+} from '@linode/api-v4';
 import {
   accountSettingsFactory,
   objectStorageClusterFactory,
@@ -17,16 +22,16 @@ import {
   mockGetBuckets,
   mockGetClusters,
 } from 'support/intercepts/object-storage';
+import { mockGetProfile } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { mockGetProfile } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.
@@ -61,12 +66,17 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
+    mockAppendFeatureFlags({
+      objMultiCluster: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
+
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
       object_storage: 'disabled',
     });
 
-    const mockAccountSettingsEnabled = {
+    const mockAccountSettingsEnabled: AccountSettings = {
       ...mockAccountSettings,
       object_storage: 'active',
     };
@@ -92,14 +102,17 @@ describe('Object Storage enrollment', () => {
     // Clusters with special pricing are currently hardcoded rather than
     // retrieved via API, so we have to mock the cluster API request to correspond
     // with that hardcoded data.
-    const mockClusters = [
+    //
+    // Because the IDs used in the mocks don't correspond with any actual clusters,
+    // we have to cast them as `ObjectStorageClusterID` to satisfy TypeScript.
+    const mockClusters: ObjectStorageCluster[] = [
       // Regions with special pricing.
       objectStorageClusterFactory.build({
-        id: 'br-gru-0',
+        id: 'br-gru-0' as ObjectStorageClusterID,
         region: 'br-gru',
       }),
       objectStorageClusterFactory.build({
-        id: 'id-cgk-1',
+        id: 'id-cgk-1' as ObjectStorageClusterID,
         region: 'id-cgk',
       }),
       // A region that does not have special pricing.

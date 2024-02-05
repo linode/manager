@@ -1,11 +1,11 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -13,9 +13,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
@@ -101,6 +101,8 @@ export const ImagesDrawer = (props: CombinedProps) => {
     canCreateImage,
     permissionedLinodes: availableLinodes,
   } = useImageAndLinodeGrantCheck();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);
@@ -228,7 +230,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
               return;
             }
 
-            resetEventsPolling();
+            checkForNewEvents();
 
             setSubmitting(false);
 

@@ -21,7 +21,7 @@ import {
 /**
  * getLoadbalancerConfigurations
  *
- * Returns a paginated list of Akamai Global Load Balancer configurations
+ * Returns a paginated list of Akamai Cloud Load Balancer configurations
  */
 export const getLoadbalancerConfigurations = (
   loadbalancerId: number,
@@ -42,7 +42,7 @@ export const getLoadbalancerConfigurations = (
 /**
  * getLoadbalancerConfiguration
  *
- * Returns an Akamai Global Load Balancer configuration
+ * Returns an Akamai Cloud Load Balancer configuration
  */
 export const getLoadbalancerConfiguration = (
   loadbalancerId: number,
@@ -60,7 +60,7 @@ export const getLoadbalancerConfiguration = (
 /**
  * getLoadbalancerConfigurationsEndpointHealth
  *
- * Returns endpoint health for an Akamai Global Load Balancer configuration
+ * Returns endpoint health for an Akamai Cloud Load Balancer configuration
  */
 export const getLoadbalancerConfigurationsEndpointHealth = (
   loadbalancerId: number
@@ -77,7 +77,7 @@ export const getLoadbalancerConfigurationsEndpointHealth = (
 /**
  * createLoadbalancerConfiguration
  *
- * Creates an Akamai Global Load Balancer configuration
+ * Creates an Akamai Cloud Load Balancer configuration
  */
 export const createLoadbalancerConfiguration = (
   loadbalancerId: number,
@@ -96,7 +96,7 @@ export const createLoadbalancerConfiguration = (
 /**
  * updateLoadbalancerConfiguration
  *
- * Updates an Akamai Global Load Balancer configuration
+ * Updates an Akamai Cloud Load Balancer configuration
  */
 export const updateLoadbalancerConfiguration = (
   loadbalancerId: number,
@@ -116,7 +116,7 @@ export const updateLoadbalancerConfiguration = (
 /**
  * deleteLoadbalancerConfiguration
  *
- * Deletes an Akamai Global Load Balancer configuration
+ * Deletes an Akamai Cloud Load Balancer configuration
  */
 export const deleteLoadbalancerConfiguration = (
   loadbalancerId: number,

@@ -1,6 +1,7 @@
 import {
   CreatePlacementGroupPayload,
   NotificationType,
+  ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
   TokenRequest,
   User,
@@ -378,7 +379,7 @@ const aglb = [
     const body = req.body as any;
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
-    // TODO: AGLB - figure out if this is still accurate
+    // TODO: ACLB - figure out if this is still accurate
     return res(ctx.json(loadbalancerFactory.build({ id, ...body })));
   }),
   rest.delete('*/v4beta/aglb/:id', (req, res, ctx) => {
@@ -550,6 +551,8 @@ export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
       restricted: false,
+      // Parent/Child: switch the `user_type` depending on what account view you need to mock.
+      user_type: 'proxy',
     });
     return res(ctx.json(profile));
   }),
@@ -936,15 +939,20 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+  rest.get('*/object-storage/buckets/:region', (req, res, ctx) => {
     // Temporarily added pagination logic to make sure my use of
     // getAll worked for fetching all buckets.
+
+    const region = req.params.region as string;
 
     objectStorageBucketFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(1);
+    const buckets = objectStorageBucketFactory.buildList(1, {
+      cluster: `${region}-1`,
+      region,
+    });
 
     return res(
       ctx.json({
@@ -992,10 +1000,56 @@ export const handlers = [
   }),
   rest.get('*object-storage/keys', (req, res, ctx) => {
     return res(
-      ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
+      ctx.json(
+        makeResourcePage([
+          ...objectStorageKeyFactory.buildList(1),
+          ...objectStorageKeyFactory.buildList(1, {
+            regions: [
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+            ],
+          }),
+          ...objectStorageKeyFactory.buildList(1, {
+            regions: [
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+            ],
+          }),
+          ...objectStorageKeyFactory.buildList(1, {
+            regions: [
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'us-east', s3_endpoint: 'us-east.com' },
+            ],
+          }),
+        ])
+      )
     );
   }),
+  rest.post('*object-storage/keys', (req, res, ctx) => {
+    const { label, regions } = req.body as ObjectStorageKeyRequest;
 
+    const regionsData = regions?.map((region: string) => ({
+      id: region,
+      s3_endpoint: `${region}.com`,
+    }));
+
+    return res(
+      ctx.json(
+        objectStorageKeyFactory.build({
+          label,
+          regions: regionsData,
+        })
+      )
+    );
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
@@ -1883,7 +1937,13 @@ export const handlers = [
       return res(ctx.status(404));
     }
 
-    return res(ctx.json(placementGroupFactory.build()));
+    return res(
+      ctx.json(
+        placementGroupFactory.build({
+          id: 1,
+        })
+      )
+    );
   }),
   rest.post('*/placement/groups', (req, res, ctx) => {
     return res(
@@ -1894,8 +1954,8 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === 'undefined') {
+  rest.put('*/placement/groups/:placementGroupId', (req, res, ctx) => {
+    if (req.params.placementGroupId === '-1') {
       return res(ctx.status(404));
     }
 

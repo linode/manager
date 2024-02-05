@@ -1,104 +1,207 @@
-import { Typography, styled } from '@mui/material';
-import { AxiosHeaders } from 'axios';
+import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
-import { useFlags } from 'src/hooks/useFlags';
-import { useChildAccounts } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useProfile } from 'src/queries/profile';
-import { authentication } from 'src/utilities/storage';
+import { Typography } from 'src/components/Typography';
+import {
+  isParentTokenValid,
+  setTokenInLocalStorage,
+  updateCurrentTokenBasedOnUserType,
+} from 'src/features/Account/utils';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { getStorage } from 'src/utilities/storage';
+
+import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
+
+import type { APIError, ChildAccountPayload, UserType } from '@linode/api-v4';
+import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
+  isProxyUser: boolean;
   onClose: () => void;
   open: boolean;
-  username: string;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { isProxyUser, onClose, open } = props;
 
-  const flags = useFlags();
+  const [isParentTokenError, setIsParentTokenError] = React.useState<
+    APIError[]
+  >([]);
+  const [isProxyTokenError, setIsProxyTokenError] = React.useState<APIError[]>(
+    []
+  );
 
-  const handleClose = () => {
+  const currentTokenWithBearer = useCurrentToken() ?? '';
+  const history = useHistory();
+
+  const handleClose = React.useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
 
-  const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
+  /**
+   * Headers are required for proxy users when obtaining a proxy token.
+   * For 'proxy' userType, use the stored parent token in the request.
+   */
+  const getProxyToken = React.useCallback(
+    async ({
+      euuid,
+      token,
+      userType,
+    }: {
+      euuid: ChildAccountPayload['euuid'];
+      token: string;
+      userType: Omit<UserType, 'child'>;
+    }) => {
+      try {
+        return await createChildAccountPersonalAccessToken({
+          euuid,
+          headers:
+            userType === 'proxy'
+              ? {
+                  Authorization: `Bearer ${token}`,
+                }
+              : undefined,
+        });
+      } catch (error) {
+        setIsProxyTokenError(error as APIError[]);
+        throw error;
+      }
+    },
+    []
+  );
 
-  // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
-  const headers =
-    flags.parentChildAccountAccess && user?.user_type === 'proxy'
-      ? new AxiosHeaders({ Authorization: authentication.token.get() }) // TODO: Parent/Child - M3-7430: replace this token with the parent token in local storage.
-      : undefined;
-  const { data: childAccounts, error, isLoading } = useChildAccounts({
-    headers,
-  });
+  // Navigate to the current location, triggering a re-render without a full page reload.
+  const refreshPage = React.useCallback(() => {
+    // TODO: Parent/Child: We need to test this against the real API.
+    history.push(history.location.pathname);
+  }, [history]);
 
-  const renderChildAccounts = React.useCallback(() => {
-    if (isLoading) {
-      return <CircleProgress mini />;
+  const handleSwitchToChildAccount = React.useCallback(
+    async ({
+      currentTokenWithBearer,
+      euuid,
+      event,
+      handleClose,
+      isProxyUser,
+    }: {
+      currentTokenWithBearer?: AuthState['token'];
+      euuid: string;
+      event: React.MouseEvent<HTMLElement>;
+      handleClose: (e: React.SyntheticEvent<HTMLElement>) => void;
+      isProxyUser: boolean;
+    }) => {
+      try {
+        // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
+        // ================================================================
+        // throw new Error(
+        //   `Account switching failed. Try again.`
+        // );
+        // ================================================================
+
+        // We don't need to worry about this if we're a proxy user.
+        if (!isProxyUser) {
+          const parentToken = {
+            expiry: getStorage('authenication/expire'),
+            scopes: getStorage('authenication/scopes'),
+            token: currentTokenWithBearer ?? '',
+          };
+
+          setTokenInLocalStorage({
+            prefix: 'authentication/parent_token',
+            token: parentToken,
+          });
+        }
+
+        const proxyToken = await getProxyToken({
+          euuid,
+          token: isProxyUser
+            ? getStorage('authentication/parent_token/token')
+            : currentTokenWithBearer,
+          userType: isProxyUser ? 'proxy' : 'parent',
+        });
+
+        setTokenInLocalStorage({
+          prefix: 'authentication/proxy_token',
+          token: proxyToken,
+        });
+
+        updateCurrentTokenBasedOnUserType({
+          userType: 'proxy',
+        });
+
+        handleClose(event);
+        refreshPage();
+      } catch (error) {
+        setIsProxyTokenError(error as APIError[]);
+
+        // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
+        // ================================================================
+        // setIsProxyTokenError([
+        //   {
+        //     field: 'token',
+        //     reason: error.message,
+        //   },
+        // ]);
+        // ================================================================
+      }
+    },
+    [getProxyToken, refreshPage]
+  );
+
+  const handleSwitchToParentAccount = React.useCallback(() => {
+    if (!isParentTokenValid({ isProxyUser })) {
+      const expiredTokenError: APIError = {
+        field: 'token',
+        reason:
+          'The reseller account token has expired. You must log back into the account manually.',
+      };
+
+      setIsParentTokenError([expiredTokenError]);
+
+      return;
     }
 
-    if (childAccounts?.results === 0) {
-      return <Notice variant="info">There are no child accounts.</Notice>;
-    }
-
-    if (error) {
-      return (
-        <Notice variant="error">
-          There was an error loading child accounts.
-        </Notice>
-      );
-    }
-
-    return childAccounts?.data.map((childAccount, idx) => (
-      <StyledChildAccountLinkButton
-        onClick={() => {
-          // TODO: Parent/Child - M3-7430
-          // handleAccountSwitch();
-        }}
-        key={`child-account-link-button-${idx}`}
-      >
-        {childAccount.company}
-      </StyledChildAccountLinkButton>
-    ));
-  }, [childAccounts, error, isLoading]);
+    updateCurrentTokenBasedOnUserType({ userType: 'parent' });
+    handleClose();
+  }, [handleClose, isProxyUser]);
 
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
-      <StyledTypography>
+      {isProxyTokenError.length > 0 && (
+        <Notice text={isProxyTokenError[0].reason} variant="error" />
+      )}
+      {isParentTokenError.length > 0 && (
+        <Notice text={isParentTokenError[0].reason} variant="error" />
+      )}
+      <Typography
+        sx={(theme) => ({
+          margin: `${theme.spacing(3)} 0`,
+        })}
+      >
         Select an account to view and manage its settings and configurations
-        {user?.user_type === 'proxy' && (
+        {isProxyUser && (
           <>
-            {' '}
-            or {/* TODO: Parent/Child - M3-7430 */}
+            {' or '}
             <StyledLinkButton
               aria-label="parent-account-link"
-              onClick={() => null}
+              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>
           </>
         )}
         .
-      </StyledTypography>
-      <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {renderChildAccounts()}
-      </Stack>
+      </Typography>
+      <ChildAccountList
+        currentTokenWithBearer={currentTokenWithBearer}
+        isProxyUser={isProxyUser}
+        onClose={handleClose}
+        onSwitchAccount={handleSwitchToChildAccount}
+      />
     </Drawer>
   );
 };
-
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  margin: `${theme.spacing(3)} 0`,
-}));
-
-const StyledChildAccountLinkButton = styled(StyledLinkButton)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-}));

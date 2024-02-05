@@ -13,6 +13,7 @@ import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
 interface Props {
+  disabled?: boolean;
   entityType: FirewallDeviceEntityType | undefined;
   handleFirewallChange: (firewallID: number) => void;
   helperText: JSX.Element;
@@ -21,6 +22,7 @@ interface Props {
 
 export const SelectFirewallPanel = (props: Props) => {
   const {
+    disabled,
     entityType,
     handleFirewallChange,
     helperText,
@@ -69,6 +71,7 @@ export const SelectFirewallPanel = (props: Props) => {
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
           }}
+          disabled={disabled}
           errorText={error?.[0].reason}
           label="Assign Firewall"
           loading={isLoading}
@@ -78,7 +81,7 @@ export const SelectFirewallPanel = (props: Props) => {
           value={selectedFirewall}
         />
         <StyledLinkButtonBox>
-          <LinkButton onClick={handleCreateFirewallClick}>
+          <LinkButton isDisabled={disabled} onClick={handleCreateFirewallClick}>
             Create Firewall
           </LinkButton>
         </StyledLinkButtonBox>

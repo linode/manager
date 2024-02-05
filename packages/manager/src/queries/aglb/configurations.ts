@@ -31,7 +31,7 @@ export const useLoadBalancerConfigurationsQuery = (
   filter?: Filter
 ) => {
   return useQuery<ResourcePage<Configuration>, APIError[]>(
-    [QUERY_KEY, 'aglb', loadbalancerId, 'configurations', params, filter],
+    [QUERY_KEY, 'aclb', loadbalancerId, 'configurations', params, filter],
     () => getLoadbalancerConfigurations(loadbalancerId, params, filter),
     { keepPreviousData: true }
   );
@@ -44,7 +44,7 @@ export const useLoadBalancerConfigurationsEndpointsHealth = (
     queryFn: () => getLoadbalancerConfigurationsEndpointHealth(loadbalancerId),
     queryKey: [
       QUERY_KEY,
-      'aglb',
+      'aclb',
       loadbalancerId,
       'configurations',
       'endpoint-health',
@@ -57,7 +57,7 @@ export const useLoabalancerConfigurationsInfiniteQuery = (
   loadbalancerId: number
 ) => {
   return useInfiniteQuery<ResourcePage<Configuration>, APIError[]>(
-    [QUERY_KEY, 'aglb', loadbalancerId, 'configurations', 'infinite'],
+    [QUERY_KEY, 'aclb', loadbalancerId, 'configurations', 'infinite'],
     ({ pageParam }) =>
       getLoadbalancerConfigurations(loadbalancerId, {
         page: pageParam,
@@ -87,13 +87,13 @@ export const useLoadBalancerConfigurationMutation = (
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'aglb',
+          'aclb',
           loadbalancerId,
           'configurations',
         ]);
-        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        // The GET /v4/aclb endpoint also returns configuration data that we must update
         queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
+        queryClient.invalidateQueries([QUERY_KEY, 'aclb', loadbalancerId]);
       },
     }
   );
@@ -110,13 +110,13 @@ export const useLoadBalancerConfigurationCreateMutation = (
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'aglb',
+          'aclb',
           loadbalancerId,
           'configurations',
         ]);
-        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        // The GET /v4/aclb endpoint also returns configuration data that we must update
         queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
+        queryClient.invalidateQueries([QUERY_KEY, 'aclb', loadbalancerId]);
       },
     }
   );
@@ -134,13 +134,13 @@ export const useLoadBalancerConfigurationDeleteMutation = (
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'aglb',
+          'aclb',
           loadbalancerId,
           'configurations',
         ]);
-        // The GET /v4/aglb endpoint also returns configuration data that we must update
+        // The GET /v4/aclb endpoint also returns configuration data that we must update
         queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-        queryClient.invalidateQueries([QUERY_KEY, 'aglb', loadbalancerId]);
+        queryClient.invalidateQueries([QUERY_KEY, 'aclb', loadbalancerId]);
       },
     }
   );

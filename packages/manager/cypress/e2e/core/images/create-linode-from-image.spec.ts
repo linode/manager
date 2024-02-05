@@ -4,9 +4,7 @@ import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
-import { cleanUp } from 'support/util/cleanup';
 import { ui } from 'support/ui';
-import { authenticate } from 'support/api/authentication';
 
 const region = chooseRegion();
 
@@ -59,7 +57,7 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
 
   fbtVisible(mockLinode.label);
   fbtVisible(region.label);
-  fbtVisible(mockLinode.id);
+  fbtVisible(`${mockLinode.id}`);
 };
 
 describe('create linode from image, mocked data', () => {

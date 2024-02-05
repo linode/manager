@@ -11,7 +11,7 @@ import { Handlers } from './LoadBalancerConfigurations';
 import { Routes } from './Routes';
 import { ServiceTargets } from './ServiceTargets';
 
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   handlers: Handlers;

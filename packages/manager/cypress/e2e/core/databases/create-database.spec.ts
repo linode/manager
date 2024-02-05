@@ -15,6 +15,7 @@ import {
 import { mockGetEvents } from 'support/intercepts/events';
 import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
+import type { Database } from '@linode/api-v4';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
@@ -22,7 +23,7 @@ describe('create a database cluster, mocked data', () => {
       // @TODO Add assertions for DBaaS pricing.
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         // Database mock immediately after instance has been created.
-        const databaseMock = databaseFactory.build({
+        const databaseMock: Database = databaseFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
           region: configuration.region.id,
@@ -31,13 +32,13 @@ describe('create a database cluster, mocked data', () => {
           cluster_size: configuration.clusterSize,
           engine: configuration.dbType,
           hosts: {
-            primary: null,
-            secondary: null,
+            primary: undefined,
+            secondary: undefined,
           },
         });
 
         // Database mock once instance has been provisioned.
-        const databaseMockActive = {
+        const databaseMockActive: Database = {
           ...databaseMock,
           status: 'active',
         };

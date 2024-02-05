@@ -9,15 +9,15 @@ import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { AGLB_DOCS_TLS_CERTIFICATE } from 'src/features/LoadBalancers/constants';
 
 import {
   CONFIGURATION_COPY,
   protocolOptions,
 } from '../LoadBalancerDetail/Configurations/constants';
+import { ACLB_DOCS } from '../constants';
 
 import type { Handlers } from './LoadBalancerConfigurations';
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   handlers: Handlers;
@@ -96,17 +96,13 @@ export const ConfigurationDetails = ({ index }: Props) => {
               />
               After the load balancer is created, and if the protocol is HTTPS,
               upload TLS termination certificates.{' '}
-              <Link to={AGLB_DOCS_TLS_CERTIFICATE}>Learn more.</Link>
+              <Link to={ACLB_DOCS.TLSCertificates}>Learn more.</Link>
             </Typography>
           </Box>
         </Stack>
       </Stack>
       <TextField
-        errorText={
-          touched.configurations?.[index]?.label
-            ? getIn(errors, `configurations[${index}].label`)
-            : ''
-        }
+        errorText={getIn(errors, `configurations[${index}].label`) ?? ''}
         inputId={`configuration-${index}-label`}
         label="Configuration Label"
         labelTooltipText={CONFIGURATION_COPY.configuration}

@@ -5,10 +5,14 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Notice } from 'src/components/Notice/Notice';
+import { CopyAll } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAll';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-
 interface Props {
   objectStorageKey?: ObjectStorageKey | null;
   onClose: () => void;
@@ -32,6 +36,15 @@ const renderActions = (
 
 export const SecretTokenDialog = (props: Props) => {
   const { objectStorageKey, onClose, open, title, value } = props;
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   const modalConfirmationButtonText = objectStorageKey
     ? 'I Have Saved My Secret Key'
@@ -58,6 +71,43 @@ export const SecretTokenDialog = (props: Props) => {
         spacingTop={8}
         variant="warning"
       />
+      {isObjMultiClusterEnabled && (
+        <div>
+          <CopyAll
+            text={
+              objectStorageKey?.regions
+                .map(
+                  (region) => `S3 Endpoint: ${region.id}: ${region.s3_endpoint}`
+                )
+                .join('\n') ?? ''
+            }
+          />
+        </div>
+      )}
+      {isObjMultiClusterEnabled && (
+        <Box
+          sx={(theme) => ({
+            '.copyIcon': {
+              marginRight: 0,
+              paddingRight: 0,
+            },
+            backgroundColor: theme.bg.main,
+            border: `1px solid ${theme.color.grey3}`,
+            borderColor: theme.name === 'light' ? '#ccc' : '#222',
+            padding: theme.spacing(1),
+          })}
+        >
+          {objectStorageKey?.regions.map((region, index) => (
+            <CopyableTextField
+              hideLabel
+              key={index}
+              label="Create a Filesystem"
+              sx={{ border: 'none', maxWidth: '100%' }}
+              value={`S3 Endpoint: ${region.id}: ${region.s3_endpoint}`}
+            />
+          ))}
+        </Box>
+      )}
       {objectStorageKey ? (
         <>
           <Box marginBottom="16px">

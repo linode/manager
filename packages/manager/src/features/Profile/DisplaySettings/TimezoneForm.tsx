@@ -1,4 +1,4 @@
-import { Theme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -86,7 +86,17 @@ export const TimezoneForm = (props: Props) => {
           </Typography>
         </StyledLoggedInAsCustomerNotice>
       ) : null}
-      <StyledRootContainer display="flex" justifyContent="space-between">
+      <StyledRootContainer
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            alignItems: 'flex-start',
+            flexDirection: 'column',
+          },
+        })}
+        alignItems="flex-end"
+        display="flex"
+        justifyContent="space-between"
+      >
         <Select
           data-qa-tz-select
           defaultValue={defaultTimeZone}
@@ -104,9 +114,12 @@ export const TimezoneForm = (props: Props) => {
             loading: isLoading,
             onClick: onSubmit,
             sx: {
-              marginTop: (theme: Theme) => (theme.breakpoints.up('md') ? 2 : 0),
+              margin: '0',
               minWidth: 180,
             },
+          }}
+          sx={{
+            padding: 0,
           }}
         />
       </StyledRootContainer>

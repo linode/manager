@@ -18,7 +18,7 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 
 import type { Handlers } from './LoadBalancerConfigurations';
-import type { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import type { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 interface Props {
   configurationIndex: number;

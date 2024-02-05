@@ -4,6 +4,64 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-02-05] - v1.111.0
+### Changed:
+
+- Table CollapsibleRow icon orientation ([#10119](https://github.com/linode/manager/pull/10119))
+- Hide error message for $0 regions ([#10141](https://github.com/linode/manager/pull/10141))
+
+### Fixed:
+
+- Incorrect color of VPC Action Buttons in Dark Mode ([#10101](https://github.com/linode/manager/pull/10101))
+- Breadcrumb label in NodeBalancers details & create pages ([#10127](https://github.com/linode/manager/pull/10127))
+
+### Tech Stories:
+
+- Improve NodeBalancer Restricted User Experience ([#10095](https://github.com/linode/manager/pull/10095))
+- Update Storybook & add @babel/traverse resolution ([#10097](https://github.com/linode/manager/pull/10097))
+- Remove unused `@types/reach__router` package ([#10099](https://github.com/linode/manager/pull/10099))
+- Add RegionMultiSelect Component ([#10084](https://github.com/linode/manager/pull/10084))
+- Remove unused `react-page-visibility` and `@types/react-page-visibility` packages ([#10099](https://github.com/linode/manager/pull/10099))
+- Move `simple-git` from `dependencies` to `devDependencies` ([#10099](https://github.com/linode/manager/pull/10099))
+- Remove `kubernetesDashboardAvailability` feature flag ([#10121](https://github.com/linode/manager/pull/10121))
+- Refactor AccessKeyTable - Eliminate React anti-patterns ([#10124](https://github.com/linode/manager/pull/10124))
+- React Query for Events ([#9949](https://github.com/linode/manager/pull/9949))
+- Upgrade to Vitest 1.2.0 ([#10070](https://github.com/linode/manager/pull/10070))
+- Enable TypeScript type checks in the Cypress directory ([#10086](https://github.com/linode/manager/pull/10086))
+
+### Tests:
+
+- Add Cypress tests for restricted user billing flows ([#10070](https://github.com/linode/manager/pull/10070))
+- Fix test failure related to Ubuntu 23.04 Image deprecation ([#10091](https://github.com/linode/manager/pull/10091))
+- Add regression tests for deleting users on the Users & Grants page. ([#10093](https://github.com/linode/manager/pull/10093))
+- Fix Domains landing page empty state test flake ([#10094](https://github.com/linode/manager/pull/10094))
+- Add Cypress test for VPC assignment during Linode create flow ([#9939](https://github.com/linode/manager/pull/9939))
+
+### Upcoming Features:
+
+- Create Load Balancer Summary page ([#10018](https://github.com/linode/manager/pull/10018))
+- OBJ MultiCluster - Add regions field in Create Access Key Drawer ([#10034](https://github.com/linode/manager/pull/10034))
+- Add Rule support to ACLB Full Create Flow ([#10035](https://github.com/linode/manager/pull/10035))
+- Update ACLB Configuration Port Copy ([#10079](https://github.com/linode/manager/pull/10079))
+- Add search filter in Clone Linode and Create Linode from Backup flows ([#10088](https://github.com/linode/manager/pull/10088))
+- Handle ACLB Account Capability ([#10098](https://github.com/linode/manager/pull/10098))
+- Add new ACLB logo ([#10105](https://github.com/linode/manager/pull/10105))
+- Put newly created ACLB Rules at the top of the table upon creation ([#10107](https://github.com/linode/manager/pull/10107))
+- Change ACLB Rule Execution Order Column ([#10112](https://github.com/linode/manager/pull/10112))
+- Add ACLB rule Path Regex match type ([#10126](https://github.com/linode/manager/pull/10126))
+- Update ACLB Copy ([#10128](https://github.com/linode/manager/pull/10128))
+- Implement Account Switching Functionality (#10064)
+- Add `user_type` to /profile endpoint for Parent/Child user roles ([#10080](https://github.com/linode/manager/pull/10080))
+- Add business partner table to Users & Grants child view ([#10076](https://github.com/linode/manager/pull/10076))
+- Disable adding and editing API tokens for proxy users (#10109)
+- Restrict proxy users from updating username/email (#10103)
+- Add Verification Banner for Child Accounts ([#10085](https://github.com/linode/manager/pull/10085))
+- Add Placement Groups Detail Page ([#10096](https://github.com/linode/manager/pull/10096))
+- Add Placement Groups Create/Rename Drawers (#10106)
+- Add Placement Groups Landing Page ([#10068](https://github.com/linode/manager/pull/10068))
+- Add Placement Groups Landing Page empty state ([#10075](https://github.com/linode/manager/pull/10075))
+
+
 ## [2024-01-31] - v1.110.3
 
 ### Fix:

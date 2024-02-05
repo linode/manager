@@ -354,7 +354,7 @@ export interface CreateLinodeRequest {
   tags?: string[];
   private_ip?: boolean;
   authorized_users?: string[];
-  interfaces?: Interface[];
+  interfaces?: InterfacePayload[];
   metadata?: UserData;
   firewall_id?: number;
 }

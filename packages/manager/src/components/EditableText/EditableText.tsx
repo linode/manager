@@ -122,6 +122,10 @@ interface Props {
    * The text inside the textbox
    */
   text: string;
+  /**
+   * Optional suffix to append to the text when it is not in editing mode
+   */
+  textSuffix?: string;
 }
 
 type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
@@ -138,6 +142,7 @@ export const EditableText = (props: PassThroughProps) => {
     onCancel,
     onEdit,
     text: propText,
+    textSuffix,
     ...rest
   } = props;
 
@@ -192,7 +197,11 @@ export const EditableText = (props: PassThroughProps) => {
     }
   };
   const labelText = (
-    <H1Header className={classes.root} data-qa-editable-text title={text} />
+    <H1Header
+      className={classes.root}
+      data-qa-editable-text
+      title={`${text}${textSuffix ?? ''}`}
+    />
   );
 
   return !isEditing && !errorText ? (
@@ -239,6 +248,7 @@ export const EditableText = (props: PassThroughProps) => {
           value={text}
         />
         <Button
+          aria-label="Save"
           className={classes.button}
           data-qa-save-edit
           onClick={finishEditing}
@@ -246,6 +256,7 @@ export const EditableText = (props: PassThroughProps) => {
           <Check className={classes.icon} />
         </Button>
         <Button
+          aria-label="Cancel"
           className={classes.button}
           data-qa-cancel-edit
           onClick={cancelEditing}

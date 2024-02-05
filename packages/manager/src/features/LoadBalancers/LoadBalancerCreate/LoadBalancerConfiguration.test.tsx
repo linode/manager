@@ -8,15 +8,18 @@ import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
 import {
   LoadBalancerCreateFormData,
   initialValues,
-} from './LoadBalancerCreate';
+} from './LoadBalancerCreateFormWrapper';
 
 import type { Handlers } from './LoadBalancerConfigurations';
 
 export const handlers: Handlers = {
   handleAddRoute: vi.fn(),
+  handleAddRule: vi.fn(),
   handleAddServiceTarget: vi.fn(),
+  handleCloseRuleDrawer: vi.fn(),
   handleCloseServiceTargetDrawer: vi.fn(),
   handleEditRoute: vi.fn(),
+  handleEditRule: vi.fn(),
   handleEditServiceTarget: vi.fn(),
 };
 

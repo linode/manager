@@ -1,4 +1,4 @@
-import { Domain } from '@linode/api-v4/types';
+import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { fbtClick, getClick, getVisible } from 'support/helpers';
@@ -18,9 +18,9 @@ describe('Create a Domain', () => {
   it('Creates first Domain', () => {
     // Mock Domains to modify incoming response.
     const mockDomains = new Array(2).fill(null).map(
-      (item: null, index: number): Domain => {
+      (_item: null, index: number): Domain => {
         return domainFactory.build({
-          label: `Domain ${index}`,
+          domain: `Domain ${index}`,
         });
       }
     );

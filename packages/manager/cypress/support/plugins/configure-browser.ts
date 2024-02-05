@@ -5,7 +5,7 @@ import { CypressPlugin } from './plugin';
  */
 const displayBrowserInfo = (
   browser: Cypress.Browser,
-  launchOptions: Cypress.BrowserLaunchOptions
+  launchOptions: Cypress.BeforeBrowserLaunchOptions
 ) => {
   const browserBasicInfo = {
     Browser: `${browser.displayName} v${browser.version}`,

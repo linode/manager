@@ -1,5 +1,6 @@
 import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 import { accountFactory } from 'src/factories/account';
+import type { Account } from '@linode/api-v4';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
@@ -44,20 +45,20 @@ const newAccountData = accountFactory.build({
   zip: '19108',
 });
 
-const checkAccountContactDisplay = (data) => {
+const checkAccountContactDisplay = (accountInfo: Account) => {
   cy.findByText('Billing Contact').should('be.visible');
-  cy.findByText(data['company']).should('be.visible');
+  cy.findByText(accountInfo['company']).should('be.visible');
   cy.get('[data-qa-contact-name]').should('be.visible');
-  cy.findByText(data['first_name'], { exact: false });
-  cy.findByText(data['last_name'], { exact: false });
-  cy.contains(data['address_1']);
-  cy.contains(data['address_2']);
-  cy.findByText(data['state'], { exact: false });
-  cy.findByText(data['zip'], { exact: false });
+  cy.findByText(accountInfo['first_name'], { exact: false });
+  cy.findByText(accountInfo['last_name'], { exact: false });
+  cy.contains(accountInfo['address_1']);
+  cy.contains(accountInfo['address_2']);
+  cy.findByText(accountInfo['state'], { exact: false });
+  cy.findByText(accountInfo['zip'], { exact: false });
   cy.get('[data-qa-contact-email="true"]').within(() => {
-    cy.findByText(data['email']);
+    cy.findByText(accountInfo['email']);
   });
-  cy.findByText(data['phone']);
+  cy.findByText(accountInfo['phone']);
 };
 
 describe('Billing Contact', () => {
