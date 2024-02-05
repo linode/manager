@@ -15,6 +15,7 @@ import {
   mockDeleteAccessKey,
   mockGetAccessKeys,
   mockGetBucketsForRegion,
+  mockUpdateAccessKey,
 } from 'support/intercepts/object-storage';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
@@ -399,7 +400,12 @@ describe('object storage access keys smoke tests', () => {
         });
     });
 
-    it.only('can update access keys with OBJ Multicluster', () => {
+    /*
+     * - Confirms user can edit access key labels and regions when OBJ Multicluster is enabled.
+     * - Confirms that user can deselect regions via the region selection list.
+     * - Confirms that access keys landing page automatically updates to reflect edited access key.
+     */
+    it('can update access keys with OBJ Multicluster', () => {
       const mockInitialRegion = regionFactory.build({
         id: `us-${randomString(5)}`,
         label: `mock-obj-region-${randomString(5)}`,
@@ -427,11 +433,16 @@ describe('object storage access keys smoke tests', () => {
         ],
       });
 
+      const mockUpdatedAccessKeyEndpoint = randomDomainName();
+
       const mockUpdatedAccessKey = {
         ...mockAccessKey,
         label: randomLabel(),
         regions: [
-          { id: mockUpdatedRegion.id, s3_endpoint: randomDomainName() },
+          {
+            id: mockUpdatedRegion.id,
+            s3_endpoint: mockUpdatedAccessKeyEndpoint,
+          },
         ],
       };
 
@@ -497,11 +508,25 @@ describe('object storage access keys smoke tests', () => {
               ).should('not.exist');
             });
 
-          // ui.button
-          //   .findByTitle('Save Changes')
-          //   .should('be.visible')
-          //   .should('be.enabled')
-          //   .click();
+          mockUpdateAccessKey(mockUpdatedAccessKey).as('updateAccessKey');
+          mockGetAccessKeys([mockUpdatedAccessKey]);
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@updateAccessKey');
+
+      // Confirm that access key landing page reflects updated key.
+      cy.findByText(mockAccessKey.label).should('not.exist');
+      cy.findByText(mockUpdatedAccessKey.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.contains(mockUpdatedRegion.label).should('be.visible');
+          cy.contains(mockUpdatedAccessKeyEndpoint).should('be.visible');
         });
     });
   });
