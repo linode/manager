@@ -14,10 +14,13 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -30,6 +33,7 @@ export const NodeBalancerDetail = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const [label, setLabel] = React.useState<string>();
+  const { data: grants } = useGrants();
 
   const {
     error: updateError,
@@ -37,6 +41,12 @@ export const NodeBalancerDetail = () => {
   } = useNodebalancerUpdateMutation(id);
 
   const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
+
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'nodebalancer',
+    id: nodebalancer?.id,
+  });
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -93,6 +103,7 @@ export const NodeBalancerDetail = () => {
     <React.Fragment>
       <LandingHeader
         breadcrumbProps={{
+          crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           firstAndLastOnly: true,
           onEditHandlers: {
             editableTextTitle: nodeBalancerLabel,
@@ -107,6 +118,15 @@ export const NodeBalancerDetail = () => {
         title={nodeBalancerLabel}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+      {isNodeBalancerReadOnly && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'NodeBalancers',
+          })}
+          important
+          variant="warning"
+        />
+      )}
       <Tabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),
@@ -122,6 +142,7 @@ export const NodeBalancerDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <NodeBalancerConfigurations
+              grants={grants}
               nodeBalancerLabel={nodebalancer.label}
               nodeBalancerRegion={nodebalancer.region}
             />

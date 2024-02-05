@@ -4,7 +4,7 @@ import type {
   Region,
   DatabaseEngine,
   DatabaseType,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';

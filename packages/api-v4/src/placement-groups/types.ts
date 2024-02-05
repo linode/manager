@@ -1,6 +1,11 @@
 import type { Region } from '../regions/types';
 
-export type AffinityType = 'affinity' | 'anti-affinity';
+export const AFFINITY_TYPES = {
+  affinity: 'Affinity',
+  anti_affinity: 'Anti-affinity',
+} as const;
+
+export type AffinityType = keyof typeof AFFINITY_TYPES;
 
 export interface PlacementGroup {
   id: number;
@@ -9,6 +14,7 @@ export interface PlacementGroup {
   affinity_type: AffinityType;
   compliant: boolean;
   linode_ids: number[];
+  capacity: number;
 }
 
 export type CreatePlacementGroupPayload = Pick<
@@ -16,7 +22,7 @@ export type CreatePlacementGroupPayload = Pick<
   'label' | 'affinity_type' | 'region'
 >;
 
-export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
+export type RenamePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 
 /**
  * Since the API expects an array of ONE linode id, we'll use a tuple here.

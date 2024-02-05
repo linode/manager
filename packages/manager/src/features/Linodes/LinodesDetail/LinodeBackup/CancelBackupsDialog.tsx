@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
 
@@ -24,13 +24,15 @@ export const CancelBackupsDialog = (props: Props) => {
     mutateAsync: cancelBackups,
   } = useLinodeBackupsCancelMutation(linodeId);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const onCancelBackups = async () => {
     await cancelBackups();
     enqueueSnackbar('Backups are being canceled for this Linode', {
       variant: 'info',
     });
     onClose();
-    resetEventsPolling();
+    checkForNewEvents();
     sendBackupsDisabledEvent();
   };
 

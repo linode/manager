@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom';
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 interface Props {
   label: string;
@@ -16,10 +18,15 @@ interface Props {
 export const NodeBalancerActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
-
   const history = useHistory();
 
   const { label, nodeBalancerId, toggleDialog } = props;
+
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'nodebalancer',
+    id: nodeBalancerId,
+  });
 
   const actions: Action[] = [
     {
@@ -35,10 +42,17 @@ export const NodeBalancerActionMenu = (props: Props) => {
       title: 'Settings',
     },
     {
+      disabled: isNodeBalancerReadOnly,
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
       },
       title: 'Delete',
+      tooltip: isNodeBalancerReadOnly
+        ? getRestrictedResourceText({
+            action: 'delete',
+            resourceType: 'NodeBalancers',
+          })
+        : undefined,
     },
   ];
 
@@ -49,8 +63,10 @@ export const NodeBalancerActionMenu = (props: Props) => {
           return (
             <InlineMenuAction
               actionText={action.title}
+              disabled={action.disabled}
               key={action.title}
               onClick={action.onClick}
+              tooltip={action.tooltip}
             />
           );
         })}
