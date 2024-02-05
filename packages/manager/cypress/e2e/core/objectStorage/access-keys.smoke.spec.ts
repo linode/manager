@@ -374,6 +374,10 @@ describe('object storage access keys smoke tests', () => {
         });
 
       ui.actionMenuItem.findByTitle('Permissions').click();
+      ui.drawer
+        .findByTitle(`Permissions for ${mockAccessKey.label}`)
+        .should('be.visible')
+        .within(() => {});
     });
 
     it('can update access keys with OBJ Multicluster', () => {});
