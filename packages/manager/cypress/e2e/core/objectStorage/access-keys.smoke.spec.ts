@@ -15,7 +15,6 @@ import {
   mockDeleteAccessKey,
   mockGetAccessKeys,
   mockGetBucketsForRegion,
-  mockGetClusters,
 } from 'support/intercepts/object-storage';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
