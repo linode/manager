@@ -3,7 +3,7 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
+import { ACLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
 
 import { LoadBalancerActionPanel } from './LoadBalancerActionPanel';
 import { LoadBalancerConfigurations } from './LoadBalancerConfigurations';
@@ -18,13 +18,13 @@ export const LoadBalancerCreate = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Global Load Balancers',
+              label: 'Cloud Load Balancers',
               position: 1,
             },
           ],
           pathname: location.pathname,
         }}
-        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
+        betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
         title="Create"
       />
 

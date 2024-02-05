@@ -1,5 +1,5 @@
 /**
- * @file Integration tests related to Cloud Manager AGLB Service Target management.
+ * @file Integration tests related to Cloud Manager ACLB Service Target management.
  */
 
 import {
@@ -26,11 +26,11 @@ import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 
-describe('Akamai Global Load Balancer service targets', () => {
-  // TODO Remove this `beforeEach()` hook and related `cy.wait()` calls when `aglb` feature flag goes away.
+describe('Akamai Cloud Load Balancer service targets', () => {
+  // TODO Remove this `beforeEach()` hook and related `cy.wait()` calls when `aclb` feature flag goes away.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
   });
@@ -200,7 +200,7 @@ describe('Akamai Global Load Balancer service targets', () => {
           .should('be.visible')
           .click();
 
-        cy.findByLabelText('Health Check Host')
+        cy.findByLabelText('Health Check Host Header')
           .scrollIntoView()
           .should('be.visible')
           .type('example.com');
@@ -378,7 +378,7 @@ describe('Akamai Global Load Balancer service targets', () => {
           mockServiceTarget.healthcheck.path
         );
 
-        cy.findByLabelText('Health Check Host', { exact: false }).should(
+        cy.findByLabelText('Health Check Host Header', { exact: false }).should(
           'have.value',
           mockServiceTarget.healthcheck.host
         );

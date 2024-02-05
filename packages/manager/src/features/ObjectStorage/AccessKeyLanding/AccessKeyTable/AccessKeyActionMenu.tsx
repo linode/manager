@@ -9,7 +9,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from './types';
+import { OpenAccessDrawer } from '../types';
 
 interface Props {
   label: string;
@@ -18,9 +18,12 @@ interface Props {
   openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
-export const AccessKeyMenu = (props: Props) => {
-  const { objectStorageKey, openDrawer, openRevokeDialog } = props;
-
+export const AccessKeyActionMenu = ({
+  label,
+  objectStorageKey,
+  openDrawer,
+  openRevokeDialog,
+}: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
@@ -56,7 +59,7 @@ export const AccessKeyMenu = (props: Props) => {
       {isObjMultiClusterEnabled ? (
         <ActionMenu
           actionsList={actions}
-          ariaLabel={`Action menu for Object Storage Key ${props.label}`}
+          ariaLabel={`Action menu for Object Storage Key ${label}`}
         />
       ) : (
         <>
@@ -72,7 +75,7 @@ export const AccessKeyMenu = (props: Props) => {
           <Hidden mdUp>
             <ActionMenu
               actionsList={actions}
-              ariaLabel={`Action menu for Object Storage Key ${props.label}`}
+              ariaLabel={`Action menu for Object Storage Key ${label}`}
             />
           </Hidden>
         </>

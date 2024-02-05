@@ -7,12 +7,13 @@ import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
@@ -29,6 +30,12 @@ export const SummaryPanel = () => {
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
+
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'nodebalancer',
+    id: nodebalancer?.id,
+  });
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
@@ -127,6 +134,7 @@ export const SummaryPanel = () => {
           Tags
         </StyledTitle>
         <TagsPanel
+          disabled={isNodeBalancerReadOnly}
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
         />

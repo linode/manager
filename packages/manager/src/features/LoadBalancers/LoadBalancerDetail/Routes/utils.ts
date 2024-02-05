@@ -6,6 +6,7 @@ import type {
   MatchField,
   Route,
   Rule,
+  RuleCreatePayload,
   RulePayload,
 } from '@linode/api-v4';
 
@@ -14,7 +15,8 @@ type CustomerFacingMatchFieldOption = Exclude<MatchField, 'always_match'>;
 export const matchFieldMap: Record<CustomerFacingMatchFieldOption, string> = {
   header: 'HTTP Header',
   method: 'HTTP Method',
-  path_prefix: 'Path',
+  path_prefix: 'Path Prefix',
+  path_regex: 'Path Regex',
   query: 'Query String',
 };
 
@@ -22,9 +24,10 @@ export const matchValuePlaceholder: Record<
   CustomerFacingMatchFieldOption,
   string
 > = {
-  header: 'x-my-header=this',
+  header: 'x-my-header:this',
   method: 'POST',
   path_prefix: '/my-path',
+  path_regex: '/path/.*[.](jpg)',
   query: '?my-query-param=this',
 };
 
@@ -59,7 +62,9 @@ export const initialValues = {
   service_targets: [defaultServiceTarget],
 };
 
-export const getIsSessionStickinessEnabled = (rule: Rule | RulePayload) => {
+export const getIsSessionStickinessEnabled = (
+  rule: Rule | RulePayload | RuleCreatePayload
+) => {
   return (
     rule.match_condition.session_stickiness_cookie !== null ||
     rule.match_condition.session_stickiness_ttl !== null

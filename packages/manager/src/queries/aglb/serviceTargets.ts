@@ -30,7 +30,7 @@ export const useLoadBalancerServiceTargetsQuery = (
   filter: Filter
 ) => {
   return useQuery<ResourcePage<ServiceTarget>, APIError[]>(
-    [QUERY_KEY, 'aglb', loadbalancerId, 'service-targets', params, filter],
+    [QUERY_KEY, 'aclb', loadbalancerId, 'service-targets', params, filter],
     () => getLoadbalancerServiceTargets(loadbalancerId, params, filter),
     { keepPreviousData: true }
   );
@@ -43,7 +43,7 @@ export const useLoadBalancerServiceTargetsEndpointHealthQuery = (
     queryFn: () => getServiceTargetsEndpointHealth(loadbalancerId),
     queryKey: [
       QUERY_KEY,
-      'aglb',
+      'aclb',
       loadbalancerId,
       'service-targets',
       'endpoint-health',
@@ -60,7 +60,7 @@ export const useServiceTargetCreateMutation = (loadbalancerId: number) => {
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'aglb',
+          'aclb',
           loadbalancerId,
           'service-targets',
         ]);
@@ -81,7 +81,7 @@ export const useServiceTargetUpdateMutation = (
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'aglb',
+          'aclb',
           loadbalancerId,
           'service-targets',
         ]);
@@ -101,7 +101,7 @@ export const useLoadBalancerServiceTargetDeleteMutation = (
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'aglb',
+          'aclb',
           loadbalancerId,
           'service-targets',
         ]);
@@ -115,7 +115,7 @@ export const useLoadBalancerServiceTargetsInfiniteQuery = (
   filter: Filter = {}
 ) => {
   return useInfiniteQuery<ResourcePage<ServiceTarget>, APIError[]>(
-    [QUERY_KEY, 'aglb', id, 'service-targets', 'infinite', filter],
+    [QUERY_KEY, 'aclb', id, 'service-targets', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerServiceTargets(
         id,

@@ -20,7 +20,7 @@ import {
 /**
  * getLoadbalancerServiceTargets
  *
- * Returns a paginated list of Akamai Global Load Balancer service targets
+ * Returns a paginated list of Akamai Cloud Load Balancer service targets
  */
 export const getLoadbalancerServiceTargets = (
   loadbalancerId: number,
@@ -41,7 +41,7 @@ export const getLoadbalancerServiceTargets = (
 /**
  * getServiceTarget
  *
- * Returns an Akamai Global Load Balancer service target
+ * Returns an Akamai Cloud Load Balancer service target
  */
 export const getServiceTarget = (
   loadbalancerId: number,
@@ -59,7 +59,7 @@ export const getServiceTarget = (
 /**
  * getServiceTargetsEndpointHealth
  *
- * Returns endpoint health data for each service targets on an Akamai Global Load Balancer
+ * Returns endpoint health data for each service targets on an Akamai Cloud Load Balancer
  */
 export const getServiceTargetsEndpointHealth = (loadbalancerId: number) =>
   Request<ServiceTargetsEndpointHealth>(
@@ -74,7 +74,7 @@ export const getServiceTargetsEndpointHealth = (loadbalancerId: number) =>
 /**
  * createLoadbalancerServiceTarget
  *
- * Creates an Akamai Global Load Balancer service target
+ * Creates an Akamai Cloud Load Balancer service target
  */
 export const createLoadbalancerServiceTarget = (
   loadbalancerId: number,
@@ -93,7 +93,7 @@ export const createLoadbalancerServiceTarget = (
 /**
  * updateLoadbalancerServiceTarget
  *
- * Updates an Akamai Global Load Balancer service target
+ * Updates an Akamai Cloud Load Balancer service target
  */
 export const updateLoadbalancerServiceTarget = (
   loadbalancerId: number,
@@ -113,7 +113,7 @@ export const updateLoadbalancerServiceTarget = (
 /**
  * deleteLoadbalancerServiceTarget
  *
- * Deletes an Akamai Global Load Balancer service target
+ * Deletes an Akamai Cloud Load Balancer service target
  */
 export const deleteLoadbalancerServiceTarget = (
   loadbalancerId: number,

@@ -1,3 +1,4 @@
+import { AFFINITY_TYPES } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -17,7 +18,7 @@ import {
 } from 'src/queries/placementGroups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { getAffinityLabel, getPlacementGroupLinodeCount } from '../utils';
+import { getPlacementGroupLinodeCount } from '../utils';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
@@ -36,6 +37,10 @@ export const PlacementGroupsDetail = () => {
   } = useMutatePlacementGroup(placementGroupId);
   const errorText = getErrorStringOrDefault(updatePlacementGroupError ?? '');
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
   if (!placementGroup) {
     return <NotFound />;
   }
@@ -44,10 +49,6 @@ export const PlacementGroupsDetail = () => {
     return (
       <ErrorState errorText="There was a problem retrieving your Placement Group. Please try again." />
     );
-  }
-
-  if (isLoading) {
-    return <CircleProgress />;
   }
 
   const linodeCount = getPlacementGroupLinodeCount(placementGroup);
@@ -62,11 +63,10 @@ export const PlacementGroupsDetail = () => {
     },
   ];
   const { affinity_type, label } = placementGroup;
-  const affinityLabel = getAffinityLabel(affinity_type);
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const resetEditableLabel = () => {
-    return `${label} (${affinityLabel})`;
+    return `${label} (${AFFINITY_TYPES[affinity_type]})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {
@@ -90,7 +90,7 @@ export const PlacementGroupsDetail = () => {
           ],
           onEditHandlers: {
             editableTextTitle: label,
-            editableTextTitleSuffix: ` (${affinityLabel})`,
+            editableTextTitleSuffix: ` (${AFFINITY_TYPES[affinity_type]})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,

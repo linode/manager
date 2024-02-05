@@ -40,6 +40,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+import { grantTypeMap } from 'src/features/Account/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -54,10 +55,7 @@ import {
   StyledSubHeaderGrid,
   StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
-import {
-  UserPermissionsEntitySection,
-  entityNameMap,
-} from './UserPermissionsEntitySection';
+import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
 interface Props {
   accountUsername?: string;
   clearNewUser: () => void;
@@ -86,7 +84,6 @@ interface State {
   showTabs?: boolean;
   tabs?: string[];
   userType: null | string;
-  vpcEnabled: boolean;
 }
 
 type CombinedProps = Props &
@@ -98,12 +95,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.getUserGrants();
     this.getUserType();
-
-    if (this.props.flags.vpc) {
-      this.setState({ vpcEnabled: true });
-      this.entityPerms.push('vpc');
-      this.globalBooleanPerms.push('add_vpcs');
-    }
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -174,6 +165,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'domain',
     'longview',
     'database',
+    'vpc',
   ];
 
   entitySetAllTo = (entity: GrantType, value: GrantLevel) => () => {
@@ -269,17 +261,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   globalBooleanPerms = [
-    'add_linodes',
-    'add_nodebalancers',
-    'add_longview',
-    'longview_subscription',
-    'add_domains',
-    'add_stackscripts',
-    'add_images',
-    'add_volumes',
-    'add_firewalls',
     'add_databases',
+    'add_domains',
+    'add_firewalls',
+    'add_images',
+    'add_linodes',
+    'add_longview',
+    'add_nodebalancers',
+    'add_stackscripts',
+    'add_volumes',
+    'add_vpcs',
     'cancel_account',
+    'longview_subscription',
   ];
 
   globalPermOnChange = (perm: string) => (
@@ -485,14 +478,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_nodebalancers: 'Can add NodeBalancers to this account ($)',
       add_stackscripts: 'Can create StackScripts under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
+      add_vpcs: 'Can add VPCs to this account',
       cancel_account: 'Can cancel the entire account',
       longview_subscription:
         'Can modify this account\u{2019}s Longview subscription ($)',
     };
-
-    if (this.state.vpcEnabled) {
-      permDescriptionMap['add_vpcs'] = 'Can add VPCs to this account';
-    }
 
     if (this.state.userType === 'parent') {
       permDescriptionMap['child_account_access'] =
@@ -631,7 +621,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <Tabs>
               <TabList>
                 {this.state.tabs?.map((entity) => (
-                  <Tab key={`${entity}-tab`}>{entityNameMap[entity]}</Tab>
+                  <Tab key={`${entity}-tab`}>{grantTypeMap[entity]}</Tab>
                 ))}
               </TabList>
               <TabPanels>
@@ -819,7 +809,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     loadingGrants: false,
     setAllPerm: 'null',
     userType: null,
-    vpcEnabled: false,
   };
 }
 
