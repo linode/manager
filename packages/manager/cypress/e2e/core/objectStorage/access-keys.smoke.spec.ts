@@ -169,6 +169,11 @@ describe('object storage access keys smoke tests', () => {
       mockGetFeatureFlagClientstream();
     });
 
+    /*
+     * - Confirms user can create access keys with unlimited access when OBJ Multicluster is enabled.
+     * - Confirms multiple regions can be selected when creating an access key.
+     * - Confirms that UI updates to reflect created access key.
+     */
     it('can create unlimited access keys with OBJ Multicluster', () => {
       const mockAccessKey = objectStorageKeyFactory.build({
         id: randomNumber(10000, 99999),
@@ -260,7 +265,12 @@ describe('object storage access keys smoke tests', () => {
         });
     });
 
-    it.only('can create limited access keys with OBJ Multicluster', () => {
+    /*
+     * - COnfirms user can create access keys with limited access when OBJ Multicluster is enabled.
+     * - Confirms that UI updates to reflect created access key.
+     * - Confirms that "Permissions" drawer contains expected scope and permission data.
+     */
+    it('can create limited access keys with OBJ Multicluster', () => {
       const mockRegion = regionFactory.build({
         id: `us-${randomString(5)}`,
         label: `mock-obj-region-${randomString(5)}`,
@@ -299,15 +309,15 @@ describe('object storage access keys smoke tests', () => {
       mockGetRegions([mockRegion]);
       mockGetBucketsForRegion(mockRegion.id, mockBuckets);
 
+      // Navigate to access keys page, click "Create Access Key" button.
       cy.visitWithLogin('/object-storage/access-keys');
-
       ui.button
         .findByTitle('Create Access Key')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
-      // mockGetAccessKeys([mockAccessKey]);
+      // Fill out form in "Create Access Key" drawer.
       ui.drawer
         .findByTitle('Create Access Key')
         .should('be.visible')
@@ -327,11 +337,13 @@ describe('object storage access keys smoke tests', () => {
             .should('be.visible')
             .click();
 
+          // Dismiss region drop-down.
           cy.contains('Regions (required)')
             .should('be.visible')
             .click()
             .type('{esc}');
 
+          // Enable "Limited Access" toggle for access key, and select access rules.
           cy.findByText('Limited Access').should('be.visible').click();
 
           mockBuckets.forEach((mockBucket) => {
@@ -354,6 +366,7 @@ describe('object storage access keys smoke tests', () => {
             .click();
         });
 
+      // Dismiss secrets dialog.
       cy.wait('@createAccessKey');
       ui.buttonGroup
         .findButtonByTitle('I Have Saved My Secret Key')
@@ -361,6 +374,7 @@ describe('object storage access keys smoke tests', () => {
         .should('be.enabled')
         .click();
 
+      // Open "Permissions" drawer for new access key.
       cy.findByText(mockAccessKey.label)
         .should('be.visible')
         .closest('tr')
