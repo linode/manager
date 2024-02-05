@@ -23,10 +23,10 @@ import {
 } from 'support/intercepts/load-balancers';
 import { ui } from 'support/ui';
 
-describe('Akamai Global Load Balancer configurations page', () => {
+describe('Akamai Cloud Load Balancer configurations page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
   });
@@ -90,7 +90,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Certificate').within(() => {
         cy.findByLabelText('Add Existing Certificate').click();
 
-        cy.findByLabelText('Host Header').should('be.visible').type('*');
+        cy.findByLabelText('Server Name Indication (SNI) Hostname')
+          .should('be.visible')
+          .type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
 
@@ -319,7 +321,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Certificate').within(() => {
         cy.findByLabelText('Add Existing Certificate').click();
 
-        cy.findByLabelText('Host Header').should('be.visible').type('*');
+        cy.findByLabelText('Server Name Indication (SNI) Hostname')
+          .should('be.visible')
+          .type('*');
 
         cy.findByLabelText('Certificate').should('be.visible').click();
 
@@ -424,7 +428,9 @@ describe('Akamai Global Load Balancer configurations page', () => {
       ui.drawer.findByTitle('Add Certificate').within(() => {
         cy.findByLabelText('Add Existing Certificate').click();
 
-        cy.findByLabelText('Host Header').type('example-1.com');
+        cy.findByLabelText('Server Name Indication (SNI) Hostname').type(
+          'example-1.com'
+        );
 
         cy.findByLabelText('Certificate').click();
 
@@ -446,7 +452,7 @@ describe('Akamai Global Load Balancer configurations page', () => {
       cy.wait('@updateConfiguration');
     });
 
-    it('can remove a route from an AGLB configuration', () => {
+    it('can remove a route from an ACLB configuration', () => {
       const routes = routeFactory.buildList(3);
       const configuration = configurationFactory.build({
         protocol: 'http',

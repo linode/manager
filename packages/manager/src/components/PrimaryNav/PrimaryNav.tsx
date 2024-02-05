@@ -43,11 +43,11 @@ type NavEntity =
   | 'Account'
   | 'Account'
   | 'Betas'
+  | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Global Load Balancers'
   | 'Help & Support'
   | 'Images'
   | 'Kubernetes'
@@ -191,8 +191,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Volume />,
         },
         {
-          betaChipClassName: 'beta-chip-aglb',
-          display: 'Global Load Balancers',
+          betaChipClassName: 'beta-chip-aclb',
+          display: 'Cloud Load Balancers',
           hide: !isACLBEnabled,
           href: '/loadbalancers',
           icon: <LoadBalancer />,

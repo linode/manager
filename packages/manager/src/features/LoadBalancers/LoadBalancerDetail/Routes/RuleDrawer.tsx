@@ -49,7 +49,7 @@ interface Props {
 }
 
 /**
- * Drawer used for *adding* and *editing* AGLB rules
+ * Drawer used for *adding* and *editing* ACLB rules
  */
 export const RuleDrawer = (props: Props) => {
   const {
@@ -224,13 +224,13 @@ export const RuleDrawer = (props: Props) => {
                       ? formik.errors.match_condition?.hostname
                       : undefined
                   }
-                  label="Hostname"
+                  label="Hostname Match"
                   labelTooltipText={ROUTE_COPY.Rule.Hostname}
                   name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   optional
-                  placeholder="www.example.com"
+                  placeholder="www.example.org"
                   value={formik.values.match_condition.hostname}
                 />
                 <Stack direction="row" spacing={2}>

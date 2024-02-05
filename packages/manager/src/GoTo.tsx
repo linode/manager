@@ -152,7 +152,7 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount]
+    [_hasAccountAccess, _isManagedAccount, isACLBEnabled]
   );
 
   const options: Item[] = React.useMemo(

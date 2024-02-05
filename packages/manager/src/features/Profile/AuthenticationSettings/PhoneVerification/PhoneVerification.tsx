@@ -7,10 +7,10 @@ import { useQueryClient } from 'react-query';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { InputAdornment } from 'src/components/InputAdornment';
 import {
   queryKey,
   updateProfileData,
@@ -38,7 +38,11 @@ import type {
 } from '@linode/api-v4/lib/profile/types';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 
-export const PhoneVerification = () => {
+export const PhoneVerification = ({
+  phoneNumberRef,
+}: {
+  phoneNumberRef: React.RefObject<HTMLInputElement>;
+}) => {
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -291,6 +295,7 @@ export const PhoneVerification = () => {
                   }}
                   hideLabel
                   id="phone_number"
+                  inputRef={phoneNumberRef}
                   label="Phone Number"
                   name="phone_number"
                   onBlur={() => setIsPhoneInputFocused(false)}
