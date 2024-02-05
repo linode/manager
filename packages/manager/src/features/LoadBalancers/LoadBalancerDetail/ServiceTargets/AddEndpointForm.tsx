@@ -58,11 +58,12 @@ export const AddEndpointForm = (props: Props) => {
         />
         <TextField
           errorText={formik.errors.host}
-          label="Host"
+          label="Host Header"
           labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Endpoints.Host}
           name="host"
           onChange={formik.handleChange}
           optional
+          placeholder="www.endpoint.org"
           value={formik.values.host}
         />
         <TextField

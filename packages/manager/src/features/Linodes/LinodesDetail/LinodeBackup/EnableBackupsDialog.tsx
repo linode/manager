@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Currency } from 'src/components/Currency';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
@@ -49,9 +49,11 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const handleEnableBackups = async () => {
     await enableBackups();
-    resetEventsPolling();
+    checkForNewEvents();
     enqueueSnackbar('Backups are being enabled for this Linode.', {
       variant: 'success',
     });

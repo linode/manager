@@ -93,7 +93,7 @@ export const RulesTable = (props: Props) => {
               width: xsDown ? '50%' : '15%',
             }}
           >
-            Execution
+            Execution Order
           </Box>
           <Box sx={{ ...sxItemSpacing, width: xsDown ? '45%' : '20%' }}>
             Match Value

@@ -4,6 +4,7 @@ import {
   getRegionOptionAvailability,
   getRegionOptions,
   getSelectedRegionById,
+  getSelectedRegionsByIds,
 } from './RegionSelect.utils';
 
 import type { RegionSelectOption } from './RegionSelect.types';
@@ -166,5 +167,66 @@ describe('getRegionOptionAvailability', () => {
     });
 
     expect(result).toBe(false);
+  });
+});
+
+describe('getSelectedRegionsByIds', () => {
+  it('should return an array of RegionSelectOptions for the given selectedRegionIds', () => {
+    const selectedRegionIds = ['us-1', 'ca-1'];
+
+    const result = getSelectedRegionsByIds({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions,
+      selectedRegionIds,
+    });
+
+    const expected = [
+      {
+        data: {
+          country: 'us',
+          region: 'North America',
+        },
+        label: 'US Location (us-1)',
+        unavailable: false,
+        value: 'us-1',
+      },
+      {
+        data: {
+          country: 'ca',
+          region: 'North America',
+        },
+        label: 'CA Location (ca-1)',
+        unavailable: false,
+        value: 'ca-1',
+      },
+    ];
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should exclude regions that are not found in the regions array', () => {
+    const selectedRegionIds = ['us-1', 'non-existent-region'];
+
+    const result = getSelectedRegionsByIds({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions,
+      selectedRegionIds,
+    });
+
+    const expected = [
+      {
+        data: {
+          country: 'us',
+          region: 'North America',
+        },
+        label: 'US Location (us-1)',
+        unavailable: false,
+        value: 'us-1',
+      },
+    ];
+
+    expect(result).toEqual(expected);
   });
 });

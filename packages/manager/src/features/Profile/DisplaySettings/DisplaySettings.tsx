@@ -30,6 +30,8 @@ export const DisplaySettings = () => {
   const location = useLocation<{ focusEmail: boolean }>();
   const emailRef = React.createRef<HTMLInputElement>();
 
+  const isProxyUser = profile?.user_type === 'proxy';
+
   React.useEffect(() => {
     if (location.state?.focusEmail && emailRef.current) {
       emailRef.current.focus();
@@ -62,6 +64,9 @@ export const DisplaySettings = () => {
       automatically linked.
     </>
   );
+
+  const restrictedProxyUserTooltip =
+    'This account type cannot update this field.';
 
   return (
     <Paper>
@@ -102,9 +107,11 @@ export const DisplaySettings = () => {
         tooltipText={
           profile?.restricted
             ? 'Restricted users cannot update their username. Please contact an account administrator.'
+            : isProxyUser
+            ? restrictedProxyUserTooltip
             : undefined
         }
-        disabled={profile?.restricted}
+        disabled={profile?.restricted || isProxyUser}
         initialValue={profile?.username}
         key={usernameResetToken}
         label="Username"
@@ -125,11 +132,13 @@ export const DisplaySettings = () => {
             refetch();
           }
         }}
+        disabled={isProxyUser}
         initialValue={profile?.email}
         inputRef={emailRef}
         key={emailResetToken}
         label="Email"
         submitForm={updateEmail}
+        tooltipText={isProxyUser ? restrictedProxyUserTooltip : undefined}
         trimmed
         type="email"
       />

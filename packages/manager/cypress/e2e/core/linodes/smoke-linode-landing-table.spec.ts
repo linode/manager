@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Linode } from '@linode/api-v4/types';
+import { Linode } from '@linode/api-v4';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
@@ -41,36 +41,8 @@ const sortByLabel = (a: Linode, b: Linode) => {
   return a.label.localeCompare(b.label);
 };
 
-const linodeLabel = (number) => {
-  return mockLinodes[number - 1].label;
-};
-
-const deleteLinodeFromActionMenu = (linodeLabel) => {
-  ui.actionMenu
-    .findByTitle(`Action menu for Linode ${linodeLabel}`)
-    .should('be.visible')
-    .click();
-
-  ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
-  ui.dialog
-    .findByTitle(`Delete ${linodeLabel}?`)
-    .should('be.visible')
-    .within(() => {
-      cy.findByLabelText('Linode Label')
-        .should('be.visible')
-        .click()
-        .type(linodeLabel);
-
-      ui.buttonGroup
-        .findButtonByTitle('Delete')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-    });
-
-  cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
-  cy.findByText(linodeLabel).should('not.exist');
+const linodeLabel = (index: number) => {
+  return mockLinodes[index - 1].label;
 };
 
 const preferenceOverrides = {
@@ -319,7 +291,7 @@ describe('linode landing checks', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@getLinodes');
 
-    // Check 'Group by Tag' button works as expected that can be visiable, enabled and clickable
+    // Check 'Group by Tag' button works as expected that can be visible, enabled and clickable
     getVisible('[aria-label="Toggle group by tag"]')
       .should('be.enabled')
       .click();
@@ -365,9 +337,7 @@ describe('linode landing checks', () => {
   });
 
   it('checks summary view for linode table', () => {
-    const mockPreferencesListView = userPreferencesFactory.build({
-      linodes_view_style: 'list',
-    });
+    const mockPreferencesListView = userPreferencesFactory.build();
 
     const mockPreferencesSummaryView = {
       ...mockPreferencesListView,

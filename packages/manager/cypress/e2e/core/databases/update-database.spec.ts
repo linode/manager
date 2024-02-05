@@ -8,7 +8,7 @@ import {
   randomIp,
   randomString,
 } from 'support/util/random';
-import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
+import { databaseFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
 import { mockGetAccount } from 'support/intercepts/account';
 import {

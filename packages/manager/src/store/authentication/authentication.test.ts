@@ -1,4 +1,3 @@
-import { queryClientFactory as queryClientFactory } from 'src/queries/base';
 import { authentication } from 'src/utilities/storage';
 
 import { storeFactory } from '..';
@@ -8,7 +7,7 @@ import {
   handleStartSession,
 } from './authentication.actions';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 describe('Authentication', () => {
   authentication.expire.set('hello world');

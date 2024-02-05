@@ -10,7 +10,7 @@ import {
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageObject,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 import axios from 'axios';
 import { authenticate } from 'support/api/authentication';
 import { isTestLabel } from 'support/api/common';

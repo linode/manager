@@ -24,6 +24,24 @@ export const Default: Story = {
   },
 };
 
+export const WithSuffix: Story = {
+  args: {
+    onCancel: action('onCancel'),
+    text: 'I have a suffix',
+  },
+  render: (args) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, setLocalArgs] = useArgs();
+    const onEdit = (updatedText: string) => {
+      return Promise.resolve(setLocalArgs({ text: updatedText }));
+    };
+
+    return (
+      <EditableText {...args} onEdit={onEdit} textSuffix=" (I am the suffix)" />
+    );
+  },
+};
+
 const meta: Meta<typeof EditableText> = {
   component: EditableText,
   title: 'Components/Editable Text',

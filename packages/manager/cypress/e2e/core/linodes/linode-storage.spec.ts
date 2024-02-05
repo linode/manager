@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Linode } from '@linode/api-v4/types';
+import { Linode } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
 import { createLinode } from 'support/api/linodes';
 import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';

@@ -1,19 +1,27 @@
 import { useFormikContext } from 'formik';
-import * as React from 'react';
 import { useState } from 'react';
+import * as React from 'react';
 
 import { AddRouteDrawer } from './AddRouteDrawer';
 import { EditRouteDrawer } from './EditRouteDrawer';
 import { LoadBalancerConfiguration } from './LoadBalancerConfiguration';
+import { RuleDrawer } from './RuleDrawer';
 import { ServiceTargetDrawer } from './ServiceTargetDrawer';
 
 import type { CreateLoadbalancerPayload } from '@linode/api-v4';
 
 export interface Handlers {
   handleAddRoute: (configurationIndex: number) => void;
+  handleAddRule: (configurationIndex: number, routeIndex: number) => void;
   handleAddServiceTarget: (configurationIndex: number) => void;
+  handleCloseRuleDrawer: () => void;
   handleCloseServiceTargetDrawer: () => void;
   handleEditRoute: (index: number, configurationIndex: number) => void;
+  handleEditRule: (
+    configurationIndex: number,
+    routeIndex: number,
+    ruleIndex: number
+  ) => void;
   handleEditServiceTarget: (index: number, configurationIndex: number) => void;
 }
 
@@ -25,12 +33,14 @@ export const LoadBalancerConfigurations = () => {
   );
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isEditRouteDrawerOpen, setIsEditRouteDrawerOpen] = useState(false);
+  const [isRuleDrawerOpen, setIsRuleDrawerOpen] = useState(false);
 
   const [
     selectedServiceTargetIndex,
     setSelectedServiceTargetIndex,
   ] = useState<number>();
   const [selectedRouteIndex, setSelectedRouteIndex] = useState<number>();
+  const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>();
   const [
     selectedConfigurationIndex,
     setSelectedConfigurationIndex,
@@ -66,11 +76,36 @@ export const LoadBalancerConfigurations = () => {
     setIsServiceTargetDrawerOpen(false);
   };
 
+  const handleEditRule = (
+    configurationIndex: number,
+    routeIndex: number,
+    ruleIndex: number
+  ) => {
+    setSelectedConfigurationIndex(configurationIndex);
+    setSelectedRouteIndex(routeIndex);
+    setSelectedRuleIndex(ruleIndex);
+    setIsRuleDrawerOpen(true);
+  };
+
+  const handleAddRule = (configurationIndex: number, routeIndex: number) => {
+    setSelectedConfigurationIndex(configurationIndex);
+    setSelectedRouteIndex(routeIndex);
+    setIsRuleDrawerOpen(true);
+  };
+
+  const handleCloseRuleDrawer = () => {
+    setSelectedRuleIndex(undefined);
+    setIsRuleDrawerOpen(false);
+  };
+
   const handlers: Handlers = {
     handleAddRoute,
+    handleAddRule,
     handleAddServiceTarget,
+    handleCloseRuleDrawer,
     handleCloseServiceTargetDrawer,
     handleEditRoute,
+    handleEditRule,
     handleEditServiceTarget,
   };
 
@@ -105,6 +140,13 @@ export const LoadBalancerConfigurations = () => {
         onClose={() => setIsEditRouteDrawerOpen(false)}
         open={isEditRouteDrawerOpen}
         routeIndex={selectedRouteIndex}
+      />
+      <RuleDrawer
+        configurationIndex={selectedConfigurationIndex}
+        onClose={handleCloseRuleDrawer}
+        open={isRuleDrawerOpen}
+        routeIndex={selectedRouteIndex}
+        ruleIndexToEdit={selectedRuleIndex}
       />
     </>
   );

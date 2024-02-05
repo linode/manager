@@ -48,6 +48,7 @@
     "docs": "bunx vitepress@1.0.0-rc.35 dev docs"
   },
   "resolutions": {
+    "@babel/traverse": "^7.23.3",
     "minimist": "^1.2.3",
     "yargs-parser": "^18.1.3",
     "kind-of": "^6.0.3",

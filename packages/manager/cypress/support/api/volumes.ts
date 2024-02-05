@@ -1,7 +1,6 @@
 import { Volume, deleteVolume, detachVolume, getVolumes } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
-import { timeout } from 'support/util/backoff';
 import { isTestLabel } from './common';
 import { attemptWithBackoff, SimpleBackoffMethod } from 'support/util/backoff';
 

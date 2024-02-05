@@ -4,8 +4,12 @@ import * as React from 'react';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
+import { BucketPermissionsTable } from './BucketPermissionsTable';
 import { MODE } from './types';
 
 interface Props {
@@ -13,11 +17,21 @@ interface Props {
   checked: boolean;
   handleToggle: () => void;
   mode: MODE;
+  selectedRegions?: string[];
   updateScopes: (newScopes: Scope[]) => void;
 }
 
 export const LimitedAccessControls = React.memo((props: Props) => {
   const { checked, handleToggle, ...rest } = props;
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   return (
     <>
@@ -37,7 +51,11 @@ export const LimitedAccessControls = React.memo((props: Props) => {
         also create new buckets, but will not have access to the buckets they
         create.
       </Typography>
-      <AccessTable checked={checked} {...rest} />
+      {isObjMultiClusterEnabled ? (
+        <BucketPermissionsTable checked={checked} {...rest} />
+      ) : (
+        <AccessTable checked={checked} {...rest} />
+      )}
     </>
   );
 });

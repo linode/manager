@@ -43,8 +43,8 @@ export const deleteAllTestLkeClusters = async (): Promise<void> => {
   );
 
   const clusterDeletionPromises = clusters
-    .filter((cluster) => isTestLabel(cluster.label))
-    .map(async (cluster) => {
+    .filter((cluster: KubernetesCluster) => isTestLabel(cluster.label))
+    .map(async (cluster: KubernetesCluster) => {
       const clusterCreateTime = DateTime.fromISO(cluster.created, {
         zone: 'utc',
       });
@@ -67,6 +67,7 @@ export const deleteAllTestLkeClusters = async (): Promise<void> => {
       if (pools.every(isPoolReady)) {
         return deleteKubernetesCluster(cluster.id);
       }
+      return;
     });
 
   await Promise.all(clusterDeletionPromises);

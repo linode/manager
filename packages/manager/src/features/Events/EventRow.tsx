@@ -14,18 +14,14 @@ import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
 import { StyledGravatar } from './EventRow.styles';
 
-interface ExtendedEvent extends Event {
-  _deleted?: string;
-}
-
 interface EventRowProps {
   entityId?: number;
-  event: ExtendedEvent;
+  event: Event;
 }
 
 export const EventRow = (props: EventRowProps) => {
   const { entityId, event } = props;
-  const link = getLinkForEvent(event.action, event.entity, event._deleted);
+  const link = getLinkForEvent(event.action, event.entity);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const timestamp = getEventTimestamp(event);
 

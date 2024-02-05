@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer routes page.
+ * @file Integration tests for Akamai Cloud Load Balancer routes page.
  */
 
 import {
@@ -21,14 +21,14 @@ import {
   mockUpdateRouteError,
 } from 'support/intercepts/load-balancers';
 
-describe('Akamai Global Load Balancer routes page', () => {
+describe('Akamai Cloud Load Balancer routes page', () => {
   describe('create route', () => {
     it('can create a route', () => {
       const loadbalancer = loadbalancerFactory.build();
       const routes = routeFactory.buildList(1, { protocol: 'http' });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -73,7 +73,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const routes = routeFactory.buildList(1, { protocol: 'http' });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -118,7 +118,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -172,7 +172,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -284,7 +284,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -367,7 +367,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -442,7 +442,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -510,7 +510,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const serviceTargets = serviceTargetFactory.buildList(3);
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -527,7 +527,7 @@ describe('Akamai Global Load Balancer routes page', () => {
         '@getRoutes',
       ]);
 
-      cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+      cy.findByLabelText(`expand route-${routes[0].id} row`).click();
 
       ui.actionMenu.findByTitle('Action Menu for Rule 0').click();
 
@@ -539,7 +539,7 @@ describe('Akamai Global Load Balancer routes page', () => {
         .findByTitle('Edit Rule')
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Hostname (optional)')
+          cy.findByLabelText('Hostname Match (optional)')
             .should('have.value', routes[0].rules[0].match_condition.hostname)
             .clear()
             .type('example.com');
@@ -585,7 +585,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       const routes = routeFactory.buildList(1, { protocol: 'http' });
 
       mockAppendFeatureFlags({
-        aglb: makeFeatureFlagData(true),
+        aclb: makeFeatureFlagData(true),
       }).as('getFeatureFlags');
       mockGetFeatureFlagClientstream().as('getClientStream');
       mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
@@ -600,7 +600,7 @@ describe('Akamai Global Load Balancer routes page', () => {
       ]);
 
       // Expand the route table
-      cy.findByLabelText(`route-${routes[0].id} expand row`).click();
+      cy.findByLabelText(`expand route-${routes[0].id} row`).click();
 
       // Verify all rules are shown
       for (const rule of routes[0].rules) {

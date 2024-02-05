@@ -8,7 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
 import {
@@ -30,6 +30,8 @@ export const CloneVolumeDrawer = (props: Props) => {
   const { onClose: _onClose, open, volume } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: grants } = useGrants();
 
@@ -56,7 +58,7 @@ export const CloneVolumeDrawer = (props: Props) => {
       try {
         await cloneVolume({ label: values.label, volumeId: volume?.id ?? -1 });
         onClose();
-        resetEventsPolling();
+        checkForNewEvents();
       } catch (error) {
         handleFieldErrors(setErrors, error);
         handleGeneralErrors(

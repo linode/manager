@@ -1,4 +1,4 @@
-import type { Linode } from '@linode/api-v4/types';
+import type { Linode } from '@linode/api-v4';
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
