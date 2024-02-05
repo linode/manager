@@ -5,7 +5,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { CloudViewTabs } from './CloudViewTabs';
 
-const CloudViewLanding = () => {
+export const CloudViewLanding = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
@@ -14,5 +14,3 @@ const CloudViewLanding = () => {
     </React.Suspense>
   );
 };
-
-export default CloudViewLanding;

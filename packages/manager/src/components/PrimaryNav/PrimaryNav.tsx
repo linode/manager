@@ -45,7 +45,7 @@ type NavEntity =
   | 'Account'
   | 'Betas'
   | 'Cloud Load Balancers'
-  | 'Akamai CloudView'
+  | 'CloudView'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
@@ -270,7 +270,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Longview />,
         },
         {
-          display: 'Akamai CloudView',
+          display: 'CloudView',
           hide: !showCloudView,
           href: '/cloudview',
           icon: <CloudView />,

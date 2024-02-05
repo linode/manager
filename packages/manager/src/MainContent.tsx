@@ -177,8 +177,10 @@ const PlacementGroups = React.lazy(() =>
     default: module.PlacementGroups,
   }))
 );
-const CloudView = React.lazy(
-  () => import('src/features/CloudView/CloudViewLanding')
+const CloudView = React.lazy(() =>
+  import('src/features/CloudView/CloudViewLanding').then((module) => ({
+    default: module.CloudViewLanding,
+  }))
 );
 
 export const MainContent = () => {
