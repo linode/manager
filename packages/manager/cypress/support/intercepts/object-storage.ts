@@ -51,6 +51,14 @@ export const mockGetBuckets = (
   );
 };
 
+/**
+ * Intercepts GET request to fetch buckets for a region and mocks response.
+ *
+ * @param regionId - ID of region for which to mock buckets.
+ * @param buckets - Array of Bucket objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
 export const mockGetBucketsForRegion = (
   regionId: string,
   buckets: ObjectStorageBucket[]
