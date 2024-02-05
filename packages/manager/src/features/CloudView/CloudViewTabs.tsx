@@ -13,7 +13,7 @@ import { Namespaces } from './Namespaces/Namespaces';
 
 type Props = RouteComponentProps<{}>;
 
-export const CloudViewTabs = (props: Props) => {
+export const CloudViewTabs = React.memo((props: Props) => {
   const tabs = [
     {
       routeName: `${props.match.url}/namespaces`,
@@ -51,12 +51,10 @@ export const CloudViewTabs = (props: Props) => {
       </StyledTabs>
     </>
   );
-};
+});
 
 const StyledTabs = styled(Tabs, {
   label: 'StyledTabs',
 })(() => ({
   marginTop: 0,
 }));
-
-export default React.memo(CloudViewTabs);
