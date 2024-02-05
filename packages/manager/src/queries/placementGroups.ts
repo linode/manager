@@ -39,7 +39,6 @@ const getAllPlacementGroupsRequest = () =>
     getPlacementGroups(params, filters)
   )().then((data) => data.data);
 
-// Make `params` and `filter` optional or keep `useAllPlacementGroupsQuery`
 export const usePlacementGroupsQuery = (
   params: Params,
   filter: Filter,

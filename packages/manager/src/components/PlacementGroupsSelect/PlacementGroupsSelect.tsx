@@ -39,11 +39,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     selectedRegionId,
   } = props;
 
-  const [
-    selectedPlacementGroup,
-    setSelectedPlacementGroup,
-  ] = React.useState<PlacementGroup>();
-
   const {
     data: placementGroups,
     error,
@@ -58,24 +53,15 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     selectedRegionId && placementGroupsOptions?.length === 0
   );
 
-  React.useEffect(() => {
-    if (noPlacementGroupInRegion) {
-      setSelectedPlacementGroup(undefined);
-    }
-  }, [noPlacementGroupInRegion]);
-
-  const handlePlacementGroupChange = (selection: PlacementGroup) => {
-    setSelectedPlacementGroup(selection);
-  };
-
   let errorText;
-  if (
-    selectedPlacementGroup &&
-    getPlacementGroupLinodeCount(selectedPlacementGroup) >=
-      selectedPlacementGroup.capacity
-  ) {
-    errorText = `This Placement Group doesn't have any capacity`;
-  }
+  const handlePlacementGroupChange = (selection: PlacementGroup) => {
+    if (
+      selection &&
+      getPlacementGroupLinodeCount(selection) >= selection.capacity
+    ) {
+      errorText = `This Placement Group doesn't have any capacity`;
+    }
+  };
 
   return (
     <Autocomplete
