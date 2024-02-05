@@ -10,9 +10,9 @@ import {
 const props: PlacementGroupsSelectProps = {
   errorText: '',
   id: '',
-  label: 'Placement Groups in Atlanta, GA(us-southeast)',
+  label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
-  selectedRegionID: 'us-southeast',
+  selectedRegionId: 'us-southeast',
 };
 
 describe('PlacementGroupSelect', () => {

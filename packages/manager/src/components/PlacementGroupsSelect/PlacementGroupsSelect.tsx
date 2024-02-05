@@ -5,10 +5,11 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { getPlacementGroupLinodeCount } from 'src/features/PlacementGroups/utils';
-import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
+  disabled?: boolean;
   errorText?: string;
   id?: string;
   label: string;
@@ -20,13 +21,14 @@ export interface PlacementGroupsSelectProps {
     selected: boolean
   ) => JSX.Element;
   renderOptionLabel?: (placementGroups: PlacementGroup) => string;
-  selectedRegionID?: string;
+  selectedRegionId?: string;
   sx?: SxProps;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     clearable = true,
+    disabled,
     id,
     label,
     loading,
@@ -34,10 +36,8 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     onBlur,
     renderOption,
     renderOptionLabel,
-    selectedRegionID,
+    selectedRegionId,
   } = props;
-
-  const [inputValue, setInputValue] = React.useState('');
 
   const [
     selectedPlacementGroup,
@@ -48,21 +48,27 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     data: placementGroups,
     error,
     isLoading,
-  } = useAllPlacementGroupsQuery();
+  } = useUnpaginatedPlacementGroupsQuery(Boolean(selectedRegionId));
 
-  const placementGroupsOptions = placementGroups?.data.filter(
-    (placementGroup) => placementGroup.region === selectedRegionID
+  const placementGroupsOptions = placementGroups?.filter(
+    (placementGroup) => placementGroup.region === selectedRegionId
   );
+
+  const noPlacementGroupInRegion = Boolean(
+    selectedRegionId && placementGroupsOptions?.length === 0
+  );
+
+  React.useEffect(() => {
+    if (noPlacementGroupInRegion) {
+      setSelectedPlacementGroup(undefined);
+    }
+  }, [noPlacementGroupInRegion]);
 
   const handlePlacementGroupChange = (selection: PlacementGroup) => {
     setSelectedPlacementGroup(selection);
   };
 
   let errorText;
-  if (selectedRegionID && placementGroupsOptions?.length === 0) {
-    errorText = 'There are no Placement Groups in this region';
-  }
-
   if (
     selectedPlacementGroup &&
     getPlacementGroupLinodeCount(selectedPlacementGroup) >=
@@ -77,6 +83,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         renderOptionLabel
           ? renderOptionLabel(placementGroupsOptions)
           : `${placementGroupsOptions.label} (${placementGroupsOptions.affinity_type})`
+      }
+      helperText={
+        noPlacementGroupInRegion
+          ? 'There are no Placement Groups in this region'
+          : undefined
       }
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
@@ -98,16 +109,15 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       clearOnBlur={false}
       data-testid="placement-groups-select"
       disableClearable={!clearable}
+      disabled={disabled || noPlacementGroupInRegion}
       errorText={errorText}
       id={id}
-      inputValue={inputValue}
+      key={selectedRegionId}
       label={label}
       loading={isLoading || loading}
       onBlur={onBlur}
-      onInputChange={(_, newValue) => setInputValue(newValue)}
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
-      value={selectedPlacementGroup}
     />
   );
 };
