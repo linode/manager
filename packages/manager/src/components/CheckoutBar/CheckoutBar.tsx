@@ -60,7 +60,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       {children}
       {
         <StyledCheckoutSection data-qa-total-price>
-          {price >= 0 || price ? (
+          {(price >= 0 && !disabled) || price ? (
             <DisplayPrice interval="mo" price={price} />
           ) : (
             <Typography>{priceSelectionText}</Typography>
