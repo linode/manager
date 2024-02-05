@@ -14,7 +14,7 @@ interface LabelAndTagsProps {
   error?: string;
   labelFieldProps?: TextFieldProps;
   regions?: Region[];
-  selectedRegionID?: string;
+  selectedRegionId?: string;
   tagsInputProps?: TagsInputProps;
 }
 
@@ -26,11 +26,11 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
     error,
     labelFieldProps,
     regions,
-    selectedRegionID,
+    selectedRegionId,
     tagsInputProps,
   } = props;
 
-  const regionLabel = regions?.find((r) => r.id === selectedRegionID)?.label;
+  const regionLabel = regions?.find((r) => r.id === selectedRegionId)?.label;
 
   return (
     <Paper
@@ -53,7 +53,7 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
       {showPlacementGroups && (
         <>
-          {!selectedRegionID && (
+          {!selectedRegionId && (
             <Notice
               dataTestId="placement-groups-no-region-notice"
               spacingBottom={0}
@@ -67,11 +67,12 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
           )}
           <PlacementGroupsSelect
             label={
-              selectedRegionID && regionLabel
-                ? `Placement Groups in ${regionLabel}(${selectedRegionID})`
+              selectedRegionId && regionLabel
+                ? `Placement Groups in ${regionLabel} (${selectedRegionId})`
                 : 'Placement Group'
             }
-            selectedRegionID={selectedRegionID}
+            disabled={!selectedRegionId}
+            selectedRegionId={selectedRegionId}
           />
         </>
       )}
