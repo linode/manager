@@ -119,6 +119,48 @@ describe('PlanSelection (table, desktop)', () => {
       '1024 GB'
     );
   });
+
+  it('should not display an error message for $0 regions', () => {
+    const propsWithRegionZeroPrice = {
+      ...defaultProps,
+      type: planSelectionTypeFactory.build({
+        heading: 'Dedicated 20 GB',
+        region_prices: [
+          {
+            hourly: 0,
+            id: 'br-gru',
+            monthly: 0,
+          },
+        ],
+        subHeadings: [
+          '$10/mo ($0.015/hr)',
+          '1 CPU, 50 GB Storage, 2 GB RAM',
+          '2 TB Transfer',
+          '40 Gbps In / 2 Gbps Out',
+        ],
+      }),
+    };
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...propsWithRegionZeroPrice}
+          selectedRegionId={'br-gru'}
+        />
+      )
+    );
+
+    const monthlyTableCell = container.querySelector('[data-qa-monthly]');
+    const hourlyTableCell = container.querySelector('[data-qa-hourly]');
+    expect(monthlyTableCell).toHaveTextContent('$0');
+    // error tooltip button should not display
+    expect(
+      monthlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+    expect(hourlyTableCell).toHaveTextContent('$0');
+    expect(
+      hourlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe('PlanSelection (card, mobile)', () => {
