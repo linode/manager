@@ -137,9 +137,10 @@ describe('Parent/Child account switching', () => {
       cy.wait('@switchAccount');
 
       // Confirm that Cloud Manager updates local storage authentication values.
+      // Satisfy TypeScript using non-null assertions since we know what the mock data contains.
       assertAuthLocalStorage(
-        mockChildAccountToken.token,
-        mockChildAccountToken.expiry,
+        mockChildAccountToken.token!,
+        mockChildAccountToken.expiry!,
         mockChildAccountToken.scopes
       );
 
@@ -211,9 +212,10 @@ describe('Parent/Child account switching', () => {
       cy.wait('@switchAccount');
 
       // Confirm that Cloud Manager updates local storage authentication values.
+      // Satisfy TypeScript using non-null assertions since we know what the mock data contains.
       assertAuthLocalStorage(
-        mockChildAccountToken.token,
-        mockChildAccountToken.expiry,
+        mockChildAccountToken.token!,
+        mockChildAccountToken.expiry!,
         mockChildAccountToken.scopes
       );
 
