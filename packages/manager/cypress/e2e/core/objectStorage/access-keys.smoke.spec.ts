@@ -4,10 +4,15 @@
 
 import { objectStorageKeyFactory } from 'src/factories/objectStorage';
 import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import {
   mockCreateAccessKey,
   mockDeleteAccessKey,
   mockGetAccessKeys,
 } from 'support/intercepts/object-storage';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 
@@ -24,6 +29,11 @@ describe('object storage access keys smoke tests', () => {
       access_key: randomString(20),
       secret_key: randomString(39),
     });
+
+    mockAppendFeatureFlags({
+      objMultiCluster: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
 
     mockGetAccessKeys([]).as('getKeys');
     mockCreateAccessKey(mockAccessKey).as('createKey');
@@ -89,6 +99,11 @@ describe('object storage access keys smoke tests', () => {
       access_key: randomString(20),
       secret_key: randomString(39),
     });
+
+    mockAppendFeatureFlags({
+      objMultiCluster: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
 
     // Mock initial GET request to include an access key.
     mockGetAccessKeys([accessKey]).as('getKeys');

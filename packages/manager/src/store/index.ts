@@ -1,21 +1,9 @@
-import { QueryClient } from 'react-query';
-import {
-  Store,
-  applyMiddleware,
-  combineReducers,
-  compose,
-  createStore,
-} from 'redux';
-import thunk from 'redux-thunk';
+import { Store, applyMiddleware, combineReducers, createStore } from 'redux';
 
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
   defaultState as authenticationDefaultState,
 } from 'src/store/authentication/authentication.reducer';
-import events, {
-  State as EventsState,
-  defaultState as eventsDefaultState,
-} from 'src/store/events/event.reducer';
 import globalErrors, {
   State as GlobalErrorState,
   defaultState as defaultGlobalErrorState,
@@ -37,7 +25,6 @@ import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
 } from 'src/store/stackScriptDialog';
 
-import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import mockFeatureFlags, {
   MockFeatureFlagState,
   defaultMockFeatureFlagState,
@@ -46,13 +33,11 @@ import pendingUpload, {
   State as PendingUploadState,
   defaultState as pendingUploadState,
 } from './pendingUpload';
-
-const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+import thunk from 'redux-thunk';
 
 export interface ApplicationState {
   authentication: AuthState;
   createLinode: LinodeCreateState;
-  events: EventsState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -64,7 +49,6 @@ export interface ApplicationState {
 export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
   createLinode: linodeCreateDefaultState,
-  events: eventsDefaultState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
@@ -79,7 +63,6 @@ export const defaultState: ApplicationState = {
 const reducers = combineReducers<ApplicationState>({
   authentication,
   createLinode: linodeCreateReducer,
-  events,
   globalErrors,
   longviewClients: longview,
   longviewStats,
@@ -88,14 +71,7 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDialog,
 });
 
-const enhancersFactory = (queryClient: QueryClient) =>
-  compose(
-    applyMiddleware(thunk, combineEventsMiddleware([], queryClient)),
-    reduxDevTools ? reduxDevTools() : (f: any) => f
-  ) as any;
-
-// We need an instance of the query client for some event event handlers
-export const storeFactory = (queryClient: QueryClient) =>
-  createStore(reducers, defaultState, enhancersFactory(queryClient));
+export const storeFactory = () =>
+  createStore(reducers, defaultState, applyMiddleware(thunk));
 
 export type ApplicationStore = Store<ApplicationState>;

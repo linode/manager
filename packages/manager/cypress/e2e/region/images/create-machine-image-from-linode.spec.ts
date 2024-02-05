@@ -1,4 +1,4 @@
-import type { CreateLinodeRequest, Disk, Linode, Region } from '@linode/api-v4';
+import type { CreateLinodeRequest, Disk, Linode } from '@linode/api-v4';
 import { createLinode, getLinodeDisks } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';

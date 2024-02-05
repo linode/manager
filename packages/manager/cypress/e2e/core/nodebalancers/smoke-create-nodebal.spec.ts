@@ -18,11 +18,18 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
 
+import type { NodeBalancer } from '@linode/api-v4';
+
 const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
+import { nodeBalancerFactory } from 'src/factories';
+
+const createNodeBalancerWithUI = (
+  nodeBal: NodeBalancer,
+  isDcPricingTest = false
+) => {
   const regionName = getRegionById(nodeBal.region).label;
 
   cy.visitWithLogin('/nodebalancers/create');
@@ -63,12 +70,9 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   cy.findByLabelText('IP Address')
     .should('be.visible')
     .click()
-    .type(nodeBal.linodePrivateIp);
+    .type(nodeBal.ipv4);
 
-  ui.autocompletePopper
-    .findByTitle(nodeBal.linodePrivateIp)
-    .should('be.visible')
-    .click();
+  ui.autocompletePopper.findByTitle(nodeBal.ipv4).should('be.visible').click();
 
   deployNodeBalancer();
 };
@@ -83,11 +87,11 @@ describe('create NodeBalancer', () => {
     // create a linode in NW where the NB will be created
     const region = chooseRegion();
     createLinode({ region: region.id }).then((linode) => {
-      const nodeBal = {
+      const nodeBal = nodeBalancerFactory.build({
         label: randomLabel(),
         region: region.id,
-        linodePrivateIp: linode.ipv4[1],
-      };
+        ipv4: linode.ipv4[1],
+      });
       // catch request
       cy.intercept('POST', apiMatcher('nodebalancers')).as(
         'createNodeBalancer'
@@ -110,12 +114,12 @@ describe('create NodeBalancer', () => {
       cy.intercept('POST', apiMatcher('nodebalancers')).as(
         'createNodeBalancer'
       );
-      createNodeBalancerWithUI({
-        // Label should have a special character to trigger API error.
+      const nodeBal = nodeBalancerFactory.build({
         label: `${randomLabel()}-^`,
-        linodePrivateIp: linode.ipv4[1],
+        ipv4: linode.ipv4[1],
         region: region.id,
       });
+      createNodeBalancerWithUI(nodeBal);
       fbtVisible(`Label can't contain special characters or spaces.`);
       getVisible('[id="nodebalancer-label"]')
         .click()
@@ -143,11 +147,11 @@ describe('create NodeBalancer', () => {
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     const initialRegion = getRegionById('us-west');
     createLinode({ region: initialRegion.id }).then((linode) => {
-      const nodeBal = {
+      const nodeBal = nodeBalancerFactory.build({
         label: randomLabel(),
         region: initialRegion.id,
-        linodePrivateIp: linode.ipv4[1],
-      };
+        ipv4: linode.ipv4[1],
+      });
 
       // catch request
       cy.intercept('POST', apiMatcher('nodebalancers')).as(

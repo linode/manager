@@ -1,13 +1,15 @@
 import { pages } from 'support/ui/constants';
 
-describe('smoke - deep link', () => {
-  // check if we run oinly one test
+import type { Page } from 'support/ui/constants';
 
-  pages.forEach((page: any) => {
-    if (!page.goWithUI) {
-      return;
-    }
+describe('smoke - deep link', () => {
+  pages.forEach((page: Page) => {
     describe(`Go to ${page.name}`, () => {
+      // check if we run only one test
+      if (!page.goWithUI) {
+        return;
+      }
+
       // Here we use login to /null here
       // so this is independant from what is coded in constants and which path are skipped
       beforeEach(() => {

@@ -1,5 +1,5 @@
 /**
- * @file Integration tests for Akamai Global Load Balancer navigation.
+ * @file Integration tests for Akamai Cloud Load Balancer navigation.
  */
 
 import {
@@ -9,36 +9,33 @@ import {
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 
-describe('Akamai Global Load Balancer navigation', () => {
+describe('Akamai Cloud Load Balancer navigation', () => {
   /*
-   * - Confirms that AGLB sidebar nav item is present when feature is enabled.
-   * - Confirms that clicking on AGLB nav item directs users to AGLB landing page.
+   * - Confirms that ACLB sidebar nav item is present when feature is enabled.
+   * - Confirms that clicking on ACLB nav item directs users to ACLB landing page.
    */
   it('can navigate to load balancer landing page', () => {
-    // TODO Delete feature flag mocks when AGLB feature flag goes away.
+    // TODO Delete feature flag mocks when ACLB feature flag goes away.
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(true),
+      aclb: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/linodes');
     cy.wait(['@getFeatureFlags', '@getClientStream']);
 
-    ui.nav
-      .findItemByTitle('Global Load Balancers')
-      .should('be.visible')
-      .click();
+    ui.nav.findItemByTitle('Cloud Load Balancers').should('be.visible').click();
 
     cy.url().should('endWith', '/loadbalancers');
   });
 
   /*
-   * - Confirms that AGLB sidebar nav item is not shown when feature is not enabled.
+   * - Confirms that ACLB sidebar nav item is not shown when feature is not enabled.
    */
   it('does not show load balancer navigation item when feature is disabled', () => {
-    // TODO Delete this test when AGLB feature flag goes away.
+    // TODO Delete this test when ACLB feature flag goes away.
     mockAppendFeatureFlags({
-      aglb: makeFeatureFlagData(false),
+      aclb: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
@@ -46,7 +43,7 @@ describe('Akamai Global Load Balancer navigation', () => {
     cy.wait(['@getFeatureFlags', '@getClientStream']);
 
     ui.nav.find().within(() => {
-      cy.findByText('Global Load Balancers').should('not.exist');
+      cy.findByText('Cloud Load Balancers').should('not.exist');
     });
   });
 });

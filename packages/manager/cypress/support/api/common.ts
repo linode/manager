@@ -4,7 +4,10 @@ import { entityPrefix, entityTag } from 'support/constants/cypress';
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 const apirootBeta = Cypress.env('REACT_APP_API_ROOT') + 'beta/';
 
-export const apiCheckErrors = (resp, failOnError = true) => {
+export const apiCheckErrors = (
+  resp: Cypress.Response<any>,
+  failOnError = true
+) => {
   let errs = undefined;
   if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
     errs = resp.body.ERRORARRAY;
@@ -97,7 +100,11 @@ export const deleteByLabel = (path: string, label: string) => {
 };
 
 // Images do not have tags
-export const isTestEntity = (entity) =>
+export const isTestEntity = (entity: {
+  label: string;
+  summary: string;
+  tags: string;
+}) =>
   entity.tags?.includes(entityTag) ||
   entity.label?.startsWith(entityPrefix) ||
   entity.summary?.includes(entityTag);
