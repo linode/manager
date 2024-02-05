@@ -68,64 +68,66 @@ vi.mock('highlight.js/lib/highlight', () => ({
 
 /**
  * Matcher override for toBeDisabled and toBeEnabled
+ *
+ * The reason for overriding those matchers is that we need to check for the aria-disabled attribute as well.
+ * When a button is disabled, it will not necessarily have the `disabled` attribute. but it will have an aria-disabled attribute set to true.
  */
-const ariaDisabled = 'aria-disabled';
+const ariaDisabledAttribute = 'aria-disabled';
+
+const isElementDisabled = (element: HTMLElement) => {
+  // We really only want to check for `aria-disabled` on buttons since this is a Cloud Manager customization
+  return element.tagName.toLowerCase() === 'button'
+    ? element.getAttribute(ariaDisabledAttribute) === 'true' ||
+        element.hasAttribute('disabled')
+    : element.hasAttribute('disabled');
+};
+
+interface HandleResult {
+  condition: boolean;
+  element: HTMLElement;
+  expectedState: 'disabled' | 'enabled';
+  thisInstance: any;
+}
+
+const handleResult = ({
+  condition,
+  element,
+  expectedState,
+  thisInstance,
+}: HandleResult) => {
+  const message = `${thisInstance?.utils?.printReceived(
+    element ?? ''
+  )}\n\n expected ${element?.tagName} to be ${expectedState}`;
+  return condition
+    ? {
+        message: () => '',
+        pass: true,
+      }
+    : {
+        message: () => message,
+        pass: false,
+      };
+};
+
 expect.extend({
-  toBeDisabled(element: HTMLElement) {
-    const isAriaDisabled = element.getAttribute(ariaDisabled) === 'true';
-    const disabledMessage = `expected ${element?.tagName} to be disabled`;
+  toBeDisabled(this: any, element: HTMLElement) {
+    const isDisabled = isElementDisabled(element);
 
-    if (element?.tagName.toLowerCase() === 'input') {
-      return isAriaDisabled
-        ? {
-            message: () => disabledMessage,
-            pass: true,
-          }
-        : {
-            message: () => disabledMessage,
-            pass: false,
-          };
-    } else {
-      const isDisabled = element.hasAttribute('disabled');
-      return isDisabled
-        ? {
-            message: () => disabledMessage,
-            pass: true,
-          }
-        : {
-            message: () => disabledMessage,
-            pass: false,
-          };
-    }
+    return handleResult({
+      condition: isDisabled,
+      element,
+      expectedState: 'disabled',
+      thisInstance: this,
+    });
   },
-  toBeEnabled(element) {
-    const isAriaEnabled = !(
-      element.getAttribute(ariaDisabled) &&
-      element.getAttribute(ariaDisabled) === 'true'
-    );
-    const enabledMessage = `expected ${element.tagName} to be enabled`;
+  toBeEnabled(this: any, element: HTMLElement) {
+    const isEnabled = !isElementDisabled(element);
 
-    if (element.tagName.toLowerCase() === 'button') {
-      return isAriaEnabled
-        ? {
-            message: () => enabledMessage,
-            pass: true,
-          }
-        : {
-            message: () => enabledMessage,
-            pass: false,
-          };
-    } else {
-      const isEnabled = !element.hasAttribute('disabled');
-      return isEnabled
-        ? {
-            message: () => enabledMessage,
-            pass: true,
-          }
-        : {
-            message: () => enabledMessage,
-            pass: false,
-          };
-    }
+    return handleResult({
+      condition: isEnabled,
+      element,
+      expectedState: 'enabled',
+      thisInstance: this,
+    });
   },
 });
