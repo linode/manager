@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed:
 
 - Table CollapsibleRow icon orientation ([#10119](https://github.com/linode/manager/pull/10119))
+- Hide error message for $0 regions ([#10141](https://github.com/linode/manager/pull/10141))
 
 ### Fixed:
 

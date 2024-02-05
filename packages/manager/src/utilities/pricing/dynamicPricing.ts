@@ -64,7 +64,7 @@ export const getDCSpecificPrice = ({
 export const renderMonthlyPriceToCorrectDecimalPlace = (
   monthlyPrice: null | number | undefined
 ) => {
-  if (!monthlyPrice) {
+  if (typeof monthlyPrice !== 'number') {
     return UNKNOWN_PRICE;
   }
   return Number.isInteger(monthlyPrice)
