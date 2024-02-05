@@ -329,12 +329,11 @@ describe('object storage access keys smoke tests', () => {
           cy.contains('Regions (required)')
             .should('be.visible')
             .click()
-            .type(mockRegion.label);
+            .type(`${mockRegion.label}{enter}`);
 
           ui.autocompletePopper
             .findByTitle(`${mockRegion.label} (${mockRegion.id})`)
-            .should('be.visible')
-            .click();
+            .should('be.visible');
 
           // Dismiss region drop-down.
           cy.contains('Regions (required)')
