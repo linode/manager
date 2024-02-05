@@ -906,6 +906,27 @@ export const oneClickApps: OCA[] = [
     website: 'https://joplinapp.org/',
   },
   {
+    alt_description: 'Data science notebook.',
+    alt_name: 'Data science and machine learning development enviornment.',
+    categories: ['Productivity'],
+    colors: {
+      end: '9e9e9e',
+      start: 'f37626',
+    },
+    description: 'JupyterLab is a cutting-edge web-based, interactive development enviornment, geared towards data science, machine learning and other scientific computing workflows.',
+    logo_url: 'jupyter.svg',
+    name: 'JupyterLab',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/jupyterlab/',
+        title: 'Deploy JupyterLab through the Linode Marketplace', 
+      },
+    ],
+    sumary: 'Data science development envirnoment.',
+    website: 'https://jupyter.org',
+  },
+  {
     alt_description:
       'Security research and testing platform with hundreds of tools for reverse engineering, penetration testing, and more.',
     alt_name: 'Security research',
@@ -1297,6 +1318,28 @@ export const oneClickApps: OCA[] = [
     ],
     summary: `World's most popular open source database.`,
     website: 'https://www.mysql.com/',
+  },
+  {
+    alt_description:
+      `Microservice centeric stream processing.`,
+    alt_name: 'Microservice messaging bus',
+    categories: ['Development'],
+    colors: {
+      end: '000000',
+      start: '0086FF',
+    },
+    description: 'NATS is an distributed PubSub technology that enables applications to securely communicate across any combination of cloud vendors, on-premise, edge, web and mobile, and devices.',
+    logo_url: 'nats.svg',
+    name: 'NATS Single Node',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/nats-single-node/',
+        title: 'Deploy NATS single node through the Linode Marketplace',
+      },
+    ],
+    summary: 'Cloud native application messaging service.',
+    website: 'https://nats.io',
   },
   {
     alt_description:
