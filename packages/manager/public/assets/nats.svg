@@ -3,8 +3,21 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 243.7 243.7" style="enable-background:new 0 0 243.7 243.7;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#939598;}
+	.st0{fill:#34A574;}
+	.st1{fill:#27AAE1;}
+	.st2{fill:#8DC63F;}
+	.st3{fill:#375C93;}
+	.st4{fill:#FFFFFF;}
 </style>
-<path class="st0" d="M122.6,0H5.5v90.5v4.4v95H106l56.7,52.5v-52.5h77V98.5V95V0H122.6z M199.1,95v3.5v47.3h-42.4l-34.1-31.9
-	l-20.4-19h0L71.1,65.8v25.9v3.2v50.9H43V94.9v-4.4V44.2h43.9l35.7,33.3l16.1,15l0,0l32.4,30.2V94.9v-3.6V44.2h28V95z"/>
+<g>
+	<rect x="122.6" class="st0" width="117.1" height="94.9"/>
+	<rect x="5.5" class="st1" width="117.1" height="94.9"/>
+	<rect x="122.6" y="95" class="st2" width="117.1" height="94.9"/>
+	<rect x="5.5" y="95" class="st3" width="117.1" height="94.9"/>
+	<polygon class="st2" points="105.4,189.4 162.7,242.4 162.7,189.4 	"/>
+	<polygon class="st3" points="122.6,189.4 123.2,206.1 104.9,188.9 	"/>
+</g>
+<g>
+	<path class="st4" d="M171.1,122.7V44.2h28v101.6h-42.4l-85.6-80v80H43V44.2h43.9L171.1,122.7z"/>
+</g>
 </svg>
