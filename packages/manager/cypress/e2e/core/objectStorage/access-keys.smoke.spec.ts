@@ -389,7 +389,14 @@ describe('object storage access keys smoke tests', () => {
       ui.drawer
         .findByTitle(`Permissions for ${mockAccessKey.label}`)
         .should('be.visible')
-        .within(() => {});
+        .within(() => {
+          mockBuckets.forEach((mockBucket) => {
+            // TODO M3-7733 Update this selector when ARIA label is fixed.
+            cy.findByLabelText(
+              `This token has read-only access for -${mockBucket.label}`
+            );
+          });
+        });
     });
 
     it('can update access keys with OBJ Multicluster', () => {});
