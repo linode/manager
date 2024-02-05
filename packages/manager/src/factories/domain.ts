@@ -1,4 +1,5 @@
 import {
+  CreateDomainPayload,
   Domain,
   DomainRecord,
   ZoneFile,
@@ -42,3 +43,13 @@ export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
 export const domainZoneFileFactory = Factory.Sync.makeFactory<ZoneFile>({
   zone_file: ['test line 1', 'test line 2'],
 });
+
+export const createDomainPayloadFactory = Factory.Sync.makeFactory<CreateDomainPayload>(
+  {
+    domain: Factory.each((id) => `domain-${id}`),
+    type: 'master',
+    master_ips: [],
+    soa_email: 'admin@example.com',
+    tags: [],
+  }
+);

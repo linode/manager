@@ -9,11 +9,9 @@ import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
-import { Typography } from 'src/components/Typography';
 import { getNextLabel } from 'src/utilities/stringUtils';
 
-import { SERVICE_TARGET_COPY } from '../LoadBalancerDetail/ServiceTargets/constants';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 import { ServiceTargetForm } from './ServiceTargetForm';
 
 interface Props {
@@ -38,7 +36,6 @@ export const ServiceTargetDrawer = (props: Props) => {
       open={open}
       title={isEditMode ? 'Edit Service Target' : 'Add a Service Target'}
     >
-      <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
       {!isEditMode && (
         <RadioGroup
           onChange={(_, value) => setMode(value as Mode)}

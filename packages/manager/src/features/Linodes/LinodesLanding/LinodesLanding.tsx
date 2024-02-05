@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -31,7 +30,6 @@ import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuil
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
-import { linodesInTransition as _linodesInTransition } from '../transitions';
 import { CardView } from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { DisplayGroupedLinodes } from './DisplayGroupedLinodes';
@@ -48,7 +46,6 @@ import { ExtendedStatus, statusToPriority } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
-import type { MapState } from 'src/store/types';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -84,15 +81,13 @@ type RouteProps = RouteComponentProps<Params>;
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
   linodesData: LinodeWithMaintenance[];
+  linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-type CombinedProps = LinodesLandingProps &
-  StateProps &
-  RouteProps &
-  WithProfileProps;
+type CombinedProps = LinodesLandingProps & RouteProps & WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
@@ -435,21 +430,8 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-interface StateProps {
-  linodesInTransition: Set<number>;
-}
-
-const mapStateToProps: MapState<StateProps, LinodesLandingProps> = (state) => {
-  return {
-    linodesInTransition: _linodesInTransition(state.events.events),
-  };
-};
-
-const connected = connect(mapStateToProps, undefined);
-
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
-  connected,
   withFeatureFlagConsumer,
   withProfile
 );

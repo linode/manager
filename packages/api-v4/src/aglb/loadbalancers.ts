@@ -19,7 +19,7 @@ import { CreateBasicLoadbalancerSchema } from '@linode/validation';
 /**
  * getLoadbalancers
  *
- * Returns a paginated list of Akamai Global Load Balancers
+ * Returns a paginated list of Akamai Cloud Load Balancers
  */
 export const getLoadbalancers = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<Loadbalancer>>(
@@ -32,7 +32,7 @@ export const getLoadbalancers = (params?: Params, filter?: Filter) =>
 /**
  * getLoadbalancer
  *
- * Returns an Akamai Global Load Balancer
+ * Returns an Akamai Cloud Load Balancer
  */
 export const getLoadbalancer = (id: number) =>
   Request<Loadbalancer>(
@@ -43,7 +43,7 @@ export const getLoadbalancer = (id: number) =>
 /**
  * getLoadbalancerEndpointHealth
  *
- * Returns the general endpoint health of an Akamai Global Load Balancer
+ * Returns the general endpoint health of an Akamai Cloud Load Balancer
  */
 export const getLoadbalancerEndpointHealth = (id: number) =>
   Request<LoadBalancerEndpointHealth>(
@@ -54,7 +54,7 @@ export const getLoadbalancerEndpointHealth = (id: number) =>
 /**
  * createLoadbalancer
  *
- * Creates an Akamai Global Load Balancer
+ * Creates an Akamai Cloud Load Balancer
  */
 export const createLoadbalancer = (data: CreateLoadbalancerPayload) =>
   Request<Loadbalancer>(
@@ -66,7 +66,7 @@ export const createLoadbalancer = (data: CreateLoadbalancerPayload) =>
 /**
  * createBasicLoadbalancer
  *
- * Creates an unconfigured Akamai Global Load Balancer
+ * Creates an unconfigured Akamai Cloud Load Balancer
  */
 export const createBasicLoadbalancer = (data: CreateBasicLoadbalancerPayload) =>
   Request<Loadbalancer>(
@@ -78,7 +78,7 @@ export const createBasicLoadbalancer = (data: CreateBasicLoadbalancerPayload) =>
 /**
  * updateLoadbalancer
  *
- * Updates an Akamai Global Load Balancer
+ * Updates an Akamai Cloud Load Balancer
  */
 export const updateLoadbalancer = (
   id: number,
@@ -93,7 +93,7 @@ export const updateLoadbalancer = (
 /**
  * deleteLoadbalancer
  *
- * Deletes an Akamai Global Load Balancer
+ * Deletes an Akamai Cloud Load Balancer
  */
 export const deleteLoadbalancer = (id: number) =>
   Request<{}>(

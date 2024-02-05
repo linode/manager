@@ -30,7 +30,7 @@ describe('RulesTable', () => {
         route={mockRoute}
       />
     );
-    expect(getByText('Execution')).toBeInTheDocument();
+    expect(getByText('Execution Order')).toBeInTheDocument();
     expect(getByText('Match Value')).toBeInTheDocument();
   });
 
@@ -56,7 +56,7 @@ describe('RulesTable', () => {
       />
     );
 
-    expect(getByText('First')).toBeInTheDocument();
+    expect(getByText('1')).toBeInTheDocument();
     expect(getByText('/images/*')).toBeInTheDocument();
   });
 });
