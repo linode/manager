@@ -364,6 +364,23 @@ export const mockCreateAccessKey = (
 };
 
 /**
+ * Intercepts request to update an Object Storage Access Key and mocks response.
+ *
+ * @param updatedAccessKey - Access key with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccessKey = (
+  updatedAccessKey: ObjectStorageKey
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`object-storage/keys/${updatedAccessKey.id}`),
+    makeResponse(updatedAccessKey)
+  );
+};
+
+/**
  * Intercepts object storage access key DELETE request and mocks success response.
  *
  * @param keyId - ID of access key for which to intercept DELETE request.
