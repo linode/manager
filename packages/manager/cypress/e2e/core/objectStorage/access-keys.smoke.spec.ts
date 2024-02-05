@@ -399,6 +399,110 @@ describe('object storage access keys smoke tests', () => {
         });
     });
 
-    it('can update access keys with OBJ Multicluster', () => {});
+    it.only('can update access keys with OBJ Multicluster', () => {
+      const mockInitialRegion = regionFactory.build({
+        id: `us-${randomString(5)}`,
+        label: `mock-obj-region-${randomString(5)}`,
+        capabilities: ['Object Storage'],
+      });
+
+      const mockUpdatedRegion = regionFactory.build({
+        id: `us-${randomString(5)}`,
+        label: `mock-obj-region-${randomString(5)}`,
+        capabilities: ['Object Storage'],
+      });
+
+      const mockRegions = [mockInitialRegion, mockUpdatedRegion];
+
+      const mockAccessKey = objectStorageKeyFactory.build({
+        id: randomNumber(10000, 99999),
+        label: randomLabel(),
+        access_key: randomString(20),
+        secret_key: randomString(39),
+        regions: [
+          {
+            id: mockInitialRegion.id,
+            s3_endpoint: randomDomainName(),
+          },
+        ],
+      });
+
+      const mockUpdatedAccessKey = {
+        ...mockAccessKey,
+        label: randomLabel(),
+        regions: [
+          { id: mockUpdatedRegion.id, s3_endpoint: randomDomainName() },
+        ],
+      };
+
+      mockGetAccessKeys([mockAccessKey]);
+      mockGetRegions(mockRegions);
+      cy.visitWithLogin('/object-storage/access-keys');
+
+      cy.findByText(mockAccessKey.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          ui.actionMenu
+            .findByTitle(
+              `Action menu for Object Storage Key ${mockAccessKey.label}`
+            )
+            .should('be.visible')
+            .click();
+        });
+
+      ui.actionMenuItem
+        // TODO M3-7696 Replace 'Edit Label' with 'Edit' upon merging #10118.
+        .findByTitle('Edit Label')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        // TODO M3-7697 Replace 'Edit Access Key Label' with 'Edit Access Key' upon merging #10118.
+        .findByTitle('Edit Access Key Label')
+        .should('be.visible')
+        .within(() => {
+          cy.contains('Label (required)')
+            .should('be.visible')
+            .click()
+            .type('{selectall}{backspace}')
+            .type(mockUpdatedAccessKey.label);
+
+          cy.contains('Regions (required)')
+            .should('be.visible')
+            .click()
+            .type(`${mockUpdatedRegion.label}{enter}{esc}`);
+
+          cy.get('[data-qa-selection-list]')
+            .should('be.visible')
+            .within(() => {
+              // Confirm both regions are selected and present in selection list.
+              mockRegions.forEach((mockRegion) => {
+                cy.findByText(`${mockRegion.label} (${mockRegion.id})`).should(
+                  'be.visible'
+                );
+              });
+
+              // Deselect initial region and confirm it's removed from list.
+              cy.findByLabelText(
+                `remove ${mockInitialRegion.label} (${mockInitialRegion.id})`
+              )
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+
+              cy.findByText(
+                `${mockInitialRegion.label} (${mockInitialRegion.id})`
+              ).should('not.exist');
+            });
+
+          // ui.button
+          //   .findByTitle('Save Changes')
+          //   .should('be.visible')
+          //   .should('be.enabled')
+          //   .click();
+        });
+    });
   });
 });
