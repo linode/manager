@@ -1,3 +1,7 @@
+import React from 'react';
+
+import { Link } from 'src/components/Link';
+
 import type { Certificate } from '@linode/api-v4';
 
 export const initialValues = {
@@ -21,11 +25,29 @@ export const CERTIFICATES_COPY = {
     downstream:
       'TLS certificates terminate incoming traffic to the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over TLS connections. ',
   },
+  Description:
+    'For HTTPS Cloud Load Balancers, a TLS termination certificate is required. To redirect web connections over port 443/HTTPS, upload your generated certificates for your domains.',
   Edit: {
     // TODO: ACLB - figure out what this should be
     ca: 'You can edit this cert here.',
     downstream:
       'TLS certificates terminate incoming traffic to the load balancer. Once the load balancing policy is applied, traffic is forwarded to your service targets over TLS connections.',
+  },
+  Tabs: {
+    ca: (
+      <>
+        Used by the load balancer to accept responses from your service target
+        endpoints. Apply these certificate(s) in the{' '}
+        <Link to="../service-targets">Service Targets</Link> tab.
+      </>
+    ),
+    downstream: (
+      <>
+        Used by the load balancer to terminate the connection and decrypt
+        requests from clients. Apply these certificate(s) in the{' '}
+        <Link to="../configurations">Configurations</Link> tab.
+      </>
+    ),
   },
   Tooltips: {
     Certificate:

@@ -122,7 +122,7 @@ export const LinodeOrIPSelect = (props: Props) => {
       loading={isLoading}
       onChange={(e, value) => onChange(value?.ipv4[0] ?? '')}
       options={options}
-      placeholder="Select Linode or Enter IPv4 Address"
+      placeholder="Select Linode or Enter IP Address"
       textFieldProps={textFieldProps}
       value={linodes.length === 0 ? customIpPlaceholder : selectedLinode}
     />

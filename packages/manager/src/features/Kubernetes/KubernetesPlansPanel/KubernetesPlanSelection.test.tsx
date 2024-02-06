@@ -72,6 +72,41 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
     expect(queryByText(regionMonthlyPrice)).toBeInTheDocument();
   });
 
+  it('should not display an error message for $0 regions', () => {
+    const propsWithRegionZeroPrice = {
+      ...props,
+      type: extendedTypeFactory.build({
+        region_prices: [
+          {
+            hourly: 0,
+            id: 'id-cgk',
+            monthly: 0,
+          },
+        ],
+      }),
+    };
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <KubernetesPlanSelection
+          {...propsWithRegionZeroPrice}
+          selectedRegionId={'id-cgk'}
+        />
+      )
+    );
+
+    const monthlyTableCell = container.querySelector('[data-qa-monthly]');
+    const hourlyTableCell = container.querySelector('[data-qa-hourly]');
+    expect(monthlyTableCell).toHaveTextContent('$0');
+    // error tooltip button should not display
+    expect(
+      monthlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+    expect(hourlyTableCell).toHaveTextContent('$0');
+    expect(
+      hourlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+  });
+
   describe('KubernetesPlanSelection (cards, mobile view)', () => {
     beforeAll(() => {
       resizeScreenSize(breakpoints.values.sm);

@@ -52,13 +52,13 @@ describe('RuleDrawer', () => {
       <RuleDrawer {...props} ruleIndexToEdit={0} />
     );
 
-    const hostnameField = getByLabelText('Hostname (optional)');
+    const hostnameField = getByLabelText('Hostname Match (optional)');
     expect(hostnameField).toHaveDisplayValue(
       props.route.rules[0].match_condition.hostname!
     );
 
     const matchTypeField = getByLabelText('Match Type');
-    expect(matchTypeField).toHaveDisplayValue('Path');
+    expect(matchTypeField).toHaveDisplayValue('Path Prefix');
 
     const matchValueField = getByLabelText('Match Value');
     expect(matchValueField).toHaveDisplayValue(

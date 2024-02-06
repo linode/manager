@@ -19,7 +19,6 @@ import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCe
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -99,7 +98,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
-  const { data: user } = useAccountUser(profile?.username ?? '');
 
   const {
     error,
@@ -190,7 +188,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const allPermissions = form.values.scopes;
 
   const showFilteredPermissions =
-    (flags.parentChildAccountAccess && user?.user_type !== 'parent') ||
+    (flags.parentChildAccountAccess && profile?.user_type !== 'parent') ||
     Boolean(!flags.parentChildAccountAccess);
 
   const filteredPermissions = allPermissions.filter(
