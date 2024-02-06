@@ -3,11 +3,18 @@ import * as React from 'react';
 
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
-import { isParentTokenValid } from 'src/features/Account/utils';
 
-vi.mock('src/features/Account/utils', () => ({
-  isParentTokenValid: vi.fn().mockReturnValue(true),
+const queryMocks = vi.hoisted(() => ({
+  isParentTokenValid: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('src/features/Account/utils', async () => {
+  const actual = await vi.importActual('src/features/Account/utils');
+  return {
+    ...actual,
+    isParentTokenValid: queryMocks.isParentTokenValid,
+  };
+});
 
 const mockUpdateState = vi.fn();
 
@@ -31,7 +38,7 @@ describe('useParentTokenManagement', () => {
   });
 
   it('should not mark parent token as expired if it is valid', async () => {
-    isParentTokenValid.mockReturnValue(true);
+    queryMocks.isParentTokenValid.mockReturnValue(true);
     const { result } = renderHook(
       () => useParentTokenManagement({ isProxyUser: true }),
       { wrapper }
@@ -41,7 +48,7 @@ describe('useParentTokenManagement', () => {
   });
 
   it('should mark parent token as expired if it is invalid', async () => {
-    isParentTokenValid.mockReturnValue(false);
+    queryMocks.isParentTokenValid.mockReturnValue(false);
     const { result } = renderHook(
       () => useParentTokenManagement({ isProxyUser: true }),
       { wrapper }
@@ -51,7 +58,7 @@ describe('useParentTokenManagement', () => {
   });
 
   it('should update the session context when isParentTokenExpired is true and continueSession is false', async () => {
-    isParentTokenValid.mockReturnValue(false);
+    queryMocks.isParentTokenValid.mockReturnValue(false);
     renderHook(() => useParentTokenManagement({ isProxyUser: true }), {
       wrapper,
     });
@@ -63,7 +70,7 @@ describe('useParentTokenManagement', () => {
   });
 
   it('should not update the session context when isParentTokenExpired is false', async () => {
-    isParentTokenValid.mockReturnValue(true);
+    queryMocks.isParentTokenValid.mockReturnValue(true);
     renderHook(() => useParentTokenManagement({ isProxyUser: true }), {
       wrapper,
     });
