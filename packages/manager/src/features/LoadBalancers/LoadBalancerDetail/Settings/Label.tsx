@@ -9,7 +9,7 @@ import { TextField } from 'src/components/TextField';
 import {
   useLoadBalancerMutation,
   useLoadBalancerQuery,
-} from 'src/queries/aglb/loadbalancers';
+} from 'src/queries/aclb/loadbalancers';
 
 interface Props {
   loadbalancerId: number;
