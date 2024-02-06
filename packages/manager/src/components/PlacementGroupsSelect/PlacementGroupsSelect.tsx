@@ -39,6 +39,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     renderOption,
     renderOptionLabel,
     selectedRegionId,
+    sx,
   } = props;
 
   const {
@@ -51,10 +52,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     (placementGroup) => placementGroup.region === selectedRegionId
   );
 
-  const noPlacementGroupInRegion = Boolean(
-    selectedRegionId && placementGroupsOptions?.length === 0
-  );
-
   const handlePlacementGroupChange = (selection: PlacementGroup) => {
     handlePlacementGroupSelection(selection);
   };
@@ -65,11 +62,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         renderOptionLabel
           ? renderOptionLabel(placementGroupsOptions)
           : `${placementGroupsOptions.label} (${placementGroupsOptions.affinity_type})`
-      }
-      helperText={
-        noPlacementGroupInRegion
-          ? 'There are no Placement Groups in this region'
-          : undefined
       }
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
@@ -91,7 +83,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       clearOnBlur={false}
       data-testid="placement-groups-select"
       disableClearable={!clearable}
-      disabled={disabled || noPlacementGroupInRegion}
+      disabled={disabled}
       errorText={errorText}
       id={id}
       key={selectedRegionId}
@@ -100,6 +92,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
+      sx={sx}
     />
   );
 };

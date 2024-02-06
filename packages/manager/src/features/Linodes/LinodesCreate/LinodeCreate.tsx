@@ -642,6 +642,7 @@ export class LinodeCreate extends React.PureComponent<
               errorText,
               handlePlacementGroupSelection: updatePlacementGroupSelection,
               label: placementGroupsLabel,
+              noOptionsMessage: 'There are no Placement Groups in this region',
               selectedRegionId: selectedRegionID,
             }}
             tagsInputProps={
