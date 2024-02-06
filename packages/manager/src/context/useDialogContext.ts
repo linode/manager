@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export interface DialogContextProps {
   [key: string]:
@@ -12,7 +12,7 @@ export interface DialogContextProps {
 }
 
 export type UseDialogContextOptions = {
-  [key: string]: boolean; // Allow for dynamic additional state variables
+  [key: string]: boolean;
 };
 
 export const defaultContext: DialogContextProps = {
@@ -22,13 +22,12 @@ export const defaultContext: DialogContextProps = {
   updateState: () => void 0,
 };
 
-export const dialogContext = createContext<DialogContextProps>(defaultContext);
-
 export const useDialogContext = (
-  initialState: UseDialogContextOptions
+  initialState: UseDialogContextOptions = {}
 ): DialogContextProps => {
   const [state, setState] = useState({ ...defaultContext, ...initialState });
 
+  // TODO: We no longer need the open and close functions after we update other references
   const open = useCallback(
     () => setState((prevState) => ({ ...prevState, isOpen: true })),
     []

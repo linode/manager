@@ -59,7 +59,7 @@ const AccountLanding = () => {
   const isProxyUser = profile?.user_type === 'proxy';
   const isParentUser = profile?.user_type === 'parent';
 
-  const { isParentAccountExpired } = useParentTokenManagement({ isProxyUser });
+  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   const tabs = [
     {
@@ -142,7 +142,7 @@ const AccountLanding = () => {
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton
-        disabled={isParentAccountExpired}
+        disabled={isParentTokenExpired}
         onClick={() => setIsDrawerOpen(true)}
         tooltipText={PARENT_SESSION_EXPIRED}
       />

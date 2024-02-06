@@ -75,7 +75,7 @@ export const UserMenu = React.memo(() => {
   const id = open ? 'user-menu-popover' : undefined;
   const companyName = (profile?.user_type && account?.company) ?? '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
-  const { isParentAccountExpired } = useParentTokenManagement({ isProxyUser });
+  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders =
@@ -258,7 +258,7 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
-              disabled={isParentAccountExpired}
+              disabled={isParentTokenExpired}
               onClick={() => setIsDrawerOpen(true)}
               tooltipText={PARENT_SESSION_EXPIRED}
             />

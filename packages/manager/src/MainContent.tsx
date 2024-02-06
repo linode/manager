@@ -191,7 +191,7 @@ export const MainContent = () => {
   const contextValue = useNotificationContext();
 
   const ComplianceUpdateProvider = complianceUpdateContext.Provider;
-  const complianceUpdateContextValue = useDialogContext({});
+  const complianceUpdateContextValue = useDialogContext();
 
   const SwitchAccountSessionProvider = switchAccountSessionContext.Provider;
   const switchAccountSessionContextValue = useDialogContext({

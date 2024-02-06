@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
-import { SwitchAccountDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
+import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile';
@@ -56,7 +56,7 @@ export const GlobalNotifications = () => {
       <AbuseTicketBanner />
       <ComplianceBanner />
       {isProxyUser && (
-        <SwitchAccountDialog
+        <SwitchAccountSessionDialog
           isOpen={Boolean(sessionContext.isOpen)}
           onClose={() => sessionContext.updateState({ isOpen: false })}
         />

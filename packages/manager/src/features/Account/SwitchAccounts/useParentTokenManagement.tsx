@@ -8,14 +8,12 @@ export const useParentTokenManagement = ({
 }: {
   isProxyUser: boolean;
 }) => {
-  const [isParentAccountExpired, setIsParentAccountExpired] = React.useState(
-    false
-  );
+  const [isParentTokenExpired, setIsParentTokenExpired] = React.useState(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
   const checkParentToken = async () => {
-    const isParentTokenExpired = !isParentTokenValid();
-    setIsParentAccountExpired(isParentTokenExpired);
+    const isExpired = !isParentTokenValid();
+    setIsParentTokenExpired(isExpired);
   };
 
   React.useEffect(() => {
@@ -25,10 +23,10 @@ export const useParentTokenManagement = ({
   }, [isProxyUser]);
 
   React.useEffect(() => {
-    if (isParentAccountExpired && sessionContext.continueSession === false) {
+    if (isParentTokenExpired && sessionContext.continueSession === false) {
       sessionContext.updateState({ continueSession: true, isOpen: true });
     }
-  }, [isParentAccountExpired, sessionContext]);
+  }, [isParentTokenExpired, sessionContext]);
 
-  return { isParentAccountExpired };
+  return { isParentTokenExpired };
 };

@@ -5,7 +5,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
-export const SwitchAccountDialog = React.memo(
+export const SwitchAccountSessionDialog = React.memo(
   ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
     const history = useHistory();
 
@@ -22,6 +22,7 @@ export const SwitchAccountDialog = React.memo(
     return (
       <ConfirmationDialog
         actions={actions}
+        data-testid="switch-account-session-dialog"
         maxWidth="xs"
         onClose={onClose}
         open={isOpen}
