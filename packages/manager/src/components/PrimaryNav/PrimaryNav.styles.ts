@@ -36,7 +36,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       alignItems: 'center',
       color: '#fff',
       display: 'flex',
-      fontFamily: 'LatoWeb', // we keep this bold at all times
+      fontFamily: 'LatoWebSemiBold',
       fontSize: '14px',
       opacity: 1,
       position: 'relative',
@@ -54,7 +54,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           width: 20,
         },
         color: '#CFD0D2',
-        marginRight: theme.spacing(2),
+        marginRight: theme.spacing(1.5),
         opacity: 0.5,
         transition: 'max-height 1s linear, width .1s linear',
       },
