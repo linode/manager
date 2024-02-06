@@ -1,3 +1,4 @@
+import { PlacementGroup } from '@linode/api-v4';
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -105,6 +106,7 @@ interface State {
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
+  placementGroupSelection?: PlacementGroup;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
   selectedDiskSize?: number;
@@ -154,6 +156,7 @@ const defaultState: State = {
   errors: undefined,
   formIsSubmitting: false,
   password: '',
+  placementGroupSelection: undefined,
   privateIPEnabled: false,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
@@ -309,6 +312,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
+            updatePlacementGroupSelection={this.setPlacementGroupSelection}
             updateRegionID={this.setRegionID}
             updateStackScript={this.setStackScript}
             updateTags={this.setTags}
@@ -596,6 +600,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setPassword = (password: string) => this.setState({ password });
 
+  setPlacementGroupSelection = (placementGroupSelection: PlacementGroup) => {
+    this.setState({ placementGroupSelection });
+  };
+
   setRegionID = (selectedRegionId: string) => {
     const { showGDPRCheckbox } = getGDPRDetails({
       agreements: this.props.agreements?.data,
@@ -690,10 +698,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     showGDPRCheckbox: Boolean(
       !this.props.profile.data?.restricted &&
-        isEURegion(
-          getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
-        ) &&
-        this.props.agreements?.data?.eu_model
+      isEURegion(
+        getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
+      ) &&
+      this.props.agreements?.data?.eu_model
     ),
     signedAgreement: false,
   };
@@ -825,10 +833,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const request =
       createType === 'fromLinode'
         ? () =>
-            this.props.linodeActions.cloneLinode({
-              sourceLinodeId: linodeID!,
-              ...payload,
-            })
+          this.props.linodeActions.cloneLinode({
+            sourceLinodeId: linodeID!,
+            ...payload,
+          })
         : () => this.props.linodeActions.createLinode(payload);
 
     this.setState({ formIsSubmitting: true });

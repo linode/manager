@@ -15,6 +15,8 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { getAll } from 'src/utilities/getAll';
+
 import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
 import type {
@@ -24,6 +26,18 @@ import type {
 } from '@linode/api-v4';
 
 export const queryKey = 'placement-groups';
+
+export const useUnpaginatedPlacementGroupsQuery = (enabled = true) =>
+  useQuery<PlacementGroup[], APIError[]>({
+    enabled,
+    queryFn: () => getAllPlacementGroupsRequest(),
+    queryKey: [queryKey, 'all'],
+  });
+
+const getAllPlacementGroupsRequest = () =>
+  getAll<PlacementGroup>((params, filters) =>
+    getPlacementGroups(params, filters)
+  )().then((data) => data.data);
 
 export const usePlacementGroupsQuery = (
   params: Params,
