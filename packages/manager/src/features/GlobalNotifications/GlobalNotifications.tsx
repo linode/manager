@@ -2,6 +2,8 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
+import { SwitchAccountDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile';
@@ -18,10 +20,13 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const isChildAccount =
+  const sessionContext = React.useContext(switchAccountSessionContext);
+  const isChildUser =
     Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'child';
+  const isProxyUser =
+    Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'proxy';
   const { data: securityQuestions } = useSecurityQuestions({
-    enabled: isChildAccount,
+    enabled: isChildUser,
   });
   const suppliedMaintenances = flags.apiMaintenance?.maintenances; // The data (ID, and sometimes the title and body) we supply regarding maintenance events in LD.
 
@@ -50,8 +55,14 @@ export const GlobalNotifications = () => {
       <RegionStatusBanner />
       <AbuseTicketBanner />
       <ComplianceBanner />
+      {isProxyUser && (
+        <SwitchAccountDialog
+          isOpen={sessionContext.isOpen}
+          onClose={() => sessionContext.updateState({ isOpen: false })}
+        />
+      )}
       <ComplianceUpdateModal />
-      {isChildAccount && !isVerified && (
+      {isChildUser && !isVerified && (
         <VerificationDetailsBanner
           hasSecurityQuestions={hasSecurityQuestions}
           hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}

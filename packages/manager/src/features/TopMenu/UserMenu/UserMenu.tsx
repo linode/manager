@@ -18,6 +18,8 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
+import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -73,6 +75,7 @@ export const UserMenu = React.memo(() => {
   const id = open ? 'user-menu-popover' : undefined;
   const companyName = (profile?.user_type && account?.company) ?? '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
+  const { isParentAccountExpired } = useParentTokenManagement({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders =
@@ -255,7 +258,9 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
+              disabled={isParentAccountExpired}
               onClick={() => setIsDrawerOpen(true)}
+              tooltipText={PARENT_SESSION_EXPIRED}
             />
           )}
           <Box>

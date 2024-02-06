@@ -11,6 +11,8 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -56,6 +58,8 @@ const AccountLanding = () => {
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
   const isParentUser = profile?.user_type === 'parent';
+
+  const { isParentAccountExpired } = useParentTokenManagement({ isProxyUser });
 
   const tabs = [
     {
@@ -137,7 +141,11 @@ const AccountLanding = () => {
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
-      <SwitchAccountButton onClick={() => setIsDrawerOpen(true)} />
+      <SwitchAccountButton
+        disabled={isParentAccountExpired}
+        onClick={() => setIsDrawerOpen(true)}
+        tooltipText={PARENT_SESSION_EXPIRED}
+      />
     ) : undefined;
   }
 

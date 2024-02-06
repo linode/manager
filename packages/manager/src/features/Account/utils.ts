@@ -43,18 +43,13 @@ export const isRestrictedGlobalGrantType = ({
 /**
  * Determine whether the tokens used for switchable accounts are still valid.
  */
-export const isParentTokenValid = ({
-  isProxyUser,
-}: {
-  isProxyUser: boolean;
-}) => {
+export const isParentTokenValid = (): boolean => {
   const now = new Date().toISOString();
 
   // From a proxy user, check whether parent token is still valid before switching.
   if (
-    isProxyUser &&
     now >
-      new Date(getStorage('authentication/parent_token/expire')).toISOString()
+    new Date(getStorage('authentication/parent_token/expire')).toISOString()
 
     // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
     // ================================================================
