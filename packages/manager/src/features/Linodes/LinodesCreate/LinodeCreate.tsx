@@ -119,7 +119,7 @@ export interface LinodeCreateProps {
   imageDisplayInfo: Info;
   ipamAddress: null | string;
   label: string;
-  placementGroupSelection: PlacementGroup;
+  placementGroupSelection?: PlacementGroup;
   regionDisplayInfo: Info;
   resetCreationState: () => void;
   selectedSubnetId?: number;
@@ -643,7 +643,6 @@ export class LinodeCreate extends React.PureComponent<
               handlePlacementGroupSelection: updatePlacementGroupSelection,
               label: placementGroupsLabel,
               selectedRegionId: selectedRegionID,
-              value: placementGroupSelection || undefined,
             }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'

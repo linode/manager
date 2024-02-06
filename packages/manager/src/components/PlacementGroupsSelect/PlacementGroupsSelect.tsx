@@ -23,7 +23,6 @@ export interface PlacementGroupsSelectProps {
   renderOptionLabel?: (placementGroups: PlacementGroup) => string;
   selectedRegionId?: string;
   sx?: SxProps;
-  value?: PlacementGroup;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
@@ -40,7 +39,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     renderOption,
     renderOptionLabel,
     selectedRegionId,
-    value,
   } = props;
 
   const {
@@ -82,12 +80,12 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       renderOption={
         renderOption
           ? (props, option, { selected }) => {
-            return (
-              <li {...props} data-qa-placement-group-option>
-                {renderOption(option, selected)}
-              </li>
-            );
-          }
+              return (
+                <li {...props} data-qa-placement-group-option>
+                  {renderOption(option, selected)}
+                </li>
+              );
+            }
           : undefined
       }
       clearOnBlur={false}
@@ -102,7 +100,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
-      value={value}
     />
   );
 };
