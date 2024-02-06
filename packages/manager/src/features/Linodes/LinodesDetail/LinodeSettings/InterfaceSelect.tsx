@@ -25,7 +25,6 @@ interface Props {
   errors: VPCInterfaceErrors & OtherInterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
-  handleIPRangeChange?: (ips: ExtendedIP[]) => void;
   ipamAddress?: null | string;
   label?: null | string;
   purpose: ExtendedPurpose;
@@ -163,10 +162,18 @@ export const InterfaceSelect = (props: CombinedProps) => {
     }
   };
 
-  // @TODO VPC: IPv4 Range
-  // const handleIPv4RangeChange = (ipv4Range: ExtendedIP[]) => {
-  //   handleIPRangeChange(ipv4Range);
-  // };
+  const handleIPv4RangeChange = (ipv4Ranges: ExtendedIP[]) => {
+    const changeObj = {
+      ip_ranges: ipv4Ranges.map((ip_range) => ip_range.address),
+      ipam_address: null,
+      label: null,
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
+    };
+
+    handleChange(changeObj);
+  };
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
@@ -406,7 +413,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
-            handleIPv4RangeChange={() => null} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
+            handleIPv4RangeChange={handleIPv4RangeChange} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}

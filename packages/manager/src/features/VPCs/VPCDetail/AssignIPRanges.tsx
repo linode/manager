@@ -39,9 +39,7 @@ export const AssignIPRanges = (props: Props) => {
   return (
     <>
       <Divider sx={sx} />
-      {ipRangesError && (
-        <Notice important text={ipRangesError} variant="error" />
-      )}
+      {ipRangesError && <Notice text={ipRangesError} variant="error" />}
       <Box
         alignItems={includeDescriptionInTooltip ? 'center' : 'flex-start'}
         display="flex"
@@ -56,24 +54,12 @@ export const AssignIPRanges = (props: Props) => {
               marginLeft: theme.spacing(0.5),
               padding: theme.spacing(0.5),
             }}
-            text={
-              <>
-                <StyledDescription>
-                  {ASSIGN_IPV4_RANGES_DESCRIPTION}
-                </StyledDescription>
-                <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
-              </>
-            }
             interactive
             status="help"
+            text={IPv4RangesDescriptionJSX}
           />
         ) : (
-          <Typography variant="body1">
-            <StyledDescription>
-              {ASSIGN_IPV4_RANGES_DESCRIPTION}
-            </StyledDescription>
-            <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
-          </Typography>
+          <Typography variant="body1">{IPv4RangesDescriptionJSX}</Typography>
         )}
       </Box>
       <MultipleIPInput
@@ -91,3 +77,10 @@ export const AssignIPRanges = (props: Props) => {
 const StyledDescription = styled('span')(() => ({
   marginRight: '5px',
 }));
+
+const IPv4RangesDescriptionJSX = (
+  <>
+    <StyledDescription>{ASSIGN_IPV4_RANGES_DESCRIPTION}</StyledDescription>
+    <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
+  </>
+);

@@ -38,8 +38,6 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useLinodeConfigCreateMutation,
   useLinodeConfigUpdateMutation,
@@ -53,7 +51,6 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { vpcQueryKey } from 'src/queries/vpcs';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -266,8 +263,6 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const theme = useTheme();
-  const flags = useFlags();
-  const { account } = useAccountManagement();
 
   const regions = useRegionsQuery().data ?? [];
 
@@ -293,13 +288,6 @@ export const LinodeConfigDialog = (props: Props) => {
     (thisRegion) =>
       thisRegion.id === linode?.region &&
       thisRegion.capabilities.includes('VPCs')
-  );
-
-  // @TODO VPC: remove once VPC is fully rolled out
-  const vpcEnabled = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
   );
 
   const { resetForm, setFieldValue, values, ...formik } = useFormik({
@@ -497,7 +485,7 @@ export const LinodeConfigDialog = (props: Props) => {
           (_interface) => _interface.primary === true
         );
 
-        if (vpcEnabled && indexOfExistingPrimaryInterface !== -1) {
+        if (indexOfExistingPrimaryInterface !== -1) {
           setPrimaryInterfaceIndex(indexOfExistingPrimaryInterface);
         }
 
@@ -527,7 +515,7 @@ export const LinodeConfigDialog = (props: Props) => {
         setPrimaryInterfaceIndex(0);
       }
     }
-  }, [open, config, initrdFromConfig, resetForm, queryClient, vpcEnabled]);
+  }, [open, config, initrdFromConfig, resetForm, queryClient]);
 
   const generalError = formik.status?.generalError;
 
@@ -644,13 +632,6 @@ export const LinodeConfigDialog = (props: Props) => {
     [setFieldValue]
   );
 
-  const handleIPRangeChange = React.useCallback(
-    (_ipRanges: ExtendedIP[]) => {
-      setFieldValue('ip_ranges', _ipRanges);
-    },
-    [setFieldValue]
-  );
-
   const handleToggleCustomRoot = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setUseCustomRoot(e.target.checked);
@@ -678,12 +659,9 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const networkInterfacesHelperText = (
     <Typography>
-      Configure the network that a selected interface will connect to (
-      {vpcEnabled
-        ? '"Public Internet", VLAN, or VPC'
-        : 'either "Public Internet" or a VLAN'}
-      ) . Each Linode can have up to three Network Interfaces. For more
-      information, see our{' '}
+      Configure the network that a selected interface will connect to
+      &quot;Public Internet&quot;, VLAN, or VPC. Each Linode can have up to
+      three Network Interfaces. For more information, see our{' '}
       <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
         Network Interfaces guide
       </Link>
@@ -962,9 +940,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <Grid xs={12}>
               <Box alignItems="center" display="flex">
-                <Typography variant="h3">
-                  {vpcEnabled ? 'Networking' : 'Network Interfaces'}
-                </Typography>
+                <Typography variant="h3">Networking</Typography>
                 <TooltipIcon
                   sxTooltipIcon={{
                     paddingBottom: 0,
@@ -982,29 +958,27 @@ export const LinodeConfigDialog = (props: Props) => {
                   variant="error"
                 />
               )}
-              {vpcEnabled && (
-                <>
-                  <Select
-                    defaultValue={
-                      primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
-                    }
-                    data-testid="primary-interface-dropdown"
-                    disabled={isReadOnly}
-                    isClearable={false}
-                    label="Primary Interface (Default Route)"
-                    onChange={handlePrimaryInterfaceChange}
-                    options={getPrimaryInterfaceOptions(values.interfaces)}
-                  />
-                  <Divider
-                    sx={{
-                      margin: `${theme.spacing(
-                        4.5
-                      )} ${theme.spacing()} ${theme.spacing(1.5)} `,
-                      width: `calc(100% - ${theme.spacing(2)})`,
-                    }}
-                  />
-                </>
-              )}
+              <>
+                <Select
+                  defaultValue={
+                    primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
+                  }
+                  data-testid="primary-interface-dropdown"
+                  disabled={isReadOnly}
+                  isClearable={false}
+                  label="Primary Interface (Default Route)"
+                  onChange={handlePrimaryInterfaceChange}
+                  options={getPrimaryInterfaceOptions(values.interfaces)}
+                />
+                <Divider
+                  sx={{
+                    margin: `${theme.spacing(
+                      4.5
+                    )} ${theme.spacing()} ${theme.spacing(1.5)} `,
+                    width: `calc(100% - ${theme.spacing(2)})`,
+                  }}
+                />
+              </>
               {values.interfaces.map((thisInterface, idx) => {
                 const thisInterfaceIPRanges: ExtendedIP[] = (
                   thisInterface.ip_ranges ?? []
@@ -1037,7 +1011,6 @@ export const LinodeConfigDialog = (props: Props) => {
                         handleInterfaceChange(idx, newInterface)
                       }
                       additionalIPv4RangesForVPC={thisInterfaceIPRanges}
-                      handleIPRangeChange={handleIPRangeChange}
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
