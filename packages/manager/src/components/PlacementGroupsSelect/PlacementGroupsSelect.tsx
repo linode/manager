@@ -4,13 +4,13 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { getPlacementGroupLinodeCount } from 'src/features/PlacementGroups/utils';
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
   disabled?: boolean;
   errorText?: string;
+  handlePlacementGroupSelection: (selected: PlacementGroup) => void;
   id?: string;
   label: string;
   loading?: boolean;
@@ -23,12 +23,15 @@ export interface PlacementGroupsSelectProps {
   renderOptionLabel?: (placementGroups: PlacementGroup) => string;
   selectedRegionId?: string;
   sx?: SxProps;
+  value?: PlacementGroup;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     clearable = true,
     disabled,
+    errorText,
+    handlePlacementGroupSelection,
     id,
     label,
     loading,
@@ -37,6 +40,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     renderOption,
     renderOptionLabel,
     selectedRegionId,
+    value,
   } = props;
 
   const {
@@ -53,14 +57,8 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     selectedRegionId && placementGroupsOptions?.length === 0
   );
 
-  let errorText;
   const handlePlacementGroupChange = (selection: PlacementGroup) => {
-    if (
-      selection &&
-      getPlacementGroupLinodeCount(selection) >= selection.capacity
-    ) {
-      errorText = `This Placement Group doesn't have any capacity`;
-    }
+    handlePlacementGroupSelection(selection);
   };
 
   return (
@@ -84,12 +82,12 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       renderOption={
         renderOption
           ? (props, option, { selected }) => {
-              return (
-                <li {...props} data-qa-placement-group-option>
-                  {renderOption(option, selected)}
-                </li>
-              );
-            }
+            return (
+              <li {...props} data-qa-placement-group-option>
+                {renderOption(option, selected)}
+              </li>
+            );
+          }
           : undefined
       }
       clearOnBlur={false}
@@ -104,6 +102,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
+      value={value}
     />
   );
 };

@@ -4,7 +4,10 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
+import {
+  PlacementGroupsSelect,
+  PlacementGroupsSelectProps,
+} from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -13,8 +16,8 @@ import { useFlags } from 'src/hooks/useFlags';
 interface LabelAndTagsProps {
   error?: string;
   labelFieldProps?: TextFieldProps;
+  placementGroupsSelectProps?: PlacementGroupsSelectProps;
   regions?: Region[];
-  selectedRegionId?: string;
   tagsInputProps?: TagsInputProps;
 }
 
@@ -25,12 +28,9 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
   const {
     error,
     labelFieldProps,
-    regions,
-    selectedRegionId,
+    placementGroupsSelectProps,
     tagsInputProps,
   } = props;
-
-  const regionLabel = regions?.find((r) => r.id === selectedRegionId)?.label;
 
   return (
     <Paper
@@ -53,7 +53,7 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
       {showPlacementGroups && (
         <>
-          {!selectedRegionId && (
+          {!placementGroupsSelectProps?.selectedRegionId && (
             <Notice
               dataTestId="placement-groups-no-region-notice"
               spacingBottom={0}
@@ -65,15 +65,10 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
               </Typography>
             </Notice>
           )}
-          <PlacementGroupsSelect
-            label={
-              selectedRegionId && regionLabel
-                ? `Placement Groups in ${regionLabel} (${selectedRegionId})`
-                : 'Placement Group'
-            }
-            disabled={!selectedRegionId}
-            selectedRegionId={selectedRegionId}
-          />
+          {placementGroupsSelectProps && (
+            <PlacementGroupsSelect {...placementGroupsSelectProps} />
+          )}
+          {/* TODO VM_Placement: Add Tooltip Icon */}
         </>
       )}
     </Paper>

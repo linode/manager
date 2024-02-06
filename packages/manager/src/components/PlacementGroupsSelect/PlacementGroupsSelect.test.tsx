@@ -9,6 +9,7 @@ import {
 
 const props: PlacementGroupsSelectProps = {
   errorText: '',
+  handlePlacementGroupSelection: vi.fn(),
   id: '',
   label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
