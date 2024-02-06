@@ -8,7 +8,7 @@ on:
 
 jobs:
   security-scan:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     container:
       image: returntocorp/semgrep
     steps:

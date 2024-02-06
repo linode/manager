@@ -18,7 +18,7 @@ on:
 
 jobs:
   run-cypress-e2e:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     strategy:
       fail-fast: false
       matrix:

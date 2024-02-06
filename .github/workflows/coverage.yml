@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   base_branch:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
         with:
@@ -48,7 +48,7 @@ jobs:
 
   current_branch:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     needs: base_branch
 
     steps:
