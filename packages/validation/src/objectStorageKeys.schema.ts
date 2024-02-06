@@ -1,10 +1,12 @@
 import { object, string, array } from 'yup';
 
+const labelErrorMessage = 'Label must be between 3 and 50 characters.';
+
 export const createObjectStorageKeysSchema = object({
   label: string()
     .required('Label is required.')
-    .min(3, 'Label must be between 3 and 50 characters.')
-    .max(50, 'Label must be between 3 and 50 characters.')
+    .min(3, labelErrorMessage)
+    .max(50, labelErrorMessage)
     .trim(),
   regions: array()
     .of(string())
@@ -15,8 +17,8 @@ export const createObjectStorageKeysSchema = object({
 export const updateObjectStorageKeysSchema = object({
   label: string()
     .notRequired()
-    .min(3, 'Label must be between 3 and 50 characters.')
-    .max(50, 'Label must be between 3 and 50 characters.')
+    .min(3, labelErrorMessage)
+    .max(50, labelErrorMessage)
     .trim(),
   regions: array()
     .of(string())

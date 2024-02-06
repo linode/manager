@@ -10,26 +10,26 @@ describe('generateUpdatePayload', () => {
     regions: ['region1', 'region2'],
   };
 
-  test('should return empty object if no changes', () => {
+  it('should return empty object if no changes', () => {
     const updatedValues = { ...initialValues };
     expect(generateUpdatePayload(updatedValues, initialValues)).toEqual({});
   });
 
-  test('should return updated label if only label changed', () => {
+  it('should return updated label if only label changed', () => {
     const updatedValues = { ...initialValues, label: 'newLabel' };
     expect(generateUpdatePayload(updatedValues, initialValues)).toEqual({
       label: 'newLabel',
     });
   });
 
-  test('should return updated regions if only regions changed', () => {
+  it('should return updated regions if only regions changed', () => {
     const updatedValues = { ...initialValues, regions: ['region3', 'region4'] };
     expect(generateUpdatePayload(updatedValues, initialValues)).toEqual({
       regions: ['region3', 'region4'],
     });
   });
 
-  test('should return updated label and regions if both changed', () => {
+  it('should return updated label and regions if both changed', () => {
     const updatedValues = {
       bucket_access: [],
       label: 'newLabel',
@@ -62,11 +62,11 @@ describe('hasLabelOrRegionsChanged', () => {
     secret_key: '',
   };
 
-  test('returns false when both label and regions are unchanged', () => {
+  it('returns false when both label and regions are unchanged', () => {
     expect(hasLabelOrRegionsChanged(updatedValues, initialValues)).toBe(false);
   });
 
-  test('returns true when only the label has changed', () => {
+  it('returns true when only the label has changed', () => {
     expect(
       hasLabelOrRegionsChanged(
         { ...updatedValues, label: 'newLabel' },
@@ -75,7 +75,7 @@ describe('hasLabelOrRegionsChanged', () => {
     ).toBe(true);
   });
 
-  test('returns true when only the regions have changed', () => {
+  it('returns true when only the regions have changed', () => {
     expect(
       hasLabelOrRegionsChanged(
         {
@@ -87,7 +87,7 @@ describe('hasLabelOrRegionsChanged', () => {
     ).toBe(true);
   });
 
-  test('returns true when both label and regions have changed', () => {
+  it('returns true when both label and regions have changed', () => {
     expect(
       hasLabelOrRegionsChanged(
         { ...updatedValues, label: 'newLabel', regions: ['region5'] },

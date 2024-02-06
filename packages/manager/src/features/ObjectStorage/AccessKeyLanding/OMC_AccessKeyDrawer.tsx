@@ -158,7 +158,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
       const updatePayload = generateUpdatePayload(values, initialValues);
 
-      if (mode !== 'creating' && Object.keys(updatePayload).length > 0) {
+      if (mode !== 'creating') {
         onSubmit(updatePayload, formik);
       } else {
         onSubmit(payload, formik);
