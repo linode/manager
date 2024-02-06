@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import { RegionOption } from './RegionOption';
@@ -39,11 +38,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     width,
   } = props;
 
-  const flags = useFlags();
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
+  } = useAccountAvailabilitiesQueryUnpaginated();
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
@@ -84,9 +82,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
-        getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(flags.dcGetWell) && Boolean(option.unavailable)
-        }
         isOptionEqualToValue={(
           option: RegionSelectOption,
           { value }: RegionSelectOption
@@ -127,6 +122,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
+        getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
