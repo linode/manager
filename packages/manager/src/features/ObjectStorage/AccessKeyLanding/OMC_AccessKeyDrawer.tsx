@@ -8,7 +8,7 @@ import {
   UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { useFormik } from 'formik';
+import { useFormik, FormikProps } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -39,7 +39,9 @@ export interface AccessKeyDrawerProps {
   onClose: () => void;
   onSubmit: (
     values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
-    formikProps: any
+    formikProps: FormikProps<
+      ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest
+    >
   ) => void;
   open: boolean;
 }

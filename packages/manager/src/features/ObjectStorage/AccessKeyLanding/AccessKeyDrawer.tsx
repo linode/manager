@@ -4,10 +4,9 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
-  UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -35,8 +34,8 @@ export interface AccessKeyDrawerProps {
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
   onSubmit: (
-    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
-    formikProps: any
+    values: ObjectStorageKeyRequest,
+    formikProps: FormikProps<ObjectStorageKeyRequest>
   ) => void;
   open: boolean;
 }
@@ -124,7 +123,10 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     label: initialLabelValue,
   };
 
-  const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
+  const handleSubmit = (
+    values: ObjectStorageKeyRequest,
+    formikProps: FormikProps<ObjectStorageKeyRequest>
+  ) => {
     // If the user hasn't toggled the Limited Access button,
     // don't include any bucket_access information in the payload.
 
