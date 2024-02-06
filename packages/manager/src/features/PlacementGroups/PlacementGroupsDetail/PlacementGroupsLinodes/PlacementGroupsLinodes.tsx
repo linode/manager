@@ -1,3 +1,5 @@
+import { useTheme } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 
@@ -25,10 +27,19 @@ interface Props {
 export const PlacementGroupsLinodes = (props: Props) => {
   const { placementGroup } = props;
   const {
-    data: allLinodes,
+    data: placementGroupLinodes,
     error: linodesError,
     isLoading: linodesLoading,
-  } = useAllLinodesQuery();
+  } = useAllLinodesQuery(
+    {},
+    {
+      '+or': placementGroup?.linode_ids.map((id) => ({
+        id,
+      })),
+    }
+  );
+  const theme = useTheme();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [searchText, setSearchText] = React.useState('');
 
   if (!placementGroup) {
@@ -38,13 +49,9 @@ export const PlacementGroupsLinodes = (props: Props) => {
   const { capacity } = placementGroup;
 
   const getLinodesList = () => {
-    if (!allLinodes) {
+    if (!placementGroupLinodes) {
       return [];
     }
-
-    const placementGroupLinodes = allLinodes.filter((linode) => {
-      return placementGroup?.linode_ids.includes(linode.id);
-    });
 
     if (searchText) {
       return placementGroupLinodes.filter((linode: Linode) => {
@@ -57,7 +64,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Box sx={{ py: 2 }}>
+      <Box sx={{ px: matchesSmDown ? 2 : 0, py: 2 }}>
         <Typography>
           The following Linodes have been assigned to this Placement Group. A
           Linode can only be assigned to a single Placement Group.
@@ -68,7 +75,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
       </Box>
 
       <Grid container justifyContent="space-between">
-        <Grid flexGrow={1}>
+        <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
           <DebouncedSearchTextField
             onSearch={(value) => {
               setSearchText(value);
@@ -76,7 +83,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
             debounceTime={250}
             hideLabel
             label="Search Linodes"
-            placeholder={`Search Linodes`}
+            placeholder="Search Linodes"
             value={searchText}
           />
         </Grid>

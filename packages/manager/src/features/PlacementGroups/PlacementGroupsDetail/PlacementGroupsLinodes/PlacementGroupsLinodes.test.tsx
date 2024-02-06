@@ -23,7 +23,7 @@ describe('PlacementGroupsLanding', () => {
       linode_ids: [1],
     });
 
-    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+    const { getByPlaceholderText, getByRole, getByTestId } = renderWithTheme(
       <PlacementGroupsLinodes placementGroup={placementGroup} />
     );
 
@@ -32,7 +32,7 @@ describe('PlacementGroupsLanding', () => {
       'false'
     );
     expect(getByPlaceholderText('Search Linodes')).toBeInTheDocument();
-    expect(getByTestId('placement-group-linode-list')).toBeInTheDocument();
+    expect(getByRole('table')).toBeInTheDocument();
   });
 
   it('has a disabled create button if the placement group has reached capacity', () => {

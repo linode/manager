@@ -44,7 +44,6 @@ describe('PlacementGroupsLanding', () => {
       <PlacementGroupsLinodesTable {...defaultProps} />
     );
 
-    // (also includes the header row)
-    expect(getAllByTestId(/placement-group-linode-/i)).toHaveLength(6);
+    expect(getAllByTestId(/placement-group-linode-/i)).toHaveLength(5);
   });
 });
