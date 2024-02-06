@@ -57,7 +57,7 @@ export const GlobalNotifications = () => {
       <ComplianceBanner />
       {isProxyUser && (
         <SwitchAccountDialog
-          isOpen={sessionContext.isOpen}
+          isOpen={Boolean(sessionContext.isOpen)}
           onClose={() => sessionContext.updateState({ isOpen: false })}
         />
       )}
