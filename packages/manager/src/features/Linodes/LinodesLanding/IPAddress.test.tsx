@@ -31,7 +31,6 @@ describe('IPAddress', () => {
     expect(showmore.prop('items')).toEqual(['8.8.4.4']);
   });
 
-  // TODO figure out this test !!!!!!!
   it('should render the copy icon, but not show it if showTooltipOnIpHover is false', () => {
     const icon = component.find('[data-testid]');
     expect(icon).toHaveLength(1);
@@ -45,40 +44,40 @@ describe('IPAddress', () => {
     expect(icon2.get(0).props.showTooltipOnIpHover).toBe(true);
   });
 
-  describe('IP address sorting', () => {
-    it('should place private IPs after public IPs', () => {
-      expect([publicIP, privateIP].sort(sortIPAddress)).toEqual([
-        publicIP,
-        privateIP,
-      ]);
-      expect([privateIP, publicIP].sort(sortIPAddress)).toEqual([
-        publicIP,
-        privateIP,
-      ]);
-    });
-    it('should not change order of two addresses of the same type', () => {
-      expect([publicIP, publicIP2].sort(sortIPAddress)).toEqual([
-        publicIP,
-        publicIP2,
-      ]);
-      expect([privateIP, privateIP2].sort(sortIPAddress)).toEqual([
-        privateIP,
-        privateIP2,
-      ]);
-    });
-    it('should sort longer lists correctly', () => {
-      expect(
-        [publicIP, privateIP, publicIP2, privateIP2].sort(sortIPAddress)
-      ).toEqual([publicIP, publicIP2, privateIP, privateIP2]);
-      expect(
-        [privateIP, publicIP, publicIP2, privateIP2].sort(sortIPAddress)
-      ).toEqual([publicIP, publicIP2, privateIP, privateIP2]);
-    });
-  });
-
   it('should disable copy functionality if disabled is true', () => {
     component.setProps({ disabled: true });
     const copyTooltip = component.find('[data-qa-copy-ip-text]');
     expect(copyTooltip.prop('disabled')).toBe(true);
+  });
+});
+
+describe('IP address sorting', () => {
+  it('should place private IPs after public IPs', () => {
+    expect([publicIP, privateIP].sort(sortIPAddress)).toEqual([
+      publicIP,
+      privateIP,
+    ]);
+    expect([privateIP, publicIP].sort(sortIPAddress)).toEqual([
+      publicIP,
+      privateIP,
+    ]);
+  });
+  it('should not change order of two addresses of the same type', () => {
+    expect([publicIP, publicIP2].sort(sortIPAddress)).toEqual([
+      publicIP,
+      publicIP2,
+    ]);
+    expect([privateIP, privateIP2].sort(sortIPAddress)).toEqual([
+      privateIP,
+      privateIP2,
+    ]);
+  });
+  it('should sort longer lists correctly', () => {
+    expect(
+      [publicIP, privateIP, publicIP2, privateIP2].sort(sortIPAddress)
+    ).toEqual([publicIP, publicIP2, privateIP, privateIP2]);
+    expect(
+      [privateIP, publicIP, publicIP2, privateIP2].sort(sortIPAddress)
+    ).toEqual([publicIP, publicIP2, privateIP, privateIP2]);
   });
 });
