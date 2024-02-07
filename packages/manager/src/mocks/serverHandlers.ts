@@ -735,9 +735,14 @@ export const handlers = [
 
       if (orFilters) {
         const filteredLinodes = linodes.filter((linode) => {
-          return orFilters.some(
+          const filteredById = orFilters.some(
             (filter: { id: number }) => filter.id === linode.id
           );
+          const filteredByRegion = orFilters.some(
+            (filter: { region: string }) => filter.region === linode.region
+          );
+
+          return (filteredById || filteredByRegion) ?? linodes;
         });
 
         return res(ctx.json(makeResourcePage(filteredLinodes)));

@@ -35,7 +35,16 @@ export const PlacementGroupsAssignLinodesDrawer = (
   props: PlacementGroupsAssignLinodesDrawerProps
 ) => {
   const { onClose, open, selectedPlacementGroup } = props;
-  const { data: linodes, error: linodesError } = useAllLinodesQuery();
+  const { data: linodes, error: linodesError } = useAllLinodesQuery(
+    {},
+    {
+      '+or': [
+        {
+          region: selectedPlacementGroup?.region,
+        },
+      ],
+    }
+  );
   const { data: regions, error: regionsError } = useRegionsQuery();
   const {
     data: allPlacementGroups,
@@ -86,7 +95,6 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const getLinodeSelectOptions = (): Linode[] => {
     return (
       linodes.filter((linode) => {
-        const isInRegion = linode.region === selectedPlacementGroup.region;
         const isNotAlreadyAssigned = !linodesFromAllPlacementGroups.includes(
           linode.id as number
         );
@@ -94,7 +102,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
           (l) => l.id === linode.id
         );
 
-        return isInRegion && isNotAlreadyAssigned && isNotAssignedInDrawer;
+        return isNotAlreadyAssigned && isNotAssignedInDrawer;
       }) ?? []
     );
   };
