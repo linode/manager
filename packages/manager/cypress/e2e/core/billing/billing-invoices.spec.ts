@@ -42,6 +42,17 @@ describe('Account invoices', () => {
    * - Confirms that outbound transfer overage items display "Global" when no region is applicable.
    */
   it('lists invoice items on invoice details page', () => {
+    const mockInvoiceItemZeroPrice = invoiceItemFactory.build({
+      amount: 0,
+      tax: 0,
+      total: 0,
+      from: DateTime.now().minus({ days: 1 }).toISO(),
+      to: DateTime.now().minus({ days: 1 }).plus({ hours: 12 }).toISO(),
+      region: chooseRegion().id,
+      unit_price: '0',
+      label: '1GB - mockInvoiceItem (12345)',
+    });
+
     const mockInvoiceItemsWithRegions = buildArray(20, (i) => {
       const subtotal = randomNumber(101, 999);
       const tax = randomNumber(1, 100);
@@ -72,6 +83,7 @@ describe('Account invoices', () => {
 
     // Regular (non-overage) invoice items.
     const mockInvoiceItemsWithAndWithoutRegions = [
+      mockInvoiceItemZeroPrice,
       ...mockInvoiceItemsWithRegions,
       invoiceItemFactory.build({
         amount: 5,
@@ -155,15 +167,21 @@ describe('Account invoices', () => {
             .within(() => {
               cy.findByText(`${invoiceItem.quantity}`).should('be.visible');
               cy.findByText(`$${invoiceItem.unit_price}`).should('be.visible');
-              cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
-                'be.visible'
-              );
-              cy.findByText(`${formatUsd(invoiceItem.tax)}`).should(
-                'be.visible'
-              );
-              cy.findByText(`${formatUsd(invoiceItem.total)}`).should(
-                'be.visible'
-              );
+              cy.get('[data-qa-amount]').within(() => {
+                cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
+                  'be.visible'
+                );
+              });
+              cy.get('[data-qa-tax]').within(() => {
+                cy.findByText(`${formatUsd(invoiceItem.tax)}`).should(
+                  'be.visible'
+                );
+              });
+              cy.get('[data-qa-total]').within(() => {
+                cy.findByText(`${formatUsd(invoiceItem.total)}`).should(
+                  'be.visible'
+                );
+              });
               // If the invoice item has a region, confirm that it is displayed
               // in the table row. Otherwise, confirm that the table cell which
               // would normally show the region is empty.
@@ -290,7 +308,20 @@ describe('Account invoices', () => {
    */
   it('paginates the list of invoice items for large invoices', () => {
     const mockInvoice = invoiceFactory.build();
-    const mockInvoiceItems = invoiceItemFactory.buildList(100);
+    const mockInvoiceItemZeroPrice = invoiceItemFactory.build({
+      amount: 0,
+      tax: 0,
+      total: 0,
+      from: DateTime.now().minus({ days: 1 }).toISO(),
+      to: DateTime.now().minus({ days: 1 }).plus({ hours: 12 }).toISO(),
+      region: chooseRegion().id,
+      unit_price: '0',
+      label: '1GB - mockInvoiceItem (12345)',
+    });
+    const mockInvoiceItems = [
+      mockInvoiceItemZeroPrice,
+      ...invoiceItemFactory.buildList(99),
+    ];
     const pages = [1, 2, 3, 4];
 
     mockGetInvoice(mockInvoice).as('getInvoice');
