@@ -728,6 +728,21 @@ export const handlers = [
       eventLinode,
       multipleIPLinode,
     ];
+
+    if (req.headers.get('x-filter')) {
+      const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+      const orFilters = headers['+or'];
+
+      if (orFilters) {
+        const filteredLinodes = linodes.filter((linode) => {
+          return orFilters.some(
+            (filter: { id: number }) => filter.id === linode.id
+          );
+        });
+
+        return res(ctx.json(makeResourcePage(filteredLinodes)));
+      }
+    }
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.get('*/linode/instances/:id', async (req, res, ctx) => {

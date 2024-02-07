@@ -13,6 +13,17 @@ export const getPlacementGroupLinodeCount = (
 };
 
 /**
+ * Helper to determine if a Placement Group has reached capacity.
+ */
+export const hasPlacementGroupReachedCapacity = (
+  placementGroup: PlacementGroup
+): boolean => {
+  return (
+    getPlacementGroupLinodeCount(placementGroup) >= placementGroup.capacity
+  );
+};
+
+/**
  * Helper to populate the affinity_type select options.
  */
 export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(

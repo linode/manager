@@ -8,6 +8,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 
+import { MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE } from './constants';
 import { affinityTypeOptions } from './utils';
 
 import type { PlacementGroupDrawerFormikProps } from './types';
@@ -122,8 +123,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
                   : false,
               label: `${isRenameDrawer ? 'Rename' : 'Create'} Placement Group`,
               loading: isSubmitting,
-              tooltipText:
-                'You have reached the maximum amount of Placement Groups.',
+              tooltipText: MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
               type: 'submit',
             }}
             secondaryButtonProps={{

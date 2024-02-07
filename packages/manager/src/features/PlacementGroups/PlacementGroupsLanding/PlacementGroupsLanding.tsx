@@ -1,4 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -38,6 +40,8 @@ export const PlacementGroupsLanding = React.memo(() => {
   const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
     PlacementGroup | undefined
   >();
+  const theme = useTheme();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [query, setQuery] = React.useState<string>('');
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -132,7 +136,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
       />
-      <Typography sx={{ mb: 4, mt: 2 }}>
+      <Typography sx={{ mb: 4, mt: 2, px: matchesSmDown ? 1 : 0 }}>
         The maximum amount of Placement Groups is{' '}
         {MAX_NUMBER_OF_PLACEMENT_GROUPS} per account.
       </Typography>
@@ -166,6 +170,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '40%' }}
             >
               Label
             </TableSortCell>
@@ -180,7 +185,7 @@ export const PlacementGroupsLanding = React.memo(() => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
