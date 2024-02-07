@@ -277,6 +277,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 'bucket_access',
                 getDefaultScopes(bucketsInRegions, regionsLookup)
               );
+              formik.validateField('regions');
             }}
             onChange={(values) => {
               const bucketsInRegions = buckets?.filter(
