@@ -37,7 +37,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       color: '#fff',
       display: 'flex',
       fontFamily: 'LatoWebSemiBold',
-      fontSize: '14px',
+      fontSize: '0.875rem',
       opacity: 1,
       position: 'relative',
       transition: theme.transitions.create(['color', 'opacity']),
