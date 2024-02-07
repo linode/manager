@@ -1,4 +1,7 @@
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import {
+  createObjectStorageKeysSchema,
+  updateObjectStorageKeysSchema,
+} from '@linode/validation/lib/objectStorageKeys.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -51,7 +54,7 @@ export const updateObjectStorageKey = (
   Request<ObjectStorageKey>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/object-storage/keys/${encodeURIComponent(id)}`),
-    setData(data, createObjectStorageKeysSchema)
+    setData(data, updateObjectStorageKeysSchema)
   );
 
 /**

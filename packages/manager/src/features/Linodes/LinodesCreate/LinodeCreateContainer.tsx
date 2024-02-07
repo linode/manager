@@ -698,10 +698,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     showGDPRCheckbox: Boolean(
       !this.props.profile.data?.restricted &&
-      isEURegion(
-        getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
-      ) &&
-      this.props.agreements?.data?.eu_model
+        isEURegion(
+          getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
+        ) &&
+        this.props.agreements?.data?.eu_model
     ),
     signedAgreement: false,
   };
@@ -833,10 +833,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const request =
       createType === 'fromLinode'
         ? () =>
-          this.props.linodeActions.cloneLinode({
-            sourceLinodeId: linodeID!,
-            ...payload,
-          })
+            this.props.linodeActions.cloneLinode({
+              sourceLinodeId: linodeID!,
+              ...payload,
+            })
         : () => this.props.linodeActions.createLinode(payload);
 
     this.setState({ formIsSubmitting: true });
