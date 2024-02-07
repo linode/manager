@@ -246,7 +246,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <EnhancedSelect
               placeholder={
-                formik.values.country === 'US' ? 'state' : 'province'
+                formik.values.country === 'US'
+                  ? 'Enter state'
+                  : 'Enter province'
               }
               textFieldProps={{
                 dataAttrs: {
