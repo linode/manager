@@ -19,6 +19,7 @@ import {
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getPlacementGroupLinodeCount } from '../utils';
+import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
@@ -106,10 +107,11 @@ export const PlacementGroupsDetail = () => {
         onChange={(i) => history.push(tabs[i].routeName)}
       >
         <TabLinkList tabs={tabs} />
-
         <TabPanels>
           <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
-          <SafeTabPanel index={1}>TODO VM_Placement: linode list</SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <PlacementGroupsLinodes placementGroup={placementGroup} />
+          </SafeTabPanel>
         </TabPanels>
       </Tabs>
     </>
