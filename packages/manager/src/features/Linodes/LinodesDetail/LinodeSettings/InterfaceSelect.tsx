@@ -35,6 +35,7 @@ interface Props {
   slotNumber: number;
 }
 interface VPCInterfaceErrors {
+  ipRangeError?: string;
   labelError?: string;
   publicIPv4Error?: string;
   subnetError?: string;
@@ -413,7 +414,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
-            handleIPv4RangeChange={handleIPv4RangeChange} // @TODO VPC: temporary placeholder to before M3-7645 is worked on to prevent errors
+            handleIPv4RangeChange={handleIPv4RangeChange}
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
@@ -422,6 +423,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
             subnetError={errors.subnetError}
+            vpcIPRangesError={errors.ipRangeError}
             vpcIPv4AddressOfLinode={vpcIPv4}
             vpcIPv4Error={errors.vpcIPv4Error}
             vpcIdError={errors.vpcError}

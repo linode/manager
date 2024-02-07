@@ -982,7 +982,19 @@ export const LinodeConfigDialog = (props: Props) => {
               {values.interfaces.map((thisInterface, idx) => {
                 const thisInterfaceIPRanges: ExtendedIP[] = (
                   thisInterface.ip_ranges ?? []
-                ).map((ip_range) => ({ address: ip_range }));
+                ).map((ip_range, index) => {
+                  // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
+                  const errorString = formik.errors[
+                    `interfaces[${idx}].ip_ranges[${index}]`
+                  ]?.includes('is invalid')
+                    ? 'Invalid IP range'
+                    : formik.errors[`interfaces[${idx}].ip_ranges[${index}]`];
+
+                  return {
+                    address: ip_range,
+                    error: errorString,
+                  };
+                });
 
                 return (
                   <React.Fragment key={`${idx}-interface`}>
@@ -994,6 +1006,8 @@ export const LinodeConfigDialog = (props: Props) => {
                     })}
                     <InterfaceSelect
                       errors={{
+                        ipRangeError:
+                          formik.errors[`interfaces[${idx}].ip_ranges`],
                         ipamError:
                           formik.errors[`interfaces[${idx}].ipam_address`],
                         labelError: formik.errors[`interfaces[${idx}].label`],
