@@ -75,7 +75,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 240,
+      marginLeft: 232,
     },
     transition: 'margin-left .1s linear',
   },

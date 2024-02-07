@@ -40,7 +40,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       fontSize: '14px',
       opacity: 1,
       position: 'relative',
-      transition: theme.transitions.create(['color']),
+      transition: theme.transitions.create(['color', 'opacity']),
     },
     listItem: {
       '& .icon': {

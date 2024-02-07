@@ -364,7 +364,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               <Divider
                 className={classes.divider}
                 spacingBottom={11}
-                spacingTop={0}
+                spacingTop={idx === 1 ? 0 : 11}
               />
               {filteredLinks.map((thisLink) => {
                 const props = {
