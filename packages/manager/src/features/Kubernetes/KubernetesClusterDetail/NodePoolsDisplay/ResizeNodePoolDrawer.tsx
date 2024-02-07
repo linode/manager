@@ -117,79 +117,82 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       open={open}
       title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
-      {isLoadingTypes && <CircleProgress />}
-      <form
-        onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
-        <div className={classes.section}>
-          <Typography className={classes.summary}>
-            Current pool: $
-            {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
-            /month ({pluralize('node', 'nodes', nodePool.count)} at $
-            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-            /month)
-          </Typography>
-        </div>
+      {isLoadingTypes ? (
+        <CircleProgress />
+      ) : (
+        <form
+          onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <div className={classes.section}>
+            <Typography className={classes.summary}>
+              Current pool: $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
+              /month ({pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month)
+            </Typography>
+          </div>
 
-        {error && <Notice text={error?.[0].reason} variant="error" />}
+          {error && <Notice text={error?.[0].reason} variant="error" />}
 
-        <div className={classes.section}>
-          <Typography className={classes.helperText}>
-            Enter the number of nodes you'd like in this pool:
-          </Typography>
-          <EnhancedNumberInput
-            min={1}
-            setValue={handleChange}
-            value={updatedCount}
-          />
-        </div>
-
-        <div className={classes.section}>
-          {/* Renders total pool price/month for N nodes at price per node/month. */}
-          <Typography className={classes.summary}>
-            {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
-              !isInvalidPricePerNode ? updatedCount * pricePerNode : undefined
-            )}/month`}{' '}
-            ({pluralize('node', 'nodes', updatedCount)} at $
-            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-            /month)
-          </Typography>
-        </div>
-
-        {updatedCount < nodePool.count && (
-          <Notice important text={resizeWarning} variant="warning" />
-        )}
-
-        {updatedCount < 3 && (
-          <Notice important text={nodeWarning} variant="warning" />
-        )}
-
-        {nodePool.count &&
-          (isInvalidPricePerNode || isInvalidTotalMonthlyPrice) && (
-            <Notice
-              spacingBottom={16}
-              spacingTop={8}
-              text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
-              variant="error"
+          <div className={classes.section}>
+            <Typography className={classes.helperText}>
+              Enter the number of nodes you'd like in this pool:
+            </Typography>
+            <EnhancedNumberInput
+              min={1}
+              setValue={handleChange}
+              value={updatedCount}
             />
+          </div>
+
+          <div className={classes.section}>
+            {/* Renders total pool price/month for N nodes at price per node/month. */}
+            <Typography className={classes.summary}>
+              {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
+                !isInvalidPricePerNode ? updatedCount * pricePerNode : undefined
+              )}/month`}{' '}
+              ({pluralize('node', 'nodes', updatedCount)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month)
+            </Typography>
+          </div>
+
+          {updatedCount < nodePool.count && (
+            <Notice important text={resizeWarning} variant="warning" />
           )}
 
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            disabled:
-              updatedCount === nodePool.count ||
-              isInvalidPricePerNode ||
-              isInvalidTotalMonthlyPrice,
-            label: 'Save Changes',
-            loading: isLoading,
-            onClick: handleSubmit,
-          }}
-        />
-      </form>
+          {updatedCount < 3 && (
+            <Notice important text={nodeWarning} variant="warning" />
+          )}
+
+          {nodePool.count &&
+            (isInvalidPricePerNode || isInvalidTotalMonthlyPrice) && (
+              <Notice
+                spacingBottom={16}
+                spacingTop={8}
+                text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+                variant="error"
+              />
+            )}
+
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled:
+                updatedCount === nodePool.count ||
+                isInvalidPricePerNode ||
+                isInvalidTotalMonthlyPrice,
+              label: 'Save Changes',
+              loading: isLoading,
+              onClick: handleSubmit,
+            }}
+          />
+        </form>
+      )}
     </Drawer>
   );
 };
