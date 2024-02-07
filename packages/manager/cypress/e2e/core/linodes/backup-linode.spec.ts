@@ -365,7 +365,7 @@ describe('"Enable Linode Backups" banner', () => {
         );
 
         // Confirm that expected total cost is shown.
-        cy.contains(`Total for 3 Linodes: ${expectedTotal}`).should(
+        cy.contains(`Total for 4 Linodes: ${expectedTotal}`).should(
           'be.visible'
         );
 
@@ -409,7 +409,7 @@ describe('"Enable Linode Backups" banner', () => {
     cy.wait([...enableBackupAliases, '@updateAccountSettings']);
 
     ui.toast.assertMessage(
-      '3 Linodes have been enrolled in automatic backups, and all new Linodes will automatically be backed up.'
+      '4 Linodes have been enrolled in automatic backups, and all new Linodes will automatically be backed up.'
     );
   });
 });
