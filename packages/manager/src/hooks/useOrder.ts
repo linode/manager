@@ -7,8 +7,6 @@ import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-export type HandleOrderChange = (key: string, order?: Order) => void;
-
 export type Order = 'asc' | 'desc';
 
 /**
