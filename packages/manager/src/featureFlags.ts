@@ -61,7 +61,6 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   recharts: boolean;
   referralBannerText: ReferralBannerText;
-  regionDropdown: boolean;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   taxBanner: TaxBanner;
