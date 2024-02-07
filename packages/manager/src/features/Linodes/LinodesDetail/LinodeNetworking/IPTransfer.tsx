@@ -258,7 +258,18 @@ export const IPTransfer = (props: Props) => {
     ];
 
     return (
-      <Grid container key={state.sourceIP} spacing={2} xs={12}>
+      <Grid
+        sx={{
+          [theme.breakpoints.down('md')]: {
+            backgroundColor: theme.color.grey5,
+            mb: 3,
+          },
+        }}
+        container
+        key={state.sourceIP}
+        spacing={2}
+        xs={12}
+      >
         <Grid
           sx={{
             alignItems: 'center',
@@ -267,7 +278,20 @@ export const IPTransfer = (props: Props) => {
           md={3}
           xs={12}
         >
-          <Typography>{state.sourceIP}</Typography>
+          <Typography>
+            <Typography
+              sx={{
+                [theme.breakpoints.up('md')]: {
+                  display: 'none',
+                },
+              }}
+              component="span"
+              fontFamily={theme.font.bold}
+            >
+              IP address:{' '}
+            </Typography>
+            {state.sourceIP}
+          </Typography>
         </Grid>
         <StyledAutoGrid md={3} xs={12}>
           <Select
@@ -481,21 +505,23 @@ export const IPTransfer = (props: Props) => {
           </div>
         ) : (
           <>
-            <Grid container spacing={2} sx={{ width: '100%' }}>
+            <Grid container xs={12}>
               <Grid
                 sx={{
-                  [theme.breakpoints.up('sm')]: {
-                    width: `calc(175px + ${theme.spacing(2)})`,
+                  [theme.breakpoints.down('md')]: {
+                    display: 'none',
                   },
-                  width: '100%',
                 }}
                 data-qa-transfer-ip-label
+                sm={3}
+                xs={12}
               >
                 <Typography>IP Address</Typography>
               </Grid>
               <Grid
                 sx={{
-                  [theme.breakpoints.down('sm')]: {
+                  pl: 0.5,
+                  [theme.breakpoints.down('md')]: {
                     display: 'none',
                   },
                 }}
@@ -503,7 +529,14 @@ export const IPTransfer = (props: Props) => {
                 <Typography>Actions</Typography>
               </Grid>
             </Grid>
-            <Grid xs={12}>
+            <Grid
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  visibility: 'hidden',
+                },
+              }}
+              xs={12}
+            >
               <Divider />
             </Grid>
             {linodes.length === 0 && searchText === '' ? (
@@ -517,7 +550,7 @@ export const IPTransfer = (props: Props) => {
                 with which to transfer IPs.
               </Typography>
             ) : (
-              <Grid spacing={2} sx={{ width: '100%' }}>
+              <Grid spacing={2} xs={12}>
                 {Object.values(ips).map(ipRow)}
               </Grid>
             )}
