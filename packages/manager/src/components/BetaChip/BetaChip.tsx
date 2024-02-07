@@ -56,7 +56,7 @@ const StyledBetaChip = styled(Chip, {
   fontSize: '0.625rem',
   height: 16,
   letterSpacing: '.25px',
-  marginLeft: theme.spacing(0.75),
-  padding: theme.spacing(0.25),
+  marginLeft: theme.spacing(0.5),
+  padding: theme.spacing(0.5),
   textTransform: 'uppercase',
 }));
