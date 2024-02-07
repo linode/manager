@@ -270,15 +270,21 @@ describe('"Enable Linode Backups" banner', () => {
       // See `dcPricingMockLinodeTypes` exported from `support/constants/dc-specific-pricing.ts`.
       linodeFactory.build({
         label: randomLabel(),
-        region: 'us-east',
+        region: 'us-ord',
         backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[0].id,
       }),
       linodeFactory.build({
         label: randomLabel(),
-        region: 'us-west',
+        region: 'us-east',
         backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[1].id,
+      }),
+      linodeFactory.build({
+        label: randomLabel(),
+        region: 'us-west',
+        backups: { enabled: false },
+        type: dcPricingMockLinodeTypesForBackups[2].id,
       }),
       linodeFactory.build({
         label: randomLabel(),
@@ -317,6 +323,7 @@ describe('"Enable Linode Backups" banner', () => {
 
     // The expected backup price for each Linode, as shown in backups drawer table.
     const expectedPrices = [
+      '$0.00/mo', // us-ord mocked price.
       '$3.57/mo', // us-east mocked price.
       '$4.17/mo', // us-west mocked price.
       '$2.00/mo', // regular price.
@@ -377,6 +384,10 @@ describe('"Enable Linode Backups" banner', () => {
             .closest('tr')
             .within(() => {
               cy.findByText(expectedPrice).should('be.visible');
+              // Confirm no error indicator appears for $0.00 prices.
+              cy.findByLabelText(
+                'There was an error loading the price.'
+              ).should('not.exist');
             });
         });
 

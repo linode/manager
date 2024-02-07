@@ -93,6 +93,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
         },
         region_prices: [
           {
+            hourly: 0,
+            id: 'us-ord',
+            monthly: 0,
+          },
+          {
             hourly: 0.0048,
             id: 'us-east',
             monthly: 3.57,
