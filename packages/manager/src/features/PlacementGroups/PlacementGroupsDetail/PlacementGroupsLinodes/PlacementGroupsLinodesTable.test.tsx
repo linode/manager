@@ -44,6 +44,6 @@ describe('PlacementGroupsLinodesTable', () => {
       <PlacementGroupsLinodesTable {...defaultProps} />
     );
 
-    expect(getAllByTestId(/placement-group-linode-/i)).toHaveLength(6);
+    expect(getAllByTestId(/placement-group-linode-/i)).toHaveLength(5);
   });
 });

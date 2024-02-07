@@ -46,10 +46,7 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
             pageSize,
           }) => (
             <>
-              <Table
-                aria-label="List of Linodes in this Placement Group"
-                data-testid="placement-group-linode-list"
-              >
+              <Table aria-label="List of Linodes in this Placement Group">
                 <TableHead>
                   <TableRow>
                     <TableSortCell
