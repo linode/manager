@@ -1021,33 +1021,34 @@ export const handlers = [
           ...objectStorageKeyFactory.buildList(1, {
             regions: [
               { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
+              { id: 'us-southeast', s3_endpoint: 'us-southeast.com' },
+              { id: 'in-maa', s3_endpoint: 'in-maa.com' },
+              { id: 'us-lax', s3_endpoint: 'us-lax.com' },
+              { id: 'us-mia', s3_endpoint: 'us-mia.com' },
+              { id: 'it-mil', s3_endpoint: 'it-mil.com' },
             ],
           }),
           ...objectStorageKeyFactory.buildList(1, {
             regions: [
               { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
+              { id: 'us-southeast', s3_endpoint: 'us-southeast.com' },
+              { id: 'in-maa', s3_endpoint: 'in-maa.com' },
+              { id: 'us-lax', s3_endpoint: 'us-lax.com' },
             ],
           }),
           ...objectStorageKeyFactory.buildList(1, {
             regions: [
               { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
+              { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
             ],
           }),
         ])
       )
     );
   }),
+
   rest.post('*object-storage/keys', (req, res, ctx) => {
     const { label, regions } = req.body as ObjectStorageKeyRequest;
 
@@ -1064,6 +1065,26 @@ export const handlers = [
         })
       )
     );
+  }),
+  rest.put('*object-storage/keys/:id', (req, res, ctx) => {
+    const { label, regions } = req.body as ObjectStorageKeyRequest;
+
+    const regionsData = regions?.map((region: string) => ({
+      id: region,
+      s3_endpoint: `${region}.com`,
+    }));
+
+    return res(
+      ctx.json(
+        objectStorageKeyFactory.build({
+          label,
+          regions: regionsData,
+        })
+      )
+    );
+  }),
+  rest.delete('*object-storage/keys/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
   }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
