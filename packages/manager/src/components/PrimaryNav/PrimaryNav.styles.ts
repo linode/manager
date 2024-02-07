@@ -90,7 +90,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
     },
     logo: {
       '& .akamai-logo-name': {
-        transition: 'opacity 100ms linear',
+        transition: theme.transitions.create(['opacity']),
       },
       // give the svg a transition so it smoothly resizes
       transition: 'width .1s linear',
