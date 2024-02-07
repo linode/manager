@@ -1,11 +1,5 @@
+import { Profile } from '@linode/api-v4';
 import { profileFactory } from '@src/factories';
-import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
-import {
-  mockGetUser,
-  mockGetUserGrants,
-  mockGetUsers,
-} from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -20,6 +14,50 @@ import {
 } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
+
+const verifyUsernameAndEmail = (
+  mockRestrictedProxyProfile: Profile,
+  tooltip: string,
+  checkEmail: boolean
+) => {
+  // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+  mockAppendFeatureFlags({
+    parentChildAccountAccess: makeFeatureFlagData(true),
+  }).as('getFeatureFlags');
+  mockGetFeatureFlagClientstream().as('getClientStream');
+
+  mockGetProfile(mockRestrictedProxyProfile);
+
+  // Navigate to User Profile page
+  cy.visitWithLogin('/profile/display');
+
+  // Confirm the username and email address fields are disabled, as well their respective save buttons
+  cy.get('[id="username"]').should('be.disabled');
+  ui.button
+    .findByTitle('Update Username')
+    .should('be.visible')
+    .should('be.disabled')
+    .trigger('mouseover');
+  // Click the button first, then confirm the tooltip is shown
+  ui.tooltip.findByText(tooltip).should('be.visible');
+
+  // Refresh the page
+  mockGetProfile(mockRestrictedProxyProfile);
+  cy.reload();
+
+  if (checkEmail) {
+    cy.get('[id="email"]').should('be.disabled');
+    ui.button
+      .findByTitle('Update Email')
+      .should('be.visible')
+      .should('be.disabled')
+      .trigger('mouseover');
+    // Click the button first, then confirm the tooltip is shown
+    ui.tooltip
+      .findByText('This account type cannot update this field.')
+      .should('be.visible');
+  }
+};
 
 describe('username', () => {
   /*
@@ -111,56 +149,44 @@ describe('username', () => {
     });
   });
 
-  it('disables username/email fields for proxy user', () => {
-    const mockRestrictedProxyUser = accountUserFactory.build({
-      restricted: true,
-      user_type: 'proxy',
-      username: 'restricted-proxy-user',
-    });
-
+  it('disables username/email fields for restricted proxy user', () => {
     const mockRestrictedProxyProfile = profileFactory.build({
       username: 'restricted-proxy-user',
       user_type: 'proxy',
+      restricted: true,
     });
 
-    const mockUserGrants = grantsFactory.build({
-      global: { account_access: 'read_write' },
+    verifyUsernameAndEmail(
+      mockRestrictedProxyProfile,
+      'This account type cannot update this field.',
+      true
+    );
+  });
+
+  it('disables username/email fields for unrestricted proxy user', () => {
+    const mockUnrestrictedProxyProfile = profileFactory.build({
+      username: 'unrestricted-proxy-user',
+      user_type: 'proxy',
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+    verifyUsernameAndEmail(
+      mockUnrestrictedProxyProfile,
+      'This account type cannot update this field.',
+      true
+    );
+  });
 
-    mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
-    mockGetProfile(mockRestrictedProxyProfile);
-    mockGetUser(mockRestrictedProxyUser);
-    mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
+  it('disables username/email fields for regular restricted user', () => {
+    const mockRegularRestrictedProfile = profileFactory.build({
+      username: 'regular-restricted-user',
+      user_type: null,
+      restricted: true,
+    });
 
-    // Navigate to User Profile page
-    cy.visitWithLogin('/profile/display');
-
-    // Confirm the username and email address fields are disabled, as well their respective save buttons
-    cy.get('[id="username"]').should('be.disabled');
-    ui.button
-      .findByTitle('Update Username')
-      .should('be.visible')
-      .should('be.disabled')
-      .click();
-    // Click the button first, then confirm the tooltip is shown:
-    ui.tooltip
-      .findByText('This account type cannot update this field.')
-      .should('be.visible');
-    cy.get('[id="email"]').should('be.disabled');
-    ui.button
-      .findByTitle('Update Email')
-      .should('be.visible')
-      .should('be.disabled')
-      .click();
-    // Click the button first, then confirm the tooltip is shown:
-    ui.tooltip
-      .findByText('This account type cannot update this field.')
-      .should('be.visible');
+    verifyUsernameAndEmail(
+      mockRegularRestrictedProfile,
+      'Restricted users cannot update their username. Please contact an account administrator.',
+      false
+    );
   });
 });
