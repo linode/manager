@@ -261,7 +261,14 @@ describe('Billing Activity Feed', () => {
    * - Confirms that invoice list updates to reflect changes to page size selection.
    */
   it('paginates the list of invoices', () => {
-    const mockInvoices = invoiceFactory.buildList(100);
+    const mockInvoices = [
+      invoiceFactory.build({
+        tax: 0,
+        total: 0,
+      }),
+      ...invoiceFactory.buildList(99),
+    ];
+    // const mockInvoices = invoiceFactory.buildList(100);
     const pages = [1, 2, 3, 4];
 
     mockGetInvoices(mockInvoices).as('getInvoices');
