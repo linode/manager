@@ -120,7 +120,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
         (${AFFINITY_TYPES[affinity_type]})`
           : 'Linodes Assigned to Placement Group'}
       </FormLabel>
-      <Typography component="span" fontSize="0.8rem">
+      <Typography component="span" display="block" fontSize="0.8rem">
         Maximum Number of Linodes for this group:{' '}
         {selectedPlacementGroup.capacity}
       </Typography>

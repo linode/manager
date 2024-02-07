@@ -11,7 +11,7 @@ const defaultProps = {
   loading: false,
 };
 
-describe('PlacementGroupsLanding', () => {
+describe('PlacementGroupsLinodesTable', () => {
   it('renders an error state when encountering an API error', () => {
     const { getByText } = renderWithTheme(
       <PlacementGroupsLinodesTable
@@ -44,6 +44,6 @@ describe('PlacementGroupsLanding', () => {
       <PlacementGroupsLinodesTable {...defaultProps} />
     );
 
-    expect(getAllByTestId(/placement-group-linode-/i)).toHaveLength(5);
+    expect(getAllByTestId(/placement-group-linode-/i)).toHaveLength(6);
   });
 });
