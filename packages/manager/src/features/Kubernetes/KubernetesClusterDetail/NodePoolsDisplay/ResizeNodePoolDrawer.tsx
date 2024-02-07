@@ -1,7 +1,7 @@
 import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -107,6 +107,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       types: planType ? [planType] : [],
     });
 
+  const isInvalidPricePerNode = !pricePerNode && pricePerNode !== 0;
+  const isInvalidTotalMonthlyPrice =
+    !totalMonthlyPrice && totalMonthlyPrice !== 0;
+
   return (
     <Drawer
       onClose={onClose}
@@ -121,15 +125,13 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         }}
       >
         <div className={classes.section}>
-          {totalMonthlyPrice && (
-            <Typography className={classes.summary}>
-              Current pool: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month{' '}
-              ({pluralize('node', 'nodes', nodePool.count)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month)
-            </Typography>
-          )}
+          <Typography className={classes.summary}>
+            Current pool: $
+            {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
+            /month ({pluralize('node', 'nodes', nodePool.count)} at $
+            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+            /month)
+          </Typography>
         </div>
 
         {error && <Notice text={error?.[0].reason} variant="error" />}
@@ -147,16 +149,14 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         <div className={classes.section}>
           {/* Renders total pool price/month for N nodes at price per node/month. */}
-          {pricePerNode && (
-            <Typography className={classes.summary}>
-              {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
-                updatedCount * pricePerNode
-              )}/month`}{' '}
-              ({pluralize('node', 'nodes', updatedCount)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month)
-            </Typography>
-          )}
+          <Typography className={classes.summary}>
+            {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
+              !isInvalidPricePerNode ? updatedCount * pricePerNode : undefined
+            )}/month`}{' '}
+            ({pluralize('node', 'nodes', updatedCount)} at $
+            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+            /month)
+          </Typography>
         </div>
 
         {updatedCount < nodePool.count && (
@@ -167,19 +167,23 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           <Notice important text={nodeWarning} variant="warning" />
         )}
 
-        {nodePool.count && (!pricePerNode || !totalMonthlyPrice) && (
-          <Notice
-            spacingBottom={16}
-            spacingTop={8}
-            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
-            variant="error"
-          />
-        )}
+        {nodePool.count &&
+          (isInvalidPricePerNode || isInvalidTotalMonthlyPrice) && (
+            <Notice
+              spacingBottom={16}
+              spacingTop={8}
+              text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+              variant="error"
+            />
+          )}
 
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: updatedCount === nodePool.count,
+            disabled:
+              updatedCount === nodePool.count ||
+              isInvalidPricePerNode ||
+              isInvalidTotalMonthlyPrice,
             label: 'Save Changes',
             loading: isLoading,
             onClick: handleSubmit,

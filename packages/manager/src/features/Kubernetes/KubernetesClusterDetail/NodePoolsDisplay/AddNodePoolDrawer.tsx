@@ -100,11 +100,13 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
     ?.monthly;
+  const isInvalidPricePerNode = !pricePerNode && pricePerNode !== 0;
 
   const totalPrice =
-    selectedTypeInfo && pricePerNode
+    selectedTypeInfo && !isInvalidPricePerNode
       ? selectedTypeInfo.count * pricePerNode
       : undefined;
+  const isInvalidTotalPrice = !totalPrice && totalPrice !== 0;
 
   React.useEffect(() => {
     if (open) {
@@ -199,7 +201,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             />
           )}
 
-        {selectedTypeInfo && !totalPrice && !pricePerNode && (
+        {selectedTypeInfo && isInvalidPricePerNode && isInvalidTotalPrice && (
           <Notice
             spacingBottom={16}
             spacingTop={8}
@@ -229,7 +231,10 @@ export const AddNodePoolDrawer = (props: Props) => {
           )}
           <ActionsPanel
             primaryButtonProps={{
-              disabled: !selectedTypeInfo,
+              disabled:
+                !selectedTypeInfo ||
+                isInvalidTotalPrice ||
+                isInvalidPricePerNode,
               label: 'Add pool',
               loading: isLoading,
               onClick: handleAdd,
