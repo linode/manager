@@ -201,7 +201,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             />
           )}
 
-        {selectedTypeInfo && isInvalidPricePerNode && isInvalidTotalPrice && (
+        {selectedTypeInfo && (isInvalidPricePerNode || isInvalidTotalPrice) && (
           <Notice
             spacingBottom={16}
             spacingTop={8}
