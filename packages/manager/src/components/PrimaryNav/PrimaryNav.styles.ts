@@ -36,7 +36,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       alignItems: 'center',
       color: '#fff',
       display: 'flex',
-      fontFamily: 'LatoWebSemiBold',
+      fontFamily: 'LatoWebBold',
       fontSize: '0.875rem',
       opacity: 1,
       position: 'relative',
