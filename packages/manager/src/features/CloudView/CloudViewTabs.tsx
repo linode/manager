@@ -44,7 +44,7 @@ export const CloudViewTabs = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <Namespaces></Namespaces>
+              <Namespaces />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
