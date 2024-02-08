@@ -11,14 +11,10 @@ export const useParentTokenManagement = ({
   const [isParentTokenExpired, setIsParentTokenExpired] = React.useState(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
-  const checkParentToken = async () => {
-    const isExpired = !isParentTokenValid();
-    setIsParentTokenExpired(isExpired);
-  };
-
   React.useEffect(() => {
     if (isProxyUser) {
-      checkParentToken();
+      const isExpired = !isParentTokenValid();
+      setIsParentTokenExpired(isExpired);
     }
   }, [isProxyUser]);
 
