@@ -24,8 +24,21 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
   const theme = useTheme();
   const priceFontSize = `${theme.typography.body1.fontSize}`;
 
-  return monthly && hourly && backups ? (
-    <StyledMigrationPricingContainer panelType={panelType}>
+  const shouldShowPrice =
+    monthly !== undefined &&
+    monthly !== null &&
+    hourly !== undefined &&
+    hourly !== null &&
+    backups !== undefined;
+
+  const shouldShowBackupsPrice =
+    backups && backups !== 'disabled' && backups.monthly !== null;
+
+  return shouldShowPrice ? (
+    <StyledMigrationPricingContainer
+      panelType={panelType}
+      data-testid="migration-pricing"
+    >
       <StyledSpan>{currentPanel ? 'Current' : 'New'} Price</StyledSpan>
       <Box
         alignItems="baseline"
@@ -44,7 +57,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
           interval="hour"
           price={hourly}
         />
-        {backups !== 'disabled' && backups?.monthly && (
+        {shouldShowBackupsPrice && (
           <>
             &nbsp;
             <Typography fontFamily={theme.font.bold} fontSize={priceFontSize}>
@@ -53,7 +66,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
             <DisplayPrice
               fontSize={priceFontSize}
               interval="month"
-              price={backups.monthly}
+              price={backups.monthly ?? '--.--'}
             />
           </>
         )}
