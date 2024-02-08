@@ -5,6 +5,7 @@ import type {
   Capabilities,
   Country,
   Region,
+  RegionSite,
 } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
@@ -14,6 +15,7 @@ export interface RegionSelectOption {
     region: string;
   };
   label: string;
+  site_type: RegionSite;
   unavailable: boolean;
   value: string;
 }

@@ -1,7 +1,11 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
@@ -112,6 +116,14 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         }}
         textFieldProps={{
           InputProps: {
+            endAdornment: selectedRegion?.site_type === 'edge' && (
+              <TooltipIcon
+                icon={<EdgeServer />}
+                status="other"
+                sxTooltipIcon={sxIcon}
+                text="This region is an edge server."
+              />
+            ),
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
@@ -139,3 +151,31 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     </StyledAutocompleteContainer>
   );
 });
+
+const sxIcon = {
+  '& svg': {
+    color: 'inherit !important',
+    height: 21,
+    width: 24,
+  },
+  '&:hover': {
+    color: 'inherit',
+  },
+  color: 'inherit',
+  padding: 0,
+};
+
+const StyledEndAdornment = styled(Box, { label: 'StyledEndAdornment' })(
+  ({ theme }) => ({
+    '& svg': {
+      height: 21,
+      width: 24,
+    },
+    '&:hover': {
+      color: 'inherit',
+    },
+    color: 'inherit',
+    display: 'flex',
+    marginLeft: 4,
+  })
+);

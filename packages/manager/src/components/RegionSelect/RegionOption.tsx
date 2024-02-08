@@ -1,10 +1,13 @@
+import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
+import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
@@ -89,9 +92,43 @@ export const RegionOption = ({ option, props, selected }: Props) => {
               </Box>
             )}
           </Box>
-          {selected && <SelectedIcon visible={selected} />}
+          {option.site_type === 'edge' && (
+            <TooltipIcon
+              icon={<EdgeServer />}
+              status="other"
+              sxTooltipIcon={sxIcon}
+              text="This region is an edge site."
+            />
+          )}
         </>
       </StyledListItem>
     </Tooltip>
   );
 };
+
+const sxIcon = {
+  '& svg': {
+    height: 21,
+    width: 24,
+  },
+  '&:hover': {
+    color: 'inherit',
+  },
+  color: 'inherit',
+  padding: 0,
+};
+
+// const StyledEndAdornment = styled(Box, { label: 'StyledEndAdornment' })(
+//   ({ theme }) => ({
+//     '& svg': {
+//       height: 21,
+//       width: 24,
+//     },
+//     '&:hover': {
+//       color: 'inherit',
+//     },
+//     color: 'inherit',
+//     display: 'flex',
+//     marginLeft: 4,
+//   })
+// );

@@ -43,6 +43,7 @@ export const getRegionOptions = ({
           region: group,
         },
         label: `${region.label} (${region.id})`,
+        site_type: region.site_type,
         unavailable: getRegionOptionAvailability({
           accountAvailabilityData,
           currentCapability,
@@ -116,6 +117,7 @@ export const getSelectedRegionById = ({
       region: group,
     },
     label: `${selectedRegion.label} (${selectedRegion.id})`,
+    site_type: selectedRegion.site_type,
     unavailable: getRegionOptionAvailability({
       accountAvailabilityData,
       currentCapability,
