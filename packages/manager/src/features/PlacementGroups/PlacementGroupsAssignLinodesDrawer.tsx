@@ -67,13 +67,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
   );
 
   React.useEffect(() => {
-    if (!open) {
-      return;
+    if (open) {
+      setSelectedLinode(null);
+      setLocalLinodesSelection([]);
+      setGeneralError(undefined);
     }
-
-    setSelectedLinode(null);
-    setLocalLinodesSelection([]);
-    setGeneralError(undefined);
   }, [open]);
 
   const linodesFromAllPlacementGroups = getLinodesFromAllPlacementGroups(
@@ -96,7 +94,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return (
       linodes.filter((linode) => {
         const isNotAlreadyAssigned = !linodesFromAllPlacementGroups.includes(
-          linode.id as number
+          linode.id
         );
         const isNotAssignedInDrawer = !localLinodesSelection.find(
           (l) => l.id === linode.id
@@ -180,7 +178,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     }
   };
 
-  const placementGroupFull = hasPlacementGroupReachedCapacity(
+  const isPlacementGroupFull = hasPlacementGroupReachedCapacity(
     selectedPlacementGroup
   );
 
@@ -203,7 +201,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
-              disabled={placementGroupFull}
+              disabled={isPlacementGroupFull}
               helperText="Only displaying Linodes that aren’t assigned to a Placement Group"
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
@@ -213,13 +211,13 @@ export const PlacementGroupsAssignLinodesDrawer = (
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
-                disabled: !selectedLinode || placementGroupFull,
+                disabled: !selectedLinode || isPlacementGroupFull,
                 label: 'Add Linode',
                 type: 'submit',
               }}
               sx={{ pt: 2 }}
             />
-            {placementGroupFull && (
+            {isPlacementGroupFull && (
               <Notice
                 text="This Placement Group has the maximum number of Linodes allowed"
                 variant="warning"

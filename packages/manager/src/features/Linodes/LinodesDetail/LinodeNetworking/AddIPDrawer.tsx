@@ -3,7 +3,6 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -11,7 +10,6 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
-import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import {
@@ -165,7 +163,7 @@ export const AddIPDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add an IP Address">
-      <Stack spacing={2}>
+      <React.Fragment>
         <Typography variant="h2">IPv4</Typography>
         {Boolean(ipv4Error) && (
           <Notice spacingTop={8} text={ipv4Error?.[0].reason} variant="error" />
@@ -206,6 +204,7 @@ export const AddIPDrawer = (props: Props) => {
                   label: 'Allocate',
                   loading: ipv4Loading,
                   onClick: handleAllocateIPv4,
+                  sx: { marginBottom: 8 },
                 }}
               />
             </div>
@@ -217,11 +216,11 @@ export const AddIPDrawer = (props: Props) => {
               label: 'Allocate',
               loading: ipv4Loading,
               onClick: handleAllocateIPv4,
+              sx: { marginBottom: 8 },
             }}
           />
         )}
-        <Divider sx={{ pt: 2 }} />
-        <Typography sx={{ pt: 2 }} variant="h2">
+        <Typography sx={{ marginTop: theme.spacing(4) }} variant="h2">
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
@@ -270,7 +269,7 @@ export const AddIPDrawer = (props: Props) => {
             sx: { marginBottom: 8 },
           }}
         />
-      </Stack>
+      </React.Fragment>
     </Drawer>
   );
 };
