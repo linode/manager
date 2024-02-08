@@ -45,7 +45,7 @@ Test execution will stop at the debugger statement, and you will be able to use 
 
 ### React Testing Library
 
-We have some older tests that still use the Enzyme framework, but for new tests we generally use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). This library provides a set of tools to render React components from within the Vitest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
+This library provides a set of tools to render React components from within the Vitest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
 
 A simple test using this library will look something like this:
 
