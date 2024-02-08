@@ -3,10 +3,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import { Order } from 'src/components/Pagey/Pagey';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+
+export type Order = 'asc' | 'desc';
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account

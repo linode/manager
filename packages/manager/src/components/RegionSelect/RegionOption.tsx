@@ -5,7 +5,6 @@ import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
-import { useFlags } from 'src/hooks/useFlags';
 
 import {
   SelectedIcon,
@@ -23,9 +22,7 @@ type Props = {
 };
 
 export const RegionOption = ({ option, props, selected }: Props) => {
-  const flags = useFlags();
-  const isDisabledMenuItem =
-    Boolean(flags.dcGetWell) && Boolean(option.unavailable);
+  const isDisabledMenuItem = option.unavailable;
 
   return (
     <Tooltip
