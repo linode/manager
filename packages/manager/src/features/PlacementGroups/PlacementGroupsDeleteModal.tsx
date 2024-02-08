@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { useDeletePlacementGroup } from 'src/queries/placementGroups';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -51,6 +52,12 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       title={dialogTitle}
     >
       {error && <Notice text={error?.[0]?.reason} variant="error" />}
+      <Notice variant="warning">
+        <Typography>
+          <strong>Warning:</strong> deleting a placement group is permanent and
+          can’t be undone.
+        </Typography>
+      </Notice>
     </TypeToConfirmDialog>
   );
 };
