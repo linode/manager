@@ -133,7 +133,7 @@ export const assignLinodesToPlacementGroup = (
  */
 export const unassignLinodesFromPlacementGroup = (
   placementGroupId: number,
-  paload: UnassignLinodesFromPlacementGroupPayload
+  payload: UnassignLinodesFromPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -142,5 +142,5 @@ export const unassignLinodesFromPlacementGroup = (
       )}/unassign`
     ),
     setMethod('POST'),
-    setData(paload)
+    setData(payload)
   );
