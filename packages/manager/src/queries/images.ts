@@ -23,11 +23,11 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { profileQueryStore } from './profile';
 
 export const queryKey = 'images';
 
@@ -55,7 +55,7 @@ export const useCreateImageMutation = () => {
       onSuccess() {
         queryClient.invalidateQueries(`${queryKey}-list`);
         // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+        profileQueryStore.grants.invalidateQueries(queryClient);
       },
     }
   );

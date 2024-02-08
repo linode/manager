@@ -40,7 +40,7 @@ import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
 import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
 import { queryPresets } from '../base';
-import { queryKey as PROFILE_QUERY_KEY } from '../profile';
+import { profileQueryStore } from '../profile';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
 export const queryKey = 'linodes';
@@ -159,7 +159,7 @@ export const useCreateLinodeMutation = () => {
         linode
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      profileQueryStore.grants.invalidateQueries(queryClient);
     },
   });
 };

@@ -24,11 +24,11 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { updateInPaginatedStore } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { profileQueryStore } from './profile';
 
 export const queryKey = 'volumes';
 
@@ -127,7 +127,7 @@ export const useCreateVolumeMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      profileQueryStore.grants.invalidateQueries(queryClient);
     },
   });
 };

@@ -15,9 +15,10 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
+
 import { updateInPaginatedStore } from './base';
 import { queryKey } from './profile';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
