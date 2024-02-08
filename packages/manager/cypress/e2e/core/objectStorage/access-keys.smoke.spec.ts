@@ -463,15 +463,13 @@ describe('object storage access keys smoke tests', () => {
         });
 
       ui.actionMenuItem
-        // TODO M3-7696 Replace 'Edit Label' with 'Edit' upon merging #10118.
-        .findByTitle('Edit Label')
+        .findByTitle('Edit')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
       ui.drawer
-        // TODO M3-7697 Replace 'Edit Access Key Label' with 'Edit Access Key' upon merging #10118.
-        .findByTitle('Edit Access Key Label')
+        .findByTitle('Edit Access Key')
         .should('be.visible')
         .within(() => {
           cy.contains('Label (required)')
