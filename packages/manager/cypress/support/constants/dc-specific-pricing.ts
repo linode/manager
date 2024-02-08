@@ -75,9 +75,10 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       monthly: 12.2,
     },
     {
-      hourly: 0.006,
+      // Mock a DC with $0 region prices, which is possible in some circumstances (e.g. Limited Availability).
+      hourly: 0.0,
       id: 'us-southeast',
-      monthly: 4.67,
+      monthly: 0.0,
     },
   ],
 });
