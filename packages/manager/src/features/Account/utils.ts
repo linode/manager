@@ -17,19 +17,25 @@ interface GetRestrictedResourceText {
   resourceType: GrantTypeMap;
 }
 
-export type isRestrictedGlobalGrantType =
-  | {
-      globalGrantType: 'account_access';
-      grants: Grants | undefined;
-      permittedGrantLevel: GrantLevel;
-      profile: Profile | undefined;
-    }
-  | {
-      globalGrantType: Exclude<GlobalGrantTypes, 'account_access'>;
-      grants: Grants | undefined;
-      permittedGrantLevel?: GrantLevel;
-      profile: Profile | undefined;
-    };
+interface GrantsProfileSchema {
+  grants: Grants | undefined;
+  profile: Profile | undefined;
+}
+
+interface AccountAccessGrant extends GrantsProfileSchema {
+  globalGrantType: 'account_access';
+  permittedGrantLevel: GrantLevel;
+}
+
+interface NonAccountAccessGrant extends GrantsProfileSchema {
+  globalGrantType: Exclude<GlobalGrantTypes, 'account_access'>;
+  permittedGrantLevel?: GrantLevel;
+}
+
+// Discriminating union to determine the type of global grant
+export type IsRestrictedGlobalGrantType =
+  | AccountAccessGrant
+  | NonAccountAccessGrant;
 
 export const getRestrictedResourceText = ({
   action = 'edit',
@@ -61,7 +67,7 @@ export const isRestrictedGlobalGrantType = ({
   grants,
   permittedGrantLevel,
   profile,
-}: isRestrictedGlobalGrantType): boolean => {
+}: IsRestrictedGlobalGrantType): boolean => {
   if (globalGrantType !== 'account_access') {
     return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
   }
