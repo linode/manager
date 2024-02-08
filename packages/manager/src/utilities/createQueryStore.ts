@@ -88,16 +88,28 @@ export const createQueryStore = <T>(
         }
       : {}),
     ...(config.children
-      ? Object.entries(config.children).reduce((acc, child) => {
+      ? Object.keys(config.children).reduce((acc, child) => {
           const childQueryKey = [...queryKey, child[0]];
           return {
             ...acc,
-            [child[0]]: createQueryStore(
-              childQueryKey,
-              typeof child[1] == 'function'
-                ? (...args: unknown[]) => (child[1] as CallableFunction)(args)
-                : child[1]
-            ),
+            [child]:
+              typeof config.children![child] == 'function'
+                ? Object.assign(
+                    (...args: unknown[]) =>
+                      createQueryStore(
+                        childQueryKey,
+                        (config.children![child] as CallableFunction)(args)
+                      ),
+                    {
+                      invalidateQueries: (queryClient, filters, options) =>
+                        queryClient.invalidateQueries(
+                          childQueryKey,
+                          filters,
+                          options
+                        ),
+                    } as BaseQueryMethods
+                  )
+                : createQueryStore(childQueryKey, config.children![child]),
           };
         }, {})
       : {}),
