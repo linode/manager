@@ -20,38 +20,51 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     error,
     isLoading,
     mutateAsync: deletePlacementGroup,
+    reset,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
 
-  if (!selectedPlacementGroup) {
-    return null;
-  }
+  React.useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
 
-  const onDelete = () => {
-    deletePlacementGroup().then(() => {
+  const onDelete = async () => {
+    try {
+      await deletePlacementGroup();
       onClose();
-    });
+    } catch (e) {}
   };
-
-  const { affinity_type, label } = selectedPlacementGroup;
-
-  const dialogTitle = `Delete Placement Group ${label} (${AFFINITY_TYPES[affinity_type]})`;
 
   return (
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: label,
+        name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Groups',
       }}
+      title={
+        selectedPlacementGroup
+          ? `Delete Placement Group ${selectedPlacementGroup?.label} (${
+              AFFINITY_TYPES[selectedPlacementGroup?.affinity_type]
+            })`
+          : 'Delete Placement Group'
+      }
+      disabled={selectedPlacementGroup === undefined}
       label="Placement Group"
       loading={isLoading}
       onClick={onDelete}
       onClose={onClose}
       open={open}
-      title={dialogTitle}
     >
-      {error && <Notice text={error?.[0]?.reason} variant="error" />}
+      {error && (
+        <Notice
+          key={selectedPlacementGroup?.id}
+          text={error?.[0]?.reason}
+          variant="error"
+        />
+      )}
       <Notice variant="warning">
         <Typography>
           <strong>Warning:</strong> deleting a placement group is permanent and

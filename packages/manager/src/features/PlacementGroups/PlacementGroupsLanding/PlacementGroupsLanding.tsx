@@ -81,7 +81,6 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
-    setSelectedPlacementGroup(undefined);
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
