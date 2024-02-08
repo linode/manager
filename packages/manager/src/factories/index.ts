@@ -41,6 +41,7 @@ export * from './statusPage';
 export * from './subnets';
 export * from './support';
 export * from './tags';
+export * from './types';
 export * from './volume';
 export * from './vlans';
 export * from './vpcs';
