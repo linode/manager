@@ -94,7 +94,9 @@ export const getLinodeIPv6Ranges = (
 export const IPTransfer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
   const theme = useTheme();
-  const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
+  const { mutateAsync: assignAddresses } = useAssignAdressesMutation({
+    currentLinodeId: linodeId,
+  });
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 

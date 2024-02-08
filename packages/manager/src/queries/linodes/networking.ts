@@ -8,6 +8,7 @@ import {
   IPRange,
   IPRangeInformation,
   IPSharingPayload,
+  Linode,
   LinodeIPsResponse,
   Params,
   allocateIPAddress,
@@ -26,7 +27,6 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { useHistory } from 'react-router-dom';
 
 import { queryKey } from './linodes';
 import { getAllIPv6Ranges, getAllIps } from './requests';
@@ -106,9 +106,12 @@ export const useLinodeShareIPMutation = () => {
   });
 };
 
-export const useAssignAdressesMutation = () => {
+export const useAssignAdressesMutation = ({
+  currentLinodeId,
+}: {
+  currentLinodeId: Linode['id'];
+}) => {
   const queryClient = useQueryClient();
-  const { location } = useHistory();
   return useMutation<{}, APIError[], IPAssignmentPayload>(assignAddresses, {
     onSuccess(_, variables) {
       for (const { linode_id } of variables.assignments) {
@@ -120,13 +123,15 @@ export const useAssignAdressesMutation = () => {
         ]);
         queryClient.invalidateQueries([queryKey, 'linode', linode_id, 'ips']);
       }
-      const currentLinodeId = location?.pathname?.split('/')?.[2];
+      // this invalidation will only work when calling this mutation from a Linode detail page.
+      // The mutation is currently only used in the IPTransfer modal, which works.
       queryClient.invalidateQueries([
         queryKey,
         'linode',
-        Number(currentLinodeId),
+        currentLinodeId,
         'ips',
       ]);
+      queryClient.invalidateQueries([queryKey, 'ipv6']);
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
