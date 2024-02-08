@@ -42,7 +42,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         action: 'deletion',
         name: label,
         primaryBtnText: 'Delete',
-        type: 'Placement Group',
+        type: 'Placement Groups',
       }}
       label="Placement Group"
       loading={isLoading}
