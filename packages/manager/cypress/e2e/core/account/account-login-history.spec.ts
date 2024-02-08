@@ -4,7 +4,6 @@
 
 import { accountFactory, profileFactory } from 'src/factories';
 import { accountLoginFactory } from 'src/factories/accountLogin';
-import { grantsFactory } from 'src/factories/grants';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockGetAccount,
@@ -14,10 +13,7 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import {
-  mockGetProfile,
-  mockGetProfileGrants,
-} from 'support/intercepts/profile';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 describe('Account login history', () => {
@@ -156,15 +152,12 @@ describe('Account login history', () => {
   });
 
   /**
-   * - Confirms that a restricted user with "read-only" account access can navigate to the Login History page.
-   * - Confirms that the user cannot see login history data.
-   * - Confirms that the user sees a notice instead.
+   * - Confirms that a restricted user can navigate to the Login History page.
+   * - Confirms that a restricted user cannot see login history data.
+   * - Confirms that a restricted user sees a notice instead.
    */
-  it('restricted users without `read_write` account_access cannot view login history', () => {
+  it('restricted users cannot view login history', () => {
     const mockAccount = accountFactory.build();
-    const mockGrants = grantsFactory.build({
-      global: { account_access: 'read_only' },
-    });
     const mockProfile = profileFactory.build({
       username: 'mock-restricted-user',
       restricted: true,
@@ -173,7 +166,6 @@ describe('Account login history', () => {
 
     mockGetProfile(mockProfile).as('getProfile');
     mockGetAccount(mockAccount).as('getAccount');
-    mockGetProfileGrants(mockGrants).as('getProfileGrants');
 
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
@@ -188,7 +180,6 @@ describe('Account login history', () => {
       '@getClientStream',
       '@getFeatureFlags',
       '@getProfile',
-      '@getProfileGrants',
     ]);
 
     // Confirm helper text above table and table are not visible.
