@@ -27,7 +27,7 @@ import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
-import IPTransfer from './IPTransfer';
+import { IPTransfer } from './IPTransfer';
 import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
 import {
   StyledRootGrid,
