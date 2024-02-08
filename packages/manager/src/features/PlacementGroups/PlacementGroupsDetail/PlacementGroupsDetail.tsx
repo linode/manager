@@ -20,6 +20,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getPlacementGroupLinodeCount } from '../utils';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
+import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
@@ -108,7 +109,9 @@ export const PlacementGroupsDetail = () => {
       >
         <TabLinkList tabs={tabs} />
         <TabPanels>
-          <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
+          <SafeTabPanel index={0}>
+            <PlacementGroupsSummary placementGroup={placementGroup} />
+          </SafeTabPanel>
           <SafeTabPanel index={1}>
             <PlacementGroupsLinodes placementGroup={placementGroup} />
           </SafeTabPanel>
