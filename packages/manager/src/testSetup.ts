@@ -1,11 +1,5 @@
 import matchers from '@testing-library/jest-dom/matchers';
-import Enzyme from 'enzyme';
-// @ts-expect-error not a big deal, we can suffer
-import Adapter from 'enzyme-adapter-react-16';
 import { expect } from 'vitest';
-
-// // Enzyme React 17 adapter.
-// Enzyme.configure({ adapter: new Adapter() });
 
 // JSDom matchers.
 expect.extend(matchers);
@@ -17,8 +11,6 @@ afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
 
 require('@testing-library/jest-dom/extend-expect');
-
-Enzyme.configure({ adapter: new Adapter() });
 
 // @ts-expect-error this prevents some console errors
 HTMLCanvasElement.prototype.getContext = () => {
