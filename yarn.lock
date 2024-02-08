@@ -10219,7 +10219,7 @@ launchdarkly-js-sdk-common@5.0.3:
     fast-deep-equal "^2.0.1"
     uuid "^8.0.0"
 
-launchdarkly-react-client-sdk@^3.0.10:
+launchdarkly-react-client-sdk@3.0.10:
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/launchdarkly-react-client-sdk/-/launchdarkly-react-client-sdk-3.0.10.tgz#33816d939d9bd18b0723c0fd30b4772f2429f3de"
   integrity sha512-ssb3KWe9z42+q8X2u32OrlDntGLsv0NP/p4E2Hx4O9RU0OeFm9v6omOlIk9SMsYEQD4QzLSXAp5L3cSN2ssLlA==
