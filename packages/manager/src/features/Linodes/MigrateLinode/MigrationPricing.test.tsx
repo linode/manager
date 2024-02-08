@@ -111,7 +111,6 @@ describe('MigrationPricing component', () => {
       );
       expect(await findByText('| Backups', { exact: false })).toBeVisible();
       expect(await findByText('$2.50')).toBeVisible();
-      // expect(await findByTestId('migration-pricing')).not.toBeNull();
     });
 
     it('shows $0 backup prices', async () => {
