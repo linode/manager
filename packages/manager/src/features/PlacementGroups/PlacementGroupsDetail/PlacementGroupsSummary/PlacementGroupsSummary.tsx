@@ -27,7 +27,9 @@ export const PlacementGroupsSummary = (props: Props) => {
     regions?.find((region) => region.id === placementGroup.region)?.label ??
     placementGroup.region;
 
-  const warningNoticeText = `Placement Group ${placementGroup.label} (${placementGroup.affinity_type}) is non-compliant.
+  const warningNoticeText = `Placement Group ${placementGroup.label} (${
+    AFFINITY_TYPES[placementGroup?.affinity_type]
+  }) is non-compliant.
   We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group.`;
 
   return (
