@@ -123,8 +123,6 @@ export const useAssignAdressesMutation = ({
         ]);
         queryClient.invalidateQueries([queryKey, 'linode', linode_id, 'ips']);
       }
-      // this invalidation will only work when calling this mutation from a Linode detail page.
-      // The mutation is currently only used in the IPTransfer modal, which works.
       queryClient.invalidateQueries([
         queryKey,
         'linode',
