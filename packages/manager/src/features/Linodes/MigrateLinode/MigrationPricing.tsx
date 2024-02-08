@@ -1,6 +1,7 @@
 import { PriceObject } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material';
+import { isNumber } from 'lodash';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -25,11 +26,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
   const priceFontSize = `${theme.typography.body1.fontSize}`;
 
   const shouldShowPrice =
-    monthly !== undefined &&
-    monthly !== null &&
-    hourly !== undefined &&
-    hourly !== null &&
-    backups !== undefined;
+    isNumber(monthly) && isNumber(hourly) && backups !== undefined;
 
   const shouldShowBackupsPrice =
     backups && backups !== 'disabled' && backups.monthly !== null;
