@@ -35,9 +35,10 @@ import {
 } from 'src/containers/profile.container';
 import { RegionsProps, withRegions } from 'src/containers/regions.container';
 import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags
+} from 'src/containers/flags.container';
 import {
   WithLinodesProps,
   withLinodes,
@@ -136,7 +137,7 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   RouteComponentProps<{}, any, any> &
   WithProfileProps &
   AgreementsProps &
@@ -952,7 +953,7 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   connected,
   withSnackbar,
-  withFlags,
+  withFeatureFlags,
   withProfile,
   withAgreements,
   withQueryClient,
