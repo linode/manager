@@ -19,6 +19,8 @@ import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
+import { hasInvalidNodePoolPrice } from './utils';
+import { isNumber } from 'lodash';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {
@@ -107,9 +109,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       types: planType ? [planType] : [],
     });
 
-  const isInvalidPricePerNode = !pricePerNode && pricePerNode !== 0;
-  const isInvalidTotalMonthlyPrice =
-    !totalMonthlyPrice && totalMonthlyPrice !== 0;
+  const hasInvalidPrice = hasInvalidNodePoolPrice(
+    pricePerNode,
+    totalMonthlyPrice
+  );
 
   return (
     <Drawer
@@ -153,7 +156,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             {/* Renders total pool price/month for N nodes at price per node/month. */}
             <Typography className={classes.summary}>
               {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
-                !isInvalidPricePerNode ? updatedCount * pricePerNode : undefined
+                isNumber(pricePerNode) ? updatedCount * pricePerNode : undefined
               )}/month`}{' '}
               ({pluralize('node', 'nodes', updatedCount)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
@@ -169,23 +172,19 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             <Notice important text={nodeWarning} variant="warning" />
           )}
 
-          {nodePool.count &&
-            (isInvalidPricePerNode || isInvalidTotalMonthlyPrice) && (
-              <Notice
-                spacingBottom={16}
-                spacingTop={8}
-                text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
-                variant="error"
-              />
-            )}
+          {nodePool.count && hasInvalidPrice && (
+            <Notice
+              spacingBottom={16}
+              spacingTop={8}
+              text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+              variant="error"
+            />
+          )}
 
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled:
-                updatedCount === nodePool.count ||
-                isInvalidPricePerNode ||
-                isInvalidTotalMonthlyPrice,
+              disabled: updatedCount === nodePool.count || hasInvalidPrice,
               label: 'Save Changes',
               loading: isLoading,
               onClick: handleSubmit,

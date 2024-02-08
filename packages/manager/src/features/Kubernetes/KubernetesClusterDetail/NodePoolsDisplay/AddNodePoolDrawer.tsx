@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material/styles';
+import { isNumber } from 'lodash';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -20,6 +21,7 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../kubeUtils';
+import { hasInvalidNodePoolPrice } from './utils';
 
 import type { Region } from '@linode/api-v4';
 
@@ -100,13 +102,13 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
     ?.monthly;
-  const isInvalidPricePerNode = !pricePerNode && pricePerNode !== 0;
 
   const totalPrice =
-    selectedTypeInfo && !isInvalidPricePerNode
+    selectedTypeInfo && isNumber(pricePerNode)
       ? selectedTypeInfo.count * pricePerNode
       : undefined;
-  const isInvalidTotalPrice = !totalPrice && totalPrice !== 0;
+
+  const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
 
   React.useEffect(() => {
     if (open) {
@@ -201,7 +203,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             />
           )}
 
-        {selectedTypeInfo && (isInvalidPricePerNode || isInvalidTotalPrice) && (
+        {selectedTypeInfo && hasInvalidPrice && (
           <Notice
             spacingBottom={16}
             spacingTop={8}
@@ -231,10 +233,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           )}
           <ActionsPanel
             primaryButtonProps={{
-              disabled:
-                !selectedTypeInfo ||
-                isInvalidTotalPrice ||
-                isInvalidPricePerNode,
+              disabled: !selectedTypeInfo || hasInvalidPrice,
               label: 'Add pool',
               loading: isLoading,
               onClick: handleAdd,
