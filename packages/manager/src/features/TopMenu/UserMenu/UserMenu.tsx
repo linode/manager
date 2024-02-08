@@ -16,6 +16,7 @@ import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
@@ -60,6 +61,7 @@ export const UserMenu = React.memo(() => {
   const { data: grants } = useGrants();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
+  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const hasGrant = (grant: GlobalGrantTypes) =>
     grants?.global?.[grant] ?? false;
@@ -176,6 +178,17 @@ export const UserMenu = React.memo(() => {
     );
   };
 
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired && sessionContext.continueSession === false) {
+      return sessionContext.updateState({
+        continueSession: true,
+        isOpen: true,
+      });
+    }
+
+    setIsDrawerOpen(true);
+  };
+
   return (
     <>
       <Tooltip
@@ -258,8 +271,8 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
-              disabled={isParentTokenExpired}
-              onClick={() => setIsDrawerOpen(true)}
+              // disabled={isParentTokenExpired}
+              onClick={handleAccountSwitch}
               tooltipText={PARENT_SESSION_EXPIRED}
             />
           )}

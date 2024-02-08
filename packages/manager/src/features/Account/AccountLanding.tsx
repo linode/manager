@@ -11,6 +11,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -52,6 +53,7 @@ const AccountLanding = () => {
 
   const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
@@ -93,6 +95,17 @@ const AccountLanding = () => {
     '/account/billing/add-payment-method',
     '/account/billing/edit',
   ];
+
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired && sessionContext.continueSession === false) {
+      return sessionContext.updateState({
+        continueSession: true,
+        isOpen: true,
+      });
+    }
+
+    setIsDrawerOpen(true);
+  };
 
   const getDefaultTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
@@ -142,8 +155,8 @@ const AccountLanding = () => {
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton
-        disabled={isParentTokenExpired}
-        onClick={() => setIsDrawerOpen(true)}
+        // disabled={isParentTokenExpired}
+        onClick={handleAccountSwitch}
         tooltipText={PARENT_SESSION_EXPIRED}
       />
     ) : undefined;
