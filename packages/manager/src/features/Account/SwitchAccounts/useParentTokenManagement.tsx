@@ -9,10 +9,12 @@ export const useParentTokenManagement = ({
 }) => {
   const [isParentTokenExpired, setIsParentTokenExpired] = React.useState(false);
 
-  if (isProxyUser) {
-    const isExpired = !isParentTokenValid();
-    setIsParentTokenExpired(isExpired);
-  }
+  React.useEffect(() => {
+    if (isProxyUser) {
+      const isExpired = !isParentTokenValid();
+      setIsParentTokenExpired(isExpired);
+    }
+  }, [isProxyUser]);
 
   return { isParentTokenExpired };
 };
