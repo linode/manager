@@ -25,6 +25,7 @@ interface EntityInfo {
     | 'Linode'
     | 'Load Balancer'
     | 'NodeBalancer'
+    | 'Placement Group'
     | 'Subnet'
     | 'VPC'
     | 'Volume';
