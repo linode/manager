@@ -158,7 +158,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     }
   };
 
-  const handleUnassignLinode = (linode: Linode) => {
+  const handleUnassignLinode = async (linode: Linode) => {
     setLocalLinodesSelection(
       localLinodesSelection.filter((l) => l.id !== linode.id)
     );
@@ -168,7 +168,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     };
 
     try {
-      unassignLinodes(payload);
+      await unassignLinodes(payload);
     } catch (error) {
       setGeneralError(
         error
