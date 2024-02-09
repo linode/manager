@@ -16,6 +16,7 @@ import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -43,7 +44,6 @@ import type {
   Linode,
   Subnet,
 } from '@linode/api-v4';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing

@@ -11,7 +11,7 @@ const defaultProps = {
   loading: false,
 };
 
-describe('PlacementGroupsLanding', () => {
+describe('PlacementGroupsLinodesTable', () => {
   it('renders an error state when encountering an API error', () => {
     const { getByText } = renderWithTheme(
       <PlacementGroupsLinodesTable

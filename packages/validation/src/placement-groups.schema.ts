@@ -1,4 +1,4 @@
-import { array, number, object, string } from 'yup';
+import { object, string } from 'yup';
 
 const labelValidation = string()
   .required('Label is required.')
@@ -13,15 +13,4 @@ export const createPlacementGroupSchema = object({
 
 export const renamePlacementGroupSchema = object({
   label: labelValidation,
-});
-
-/**
- * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
- */
-export const assignVMsToPlacementGroupSchema = object({
-  linodeIds: array().of(number().max(1, 'Only one Linode id is supported.')),
-});
-
-export const unassignVMsFromPlacementGroupSchema = object({
-  linodeIds: array().of(number().max(1, 'Only one Linode id is supported.')),
 });
