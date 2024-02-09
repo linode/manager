@@ -907,7 +907,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description: 'Data science notebook.',
-    alt_name: 'Data science and machine learning development enviornment.',
+    alt_name: 'Data science and machine learning development environment.',
     categories: ['Productivity'],
     colors: {
       end: '9e9e9e',
