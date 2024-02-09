@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { FlagSet } from 'src/featureFlags'
+import type { FlagSet } from 'src/featureFlags';
 
 export interface WithFeatureFlagProps {
   flags: FlagSet;

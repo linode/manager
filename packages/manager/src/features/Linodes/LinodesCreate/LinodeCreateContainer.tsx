@@ -26,6 +26,10 @@ import {
   WithEventsPollingActionProps,
   withEventsPollingActions,
 } from 'src/containers/events.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -35,10 +39,6 @@ import {
 } from 'src/containers/profile.container';
 import { RegionsProps, withRegions } from 'src/containers/regions.container';
 import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import {
-  WithFeatureFlagProps,
-  withFeatureFlags
-} from 'src/containers/flags.container';
 import {
   WithLinodesProps,
   withLinodes,

@@ -35,7 +35,7 @@ import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import {
   WithFeatureFlagProps,
-  withFeatureFlags
+  withFeatureFlags,
 } from 'src/containers/flags.container';
 import {
   WithQueryClientProps,
