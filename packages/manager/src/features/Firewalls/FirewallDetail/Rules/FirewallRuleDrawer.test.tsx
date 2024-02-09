@@ -52,7 +52,7 @@ describe('AddRuleDrawer', () => {
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
-    await userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
+    await userEvent.selectOptions(screen.getByLabelText('Protocol'), 'ICMP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 
@@ -61,10 +61,7 @@ describe('AddRuleDrawer', () => {
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
-    await userEvent.selectOptions(
-      screen.getByPlaceholderText(/protocol/i),
-      'IPENCAP'
-    );
+    await userEvent.selectOptions(screen.getByLabelText('Protocol'), 'IPENCAP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 });

@@ -55,18 +55,17 @@ describe('Volume action menu', () => {
   });
 
   it('should include Detach if the Volume is attached', async () => {
+    const attachedVolune = volumeFactory.build({
+      linode_id: 2,
+      linode_label: 'linode-2',
+    });
+
     const { getByLabelText, getByText, queryByText } = renderWithTheme(
-      <VolumesActionMenu
-        {...props}
-        volume={volumeFactory.build({
-          linode_id: 2,
-          linode_label: 'linode-2',
-        })}
-      />
+      <VolumesActionMenu {...props} volume={attachedVolune} />
     );
 
     const actionMenuButton = getByLabelText(
-      `Action menu for Volume ${volume.label}`
+      `Action menu for Volume ${attachedVolune.label}`
     );
 
     await userEvent.click(actionMenuButton);
