@@ -913,14 +913,15 @@ export const oneClickApps: OCA[] = [
       end: '9e9e9e',
       start: 'f37626',
     },
-    description: 'JupyterLab is a cutting-edge web-based, interactive development environment, geared towards data science, machine learning and other scientific computing workflows.',
+    description:
+      'JupyterLab is a cutting-edge web-based, interactive development environment, geared towards data science, machine learning and other scientific computing workflows.',
     logo_url: 'jupyter.svg',
     name: 'JupyterLab',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/jupyterlab/',
-        title: 'Deploy JupyterLab through the Linode Marketplace', 
+        title: 'Deploy JupyterLab through the Linode Marketplace',
       },
     ],
     summary: 'Data science development environment.',
@@ -1320,15 +1321,15 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.mysql.com/',
   },
   {
-    alt_description:
-      `Microservice centeric stream processing.`,
+    alt_description: `Microservice centeric stream processing.`,
     alt_name: 'Microservice messaging bus',
     categories: ['Development'],
     colors: {
       end: '000000',
       start: '0086FF',
     },
-    description: 'NATS is an distributed PubSub technology that enables applications to securely communicate across any combination of cloud vendors, on-premise, edge, web and mobile, and devices.',
+    description:
+      'NATS is a distributed PubSub technology that enables applications to securely communicate across any combination of cloud vendors, on-premise, edge, web and mobile, and devices.',
     logo_url: 'nats.svg',
     name: 'NATS Single Node',
     related_guides: [
