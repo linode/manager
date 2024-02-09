@@ -89,7 +89,7 @@ export const createQueryStore = <T>(
       : {}),
     ...(config.children
       ? Object.keys(config.children).reduce((acc, child) => {
-          const childQueryKey = [...queryKey, child[0]];
+          const childQueryKey = [...queryKey, child];
           return {
             ...acc,
             [child]:
