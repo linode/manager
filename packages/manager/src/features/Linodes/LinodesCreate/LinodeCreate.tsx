@@ -33,10 +33,10 @@ import {
   WithAccountProps,
   withAccount,
 } from 'src/containers/account.container';
+import { WithFeatureFlagProps } from 'src/containers/flags.container';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
-import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
@@ -170,7 +170,7 @@ type InnerProps = WithTypesRegionsAndImages &
 
 type CombinedProps = AllFormStateAndHandlers &
   AppsData &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   ImagesProps &
   InnerProps &
   ReduxStateProps &
