@@ -4,6 +4,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Hidden } from 'src/components/Hidden';
+import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -15,11 +16,14 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountLoginsQuery } from 'src/queries/accountLogins';
+import { useProfile } from 'src/queries/profile';
 
 import AccountLoginsTableRow from './AccountLoginsTableRow';
+import { getAccessRestrictedText } from './utils';
 
 const preferenceKey = 'account-logins';
 
@@ -40,6 +44,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 const AccountLogins = () => {
   const { classes } = useStyles();
   const pagination = usePagination(1, preferenceKey);
+  const flags = useFlags();
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -61,6 +66,13 @@ const AccountLogins = () => {
     },
     filter
   );
+  const { data: profile } = useProfile();
+
+  const isRestrictedChildUser = Boolean(
+    flags.parentChildAccountAccess && profile?.user_type === 'child'
+  );
+  const isAccountAccessRestricted =
+    isRestrictedChildUser || profile?.restricted;
 
   const renderTableContent = () => {
     if (isLoading) {
@@ -90,12 +102,12 @@ const AccountLogins = () => {
     return null;
   };
 
-  return (
+  return !isAccountAccessRestricted ? (
     <>
       <Typography className={classes.copy} variant="body1">
         Logins across all users on your account over the last 90 days.
       </Typography>
-      <Table>
+      <Table aria-label="Account Logins">
         <TableHead>
           <TableRow>
             <TableSortCell
@@ -152,6 +164,10 @@ const AccountLogins = () => {
         pageSize={pagination.pageSize}
       />
     </>
+  ) : (
+    <Notice important variant="warning">
+      {getAccessRestrictedText(profile?.user_type ?? null)}
+    </Notice>
   );
 };
 
