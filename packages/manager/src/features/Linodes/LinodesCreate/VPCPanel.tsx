@@ -45,6 +45,7 @@ export interface VPCPanelProps {
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
+  vpcIPRangesError?: string;
   vpcIPv4AddressOfLinode: string | undefined;
   vpcIPv4Error?: string;
   vpcIdError?: string;
@@ -69,6 +70,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     subnetError,
     toggleAssignPublicIPv4Address,
     toggleAutoassignIPv4WithinVPCEnabled,
+    vpcIPRangesError,
     vpcIPv4AddressOfLinode,
     vpcIPv4Error,
     vpcIdError,
@@ -347,9 +349,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   )}
                   <AssignIPRanges
                     handleIPRangeChange={handleIPv4RangeChange}
+                    includeDescriptionInTooltip={fromLinodeConfig}
                     ipRanges={additionalIPv4RangesForVPC}
-                    ipRangesError={''}
-                    sx={{}}
+                    ipRangesError={vpcIPRangesError}
                   />
                 </>
               )}
