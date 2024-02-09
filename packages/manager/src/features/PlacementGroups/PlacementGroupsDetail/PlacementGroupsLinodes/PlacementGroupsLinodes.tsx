@@ -69,18 +69,14 @@ export const PlacementGroupsLinodes = (props: Props) => {
   const handleOpenAssignLinodesDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
   };
-
-  const onCloseAssignLinodesDrawer = () => {
+  const onCloseDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes`);
   };
   const isAssignLinodesDrawerOpen = history.location.pathname.includes(
-    '/linodes/assign'
+    '/assign'
   );
-  const onCloseUnassignLinodesDrawer = () => {
-    history.replace(`/placement-groups/${placementGroup.id}/linodes`);
-  };
   const isUnassignLinodesDrawerOpen = history.location.pathname.includes(
-    'unassign'
+    '/unassign'
   );
 
   return (
@@ -126,12 +122,12 @@ export const PlacementGroupsLinodes = (props: Props) => {
         loading={linodesLoading}
       />
       <PlacementGroupsAssignLinodesDrawer
-        onClose={onCloseAssignLinodesDrawer}
+        onClose={onCloseDrawer}
         open={isAssignLinodesDrawerOpen}
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal
-        onClose={onCloseUnassignLinodesDrawer}
+        onClose={onCloseDrawer}
         open={isUnassignLinodesDrawerOpen}
       />
     </Stack>

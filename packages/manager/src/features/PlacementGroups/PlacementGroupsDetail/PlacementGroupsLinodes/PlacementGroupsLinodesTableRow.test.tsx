@@ -7,7 +7,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 
 const defaultProps = {
-  handleOpenUnassignLinodesModal: vi.fn(),
   linode: linodeFactory.build({
     label: 'my-linode',
     status: 'running',
