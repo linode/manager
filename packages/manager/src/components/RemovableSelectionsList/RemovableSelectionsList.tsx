@@ -100,7 +100,11 @@ export const RemovableSelectionsList = (
           maxWidth={maxWidth}
         >
           <StyledScrollBox maxHeight={maxHeight} maxWidth={maxWidth}>
-            <SelectedOptionsList isRemovable={isRemovable} ref={listRef}>
+            <SelectedOptionsList
+              isRemovable={isRemovable}
+              ref={listRef}
+              data-qa-selection-list
+            >
               {selectionData.map((selection) => (
                 <SelectedOptionsListItem alignItems="center" key={selection.id}>
                   <StyledLabel>
