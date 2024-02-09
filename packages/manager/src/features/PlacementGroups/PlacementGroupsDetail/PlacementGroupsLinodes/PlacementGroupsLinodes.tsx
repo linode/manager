@@ -1,5 +1,5 @@
-import { useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
+import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
@@ -75,6 +76,12 @@ export const PlacementGroupsLinodes = (props: Props) => {
   const isAssignLinodesDrawerOpen = history.location.pathname.includes(
     '/linodes/assign'
   );
+  const onCloseUnassignLinodesDrawer = () => {
+    history.replace(`/placement-groups/${placementGroup.id}/linodes`);
+  };
+  const isUnassignLinodesDrawerOpen = history.location.pathname.includes(
+    '/linodes/unassign'
+  );
 
   return (
     <Stack spacing={2}>
@@ -123,7 +130,10 @@ export const PlacementGroupsLinodes = (props: Props) => {
         open={isAssignLinodesDrawerOpen}
         selectedPlacementGroup={placementGroup}
       />
-      {/* TODO VM_Placement: UNASSIGN LINODE DRAWER */}
+      <PlacementGroupsUnassignModal
+        onClose={onCloseUnassignLinodesDrawer}
+        open={isUnassignLinodesDrawerOpen}
+      />
     </Stack>
   );
 };

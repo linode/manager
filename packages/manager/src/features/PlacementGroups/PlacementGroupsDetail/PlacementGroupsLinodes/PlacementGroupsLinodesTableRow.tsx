@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -16,8 +17,16 @@ interface Props {
 
 export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { linode } = props;
-  const { label, status } = linode;
+  const { id: linodeId, label, status } = linode;
+  const history = useHistory();
+  const { id: placementGroupId } = useParams<{ id: string }>();
   const iconStatus = getLinodeIconStatus(status);
+
+  const handleOpenUnassignLinodesDrawer = () => {
+    history.replace(
+      `/placement-groups/${placementGroupId}/linodes/unassign/${linodeId}`
+    );
+  };
 
   return (
     <TableRow
@@ -37,7 +46,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
       <TableCell actionCell>
         <InlineMenuAction
           actionText="Unassign"
-          onClick={() => null} // TODO VM_Placement: open unassign drawer
+          onClick={handleOpenUnassignLinodesDrawer}
         />
       </TableCell>
     </TableRow>
