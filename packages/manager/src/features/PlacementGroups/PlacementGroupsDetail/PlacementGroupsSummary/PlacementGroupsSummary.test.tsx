@@ -5,18 +5,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsSummary } from './PlacementGroupsSummary';
 
-const queryMocks = vi.hoisted(() => ({
-  usePlacementGroupQuery: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
-  return {
-    ...actual,
-    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
-  };
-});
-
 describe('PlacementGroups Summary', () => {
   it('renders the placement group detail summary panel', () => {
     const { getByText } = renderWithTheme(
