@@ -352,7 +352,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     includeDescriptionInTooltip={fromLinodeConfig}
                     ipRanges={additionalIPv4RangesForVPC}
                     ipRangesError={vpcIPRangesError}
-                    sx={{}}
                   />
                 </>
               )}

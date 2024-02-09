@@ -984,7 +984,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   thisInterface.ip_ranges ?? []
                 ).map((ip_range, index) => {
                   // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
-                  const errorString = formik.errors[
+                  const errorString: string = formik.errors[
                     `interfaces[${idx}].ip_ranges[${index}]`
                   ]?.includes('is invalid')
                     ? 'Invalid IP range'

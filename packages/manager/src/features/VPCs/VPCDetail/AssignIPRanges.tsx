@@ -68,7 +68,7 @@ export const AssignIPRanges = (props: Props) => {
         ips={ipRanges}
         onChange={handleIPRangeChange}
         placeholder="10.0.0.0/24"
-        title=""
+        title="" // Empty string so a title isn't displayed for each IP input
       />
     </>
   );
