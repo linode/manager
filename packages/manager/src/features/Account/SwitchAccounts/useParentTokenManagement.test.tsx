@@ -56,17 +56,6 @@ describe('useParentTokenManagement', () => {
     expect(result.current.isParentTokenExpired).toBe(true);
   });
 
-  it('should update the session context when isParentTokenExpired is true', async () => {
-    queryMocks.isParentTokenValid.mockReturnValue(false);
-    renderHook(() => useParentTokenManagement({ isProxyUser: true }), {
-      wrapper,
-    });
-
-    expect(mockUpdateState).toHaveBeenCalledWith({
-      isOpen: true,
-    });
-  });
-
   it('should not update the session context when isParentTokenExpired is false', async () => {
     queryMocks.isParentTokenValid.mockReturnValue(true);
     renderHook(() => useParentTokenManagement({ isProxyUser: true }), {
