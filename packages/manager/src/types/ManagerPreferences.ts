@@ -1,7 +1,8 @@
 import { UserPreferences } from '@linode/api-v4';
 
-import { Order } from 'src/components/Pagey';
 import { ThemeChoice } from 'src/utilities/theme';
+
+import type { Order } from 'src/hooks/useOrder';
 
 export interface OrderSet {
   order: Order;

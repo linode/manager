@@ -100,4 +100,37 @@ describe('getTotalBackupsPrice', () => {
       })
     ).toBe(8.57);
   });
+
+  it('correctly calculates the total price with $0 DC-specific pricing for Linode backups', () => {
+    const basePriceLinodes = linodeFactory.buildList(2, { type: 'my-type' });
+    const zeroPriceLinode = linodeFactory.build({
+      region: 'es-mad',
+      type: 'my-type',
+    });
+    const linodes = [...basePriceLinodes, zeroPriceLinode];
+    const types = linodeTypeFactory.buildList(1, {
+      addons: {
+        backups: {
+          price: {
+            hourly: 0.004,
+            monthly: 2.5,
+          },
+          region_prices: [
+            {
+              hourly: 0,
+              id: 'es-mad',
+              monthly: 0,
+            },
+          ],
+        },
+      },
+      id: 'my-type',
+    });
+    expect(
+      getTotalBackupsPrice({
+        linodes,
+        types,
+      })
+    ).toBe(5);
+  });
 });
