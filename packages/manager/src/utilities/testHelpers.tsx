@@ -95,7 +95,8 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
-            clientSideID={'fake-id'}
+            clientSideID={''}
+            deferInitialization
             flags={options.flags ?? {}}
             options={{ bootstrap: options.flags }}
           >
