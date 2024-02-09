@@ -32,13 +32,3 @@ export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
     value: key as CreatePlacementGroupPayload['affinity_type'],
   })
 );
-
-/**
- * Helper to generate the text content of the non-compliant warning notice.
- */
-export const getWarningNoticeText = (placementGroup: PlacementGroup) => {
-  return `Placement Group ${placementGroup.label} (${
-    AFFINITY_TYPES[placementGroup?.affinity_type]
-  }) is non-compliant.
-We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group. `;
-};
