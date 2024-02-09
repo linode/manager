@@ -1,5 +1,4 @@
-import { MatcherFunction, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { MatcherFunction, render } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import { Formik, FormikConfig, FormikValues } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
@@ -159,22 +158,6 @@ export const renderWithThemeAndFormik = <T extends FormikValues>(
   ui: React.ReactElement,
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
-
-export const includesActions = async (
-  actions: string[],
-  query: any,
-  includes = true
-) => {
-  const actionMenuButton = screen.queryByLabelText(/^Action menu for/);
-  if (actionMenuButton) {
-    await userEvent.click(actionMenuButton);
-  }
-  for (const action of actions) {
-    includes
-      ? expect(query(action)).toBeInTheDocument()
-      : expect(query(action)).not.toBeInTheDocument();
-  }
-};
 
 type Query = (f: MatcherFunction) => HTMLElement;
 

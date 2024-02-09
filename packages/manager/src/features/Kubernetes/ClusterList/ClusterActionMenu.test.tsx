@@ -1,9 +1,10 @@
 import * as kube from '@linode/api-v4/lib/kubernetes/kubernetes';
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ClusterActionMenu } from './ClusterActionMenu';
 
@@ -32,11 +33,17 @@ const props = {
 };
 
 describe('Kubernetes cluster action menu', () => {
-  it('should include the correct Kube actions', () => {
-    const { queryByText } = render(
+  it('should include the correct Kube actions', async () => {
+    const { getByText, queryByLabelText } = render(
       wrapWithTheme(<ClusterActionMenu {...props} />)
     );
-    includesActions(['Download kubeconfig', 'Delete'], queryByText);
+
+    const actionMenuButton = queryByLabelText(/^Action menu for/)!;
+
+    await userEvent.click(actionMenuButton);
+    for (const action of ['Download kubeconfig', 'Delete']) {
+      expect(getByText(action)).toBeVisible();
+    }
   });
 
   it('should query the API for a config file when Download kubeconfig is clicked', async () => {
