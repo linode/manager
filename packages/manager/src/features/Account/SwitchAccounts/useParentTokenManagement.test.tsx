@@ -22,7 +22,6 @@ const wrapper = ({ children }: any) => (
   <switchAccountSessionContext.Provider
     value={{
       close: vi.fn(),
-      continueSession: false,
       isOpen: false,
       open: vi.fn(),
       updateState: mockUpdateState,
@@ -57,14 +56,13 @@ describe('useParentTokenManagement', () => {
     expect(result.current.isParentTokenExpired).toBe(true);
   });
 
-  it('should update the session context when isParentTokenExpired is true and continueSession is false', async () => {
+  it('should update the session context when isParentTokenExpired is true', async () => {
     queryMocks.isParentTokenValid.mockReturnValue(false);
     renderHook(() => useParentTokenManagement({ isProxyUser: true }), {
       wrapper,
     });
 
     expect(mockUpdateState).toHaveBeenCalledWith({
-      continueSession: true,
       isOpen: true,
     });
   });

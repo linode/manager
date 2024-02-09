@@ -78,8 +78,6 @@ export const UserMenu = React.memo(() => {
   const companyName = (profile?.user_type && account?.company) ?? '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
-  const shouldEndSession =
-    isParentTokenExpired && sessionContext.continueSession === false;
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders =
@@ -181,9 +179,8 @@ export const UserMenu = React.memo(() => {
   };
 
   const handleAccountSwitch = () => {
-    if (shouldEndSession) {
+    if (isParentTokenExpired) {
       return sessionContext.updateState({
-        continueSession: true,
         isOpen: true,
       });
     }
@@ -273,7 +270,6 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
-              disabled={!shouldEndSession}
               onClick={handleAccountSwitch}
               tooltipText={PARENT_SESSION_EXPIRED}
             />

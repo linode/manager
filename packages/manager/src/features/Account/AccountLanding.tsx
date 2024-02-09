@@ -62,8 +62,6 @@ const AccountLanding = () => {
   const isParentUser = profile?.user_type === 'parent';
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
-  const shouldEndSession =
-    isParentTokenExpired && sessionContext.continueSession === false;
 
   const tabs = [
     {
@@ -99,9 +97,8 @@ const AccountLanding = () => {
   ];
 
   const handleAccountSwitch = () => {
-    if (shouldEndSession) {
+    if (isParentTokenExpired) {
       return sessionContext.updateState({
-        continueSession: true,
         isOpen: true,
       });
     }
@@ -157,7 +154,6 @@ const AccountLanding = () => {
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton
-        disabled={!shouldEndSession}
         onClick={handleAccountSwitch}
         tooltipText={PARENT_SESSION_EXPIRED}
       />

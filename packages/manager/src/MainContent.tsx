@@ -195,7 +195,6 @@ export const MainContent = () => {
 
   const SwitchAccountSessionProvider = switchAccountSessionContext.Provider;
   const switchAccountSessionContextValue = useDialogContext({
-    continueSession: false,
     isOpen: false,
   });
 
