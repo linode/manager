@@ -71,6 +71,7 @@ export const RegionOption = ({ option, props, selected }: Props) => {
             : null
         }
         aria-disabled={undefined}
+        data-qa-disabled-item={isDisabledMenuItem}
       >
         <>
           <Box alignItems="center" display="flex" flexGrow={1}>

@@ -14,6 +14,7 @@ import { fetchAccount } from './cypress/support/plugins/fetch-account';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
+import cypressViteConfig from './cypress/vite.config';
 
 /**
  * Exports a Cypress configuration object.
@@ -43,6 +44,20 @@ export default defineConfig({
   retries: process.env['CI'] ? 2 : 0,
 
   experimentalMemoryManagement: true,
+
+  component: {
+    devServer: {
+      framework: 'react',
+      bundler: 'vite',
+      viteConfig: cypressViteConfig,
+    },
+    indexHtmlFile: './cypress/support/component/index.html',
+    supportFile: './cypress/support/component/setup.tsx',
+    specPattern: './cypress/component/**/*.spec.tsx',
+    viewportWidth: 500,
+    viewportHeight: 500,
+  },
+
   e2e: {
     experimentalRunAllSpecs: true,
 
