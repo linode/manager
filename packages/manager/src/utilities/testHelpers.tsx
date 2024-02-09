@@ -1,9 +1,4 @@
-import {
-  MatcherFunction,
-  RenderResult,
-  render,
-  screen,
-} from '@testing-library/react';
+import { MatcherFunction, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import mediaQuery from 'css-mediaquery';
 import { Formik, FormikConfig, FormikValues } from 'formik';
@@ -164,66 +159,6 @@ export const renderWithThemeAndFormik = <T extends FormikValues>(
   ui: React.ReactElement,
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
-
-declare global {
-  // export would be better, but i m aligning with how the namespace is declared by vi-axe
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace vi {
-    interface Matchers<R, T> {
-      toPassAxeCheck(): R;
-    }
-  }
-}
-export const toPassAxeCheck = {
-  toPassAxeCheck(received: RenderResult) {
-    // if ((typeof rec) !== RenderResult){
-    //   return {
-    //     pass:false,
-    //     message:()=> `Expected type RenderResult (result of function call render...)`
-    //   };
-    // }
-    const anchors = received.container.querySelectorAll('a');
-    // Here i want to use forEach but tslint has a bug saying not all my pth return a value,
-    // which is intended as i want to return only if there is an error, if not keep traversing
-    // Also i could have used For .. Of but this was making tslint think e was a string...
-    for (let i = 0; i < anchors.length; i++) {
-      const e = anchors[i];
-      const hasHref = e.hasAttribute('href');
-      if (!hasHref) {
-        return {
-          message: () => `anchors has no href - specify a value for href
-        \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
-          pass: false,
-        };
-      }
-      let hrefAtt = e.getAttribute('href');
-      if (hrefAtt == null) {
-        return {
-          message: () => `anchors has bad href - specify a non null value for href
-        \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
-          pass: false,
-        };
-      }
-      hrefAtt = hrefAtt as string;
-      if (['#', ''].includes(hrefAtt) || hrefAtt.includes('javascript')) {
-        return {
-          message: () => `anchors has invalid href - specify a valid value not #,'' or javascript(void)
-        \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
-          pass: false,
-        };
-      }
-      // ugly trick to bypass tslint inablility to understand it s normal not to return
-      continue;
-    }
-    return { message: () => '!', pass: true };
-  },
-};
 
 export const includesActions = (
   actions: string[],
