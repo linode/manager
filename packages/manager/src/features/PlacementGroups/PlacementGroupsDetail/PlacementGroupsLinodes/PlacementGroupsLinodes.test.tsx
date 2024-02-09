@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
 
-describe('PlacementGroupsLanding', () => {
+describe('PlacementGroupsLinodes', () => {
   it('renders an error state if placement groups are undefined', () => {
     const { getByText } = renderWithTheme(
       <PlacementGroupsLinodes placementGroup={undefined} />

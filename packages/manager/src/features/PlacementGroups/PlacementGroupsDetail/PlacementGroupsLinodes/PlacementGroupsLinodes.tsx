@@ -2,6 +2,7 @@ import { useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -11,6 +12,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
+import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
@@ -26,6 +28,7 @@ interface Props {
 
 export const PlacementGroupsLinodes = (props: Props) => {
   const { placementGroup } = props;
+  const history = useHistory();
   const {
     data: placementGroupLinodes,
     error: linodesError,
@@ -62,6 +65,17 @@ export const PlacementGroupsLinodes = (props: Props) => {
     return placementGroupLinodes;
   };
 
+  const handleOpenAssignLinodesDrawer = () => {
+    history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
+  };
+
+  const onCloseAssignLinodesDrawer = () => {
+    history.replace(`/placement-groups/${placementGroup.id}/linodes`);
+  };
+  const isAssignLinodesDrawerOpen = history.location.pathname.includes(
+    '/linodes/assign'
+  );
+
   return (
     <Stack spacing={2}>
       <Box sx={{ px: matchesSmDown ? 2 : 0, py: 2 }}>
@@ -92,7 +106,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
             disabled={hasPlacementGroupReachedCapacity(placementGroup)}
-            // onClick={TODO VM_Placement: open assign linode drawer}
+            onClick={handleOpenAssignLinodesDrawer}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
           >
             Add Linode to Placement Group
@@ -104,7 +118,11 @@ export const PlacementGroupsLinodes = (props: Props) => {
         linodes={getLinodesList() ?? []}
         loading={linodesLoading}
       />
-      {/* TODO VM_Placement: ASSIGN LINODE DRAWER */}
+      <PlacementGroupsAssignLinodesDrawer
+        onClose={onCloseAssignLinodesDrawer}
+        open={isAssignLinodesDrawerOpen}
+        selectedPlacementGroup={placementGroup}
+      />
       {/* TODO VM_Placement: UNASSIGN LINODE DRAWER */}
     </Stack>
   );
