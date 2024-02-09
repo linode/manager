@@ -1,12 +1,10 @@
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { debounce } from 'lodash';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DebouncedSearchTextField } from './DebouncedSearchTextField';
-
-vi.useFakeTimers();
 
 const labelVal = 'Search textfield label';
 const textfieldId = 'textfield-input';
@@ -46,19 +44,14 @@ describe('Debounced Search Text Field', () => {
   });
 
   it('calls isSearching', async () => {
-    const debouncedOnSearch = debounce(props.onSearch, 250);
     const screen = renderWithTheme(
-      <DebouncedSearchTextField
-        {...props}
-        debounceTime={250}
-        onSearch={debouncedOnSearch}
-      />
+      <DebouncedSearchTextField {...props} debounceTime={250} />
     );
 
     const textfield = screen.getByTestId(textfieldId);
     await userEvent.type(textfield, 'test');
-    vi.runAllTimers();
-    expect(props.onSearch).toHaveBeenCalled();
+
+    await waitFor(() => expect(props.onSearch).toHaveBeenCalled());
   });
 
   it('renders the expected placeholder', () => {
