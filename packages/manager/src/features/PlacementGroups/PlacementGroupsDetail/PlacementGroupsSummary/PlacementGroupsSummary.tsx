@@ -44,8 +44,9 @@ export const PlacementGroupsSummary = (props: Props) => {
               data-testid="pg-non-compliant-notice-link"
               to={'#'}
             >
-              Learn more.
+              Learn more
             </Link>
+            .
           </Typography>
         </Notice>
       )}
