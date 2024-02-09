@@ -1,24 +1,29 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
   open: boolean;
+  selectedLinode: Linode | undefined;
 }
 
 export const PlacementGroupsUnassignModal = (props: Props) => {
-  const { onClose, open } = props;
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { onClose, open, selectedLinode } = props;
 
-  console.log(useParams());
+  if (!selectedLinode) {
+    return null;
+  }
+
+  const { label } = selectedLinode;
 
   return (
     <ConfirmationDialog
       onClose={onClose}
       open={open}
-      title={linodeId ? `Unassign ${linodeId}` : 'Unassign'}
+      title={label ? `Unassign ${label}` : 'Unassign'}
     />
   );
 };
