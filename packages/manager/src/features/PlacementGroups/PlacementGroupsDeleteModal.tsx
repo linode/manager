@@ -24,7 +24,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
 
   React.useEffect(() => {
-    if (!open) {
+    if (open) {
       reset();
     }
   }, [open, reset]);
@@ -44,6 +44,11 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         primaryBtnText: 'Delete',
         type: 'Placement Groups',
       }}
+      errors={
+        !selectedPlacementGroup
+          ? [{ reason: 'Placement Group not found.' }]
+          : undefined
+      }
       title={
         selectedPlacementGroup
           ? `Delete Placement Group ${selectedPlacementGroup?.label} (${
@@ -51,7 +56,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             })`
           : 'Delete Placement Group'
       }
-      disabled={selectedPlacementGroup === undefined}
+      disabled={!selectedPlacementGroup}
       label="Placement Group"
       loading={isLoading}
       onClick={onDelete}
