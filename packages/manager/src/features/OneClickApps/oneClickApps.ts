@@ -913,7 +913,7 @@ export const oneClickApps: OCA[] = [
       end: '9e9e9e',
       start: 'f37626',
     },
-    description: 'JupyterLab is a cutting-edge web-based, interactive development enviornment, geared towards data science, machine learning and other scientific computing workflows.',
+    description: 'JupyterLab is a cutting-edge web-based, interactive development environment, geared towards data science, machine learning and other scientific computing workflows.',
     logo_url: 'jupyter.svg',
     name: 'JupyterLab',
     related_guides: [
@@ -923,7 +923,7 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy JupyterLab through the Linode Marketplace', 
       },
     ],
-    sumary: 'Data science development envirnoment.',
+    summary: 'Data science development environment.',
     website: 'https://jupyter.org',
   },
   {
