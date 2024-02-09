@@ -44,9 +44,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
   );
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-  const [selectedLinode, setSelectedLinode] = React.useState<
-    Linode | undefined
-  >(undefined);
   const [searchText, setSearchText] = React.useState('');
 
   if (!placementGroup) {
@@ -83,14 +80,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes`);
   };
   const isUnassignLinodesDrawerOpen = history.location.pathname.includes(
-    '/linodes/unassign'
+    'unassign'
   );
-  const onOpenUnassignLinodeModal = (linode: Linode) => {
-    setSelectedLinode(linode);
-    history.push(
-      `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
-    );
-  };
 
   return (
     <Stack spacing={2}>
@@ -131,7 +122,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
       </Grid>
       <PlacementGroupsLinodesTable
         error={linodesError ?? []}
-        handleOpenUnassignLinodesModal={onOpenUnassignLinodeModal}
         linodes={getLinodesList() ?? []}
         loading={linodesLoading}
       />
@@ -143,7 +133,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <PlacementGroupsUnassignModal
         onClose={onCloseUnassignLinodesDrawer}
         open={isUnassignLinodesDrawerOpen}
-        selectedLinode={selectedLinode ?? undefined}
       />
     </Stack>
   );

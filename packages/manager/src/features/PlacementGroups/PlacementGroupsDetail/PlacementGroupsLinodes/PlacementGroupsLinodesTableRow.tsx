@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -11,17 +12,20 @@ import { capitalizeAllWords } from 'src/utilities/capitalize';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
-  handleOpenUnassignLinodesModal: (linode: Linode) => void;
   linode: Linode;
 }
 
 export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
-  const { handleOpenUnassignLinodesModal, linode } = props;
+  const { linode } = props;
   const { label, status } = linode;
+  const history = useHistory();
+  const { id: placementGroupId } = useParams<{ id: string }>();
   const iconStatus = getLinodeIconStatus(status);
 
-  const handleUnassignClick = () => {
-    handleOpenUnassignLinodesModal(linode);
+  const onOpenUnassignLinodeModal = () => {
+    history.push(
+      `/placement-groups/${placementGroupId}/linodes/unassign/${linode.id}`
+    );
   };
 
   return (
@@ -40,7 +44,10 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         {capitalizeAllWords(linode.status.replace('_', ' '))}
       </TableCell>
       <TableCell actionCell>
-        <InlineMenuAction actionText="Unassign" onClick={handleUnassignClick} />
+        <InlineMenuAction
+          actionText="Unassign"
+          onClick={onOpenUnassignLinodeModal}
+        />
       </TableCell>
     </TableRow>
   );
