@@ -1,4 +1,4 @@
-import { UserPreferences } from '@linode/api-v4';
+import { CreateLinodeRequest, UserPreferences } from '@linode/api-v4';
 
 import { Order } from 'src/components/Pagey';
 import { ThemeChoice } from 'src/utilities/theme';
@@ -29,8 +29,13 @@ export interface ManagerPreferences extends UserPreferences {
   main_content_banner_dismissal?: Record<string, boolean>;
   nodebalancers_group_by_tag?: boolean;
   pageSizes?: Record<string, number>;
+  quick_deploy_options?: QuickDeployOptions;
   sortKeys?: Partial<Record<string, OrderSet>>;
   theme?: ThemeChoice;
   type_to_confirm?: boolean;
   volumes_group_by_tag?: boolean;
+}
+
+export interface QuickDeployOptions {
+  linodes: CreateLinodeRequest & { quickDeployLabel: string }[];
 }

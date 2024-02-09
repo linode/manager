@@ -177,6 +177,7 @@ const PlacementGroups = React.lazy(() =>
     default: module.PlacementGroups,
   }))
 );
+const QuickDeploy = React.lazy(() => import('src/features/QuickDeploy'));
 
 export const MainContent = () => {
   const { classes, cx } = useStyles();
@@ -367,6 +368,7 @@ export const MainContent = () => {
                         <Route component={SearchLanding} path="/search" />
                         <Route component={EventsLanding} path="/events" />
                         <Route component={Firewalls} path="/firewalls" />
+                        <Route component={QuickDeploy} path="/quick-deploy" />
                         {showDatabases && (
                           <Route component={Databases} path="/databases" />
                         )}

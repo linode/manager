@@ -1,5 +1,6 @@
 import { PlacementGroup } from '@linode/api-v4';
 import {
+  CreateLinodeRequest,
   InterfacePayload,
   PriceObject,
   restoreBackup,
@@ -80,6 +81,7 @@ import {
   StyledPaper,
   StyledTabPanel,
 } from './LinodeCreate.styles';
+import { QuickDeployModal } from './QuickDeployModal';
 import { FromAppsContent } from './TabbedContent/FromAppsContent';
 import { FromBackupsContent } from './TabbedContent/FromBackupsContent';
 import { FromImageContent } from './TabbedContent/FromImageContent';
@@ -92,7 +94,6 @@ import {
   AppsData,
   HandleSubmit,
   Info,
-  LinodeCreateValidation,
   ReduxStateProps,
   StackScriptFormStateHandlers,
   TypeInfo,
@@ -105,12 +106,15 @@ import type { Tab } from 'src/components/Tabs/TabLinkList';
 export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
-  checkValidation: LinodeCreateValidation;
+  // checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
   firewallId?: number;
   handleAgreementChange: () => void;
+  handleClickCreateUsingCommandLine: (payload: CreateLinodeRequest) => void;
+  handleClickSaveQuickDeploy: (payload: CreateLinodeRequest) => void;
   handleFirewallChange: (firewallId: number) => void;
   handleShowApiAwarenessModal: () => void;
+  handleShowQuickDeployModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
   handleVLANChange: (updatedInterface: InterfacePayload) => void;
@@ -130,6 +134,7 @@ export interface LinodeCreateProps {
   showApiAwarenessModal: boolean;
   showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
+  showQuickDeployModal: boolean;
   signedAgreement: boolean;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
@@ -270,6 +275,7 @@ export class LinodeCreate extends React.PureComponent<
       formIsSubmitting,
       handleAgreementChange,
       handleShowApiAwarenessModal,
+      handleShowQuickDeployModal,
       imageDisplayInfo,
       imagesData,
       imagesError,
@@ -287,6 +293,7 @@ export class LinodeCreate extends React.PureComponent<
       showApiAwarenessModal,
       showGDPRCheckbox,
       showGeneralError,
+      showQuickDeployModal,
       signedAgreement,
       tags,
       typeDisplayInfo,
@@ -735,7 +742,21 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-checkout-bar
             displaySections={displaySections}
             heading={`Summary ${this.props.label}`}
-          />
+          >
+            <StyledCreateButton
+              disabled={
+                formIsSubmitting ||
+                userCannotCreateLinode ||
+                (showGDPRCheckbox && !signedAgreement)
+              }
+              // buttonType="outlined"
+              data-qa-quick-deploy-linode
+              onClick={this.handleClickSaveQuickDeploy}
+              style={{ marginLeft: 0, marginTop: 16, paddingLeft: 0 }}
+            >
+              Save options for Quick Deploy
+            </StyledCreateButton>
+          </CheckoutSummary>
           <Box
             alignItems="center"
             display="flex"
@@ -790,6 +811,11 @@ export class LinodeCreate extends React.PureComponent<
               onClose={handleShowApiAwarenessModal}
               payLoad={this.getPayload()}
               route={this.props.match.url}
+            />
+            <QuickDeployModal
+              isOpen={showQuickDeployModal}
+              onClose={handleShowQuickDeployModal}
+              payload={this.getPayload()}
             />
           </StyledButtonGroupBox>
         </Grid>
@@ -949,7 +975,31 @@ export class LinodeCreate extends React.PureComponent<
       type: this.props.selectedTypeID,
     };
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
-    this.props.checkValidation(payload);
+    this.props.handleClickCreateUsingCommandLine(payload);
+  };
+
+  handleClickSaveQuickDeploy = () => {
+    const payload = {
+      authorized_users: this.props.authorized_users,
+      backup_id: this.props.selectedBackupID,
+      backups_enabled: this.props.backupsEnabled,
+      booted: true,
+      image: this.props.selectedImageID,
+      label: this.props.label,
+      private_ip: this.props.privateIPEnabled,
+      region: this.props.selectedRegionID,
+      root_pass: this.props.password,
+      stackscript_data: this.props.selectedUDFs,
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      type: this.props.selectedTypeID,
+    };
+    // TODO: Analytics
+    this.props.handleClickSaveQuickDeploy(payload);
   };
 
   handleTabChange = (index: number) => {

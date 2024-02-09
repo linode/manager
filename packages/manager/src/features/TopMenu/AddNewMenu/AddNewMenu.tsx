@@ -149,6 +149,12 @@ export const AddNewMenu = () => {
       icon: OneClickIcon,
       link: '/linodes/create?type=One-Click',
     },
+    {
+      description: 'Deploy saved infrastructre configurations',
+      entity: 'Quick Deploy',
+      icon: LinodeIcon,
+      link: '/quick-deploy',
+    },
   ];
 
   return (

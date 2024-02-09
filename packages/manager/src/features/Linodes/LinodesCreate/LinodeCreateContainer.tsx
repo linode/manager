@@ -80,7 +80,7 @@ import { validatePassword } from 'src/utilities/validatePassword';
 
 import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
-import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
+import { HandleSubmit, Info, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
@@ -122,6 +122,7 @@ interface State {
   selectedfirewallId?: number;
   showApiAwarenessModal: boolean;
   showGDPRCheckbox: boolean;
+  showQuickDeployModal: boolean;
   signedAgreement: boolean;
   tags?: Tag[];
   udfs?: any;
@@ -172,6 +173,7 @@ const defaultState: State = {
   selectedfirewallId: undefined,
   showApiAwarenessModal: false,
   showGDPRCheckbox: false,
+  showQuickDeployModal: false,
   signedAgreement: false,
   tags: [],
   udfs: undefined,
@@ -276,16 +278,21 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             accountBackupsEnabled={
               this.props.accountSettings.data?.backups_enabled ?? false
             }
+            handleClickCreateUsingCommandLine={
+              this.handleClickCreateUsingCommandLine
+            }
             toggleAutoassignIPv4WithinVPCEnabled={
               this.toggleAutoassignIPv4WithinVPCEnabled
             }
             autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
-            checkValidation={this.checkValidation}
+            // checkValidation={this.checkValidation}
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
+            handleClickSaveQuickDeploy={this.handleClickSaveQuickDeploy}
             handleFirewallChange={this.handleFirewallChange}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
+            handleShowQuickDeployModal={this.handleShowQuickDeployModal}
             handleSubmitForm={this.submitForm}
             handleSubnetChange={this.handleSubnetChange}
             handleVLANChange={this.handleVLANChange}
@@ -329,21 +336,23 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     );
   }
 
-  checkValidation: LinodeCreateValidation = (payload) => {
-    try {
-      CreateLinodeSchema.validateSync(payload, { abortEarly: false });
-      // reset errors to default state
-      this.setState({ errors: undefined, showApiAwarenessModal: true });
-    } catch (error) {
-      const processedErrors = convertYupToLinodeErrors(error);
-      this.setState(
-        () => ({
-          errors: getAPIErrorOrDefault(processedErrors),
-          formIsSubmitting: false,
-        }),
-        () => scrollErrorIntoView()
-      );
-    }
+  checkValidation = (payload: CreateLinodeRequest) => {
+    return CreateLinodeSchema.validate(payload, { abortEarly: false })
+      .then(() => {
+        // reset errors to default state
+        this.setState({ errors: undefined });
+      })
+      .catch((error) => {
+        const processedErrors = convertYupToLinodeErrors(error);
+        this.setState(
+          () => ({
+            errors: getAPIErrorOrDefault(processedErrors),
+            formIsSubmitting: false,
+          }),
+          () => scrollErrorIntoView()
+        );
+        throw error;
+      });
   };
 
   clearCreationState = () => {
@@ -482,6 +491,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
+  handleClickCreateUsingCommandLine = (payload: CreateLinodeRequest) => {
+    this.checkValidation(payload).then(() => {
+      this.setState({ showApiAwarenessModal: true });
+    });
+  };
+
+  handleClickSaveQuickDeploy = (payload: CreateLinodeRequest) => {
+    this.checkValidation(payload).then(() => {
+      this.setState({ showQuickDeployModal: true });
+    });
+  };
+
   handleFirewallChange = (firewallId: number) => {
     this.setState({ selectedfirewallId: firewallId });
   };
@@ -489,6 +510,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   handleShowApiAwarenessModal = () => {
     this.setState((prevState) => ({
       showApiAwarenessModal: !prevState.showApiAwarenessModal,
+    }));
+  };
+
+  handleShowQuickDeployModal = () => {
+    this.setState((prevState) => ({
+      showQuickDeployModal: !prevState.showQuickDeployModal,
     }));
   };
 
@@ -698,10 +725,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     showGDPRCheckbox: Boolean(
       !this.props.profile.data?.restricted &&
-      isEURegion(
-        getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
-      ) &&
-      this.props.agreements?.data?.eu_model
+        isEURegion(
+          getSelectedRegionGroup(this.props.regionsData, this.params.regionID)
+        ) &&
+        this.props.agreements?.data?.eu_model
     ),
     signedAgreement: false,
   };
@@ -833,10 +860,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const request =
       createType === 'fromLinode'
         ? () =>
-          this.props.linodeActions.cloneLinode({
-            sourceLinodeId: linodeID!,
-            ...payload,
-          })
+            this.props.linodeActions.cloneLinode({
+              sourceLinodeId: linodeID!,
+              ...payload,
+            })
         : () => this.props.linodeActions.createLinode(payload);
 
     this.setState({ formIsSubmitting: true });
