@@ -6,6 +6,7 @@ import type {
   Grants,
   Profile,
   Token,
+  UserType,
 } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
@@ -37,6 +38,9 @@ export type IsRestrictedGlobalGrantType =
   | AccountAccessGrant
   | NonAccountAccessGrant;
 
+/**
+ * Get a resource restricted message based on action and resource type.
+ */
 export const getRestrictedResourceText = ({
   action = 'edit',
   isSingular = true,
@@ -47,6 +51,15 @@ export const getRestrictedResourceText = ({
     : resourceType;
 
   return `You don't have permissions to ${action} ${resource}. Please contact your account administrator to request the necessary permissions.`;
+};
+
+/**
+ * Get an 'access restricted' message based on user type.
+ */
+export const getAccessRestrictedText = (userType: UserType | null) => {
+  return `Access restricted. Please contact your ${
+    userType === 'child' ? 'business partner' : 'account administrator'
+  } to request the necessary permission.`;
 };
 
 /**

@@ -1,3 +1,4 @@
+import { PlacementGroup } from '@linode/api-v4';
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -25,6 +26,10 @@ import {
   WithEventsPollingActionProps,
   withEventsPollingActions,
 } from 'src/containers/events.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -34,9 +39,6 @@ import {
 } from 'src/containers/profile.container';
 import { RegionsProps, withRegions } from 'src/containers/regions.container';
 import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   WithLinodesProps,
   withLinodes,
@@ -105,6 +107,7 @@ interface State {
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
+  placementGroupSelection?: PlacementGroup;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
   selectedDiskSize?: number;
@@ -134,7 +137,7 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   RouteComponentProps<{}, any, any> &
   WithProfileProps &
   AgreementsProps &
@@ -154,6 +157,7 @@ const defaultState: State = {
   errors: undefined,
   formIsSubmitting: false,
   password: '',
+  placementGroupSelection: undefined,
   privateIPEnabled: false,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
@@ -309,6 +313,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
+            updatePlacementGroupSelection={this.setPlacementGroupSelection}
             updateRegionID={this.setRegionID}
             updateStackScript={this.setStackScript}
             updateTags={this.setTags}
@@ -595,6 +600,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   setPassword = (password: string) => this.setState({ password });
+
+  setPlacementGroupSelection = (placementGroupSelection: PlacementGroup) => {
+    this.setState({ placementGroupSelection });
+  };
 
   setRegionID = (selectedRegionId: string) => {
     const { showGDPRCheckbox } = getGDPRDetails({
@@ -944,7 +953,7 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   connected,
   withSnackbar,
-  withFlags,
+  withFeatureFlags,
   withProfile,
   withAgreements,
   withQueryClient,

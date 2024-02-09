@@ -9,7 +9,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -28,7 +27,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
-  const flags = useFlags();
   const emailRef = React.useRef<HTMLInputElement>();
 
   const formik = useFormik({
@@ -241,15 +239,16 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             onChange={(item) => formik.setFieldValue('country', item.value)}
             options={countryResults}
             placeholder="Select a Country"
-            required={flags.regionDropdown}
+            required
           />
         </Grid>
         <Grid sm={6} xs={12}>
-          {flags.regionDropdown &&
-          (formik.values.country === 'US' || formik.values.country == 'CA') ? (
+          {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <EnhancedSelect
               placeholder={
-                formik.values.country === 'US' ? 'state' : 'province'
+                formik.values.country === 'US'
+                  ? 'Enter state'
+                  : 'Enter province'
               }
               textFieldProps={{
                 dataAttrs: {
@@ -266,7 +265,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
               onChange={(item) => formik.setFieldValue('state', item.value)}
               options={filteredRegionResults}
-              required={flags.regionDropdown}
+              required
             />
           ) : (
             <TextField
@@ -276,7 +275,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
               name="state"
               onChange={formik.handleChange}
               placeholder="Enter region"
-              required={flags.regionDropdown}
+              required
               value={formik.values.state}
             />
           )}

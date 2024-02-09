@@ -1,7 +1,5 @@
 import {
-  assignVMsToPlacementGroupSchema,
   createPlacementGroupSchema,
-  unassignVMsFromPlacementGroupSchema,
   renamePlacementGroupSchema,
 } from '@linode/validation';
 import { API_ROOT } from '../constants';
@@ -15,10 +13,10 @@ import Request, {
 } from '../request';
 import type { Filter, Params, ResourcePage as Page } from '../types';
 import type {
-  AssignVMsToPlacementGroupPayload,
+  AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
-  UnassignVMsFromPlacementGroupPayload,
+  UnassignLinodesFromPlacementGroupPayload,
   RenamePlacementGroupPayload,
 } from './types';
 
@@ -109,9 +107,9 @@ export const deletePlacementGroup = (placementGroupId: number) =>
  *
  * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
  */
-export const assignVMsToPlacementGroup = (
+export const assignLinodesToPlacementGroup = (
   placementGroupId: number,
-  linodeIds: AssignVMsToPlacementGroupPayload
+  payload: AssignLinodesToPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -120,7 +118,7 @@ export const assignVMsToPlacementGroup = (
       )}/assign`
     ),
     setMethod('POST'),
-    setData(linodeIds, assignVMsToPlacementGroupSchema)
+    setData(payload)
   );
 
 /**
@@ -133,9 +131,9 @@ export const assignVMsToPlacementGroup = (
  *
  * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
  */
-export const unassignVMsFromPlacementGroup = (
+export const unassignLinodesFromPlacementGroup = (
   placementGroupId: number,
-  linodeIds: UnassignVMsFromPlacementGroupPayload
+  payload: UnassignLinodesFromPlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
@@ -144,5 +142,5 @@ export const unassignVMsFromPlacementGroup = (
       )}/unassign`
     ),
     setMethod('POST'),
-    setData(linodeIds, unassignVMsFromPlacementGroupSchema)
+    setData(payload)
   );

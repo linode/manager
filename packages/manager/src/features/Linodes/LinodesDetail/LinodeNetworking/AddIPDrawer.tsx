@@ -1,8 +1,10 @@
 import { IPv6Prefix } from '@linode/api-v4/lib/networking';
-import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -10,6 +12,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import {
@@ -80,7 +83,6 @@ interface Props {
 
 export const AddIPDrawer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
-  const theme = useTheme();
 
   const {
     error: ipv4Error,
@@ -163,94 +165,87 @@ export const AddIPDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add an IP Address">
-      <React.Fragment>
-        <Typography variant="h2">IPv4</Typography>
+      <Stack spacing={2}>
+        <Typography variant="h3">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice spacingTop={8} text={ipv4Error?.[0].reason} variant="error" />
+          <Notice spacingTop={4} text={ipv4Error?.[0].reason} variant="error" />
         )}
-        <Typography sx={{ marginTop: '1rem' }} variant="h3">
-          Select type
-        </Typography>
-        <RadioGroup
-          aria-label="ip-option"
+
+        <StyledRadioGroup
+          aria-labelledby="ipv4-select-type"
           data-qa-ip-options-radio-group
           name="Select IPv4 type"
           onChange={handleIPv4Change}
-          sx={{ marginTop: '0 !important' }}
           value={selectedIPv4}
         >
-          {ipOptions.map((option, idx) => (
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-radio={option.label}
-              key={idx}
-              label={option.label}
-              value={option.value}
-            />
-          ))}
-        </RadioGroup>
-        {selectedIPv4 && (
-          <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
-            {explainerCopy[selectedIPv4]}
-          </Typography>
-        )}
+          <Typography id="ipv4-select-type">Select type</Typography>
+          <Box>
+            {ipOptions.map((option, idx) => (
+              <FormControlLabel
+                control={<Radio />}
+                data-qa-radio={option.label}
+                key={idx}
+                label={option.label}
+                value={option.value}
+              />
+            ))}
+          </Box>
+        </StyledRadioGroup>
+        {selectedIPv4 && <Typography>{explainerCopy[selectedIPv4]}</Typography>}
 
         {_tooltipCopy ? (
           <Tooltip placement="bottom-end" title={_tooltipCopy}>
             <div style={{ display: 'inline' }}>
-              <ActionsPanel
+              <StyledActionsPanel
                 primaryButtonProps={{
                   disabled: disabledIPv4,
                   label: 'Allocate',
                   loading: ipv4Loading,
                   onClick: handleAllocateIPv4,
-                  sx: { marginBottom: 8 },
                 }}
               />
             </div>
           </Tooltip>
         ) : (
-          <ActionsPanel
+          <StyledActionsPanel
             primaryButtonProps={{
               disabled: disabledIPv4,
               label: 'Allocate',
               loading: ipv4Loading,
               onClick: handleAllocateIPv4,
-              sx: { marginBottom: 8 },
             }}
           />
         )}
-        <Typography sx={{ marginTop: theme.spacing(4) }} variant="h2">
+        <Divider sx={{ pt: 1 }} />
+        <Typography sx={{ pt: 1 }} variant="h3">
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice spacingTop={8} text={ipv6Error?.[0].reason} variant="error" />
+          <Notice spacingTop={4} text={ipv6Error?.[0].reason} variant="error" />
         )}
-        <Typography sx={{ marginTop: '1rem' }} variant="h3">
-          Select prefix
-        </Typography>
-        <RadioGroup
-          aria-label="prefix-option"
+
+        <StyledRadioGroup
+          aria-labelledby="ipv6-select-type"
           data-qa-ip-options-radio-group
-          name="Select prefix"
+          name="Select IPv6 type"
           onChange={handleIPv6Change}
-          sx={{ marginTop: '0 !important' }}
           value={selectedIPv6Prefix}
         >
-          {prefixOptions.map((option, idx) => (
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-radio={option.label}
-              key={idx}
-              label={option.label}
-              value={option.value}
-            />
-          ))}
-        </RadioGroup>
+          <Typography id="ipv6-select-type">Select prefix</Typography>
+          <Box>
+            {prefixOptions.map((option, idx) => (
+              <FormControlLabel
+                control={<Radio />}
+                data-qa-radio={option.label}
+                key={idx}
+                label={option.label}
+                value={option.value}
+              />
+            ))}
+          </Box>
+        </StyledRadioGroup>
         {selectedIPv6Prefix && (
-          <Typography style={{ marginBottom: '1rem' }} variant="body1">
-            {IPv6ExplanatoryCopy[selectedIPv6Prefix]}
-          </Typography>
+          <Typography>{IPv6ExplanatoryCopy[selectedIPv6Prefix]}</Typography>
         )}
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
@@ -260,16 +255,34 @@ export const AddIPDrawer = (props: Props) => {
           </Link>
           .
         </Typography>
-        <ActionsPanel
+        <StyledActionsPanel
           primaryButtonProps={{
             disabled: disabledIPv6,
             label: 'Allocate',
             loading: ipv6Loading,
             onClick: handleCreateIPv6Range,
-            sx: { marginBottom: 8 },
           }}
         />
-      </React.Fragment>
+      </Stack>
     </Drawer>
   );
 };
+
+const StyledRadioGroup = styled(RadioGroup, {
+  label: 'StyledApiDrawerRadioGroup',
+})(({ theme }) => ({
+  '& label': {
+    minWidth: 100,
+  },
+  '& p': {
+    fontFamily: theme.font.bold,
+    marginTop: theme.spacing(),
+  },
+  marginBottom: '0 !important',
+}));
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+}));
