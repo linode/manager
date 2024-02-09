@@ -45,7 +45,7 @@ describe('Debounced Search Text Field', () => {
     expect(circleIcon).toBeInTheDocument();
   });
 
-  it('calls isSearching', () => {
+  it('calls isSearching', async () => {
     const debouncedOnSearch = debounce(props.onSearch, 250);
     const screen = renderWithTheme(
       <DebouncedSearchTextField
@@ -56,7 +56,7 @@ describe('Debounced Search Text Field', () => {
     );
 
     const textfield = screen.getByTestId(textfieldId);
-    userEvent.type(textfield, 'test');
+    await userEvent.type(textfield, 'test');
     vi.runAllTimers();
     expect(props.onSearch).toHaveBeenCalled();
   });

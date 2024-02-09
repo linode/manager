@@ -13,7 +13,7 @@ const props = {
 };
 
 describe('Domain action menu', () => {
-  it('should include basic Domain actions', () => {
+  it('should include basic Domain actions', async () => {
     const { queryByText } = renderWithTheme(
       <DomainActionMenu domain={domainFactory.build()} {...props} />
     );

@@ -160,14 +160,14 @@ export const renderWithThemeAndFormik = <T extends FormikValues>(
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
-export const includesActions = (
+export const includesActions = async (
   actions: string[],
   query: any,
   includes = true
 ) => {
   const actionMenuButton = screen.queryByLabelText(/^Action menu for/);
   if (actionMenuButton) {
-    userEvent.click(actionMenuButton);
+    await userEvent.click(actionMenuButton);
   }
   for (const action of actions) {
     includes

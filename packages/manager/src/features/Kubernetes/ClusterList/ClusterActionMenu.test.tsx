@@ -39,11 +39,11 @@ describe('Kubernetes cluster action menu', () => {
     includesActions(['Download kubeconfig', 'Delete'], queryByText);
   });
 
-  it('should query the API for a config file when Download kubeconfig is clicked', () => {
+  it('should query the API for a config file when Download kubeconfig is clicked', async () => {
     const { getByText } = render(
       wrapWithTheme(<ClusterActionMenu {...props} />)
     );
-    fireEvent.click(getByText(/download/i));
+    await fireEvent.click(getByText(/download/i));
     expect(mockGetKubeConfig).toHaveBeenCalledWith(123456);
   });
 });

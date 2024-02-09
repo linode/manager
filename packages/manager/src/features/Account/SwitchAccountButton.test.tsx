@@ -14,11 +14,11 @@ describe('SwitchAccountButton', () => {
     expect(screen.getByTestId('swap-icon')).toBeInTheDocument();
   });
 
-  test('calls onClick handler when button is clicked', () => {
+  test('calls onClick handler when button is clicked', async () => {
     const onClickMock = vi.fn();
     renderWithTheme(<SwitchAccountButton onClick={onClickMock} />);
 
-    userEvent.click(screen.getByText('Switch Account'));
+    await userEvent.click(screen.getByText('Switch Account'));
 
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });

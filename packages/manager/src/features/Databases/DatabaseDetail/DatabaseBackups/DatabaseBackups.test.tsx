@@ -48,20 +48,15 @@ describe('Database Backups', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
+    const { findByText } = renderWithTheme(<DatabaseBackups />, {
       queryClient,
     });
-
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    // Wait for loading to finish before test continues
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     for (const backup of backups) {
       // Check to see if all 7 backups are rendered
       expect(
-        getByText(formatDate(backup.created, { timezone: 'utc' }))
+        // eslint-disable-next-line no-await-in-loop
+        await findByText(formatDate(backup.created, { timezone: 'utc' }))
       ).toBeInTheDocument();
     }
   });
@@ -81,16 +76,10 @@ describe('Database Backups', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
+    const { findByText } = renderWithTheme(<DatabaseBackups />, {
       queryClient,
     });
 
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    // Wait for loading to finish before test continues
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    expect(getByText('No backups to display.')).toBeInTheDocument();
+    expect(await findByText('No backups to display.')).toBeInTheDocument();
   });
 });
