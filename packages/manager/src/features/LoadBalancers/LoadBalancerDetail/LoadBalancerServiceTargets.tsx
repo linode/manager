@@ -20,7 +20,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
+import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aclb/serviceTargets';
 
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 import { ServiceTargetDrawer } from './ServiceTargets/ServiceTargetDrawer';

@@ -11,7 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
-import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteCreateMutation } from 'src/queries/aclb/routes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';

@@ -4,7 +4,7 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useLoadbalancerCertificateQuery } from 'src/queries/aglb/certificates';
+import { useLoadbalancerCertificateQuery } from 'src/queries/aclb/certificates';
 
 import { ServiceTargetEndpontHeath } from './ServiceTargetEndpointHealth';
 
