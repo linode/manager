@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
@@ -10,22 +9,22 @@ import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 
-import {
-  SelectedIcon,
-  StyledFlagContainer,
-  StyledListItem,
-} from './RegionSelect.styles';
+import { StyledFlagContainer, StyledListItem } from './RegionSelect.styles';
 import { RegionSelectOption } from './RegionSelect.types';
 
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 type Props = {
+  displayEdgeServerIcon: boolean;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
-  selected: boolean;
 };
 
-export const RegionOption = ({ option, props, selected }: Props) => {
+export const RegionOption = ({
+  displayEdgeServerIcon,
+  option,
+  props,
+}: Props) => {
   const flags = useFlags();
   const isDisabledMenuItem =
     Boolean(flags.dcGetWell) && Boolean(option.unavailable);
@@ -92,7 +91,7 @@ export const RegionOption = ({ option, props, selected }: Props) => {
               </Box>
             )}
           </Box>
-          {option.site_type === 'edge' && (
+          {displayEdgeServerIcon && (
             <TooltipIcon
               icon={<EdgeServer />}
               status="other"

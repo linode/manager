@@ -106,26 +106,29 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             handleRegionChange(null);
           }
         }}
-        renderOption={(props, option, { selected }) => {
+        renderOption={(props, option) => {
           return (
             <RegionOption
+              displayEdgeServerIcon={Boolean(
+                flags.gecko && option.site_type === 'edge'
+              )}
               key={option.value}
               option={option}
               props={props}
-              selected={selected}
             />
           );
         }}
         textFieldProps={{
           InputProps: {
-            endAdornment: selectedRegion?.site_type === 'edge' && (
-              <TooltipIcon
-                icon={<EdgeServer />}
-                status="other"
-                sxTooltipIcon={sxIcon}
-                text="This region is an edge server."
-              />
-            ),
+            endAdornment: flags.gecko &&
+              selectedRegion?.site_type === 'edge' && (
+                <TooltipIcon
+                  icon={<EdgeServer />}
+                  status="other"
+                  sxTooltipIcon={sxIcon}
+                  text="This region is an edge server."
+                />
+              ),
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
@@ -151,13 +154,15 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         sx={{ minWidth: 416 }}
         value={selectedRegion}
       />
-      <StyledBox>
-        <EdgeServer />
-        <Typography>
-          {' '}
-          Indicates an Edge server region. <Link to="#">Learn more</Link>
-        </Typography>
-      </StyledBox>
+      {flags.gecko && (
+        <StyledBox>
+          <EdgeServer />
+          <Typography>
+            {' '}
+            Indicates an Edge server region. <Link to="#">Learn more</Link>
+          </Typography>
+        </StyledBox>
+      )}
     </StyledAutocompleteContainer>
     // @TODO Gecko MVP: Add docs link
   );

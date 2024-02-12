@@ -16,7 +16,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'dcGetWell', label: 'DC Get Well' },
   { flag: 'linodeCloneUIChanges', label: 'Linode Clone UI Changes' },
-  { flag: 'metadata', label: 'Metadata' },
+  { flag: 'gecko', label: 'Gecko' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'vpc', label: 'VPC' },

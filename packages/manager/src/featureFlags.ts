@@ -48,6 +48,7 @@ export interface Flags {
   databases: boolean;
   dcGetWell: boolean;
   firewallNodebalancer: boolean;
+  gecko: boolean;
   ipv6Sharing: boolean;
   linodeCloneUIChanges: boolean;
   linodeCreateWithFirewall: boolean;
