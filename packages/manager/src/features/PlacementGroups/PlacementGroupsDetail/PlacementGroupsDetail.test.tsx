@@ -47,6 +47,7 @@ describe('PlacementGroupsLanding', () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
         affinity_type: 'anti_affinity',
+        compliant: true,
         id: 1,
         label: 'My first PG',
       }),
@@ -64,6 +65,6 @@ describe('PlacementGroupsLanding', () => {
     expect(getByText(/my first pg \(Anti-affinity\)/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
     expect(getByRole('tab', { name: 'Summary' })).toBeInTheDocument();
-    expect(getByRole('tab', { name: 'Linodes (5)' })).toBeInTheDocument();
+    expect(getByRole('tab', { name: 'Linodes (9)' })).toBeInTheDocument();
   });
 });
