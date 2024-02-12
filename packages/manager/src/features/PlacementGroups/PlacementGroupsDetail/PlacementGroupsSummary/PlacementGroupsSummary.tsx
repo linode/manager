@@ -68,6 +68,7 @@ export const PlacementGroupsSummary = (props: Props) => {
                     marginLeft: '10px',
                     padding: 0,
                   }}
+                  // data-testid="help-icon"
                   status="help"
                   text={PLACEMENT_GROUP_TOOLTIP_TEXT}
                   tooltipPosition="right"
