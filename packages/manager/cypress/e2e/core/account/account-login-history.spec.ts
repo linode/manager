@@ -2,13 +2,10 @@
  * @file Integration tests for Cloud Manager account login history flows.
  */
 
-import { accountFactory, profileFactory } from 'src/factories';
+import { profileFactory } from 'src/factories';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { formatDate } from 'src/utilities/formatDate';
-import {
-  mockGetAccount,
-  mockGetAccountLogins,
-} from 'support/intercepts/account';
+import { mockGetAccountLogins } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -24,7 +21,6 @@ describe('Account login history', () => {
    * - Confirm that the login table displays a mocked successful unrestricted user login.
    */
   it('users can view the login history table', () => {
-    const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-user',
       restricted: false,
@@ -40,7 +36,6 @@ describe('Account login history', () => {
       restricted: false,
     });
 
-    mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
     mockGetAccountLogins([mockFailedLogin, mockSuccessfulLogin]).as(
       'getAccountLogins'
@@ -54,12 +49,7 @@ describe('Account login history', () => {
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait([
-      '@getAccount',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getProfile',
-    ]);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
 
     // Confirm helper text above table is visible.
     cy.findByText(
@@ -115,14 +105,12 @@ describe('Account login history', () => {
    * - Confirms that a child user sees a notice instead.
    */
   it('child users cannot view login history', () => {
-    const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-child-user',
       restricted: false,
       user_type: 'child',
     });
 
-    mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
 
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
@@ -133,12 +121,7 @@ describe('Account login history', () => {
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait([
-      '@getAccount',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getProfile',
-    ]);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(
@@ -157,7 +140,6 @@ describe('Account login history', () => {
    * - Confirms that a restricted user sees a notice instead.
    */
   it('restricted users cannot view login history', () => {
-    const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-restricted-user',
       restricted: true,
@@ -165,7 +147,6 @@ describe('Account login history', () => {
     });
 
     mockGetProfile(mockProfile).as('getProfile');
-    mockGetAccount(mockAccount).as('getAccount');
 
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
@@ -175,12 +156,7 @@ describe('Account login history', () => {
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait([
-      '@getAccount',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getProfile',
-    ]);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(
