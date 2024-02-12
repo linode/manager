@@ -1,4 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -6,14 +7,21 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
+import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
-import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Stack } from 'src/components/Stack';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
+
+import { PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
+import { SelectLinodeRow, SelectLinodeTableRowHead } from './SelectLinodeRow';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -30,28 +38,35 @@ interface Props {
   error?: string;
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
-  linodes: ExtendedLinode[];
   notices?: Notice[];
+  orderBy: OrderByProps<ExtendedLinode>;
   selectedLinodeID?: number;
 }
 
-const SelectLinodePanel = (props: Props) => {
+export const SelectLinodePanel = (props: Props) => {
   const {
     disabled,
     error,
     handleSelection,
     header,
-    linodes,
     notices,
+    orderBy,
     selectedLinodeID,
   } = props;
 
-  const flags = useFlags();
+  const linodes = orderBy.data;
 
+  const flags = useFlags();
   const theme = useTheme();
+  const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
+
   const [userSearchText, setUserSearchText] = React.useState<
     string | undefined
   >(undefined);
+
+  const [powerOffLinode, setPowerOffLinode] = React.useState<
+    { linodeID: number } | false
+  >(false);
 
   // Capture the selected linode when this component mounts,
   // so it doesn't change when the user selects a different one.
@@ -76,8 +91,120 @@ const SelectLinodePanel = (props: Props) => {
     [linodes, searchText]
   );
 
-  const renderCard = (linode: ExtendedLinode) => {
-    return (
+  return (
+    <>
+      <Paginate data={filteredLinodes}>
+        {({
+          count,
+          data: linodesData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => {
+          return (
+            <>
+              <StyledPaper data-qa-select-linode-panel>
+                <Stack gap={0.5} mb={2}>
+                  {error && (
+                    <Notice
+                      spacingBottom={0}
+                      spacingTop={0}
+                      text={error}
+                      variant="error"
+                    />
+                  )}
+                  {notices &&
+                    !disabled &&
+                    notices.map((notice, i) => (
+                      <Notice
+                        key={i}
+                        spacingBottom={0}
+                        spacingTop={0}
+                        text={notice.text}
+                        variant={notice.level}
+                      />
+                    ))}
+                </Stack>
+                <Typography
+                  marginBottom={
+                    flags.linodeCloneUIChanges ? theme.spacing(2) : undefined
+                  }
+                  data-qa-select-linode-header
+                  variant="h2"
+                >
+                  {!!header ? header : 'Select Linode'}
+                </Typography>
+                {flags.linodeCloneUIChanges && (
+                  <DebouncedSearchTextField
+                    customValue={{
+                      onChange: setUserSearchText,
+                      value: searchText,
+                    }}
+                    sx={{
+                      marginBottom: theme.spacing(1),
+                      width: '330px',
+                    }}
+                    clearable
+                    debounceTime={0}
+                    expand={true}
+                    hideLabel
+                    label=""
+                    placeholder="Search"
+                  />
+                )}
+                <StyledBox>
+                  {(matchesMdUp ? renderTable : renderCards)({
+                    disabled: disabled ?? false,
+                    handlePowerOff: (linodeID) =>
+                      setPowerOffLinode({ linodeID }),
+                    handleSelection,
+                    orderBy: { ...orderBy, data: linodesData },
+                    selectedLinodeID,
+                  })}
+                </StyledBox>
+              </StyledPaper>
+              <PaginationFooter
+                count={count}
+                eventCategory={'Clone from existing panel'}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </>
+          );
+        }}
+      </Paginate>
+      {powerOffLinode && (
+        <PowerActionsDialog
+          action={'Power Off'}
+          isOpen={!!powerOffLinode}
+          linodeId={powerOffLinode.linodeID}
+          manuallyUpdateConfigs={true}
+          onClose={() => setPowerOffLinode(false)}
+        />
+      )}
+    </>
+  );
+};
+
+interface RenderLinodeProps {
+  disabled: boolean;
+  handlePowerOff: (linodeID: number) => void;
+  handleSelection: Props['handleSelection'];
+  orderBy: OrderByProps<ExtendedLinode>;
+  selectedLinodeID: number | undefined;
+}
+
+const renderCards = ({
+  disabled,
+  handleSelection,
+  orderBy: { data: linodes },
+  selectedLinodeID,
+}: RenderLinodeProps) => (
+  <Grid container spacing={2}>
+    {linodes.map((linode) => (
       <SelectionCard
         onClick={() => {
           handleSelection(linode.id, linode.type, linode.specs.disk);
@@ -88,92 +215,41 @@ const SelectLinodePanel = (props: Props) => {
         key={`selection-card-${linode.id}`}
         subheadings={linode.subHeadings}
       />
-    );
-  };
+    ))}
+  </Grid>
+);
 
-  return (
-    <Paginate data={filteredLinodes}>
-      {({
-        count,
-        data: linodesData,
-        handlePageChange,
-        handlePageSizeChange,
-        page,
-        pageSize,
-      }) => {
-        return (
-          <>
-            <StyledPaper data-qa-select-linode-panel>
-              <Stack gap={0.5} mb={2}>
-                {error && (
-                  <Notice
-                    spacingBottom={0}
-                    spacingTop={0}
-                    text={error}
-                    variant="error"
-                  />
-                )}
-                {notices &&
-                  !disabled &&
-                  notices.map((notice, i) => (
-                    <Notice
-                      key={i}
-                      spacingBottom={0}
-                      spacingTop={0}
-                      text={notice.text}
-                      variant={notice.level}
-                    />
-                  ))}
-              </Stack>
-              <Typography
-                marginBottom={
-                  flags.linodeCloneUIChanges ? theme.spacing(2) : undefined
-                }
-                data-qa-select-linode-header
-                variant="h2"
-              >
-                {!!header ? header : 'Select Linode'}
-              </Typography>
-              {flags.linodeCloneUIChanges && (
-                <DebouncedSearchTextField
-                  customValue={{
-                    onChange: setUserSearchText,
-                    value: searchText,
-                  }}
-                  sx={{
-                    marginBottom: theme.spacing(1),
-                    width: '330px',
-                  }}
-                  clearable
-                  debounceTime={0}
-                  expand={true}
-                  hideLabel
-                  label=""
-                  placeholder="Search"
-                />
-              )}
-              <StyledBox>
-                <Grid container spacing={2}>
-                  {linodesData.map((linode) => {
-                    return renderCard(linode);
-                  })}
-                </Grid>
-              </StyledBox>
-            </StyledPaper>
-            <PaginationFooter
-              count={count}
-              eventCategory={'Clone from existing panel'}
-              handlePageChange={handlePageChange}
-              handleSizeChange={handlePageSizeChange}
-              page={page}
-              pageSize={pageSize}
-            />
-          </>
-        );
-      }}
-    </Paginate>
-  );
-};
+const renderTable = ({
+  disabled,
+  handlePowerOff,
+  handleSelection,
+  orderBy,
+  selectedLinodeID,
+}: RenderLinodeProps) => (
+  <Table aria-label="Linode" size="small">
+    <TableHead style={{ fontSize: '.875rem' }}>
+      <SelectLinodeTableRowHead orderBy={orderBy} />
+    </TableHead>
+    <TableBody role="radiogroup">
+      {orderBy.data.length > 0 ? (
+        orderBy.data.map((linode) => (
+          <SelectLinodeRow
+            handleSelection={() =>
+              handleSelection(linode.id, linode.type, linode.specs.disk)
+            }
+            disabled={disabled}
+            handlePowerOff={() => handlePowerOff(linode.id)}
+            key={linode.id}
+            linodeId={linode.id}
+            selected={Number(selectedLinodeID) === linode.id}
+          />
+        ))
+      ) : (
+        <TableRowEmpty colSpan={6} message={'No results'} />
+      )}
+    </TableBody>
+  </Table>
+);
 
 const StyledBox = styled(Box, {
   label: 'StyledBox',
@@ -186,5 +262,3 @@ const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
   flexGrow: 1,
   width: '100%',
 }));
-
-export default RenderGuard(SelectLinodePanel);

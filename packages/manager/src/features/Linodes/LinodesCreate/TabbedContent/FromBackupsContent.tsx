@@ -7,6 +7,7 @@ import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { reportException } from 'src/exceptionReporting';
@@ -14,7 +15,7 @@ import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { SelectBackupPanel } from '../SelectBackupPanel';
-import SelectLinodePanel from '../SelectLinodePanel';
+import { SelectLinodePanel } from '../SelectLinodePanel';
 import {
   BackupFormStateHandlers,
   Info,
@@ -109,8 +110,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           </Paper>
         ) : (
           <React.Fragment>
-            <SelectLinodePanel
-              linodes={ramdaCompose(
+            <OrderBy
+              data={ramdaCompose(
                 (linodes: Linode[]) =>
                   extendLinodes(
                     linodes,
@@ -120,21 +121,29 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   ),
                 filterLinodesWithBackups
               )(linodesData)}
-              notices={[
-                {
-                  level: 'warning',
-                  text: `This newly created Linode will be created with
+              order="asc"
+              orderBy="label"
+              preferenceKey={'linode-create-backups'}
+            >
+              {(orderBy) => (
+                <SelectLinodePanel
+                  notices={[
+                    {
+                      level: 'warning',
+                      text: `This newly created Linode will be created with
                           the same password and SSH Keys (if any) as the original Linode.
                           Also note that this Linode will need to be manually booted after it finishes
                           provisioning.`,
-                },
-              ]}
-              disabled={disabled}
-              error={hasErrorFor('linode_id')}
-              handleSelection={this.handleLinodeSelect}
-              selectedLinodeID={selectedLinodeID}
-              updateFor={[selectedLinodeID, errors]}
-            />
+                    },
+                  ]}
+                  disabled={disabled}
+                  error={hasErrorFor('linode_id')}
+                  handleSelection={this.handleLinodeSelect}
+                  orderBy={orderBy}
+                  selectedLinodeID={selectedLinodeID}
+                />
+              )}
+            </OrderBy>
             <SelectBackupPanel
               error={hasErrorFor('backup_id') || this.state.backupsError}
               handleChangeBackup={setBackupID}

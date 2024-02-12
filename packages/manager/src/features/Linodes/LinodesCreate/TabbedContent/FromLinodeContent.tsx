@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
@@ -9,7 +10,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import SelectLinodePanel from '../SelectLinodePanel';
+import { SelectLinodePanel } from '../SelectLinodePanel';
 import {
   CloneFormStateHandlers,
   ReduxStateProps,
@@ -95,37 +96,45 @@ export const FromLinodeContent = (props: CombinedProps) => {
         </StyledGrid>
       ) : (
         <StyledGrid>
-          <SelectLinodePanel
-            linodes={extendLinodes(
+          <OrderBy
+            data={extendLinodes(
               linodesData,
               imagesData,
               extendedTypes,
               regionsData
             )}
-            notices={[
-              {
-                level: 'warning',
-                text:
-                  'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
-              },
-              ...(flags.linodeCloneUIChanges
-                ? [
-                    {
-                      level: 'warning' as const,
-                      text:
-                        'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
-                    },
-                  ]
-                : []),
-            ]}
-            data-qa-linode-panel
-            disabled={userCannotCreateLinode}
-            error={hasErrorFor('linode_id')}
-            handleSelection={handleSelectLinode}
-            header={'Select Linode to Clone From'}
-            selectedLinodeID={selectedLinodeID}
-            updateFor={[selectedLinodeID, errors]}
-          />
+            order="asc"
+            orderBy="label"
+            preferenceKey={'linode-create-clone'}
+          >
+            {(orderBy) => (
+              <SelectLinodePanel
+                notices={[
+                  {
+                    level: 'warning',
+                    text:
+                      'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
+                  },
+                  ...(flags.linodeCloneUIChanges
+                    ? [
+                        {
+                          level: 'warning' as const,
+                          text:
+                            'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
+                        },
+                      ]
+                    : []),
+                ]}
+                data-qa-linode-panel
+                disabled={userCannotCreateLinode}
+                error={hasErrorFor('linode_id')}
+                handleSelection={handleSelectLinode}
+                header={'Select Linode to Clone From'}
+                orderBy={orderBy}
+                selectedLinodeID={selectedLinodeID}
+              />
+            )}
+          </OrderBy>
         </StyledGrid>
       )}
     </React.Fragment>
