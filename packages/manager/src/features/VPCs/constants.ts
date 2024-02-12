@@ -70,3 +70,6 @@ export const VPC_GETTING_STARTED_LINK =
 
 export const VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
+
+export const UNDERSTANDING_IP_ADDRESSES_LINK =
+  'https://www.linode.com/docs/guides/how-to-understand-ip-addresses/';
