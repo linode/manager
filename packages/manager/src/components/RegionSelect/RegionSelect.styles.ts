@@ -20,6 +20,9 @@ export const StyledAutocompleteContainer = styled(Box, {
       marginTop: -8,
     },
   },
+  '& .MuiAutocomplete-root .MuiAutocomplete-inputRoot': {
+    paddingRight: 8,
+  },
   display: 'flex',
 }));
 
