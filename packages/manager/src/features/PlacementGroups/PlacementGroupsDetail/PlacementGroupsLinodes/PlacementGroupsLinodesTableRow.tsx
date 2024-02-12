@@ -22,7 +22,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { id: placementGroupId } = useParams<{ id: string }>();
   const iconStatus = getLinodeIconStatus(status);
 
-  const onOpenUnassignLinodeModal = () => {
+  const handleOpenUnassignLinodeModal = () => {
     history.push(
       `/placement-groups/${placementGroupId}/linodes/unassign/${linode.id}`
     );
@@ -46,7 +46,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
       <TableCell actionCell>
         <InlineMenuAction
           actionText="Unassign"
-          onClick={onOpenUnassignLinodeModal}
+          onClick={handleOpenUnassignLinodeModal}
         />
       </TableCell>
     </TableRow>
