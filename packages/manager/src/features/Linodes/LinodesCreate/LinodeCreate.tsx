@@ -62,6 +62,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -101,6 +102,7 @@ import {
 import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 export interface LinodeCreateProps {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
@@ -108,6 +110,7 @@ export interface LinodeCreateProps {
   firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
+  handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -641,9 +644,11 @@ export class LinodeCreate extends React.PureComponent<
             toggleAutoassignIPv4WithinVPCEnabled={
               this.props.toggleAutoassignIPv4WithinVPCEnabled
             }
+            additionalIPv4RangesForVPC={this.props.additionalIPv4RangesForVPC}
             assignPublicIPv4Address={this.props.assignPublicIPv4Address}
             autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
             from="linodeCreate"
+            handleIPv4RangeChange={this.props.handleIPv4RangesForVPC}
             handleSelectVPC={this.props.setSelectedVPC}
             handleSubnetChange={this.props.handleSubnetChange}
             handleVPCIPv4Change={this.props.handleVPCIPv4Change}
@@ -822,6 +827,9 @@ export class LinodeCreate extends React.PureComponent<
       this.props.selectedVPCId !== -1
     ) {
       const vpcInterfaceData: InterfacePayload = {
+        ip_ranges: this.props.additionalIPv4RangesForVPC
+          .map((ipRange) => ipRange.address)
+          .filter((ipRange) => ipRange !== ''),
         ipam_address: null,
         ipv4: {
           nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,
