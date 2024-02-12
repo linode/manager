@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -21,7 +15,7 @@ const LinodesDetailNavigation = React.lazy(
 const CloneLanding = React.lazy(() => import('../CloneLanding/CloneLanding'));
 
 const LinodeDetail = () => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
@@ -52,15 +46,9 @@ const LinodeDetail = () => {
             <React.Fragment>
               <LinodesDetailHeader />
               <LinodesDetailNavigation />
-              <Switch>
-                <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
-                <Redirect from={`${url}/rebuild`} to={`${url}?rebuild=true`} />
-                <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
-                <Redirect from={`${url}/migrate`} to={`${url}?migrate=true`} />
-                <Redirect from={`${url}/upgrade`} to={`${url}?upgrade=true`} />
-              </Switch>
             </React.Fragment>
           )}
+          path={`${path}/:action?`}
         />
       </Switch>
     </React.Suspense>

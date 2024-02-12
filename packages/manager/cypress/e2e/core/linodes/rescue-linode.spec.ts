@@ -102,7 +102,7 @@ describe('Rescue Linodes', () => {
       'rescueLinode'
     );
 
-    cy.visitWithLogin(`/linodes/${mockLinode.id}?rescue=true`);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/rescue`);
     ui.dialog
       .findByTitle(`Rescue Linode ${mockLinode.label}`)
       .should('be.visible')

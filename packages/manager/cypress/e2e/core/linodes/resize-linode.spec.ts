@@ -20,7 +20,7 @@ describe('resize linode', () => {
         'POST',
         apiMatcher(`linode/instances/${linode.id}/resize`)
       ).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/resize`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
       getClick('[id="g6-standard-4"]');
@@ -43,7 +43,7 @@ describe('resize linode', () => {
         'POST',
         apiMatcher(`linode/instances/${linode.id}/resize`)
       ).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/resize`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
       getClick('[id="g6-standard-4"]');
@@ -84,7 +84,7 @@ describe('resize linode', () => {
         'POST',
         apiMatcher(`linode/instances/${linode.id}/resize`)
       ).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/resize`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
       getClick('[id="g6-standard-4"]');
@@ -117,7 +117,7 @@ describe('resize linode', () => {
         'POST',
         apiMatcher(`linode/instances/${linode.id}/resize`)
       ).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/resize`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 2 GB');
       getClick('[id="g6-standard-1"]');
@@ -179,7 +179,7 @@ describe('resize linode', () => {
         'POST',
         apiMatcher(`linode/instances/${linode.id}/resize`)
       ).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/resize`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 2 GB');
       getClick('[id="g6-standard-1"]');

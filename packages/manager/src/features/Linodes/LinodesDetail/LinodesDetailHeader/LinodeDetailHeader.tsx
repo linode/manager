@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -23,11 +23,9 @@ import {
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
-import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
@@ -41,16 +39,8 @@ interface TagDrawerProps {
 }
 
 const LinodeDetailHeader = () => {
-  // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
-  // now show their content in modals instead. The logic below facilitates handling
-  // modal-related query params (and the older /:subpath routes before the redirect
-  // logic changes the URL) to determine if a modal should be open when this component
-  // is first rendered.
-  const location = useLocation();
-  const queryParams = getQueryParamsFromQueryString(location.search);
-
-  const match = useRouteMatch<{ linodeId: string; subpath: string }>({
-    path: '/linodes/:linodeId/:subpath?',
+  const match = useRouteMatch<{ action: string; linodeId: string }>({
+    path: '/linodes/:linodeId/:action?',
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
@@ -71,24 +61,16 @@ const LinodeDetailHeader = () => {
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(
-    queryParams.delete === 'true'
-  );
-  const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(
-    queryParams.rebuild === 'true'
-  );
-  const [rescueDialogOpen, setRescueDialogOpen] = React.useState(
-    queryParams.rescue === 'true'
-  );
-  const [resizeDialogOpen, setResizeDialogOpen] = React.useState(
-    queryParams.resize === 'true'
-  );
-  const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
-    queryParams.migrate === 'true'
-  );
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
+
+  const deleteDialogOpen = match?.params.action === 'delete';
+
+  const rebuildDialogOpen = match?.params.action === 'rebuild';
+
+  const rescueDialogOpen = match?.params.action === 'rescue';
+
+  const resizeDialogOpen = match?.params.action === 'resize';
+
+  const migrateDialogOpen = match?.params.action === 'migrate';
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -98,25 +80,7 @@ const LinodeDetailHeader = () => {
   const history = useHistory();
 
   const closeDialogs = () => {
-    // If the user is on a Linode detail tab with the modal open and they then close it,
-    // change the URL to reflect just the tab they are on.
-    if (
-      queryParams.resize ||
-      queryParams.rescue ||
-      queryParams.rebuild ||
-      queryParams.migrate ||
-      queryParams.upgrade
-    ) {
-      history.replace({ search: undefined });
-    }
-
-    setPowerDialogOpen(false);
-    setDeleteDialogOpen(false);
-    setResizeDialogOpen(false);
-    setMigrateDialogOpen(false);
-    setRescueDialogOpen(false);
-    setRebuildDialogOpen(false);
-    setEnableBackupsDialogOpen(false);
+    history.replace(`/linodes/${matchedLinodeId}`);
   };
 
   const closeTagDrawer = () => {
@@ -175,23 +139,23 @@ const LinodeDetailHeader = () => {
   };
 
   const onOpenDeleteDialog = () => {
-    setDeleteDialogOpen(true);
+    history.replace(`/linodes/${matchedLinodeId}/delete`);
   };
 
   const onOpenResizeDialog = () => {
-    setResizeDialogOpen(true);
+    history.replace(`/linodes/${matchedLinodeId}/resize`);
   };
 
   const onOpenRebuildDialog = () => {
-    setRebuildDialogOpen(true);
+    history.replace(`/linodes/${matchedLinodeId}/rebuild`);
   };
 
   const onOpenRescueDialog = () => {
-    setRescueDialogOpen(true);
+    history.replace(`/linodes/${matchedLinodeId}/rescue`);
   };
 
   const onOpenMigrateDialog = () => {
-    setMigrateDialogOpen(true);
+    history.replace(`/linodes/${matchedLinodeId}/migrate`);
   };
 
   const handlers = {
@@ -249,7 +213,7 @@ const LinodeDetailHeader = () => {
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
         manuallyUpdateConfigs={showVPCs}
-        onClose={closeDialogs}
+        onClose={() => setPowerDialogOpen(false)}
       />
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}
@@ -284,11 +248,6 @@ const LinodeDetailHeader = () => {
         open={tagDrawer.open}
         tags={tagDrawer.tags}
         updateTags={updateTags}
-      />
-      <EnableBackupsDialog
-        linodeId={matchedLinodeId}
-        onClose={closeDialogs}
-        open={enableBackupsDialogOpen}
       />
     </>
   );

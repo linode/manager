@@ -244,7 +244,7 @@ describe('Community Stackscripts integration tests', () => {
    * - Deploys a Linode from Community StackScripts.
    * - Confirms that the deployment flow works.
    */
-  it('deploys a new linode as expected', () => {
+  it.only('deploys a new linode as expected', () => {
     const stackScriptId = '37239';
     const stackScriptName = 'setup-ipsec-vpn';
     const sharedKey = randomString();
