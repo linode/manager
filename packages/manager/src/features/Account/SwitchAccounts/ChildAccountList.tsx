@@ -81,7 +81,7 @@ export const ChildAccountList = React.memo(
               queryClient.invalidateQueries([
                 accountQueryKey,
                 'childAccounts',
-                'paginated',
+                'infinite',
               ]);
               refetchChildAccounts();
             }}

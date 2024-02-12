@@ -89,7 +89,7 @@ export const useChildAccountsInfiniteQuery = ({
     hasExplicitAuthToken;
 
   return useInfiniteQuery<ResourcePage<Account>, APIError[]>(
-    [queryKey, 'childAccounts', 'paginated', params, filter],
+    [queryKey, 'childAccounts', 'infinite', params, filter],
     ({ pageParam }) =>
       getChildAccounts({
         filter,
