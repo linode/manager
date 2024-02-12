@@ -60,15 +60,16 @@ export const useChildAccounts = ({
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
+  const enabled =
+    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+    Boolean(grants?.global?.child_account_access) ||
+    hasExplicitAuthToken;
 
   return useQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
     () => getChildAccounts({ filter, headers, params }),
     {
-      enabled:
-        (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
-        Boolean(grants?.global?.child_account_access) ||
-        hasExplicitAuthToken,
+      enabled,
       keepPreviousData: true,
     }
   );
@@ -82,6 +83,10 @@ export const useChildAccountsInfiniteQuery = ({
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
+  const enabled =
+    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+    Boolean(grants?.global?.child_account_access) ||
+    hasExplicitAuthToken;
 
   return useInfiniteQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
@@ -95,10 +100,7 @@ export const useChildAccountsInfiniteQuery = ({
         },
       }),
     {
-      enabled:
-        (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
-        Boolean(grants?.global?.child_account_access) ||
-        hasExplicitAuthToken,
+      enabled,
       getNextPageParam: ({ page, pages }) => {
         if (page === pages) {
           return undefined;
@@ -114,15 +116,16 @@ export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
+  const enabled =
+    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+    Boolean(grants?.global?.child_account_access) ||
+    hasExplicitAuthToken;
 
   return useQuery<Account, APIError[]>(
     [queryKey, 'childAccounts', 'childAccount', euuid],
     () => getChildAccount({ euuid }),
     {
-      enabled:
-        (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
-        Boolean(grants?.global?.child_account_access) ||
-        hasExplicitAuthToken,
+      enabled,
     }
   );
 };
