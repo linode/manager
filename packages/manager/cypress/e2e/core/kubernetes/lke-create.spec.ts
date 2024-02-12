@@ -218,7 +218,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
    * - Confirms that HA helper text updates dynamically to display pricing when a region is selected.
    */
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
-    const clusterRegion = getRegionById('us-southeast');
     const dcSpecificPricingRegion = getRegionById('us-east');
     const clusterLabel = randomLabel();
     const clusterVersion = '1.27';

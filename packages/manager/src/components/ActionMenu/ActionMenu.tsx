@@ -1,4 +1,4 @@
-import { IconButton, ListItemText } from '@mui/material';
+import { IconButton, ListItemText, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
@@ -37,6 +37,7 @@ export interface ActionMenuProps {
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const { actionsList, ariaLabel, onOpen } = props;
+  const theme = useTheme();
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -69,14 +70,15 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   }
 
   const sxTooltipIcon = {
-    '& .MuiSvgIcon-root': {
-      fill: '#fff',
-      height: '20px',
-      width: '20px',
-    },
     '& :hover': {
       color: '#4d99f1',
     },
+    '&& .MuiSvgIcon-root': {
+      fill: theme.color.disabledText,
+      height: '20px',
+      width: '20px',
+    },
+
     color: '#fff',
     padding: '0 0 0 8px',
     pointerEvents: 'all', // Allows the tooltip to be hovered on a disabled MenuItem

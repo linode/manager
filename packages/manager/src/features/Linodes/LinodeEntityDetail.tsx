@@ -3,11 +3,11 @@ import * as React from 'react';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
@@ -40,7 +40,11 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const notificationContext = React.useContext(_notificationContext);
 
-  const recentEvent = useRecentEventForLinode(linode.id);
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (event) => event.entity?.id === linode.id && event.entity.type === 'linode'
+  );
 
   const { data: images } = useAllImagesQuery({}, {});
 

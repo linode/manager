@@ -182,7 +182,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={!price?.monthly}
+            errorCell={typeof price?.monthly !== 'number'}
             errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             {' '}
@@ -190,7 +190,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           <TableCell
             data-qa-hourly
-            errorCell={!price?.hourly}
+            errorCell={typeof price?.hourly !== 'number'}
             errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             {isGPU ? (
