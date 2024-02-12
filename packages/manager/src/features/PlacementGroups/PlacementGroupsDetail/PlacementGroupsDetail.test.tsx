@@ -47,6 +47,7 @@ describe('PlacementGroupsLanding', () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
         affinity_type: 'anti_affinity',
+        compliant: true,
         id: 1,
         label: 'My first PG',
       }),
