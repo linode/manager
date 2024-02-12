@@ -1,9 +1,17 @@
-## [2024-01-31] - v0.39.0
+## [2024-02-12] - v0.40.0
 
 
 ### Changed:
 
 - ip_ranges field in LinodeInterfaceSchema no longer limited to 1 element ([#10089](https://github.com/linode/manager/pull/10089))
+
+## [2024-02-05] - v0.39.0
+
+
+### Upcoming Features:
+
+- Add `path_regex` as a valid ACLB rule match field ([#10126](https://github.com/linode/manager/pull/10126))
+
 
 ## [2024-01-22] - v0.38.0
 

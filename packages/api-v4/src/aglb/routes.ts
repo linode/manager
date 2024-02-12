@@ -13,7 +13,7 @@ import { UpdateRouteSchema, CreateRouteSchema } from '@linode/validation';
 /**
  * getLoadbalancerRoutes
  *
- * Returns a paginated list of Akamai Global Load Balancer routes
+ * Returns a paginated list of Akamai Cloud Load Balancer routes
  */
 export const getLoadbalancerRoutes = (
   loadbalancerId: number,
@@ -32,7 +32,7 @@ export const getLoadbalancerRoutes = (
 /**
  * getLoadbalancerRoute
  *
- * Returns an Akamai Global Load Balancer route
+ * Returns an Akamai Cloud Load Balancer route
  */
 export const getLoadbalancerRoute = (loadbalancerId: number, routeId: number) =>
   Request<Route>(
@@ -47,7 +47,7 @@ export const getLoadbalancerRoute = (loadbalancerId: number, routeId: number) =>
 /**
  * createLoadbalancerRoute
  *
- * Creates an Akamai Global Load Balancer route
+ * Creates an Akamai Cloud Load Balancer route
  */
 export const createLoadbalancerRoute = (
   loadbalancerId: number,
@@ -64,7 +64,7 @@ export const createLoadbalancerRoute = (
 /**
  * updateLoadbalancerRoute
  *
- * Updates an Akamai Global Load Balancer route
+ * Updates an Akamai Cloud Load Balancer route
  */
 export const updateLoadbalancerRoute = (
   loadbalancerId: number,
@@ -84,7 +84,7 @@ export const updateLoadbalancerRoute = (
 /**
  * deleteLoadbalancerRoute
  *
- * Deletes an Akamai Global Load Balancer route
+ * Deletes an Akamai Cloud Load Balancer route
  */
 export const deleteLoadbalancerRoute = (
   loadbalancerId: number,

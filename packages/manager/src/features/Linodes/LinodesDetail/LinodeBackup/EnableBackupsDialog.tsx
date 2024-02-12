@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Currency } from 'src/components/Currency';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
@@ -47,11 +47,16 @@ export const EnableBackupsDialog = (props: Props) => {
     type,
   });
 
+  const hasBackupsMonthlyPriceError =
+    !backupsMonthlyPrice && backupsMonthlyPrice !== 0;
+
   const { enqueueSnackbar } = useSnackbar();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const handleEnableBackups = async () => {
     await enableBackups();
-    resetEventsPolling();
+    checkForNewEvents();
     enqueueSnackbar('Backups are being enabled for this Linode.', {
       variant: 'success',
     });
@@ -68,7 +73,7 @@ export const EnableBackupsDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm-enable-backups',
-        disabled: !backupsMonthlyPrice,
+        disabled: hasBackupsMonthlyPriceError,
         label: 'Enable Backups',
         loading: isLoading,
         onClick: handleEnableBackups,
@@ -90,7 +95,7 @@ export const EnableBackupsDialog = (props: Props) => {
       open={open}
       title="Enable backups?"
     >
-      {backupsMonthlyPrice ? (
+      {!hasBackupsMonthlyPriceError ? (
         <Typography>
           Are you sure you want to enable backups on this Linode?{` `}
           This will add <Currency quantity={backupsMonthlyPrice} />

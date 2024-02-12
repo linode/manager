@@ -17,7 +17,7 @@ import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesVersion,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to retrieve Kubernetes versions and mocks response.

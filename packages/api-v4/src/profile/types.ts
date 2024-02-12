@@ -1,3 +1,5 @@
+import type { UserType } from '../account';
+
 export interface Referrals {
   code: string;
   url: string;
@@ -22,6 +24,7 @@ export interface Profile {
   two_factor_auth: boolean;
   restricted: boolean;
   verified_phone_number: string | null;
+  user_type: UserType | null;
 }
 
 export interface TokenRequest {

@@ -51,6 +51,11 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
           id: 'us-west',
           monthly: 4.17,
         },
+        {
+          hourly: 0.006,
+          id: 'us-southeast',
+          monthly: 4.67,
+        },
       ],
     },
   },
@@ -69,6 +74,12 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       id: 'us-west',
       monthly: 12.2,
     },
+    {
+      // Mock a DC with $0 region prices, which is possible in some circumstances (e.g. Limited Availability).
+      hourly: 0.0,
+      id: 'us-southeast',
+      monthly: 0.0,
+    },
   ],
 });
 
@@ -83,6 +94,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
         },
         region_prices: [
           {
+            hourly: 0,
+            id: 'us-ord',
+            monthly: 0,
+          },
+          {
             hourly: 0.0048,
             id: 'us-east',
             monthly: 3.57,
@@ -91,6 +107,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
             hourly: 0.0056,
             id: 'us-west',
             monthly: 4.17,
+          },
+          {
+            hourly: 0.006,
+            id: 'us-southeast',
+            monthly: 4.67,
           },
         ],
       },
@@ -106,7 +127,7 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
 export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
   (type) => {
     return {
-      size: type.id.split('-')[2],
+      size: parseInt(type.id.split('-')[2], 10),
       tab: 'Shared CPU',
       type: 'Linode',
     };

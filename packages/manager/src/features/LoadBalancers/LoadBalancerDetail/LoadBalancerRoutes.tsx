@@ -7,9 +7,11 @@ import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 
 import { CreateRouteDrawer } from './Routes/CreateRouteDrawer';
 import { RoutesTable } from './Routes/RoutesTable';
+import { ROUTE_COPY } from './Routes/constants';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -21,15 +23,14 @@ export const LoadBalancerRoutes = () => {
   const filter: Filter = query ? { label: { '+contains': query } } : {};
 
   return (
-    <>
+    <Stack mt={2} spacing={2}>
+      <Typography>{ROUTE_COPY.Description}</Typography>
       <Stack
         alignItems="flex-end"
         direction="row"
         flexWrap="wrap"
         gap={2}
         justifyContent="space-between"
-        mb={2}
-        mt={1.5}
       >
         <TextField
           InputProps={{
@@ -66,6 +67,6 @@ export const LoadBalancerRoutes = () => {
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
       />
-    </>
+    </Stack>
   );
 };

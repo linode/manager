@@ -34,7 +34,6 @@ import {
   vpcFactory,
   linodeFactory,
   linodeConfigFactory,
-  subnetFactory,
   VLANFactory,
 } from '@src/factories';
 import { randomNumber, randomLabel } from 'support/util/random';

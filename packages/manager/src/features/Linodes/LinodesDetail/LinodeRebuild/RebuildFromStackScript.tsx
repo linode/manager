@@ -13,7 +13,6 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
@@ -24,6 +23,7 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -72,6 +72,8 @@ export const RebuildFromStackScript = (props: Props) => {
     data: preferences,
     isLoading: isLoadingPreferences,
   } = usePreferences();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -127,7 +129,7 @@ export const RebuildFromStackScript = (props: Props) => {
     })
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
-        resetEventsPolling();
+        checkForNewEvents();
 
         setSubmitting(false);
 
