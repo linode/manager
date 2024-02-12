@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-02-12] - v1.113.0
+
+
+### Fixed:
+
+- EditableText interaction styling ([#10132](https://github.com/linode/manager/pull/10132))
+- Unit tests Button enabled assertions ([#10142](https://github.com/linode/manager/pull/10142))
+- Error when enabling backups for Linodes in regions with $0 pricing ([#10153](https://github.com/linode/manager/pull/10153))
+- Allow IPv6 ranges transfers ([#10156](https://github.com/linode/manager/pull/10156))
+- Error notices for $0 regions in LKE Resize and Add Node Pools drawers ([#10157](https://github.com/linode/manager/pull/10157))
+- Error in Enable All Backups drawer when one or more Linode is in a $0 region ([#10161](https://github.com/linode/manager/pull/10161))
+- Display $0.00 prices in Linode Migration dialog ([#10166](https://github.com/linode/manager/pull/10166))
+
+### Tech Stories:
+
+- DC Get Well - Cleanup/Remove feature flag logic ([#10146](https://github.com/linode/manager/pull/10146))
+- Clean up `regionDropdown` feature flag ([#10148](https://github.com/linode/manager/pull/10148))
+- Update `react-router-dom` in preparation for React 18 ([#10154](https://github.com/linode/manager/pull/10154))
+- Remove Enzyme ([#10160](https://github.com/linode/manager/pull/10160))
+- Update `launchdarkly-react-client-sdk` ([#10165](https://github.com/linode/manager/pull/10165))
+
+### Tests:
+
+- Add integration test coverage for Account Login History ([#10125](https://github.com/linode/manager/pull/10125))
+- Add test to check proxy user disabled username/email field ([#10139](https://github.com/linode/manager/pull/10139))
+- Add Cypress tests for OBJ Multicluster access key operations ([#10144](https://github.com/linode/manager/pull/10144))
+- Fix billing contact Cypress test by narrowing element selection scope ([#10150](https://github.com/linode/manager/pull/10150))
+
+### Upcoming Features:
+
+- Create Placement Groups Select component ([#10100](https://github.com/linode/manager/pull/10100))
+- Cleanup files to use profile to get user_type ([#10102](https://github.com/linode/manager/pull/10102))
+- "Save" button in Edit Access Key drawer disabled unless field values are changed ([#10118](https://github.com/linode/manager/pull/10118))
+- Add Placement Group Linodes List ([#10123](https://github.com/linode/manager/pull/10123))
+- Improve restricted access Login History experience for child and restricted users ([#10125](https://github.com/linode/manager/pull/10125))
+- Add AssignLinodesToPlacementGroup drawer ([#10140](https://github.com/linode/manager/pull/10140))
+
 ## [2024-02-05] - v1.111.0
 ### Changed:
 
