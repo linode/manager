@@ -9,6 +9,7 @@ export interface LabelProps {
 }
 
 export interface EditableProps {
+  analyticsEvent?: () => void;
   editableTextTitle: string;
   editableTextTitleSuffix?: string;
   errorText?: string;

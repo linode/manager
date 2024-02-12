@@ -19,6 +19,7 @@ export const FinalCrumb = React.memo((props: Props) => {
   if (onEditHandlers) {
     return (
       <StyledEditableText
+        analyticsEvent={onEditHandlers.analyticsEvent}
         data-qa-editable-text
         errorText={onEditHandlers.errorText}
         labelLink={labelOptions && labelOptions.linkTo}

@@ -434,3 +434,12 @@ export const sendLinodeConfigurationDocsEvent = (label: string) => {
     label,
   });
 };
+
+// LinodeDetailHeader.tsx
+export const sendEditBreadcrumbEvent = () => {
+  sendEvent({
+    action: 'Click:pencil icon',
+    category: 'Breadcrumb',
+    label: 'Edit Breadcrumb',
+  });
+};

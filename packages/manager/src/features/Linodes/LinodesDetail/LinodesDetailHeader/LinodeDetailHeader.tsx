@@ -21,7 +21,10 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import {
+  sendEditBreadcrumbEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -224,6 +227,7 @@ const LinodeDetailHeader = () => {
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
+            analyticsEvent: () => sendEditBreadcrumbEvent(),
             editableTextTitle: linode?.label ?? '',
             errorText: editableLabelError,
             onCancel: resetEditableLabel,
