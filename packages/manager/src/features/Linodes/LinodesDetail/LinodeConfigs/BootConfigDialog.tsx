@@ -5,7 +5,7 @@ import React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
 
 interface Props {
@@ -21,9 +21,11 @@ export const BootConfigDialog = (props: Props) => {
 
   const { error, isLoading, mutateAsync } = useRebootLinodeMutation(linodeId);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const onBoot = async () => {
     await mutateAsync({ config_id: config?.id ?? -1 });
-    resetEventsPolling();
+    checkForNewEvents();
     enqueueSnackbar(`Successfully booted config ${config?.label}`, {
       variant: 'success',
     });

@@ -7,7 +7,7 @@ import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import {
@@ -46,6 +46,8 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const linodeGrant = grants?.linode.find(
     (grant: Grant) => grant.id === linode.id
   );
@@ -74,7 +76,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
           volumeId: values.volume_id,
         });
         onClose();
-        resetEventsPolling();
+        checkForNewEvents();
         enqueueSnackbar(`Volume attachment started`, {
           variant: 'info',
         });

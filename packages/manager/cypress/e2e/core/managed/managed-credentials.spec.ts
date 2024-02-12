@@ -58,8 +58,6 @@ describe('Managed Credentials tab', () => {
 
     const credential = credentialFactory.build({
       label: credentialLabel,
-      username: credentialUsername,
-      password: credentialPassword,
     });
 
     mockGetCredentials([]).as('getCredentials');

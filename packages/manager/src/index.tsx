@@ -23,7 +23,7 @@ import './index.css';
 import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory();
-const store = storeFactory(queryClient);
+const store = storeFactory();
 
 setupInterceptors(store);
 

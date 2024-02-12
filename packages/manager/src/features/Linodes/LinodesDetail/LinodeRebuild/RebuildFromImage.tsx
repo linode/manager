@@ -16,10 +16,10 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -78,6 +78,8 @@ export const RebuildFromImage = (props: Props) => {
     data: preferences,
     isLoading: isLoadingPreferences,
   } = usePreferences();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
@@ -153,7 +155,7 @@ export const RebuildFromImage = (props: Props) => {
     rebuildLinode(linodeId, params)
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
-        resetEventsPolling();
+        checkForNewEvents();
 
         setSubmitting(false);
 

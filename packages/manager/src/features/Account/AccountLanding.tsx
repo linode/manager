@@ -174,9 +174,9 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
+        isProxyUser={user?.user_type === 'proxy'}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        username={user?.username ?? ''}
       />
     </React.Fragment>
   );

@@ -17,9 +17,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -85,6 +85,8 @@ export const LinodeResize = (props: Props) => {
     mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const { data: regionsData } = useRegionsQuery();
 
   const hostMaintenance = linode?.status === 'stopped';
@@ -115,7 +117,7 @@ export const LinodeResize = (props: Props) => {
         migration_type: values.migration_type,
         type: values.type,
       });
-      resetEventsPolling();
+      checkForNewEvents();
       enqueueSnackbar('Linode queued for resize.', {
         variant: 'info',
       });

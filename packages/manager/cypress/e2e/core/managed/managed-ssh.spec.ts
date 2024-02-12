@@ -2,7 +2,7 @@
  * @file Integration tests for Managed SSH access.
  */
 
-import type { ManagedLinodeSetting } from '@linode/api-v4/types';
+import type { ManagedLinodeSetting } from '@linode/api-v4';
 import {
   managedLinodeSettingFactory,
   managedSSHSettingFactory,

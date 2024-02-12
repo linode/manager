@@ -3,7 +3,6 @@ import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
 import { profileFactory } from './factories';
-import { queryClientFactory } from './queries/base';
 import {
   LinodeError,
   getURL,
@@ -14,7 +13,7 @@ import { storeFactory } from './store';
 
 import type { APIError } from '@linode/api-v4';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const mockAxiosError = {
   isAxiosError: true,

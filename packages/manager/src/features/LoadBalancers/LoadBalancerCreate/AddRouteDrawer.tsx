@@ -15,7 +15,7 @@ import { getNextLabel } from 'src/utilities/stringUtils';
 
 import { ROUTE_COPY } from '../LoadBalancerDetail/Routes/constants';
 import { getRouteProtocolFromConfigurationProtocol } from '../LoadBalancerDetail/Routes/utils';
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 
 import type { Configuration, Route, RoutePayload } from '@linode/api-v4';
 
@@ -58,7 +58,7 @@ export const AddRouteDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Add Route">
       <Stack spacing={1}>
-        <Typography>{ROUTE_COPY.Description.main}</Typography>
+        <Typography>{ROUTE_COPY.Protocol.main}</Typography>
         <Typography>{ROUTE_COPY.Description[routeProtocol]}</Typography>
       </Stack>
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>

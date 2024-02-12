@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -26,6 +26,8 @@ export const BareMetalRescue = (props: Props) => {
     linodeId !== undefined && isOpen
   );
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   React.useEffect(() => {
     if (isOpen) {
       setError(undefined);
@@ -42,7 +44,7 @@ export const BareMetalRescue = (props: Props) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
         });
-        resetEventsPolling();
+        checkForNewEvents();
         onClose();
       })
       .catch((err) => {

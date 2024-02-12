@@ -1,3 +1,5 @@
+import React from 'react';
+
 import type {
   AccountAvailability,
   Capabilities,
@@ -39,6 +41,27 @@ export interface RegionSelectProps
   width?: number;
 }
 
+export interface RegionMultiSelectProps
+  extends Omit<
+    EnhancedAutocompleteProps<RegionSelectOption, false>,
+    'label' | 'onChange' | 'options'
+  > {
+  SelectedRegionsList?: React.ComponentType<{
+    onRemove: (region: string) => void;
+    selectedRegions: RegionSelectOption[];
+  }>;
+  currentCapability: Capabilities | undefined;
+  handleSelection: (ids: string[]) => void;
+  helperText?: string;
+  isClearable?: boolean;
+  label?: string;
+  regions: Region[];
+  required?: boolean;
+  selectedIds: string[];
+  sortRegionOptions?: (a: RegionSelectOption, b: RegionSelectOption) => number;
+  width?: number;
+}
+
 export interface RegionOptionAvailability {
   accountAvailabilityData: AccountAvailability[] | undefined;
   currentCapability: Capabilities | undefined;
@@ -55,4 +78,11 @@ export interface GetSelectedRegionById extends RegionOptionAvailability {
 
 export interface GetRegionOptionAvailability extends RegionOptionAvailability {
   region: Region;
+}
+
+export interface GetSelectedRegionsByIdsArgs {
+  accountAvailabilityData: AccountAvailability[] | undefined;
+  currentCapability: Capabilities | undefined;
+  regions: Region[];
+  selectedRegionIds: string[];
 }

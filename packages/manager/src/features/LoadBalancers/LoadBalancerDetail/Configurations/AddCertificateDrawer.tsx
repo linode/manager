@@ -29,7 +29,7 @@ export const AddCertificateDrawer = (props: AddCertificateDrawerProps) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Certificate">
-      {/* @TODO Add AGLB docs link - M3-7041 */}
+      {/* @TODO Add ACLB docs link - M3-7041 */}
       <Typography>
         Input the host header that the Load Balancer will repsond to and the
         respective certificate to deliver. Use <Code>*</Code> as a wildcard

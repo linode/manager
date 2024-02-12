@@ -112,14 +112,14 @@ export const KubernetesPlanSelection = (
           </TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={!price?.monthly}
+            errorCell={typeof price?.monthly !== 'number'}
             errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
           </TableCell>
           <TableCell
             data-qa-hourly
-            errorCell={!price?.hourly}
+            errorCell={typeof price?.hourly !== 'number'}
             errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             ${price?.hourly ?? UNKNOWN_PRICE}
@@ -142,7 +142,7 @@ export const KubernetesPlanSelection = (
                   // or there was a pricing data error.
                   (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
                   disabled ||
-                  !price?.monthly ||
+                  typeof price?.hourly !== 'number' ||
                   isPlanSoldOut
                 }
                 setValue={(newCount: number) =>
@@ -154,7 +154,10 @@ export const KubernetesPlanSelection = (
               {onAdd && (
                 <Button
                   disabled={
-                    count < 1 || disabled || !price?.monthly || isPlanSoldOut
+                    count < 1 ||
+                    disabled ||
+                    typeof price?.hourly !== 'number' ||
+                    isPlanSoldOut
                   }
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}

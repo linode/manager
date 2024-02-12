@@ -72,6 +72,23 @@ export const getBucketsInCluster = (
   );
 
 /**
+ * getBucketsInRegion
+ *
+ * Gets a list of a user's Object Storage Buckets in the specified region.
+ */
+export const getBucketsInRegion = (
+  regionId: string,
+  params?: Params,
+  filters?: Filter
+) =>
+  Request<Page<ObjectStorageBucket>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/object-storage/buckets/${encodeURIComponent(regionId)}`)
+  );
+
+/**
  * createBucket
  *
  * Creates a new Bucket on your account.

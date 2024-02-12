@@ -11,10 +11,20 @@ import { queryPresets } from './base';
 
 export const queryKey = 'securityQuestions';
 
-export const useSecurityQuestions = () =>
-  useQuery<SecurityQuestionsData, APIError[]>(queryKey, getSecurityQuestions, {
-    ...queryPresets.oneTimeFetch,
-  });
+export const useSecurityQuestions = ({
+  enabled = true,
+}: {
+  enabled?: boolean;
+} = {}) => {
+  return useQuery<SecurityQuestionsData, APIError[]>(
+    queryKey,
+    getSecurityQuestions,
+    {
+      ...queryPresets.oneTimeFetch,
+      enabled,
+    }
+  );
+};
 
 export const useMutateSecurityQuestions = () => {
   const queryClient = useQueryClient();

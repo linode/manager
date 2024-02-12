@@ -4,7 +4,6 @@ import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { fbtVisible, fbtClick } from 'support/helpers';
-import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
@@ -22,7 +21,6 @@ describe('delete firewall', () => {
   it('deletes a firewall', () => {
     const firewallRequest = firewallFactory.build({
       label: randomLabel(),
-      region: chooseRegion().id,
     });
 
     cy.defer(createFirewall(firewallRequest), 'creating firewalls').then(

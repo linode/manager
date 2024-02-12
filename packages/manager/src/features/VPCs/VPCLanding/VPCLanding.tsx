@@ -13,12 +13,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  VPC_DOCS_LINK,
-  VPC_FEEDBACK_FORM_URL,
-  VPC_LABEL,
-} from 'src/features/VPCs/constants';
-import { useFlags } from 'src/hooks/useFlags';
+import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
@@ -56,7 +51,6 @@ const VPCLanding = () => {
   );
 
   const history = useHistory();
-  const flags = useFlags();
 
   const [selectedVPC, setSelectedVPC] = React.useState<VPC | undefined>();
 
@@ -98,7 +92,6 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
-        betaFeedbackLink={flags.vpc ? VPC_FEEDBACK_FORM_URL : undefined} // @TODO VPC: remove this once VPC goes into GA
         createButtonText="Create VPC"
         docsLink={VPC_DOCS_LINK}
         onButtonClick={createVPC}

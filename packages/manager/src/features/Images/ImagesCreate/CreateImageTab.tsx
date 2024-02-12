@@ -1,11 +1,11 @@
 import { Disk, Linode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -15,10 +15,10 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -102,6 +102,8 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
   const [disks, setDisks] = React.useState<Disk[]>([]);
@@ -171,7 +173,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       label,
     })
       .then((_) => {
-        resetEventsPolling();
+        checkForNewEvents();
 
         setSubmitting(false);
 

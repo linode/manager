@@ -84,13 +84,19 @@ describe('OneClick Apps (OCA)', () => {
         stackScriptLabel: candidate,
       });
 
+      if (!app) {
+        throw new Error(
+          `Failed to map StackScript label '${candidate}' to a One-Click App`
+        );
+      }
+
       ui.drawer
         .findByTitle(trimmedApps[0].label)
         .should('be.visible')
         .within(() => {
-          containsVisible(app?.description);
-          containsVisible(app?.summary);
-          containsVisible(app?.website);
+          containsVisible(app.description);
+          containsVisible(app.summary);
+          containsVisible(app.website!);
         });
       ui.drawerCloseButton.find().click();
       ui.drawer.find().should('not.exist');
@@ -159,7 +165,7 @@ describe('OneClick Apps (OCA)', () => {
     const linodeLabel = randomLabel();
     const levelName = 'Get the enderman!';
 
-    mockGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScripts([stackScripts]).as('getStackScripts');
     mockAppendFeatureFlags({
       oneClickApps: makeFeatureFlagData({
         401709: 'E2E Test App',

@@ -22,7 +22,7 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { EventWithStore } from 'src/events';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
@@ -188,7 +188,7 @@ const getAllFirewallsRequest = () =>
     getFirewalls(passedParams, passedFilter)
   )().then((data) => data.data);
 
-export const firewallEventsHandler = ({ queryClient }: EventWithStore) => {
+export const firewallEventsHandler = ({ queryClient }: EventHandlerData) => {
   // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
   queryClient.invalidateQueries([queryKey]);
 };

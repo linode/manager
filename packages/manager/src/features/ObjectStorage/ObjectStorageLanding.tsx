@@ -86,7 +86,7 @@ export const ObjectStorageLanding = () => {
 
   const flags = useFlags();
 
-  const isObjMultiClusterFlagEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -171,7 +171,7 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-        {isObjMultiClusterFlagEnabled ? (
+        {isObjMultiClusterEnabled ? (
           <OMC_CreateBucketDrawer
             isOpen={isCreateBucketOpen}
             onClose={() => history.replace('/object-storage/buckets')}
