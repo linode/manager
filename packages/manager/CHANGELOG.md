@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2024-02-12] - v1.112.0
 
 
+### Fixed:
+
+- Error when enabling backups for Linodes in regions with $0 pricing ([#10153](https://github.com/linode/manager/pull/10153))
+- Error notices for $0 regions in LKE Resize and Add Node Pools drawers ([#10157](https://github.com/linode/manager/pull/10157))
+- Error in Enable All Backups drawer when one or more Linode is in a $0 region ([#10161](https://github.com/linode/manager/pull/10161))
+- Display $0.00 prices in Linode Migration dialog ([#10166](https://github.com/linode/manager/pull/10166))
+
 ### Added:
 
 - Support for IPv4 Ranges in VPC 'Assign Linodes to subnet' drawer ([#10089](https://github.com/linode/manager/pull/10089))
