@@ -20,7 +20,7 @@ import {
 } from 'src/features/LoadBalancers/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
+import { useLoadBalancersQuery } from 'src/queries/aclb/loadbalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { DeleteLoadBalancerDialog } from '../LoadBalancerDetail/Settings/LoadBalancerDeleteDialog';

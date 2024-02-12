@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
-import { useLoadBalancerServiceTargetsInfiniteQuery } from 'src/queries/aglb/serviceTargets';
+import { useLoadBalancerServiceTargetsInfiniteQuery } from 'src/queries/aclb/serviceTargets';
 import { pluralize } from 'src/utilities/pluralize';
 
 import type { Filter, ServiceTarget } from '@linode/api-v4';

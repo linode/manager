@@ -18,7 +18,7 @@ import {
   ACLB_DOCS,
   ACLB_FEEDBACK_FORM_URL,
 } from 'src/features/LoadBalancers/constants';
-import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
+import { useLoadBalancerQuery } from 'src/queries/aclb/loadbalancers';
 
 const LoadBalancerSummary = React.lazy(() =>
   import('./LoadBalancerSummary').then((module) => ({

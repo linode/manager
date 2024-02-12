@@ -78,7 +78,7 @@ export const useLoadBalancerCreateMutation = () => {
   return useMutation<Loadbalancer, APIError[], CreateLoadbalancerPayload>({
     mutationFn: createLoadbalancer,
     onSuccess(data) {
-      queryClient.setQueryData([QUERY_KEY, 'aglb', data.id], data);
+      queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);
       queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
     },
   });

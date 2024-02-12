@@ -1,4 +1,8 @@
-import {
+import * as Factory from 'factory.ts';
+
+import { pickRandom } from 'src/utilities/random';
+
+import type {
   Certificate,
   Configuration,
   ConfigurationsEndpointHealth,
@@ -14,10 +18,7 @@ import {
   ServiceTargetPayload,
   ServiceTargetsEndpointHealth,
   UpdateLoadbalancerPayload,
-} from '@linode/api-v4/lib/aglb/types';
-import * as Factory from 'factory.ts';
-
-import { pickRandom } from 'src/utilities/random';
+} from '@linode/api-v4';
 
 export const mockCertificate = `
 -----BEGIN CERTIFICATE-----
@@ -101,9 +102,9 @@ export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
 // ***********************
 export const loadbalancerFactory = Factory.Sync.makeFactory<Loadbalancer>({
   configurations: [{ id: 1, label: 'my-config-1' }],
-  hostname: 'loadbalancer1.aglb.akamai.com',
+  hostname: 'loadbalancer1.aclb.akamai.com',
   id: Factory.each((i) => i),
-  label: Factory.each((i) => `aglb-${i}`),
+  label: Factory.each((i) => `aclb-${i}`),
   regions: ['us-west'],
   tags: ['tag1', 'tag2'],
 });

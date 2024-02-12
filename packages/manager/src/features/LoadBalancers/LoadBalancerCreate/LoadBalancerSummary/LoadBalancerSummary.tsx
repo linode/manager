@@ -32,7 +32,7 @@ export const LoadBalancerSummary = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Global Load Balancers',
+              label: 'Cloud Load Balancers',
               position: 1,
             },
             {
@@ -59,21 +59,21 @@ export const LoadBalancerSummary = () => {
             <Stack spacing={1}>
               <Typography variant="body1">Regions (5)</Typography>
               <div>
-                {/* // TODO AGLB: Implement Pricing */}
+                {/* TODO ACLB: Implement Pricing */}
                 <DisplayPrice interval="mo" price={60} />
               </div>
             </Stack>
 
             <Divider dark />
             <div>
-              {/* // TODO AGLB: Implement Pricing */}
+              {/* TODO ACLB: Implement Pricing */}
               <DisplayPrice interval="hour" price={2} />
             </div>
             <Divider dark />
             <Notice important variant="warning">
               <Typography>
                 Upload and apply certificates after Load Balancer creation.{' '}
-                {/* // TODO AGLB: update learn more link */}
+                {/* TODO ACLB: update learn more link */}
                 <Link to="#">Learn more</Link>.
               </Typography>
             </Notice>

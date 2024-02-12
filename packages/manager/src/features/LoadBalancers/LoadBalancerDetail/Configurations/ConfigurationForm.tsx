@@ -19,7 +19,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useLoadBalancerConfigurationCreateMutation,
   useLoadBalancerConfigurationMutation,
-} from 'src/queries/aglb/configurations';
+} from 'src/queries/aclb/configurations';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
