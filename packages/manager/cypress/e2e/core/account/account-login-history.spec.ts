@@ -28,7 +28,7 @@ describe('Account login history', () => {
     const mockProfile = profileFactory.build({
       username: 'mock-user',
       restricted: false,
-      user_type: null,
+      user_type: 'default',
     });
     const mockFailedLogin = accountLoginFactory.build({
       status: 'failed',
@@ -161,7 +161,7 @@ describe('Account login history', () => {
     const mockProfile = profileFactory.build({
       username: 'mock-restricted-user',
       restricted: true,
-      user_type: null,
+      user_type: 'default',
     });
 
     mockGetProfile(mockProfile).as('getProfile');
