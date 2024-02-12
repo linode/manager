@@ -1288,28 +1288,23 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/account/child-accounts', (req, res, ctx) => {
-    const childAccounts = [
-      accountFactory.build({
-        company: 'Child Company 0',
-        euuid: '0',
-      }),
-      accountFactory.build({
-        company: 'Child Company 1',
-        euuid: '1',
-      }),
-      accountFactory.build({
-        company: 'Child Company 2',
-        euuid: '2',
-      }),
-    ];
-    return res(ctx.json(makeResourcePage(childAccounts)));
-    // return res(ctx.json(makeResourcePage(accountFactory.buildList(101))));
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+    const childAccounts = accountFactory.buildList(100);
+    return res(
+      ctx.json({
+        data: childAccounts.slice(
+          (page - 1) * pageSize,
+          (page - 1) * pageSize + pageSize
+        ),
+        page,
+        pages: Math.ceil(childAccounts.length / pageSize),
+        results: childAccounts.length,
+      })
+    );
   }),
   rest.get('*/account/child-accounts/:euuid', (req, res, ctx) => {
-    const childAccount = accountFactory.build({
-      company: 'Child Company 1',
-      euuid: '1',
-    });
+    const childAccount = accountFactory.buildList(1);
     return res(ctx.json(childAccount));
   }),
   rest.post('*/account/child-accounts/:euuid/token', (req, res, ctx) => {
