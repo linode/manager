@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2024-02-12] - v1.112.0
 
+### Added:
+
+- Support for IPv4 Ranges in VPC 'Assign Linodes to subnet' drawer ([#10089](https://github.com/linode/manager/pull/10089))
+- VPC IPv4 address and range to Linode IP Address Table ([#10108](https://github.com/linode/manager/pull/10108))
+- Support for VPC IPv4 Ranges data in Unassign Linodes drawer ([#10114](https://github.com/linode/manager/pull/10114))
+- Support for VPC IPv4 Ranges in Linode Create flow and 'VPC IPv4 Ranges' column to inner Subnets table on VPC Detail page ([#10116](https://github.com/linode/manager/pull/10116))
+- Support VPC IPv4 Ranges in Add/Edit Linode Config dialog ([#10170](https://github.com/linode/manager/pull/10170))
 
 ### Fixed:
 
@@ -13,13 +20,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Error notices for $0 regions in LKE Resize and Add Node Pools drawers ([#10157](https://github.com/linode/manager/pull/10157))
 - Error in Enable All Backups drawer when one or more Linode is in a $0 region ([#10161](https://github.com/linode/manager/pull/10161))
 - Display $0.00 prices in Linode Migration dialog ([#10166](https://github.com/linode/manager/pull/10166))
-
-### Added:
-
-- Support for IPv4 Ranges in VPC 'Assign Linodes to subnet' drawer ([#10089](https://github.com/linode/manager/pull/10089))
-- VPC IPv4 address and range to Linode IP Address Table ([#10108](https://github.com/linode/manager/pull/10108))
-- Support for VPC IPv4 Ranges data in Unassign Linodes drawer ([#10114](https://github.com/linode/manager/pull/10114))
-- Support for VPC IPv4 Ranges in Linode Create flow and 'VPC IPv4 Ranges' column to inner Subnets table on VPC Detail page ([#10116](https://github.com/linode/manager/pull/10116))
 
 ## [2024-02-05] - v1.111.0
 ### Changed:
