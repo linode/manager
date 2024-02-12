@@ -70,6 +70,7 @@ export interface RegionOptionAvailability {
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
+  hideEdgeServers?: boolean;
   regions: Region[];
 }
 

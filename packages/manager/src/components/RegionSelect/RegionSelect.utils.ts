@@ -25,12 +25,19 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
+  hideEdgeServers = false,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
   const filteredRegions = currentCapability
-    ? regions.filter((region) =>
-        region.capabilities.includes(currentCapability)
-      )
+    ? regions.filter((region) => {
+        if (hideEdgeServers) {
+          return (
+            region.capabilities.includes(currentCapability) &&
+            region.site_type !== 'edge'
+          );
+        }
+        return region.capabilities.includes(currentCapability);
+      })
     : regions;
 
   return filteredRegions
