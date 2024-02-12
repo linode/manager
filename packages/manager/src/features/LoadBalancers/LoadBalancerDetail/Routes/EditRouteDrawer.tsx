@@ -92,13 +92,13 @@ export const EditRouteDrawer = (props: Props) => {
             Protocol
           </FormLabel>
           <FormControlLabel
-            control={<Radio checked={formik.values.protocol === 'http'} />}
+            control={<Radio />}
             data-qa-radio="HTTP"
             label="HTTP"
             value="http"
           />
           <FormControlLabel
-            control={<Radio checked={formik.values.protocol === 'tcp'} />}
+            control={<Radio />}
             data-qa-radio="TCP"
             label="TCP"
             value="tcp"

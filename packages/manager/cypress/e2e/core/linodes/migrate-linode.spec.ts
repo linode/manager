@@ -39,7 +39,7 @@ describe('Migrate linodes', () => {
     mockGetLinodeDisks(mockLinode.id, mockLinodeDisks).as('getLinodeDisks');
     mockGetLinodeVolumes(mockLinode.id, []).as('getLinodeVolumes');
 
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}?migrate=true`);
     cy.wait(['@getLinode', '@getLinodeDisks', '@getLinodeVolumes']);
 
     ui.button.findByTitle('Enter Migration Queue').should('be.disabled');
@@ -88,7 +88,7 @@ describe('Migrate linodes', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
 
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}?migrate=true`);
     cy.wait(['@getLinode', '@getLinodeDisks', '@getLinodeVolumes']);
 
     ui.button.findByTitle('Enter Migration Queue').should('be.disabled');
@@ -159,7 +159,7 @@ describe('Migrate linodes', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
 
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}?migrate=true`);
     cy.wait(['@getLinode', '@getLinodeDisks', '@getLinodeVolumes']);
 
     ui.button.findByTitle('Enter Migration Queue').should('be.disabled');

@@ -311,7 +311,7 @@ describe('rebuild linode', () => {
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockRebuildLinodeError(mockLinode.id, mockErrorMessage).as('rebuildLinode');
 
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/rebuild`);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}?rebuild=true`);
     findRebuildDialog(mockLinode.label).within(() => {
       ui.select.findByText('From Image').should('be.visible');
       ui.select
