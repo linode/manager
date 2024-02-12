@@ -111,7 +111,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
   });
 
   describe('edit route', () => {
-    it.only('can edit a route label and protocol', () => {
+    it('can edit a route label and protocol', () => {
       const loadbalancer = loadbalancerFactory.build();
       const routes = routeFactory.buildList(1, {
         protocol: 'http',
