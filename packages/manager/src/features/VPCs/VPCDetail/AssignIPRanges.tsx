@@ -9,9 +9,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import {
+  ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK,
   ASSIGN_IPV4_RANGES_DESCRIPTION,
   ASSIGN_IPV4_RANGES_TITLE,
-  UNDERSTANDING_IP_ADDRESSES_LINK,
 } from 'src/features/VPCs/constants';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -81,6 +81,6 @@ const StyledDescription = styled('span')(() => ({
 const IPv4RangesDescriptionJSX = (
   <>
     <StyledDescription>{ASSIGN_IPV4_RANGES_DESCRIPTION}</StyledDescription>
-    <Link to={UNDERSTANDING_IP_ADDRESSES_LINK}>Learn more</Link>.
+    <Link to={ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK}>Learn more</Link>.
   </>
 );
