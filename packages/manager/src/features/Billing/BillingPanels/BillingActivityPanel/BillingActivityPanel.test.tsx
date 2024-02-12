@@ -168,6 +168,11 @@ describe('paymentToActivityFeedItem', () => {
         { zone: 'utc' }
       );
       const testDateISO = testDate.toISO();
+
+      if (!testDateISO) {
+        throw new Error('Invalid test date');
+      }
+
       expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
         testDate.minus({ days: 30 }).toISO()
       );
@@ -183,21 +188,21 @@ describe('paymentToActivityFeedItem', () => {
       expect(getCutoffFromDateRange('12 Months', testDateISO)).toBe(
         testDate.minus({ months: 12 }).toISO()
       );
-      expect(getCutoffFromDateRange('All Time', testDateISO)).toBeUndefined();
+      expect(getCutoffFromDateRange('All Time', testDateISO)).toBeNull();
     });
   });
 
   describe('makeFilter', () => {
     const endDate = '2020-01-01T00:00:00';
     it('always includes conditions to order by date desc', () => {
-      expect(makeFilter()).toHaveProperty('+order_by', 'date');
-      expect(makeFilter()).toHaveProperty('+order', 'desc');
+      expect(makeFilter(null)).toHaveProperty('+order_by', 'date');
+      expect(makeFilter(null)).toHaveProperty('+order', 'desc');
       expect(makeFilter(endDate)).toHaveProperty('+order_by', 'date');
       expect(makeFilter(endDate)).toHaveProperty('+order', 'desc');
     });
 
     it('includes a date filter only if given an endDate', () => {
-      expect(makeFilter()).not.toHaveProperty('date');
+      expect(makeFilter(null)).not.toHaveProperty('date');
       expect(makeFilter(endDate)).toHaveProperty('date', {
         '+gte': '2020-01-01T00:00:00',
       });
