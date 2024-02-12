@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Support for VPC IPv4 Ranges in Linode Create flow and 'VPC IPv4 Ranges' column to inner Subnets table on VPC Detail page ([#10116](https://github.com/linode/manager/pull/10116))
 - Support VPC IPv4 Ranges in Add/Edit Linode Config dialog ([#10170](https://github.com/linode/manager/pull/10170))
 
+### Changed:
+
+- "Learn more" docs link for IPv4 ranges in Add/Edit Linode Config dialog, Linode Create flow, and VPC "Assign Linodes" drawer
+
 ### Fixed:
 
 - Error when enabling backups for Linodes in regions with $0 pricing ([#10153](https://github.com/linode/manager/pull/10153))
