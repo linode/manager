@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -5,6 +6,7 @@ import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
@@ -146,9 +148,18 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         noOptionsText="No results"
         options={options}
         placeholder="Select a Region"
+        sx={{ minWidth: 416 }}
         value={selectedRegion}
       />
+      <StyledBox>
+        <EdgeServer />
+        <Typography>
+          {' '}
+          Indicates an Edge server region. <Link to="#">Learn more</Link>
+        </Typography>
+      </StyledBox>
     </StyledAutocompleteContainer>
+    // @TODO Gecko MVP: Add docs link
   );
 });
 
@@ -165,17 +176,16 @@ const sxIcon = {
   padding: 0,
 };
 
-const StyledEndAdornment = styled(Box, { label: 'StyledEndAdornment' })(
-  ({ theme }) => ({
-    '& svg': {
-      height: 21,
-      width: 24,
-    },
-    '&:hover': {
-      color: 'inherit',
-    },
-    color: 'inherit',
-    display: 'flex',
-    marginLeft: 4,
-  })
-);
+const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
+  '& svg': {
+    height: 21,
+    marginLeft: 8,
+    marginRight: 8,
+    width: 24,
+  },
+  alignSelf: 'end',
+  color: 'inherit',
+  display: 'flex',
+  marginLeft: 8,
+  padding: '8px 0',
+}));

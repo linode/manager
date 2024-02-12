@@ -20,6 +20,7 @@ export const StyledAutocompleteContainer = styled(Box, {
       marginTop: -8,
     },
   },
+  display: 'flex',
 }));
 
 export const StyledFlagContainer = styled('div', {
