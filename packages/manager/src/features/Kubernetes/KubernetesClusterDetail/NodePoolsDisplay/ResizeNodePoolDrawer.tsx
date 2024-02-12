@@ -1,7 +1,7 @@
 import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -19,6 +19,8 @@ import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
+import { hasInvalidNodePoolPrice } from './utils';
+import { isNumber } from 'lodash';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {
@@ -107,85 +109,89 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       types: planType ? [planType] : [],
     });
 
+  const hasInvalidPrice = hasInvalidNodePoolPrice(
+    pricePerNode,
+    totalMonthlyPrice
+  );
+
   return (
     <Drawer
       onClose={onClose}
       open={open}
       title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
-      {isLoadingTypes && <CircleProgress />}
-      <form
-        onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
-        <div className={classes.section}>
-          {totalMonthlyPrice && (
+      {isLoadingTypes ? (
+        <CircleProgress />
+      ) : (
+        <form
+          onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <div className={classes.section}>
             <Typography className={classes.summary}>
               Current pool: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month{' '}
-              ({pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
+              /month ({pluralize('node', 'nodes', nodePool.count)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
               /month)
             </Typography>
-          )}
-        </div>
+          </div>
 
-        {error && <Notice text={error?.[0].reason} variant="error" />}
+          {error && <Notice text={error?.[0].reason} variant="error" />}
 
-        <div className={classes.section}>
-          <Typography className={classes.helperText}>
-            Enter the number of nodes you'd like in this pool:
-          </Typography>
-          <EnhancedNumberInput
-            min={1}
-            setValue={handleChange}
-            value={updatedCount}
-          />
-        </div>
+          <div className={classes.section}>
+            <Typography className={classes.helperText}>
+              Enter the number of nodes you'd like in this pool:
+            </Typography>
+            <EnhancedNumberInput
+              min={1}
+              setValue={handleChange}
+              value={updatedCount}
+            />
+          </div>
 
-        <div className={classes.section}>
-          {/* Renders total pool price/month for N nodes at price per node/month. */}
-          {pricePerNode && (
+          <div className={classes.section}>
+            {/* Renders total pool price/month for N nodes at price per node/month. */}
             <Typography className={classes.summary}>
               {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
-                updatedCount * pricePerNode
+                isNumber(pricePerNode) ? updatedCount * pricePerNode : undefined
               )}/month`}{' '}
               ({pluralize('node', 'nodes', updatedCount)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
               /month)
             </Typography>
+          </div>
+
+          {updatedCount < nodePool.count && (
+            <Notice important text={resizeWarning} variant="warning" />
           )}
-        </div>
 
-        {updatedCount < nodePool.count && (
-          <Notice important text={resizeWarning} variant="warning" />
-        )}
+          {updatedCount < 3 && (
+            <Notice important text={nodeWarning} variant="warning" />
+          )}
 
-        {updatedCount < 3 && (
-          <Notice important text={nodeWarning} variant="warning" />
-        )}
+          {nodePool.count && hasInvalidPrice && (
+            <Notice
+              spacingBottom={16}
+              spacingTop={8}
+              text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+              variant="error"
+            />
+          )}
 
-        {nodePool.count && (!pricePerNode || !totalMonthlyPrice) && (
-          <Notice
-            spacingBottom={16}
-            spacingTop={8}
-            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
-            variant="error"
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: updatedCount === nodePool.count || hasInvalidPrice,
+              label: 'Save Changes',
+              loading: isLoading,
+              onClick: handleSubmit,
+            }}
           />
-        )}
-
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            disabled: updatedCount === nodePool.count,
-            label: 'Save Changes',
-            loading: isLoading,
-            onClick: handleSubmit,
-          }}
-        />
-      </form>
+        </form>
+      )}
     </Drawer>
   );
 };

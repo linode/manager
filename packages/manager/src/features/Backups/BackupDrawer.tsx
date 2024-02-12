@@ -181,9 +181,7 @@ all new Linodes will automatically be backed up.`
           &nbsp;
           <DisplayPrice
             price={
-              totalBackupsPrice && isNumber(totalBackupsPrice)
-                ? totalBackupsPrice
-                : UNKNOWN_PRICE
+              isNumber(totalBackupsPrice) ? totalBackupsPrice : UNKNOWN_PRICE
             }
             interval="mo"
           />

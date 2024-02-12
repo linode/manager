@@ -1,6 +1,7 @@
 import { PriceObject } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material';
+import { isNumber } from 'lodash';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -24,8 +25,17 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
   const theme = useTheme();
   const priceFontSize = `${theme.typography.body1.fontSize}`;
 
-  return monthly && hourly && backups ? (
-    <StyledMigrationPricingContainer panelType={panelType}>
+  const shouldShowPrice =
+    isNumber(monthly) && isNumber(hourly) && backups !== undefined;
+
+  const shouldShowBackupsPrice =
+    backups && backups !== 'disabled' && backups.monthly !== null;
+
+  return shouldShowPrice ? (
+    <StyledMigrationPricingContainer
+      panelType={panelType}
+      data-testid="migration-pricing"
+    >
       <StyledSpan>{currentPanel ? 'Current' : 'New'} Price</StyledSpan>
       <Box
         alignItems="baseline"
@@ -44,7 +54,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
           interval="hour"
           price={hourly}
         />
-        {backups !== 'disabled' && backups?.monthly && (
+        {shouldShowBackupsPrice && (
           <>
             &nbsp;
             <Typography fontFamily={theme.font.bold} fontSize={priceFontSize}>
@@ -53,7 +63,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
             <DisplayPrice
               fontSize={priceFontSize}
               interval="month"
-              price={backups.monthly}
+              price={backups.monthly ?? '--.--'}
             />
           </>
         )}

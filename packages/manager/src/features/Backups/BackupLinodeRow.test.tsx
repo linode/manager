@@ -78,4 +78,71 @@ describe('BackupLinodeRow', () => {
     expect(await findByText('Jakarta, ID')).toBeVisible();
     expect(await findByText('$3.57/mo')).toBeVisible();
   });
+
+  it('should render error indicator when price cannot be determined', async () => {
+    server.use(
+      rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
+        return res.networkError('A hypothetical network error has occurred!');
+      })
+    );
+
+    const linode = linodeFactory.build({
+      label: 'my-dc-pricing-linode-to-back-up',
+      region: 'id-cgk',
+      type: 'linode-type-test',
+    });
+
+    const { findByText, findByLabelText } = renderWithTheme(
+      wrapWithTableBody(<BackupLinodeRow linode={linode} />)
+    );
+
+    expect(await findByText('$--.--/mo')).toBeVisible();
+    expect(
+      await findByLabelText('There was an error loading the price.')
+    ).toBeVisible();
+  });
+
+  it('should not render error indicator for $0 price', async () => {
+    server.use(
+      rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            linodeTypeFactory.build({
+              addons: {
+                backups: {
+                  price: {
+                    hourly: 0.004,
+                    monthly: 2.5,
+                  },
+                  region_prices: [
+                    {
+                      hourly: 0,
+                      id: 'id-cgk',
+                      monthly: 0,
+                    },
+                  ],
+                },
+              },
+              label: 'Linode Test Type',
+            })
+          )
+        );
+      })
+    );
+
+    const linode = linodeFactory.build({
+      label: 'my-dc-pricing-linode-to-back-up',
+      region: 'id-cgk',
+      type: 'linode-type-test',
+    });
+
+    const { findByText, queryByLabelText } = renderWithTheme(
+      wrapWithTableBody(<BackupLinodeRow linode={linode} />)
+    );
+
+    expect(await findByText('$0.00/mo')).toBeVisible();
+    expect(
+      queryByLabelText('There was an error loading the price.')
+    ).toBeNull();
+  });
 });
