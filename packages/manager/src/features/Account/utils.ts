@@ -34,7 +34,7 @@ interface NonAccountAccessGrant extends GrantsProfileSchema {
 }
 
 // Discriminating union to determine the type of global grant
-export type IsRestrictedGlobalGrantType =
+export type RestrictedGlobalGrantType =
   | AccountAccessGrant
   | NonAccountAccessGrant;
 
@@ -80,7 +80,7 @@ export const isRestrictedGlobalGrantType = ({
   grants,
   permittedGrantLevel,
   profile,
-}: IsRestrictedGlobalGrantType): boolean => {
+}: RestrictedGlobalGrantType): boolean => {
   if (globalGrantType !== 'account_access') {
     return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
   }

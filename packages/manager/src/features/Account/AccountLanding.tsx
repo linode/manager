@@ -13,7 +13,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
-import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -153,10 +152,7 @@ const AccountLanding = () => {
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
-      <SwitchAccountButton
-        onClick={handleAccountSwitch}
-        tooltipText={PARENT_SESSION_EXPIRED}
-      />
+      <SwitchAccountButton onClick={handleAccountSwitch} />
     ) : undefined;
   }
 

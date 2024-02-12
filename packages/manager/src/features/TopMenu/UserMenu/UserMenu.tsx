@@ -20,7 +20,6 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
-import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -271,7 +270,6 @@ export const UserMenu = React.memo(() => {
             <SwitchAccountButton
               buttonType="outlined"
               onClick={handleAccountSwitch}
-              tooltipText={PARENT_SESSION_EXPIRED}
             />
           )}
           <Box>
