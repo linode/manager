@@ -69,7 +69,7 @@ export const getAccessRestrictedText = (userType: UserType | null) => {
  * // If account access does not equal 'read_write', the user has restricted access.
  * isRestrictedGlobalGrantType({
  *   globalGrantType: 'account_access',
- *   allowableGrantLevel: 'read_write',
+ *   permittedGrantLevel: 'read_write',
  *   grants,
  *   profile
  * });
