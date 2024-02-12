@@ -1,5 +1,5 @@
-import type { AxiosError } from 'axios';
 import type { APIError } from '@linode/api-v4';
+import type { AxiosError } from 'axios';
 
 type LinodeApiV4Error = {
   errors: APIError[];
@@ -49,10 +49,11 @@ const isAxiosError = (e: any): e is AxiosError => {
  */
 const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
   if (isAxiosError(e)) {
-    const errorData = e.response?.data?.errors;
+    const responseData = e.response?.data as any;
     return (
-      Array.isArray(errorData) &&
-      errorData.every((item: any) => {
+      responseData.errors &&
+      Array.isArray(responseData.errors) &&
+      responseData.errors.every((item: any) => {
         return 'reason' in item;
       })
     );
@@ -69,7 +70,7 @@ const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
  *
  * @returns A new error with added information in message, or `e`.
  */
-const enhanceError = (e: any) => {
+const enhanceError = (e: Error) => {
   // Check for most specific error types first.
   if (isLinodeApiError(e)) {
     // If `e` is a Linode APIv4 error response, show the status code, error messages,
@@ -85,7 +86,7 @@ const enhanceError = (e: any) => {
     });
 
     const requestInfo =
-      !!e.request?.responseURL && !!e.config.method
+      !!e.request?.responseURL && !!e.config?.method
         ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
         : '';
 
@@ -100,7 +101,7 @@ const enhanceError = (e: any) => {
       : `Request failed`;
 
     const requestInfo =
-      !!e.request?.responseURL && !!e.config.method
+      !!e.request?.responseURL && !!e.config?.method
         ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
         : '';
 

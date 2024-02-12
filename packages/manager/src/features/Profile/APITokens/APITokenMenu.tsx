@@ -7,6 +7,7 @@ import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
+  isProxyUser: boolean;
   isThirdPartyAccessToken: boolean;
   openEditDrawer: (token: Token) => void;
   openRevokeDialog: (token: Token, type: string) => void;
@@ -20,6 +21,7 @@ export const APITokenMenu = (props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
+    isProxyUser,
     isThirdPartyAccessToken,
     openEditDrawer,
     openRevokeDialog,
@@ -37,10 +39,12 @@ export const APITokenMenu = (props: Props) => {
     },
     !isThirdPartyAccessToken
       ? {
+          disabled: isProxyUser,
           onClick: () => {
             openEditDrawer(token);
           },
           title: 'Rename',
+          tooltip: 'Only company users can edit API tokens.',
         }
       : null,
     {
@@ -65,8 +69,10 @@ export const APITokenMenu = (props: Props) => {
       {actions.map((action) => (
         <InlineMenuAction
           actionText={action.title}
+          disabled={action.disabled}
           key={action.title}
           onClick={action.onClick}
+          tooltip={action.tooltip}
         />
       ))}
     </>

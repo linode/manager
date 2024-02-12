@@ -1,3 +1,16 @@
+## [2024-02-05] - v0.109.0
+
+
+### Fixed:
+
+- Accept `InterfacePayload` type when creating a Linode with interfaces specified ([#10086](https://github.com/linode/manager/pull/10086))
+- Remove incorrect `_initial` property on `Event` type ([#9949](https://github.com/linode/manager/pull/9949))
+
+### Upcoming Features:
+
+- Add `user_type` to /profile endpoint for Parent/Child user roles ([#10080](https://github.com/linode/manager/pull/10080))
+- Add `Akamai Cloud Load Balancer` to `AccountCapability` type ([#10098](https://github.com/linode/manager/pull/10098))
+
 ## [2024-01-22] - v0.108.0
 
 

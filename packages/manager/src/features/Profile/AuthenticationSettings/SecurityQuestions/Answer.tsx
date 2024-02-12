@@ -8,10 +8,17 @@ interface Props {
   index: number;
   isReadOnly: boolean;
   questionResponse?: SecurityQuestion;
+  securityQuestionRef?: React.RefObject<HTMLInputElement>;
 }
 
 export const Answer = (props: Props) => {
-  const { handleChange, index, isReadOnly, questionResponse } = props;
+  const {
+    handleChange,
+    index,
+    isReadOnly,
+    questionResponse,
+    securityQuestionRef,
+  } = props;
   const label = `Answer ${index + 1}`;
   const name = `security_questions[${index}].response`;
 
@@ -21,6 +28,7 @@ export const Answer = (props: Props) => {
 
   return (
     <TextField
+      inputRef={securityQuestionRef}
       label={label}
       name={name}
       onChange={handleChange}

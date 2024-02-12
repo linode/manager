@@ -1,5 +1,5 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { Volume } from '@linode/api-v4/types';
+import { Volume } from '@linode/api-v4';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';

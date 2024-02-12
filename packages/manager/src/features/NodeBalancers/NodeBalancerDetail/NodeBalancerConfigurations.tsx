@@ -62,6 +62,7 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from '../types';
+import type { Grants } from '@linode/api-v4';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -87,6 +88,7 @@ const StyledConfigsButton = styled(Button, {
 }));
 
 interface Props {
+  grants: Grants | undefined;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
 }
@@ -168,6 +170,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       panelMessages,
     } = this.state;
 
+    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
+
     return (
       <div>
         <DocumentTitleSegment
@@ -183,6 +187,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <StyledConfigsButton
               buttonType="outlined"
               data-qa-add-config
+              disabled={isNodeBalancerReadOnly}
               onClick={() => this.addNodeBalancerConfig()}
             >
               {configs.length === 0
@@ -540,6 +545,18 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return true;
   };
 
+  isNodeBalancerReadOnly = () => {
+    const { grants } = this.props;
+    const { nodeBalancerId } = this.props.match.params;
+    return Boolean(
+      grants?.nodebalancer?.some(
+        (grant) =>
+          grant.id === Number(nodeBalancerId) &&
+          grant.permissions === 'read_only'
+      )
+    );
+  };
+
   onCloseConfirmation = () =>
     this.setState({
       deleteConfigConfirmDialog: {
@@ -628,6 +645,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
 
+    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
+
     const L = {
       algorithmLens: lensTo(['algorithm']),
       checkBodyLens: lensTo(['check_body']),
@@ -687,6 +706,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           checkPassive={view(L.checkPassiveLens, this.state)}
           checkPath={view(L.checkPathLens, this.state)}
           configIdx={idx}
+          disabled={isNodeBalancerReadOnly}
           errors={configErrors[idx]}
           forEdit
           healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}

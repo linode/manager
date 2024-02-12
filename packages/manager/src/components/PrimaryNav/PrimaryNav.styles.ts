@@ -16,9 +16,14 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       textDecoration: 'none',
     },
     chip: {
-      '&.beta-chip-aglb': {
+      '&.beta-chip-aclb': {
         bottom: -2,
         left: 70,
+        position: 'absolute',
+      },
+      '&.beta-chip-placement-groups': {
+        bottom: -2,
+        left: 52,
         position: 'absolute',
       },
       marginTop: 2,

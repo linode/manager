@@ -100,10 +100,24 @@ export const MAX_VOLUME_SIZE = 10240;
 export const MAX_MONTHS_EOL_FILTER = 6;
 
 /**
- * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
- * to get the actual interval.
+ * Values used for our events polling system.
+ * Number values are in milliseconds
  */
-export const INTERVAL = 1000;
+export const POLLING_INTERVALS = {
+  /**
+   * By default, we will poll for events every 16 seconds
+   */
+  DEFAULT: 16_000,
+  /**
+   * If there are "in-progress" events, we will poll every 2 seconds to give users
+   * a real-time feeling experience
+   *
+   * The /v4/account/events endpoint has a rate-limit of 400 requets per minute.
+   * If we request events every 2 seconds, we will make 30 calls in 1 minute.
+   * We should be well within rate-limits.
+   */
+  IN_PROGRESS: 2_000,
+} as const;
 
 /**
  * Time after which data from the API is considered stale (half an hour)
