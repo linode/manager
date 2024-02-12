@@ -5,7 +5,12 @@ import {
   getChildAccounts,
   updateAccountInfo,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 
@@ -64,6 +69,42 @@ export const useChildAccounts = ({
         (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
         Boolean(grants?.global?.child_account_access) ||
         hasExplicitAuthToken,
+      keepPreviousData: true,
+    }
+  );
+};
+
+export const useChildAccountsInfiniteQuery = ({
+  filter,
+  headers,
+  params,
+}: RequestOptions) => {
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+  const hasExplicitAuthToken = Boolean(headers?.Authorization);
+
+  return useInfiniteQuery<ResourcePage<Account>, APIError[]>(
+    [queryKey, 'childAccounts', 'paginated', params, filter],
+    ({ pageParam }) =>
+      getChildAccounts({
+        filter,
+        headers,
+        params: {
+          page: pageParam,
+          page_size: 25,
+        },
+      }),
+    {
+      enabled:
+        (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+        Boolean(grants?.global?.child_account_access) ||
+        hasExplicitAuthToken,
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
+      },
       keepPreviousData: true,
     }
   );

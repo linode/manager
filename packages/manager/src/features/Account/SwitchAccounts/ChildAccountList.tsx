@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import React from 'react';
 import { useQueryClient } from 'react-query';
+import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
 import { Box } from 'src/components/Box';
@@ -11,7 +13,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import {
   queryKey as accountQueryKey,
-  useChildAccounts,
+  useChildAccountsInfiniteQuery,
 } from 'src/queries/account';
 
 interface ChildAccountListProps {
@@ -35,11 +37,14 @@ export const ChildAccountList = React.memo(
     onSwitchAccount,
   }: ChildAccountListProps) => {
     const {
-      data: childAccounts,
+      data,
+      fetchNextPage,
+      hasNextPage,
       isError,
+      isFetchingNextPage,
       isLoading,
       refetch: refetchChildAccounts,
-    } = useChildAccounts({
+    } = useChildAccountsInfiniteQuery({
       headers: isProxyUser
         ? {
             Authorization: currentTokenWithBearer,
@@ -47,6 +52,7 @@ export const ChildAccountList = React.memo(
         : undefined,
     });
     const queryClient = useQueryClient();
+    const childAccounts = data?.pages.flatMap((page) => page.data);
 
     if (isLoading) {
       return (
@@ -56,7 +62,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (childAccounts?.results === 0) {
+    if (childAccounts?.length === 0) {
       return (
         <Notice variant="info">There are no indirect customer accounts.</Notice>
       );
@@ -90,7 +96,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    const renderChildAccounts = childAccounts?.data.map((childAccount, idx) => {
+    const renderChildAccounts = childAccounts?.map((childAccount, idx) => {
       const euuid = childAccount.euuid;
       return (
         <StyledLinkButton
@@ -116,6 +122,8 @@ export const ChildAccountList = React.memo(
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
         {renderChildAccounts}
+        {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
+        {isFetchingNextPage && <CircleProgress mini />}
       </Stack>
     );
   }
