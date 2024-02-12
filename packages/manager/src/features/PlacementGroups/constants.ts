@@ -8,3 +8,5 @@ export const MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE =
 
 export const PLACEMENT_GROUP_LINODES_ERROR_MESSAGE =
   'There was an error loading Linodes for this Placement Group.';
+
+export const PLACEMENT_GROUP_TOOLTIP_TEXT = `The Affinity Type and Region determine the maximum number of VMs per group.`;
