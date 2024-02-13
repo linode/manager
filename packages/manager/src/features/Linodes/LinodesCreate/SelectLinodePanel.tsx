@@ -160,7 +160,9 @@ export const SelectLinodePanel = (props: Props) => {
                   />
                 )}
                 <StyledBox>
-                  {(matchesMdUp ? renderTable : renderCards)({
+                  {(matchesMdUp && flags.linodeCloneUIChanges
+                    ? renderTable
+                    : renderCards)({
                     disabled: disabled ?? false,
                     handlePowerOff: (linodeID) =>
                       setPowerOffLinode({ linodeID }),
