@@ -131,8 +131,9 @@ export const baseApps = {
   '1243763': 'MainConcept XAVC Transcoder Demo',
   '1243764': 'MainConcept XDCAM Transcoder Demo',
   '1243780': 'SimpleX Chat',
-  '1308539': 'NATS Single Node',
-  '1298017': 'JupyterLab',
+  // uncomment after 2/20/24 release
+  // '1308539': 'NATS Single Node',
+  // '1298017': 'JupyterLab',
 };
 
 const oneClickFilter = [
