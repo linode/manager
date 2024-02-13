@@ -88,3 +88,10 @@ export const StyledScrollBox = styled(Box, {
   maxWidth: `${maxWidth}px`,
   overflow: 'auto',
 }));
+
+export const StyledItemWithPlusChip = styled('span', {
+  label: 'ItemWithPlusChip',
+})({
+  alignItems: 'center',
+  display: 'inline-flex',
+});

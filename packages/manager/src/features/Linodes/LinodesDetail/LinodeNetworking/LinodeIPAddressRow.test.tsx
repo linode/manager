@@ -1,8 +1,12 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
+import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
 import { linodeIPFactory } from 'src/factories/linodes';
-import { ipResponseToDisplayRows } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import {
+  ipResponseToDisplayRows,
+  vpcConfigInterfaceToDisplayRows,
+} from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
@@ -10,6 +14,9 @@ import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
 const ipDisplay = ipResponseToDisplayRows(ips)[0];
+const ipDisplayVPC = vpcConfigInterfaceToDisplayRows(
+  LinodeConfigInterfaceFactoryWithVPC.build()
+)[0];
 
 const handlers: IPAddressRowHandlers = {
   handleOpenEditRDNS: vi.fn(),
@@ -41,6 +48,25 @@ describe('LinodeIPAddressRow', () => {
     // Check if actions were rendered
     getAllByText('Delete');
     getAllByText('Edit RDNS');
+  });
+  it('should render a VPC IP Address row', () => {
+    const { getAllByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          isVPCOnlyLinode={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplayVPC}
+        />
+      )
+    );
+
+    getAllByText(ipDisplayVPC.address);
+    getAllByText(ipDisplayVPC.type);
+    // No actions should be rendered
+    expect(queryByText('Delete')).not.toBeInTheDocument();
+    expect(queryByText('Edit RDNS')).not.toBeInTheDocument();
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {
@@ -94,5 +120,21 @@ describe('LinodeIPAddressRow', () => {
 
     const editRDNSBtn = buttons[3];
     expect(editRDNSBtn).not.toHaveAttribute('aria-disabled', 'true');
+  });
+});
+
+describe('ipResponseToDisplayRows', () => {
+  it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
+    const ipDisplays = ipResponseToDisplayRows(
+      ips,
+      LinodeConfigInterfaceFactoryWithVPC.build()
+    );
+
+    expect(
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'IPv4 – Public')
+    ).toBeUndefined();
+    expect(
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC IPv4 – NAT')
+    ).toBeDefined();
   });
 });
