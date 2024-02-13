@@ -97,6 +97,8 @@ import {
   tagFactory,
   volumeFactory,
   vpcFactory,
+  namespaceFactory,
+  
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountUserFactory } from 'src/factories/accountUsers';
@@ -512,6 +514,12 @@ const vpc = [
   rest.post('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
     const subnet = subnetFactory.build({ ...(req.body as any) });
     return res(ctx.json(subnet));
+  }),
+];
+
+const cloudView = [
+  rest.get('*/cloudview/namespaces', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(namespaceFactory.buildList(30))));
   }),
 ];
 
@@ -2030,4 +2038,5 @@ export const handlers = [
   ...databases,
   ...aglb,
   ...vpc,
+  ...cloudView
 ];
