@@ -7,6 +7,8 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'label', label: 'Linode Label' },
   { key: 'id', label: 'Linode ID' },
   { key: 'ipv4', label: 'IPv4' },
+  { key: 'interfaceData.ipv4.vpc', label: 'IPv4 VPC' },
+  { key: 'interfaceData.ip_ranges', label: 'IPv4 VPC Ranges' },
 ];
 
 // @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
