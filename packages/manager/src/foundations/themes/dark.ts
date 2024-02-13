@@ -193,8 +193,6 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: '#454b54',
             color: '#5c6470',
           },
-          backgroundColor: primaryColors.main,
-          color: primaryColors.text,
         },
         containedSecondary: {
           '&[aria-disabled="true"]': {
