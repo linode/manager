@@ -43,7 +43,6 @@ export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
-  cloudView: boolean;
   databaseBeta: boolean;
   databaseScaleUp: boolean;
   databases: boolean;

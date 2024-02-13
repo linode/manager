@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
-import CloudView from 'src/assets/icons/cloudview.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -45,7 +44,6 @@ type NavEntity =
   | 'Account'
   | 'Betas'
   | 'Cloud Load Balancers'
-  | 'CloudView'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
@@ -147,8 +145,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
-
-  const showCloudView = Boolean(flags.cloudView);
 
   const { isACLBEnabled } = useIsACLBEnabled();
 
@@ -268,13 +264,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Longview',
           href: '/longview',
           icon: <Longview />,
-        },
-        {
-          display: 'CloudView',
-          hide: !showCloudView,
-          href: '/cloudview',
-          icon: <CloudView />,
-          isBeta: false,
         },
         {
           attr: { 'data-qa-one-click-nav-btn': true },
