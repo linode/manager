@@ -437,12 +437,12 @@ export const sendLinodeConfigurationDocsEvent = (label: string) => {
 
 // AccountLanding.tsx
 // UserMenu.tsx
-export const sendSwitchToProxyAccountEvent = (
+export const sendSwitchAccountEvent = (
   label: 'Account Landing' | 'User Menu'
 ) => {
   sendEvent({
     action: 'Click:button',
-    category: 'Switch Accounts Flow - To Proxy Account',
+    category: 'Switch Accounts Flow',
     label,
   });
 };

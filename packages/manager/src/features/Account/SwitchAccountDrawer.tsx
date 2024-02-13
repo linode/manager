@@ -13,13 +13,13 @@ import {
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 import { getStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
 import type { APIError, ChildAccountPayload, UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
-import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 
 interface Props {
   isProxyUser: boolean;

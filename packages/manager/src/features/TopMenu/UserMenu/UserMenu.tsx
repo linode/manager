@@ -23,7 +23,7 @@ import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/us
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { sendSwitchToProxyAccountEvent } from 'src/utilities/analytics';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 import { getStorage } from 'src/utilities/storage';
 
 interface MenuLink {
@@ -274,7 +274,7 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               onClick={() => {
-                sendSwitchToProxyAccountEvent('User Menu');
+                sendSwitchAccountEvent('User Menu');
                 handleAccountSwitch();
               }}
               buttonType="outlined"
