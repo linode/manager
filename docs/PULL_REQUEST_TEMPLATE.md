@@ -1,4 +1,4 @@
-## Target Release Date (Optional)
+## Target Release Date (Optional) 🗓️
 Please specify a release date to guarantee timely review of this PR.
 
 ## Description 📝
