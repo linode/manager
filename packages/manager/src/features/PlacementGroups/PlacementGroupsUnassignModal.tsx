@@ -34,6 +34,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
 
   const onUnassign = async () => {
     await unassignLinodes(payload);
+    onClose();
   };
 
   const actions = (
