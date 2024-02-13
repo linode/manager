@@ -2,6 +2,7 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type {
   GlobalGrantTypes,
+  GrantLevel,
   Grants,
   Profile,
   Token,
@@ -16,6 +17,26 @@ interface GetRestrictedResourceText {
   isSingular?: boolean;
   resourceType: GrantTypeMap;
 }
+
+interface GrantsProfileSchema {
+  grants: Grants | undefined;
+  profile: Profile | undefined;
+}
+
+interface AccountAccessGrant extends GrantsProfileSchema {
+  globalGrantType: 'account_access';
+  permittedGrantLevel: GrantLevel;
+}
+
+interface NonAccountAccessGrant extends GrantsProfileSchema {
+  globalGrantType: Exclude<GlobalGrantTypes, 'account_access'>;
+  permittedGrantLevel?: GrantLevel;
+}
+
+// Discriminating union to determine the type of global grant
+export type RestrictedGlobalGrantType =
+  | AccountAccessGrant
+  | NonAccountAccessGrant;
 
 /**
  * Get a resource restricted message based on action and resource type.
@@ -46,16 +67,33 @@ export const getAccessRestrictedText = (
   } to request the necessary permission.`;
 };
 
+/**
+ * Determine whether the user has restricted access to a specific resource.
+ *
+ * @example
+ * // If account access does not equal 'read_write', the user has restricted access.
+ * isRestrictedGlobalGrantType({
+ *   globalGrantType: 'account_access',
+ *   permittedGrantLevel: 'read_write',
+ *   grants,
+ *   profile
+ * });
+ * // Returns: true
+ */
 export const isRestrictedGlobalGrantType = ({
   globalGrantType,
   grants,
+  permittedGrantLevel,
   profile,
-}: {
-  globalGrantType: GlobalGrantTypes;
-  grants: Grants | undefined;
-  profile: Profile | undefined;
-}): boolean => {
-  return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+}: RestrictedGlobalGrantType): boolean => {
+  if (globalGrantType !== 'account_access') {
+    return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+  }
+
+  return (
+    Boolean(profile?.restricted) &&
+    grants?.global[globalGrantType] !== permittedGrantLevel
+  );
 };
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
@@ -67,18 +105,13 @@ export const isRestrictedGlobalGrantType = ({
 /**
  * Determine whether the tokens used for switchable accounts are still valid.
  */
-export const isParentTokenValid = ({
-  isProxyUser,
-}: {
-  isProxyUser: boolean;
-}) => {
+export const isParentTokenValid = (): boolean => {
   const now = new Date().toISOString();
 
   // From a proxy user, check whether parent token is still valid before switching.
   if (
-    isProxyUser &&
     now >
-      new Date(getStorage('authentication/parent_token/expire')).toISOString()
+    new Date(getStorage('authentication/parent_token/expire')).toISOString()
 
     // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
     // ================================================================

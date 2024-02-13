@@ -6,6 +6,7 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import {
   isParentTokenValid,
   setTokenInLocalStorage,
@@ -153,11 +154,10 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const handleSwitchToParentAccount = React.useCallback(() => {
-    if (!isParentTokenValid({ isProxyUser })) {
+    if (!isParentTokenValid()) {
       const expiredTokenError: APIError = {
         field: 'token',
-        reason:
-          'The reseller account token has expired. You must log back into the account manually.',
+        reason: PARENT_SESSION_EXPIRED,
       };
 
       setIsParentTokenError([expiredTokenError]);
