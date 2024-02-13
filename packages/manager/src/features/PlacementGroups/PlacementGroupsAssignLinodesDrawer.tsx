@@ -142,6 +142,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
     const payload: AssignLinodesToPlacementGroupPayload = {
       linodes: [selectedLinode.id],
+      strict: true,
     };
 
     try {

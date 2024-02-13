@@ -59,6 +59,7 @@ export const PlacementGroupsCreateDrawer = (
       affinity_type: '' as PlacementGroupDrawerFormikProps['affinity_type'],
       label: '',
       region: selectedRegionId ?? '',
+      strict: true,
     },
     onSubmit(
       values: PlacementGroupDrawerFormikProps,

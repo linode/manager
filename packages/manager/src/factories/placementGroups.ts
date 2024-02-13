@@ -21,5 +21,6 @@ export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<Creat
     affinity_type: 'anti_affinity',
     label: Factory.each((id) => `mock-pg-${id}`),
     region: pickRandom(['us-east', 'us-southeast', 'ca-central']),
+    strict: true,
   }
 );
