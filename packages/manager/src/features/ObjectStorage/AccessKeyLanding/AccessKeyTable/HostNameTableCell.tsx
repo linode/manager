@@ -2,29 +2,25 @@ import {
   ObjectStorageKey,
   RegionS3EndpointAndID,
 } from '@linode/api-v4/lib/object-storage';
-
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-
 import { TableCell } from 'src/components/TableCell';
-
 import { useRegionsQuery } from 'src/queries/regions';
-
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 type Props = {
-  storageKeyData: ObjectStorageKey;
   setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
+  storageKeyData: ObjectStorageKey;
 };
 
 export const HostNameTableCell = ({
-  storageKeyData,
   setHostNames,
   setShowHostNamesDrawers,
+  storageKeyData,
 }: Props) => {
   const { data: regionsData } = useRegionsQuery();
 

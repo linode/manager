@@ -2,39 +2,36 @@ import {
   ObjectStorageKey,
   RegionS3EndpointAndID,
 } from '@linode/api-v4/lib/object-storage';
-
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-
 import { TableCell } from 'src/components/TableCell';
-
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { AccessKeyActionMenu } from './AccessKeyActionMenu';
-import { OpenAccessDrawer } from '../types';
 
+import { OpenAccessDrawer } from '../types';
+import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';
 
 // Define the props type for AccessKeyTableRow
 type Props = {
-  storageKeyData: ObjectStorageKey;
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
   setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
+  storageKeyData: ObjectStorageKey;
 };
 
 export const AccessKeyTableRow = ({
-  storageKeyData,
   openDrawer,
   openRevokeDialog,
   setHostNames,
   setShowHostNamesDrawers,
+  storageKeyData,
 }: Props) => {
   const { account } = useAccountManagement();
   const flags = useFlags();
@@ -60,9 +57,9 @@ export const AccessKeyTableRow = ({
       </TableCell>
       {isObjMultiClusterEnabled && (
         <HostNameTableCell
-          storageKeyData={storageKeyData}
           setHostNames={setHostNames}
           setShowHostNamesDrawers={setShowHostNamesDrawers}
+          storageKeyData={storageKeyData}
         />
       )}
 
