@@ -115,6 +115,8 @@ const LinodeSummary: React.FC<Props> = (props) => {
     debouncedRefetchLinodeStats();
   }, [windowWidth, windowHeight, debouncedRefetchLinodeStats]);
 
+  const xAxisTickFormat = isLast24Hours ? 'hh a' : 'LLL dd';
+
   const renderCPUChart = () => {
     const data = stats?.data.cpu ?? [];
     const metrics = getMetrics(data);
@@ -147,7 +149,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
               },
             ]}
             xAxis={{
-              tickFormat: 'hh a',
+              tickFormat: xAxisTickFormat,
               tickGap: 60,
             }}
             ariaLabel="CPU Usage Graph"
@@ -233,7 +235,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
               },
             ]}
             xAxis={{
-              tickFormat: 'hh a',
+              tickFormat: xAxisTickFormat,
               tickGap: 60,
             }}
             ariaLabel="Disk I/O Graph"
@@ -382,7 +384,11 @@ const LinodeSummary: React.FC<Props> = (props) => {
           </StyledGrid>
         </Grid>
       ) : null}
-      <NetworkGraphs stats={stats} {...chartProps} />
+      <NetworkGraphs
+        stats={stats}
+        xAxisTickFormat={xAxisTickFormat}
+        {...chartProps}
+      />
     </Grid>
   );
 };
