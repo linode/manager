@@ -26,25 +26,8 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { RegionIndicator } from '../LinodesLanding/RegionIndicator';
 
-// import {
-//   NETWORK_INTERFACES_GUIDE_URL,
-//   VPC_REBOOT_MESSAGE,
-//   WARNING_ICON_UNRECOMMENDED_CONFIG,
-// } from '../constants';
-// import {
-//   hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
-//   getSubnetInterfaceFromConfigs,
-// } from '../utils';
-// import {
-//   StyledActionTableCell,
-//   StyledTableCell,
-//   StyledTableHeadCell,
-//   StyledTableRow,
-//   StyledWarningIcon,
-// } from './SubnetLinodeRow.styles';
-
 interface Props {
-  disabled: boolean;
+  disabled?: boolean;
   handlePowerOff: () => void;
   handleSelection: () => void;
   linodeId: number;
