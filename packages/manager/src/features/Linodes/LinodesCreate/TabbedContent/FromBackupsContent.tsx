@@ -7,7 +7,6 @@ import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { reportException } from 'src/exceptionReporting';
@@ -110,8 +109,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           </Paper>
         ) : (
           <React.Fragment>
-            <OrderBy
-              data={ramdaCompose(
+            <SelectLinodePanel
+              linodes={ramdaCompose(
                 (linodes: Linode[]) =>
                   extendLinodes(
                     linodes,
@@ -121,29 +120,20 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   ),
                 filterLinodesWithBackups
               )(linodesData)}
-              order="asc"
-              orderBy="label"
-              preferenceKey={'linode-create-backups'}
-            >
-              {(orderBy) => (
-                <SelectLinodePanel
-                  notices={[
-                    {
-                      level: 'warning',
-                      text: `This newly created Linode will be created with
+              notices={[
+                {
+                  level: 'warning',
+                  text: `This newly created Linode will be created with
                           the same password and SSH Keys (if any) as the original Linode.
                           Also note that this Linode will need to be manually booted after it finishes
                           provisioning.`,
-                    },
-                  ]}
-                  disabled={disabled}
-                  error={hasErrorFor('linode_id')}
-                  handleSelection={this.handleLinodeSelect}
-                  orderBy={orderBy}
-                  selectedLinodeID={selectedLinodeID}
-                />
-              )}
-            </OrderBy>
+                },
+              ]}
+              disabled={disabled}
+              error={hasErrorFor('linode_id')}
+              handleSelection={this.handleLinodeSelect}
+              selectedLinodeID={selectedLinodeID}
+            />
             <SelectBackupPanel
               error={hasErrorFor('backup_id') || this.state.backupsError}
               handleChangeBackup={setBackupID}

@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { OrderByProps } from 'src/components/OrderBy';
+import { OrderByProps, sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
@@ -19,6 +19,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
+import { useOrder } from 'src/hooks/useOrder';
 
 import { PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { SelectLinodeRow, SelectLinodeTableRowHead } from './SelectLinodeRow';
@@ -38,8 +39,8 @@ interface Props {
   error?: string;
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
+  linodes: ExtendedLinode[];
   notices?: Notice[];
-  orderBy: OrderByProps<ExtendedLinode>;
   selectedLinodeID?: number;
 }
 
@@ -49,12 +50,17 @@ export const SelectLinodePanel = (props: Props) => {
     error,
     handleSelection,
     header,
+    linodes,
     notices,
-    orderBy,
     selectedLinodeID,
   } = props;
 
-  const linodes = orderBy.data;
+  const { handleOrderChange, order, orderBy } = useOrder(
+    { order: 'asc', orderBy: 'label' },
+    'create-select-linode'
+  );
+
+  const orderedLinodes = sortData<ExtendedLinode>(orderBy, order)(linodes);
 
   const flags = useFlags();
   const theme = useTheme();
@@ -85,10 +91,10 @@ export const SelectLinodePanel = (props: Props) => {
 
   const filteredLinodes = React.useMemo(
     () =>
-      linodes.filter((linode) =>
+      orderedLinodes.filter((linode) =>
         linode.label.toLowerCase().includes(searchText.toLowerCase())
       ),
-    [linodes, searchText]
+    [orderedLinodes, searchText]
   );
 
   return (
@@ -159,7 +165,12 @@ export const SelectLinodePanel = (props: Props) => {
                     handlePowerOff: (linodeID) =>
                       setPowerOffLinode({ linodeID }),
                     handleSelection,
-                    orderBy: { ...orderBy, data: linodesData },
+                    orderBy: {
+                      data: linodesData,
+                      handleOrderChange,
+                      order,
+                      orderBy,
+                    },
                     selectedLinodeID,
                   })}
                 </StyledBox>
