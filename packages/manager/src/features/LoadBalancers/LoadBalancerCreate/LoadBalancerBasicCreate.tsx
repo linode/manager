@@ -13,7 +13,7 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { ACLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
-import { useLoadBalancerBasicCreateMutation } from 'src/queries/aglb/loadbalancers';
+import { useLoadBalancerBasicCreateMutation } from 'src/queries/aclb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LoadBalancerRegions } from './LoadBalancerRegions';

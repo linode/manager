@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.111.0",
+  "version": "1.112.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -84,6 +84,7 @@
     "start:ci": "yarn serve ./build -p 3000 -s --cors",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/prebuild.mjs && vite build",
+    "build:analyze": "bunx vite-bundle-visualizer",
     "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",

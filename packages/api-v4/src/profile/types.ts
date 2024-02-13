@@ -24,7 +24,7 @@ export interface Profile {
   two_factor_auth: boolean;
   restricted: boolean;
   verified_phone_number: string | null;
-  user_type: UserType | null;
+  user_type: UserType;
 }
 
 export interface TokenRequest {

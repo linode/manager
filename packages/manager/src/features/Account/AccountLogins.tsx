@@ -166,7 +166,10 @@ const AccountLogins = () => {
     </>
   ) : (
     <Notice important variant="warning">
-      {getAccessRestrictedText(profile?.user_type ?? null)}
+      {getAccessRestrictedText(
+        profile?.user_type,
+        flags.parentChildAccountAccess
+      )}
     </Notice>
   );
 };

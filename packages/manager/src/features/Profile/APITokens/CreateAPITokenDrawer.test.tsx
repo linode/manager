@@ -101,7 +101,7 @@ describe('Create API Token Drawer', () => {
 
   it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ user_type: null }),
+      data: profileFactory.build({ user_type: 'default' }),
     });
 
     const { queryByText } = renderWithTheme(
