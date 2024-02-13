@@ -32,9 +32,7 @@ export const HostNamesDrawer = (props: Props) => {
             regions
               .map(
                 (region) =>
-                  `S3 Endpoint: ${regionsLookup[region.id]?.label}: ${
-                    region.s3_endpoint
-                  }`
+                  `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
               )
               .join('\n') ?? ''
           }
@@ -49,9 +47,7 @@ export const HostNamesDrawer = (props: Props) => {
       >
         {regions.map((region, index) => (
           <CopyableTextField
-            value={`S3 Endpoint: ${regionsLookup[region.id]?.label}: ${
-              region.s3_endpoint
-            }`}
+            value={`${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`}
             hideLabel
             key={index}
             label={`${region.id}: ${region.s3_endpoint}`}

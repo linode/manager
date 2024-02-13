@@ -53,12 +53,12 @@ describe('HostNamesDrawer', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', {
-        name: 'Copy S3 Endpoint: Atlanta, GA: endpoint2 to clipboard',
+        name: 'Copy Atlanta, GA: endpoint2 to clipboard',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', {
-        name: 'Copy S3 Endpoint: Newark, NJ: endpoint1 to clipboard',
+        name: 'Copy Newark, NJ: endpoint1 to clipboard',
       })
     ).toBeInTheDocument();
   });
