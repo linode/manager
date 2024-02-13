@@ -39,6 +39,21 @@ export const UsersLanding = () => {
     {
       '+order': order.order,
       '+order_by': order.orderBy,
+      user_type: { '+neq': 'proxy' },
+    }
+  );
+
+  const {
+    data: proxyUser,
+    error: proxyUserError,
+    isLoading: loadingProxyUser,
+  } = useAccountUsers(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    {
+      user_type: 'proxy',
     }
   );
 
@@ -47,22 +62,12 @@ export const UsersLanding = () => {
   const showProxyUserTable =
     flags.parentChildAccountAccess &&
     (profile?.user_type === 'child' || profile?.user_type === 'proxy');
+
   const showChildAccountAccessCol = Boolean(
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
   );
-  const numCols = showChildAccountAccessCol ? 6 : 5;
 
-  const { nonProxyUsers, proxyUsers } = users?.data.reduce(
-    (acc: { nonProxyUsers: User[]; proxyUsers: User[] }, user: User) => {
-      if (user.user_type === 'proxy') {
-        acc.proxyUsers.push(user);
-      } else {
-        acc.nonProxyUsers.push(user);
-      }
-      return acc;
-    },
-    { nonProxyUsers: [], proxyUsers: [] }
-  ) ?? { nonProxyUsers: [], proxyUsers: [] };
+  const numCols = showChildAccountAccessCol ? 6 : 5;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -74,31 +79,6 @@ export const UsersLanding = () => {
   const onDelete = (username: string) => {
     setIsDeleteDialogOpen(true);
     setSelectedUsername(username);
-  };
-
-  // TODO: Parent/Child - M3-7559 remove this function once feature is live in production.
-  const renderTableContent = () => {
-    if (isLoading) {
-      return (
-        <TableRowLoading
-          columns={numCols}
-          responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
-          rows={1}
-        />
-      );
-    }
-
-    if (error) {
-      return <TableRowError colSpan={numCols} message={error[0].reason} />;
-    }
-
-    if (!users || users.results === 0) {
-      return <TableRowEmpty colSpan={numCols} />;
-    }
-
-    return users.data.map((user) => (
-      <UserRow key={user.username} onDelete={onDelete} user={user} />
-    ));
   };
 
   return (
@@ -123,11 +103,11 @@ export const UsersLanding = () => {
           <UsersLandingProxyTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody
-              error={error}
-              isLoading={isLoading}
+              error={proxyUserError}
+              isLoading={loadingProxyUser}
               numCols={numCols}
               onDelete={onDelete}
-              users={proxyUsers}
+              users={proxyUser?.data}
             />
           </TableBody>
         </Table>
@@ -170,17 +150,13 @@ export const UsersLanding = () => {
           showChildAccountAccessCol={showChildAccountAccessCol}
         />
         <TableBody>
-          {flags.parentChildAccountAccess ? (
-            <UsersLandingTableBody
-              error={error}
-              isLoading={isLoading}
-              numCols={numCols}
-              onDelete={onDelete}
-              users={nonProxyUsers}
-            />
-          ) : (
-            renderTableContent()
-          )}
+          <UsersLandingTableBody
+            error={error}
+            isLoading={isLoading}
+            numCols={numCols}
+            onDelete={onDelete}
+            users={users?.data}
+          />
         </TableBody>
       </Table>
       <PaginationFooter
