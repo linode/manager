@@ -169,10 +169,12 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     validationSchema: createObjectStorageKeysSchema,
   });
 
+  // @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix to handle error cases when the feature flag is enabled without Mock Service Worker (MSW). This can be removed during the feature flag cleanup.
   const isSaveDisabled =
     isRestrictedUser ||
     (mode !== 'creating' &&
       objectStorageKey &&
+      objectStorageKey?.regions?.length > 0 &&
       !hasLabelOrRegionsChanged(formik.values, objectStorageKey));
 
   const beforeSubmit = () => {
