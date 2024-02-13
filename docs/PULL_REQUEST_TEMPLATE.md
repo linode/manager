@@ -6,7 +6,7 @@ List any change relevant to the reviewer.
 - ...
 - ...
 
-## Target Release Date 🗓️
+## Target release date 🗓️
 Please specify a release date to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
 
 ## Preview 📷
