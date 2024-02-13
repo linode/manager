@@ -177,6 +177,11 @@ const PlacementGroups = React.lazy(() =>
     default: module.PlacementGroups,
   }))
 );
+const CloudView = React.lazy(() =>
+  import('src/features/CloudView/CloudViewLanding').then((module) => ({
+    default: module.CloudViewLanding,
+  }))
+);
 
 export const MainContent = () => {
   const { classes, cx } = useStyles();
@@ -223,6 +228,7 @@ export const MainContent = () => {
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
+  const showCloudView = Boolean(flags.cloudView);
 
   const { isACLBEnabled } = useIsACLBEnabled();
 
@@ -374,6 +380,9 @@ export const MainContent = () => {
                           <Route component={BetaRoutes} path="/betas" />
                         )}
                         {showVPCs && <Route component={VPC} path="/vpcs" />}
+                        {showCloudView && (
+                          <Route component={CloudView} path="/cloudview" />
+                        )}
                         <Redirect exact from="/" to={defaultRoot} />
                         {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                         <Redirect from="/dashboard" to={defaultRoot} />
