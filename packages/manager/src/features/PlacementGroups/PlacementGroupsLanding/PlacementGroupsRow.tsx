@@ -84,7 +84,7 @@ export const PlacementGroupsRow = React.memo(
             displayText={`${linodeCount}`}
             minWidth={200}
           />
-          &nbsp; of {currentRegion?.maximum_pgs_per_customer}
+          &nbsp; of {currentRegion?.maximum_vms_per_pg}
         </TableCell>
         <Hidden smDown>
           <TableCell>{currentRegion?.label}</TableCell>

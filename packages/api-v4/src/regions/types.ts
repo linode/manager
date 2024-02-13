@@ -3,6 +3,7 @@ import { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
 export type Capabilities =
   | 'Bare Metal'
   | 'Block Storage'
+  | 'Block Storage Migrations'
   | 'Cloud Firewall'
   | 'GPU Linodes'
   | 'Kubernetes'

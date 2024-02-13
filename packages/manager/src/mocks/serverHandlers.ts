@@ -10,7 +10,7 @@ import {
 import { DateTime } from 'luxon';
 import { rest } from 'msw';
 
-import cachedRegions from 'src/cachedData/regions.json';
+import { regions } from 'src/__data__/regionsData';
 import {
   VLANFactory,
   abuseTicketNotificationFactory,
@@ -589,7 +589,7 @@ export const handlers = [
     return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(cachedRegions));
+    return res(ctx.json({ data: regions }));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {

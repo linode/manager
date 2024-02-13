@@ -1,10 +1,11 @@
-import {
+import * as Factory from 'factory.ts';
+
+import type {
   Country,
   DNSResolvers,
   Region,
   RegionAvailability,
 } from '@linode/api-v4/lib/regions/types';
-import * as Factory from 'factory.ts';
 
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
   ipv4: '1.1.1.1',
@@ -31,6 +32,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
       'Object Storage',
       'Kubernetes',
       'Cloud Firewall',
+      'Placement Group',
       'Vlans',
       'Premium Plans',
     ],
