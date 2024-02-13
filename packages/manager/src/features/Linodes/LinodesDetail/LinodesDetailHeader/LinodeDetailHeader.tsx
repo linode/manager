@@ -24,6 +24,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
+  sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -163,6 +164,7 @@ const LinodeDetailHeader = () => {
     return updateLinodeLabel(label)
       .then(() => {
         resetEditableLabel();
+        sendUpdateLinodeLabelEvent('Breadcrumb');
       })
       .catch((updateError) => {
         const errorReasons: string[] = [updateError.message];

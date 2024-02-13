@@ -443,3 +443,15 @@ export const sendEditBreadcrumbEvent = () => {
     label: 'Edit Breadcrumb',
   });
 };
+
+// LinodeDetailHeader.tsx
+// LinodeSettingsLabelPanel.tsx
+export const sendUpdateLinodeLabelEvent = (
+  label: 'Breadcrumb' | 'Settings'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Linode Label',
+    label: `Update linode label from ${label}`,
+  });
+};
