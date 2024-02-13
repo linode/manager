@@ -11,7 +11,6 @@ describe('PlacementGroups Summary', () => {
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
           affinity_type: 'affinity',
-          capacity: 10,
           compliant: true,
           id: 3,
           label: 'pg-3',

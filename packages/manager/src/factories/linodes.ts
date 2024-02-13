@@ -265,7 +265,6 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   placement_groups: [
     placementGroupFactory.build({
       affinity_type: 'anti_affinity',
-      capacity: 10,
       compliant: true,
       id: 1,
       label: 'test',

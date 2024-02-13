@@ -106,11 +106,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
   };
 
   const { affinity_type, label } = selectedPlacementGroup;
-  const placementGroupRegion: Region | undefined = regions?.find(
+  const currentRegion: Region | undefined = regions?.find(
     (region) => region.id === selectedPlacementGroup.region
   );
-  const linodeSelectLabel = placementGroupRegion
-    ? `Linodes in ${placementGroupRegion.label} (${placementGroupRegion.id})`
+  const linodeSelectLabel = currentRegion
+    ? `Linodes in ${currentRegion.label} (${currentRegion.id})`
     : 'Linodes';
 
   const drawerTitle =
@@ -128,7 +128,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
       </FormLabel>
       <Typography component="span" display="block" fontSize="0.8rem">
         Maximum Number of Linodes for this group:{' '}
-        {selectedPlacementGroup.capacity}
+        {currentRegion?.maximum_vms_per_pg}
       </Typography>
     </>
   );
@@ -178,9 +178,10 @@ export const PlacementGroupsAssignLinodesDrawer = (
     }
   };
 
-  const isPlacementGroupFull = hasPlacementGroupReachedCapacity(
-    selectedPlacementGroup
-  );
+  const isPlacementGroupFull = hasPlacementGroupReachedCapacity({
+    placementGroup: selectedPlacementGroup,
+    region: currentRegion,
+  });
 
   return (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>

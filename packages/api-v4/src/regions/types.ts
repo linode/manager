@@ -11,6 +11,7 @@ export type Capabilities =
   | 'Metadata'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Group'
   | 'Premium Plans'
   | 'Vlans'
   | 'VPCs';
@@ -27,6 +28,8 @@ export interface Region {
   label: string;
   country: Country;
   capabilities: Capabilities[];
+  maximum_pgs_per_customer: number;
+  maximum_vms_per_pg: number;
   status: RegionStatus;
   resolvers: DNSResolvers;
 }

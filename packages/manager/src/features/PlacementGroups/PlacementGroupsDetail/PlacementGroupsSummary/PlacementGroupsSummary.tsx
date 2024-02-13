@@ -25,9 +25,9 @@ export const PlacementGroupsSummary = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const theme = useTheme();
 
-  const regionLabel = regions?.find(
+  const currentRegion = regions?.find(
     (region) => region.id === placementGroup.region
-  )?.label;
+  );
 
   return (
     <>
@@ -62,7 +62,7 @@ export const PlacementGroupsSummary = (props: Props) => {
             <Box display="flex">
               <StyledLabel>Linodes</StyledLabel>
               <Typography sx={{ mx: 8 }}>
-                {`${placementGroup.linode_ids.length} of ${placementGroup.capacity}`}
+                {`${placementGroup.linode_ids.length} of ${currentRegion?.maximum_vms_per_pg}`}
                 <TooltipIcon
                   sxTooltipIcon={{
                     marginLeft: '10px',
@@ -86,7 +86,7 @@ export const PlacementGroupsSummary = (props: Props) => {
           <Grid md={8} sm={12}>
             <Box display="flex">
               <StyledLabel>Region</StyledLabel>
-              <Typography sx={{ mx: 8 }}>{regionLabel}</Typography>
+              <Typography sx={{ mx: 8 }}>{currentRegion?.label}</Typography>
             </Box>
           </Grid>
         </Grid>

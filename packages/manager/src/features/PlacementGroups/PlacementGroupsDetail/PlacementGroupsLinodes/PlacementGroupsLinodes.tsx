@@ -11,6 +11,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useRegionsQuery } from 'src/queries/regions';
 
 import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
@@ -42,6 +43,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
       })),
     }
   );
+  const { data: regions } = useRegionsQuery();
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [searchText, setSearchText] = React.useState('');
@@ -50,8 +52,9 @@ export const PlacementGroupsLinodes = (props: Props) => {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
   }
 
-  const { capacity } = placementGroup;
-
+  const currentRegion = regions?.find(
+    (region) => region.id === placementGroup.region
+  );
   const getLinodesList = () => {
     if (!placementGroupLinodes) {
       return [];
@@ -87,7 +90,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
           Linode can only be assigned to a single Placement Group.
         </Typography>
         <Typography sx={{ mt: 1 }}>
-          Limit of Linodes for this Placement Group: {capacity}
+          Limit of Linodes for this Placement Group:{' '}
+          {currentRegion?.maximum_vms_per_pg}
         </Typography>
       </Box>
 
@@ -106,9 +110,12 @@ export const PlacementGroupsLinodes = (props: Props) => {
         </Grid>
         <Grid>
           <Button
+            disabled={hasPlacementGroupReachedCapacity({
+              placementGroup,
+              region: currentRegion,
+            })}
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
-            disabled={hasPlacementGroupReachedCapacity(placementGroup)}
             onClick={handleOpenAssignLinodesDrawer}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
           >

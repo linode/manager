@@ -14,7 +14,6 @@ export interface PlacementGroup {
   affinity_type: AffinityType;
   compliant: boolean;
   linode_ids: number[];
-  capacity: number;
 }
 
 export type CreatePlacementGroupPayload = Pick<

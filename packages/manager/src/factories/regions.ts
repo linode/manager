@@ -16,6 +16,8 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   country: 'us',
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
+  maximum_pgs_per_customer: 5,
+  maximum_vms_per_pg: 10,
   resolvers: resolverFactory.build(),
   status: 'ok',
 });
@@ -35,6 +37,8 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
     country: 'id' as Country,
     id: 'id-cgk',
     label: 'Jakarta, ID',
+    maximum_pgs_per_customer: 5,
+    maximum_vms_per_pg: 10,
     resolvers: resolverFactory.build(),
     status: 'ok',
   }

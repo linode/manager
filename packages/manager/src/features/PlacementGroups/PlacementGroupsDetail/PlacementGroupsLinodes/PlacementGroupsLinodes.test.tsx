@@ -19,7 +19,6 @@ describe('PlacementGroupsLinodes', () => {
 
   it('features the linodes table, a filter field, a create button and a docs link', () => {
     const placementGroup = placementGroupFactory.build({
-      capacity: 2,
       linode_ids: [1],
     });
 
@@ -37,7 +36,6 @@ describe('PlacementGroupsLinodes', () => {
 
   it('has a disabled create button if the placement group has reached capacity', () => {
     const placementGroup = placementGroupFactory.build({
-      capacity: 1,
       linode_ids: [1],
     });
 

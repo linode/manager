@@ -31,19 +31,12 @@ export const PlacementGroupsRow = React.memo(
     handleRenamePlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
-    const {
-      affinity_type,
-      capacity,
-      compliant,
-      id,
-      label,
-      linode_ids,
-    } = placementGroup;
+    const { affinity_type, compliant, id, label, linode_ids } = placementGroup;
     const { data: regions } = useRegionsQuery();
     const { data: linodes } = useLinodesQuery();
-    const regionLabel =
-      regions?.find((region) => region.id === placementGroup.region)?.label ??
-      placementGroup.region;
+    const currentRegion = regions?.find(
+      (region) => region.id === placementGroup.region
+    );
     const linodeCount = getPlacementGroupLinodeCount(placementGroup);
     const listOfAssignedLinodes = linodes?.data.filter((linode) =>
       linode_ids.includes(linode.id)
@@ -91,10 +84,10 @@ export const PlacementGroupsRow = React.memo(
             displayText={`${linodeCount}`}
             minWidth={200}
           />
-          &nbsp; of {capacity}
+          &nbsp; of {currentRegion?.maximum_pgs_per_customer}
         </TableCell>
         <Hidden smDown>
-          <TableCell>{regionLabel}</TableCell>
+          <TableCell>{currentRegion?.label}</TableCell>
         </Hidden>
         <TableCell actionCell>
           {actions.map((action) => (
