@@ -19,6 +19,7 @@ import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
 import type { APIError, ChildAccountPayload, UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 
 interface Props {
   isProxyUser: boolean;
@@ -187,8 +188,11 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              onClick={() => {
+                sendSwitchToParentAccountEvent();
+                handleSwitchToParentAccount();
+              }}
               aria-label="parent-account-link"
-              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>

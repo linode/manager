@@ -434,3 +434,34 @@ export const sendLinodeConfigurationDocsEvent = (label: string) => {
     label,
   });
 };
+
+// AccountLanding.tsx
+// UserMenu.tsx
+export const sendSwitchToProxyAccountEvent = (
+  label: 'Account Landing' | 'User Menu'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Switch Accounts Flow - To Proxy Account',
+    label,
+  });
+};
+
+// SwitchAccountDrawer.tsx
+export const sendSwitchToParentAccountEvent = () => {
+  sendEvent({
+    action: 'Click:link button',
+    category: 'Switch Accounts Flow - To Parent Account',
+  });
+};
+
+// SwitchAccountSessionDialog.tsx
+export const sendSwitchAccountSessionExpiryEvent = (
+  label: 'Close' | 'Log In'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Switch Accounts Flow - Session Expiration',
+    label,
+  });
+};
