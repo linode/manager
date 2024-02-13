@@ -136,7 +136,7 @@ when performing ***one-time actions*** that do not require any immediate state c
 
 While use of **api-v4** methods directly are acceptable, use of **React Query** Queries or Mutations are **still prefered** for the benefits described above.
 
-A minimal example of accepable direct **api-v4** use:
+A minimal example of acceptable direct **api-v4** use:
 
 ```ts
 resetKubeConfig({ id }).then(() => {
