@@ -28,19 +28,19 @@ export const getRegionOptions = ({
   hideEdgeServers = false,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
-  const filteredRegions = currentCapability
-    ? regions.filter((region) => {
-        if (hideEdgeServers) {
-          return (
-            region.capabilities.includes(currentCapability) &&
-            region.site_type !== 'edge'
-          );
-        }
-        return region.capabilities.includes(currentCapability);
-      })
+  const filteredRegionsByCapability = currentCapability
+    ? regions.filter((region) =>
+        region.capabilities.includes(currentCapability)
+      )
     : regions;
 
-  return filteredRegions
+  const filteredRegionsByCapabilityAndSiteType = hideEdgeServers
+    ? filteredRegionsByCapability.filter(
+        (region) => region.site_type !== 'edge'
+      )
+    : filteredRegionsByCapability;
+
+  return filteredRegionsByCapabilityAndSiteType
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 

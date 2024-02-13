@@ -82,7 +82,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     }
   }, [selectedId]);
 
-  const geckoEnabled = Boolean(flags.gecko && createType !== 'One-Click'); // hide edge sites from Marketplace
+  // Hide edge sites from Marketplace and Image Upload
+  const isNotImagesOrMarketplace =
+    !['Images', 'One-Click'].includes(createType) &&
+    !location.pathname.match('/images/create');
+
+  const geckoEnabled = Boolean(flags.gecko && isNotImagesOrMarketplace);
 
   const options = React.useMemo(
     () =>
