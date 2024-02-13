@@ -23,6 +23,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'vmPlacement', label: 'Placement Groups' },
+  { flag: 'cloudView', label: 'CloudView' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
