@@ -22,7 +22,7 @@ export const getLoadbalancerRoutes = (
 ) =>
   Request<ResourcePage<Route>>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(loadbalancerId)}/routes`
     ),
     setMethod('GET'),
     setParams(params),
@@ -37,7 +37,7 @@ export const getLoadbalancerRoutes = (
 export const getLoadbalancerRoute = (loadbalancerId: number, routeId: number) =>
   Request<Route>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/routes/${encodeURIComponent(routeId)}`
     ),
@@ -55,7 +55,7 @@ export const createLoadbalancerRoute = (
 ) =>
   Request<Route>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(loadbalancerId)}/routes`
     ),
     setData(data, CreateRouteSchema),
     setMethod('POST')
@@ -73,7 +73,7 @@ export const updateLoadbalancerRoute = (
 ) =>
   Request<Route>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/routes/${encodeURIComponent(routeId)}`
     ),
@@ -92,7 +92,7 @@ export const deleteLoadbalancerRoute = (
 ) =>
   Request<{}>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/routes/${encodeURIComponent(routeId)}`
     ),

@@ -195,7 +195,7 @@ export const LinodeInterfaceSchema = object().shape({
     .of(string())
     .when('purpose', {
       is: 'vpc',
-      then: array().of(string().test(validateIP)).max(1).notRequired(),
+      then: array().of(string().test(validateIP)).notRequired(),
       otherwise: array().test({
         name: testnameDisallowedBasedOnPurpose('VPC'),
         message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
