@@ -666,6 +666,11 @@ export const handlers = [
       label: 'metadata-test-region',
       region: 'eu-west',
     });
+    const linodeInEdgeRegion = linodeFactory.build({
+      image: 'edge-test-image',
+      label: 'edge-test-region',
+      region: 'us-southeast',
+    });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
@@ -696,6 +701,7 @@ export const handlers = [
     const linodes = [
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
+      linodeInEdgeRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
