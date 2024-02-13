@@ -16,8 +16,10 @@ import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
+import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -58,6 +60,7 @@ export const UserMenu = React.memo(() => {
   const { data: grants } = useGrants();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
+  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const hasGrant = (grant: GlobalGrantTypes) =>
     grants?.global?.[grant] ?? false;
@@ -77,6 +80,7 @@ export const UserMenu = React.memo(() => {
       account?.company) ??
     '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
+  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders =
@@ -177,6 +181,16 @@ export const UserMenu = React.memo(() => {
     );
   };
 
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired) {
+      return sessionContext.updateState({
+        isOpen: true,
+      });
+    }
+
+    setIsDrawerOpen(true);
+  };
+
   return (
     <>
       <Tooltip
@@ -259,7 +273,7 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
-              onClick={() => setIsDrawerOpen(true)}
+              onClick={handleAccountSwitch}
             />
           )}
           <Box>
