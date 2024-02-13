@@ -117,7 +117,7 @@ describe('UserRow', () => {
       }),
       // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
       rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: null })));
+        return res(ctx.json(profileFactory.build({ user_type: 'default' })));
       })
     );
 

@@ -102,7 +102,10 @@ describe('UserMenu', () => {
       rest.get('*/profile', (req, res, ctx) => {
         return res(
           ctx.json(
-            profileFactory.build({ user_type: null, username: 'regular-user' })
+            profileFactory.build({
+              user_type: 'default',
+              username: 'regular-user',
+            })
           )
         );
       })

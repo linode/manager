@@ -1,7 +1,7 @@
 import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
 
-export type UserType = 'child' | 'parent' | 'proxy';
+export type UserType = 'child' | 'parent' | 'proxy' | 'default';
 
 export interface User {
   email: string;
@@ -30,7 +30,7 @@ export interface User {
   ssh_keys: string[];
   tfa_enabled: boolean;
   username: string;
-  user_type: UserType | null;
+  user_type: UserType;
   verified_phone_number: string | null;
 }
 

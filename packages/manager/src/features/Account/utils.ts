@@ -35,9 +35,14 @@ export const getRestrictedResourceText = ({
 /**
  * Get an 'access restricted' message based on user type.
  */
-export const getAccessRestrictedText = (userType: UserType | null) => {
+export const getAccessRestrictedText = (
+  userType: UserType | undefined,
+  isParentChildFeatureEnabled?: boolean
+) => {
   return `Access restricted. Please contact your ${
-    userType === 'child' ? 'business partner' : 'account administrator'
+    isParentChildFeatureEnabled && userType === 'child'
+      ? 'business partner'
+      : 'account administrator'
   } to request the necessary permission.`;
 };
 

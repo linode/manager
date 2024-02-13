@@ -179,7 +179,7 @@ describe('username', () => {
   it('disables username/email fields for regular restricted user', () => {
     const mockRegularRestrictedProfile = profileFactory.build({
       username: 'regular-restricted-user',
-      user_type: null,
+      user_type: 'default',
       restricted: true,
     });
 

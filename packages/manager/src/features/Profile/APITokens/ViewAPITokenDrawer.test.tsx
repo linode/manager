@@ -167,10 +167,7 @@ describe('View API Token Drawer', () => {
   });
 
   describe('Parent/Child: User Roles', () => {
-    const setupAndRender = (
-      userType: UserType | null,
-      enableFeatureFlag = true
-    ) => {
+    const setupAndRender = (userType: UserType, enableFeatureFlag = true) => {
       queryMocks.useProfile.mockReturnValue({
         data: profileFactory.build({ user_type: userType }),
       });
@@ -181,7 +178,7 @@ describe('View API Token Drawer', () => {
     };
 
     const testChildScopeNotDisplayed = (
-      userType: UserType | null,
+      userType: UserType,
       enableFeatureFlag = true
     ) => {
       const { queryByText } = setupAndRender(userType, enableFeatureFlag);
@@ -193,8 +190,8 @@ describe('View API Token Drawer', () => {
       testChildScopeNotDisplayed('parent', false);
     });
 
-    it('should not display the Child Account Access scope for a user account without a parent uer type', () => {
-      testChildScopeNotDisplayed(null);
+    it('should not display the Child Account Access scope for a user account without a parent user type', () => {
+      testChildScopeNotDisplayed('default');
     });
 
     it('should not display the Child Account Access scope for "proxy" user type', () => {
