@@ -1,6 +1,3 @@
-## Target Release Date 🗓️
-Please specify a release date to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
-
 ## Description 📝
 Highlight the Pull Request's context and intentions.
 
@@ -8,6 +5,9 @@ Highlight the Pull Request's context and intentions.
 List any change relevant to the reviewer.
 - ...
 - ...
+
+## Target Release Date 🗓️
+Please specify a release date to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
 
 ## Preview 📷
 **Include a screenshot or screen recording of the change**
