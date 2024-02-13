@@ -11,23 +11,21 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useAssignLinodesToPlacementGroup,
   useUnassignLinodesFromPlacementGroup,
   useUnpaginatedPlacementGroupsQuery,
 } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import { getLinodesFromAllPlacementGroups } from './utils';
-import { hasPlacementGroupReachedCapacity } from './utils';
 
 import type { PlacementGroupsAssignLinodesDrawerProps } from './types';
 import type {
   AssignLinodesToPlacementGroupPayload,
   Linode,
-  Region,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
 
@@ -35,7 +33,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
   props: PlacementGroupsAssignLinodesDrawerProps
 ) => {
   const { onClose, open, selectedPlacementGroup } = props;
-  const { data: linodes, error: linodesError } = useAllLinodesQuery(
+  const { data: allLinodesInRegion, error: linodesError } = useAllLinodesQuery(
     {},
     {
       '+or': [
@@ -45,11 +43,15 @@ export const PlacementGroupsAssignLinodesDrawer = (
       ],
     }
   );
-  const { data: regions, error: regionsError } = useRegionsQuery();
   const {
     data: allPlacementGroups,
     error: allPlacementGroupsError,
   } = useUnpaginatedPlacementGroupsQuery();
+
+  const { hasReachedCapacity, region } = usePlacementGroupData({
+    placementGroup: selectedPlacementGroup,
+  });
+
   const { mutateAsync: assignLinodes } = useAssignLinodesToPlacementGroup(
     selectedPlacementGroup?.id ?? -1
   );
@@ -79,10 +81,9 @@ export const PlacementGroupsAssignLinodesDrawer = (
   );
 
   if (
-    !linodes ||
+    !allLinodesInRegion ||
     !selectedPlacementGroup ||
     linodesError ||
-    regionsError ||
     allPlacementGroupsError
   ) {
     return (
@@ -92,7 +93,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
   const getLinodeSelectOptions = (): Linode[] => {
     return (
-      linodes.filter((linode) => {
+      allLinodesInRegion.filter((linode) => {
         const isNotAlreadyAssigned = !linodesFromAllPlacementGroups.includes(
           linode.id
         );
@@ -106,11 +107,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
   };
 
   const { affinity_type, label } = selectedPlacementGroup;
-  const currentRegion: Region | undefined = regions?.find(
-    (region) => region.id === selectedPlacementGroup.region
-  );
-  const linodeSelectLabel = currentRegion
-    ? `Linodes in ${currentRegion.label} (${currentRegion.id})`
+  const linodeSelectLabel = region
+    ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
 
   const drawerTitle =
@@ -127,8 +125,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
           : 'Linodes Assigned to Placement Group'}
       </FormLabel>
       <Typography component="span" display="block" fontSize="0.8rem">
-        Maximum Number of Linodes for this group:{' '}
-        {currentRegion?.maximum_vms_per_pg}
+        Maximum Number of Linodes for this group: {region?.maximum_vms_per_pg}
       </Typography>
     </>
   );
@@ -178,11 +175,6 @@ export const PlacementGroupsAssignLinodesDrawer = (
     }
   };
 
-  const isPlacementGroupFull = hasPlacementGroupReachedCapacity({
-    placementGroup: selectedPlacementGroup,
-    region: currentRegion,
-  });
-
   return (
     <Drawer onClose={onClose} open={open} title={drawerTitle}>
       <Grid>
@@ -202,7 +194,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
-              disabled={isPlacementGroupFull}
+              disabled={hasReachedCapacity}
               helperText="Only displaying Linodes that aren’t assigned to a Placement Group"
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
@@ -212,13 +204,13 @@ export const PlacementGroupsAssignLinodesDrawer = (
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
-                disabled: !selectedLinode || isPlacementGroupFull,
+                disabled: !selectedLinode || hasReachedCapacity,
                 label: 'Add Linode',
                 type: 'submit',
               }}
               sx={{ pt: 2 }}
             />
-            {isPlacementGroupFull && (
+            {hasReachedCapacity && (
               <Notice
                 text="This Placement Group has the maximum number of Linodes allowed"
                 variant="warning"

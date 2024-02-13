@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
 import { PLACEMENT_GROUP_TOOLTIP_TEXT } from '../../constants';
 
@@ -22,12 +22,10 @@ interface Props {
 
 export const PlacementGroupsSummary = (props: Props) => {
   const { placementGroup } = props;
-  const { data: regions } = useRegionsQuery();
   const theme = useTheme();
-
-  const currentRegion = regions?.find(
-    (region) => region.id === placementGroup.region
-  );
+  const { linodesCount, region } = usePlacementGroupData({
+    placementGroup,
+  });
 
   return (
     <>
@@ -62,7 +60,7 @@ export const PlacementGroupsSummary = (props: Props) => {
             <Box display="flex">
               <StyledLabel>Linodes</StyledLabel>
               <Typography sx={{ mx: 8 }}>
-                {`${placementGroup.linode_ids.length} of ${currentRegion?.maximum_vms_per_pg}`}
+                {`${linodesCount} of ${region?.maximum_vms_per_pg}`}
                 <TooltipIcon
                   sxTooltipIcon={{
                     marginLeft: '10px',
@@ -86,7 +84,7 @@ export const PlacementGroupsSummary = (props: Props) => {
           <Grid md={8} sm={12}>
             <Box display="flex">
               <StyledLabel>Region</StyledLabel>
-              <Typography sx={{ mx: 8 }}>{currentRegion?.label}</Typography>
+              <Typography sx={{ mx: 8 }}>{region?.label}</Typography>
             </Box>
           </Grid>
         </Grid>
