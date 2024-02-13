@@ -71,7 +71,11 @@ export const UserMenu = React.memo(() => {
     hasParentChildAccountAccess && (isParentUser || isProxyUser);
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
-  const companyName = (profile?.user_type && account?.company) ?? '';
+  const companyName =
+    (hasParentChildAccountAccess &&
+      profile?.user_type !== 'default' &&
+      account?.company) ??
+    '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
