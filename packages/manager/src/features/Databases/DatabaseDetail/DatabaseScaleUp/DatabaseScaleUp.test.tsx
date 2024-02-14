@@ -23,7 +23,7 @@ afterEach(() => {
   queryClient.clear();
 });
 
-describe('database scale up', () => {
+describe('database resize', () => {
   const database = databaseFactory.build();
   const dedicatedTypes = databaseTypeFactory.buildList(7, {
     class: 'dedicated',
@@ -101,7 +101,7 @@ describe('database scale up', () => {
       );
     });
 
-    it('scale up button should be disabled when no input is provided in the form', async () => {
+    it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseScaleUp database={database} />,
         {
@@ -110,14 +110,14 @@ describe('database scale up', () => {
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       expect(
-        getByText(/Scale Up Database Cluster/i).closest('button')
+        getByText(/Resize Database Cluster/i).closest('button')
       ).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('when a plan is selected, scale up button should be enabled and on click of it, it should show a confirmation dialog', async () => {
+    it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
       // Mock route history so the Plan Selection table displays prices without requiring a region in the DB scale up flow.
       const history = createMemoryHistory();
-      history.push(`databases/${database.engine}/${database.id}/scale-up`);
+      history.push(`databases/${database.engine}/${database.id}/resize`);
       const { container, getByTestId, getByText } = renderWithTheme(
         <Router history={history}>
           <DatabaseScaleUp database={database} />
@@ -129,13 +129,13 @@ describe('database scale up', () => {
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const getById = queryByAttribute.bind(null, 'id');
       fireEvent.click(getById(container, examplePlanType));
-      const scaleUpButton = getByText(/Scale Up Database Cluster/i);
+      const scaleUpButton = getByText(/Resize Database Cluster/i);
       expect(scaleUpButton.closest('button')).toHaveAttribute(
         'aria-disabled',
         'false'
       );
       fireEvent.click(scaleUpButton);
-      getByText(`Scale up ${database.label}?`);
+      getByText(`Resize ${database.label}?`);
     });
   });
 });

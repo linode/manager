@@ -86,8 +86,8 @@ export const DatabaseDetail = () => {
 
   if (flags.databaseScaleUp) {
     tabs.push({
-      routeName: `/databases/${engine}/${id}/scale-up`,
-      title: 'Scale Up',
+      routeName: `/databases/${engine}/${id}/resize`,
+      title: 'Resize',
     });
   }
 

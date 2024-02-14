@@ -85,7 +85,7 @@ export const PlanContainer = (props: Props) => {
   // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
   const isDatabaseScaleUpFlow =
-    location.pathname.match(/\/databases\/.*\/(\d+\/scale-up)/)?.[0] ===
+    location.pathname.match(/\/databases\/.*\/(\d+\/resize)/)?.[0] ===
     location.pathname;
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseScaleUpFlow;

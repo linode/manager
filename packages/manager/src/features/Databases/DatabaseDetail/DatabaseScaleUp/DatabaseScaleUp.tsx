@@ -46,7 +46,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     price: string;
   }>();
   // This will be set to `false` once one of the configuration is selected from available plan. This is used to disable the
-  // "Scale up" button unless there have been changes to the form.
+  // "Resize" button unless there have been changes to the form.
   const [
     shouldSubmitBeDisabled,
     setShouldSubmitBeDisabled,
@@ -76,7 +76,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       type: planSelected,
     }).then(() => {
       enqueueSnackbar(
-        `Your database cluster ${database.label} is being scaled up.`,
+        `Your database cluster ${database.label} is being resized.`,
         {
           variant: 'info',
         }
@@ -87,7 +87,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
 
   const scaleUpDescription = (
     <>
-      <Typography variant="h2">Scaling up a Database Cluster</Typography>
+      <Typography variant="h2">Resize a Database Cluster</Typography>
       <Typography sx={{ marginTop: '4px' }}>
         Adapt the cluster to your needs by scaling it up. Clusters cannot be
         scaled down.
@@ -121,7 +121,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'button-confirm',
-        label: 'Scale Up',
+        label: 'Resize',
         loading: submitInProgress,
         onClick: onScaleUp,
       }}
@@ -135,7 +135,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
 
   const costSummary = (
     <Typography sx={{ marginBottom: '10px' }} variant="h3">
-      {`The cost of the scaled-up database is ${summaryText?.price}.`}
+      {`The cost of the resized database is ${summaryText?.price}.`}
     </Typography>
   );
   const confirmationPopUpMessage =
@@ -143,7 +143,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       <>
         {costSummary}
         <Notice variant="warning">
-          <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node cluster.`}</Typography>
+          <Typography variant="h3">{`Warning: This operation will cause downtime for your resized node cluster.`}</Typography>
         </Notice>
       </>
     ) : (
@@ -250,7 +250,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
           tabDisabledMessage={
-            'You can upscale your cluster only within already selected plan.'
+            'You can resize your cluster only within already selected plan.'
           }
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
@@ -272,7 +272,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
           disabled={shouldSubmitBeDisabled}
           type="submit"
         >
-          Scale Up Database Cluster
+          Resize Database Cluster
         </StyledScaleUpButton>
       </StyledGrid>
       <ConfirmationDialog
@@ -280,7 +280,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
         error={scaleUpError?.[0].reason}
         onClose={() => setIsScaleUpConfirmationDialogOpen(false)}
         open={isScaleUpConfirmationDialogOpen}
-        title={`Scale up ${database.label}?`}
+        title={`Resize ${database.label}?`}
       >
         {confirmationPopUpMessage}
       </ConfirmationDialog>
