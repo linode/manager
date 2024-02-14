@@ -94,7 +94,7 @@ describe('Parent/Child account switching', () => {
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
-  describe('From Parent to Child', () => {
+  describe('From Parent to Proxy', () => {
     beforeEach(() => {
       // @TODO M3-7554, M3-7559: Remove feature flag mocks after feature launch and clean-up.
       mockAppendFeatureFlags({
