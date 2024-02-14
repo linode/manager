@@ -1384,6 +1384,9 @@ export const handlers = [
         })
       );
     }
+
+    // Return default response if 'x-filter' header is not present
+    return res(ctx.json(makeResourcePage(accountUsers)));
   }),
   rest.get(`*/account/users/${childAccountUser.username}`, (req, res, ctx) => {
     return res(ctx.json(childAccountUser));
