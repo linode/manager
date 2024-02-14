@@ -82,12 +82,13 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     }
   }, [selectedId]);
 
-  // Hide edge sites from Marketplace and Image Upload
-  const isNotImagesOrMarketplace =
-    !['Images', 'One-Click'].includes(createType) &&
-    !location.pathname.match('/images/create');
-
-  const geckoEnabled = Boolean(flags.gecko && isNotImagesOrMarketplace);
+  // Hide edge sites from Marketplace, Create NodeBalancer, and Image Upload
+  const unsupportedEdgeEntities =
+    ['Images', 'One-Click'].includes(createType) ||
+    ['/images/create/upload', '/nodebalancers/create'].includes(
+      location.pathname
+    );
+  const geckoEnabled = Boolean(flags.gecko && !unsupportedEdgeEntities);
 
   const options = React.useMemo(
     () =>
