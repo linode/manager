@@ -14,7 +14,7 @@ import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { SelectBackupPanel } from '../SelectBackupPanel';
-import { SelectLinodePanel } from '../SelectLinodePanel';
+import { SelectLinodePanel } from '../SelectLinodePanel/SelectLinodePanel';
 import {
   BackupFormStateHandlers,
   Info,

@@ -1,6 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -11,18 +10,14 @@ import { OrderByProps, sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
-import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Stack } from 'src/components/Stack';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 
-import { PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
-import { SelectLinodeRow, SelectLinodeTableRowHead } from './SelectLinodeRow';
+import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
+import { SelectCards } from './SelectCards';
+import { SelectTable } from './SelectTable';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -97,6 +92,9 @@ export const SelectLinodePanel = (props: Props) => {
     [orderedLinodes, searchText]
   );
 
+  const SelectComponent =
+    matchesMdUp && flags.linodeCloneUIChanges ? SelectTable : SelectCards;
+
   return (
     <>
       <Paginate data={filteredLinodes}>
@@ -160,21 +158,20 @@ export const SelectLinodePanel = (props: Props) => {
                   />
                 )}
                 <StyledBox>
-                  {(matchesMdUp && flags.linodeCloneUIChanges
-                    ? renderTable
-                    : renderCards)({
-                    disabled: disabled ?? false,
-                    handlePowerOff: (linodeID) =>
-                      setPowerOffLinode({ linodeID }),
-                    handleSelection,
-                    orderBy: {
+                  <SelectComponent
+                    handlePowerOff={(linodeID) =>
+                      setPowerOffLinode({ linodeID })
+                    }
+                    orderBy={{
                       data: linodesData,
                       handleOrderChange,
                       order,
                       orderBy,
-                    },
-                    selectedLinodeID,
-                  })}
+                    }}
+                    disabled={disabled ?? false}
+                    handleSelection={handleSelection}
+                    selectedLinodeID={selectedLinodeID}
+                  />
                 </StyledBox>
               </StyledPaper>
               <PaginationFooter
@@ -202,67 +199,13 @@ export const SelectLinodePanel = (props: Props) => {
   );
 };
 
-interface RenderLinodeProps {
+export interface RenderLinodeProps {
   disabled: boolean;
   handlePowerOff: (linodeID: number) => void;
   handleSelection: Props['handleSelection'];
   orderBy: OrderByProps<ExtendedLinode>;
   selectedLinodeID: number | undefined;
 }
-
-const renderCards = ({
-  disabled,
-  handleSelection,
-  orderBy: { data: linodes },
-  selectedLinodeID,
-}: RenderLinodeProps) => (
-  <Grid container spacing={2}>
-    {linodes.map((linode) => (
-      <SelectionCard
-        onClick={() => {
-          handleSelection(linode.id, linode.type, linode.specs.disk);
-        }}
-        checked={linode.id === Number(selectedLinodeID)}
-        disabled={disabled}
-        heading={linode.heading}
-        key={`selection-card-${linode.id}`}
-        subheadings={linode.subHeadings}
-      />
-    ))}
-  </Grid>
-);
-
-const renderTable = ({
-  disabled,
-  handlePowerOff,
-  handleSelection,
-  orderBy,
-  selectedLinodeID,
-}: RenderLinodeProps) => (
-  <Table aria-label="Linode" size="small">
-    <TableHead style={{ fontSize: '.875rem' }}>
-      <SelectLinodeTableRowHead orderBy={orderBy} />
-    </TableHead>
-    <TableBody role="radiogroup">
-      {orderBy.data.length > 0 ? (
-        orderBy.data.map((linode) => (
-          <SelectLinodeRow
-            handleSelection={() =>
-              handleSelection(linode.id, linode.type, linode.specs.disk)
-            }
-            disabled={disabled}
-            handlePowerOff={() => handlePowerOff(linode.id)}
-            key={linode.id}
-            linodeId={linode.id}
-            selected={Number(selectedLinodeID) === linode.id}
-          />
-        ))
-      ) : (
-        <TableRowEmpty colSpan={6} message={'No results'} />
-      )}
-    </TableBody>
-  </Table>
-);
 
 const StyledBox = styled(Box, {
   label: 'StyledBox',

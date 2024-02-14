@@ -9,7 +9,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import { SelectLinodePanel } from '../SelectLinodePanel';
+import { SelectLinodePanel } from '../SelectLinodePanel/SelectLinodePanel';
 import {
   CloneFormStateHandlers,
   ReduxStateProps,

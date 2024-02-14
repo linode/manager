@@ -24,7 +24,7 @@ import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
-import { RegionIndicator } from '../LinodesLanding/RegionIndicator';
+import { RegionIndicator } from '../../LinodesLanding/RegionIndicator';
 
 interface Props {
   disabled?: boolean;
