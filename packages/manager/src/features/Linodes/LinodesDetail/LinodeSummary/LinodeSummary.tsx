@@ -118,11 +118,11 @@ const LinodeSummary: React.FC<Props> = (props) => {
   /**
    * This changes the X-Axis tick labels depending on the selected timeframe.
    *
-   * This is important because the X-Axis should show dates insted of times
-   * when viewing many days worth of stats.
+   * This is important because the X-Axis should show dates instead of times
+   * when viewing many days' worth of stats.
    *
    * @example 'hh a' renders '11am'
-   * @example 'LLL dd' render 'Feb 14'
+   * @example 'LLL dd' renders 'Feb 14'
    */
   const xAxisTickFormat = isLast24Hours ? 'hh a' : 'LLL dd';
 
