@@ -1,11 +1,9 @@
 import { Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -16,7 +14,9 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
+  StyledEdgeBox,
   StyledFlagContainer,
+  sxEdgeIcon,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
@@ -134,6 +134,11 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             />
           );
         }}
+        sx={(theme) => ({
+          [theme.breakpoints.up('md')]: {
+            width: '416px',
+          },
+        })}
         textFieldProps={{
           InputProps: {
             endAdornment: geckoEnabled &&
@@ -141,7 +146,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                 <TooltipIcon
                   icon={<EdgeServer />}
                   status="other"
-                  sxTooltipIcon={sxIcon}
+                  sxTooltipIcon={sxEdgeIcon}
                   text="This region is an edge server."
                 />
               ),
@@ -167,46 +172,17 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         noOptionsText="No results"
         options={options}
         placeholder="Select a Region"
-        sx={{ minWidth: 416 }}
         value={selectedRegion}
       />
-      {geckoEnabled && (
-        <StyledBox>
+      {geckoEnabled && ( // @TODO Gecko MVP: Add docs link
+        <StyledEdgeBox>
           <EdgeServer />
-          <Typography>
+          <Typography sx={{ textWrap: 'nowrap' }}>
             {' '}
             Indicates an Edge server region. <Link to="#">Learn more</Link>
           </Typography>
-        </StyledBox>
+        </StyledEdgeBox>
       )}
     </StyledAutocompleteContainer>
-    // @TODO Gecko MVP: Add docs link
   );
 });
-
-const sxIcon = {
-  '& svg': {
-    color: 'inherit !important',
-    height: 21,
-    width: 24,
-  },
-  '&:hover': {
-    color: 'inherit',
-  },
-  color: 'inherit',
-  padding: 0,
-};
-
-const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
-  '& svg': {
-    height: 21,
-    marginLeft: 8,
-    marginRight: 8,
-    width: 24,
-  },
-  alignSelf: 'end',
-  color: 'inherit',
-  display: 'flex',
-  marginLeft: 8,
-  padding: '8px 0',
-}));

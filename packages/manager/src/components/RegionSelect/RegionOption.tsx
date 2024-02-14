@@ -9,7 +9,11 @@ import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { StyledFlagContainer, StyledListItem } from './RegionSelect.styles';
+import {
+  StyledFlagContainer,
+  StyledListItem,
+  sxEdgeIcon,
+} from './RegionSelect.styles';
 import { RegionSelectOption } from './RegionSelect.types';
 
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
@@ -95,7 +99,7 @@ export const RegionOption = ({
             <TooltipIcon
               icon={<EdgeServer />}
               status="other"
-              sxTooltipIcon={sxIcon}
+              sxTooltipIcon={sxEdgeIcon}
               text="This region is an edge site."
             />
           )}
@@ -104,30 +108,3 @@ export const RegionOption = ({
     </Tooltip>
   );
 };
-
-const sxIcon = {
-  '& svg': {
-    height: 21,
-    width: 24,
-  },
-  '&:hover': {
-    color: 'inherit',
-  },
-  color: 'inherit',
-  padding: 0,
-};
-
-// const StyledEndAdornment = styled(Box, { label: 'StyledEndAdornment' })(
-//   ({ theme }) => ({
-//     '& svg': {
-//       height: 21,
-//       width: 24,
-//     },
-//     '&:hover': {
-//       color: 'inherit',
-//     },
-//     color: 'inherit',
-//     display: 'flex',
-//     marginLeft: 4,
-//   })
-// );
