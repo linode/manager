@@ -6,7 +6,7 @@
  * Asserts that a local storage item has a given value.
  *
  * @param key - Local storage item key.
- * @param value - Local stroage item value to assert.
+ * @param value - Local storage item value to assert.
  */
 export const assertLocalStorageValue = (key: string, value: any) => {
   cy.getAllLocalStorage().then((localStorageData: any) => {
