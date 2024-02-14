@@ -105,6 +105,10 @@ interface Props {
   className?: string;
   errorText?: string;
   /**
+   * Send event analytics
+   */
+  handleAnalyticsEvent?: () => void;
+  /**
    * Optional link for the text when it is not in editing mode
    */
   labelLink?: string;
@@ -136,6 +140,7 @@ export const EditableText = (props: PassThroughProps) => {
   const {
     className,
     errorText,
+    handleAnalyticsEvent,
     labelLink,
     onCancel,
     onEdit,
@@ -158,6 +163,10 @@ export const EditableText = (props: PassThroughProps) => {
   };
 
   const openEdit = () => {
+    // Send analytics when pencil icon is clicked.
+    if (handleAnalyticsEvent) {
+      handleAnalyticsEvent();
+    }
     setIsEditing(true);
   };
 
