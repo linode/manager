@@ -1,3 +1,4 @@
+import { PlacementGroup } from '@linode/api-v4';
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -25,6 +26,10 @@ import {
   WithEventsPollingActionProps,
   withEventsPollingActions,
 } from 'src/containers/events.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -34,9 +39,6 @@ import {
 } from 'src/containers/profile.container';
 import { RegionsProps, withRegions } from 'src/containers/regions.container';
 import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   WithLinodesProps,
   withLinodes,
@@ -66,11 +68,12 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { isEURegion } from 'src/utilities/formatRegion';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -93,6 +96,7 @@ import type {
 const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   attachedVLANLabel: null | string;
   authorized_users: string[];
@@ -105,6 +109,7 @@ interface State {
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
+  placementGroupSelection?: PlacementGroup;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
   selectedDiskSize?: number;
@@ -134,7 +139,7 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   RouteComponentProps<{}, any, any> &
   WithProfileProps &
   AgreementsProps &
@@ -144,6 +149,7 @@ type CombinedProps = WithSnackbarProps &
   WithEventsPollingActionProps;
 
 const defaultState: State = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   attachedVLANLabel: '',
   authorized_users: [],
@@ -154,6 +160,7 @@ const defaultState: State = {
   errors: undefined,
   formIsSubmitting: false,
   password: '',
+  placementGroupSelection: undefined,
   privateIPEnabled: false,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
@@ -281,6 +288,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
+            handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
@@ -309,6 +317,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
+            updatePlacementGroupSelection={this.setPlacementGroupSelection}
             updateRegionID={this.setRegionID}
             updateStackScript={this.setStackScript}
             updateTags={this.setTags}
@@ -519,6 +528,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ vpcIPv4AddressOfLinode: IPv4 });
   };
 
+  handleVPCIPv4RangesChange = (ranges: ExtendedIP[]) => {
+    this.setState({ additionalIPv4RangesForVPC: ranges });
+  };
+
   params = getQueryParamsFromQueryString(this.props.location.search) as Record<
     string,
     string
@@ -595,6 +608,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   setPassword = (password: string) => this.setState({ password });
+
+  setPlacementGroupSelection = (placementGroupSelection: PlacementGroup) => {
+    this.setState({ placementGroupSelection });
+  };
 
   setRegionID = (selectedRegionId: string) => {
     const { showGDPRCheckbox } = getGDPRDetails({
@@ -944,7 +961,7 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   connected,
   withSnackbar,
-  withFlags,
+  withFeatureFlags,
   withProfile,
   withAgreements,
   withQueryClient,

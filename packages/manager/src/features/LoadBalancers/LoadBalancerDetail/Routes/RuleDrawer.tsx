@@ -17,7 +17,7 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aclb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';

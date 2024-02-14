@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Skeleton } from 'src/components/Skeleton';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerServiceTargetsEndpointHealthQuery } from 'src/queries/aglb/serviceTargets';
+import { useLoadBalancerServiceTargetsEndpointHealthQuery } from 'src/queries/aclb/serviceTargets';
 
 import { EndpointHealth } from '../EndpointHealth';
 

@@ -17,7 +17,7 @@ describe('Ports', () => {
     ];
 
     server.use(
-      rest.get('*/aglb/1/configurations*', (req, res, ctx) => {
+      rest.get('*/aclb/1/configurations*', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage(configs)));
       })
     );

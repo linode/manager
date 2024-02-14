@@ -22,7 +22,7 @@ import type {
 export const mockGetLoadBalancer = (loadBalancer: Loadbalancer) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancer.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}`),
     makeResponse(loadBalancer)
   );
 };
@@ -37,7 +37,7 @@ export const mockGetLoadBalancer = (loadBalancer: Loadbalancer) => {
 export const mockGetLoadBalancers = (loadBalancers: Loadbalancer[]) => {
   return cy.intercept(
     'GET',
-    apiMatcher('/aglb*'),
+    apiMatcher('/aclb*'),
     paginateResponse(loadBalancers)
   );
 };
@@ -50,7 +50,7 @@ export const mockGetLoadBalancers = (loadBalancers: Loadbalancer[]) => {
  * @returns Cypress chainable.
  */
 export const mockDeleteLoadBalancer = (loadBalancerId: number) => {
-  return cy.intercept('DELETE', apiMatcher(`/aglb/${loadBalancerId}`), {});
+  return cy.intercept('DELETE', apiMatcher(`/aclb/${loadBalancerId}`), {});
 };
 
 /**
@@ -68,7 +68,7 @@ export const mockDeleteLoadBalancerError = (
   const defaultMessage = 'An error occurred while deleting Load Balancer.';
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}`),
+    apiMatcher(`/aclb/${loadBalancerId}`),
     makeErrorResponse(message ?? defaultMessage, 500)
   );
 };
@@ -87,7 +87,7 @@ export const mockGetLoadBalancerConfigurations = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations*`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations*`),
     paginateResponse(configurations)
   );
 };
@@ -106,7 +106,7 @@ export const mockDeleteLoadBalancerConfiguration = (
 ) => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configId}`),
     {}
   );
 };
@@ -126,7 +126,7 @@ export const mockDeleteLoadBalancerConfigurationError = (
 ) => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configId}`),
     makeResponse({ errors: [{ reason: error }] }, 500)
   );
 };
@@ -145,7 +145,7 @@ export const mockCreateLoadBalancerConfiguration = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations`),
     makeResponse(configuration)
   );
 };
@@ -164,7 +164,7 @@ export const mockUpdateLoadBalancerConfiguration = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configuration.id}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configuration.id}`),
     makeResponse(configuration)
   );
 };
@@ -184,7 +184,7 @@ export const mockUpdateLoadBalancerConfigurationError = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configurationId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configurationId}`),
     makeResponse({ errors }, 400)
   );
 };
@@ -203,7 +203,7 @@ export const mockCreateLoadBalancerConfigurationError = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations`),
     makeResponse({ errors }, 500)
   );
 };
@@ -222,7 +222,7 @@ export const mockGetLoadBalancerCertificates = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates*`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates*`),
     paginateResponse(certificates)
   );
 };
@@ -240,7 +240,7 @@ export const mockUploadLoadBalancerCertificate = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates`),
     makeResponse(certificate)
   );
 };
@@ -259,7 +259,7 @@ export const mockDeleteLoadBalancerCertificate = (
 ) => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates/${certificateId}`),
     makeResponse()
   );
 };
@@ -282,7 +282,7 @@ export const mockDeleteLoadBalancerCertificateError = (
     'An error occurred while deleting Load Balancer certificate.';
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates/${certificateId}`),
     makeErrorResponse(message ?? defaultMessage, 500)
   );
 };
@@ -300,7 +300,7 @@ export const mockUpdateLoadBalancerCertificate = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificate.id}`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates/${certificate.id}`),
     makeResponse(certificate)
   );
 };
@@ -319,7 +319,7 @@ export const mockGetServiceTargets = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancer.id}/service-targets*`),
+    apiMatcher(`/aclb/${loadBalancer.id}/service-targets*`),
     paginateResponse(serviceTargets)
   );
 };
@@ -335,7 +335,7 @@ export const mockGetServiceTargetsError = (message?: string) => {
   const defaultMessage = 'An error occurred while retrieving service targets';
   return cy.intercept(
     'GET',
-    apiMatcher('/aglb/service-targets*'),
+    apiMatcher('/aclb/service-targets*'),
     makeErrorResponse(message ?? defaultMessage, 500)
   );
 };
@@ -354,7 +354,7 @@ export const mockCreateServiceTarget = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
+    apiMatcher(`/aclb/${loadBalancer.id}/service-targets`),
     makeResponse(serviceTarget)
   );
 };
@@ -373,7 +373,7 @@ export const mockUpdateServiceTarget = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
     makeResponse(serviceTarget)
   );
 };
@@ -389,7 +389,7 @@ export const mockUpdateServiceTarget = (
 export const mockCreateRoute = (loadBalancer: Loadbalancer, route: Route) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancer.id}/routes`),
+    apiMatcher(`/aclb/${loadBalancer.id}/routes`),
     makeResponse(route)
   );
 };
@@ -408,7 +408,7 @@ export const mockGetLoadBalancerRoutes = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/routes*`),
+    apiMatcher(`/aclb/${loadBalancerId}/routes*`),
     paginateResponse(routes)
   );
 };
@@ -427,7 +427,7 @@ export const mockGetLoadBalancerServiceTargets = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/service-targets*`),
+    apiMatcher(`/aclb/${loadBalancerId}/service-targets*`),
     paginateResponse(serviceTargets)
   );
 };
@@ -443,7 +443,7 @@ export const mockGetLoadBalancerServiceTargets = (
 export const mockUpdateRoute = (loadBalancer: Loadbalancer, route: Route) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}/routes/${route.id}`),
     makeResponse(route)
   );
 };
@@ -462,7 +462,7 @@ export const mockUpdateRouteError = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}/routes/${route.id}`),
     makeResponse(
       {
         errors: [

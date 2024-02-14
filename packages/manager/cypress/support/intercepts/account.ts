@@ -10,6 +10,7 @@ import { makeResponse } from 'support/util/response';
 
 import type {
   Account,
+  AccountLogin,
   AccountSettings,
   Agreements,
   CancelAccount,
@@ -590,5 +591,22 @@ export const mockCreateChildAccountTokenError = (
     'POST',
     apiMatcher(`account/child-accounts/${childAccount.euuid}/token`),
     makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch the account logins and mocks the response.
+ *
+ * @param accountLogins - Account login objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAccountLogins = (
+  accountLogins: AccountLogin[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/logins*`),
+    paginateResponse(accountLogins)
   );
 };

@@ -9,7 +9,7 @@ import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
 describe('LoadBalancerEndpointHealth', () => {
   it('renders endpoint health from API data', async () => {
     server.use(
-      rest.get('*/v4beta/aglb/:id/endpoints-health', (req, res, ctx) => {
+      rest.get('*/v4beta/aclb/:id/endpoints-health', (req, res, ctx) => {
         const health = loadbalancerEndpointHealthFactory.build({
           healthy_endpoints: 150,
           total_endpoints: 200,

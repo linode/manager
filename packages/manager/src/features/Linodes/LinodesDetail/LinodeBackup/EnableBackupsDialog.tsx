@@ -47,6 +47,9 @@ export const EnableBackupsDialog = (props: Props) => {
     type,
   });
 
+  const hasBackupsMonthlyPriceError =
+    !backupsMonthlyPrice && backupsMonthlyPrice !== 0;
+
   const { enqueueSnackbar } = useSnackbar();
 
   const { checkForNewEvents } = useEventsPollingActions();
@@ -70,7 +73,7 @@ export const EnableBackupsDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm-enable-backups',
-        disabled: !backupsMonthlyPrice,
+        disabled: hasBackupsMonthlyPriceError,
         label: 'Enable Backups',
         loading: isLoading,
         onClick: handleEnableBackups,
@@ -92,7 +95,7 @@ export const EnableBackupsDialog = (props: Props) => {
       open={open}
       title="Enable backups?"
     >
-      {backupsMonthlyPrice ? (
+      {!hasBackupsMonthlyPriceError ? (
         <Typography>
           Are you sure you want to enable backups on this Linode?{` `}
           This will add <Currency quantity={backupsMonthlyPrice} />

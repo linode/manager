@@ -37,6 +37,15 @@ export interface LinkProps extends _LinkProps {
    * @default false
    */
   hideIcon?: boolean;
+  /**
+   * The Link's destination.
+   * We are overwriting react-router-dom's `to` type because they allow objects, functions, and strings.
+   * We want to keep our `to` prop simple so that we can easily read and sanitize it.
+   *
+   * @example "/profile/display"
+   * @example "https://linode.com"
+   */
+  to: string;
 }
 
 /**

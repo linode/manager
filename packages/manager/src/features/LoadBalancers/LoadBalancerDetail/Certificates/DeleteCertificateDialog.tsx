@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLoadBalancerCertificateDeleteMutation } from 'src/queries/aglb/certificates';
+import { useLoadBalancerCertificateDeleteMutation } from 'src/queries/aclb/certificates';
 
 import type { Certificate } from '@linode/api-v4';
 
