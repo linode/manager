@@ -53,7 +53,7 @@ export const UsersLanding = () => {
   const {
     data: proxyUser,
     error: proxyUserError,
-    isLoading: loadingProxyUser,
+    isLoading: isLoadingProxyUser,
   } = useAccountUsers({
     enabled: flags.parentChildAccountAccess,
     filters: { user_type: 'proxy' },
