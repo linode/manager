@@ -42,22 +42,22 @@ export const UsersLanding = () => {
     usersFilter['user_type'] = { '+neq': 'proxy' };
   }
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers(
-    {
+  const { data: users, error, isLoading, refetch } = useAccountUsers({
+    filters: usersFilter,
+    params: {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    usersFilter
-  );
+  });
 
   const {
     data: proxyUser,
     error: proxyUserError,
     isLoading: loadingProxyUser,
-  } = useAccountUsers(
-    {},
-    flags.parentChildAccountAccess ? { user_type: 'proxy' } : {}
-  );
+  } = useAccountUsers({
+    enabled: flags.parentChildAccountAccess,
+    filters: { user_type: 'proxy' },
+  });
 
   const isRestrictedUser = profile?.restricted;
 
