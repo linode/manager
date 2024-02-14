@@ -2,6 +2,7 @@ import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { IconButton } from 'src/components/IconButton';
 
 import {
@@ -64,6 +65,11 @@ export interface RemovableSelectionsListProps {
    */
   preferredDataLabel?: string;
   /**
+   * Overrides the render of the X Button
+   * Has no effect if isRemovable is false
+   */
+  removeButtonText?: string;
+  /**
    * The data to display in the list
    */
   selectionData: RemovableItem[];
@@ -86,6 +92,7 @@ export const RemovableSelectionsList = (
     noDataText,
     onRemove,
     preferredDataLabel,
+    removeButtonText,
     selectionData,
     sx,
   } = props;
@@ -115,9 +122,9 @@ export const RemovableSelectionsList = (
         >
           <StyledScrollBox maxHeight={maxHeight} maxWidth={maxWidth}>
             <SelectedOptionsList
+              data-qa-selection-list
               isRemovable={isRemovable}
               ref={listRef}
-              data-qa-selection-list
             >
               {selectionData.map((selection) => (
                 <SelectedOptionsListItem alignItems="center" key={selection.id}>
@@ -130,7 +137,18 @@ export const RemovableSelectionsList = (
                       selection.label
                     )}
                   </StyledLabel>
-                  {isRemovable && (
+                  {isRemovable && removeButtonText ? (
+                    <Button
+                      sx={(theme) => ({
+                        fontFamily: theme.font.normal,
+                        fontSize: '0.875rem',
+                      })}
+                      onClick={() => handleOnClick(selection)}
+                      variant="text"
+                    >
+                      {removeButtonText}
+                    </Button>
+                  ) : (
                     <IconButton
                       aria-label={`remove ${
                         preferredDataLabel

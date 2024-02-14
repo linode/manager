@@ -211,7 +211,6 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsDeleteModal
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupDeleteModalOpen}
-        selectedPlacementGroup={selectedPlacementGroup}
       />
     </>
   );
