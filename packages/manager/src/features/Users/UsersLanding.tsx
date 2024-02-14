@@ -1,4 +1,3 @@
-import { User } from '@linode/api-v4';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -7,9 +6,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
@@ -19,12 +15,16 @@ import { useProfile } from 'src/queries/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
-import { UserRow } from './UserRow';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 export const UsersLanding = () => {
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
+    false
+  );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [selectedUsername, setSelectedUsername] = React.useState('');
   const flags = useFlags();
   const { data: profile } = useProfile();
 
@@ -48,10 +48,7 @@ export const UsersLanding = () => {
     error: proxyUserError,
     isLoading: loadingProxyUser,
   } = useAccountUsers(
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
+    {},
     {
       user_type: 'proxy',
     }
@@ -69,14 +66,7 @@ export const UsersLanding = () => {
 
   const numCols = showChildAccountAccessCol ? 6 : 5;
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [selectedUsername, setSelectedUsername] = React.useState('');
-
-  const onDelete = (username: string) => {
+  const handleDelete = (username: string) => {
     setIsDeleteDialogOpen(true);
     setSelectedUsername(username);
   };
@@ -106,7 +96,7 @@ export const UsersLanding = () => {
               error={proxyUserError}
               isLoading={loadingProxyUser}
               numCols={numCols}
-              onDelete={onDelete}
+              onDelete={handleDelete}
               users={proxyUser?.data}
             />
           </TableBody>
@@ -154,7 +144,7 @@ export const UsersLanding = () => {
             error={error}
             isLoading={isLoading}
             numCols={numCols}
-            onDelete={onDelete}
+            onDelete={handleDelete}
             users={users?.data}
           />
         </TableBody>
