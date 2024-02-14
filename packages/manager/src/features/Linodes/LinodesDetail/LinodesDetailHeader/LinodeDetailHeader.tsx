@@ -229,9 +229,9 @@ const LinodeDetailHeader = () => {
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            analyticsEvent: () => sendEditBreadcrumbEvent(),
             editableTextTitle: linode?.label ?? '',
             errorText: editableLabelError,
+            handleAnalyticsEvent: () => sendEditBreadcrumbEvent(),
             onCancel: resetEditableLabel,
             onEdit: handleLinodeLabelUpdate,
           },

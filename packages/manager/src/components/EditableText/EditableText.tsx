@@ -102,9 +102,12 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 );
 
 interface Props {
-  analyticsEvent?: () => void;
   className?: string;
   errorText?: string;
+  /**
+   * Send event analytics
+   */
+  handleAnalyticsEvent?: () => void;
   /**
    * Optional link for the text when it is not in editing mode
    */
@@ -135,9 +138,9 @@ export const EditableText = (props: PassThroughProps) => {
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
   const {
-    analyticsEvent,
     className,
     errorText,
+    handleAnalyticsEvent,
     labelLink,
     onCancel,
     onEdit,
@@ -161,8 +164,8 @@ export const EditableText = (props: PassThroughProps) => {
 
   const openEdit = () => {
     // Send analytics when pencil icon is clicked.
-    if (analyticsEvent) {
-      analyticsEvent();
+    if (handleAnalyticsEvent) {
+      handleAnalyticsEvent();
     }
     setIsEditing(true);
   };
