@@ -36,11 +36,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
     linodesError,
     region,
   } = usePlacementGroupData({
-    linodeQueryFilters: {
-      '+or': placementGroup?.linode_ids.map((id) => ({
-        id,
-      })),
-    },
     placementGroup,
   });
   const theme = useTheme();

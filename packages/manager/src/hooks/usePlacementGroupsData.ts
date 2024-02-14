@@ -6,7 +6,6 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import type { APIError, Linode, PlacementGroup, Region } from '@linode/api-v4';
-import type { Filter } from '@linode/api-v4';
 
 interface PlacementGroupLimits {
   assignedLinodes: Linode[];
@@ -18,20 +17,24 @@ interface PlacementGroupLimits {
 }
 
 interface PlacementGroupLimitsOptions {
-  linodeQueryFilters?: Filter;
   placementGroup: PlacementGroup | undefined;
 }
 
 /**
  * Helper hook to fetch data we always need when working with Placement Groups.
+ *
+ * NOTE: the linodes are filtered by the linode_ids in the placement group by default.
  */
 export const usePlacementGroupData = ({
-  linodeQueryFilters,
   placementGroup,
 }: PlacementGroupLimitsOptions): PlacementGroupLimits => {
   const { data: linodes, error, isLoading } = useAllLinodesQuery(
-    linodeQueryFilters && {},
-    linodeQueryFilters
+    {},
+    {
+      '+or': placementGroup?.linode_ids.map((id) => ({
+        id,
+      })),
+    }
   );
   const { data: regions } = useRegionsQuery();
 
