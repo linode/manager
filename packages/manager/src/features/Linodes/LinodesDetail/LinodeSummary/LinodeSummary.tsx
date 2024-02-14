@@ -115,6 +115,17 @@ const LinodeSummary: React.FC<Props> = (props) => {
     debouncedRefetchLinodeStats();
   }, [windowWidth, windowHeight, debouncedRefetchLinodeStats]);
 
+  /**
+   * This changes the X-Axis tick labels depending on the selected timeframe.
+   *
+   * This is important because the X-Axis should show dates instead of times
+   * when viewing many days' worth of stats.
+   *
+   * @example 'hh a' renders '11am'
+   * @example 'LLL dd' renders 'Feb 14'
+   */
+  const xAxisTickFormat = isLast24Hours ? 'hh a' : 'LLL dd';
+
   const renderCPUChart = () => {
     const data = stats?.data.cpu ?? [];
     const metrics = getMetrics(data);
@@ -147,7 +158,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
               },
             ]}
             xAxis={{
-              tickFormat: 'hh a',
+              tickFormat: xAxisTickFormat,
               tickGap: 60,
             }}
             ariaLabel="CPU Usage Graph"
@@ -233,7 +244,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
               },
             ]}
             xAxis={{
-              tickFormat: 'hh a',
+              tickFormat: xAxisTickFormat,
               tickGap: 60,
             }}
             ariaLabel="Disk I/O Graph"
@@ -382,7 +393,11 @@ const LinodeSummary: React.FC<Props> = (props) => {
           </StyledGrid>
         </Grid>
       ) : null}
-      <NetworkGraphs stats={stats} {...chartProps} />
+      <NetworkGraphs
+        stats={stats}
+        xAxisTickFormat={xAxisTickFormat}
+        {...chartProps}
+      />
     </Grid>
   );
 };
