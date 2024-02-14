@@ -56,7 +56,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
       disabled={disabled}
       loading={loading}
       onClick={onClick}
-      sx={buttonHeight != undefined ? { height: `${buttonHeight}px` } : {}}
+      sx={buttonHeight != undefined ? { height: buttonHeight } : {}}
       tooltipAnalyticsEvent={tooltipAnalyticsEvent}
       tooltipText={tooltip}
       {...rest}
