@@ -19,22 +19,27 @@ import {
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getPlacementGroupLinodeCount } from '../utils';
+import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
+import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
   const { id, tab } = useParams<{ id: string; tab?: string }>();
   const history = useHistory();
   const placementGroupId = Number(id);
+
   const {
     data: placementGroup,
     error: placementGroupError,
     isLoading,
   } = usePlacementGroupQuery(placementGroupId, Boolean(flags.vmPlacement));
+
   const {
     error: updatePlacementGroupError,
     mutateAsync: updatePlacementGroup,
     reset,
   } = useMutatePlacementGroup(placementGroupId);
+
   const errorText = getErrorStringOrDefault(updatePlacementGroupError ?? '');
 
   if (isLoading) {
@@ -106,10 +111,13 @@ export const PlacementGroupsDetail = () => {
         onChange={(i) => history.push(tabs[i].routeName)}
       >
         <TabLinkList tabs={tabs} />
-
         <TabPanels>
-          <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
-          <SafeTabPanel index={1}>TODO VM_Placement: linode list</SafeTabPanel>
+          <SafeTabPanel index={0}>
+            <PlacementGroupsSummary placementGroup={placementGroup} />
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <PlacementGroupsLinodes placementGroup={placementGroup} />
+          </SafeTabPanel>
         </TabPanels>
       </Tabs>
     </>

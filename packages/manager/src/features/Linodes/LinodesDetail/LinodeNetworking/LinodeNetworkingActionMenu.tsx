@@ -37,11 +37,14 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     readOnly,
   } = props;
 
-  const showEdit =
-    ipType !== 'IPv4 – Private' &&
-    ipType !== 'IPv6 – Link Local' &&
-    ipType !== 'IPv4 – Reserved (public)' &&
-    ipType !== 'IPv4 – Reserved (private)';
+  const showEdit = ![
+    'IPv4 – Private',
+    'IPv4 – Reserved (private)',
+    'IPv4 – Reserved (public)',
+    'IPv4 – VPC',
+    'IPv6 – Link Local',
+    'VPC IPv4 – NAT',
+  ].includes(ipType);
 
   const deletableIPTypes = ['IPv4 – Public', 'IPv4 – Private', 'IPv6 – Range'];
 

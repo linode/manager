@@ -1,4 +1,3 @@
-import { placementGroupFactory } from './placementGroups';
 import { RegionalNetworkUtilization } from '@linode/api-v4/lib/account';
 import {
   CreateLinodeRequest,
@@ -14,6 +13,8 @@ import {
   StatsData,
 } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
+
+import { placementGroupFactory } from './placementGroups';
 
 export const linodeAlertsFactory = Factory.Sync.makeFactory<LinodeAlerts>({
   cpu: 10,
@@ -261,7 +262,17 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
-  placement_groups: [placementGroupFactory.build()],
+  placement_groups: [
+    placementGroupFactory.build({
+      affinity_type: 'anti_affinity',
+      capacity: 10,
+      compliant: true,
+      id: 1,
+      label: 'test',
+      linode_ids: [1],
+      region: 'us-east',
+    }),
+  ],
   region: 'us-east',
   specs: linodeSpecsFactory.build(),
   status: 'running',

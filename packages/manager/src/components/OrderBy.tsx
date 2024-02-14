@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { Order } from 'src/components/Pagey';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
@@ -15,6 +14,8 @@ import {
   sortByString,
   sortByUTFDate,
 } from 'src/utilities/sort-by';
+
+import type { Order } from 'src/hooks/useOrder';
 
 export interface OrderByProps<T> extends State {
   data: T[];

@@ -5,9 +5,10 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
+  UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { useFormik } from 'formik';
+import { useFormik, FormikProps } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -28,6 +29,7 @@ import { confirmObjectStorage } from '../utilities';
 import { AccessKeyRegions } from './AccessKeyRegions/AccessKeyRegions';
 import { LimitedAccessControls } from './LimitedAccessControls';
 import { MODE } from './types';
+import { generateUpdatePayload, hasLabelOrRegionsChanged } from './utils';
 
 export interface AccessKeyDrawerProps {
   isRestrictedUser: boolean;
@@ -35,7 +37,12 @@ export interface AccessKeyDrawerProps {
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
-  onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
+  onSubmit: (
+    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
+    formikProps: FormikProps<
+      ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest
+    >
+  ) => void;
   open: boolean;
 }
 
@@ -116,10 +123,11 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   // and so not included in Formik's types
   const [limitedAccessChecked, setLimitedAccessChecked] = useState(false);
 
-  const title = createMode ? 'Create Access Key' : 'Edit Access Key Label';
+  const title = createMode ? 'Create Access Key' : 'Edit Access Key';
 
   const initialLabelValue =
     !createMode && objectStorageKey ? objectStorageKey.label : '';
+
   const initialRegions =
     !createMode && objectStorageKey
       ? objectStorageKey.regions?.map((region) => region.id)
@@ -148,12 +156,24 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
           }
         : { ...values, bucket_access: null };
 
-      onSubmit(payload, formik);
+      const updatePayload = generateUpdatePayload(values, initialValues);
+
+      if (mode !== 'creating') {
+        onSubmit(updatePayload, formik);
+      } else {
+        onSubmit(payload, formik);
+      }
     },
     validateOnBlur: true,
     validateOnChange: false,
     validationSchema: createObjectStorageKeysSchema,
   });
+
+  const isSaveDisabled =
+    isRestrictedUser ||
+    (mode !== 'creating' &&
+      objectStorageKey &&
+      !hasLabelOrRegionsChanged(formik.values, objectStorageKey));
 
   const beforeSubmit = () => {
     confirmObjectStorage<FormState>(
@@ -257,6 +277,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 'bucket_access',
                 getDefaultScopes(bucketsInRegions, regionsLookup)
               );
+              formik.validateField('regions');
             }}
             onChange={(values) => {
               const bucketsInRegions = buckets?.filter(
@@ -287,10 +308,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled:
-                isRestrictedUser ||
-                (mode !== 'creating' &&
-                  formik.values.label === initialLabelValue),
+              disabled: isSaveDisabled,
               label: createMode ? 'Create Access Key' : 'Save Changes',
               loading: formik.isSubmitting,
               onClick: beforeSubmit,

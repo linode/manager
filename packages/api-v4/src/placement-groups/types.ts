@@ -27,5 +27,9 @@ export type RenamePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 /**
  * Since the API expects an array of ONE linode id, we'll use a tuple here.
  */
-export type AssignVMsToPlacementGroupPayload = [number];
-export type UnassignVMsFromPlacementGroupPayload = [number];
+export type AssignLinodesToPlacementGroupPayload = {
+  linodes: [number];
+};
+export type UnassignLinodesFromPlacementGroupPayload = {
+  linodes: [number];
+};

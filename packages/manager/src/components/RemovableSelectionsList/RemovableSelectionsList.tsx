@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
 
 import {
@@ -12,6 +13,8 @@ import {
   StyledNoAssignedLinodesBox,
   StyledScrollBox,
 } from './RemovableSelectionsList.style';
+
+import type { SxProps, Theme } from '@mui/material';
 
 export type RemovableItem = {
   id: number;
@@ -29,7 +32,11 @@ export interface RemovableSelectionsListProps {
   /**
    * The descriptive text to display above the list
    */
-  headerText: string;
+  headerText: JSX.Element | string;
+  /**
+   * The id of the list component
+   */
+  id?: string;
   /**
    * If false, hide the remove button
    */
@@ -60,6 +67,10 @@ export interface RemovableSelectionsListProps {
    * The data to display in the list
    */
   selectionData: RemovableItem[];
+  /**
+   * Additional styles to apply to the component
+   */
+  sx?: SxProps<Theme>;
 }
 
 export const RemovableSelectionsList = (
@@ -68,6 +79,7 @@ export const RemovableSelectionsList = (
   const {
     LabelComponent,
     headerText,
+    id,
     isRemovable = true,
     maxHeight = 427,
     maxWidth = 416,
@@ -75,6 +87,7 @@ export const RemovableSelectionsList = (
     onRemove,
     preferredDataLabel,
     selectionData,
+    sx,
   } = props;
 
   // used to determine when to display a box-shadow to indicate scrollability
@@ -92,15 +105,20 @@ export const RemovableSelectionsList = (
   };
 
   return (
-    <>
+    <Box data-testid={id} sx={sx}>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
         <StyledBoxShadowWrapper
           displayShadow={listHeight > maxHeight}
+          id={id}
           maxWidth={maxWidth}
         >
           <StyledScrollBox maxHeight={maxHeight} maxWidth={maxWidth}>
-            <SelectedOptionsList isRemovable={isRemovable} ref={listRef}>
+            <SelectedOptionsList
+              isRemovable={isRemovable}
+              ref={listRef}
+              data-qa-selection-list
+            >
               {selectionData.map((selection) => (
                 <SelectedOptionsListItem alignItems="center" key={selection.id}>
                   <StyledLabel>
@@ -132,10 +150,10 @@ export const RemovableSelectionsList = (
           </StyledScrollBox>
         </StyledBoxShadowWrapper>
       ) : (
-        <StyledNoAssignedLinodesBox maxWidth={maxWidth}>
+        <StyledNoAssignedLinodesBox id={id} maxWidth={maxWidth}>
           <StyledLabel>{noDataText}</StyledLabel>
         </StyledNoAssignedLinodesBox>
       )}
-    </>
+    </Box>
   );
 };

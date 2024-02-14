@@ -1,4 +1,4 @@
-import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+import { Interface, LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -27,7 +27,7 @@ import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
-import IPTransfer from './IPTransfer';
+import { IPTransfer } from './IPTransfer';
 import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
 import {
   StyledRootGrid,
@@ -52,7 +52,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
 
   const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
-  const { isVPCOnlyLinode } = useVPCConfigInterface(linodeID);
+  const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(
+    linodeID
+  );
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -119,7 +121,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   }
 
   const renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(ips);
+    const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -192,7 +194,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                         isVPCOnlyLinode={
                           isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
                         }
-                        key={ipDisplay.address}
+                        key={`${ipDisplay.address}-${ipDisplay.type}`}
                         linodeId={linodeID}
                         readOnly={readOnly}
                       />
@@ -286,9 +288,51 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
+export const vpcConfigInterfaceToDisplayRows = (
+  configInterfaceWithVPC: Interface
+) => {
+  const ipDisplay: IPDisplay[] = [];
+
+  const { ip_ranges, ipv4 } = configInterfaceWithVPC;
+  const emptyProps = {
+    gateway: '',
+    rdns: '',
+    subnetMask: '',
+  };
+
+  if (ipv4?.vpc) {
+    ipDisplay.push({
+      address: ipv4.vpc,
+      type: 'IPv4 – VPC',
+      ...emptyProps,
+    });
+  }
+
+  if (ipv4?.nat_1_1) {
+    ipDisplay.push({
+      address: ipv4.nat_1_1,
+      type: 'VPC IPv4 – NAT',
+      ...emptyProps,
+    });
+  }
+
+  if (ip_ranges) {
+    ip_ranges.forEach((ip_range) => {
+      ipDisplay.push({
+        address: ip_range,
+        type: 'IPv4 – VPC – Range',
+        ...emptyProps,
+      });
+    });
+  }
+
+  return ipDisplay;
+};
+
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse
+  ipResponse?: LinodeIPsResponse,
+  configInterfaceWithVPC?: Interface
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
@@ -309,6 +353,14 @@ export const ipResponseToDisplayRows = (
 
   if (ipv6?.link_local) {
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
+  }
+
+  if (configInterfaceWithVPC) {
+    if (configInterfaceWithVPC.ipv4?.nat_1_1) {
+      // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
+      ipDisplay.shift();
+    }
+    ipDisplay.push(...vpcConfigInterfaceToDisplayRows(configInterfaceWithVPC));
   }
 
   // IPv6 ranges and pools to display in the networking table

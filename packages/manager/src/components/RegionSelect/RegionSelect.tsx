@@ -54,7 +54,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
+  } = useAccountAvailabilitiesQueryUnpaginated();
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
@@ -106,9 +106,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
-        getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(flags.dcGetWell) && Boolean(option.unavailable)
-        }
         isOptionEqualToValue={(
           option: RegionSelectOption,
           { value }: RegionSelectOption
@@ -165,6 +162,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
+        getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
