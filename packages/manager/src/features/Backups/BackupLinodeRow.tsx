@@ -32,6 +32,9 @@ export const BackupLinodeRow = (props: Props) => {
   const regionLabel =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
 
+  const hasInvalidPrice =
+    backupsMonthlyPrice === null || backupsMonthlyPrice === undefined;
+
   return (
     <TableRow key={`backup-linode-${linode.id}`}>
       <TableCell parentColumn="Label">
@@ -53,8 +56,8 @@ export const BackupLinodeRow = (props: Props) => {
       </TableCell>
       <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       <TableCell
-        errorCell={!Boolean(backupsMonthlyPrice)}
-        errorText={!backupsMonthlyPrice ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+        errorCell={hasInvalidPrice}
+        errorText={hasInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
         parentColumn="Price"
       >
         {`$${backupsMonthlyPrice?.toFixed(2) ?? UNKNOWN_PRICE}/mo`}

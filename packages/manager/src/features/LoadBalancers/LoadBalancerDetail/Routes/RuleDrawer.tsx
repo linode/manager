@@ -17,7 +17,7 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aclb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
@@ -224,13 +224,13 @@ export const RuleDrawer = (props: Props) => {
                       ? formik.errors.match_condition?.hostname
                       : undefined
                   }
-                  label="Hostname"
+                  label="Hostname Match"
                   labelTooltipText={ROUTE_COPY.Rule.Hostname}
                   name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   optional
-                  placeholder="www.example.com"
+                  placeholder="www.example.org"
                   value={formik.values.match_condition.hostname}
                 />
                 <Stack direction="row" spacing={2}>

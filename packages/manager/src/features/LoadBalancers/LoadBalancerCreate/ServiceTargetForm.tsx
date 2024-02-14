@@ -147,6 +147,9 @@ export const ServiceTargetForm = (props: Props) => {
         onChange={(_, { value }) => formik.setFieldValue('protocol', value)}
         options={protocolOptions}
       />
+      <Divider spacingBottom={16} spacingTop={16} />
+      <Typography variant="h3">Algorithm</Typography>
+      <Typography mt={1}>{SERVICE_TARGET_COPY.Headers.Algorithm}</Typography>
       <Autocomplete
         onChange={(e, selected) =>
           formik.setFieldValue('load_balancing_policy', selected.value)
@@ -163,9 +166,6 @@ export const ServiceTargetForm = (props: Props) => {
               <SelectedIcon visible={state.selected} />
             </li>
           );
-        }}
-        textFieldProps={{
-          labelTooltipText: SERVICE_TARGET_COPY.Tooltips.Algorithm,
         }}
         value={algorithmOptions.find(
           (option) => option.value === formik.values.load_balancing_policy
@@ -187,12 +187,9 @@ export const ServiceTargetForm = (props: Props) => {
       {formik.values.protocol === 'https' && (
         <>
           <Divider spacingBottom={12} spacingTop={24} />
-          <Stack alignItems="center" direction="row">
+          <Stack spacing={1}>
             <Typography variant="h3">Service Target CA Certificate</Typography>
-            <TooltipIcon
-              status="help"
-              text={SERVICE_TARGET_COPY.Tooltips.Certificate}
-            />
+            <Typography>{SERVICE_TARGET_COPY.Headers.Certificate}</Typography>
           </Stack>
           <Typography>
             <BetaChip
@@ -201,17 +198,14 @@ export const ServiceTargetForm = (props: Props) => {
             />
             Upload service target endpoint CA certificates after the load
             balancer is created and the protocol is HTTPS.{' '}
-            <Link to={ACLB_DOCS.Certificates}>Learn more.</Link>
+            <Link to={ACLB_DOCS.ServiceTargetCertificates}>Learn more.</Link>
           </Typography>
         </>
       )}
       <Divider spacingBottom={12} spacingTop={24} />
-      <Stack alignItems="center" direction="row">
+      <Stack spacing={1}>
         <Typography variant="h3">Health Checks</Typography>
-        <TooltipIcon
-          status="help"
-          text={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Description}
-        />
+        <Typography>{SERVICE_TARGET_COPY.Headers.HealthCheck}</Typography>
       </Stack>
       <RadioGroup
         onChange={(_, value) =>
@@ -315,12 +309,12 @@ export const ServiceTargetForm = (props: Props) => {
                 ? formik.errors.healthcheck?.host
                 : undefined
             }
-            label="Health Check Host"
+            label="Health Check Host Header"
             labelTooltipText={SERVICE_TARGET_COPY.Tooltips.Healthcheck.Host}
             name="healthcheck.host"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
-            placeholder="example.org"
+            placeholder="check.endpoint.org"
             value={formik.values.healthcheck.host}
           />
         </>

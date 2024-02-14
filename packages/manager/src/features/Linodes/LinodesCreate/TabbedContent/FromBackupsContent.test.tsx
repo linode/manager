@@ -1,7 +1,7 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { linodeFactory } from 'src/factories';
 
-import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CombinedProps, FromBackupsContent } from './FromBackupsContent';
 
@@ -21,35 +21,27 @@ const mockProps: CombinedProps = {
 };
 
 describe('FromBackupsContent', () => {
-  const component = shallow(<FromBackupsContent {...mockProps} />);
-
-  component.setState({ isGettingBackups: false }); // get rid of loading state
-
   it('should render Placeholder if no valid backups exist', () => {
-    expect(component.find('Placeholder')).toHaveLength(1);
+    const { getByText } = renderWithTheme(
+      <FromBackupsContent {...mockProps} />
+    );
+    expect(
+      getByText(
+        'You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view.'
+      )
+    ).toBeVisible();
   });
 
-  // @todo: Rewrite these tests with react-testing-library.
-  describe.skip('FromBackupsContent When Valid Backups Exist', () => {
-    beforeAll(async () => {
-      component.setState({ linodesWithBackups: LinodesWithBackups });
-      await component.update();
+  it('should render a linode select if a user has linodes with backups', () => {
+    const linodes = linodeFactory.buildList(1, {
+      backups: { enabled: true },
+      label: 'this-linode-should-show-up',
     });
 
-    it('should render SelectLinode panel', () => {
-      expect(
-        component.find(
-          'WithTheme(WithRenderGuard(WithStyles(SelectLinodePanel)))'
-        )
-      ).toHaveLength(1);
-    });
+    const { getByText } = renderWithTheme(
+      <FromBackupsContent {...mockProps} linodesData={linodes} />
+    );
 
-    it('should render SelectBackup panel', () => {
-      expect(
-        component.find(
-          'WithTheme(WithRenderGuard(WithStyles(SelectBackupPanel)))'
-        )
-      ).toHaveLength(1);
-    });
+    expect(getByText('this-linode-should-show-up')).toBeVisible();
   });
 });

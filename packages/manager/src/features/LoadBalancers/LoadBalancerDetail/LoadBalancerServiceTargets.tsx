@@ -20,13 +20,15 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
+import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aclb/serviceTargets';
 
 import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 import { ServiceTargetDrawer } from './ServiceTargets/ServiceTargetDrawer';
 import { ServiceTargetRow } from './ServiceTargets/ServiceTargetRow';
 
 import type { Filter } from '@linode/api-v4';
+import { Typography } from 'src/components/Typography';
+import { SERVICE_TARGET_COPY } from './ServiceTargets/constants';
 
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
 
@@ -89,14 +91,13 @@ export const LoadBalancerServiceTargets = () => {
   }
 
   return (
-    <>
+    <Stack mt={2} spacing={2}>
+      <Typography>{SERVICE_TARGET_COPY.Description}</Typography>
       <Stack
         direction="row"
         flexWrap="wrap"
         gap={2}
         justifyContent="space-between"
-        mb={2}
-        mt={1.5}
       >
         <TextField
           InputProps={{
@@ -211,6 +212,6 @@ export const LoadBalancerServiceTargets = () => {
         open={isDeleteDialogOpen}
         serviceTarget={selectedServiceTarget}
       />
-    </>
+    </Stack>
   );
 };

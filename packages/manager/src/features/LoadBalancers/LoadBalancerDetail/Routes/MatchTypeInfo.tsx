@@ -15,8 +15,13 @@ export const MatchTypeInfo = () => {
       title: 'HTTP Method',
     },
     {
-      description: 'Match is on a network path.',
-      title: 'Path',
+      description: 'Match is on the prefix of a network path.',
+      title: 'Path Prefix',
+    },
+    {
+      description:
+        'Match is on a path using regular expression (RE2 syntax). Not applicable for query string parameters.',
+      title: 'Path Regex',
     },
     {
       description:

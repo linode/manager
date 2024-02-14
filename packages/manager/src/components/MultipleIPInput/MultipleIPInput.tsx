@@ -7,7 +7,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { InputLabel } from 'src/components/InputLabel';
+import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -56,9 +58,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props {
+  buttonText?: string;
   className?: string;
   error?: string;
   forDatabaseAccessControls?: boolean;
+  forVPCIPv4Ranges?: boolean;
   helperText?: string;
   inputProps?: InputBaseProps;
   ips: ExtendedIP[];
@@ -72,9 +76,11 @@ interface Props {
 
 export const MultipleIPInput = React.memo((props: Props) => {
   const {
+    buttonText,
     className,
     error,
     forDatabaseAccessControls,
+    forVPCIPv4Ranges,
     helperText,
     ips,
     onBlur,
@@ -122,6 +128,21 @@ export const MultipleIPInput = React.memo((props: Props) => {
     return null;
   }
 
+  const addIPButton = forVPCIPv4Ranges ? (
+    <StyledLinkButtonBox>
+      <LinkButton onClick={addNewInput}>{buttonText}</LinkButton>
+    </StyledLinkButtonBox>
+  ) : (
+    <Button
+      buttonType="secondary"
+      className={classes.addIP}
+      compactX
+      onClick={addNewInput}
+    >
+      {buttonText ?? 'Add an IP'}
+    </Button>
+  );
+
   return (
     <div className={cx(classes.root, className)}>
       {tooltip ? (
@@ -156,6 +177,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
           direction="row"
           justifyContent="center"
           key={`domain-transfer-ip-${idx}`}
+          maxWidth={forVPCIPv4Ranges ? '415px' : undefined}
           spacing={2}
         >
           <Grid xs={11}>
@@ -177,27 +199,22 @@ export const MultipleIPInput = React.memo((props: Props) => {
               value={thisIP.address}
             />
           </Grid>
-          {/** Don't show the button for the first input since it won't do anything, unless this component is used in DBaaS */}
+          {/** Don't show the button for the first input since it won't do anything, unless this component is
+           * used in DBaaS or for Linode VPC interfaces
+           */}
           <Grid xs={1}>
-            {idx > 0 || forDatabaseAccessControls ? (
+            {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}
                 onClick={() => removeInput(idx)}
               >
                 <Close data-testid={`delete-ip-${idx}`} />
               </Button>
-            ) : null}
+            )}
           </Grid>
         </Grid>
       ))}
-      <Button
-        buttonType="secondary"
-        className={classes.addIP}
-        compactX
-        onClick={addNewInput}
-      >
-        Add an IP
-      </Button>
+      {addIPButton}
     </div>
   );
 });

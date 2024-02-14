@@ -7,6 +7,8 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 
+import { CERTIFICATES_COPY } from './constants';
+
 const Certificates = React.lazy(() =>
   import('./Certificates').then((module) => ({
     default: module.Certificates,
@@ -34,10 +36,7 @@ export const LoadBalancerCertificates = () => {
 
   return (
     <Stack paddingTop={1} spacing={1}>
-      <Typography>
-        Upload certificates to your Load Balancer for use across your
-        Configurations and Service Targets.
-      </Typography>
+      <Typography>{CERTIFICATES_COPY.Description}</Typography>
       <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={() => null}>
         <TabLinkList
           tabs={tabs.map((t) => ({ ...t, routeName: `${url}/${t.path}` }))}

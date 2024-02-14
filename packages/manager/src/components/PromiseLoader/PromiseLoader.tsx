@@ -16,10 +16,11 @@ export interface PromiseLoaderResponse<T> {
   response: T;
 }
 
-/* tslint:disable */
+/**
+ * @deprecated Please don't use this. Use something like React Query instead.
+ */
 export default function preload<P>(requests: RequestMap<P>) {
   return function (Component: React.ComponentType<P>) {
-    /* tslint:enable */
     return class LoadedComponent extends React.Component<P, State> {
       componentDidMount() {
         this.mounted = true;

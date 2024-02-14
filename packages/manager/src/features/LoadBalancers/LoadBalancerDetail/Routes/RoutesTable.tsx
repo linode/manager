@@ -16,7 +16,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
+import { useLoadBalancerRoutesQuery } from 'src/queries/aclb/routes';
 
 import { RulesTable } from '../RulesTable';
 import { DeleteRouteDialog } from './DeleteRouteDialog';

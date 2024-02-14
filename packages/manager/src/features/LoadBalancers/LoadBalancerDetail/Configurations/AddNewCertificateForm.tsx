@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
+import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aclb/certificates';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import {
@@ -111,10 +111,12 @@ export const AddNewCertificateForm = (props: AddCertificateDrawerProps) => {
       />
       <TextField
         errorText={formik.touched.hostname ? formik.errors.hostname : undefined}
-        label="Host Header"
+        label="Server Name Indication (SNI) Hostname"
+        labelTooltipText="The request host header sent by the client. This host header tells the load balancer which certificate to use when responding back to the client."
         name="hostname"
         onBlur={formik.handleBlur}
         onChange={formik.handleChange}
+        placeholder="www.example.org"
         value={formik.values.hostname}
       />
       <ActionsPanel

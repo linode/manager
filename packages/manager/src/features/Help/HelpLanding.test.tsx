@@ -1,19 +1,26 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HelpLanding } from './HelpLanding';
 
 describe('Help Landing', () => {
-  const component = shallow(<HelpLanding />);
-  it.skip('should render search panel', () => {
-    expect(component.find('SearchPanel')).toHaveLength(1);
+  it('should render search panel', () => {
+    const { getByText } = renderWithTheme(<HelpLanding />);
+
+    expect(getByText('What can we help you with?')).toBeVisible();
   });
 
   it('should render popular posts panel', () => {
-    expect(component.find('PopularPosts')).toHaveLength(1);
+    const { getByText } = renderWithTheme(<HelpLanding />);
+
+    expect(getByText('Most Popular Documentation:')).toBeVisible();
+    expect(getByText('Most Popular Community Posts:')).toBeVisible();
   });
 
   it('should render other ways panel', () => {
-    expect(component.find('OtherWays')).toHaveLength(1);
+    const { getByText } = renderWithTheme(<HelpLanding />);
+
+    expect(getByText('Other Ways to Get Help')).toBeVisible();
   });
 });

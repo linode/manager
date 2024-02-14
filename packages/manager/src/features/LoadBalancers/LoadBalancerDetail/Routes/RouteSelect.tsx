@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { useLoadBalancerRoutesInfiniteQuery } from 'src/queries/aglb/routes';
+import { useLoadBalancerRoutesInfiniteQuery } from 'src/queries/aclb/routes';
 import { pluralize } from 'src/utilities/pluralize';
 
 import type { Filter, Route } from '@linode/api-v4';

@@ -1,12 +1,13 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { LinkProps } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 
-type ResourcesMoreLinkProps = LinkProps & {
+import type { LinkProps } from 'src/components/Link';
+
+interface ResourcesMoreLinkProps extends LinkProps {
   external?: boolean;
-};
+}
 
 const StyledMoreLink = styled(Link)<ResourcesMoreLinkProps>(({ ...props }) => ({
   alignItems: props.external ? 'baseline' : 'center',
