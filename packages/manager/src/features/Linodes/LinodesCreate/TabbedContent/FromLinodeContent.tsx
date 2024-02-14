@@ -55,9 +55,9 @@ export const FromLinodeContent = (props: CombinedProps) => {
   };
 
   /** Set the Linode ID and the disk size and reset the plan selection */
-  const handleSelectLinode = (linodeID: number) => {
+  const handleSelectLinode = (linodeId: number) => {
     const linode = props.linodesData.find(
-      (eachLinode) => eachLinode.id === linodeID
+      (eachLinode) => eachLinode.id === linodeId
     );
 
     if (linode) {

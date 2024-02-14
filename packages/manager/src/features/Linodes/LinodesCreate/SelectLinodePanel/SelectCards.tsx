@@ -9,7 +9,7 @@ export const SelectCards = ({
   disabled,
   handleSelection,
   orderBy: { data: linodes },
-  selectedLinodeID,
+  selectedLinodeId,
 }: RenderLinodeProps) => (
   <Grid container spacing={2}>
     {linodes.map((linode) => (
@@ -17,7 +17,7 @@ export const SelectCards = ({
         onClick={() => {
           handleSelection(linode.id, linode.type, linode.specs.disk);
         }}
-        checked={linode.id === Number(selectedLinodeID)}
+        checked={linode.id === Number(selectedLinodeId)}
         disabled={disabled}
         heading={linode.heading}
         key={`selection-card-${linode.id}`}

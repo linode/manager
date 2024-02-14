@@ -13,7 +13,7 @@ export const SelectTable = ({
   handlePowerOff,
   handleSelection,
   orderBy,
-  selectedLinodeID,
+  selectedLinodeId,
 }: RenderLinodeProps) => (
   <Table aria-label="Linode" size="small">
     <TableHead style={{ fontSize: '.875rem' }}>
@@ -30,7 +30,7 @@ export const SelectTable = ({
             handlePowerOff={() => handlePowerOff(linode.id)}
             key={linode.id}
             linodeId={linode.id}
-            selected={Number(selectedLinodeID) === linode.id}
+            selected={Number(selectedLinodeId) === linode.id}
           />
         ))
       ) : (

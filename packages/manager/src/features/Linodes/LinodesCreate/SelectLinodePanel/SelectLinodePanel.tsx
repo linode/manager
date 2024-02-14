@@ -66,7 +66,7 @@ export const SelectLinodePanel = (props: Props) => {
   >(undefined);
 
   const [powerOffLinode, setPowerOffLinode] = React.useState<
-    { linodeID: number } | false
+    { linodeId: number } | false
   >(false);
 
   // Capture the selected linode when this component mounts,
@@ -159,8 +159,8 @@ export const SelectLinodePanel = (props: Props) => {
                 )}
                 <StyledBox>
                   <SelectComponent
-                    handlePowerOff={(linodeID) =>
-                      setPowerOffLinode({ linodeID })
+                    handlePowerOff={(linodeId) =>
+                      setPowerOffLinode({ linodeId })
                     }
                     orderBy={{
                       data: linodesData,
@@ -170,7 +170,7 @@ export const SelectLinodePanel = (props: Props) => {
                     }}
                     disabled={disabled ?? false}
                     handleSelection={handleSelection}
-                    selectedLinodeID={selectedLinodeID}
+                    selectedLinodeId={selectedLinodeID}
                   />
                 </StyledBox>
               </StyledPaper>
@@ -190,7 +190,7 @@ export const SelectLinodePanel = (props: Props) => {
         <PowerActionsDialog
           action={'Power Off'}
           isOpen={!!powerOffLinode}
-          linodeId={powerOffLinode.linodeID}
+          linodeId={powerOffLinode.linodeId}
           manuallyUpdateConfigs={true}
           onClose={() => setPowerOffLinode(false)}
         />
@@ -201,10 +201,10 @@ export const SelectLinodePanel = (props: Props) => {
 
 export interface RenderLinodeProps {
   disabled: boolean;
-  handlePowerOff: (linodeID: number) => void;
+  handlePowerOff: (linodeId: number) => void;
   handleSelection: Props['handleSelection'];
   orderBy: OrderByProps<ExtendedLinode>;
-  selectedLinodeID: number | undefined;
+  selectedLinodeId: number | undefined;
 }
 
 const StyledBox = styled(Box, {
