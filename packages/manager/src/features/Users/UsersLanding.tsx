@@ -19,6 +19,8 @@ import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
+import type { Filter } from '@linode/api-v4';
+
 export const UsersLanding = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -31,16 +33,21 @@ export const UsersLanding = () => {
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
 
+  const usersFilter: Filter = {
+    ['+order']: order.order,
+    ['+order_by']: order.orderBy,
+  };
+
+  if (flags.parentChildAccountAccess) {
+    usersFilter['user_type'] = { '+neq': 'proxy' };
+  }
+
   const { data: users, error, isLoading, refetch } = useAccountUsers(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    {
-      '+order': order.order,
-      '+order_by': order.orderBy,
-      user_type: { '+neq': 'proxy' },
-    }
+    usersFilter
   );
 
   const {
@@ -49,9 +56,7 @@ export const UsersLanding = () => {
     isLoading: loadingProxyUser,
   } = useAccountUsers(
     {},
-    {
-      user_type: 'proxy',
-    }
+    flags.parentChildAccountAccess ? { user_type: 'proxy' } : {}
   );
 
   const isRestrictedUser = profile?.restricted;
