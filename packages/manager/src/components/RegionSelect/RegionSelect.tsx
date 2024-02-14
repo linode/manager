@@ -147,7 +147,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                   icon={<EdgeServer />}
                   status="other"
                   sxTooltipIcon={sxEdgeIcon}
-                  text="This region is an edge server."
+                  text="This region is an Edge server."
                 />
               ),
             required,
