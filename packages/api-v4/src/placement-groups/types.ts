@@ -12,7 +12,7 @@ export interface PlacementGroup {
   label: string;
   region: Region['id'];
   affinity_type: AffinityType;
-  compliant: boolean;
+  is_compliant: boolean;
   linode_ids: number[];
 }
 

@@ -29,7 +29,7 @@ export const PlacementGroupsSummary = (props: Props) => {
 
   return (
     <>
-      {!placementGroup.compliant && (
+      {!placementGroup.is_compliant && (
         <Notice spacingBottom={20} spacingTop={24} variant="warning">
           <Typography fontFamily={theme.font.bold}>
             {`Placement Group ${placementGroup.label} (${

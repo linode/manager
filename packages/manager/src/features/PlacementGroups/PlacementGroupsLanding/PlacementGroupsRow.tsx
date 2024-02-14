@@ -29,7 +29,7 @@ export const PlacementGroupsRow = React.memo(
     handleRenamePlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
-    const { affinity_type, compliant, id, label } = placementGroup;
+    const { affinity_type, id, is_compliant, label } = placementGroup;
     const { assignedLinodes, linodesCount, region } = usePlacementGroupData({
       placementGroup,
     });
@@ -57,7 +57,7 @@ export const PlacementGroupsRow = React.memo(
           >
             {label} ({AFFINITY_TYPES[affinity_type]})
           </Link>
-          {!compliant && (
+          {!is_compliant && (
             <Typography component="span" sx={{ whiteSpace: 'nowrap' }}>
               <StyledWarningIcon />
               Non-compliant

@@ -9,8 +9,8 @@ import type {
 
 export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   affinity_type: 'anti_affinity',
-  compliant: Factory.each(() => pickRandom([true, false])),
   id: Factory.each((id) => id),
+  is_compliant: Factory.each(() => pickRandom([true, false])),
   label: Factory.each((id) => `pg-${id}`),
   linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
   region: 'us-east',
