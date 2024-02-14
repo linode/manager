@@ -751,6 +751,28 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       }
     }
 
+    if (payload.placement_group) {
+      const placementGroupError =
+        payload.placement_group.linode_ids.length >=
+        payload.placement_group.capacity;
+      if (placementGroupError) {
+        this.setState(
+          {
+            errors: [
+              {
+                field: 'placement_group',
+                reason: `${payload.placement_group.label} (${payload.placement_group.affinity_type}) doesn't have any capacity for this Linode.`,
+              },
+            ],
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+        return;
+      }
+    }
+
     // Validation for VPC fields
     if (
       this.state.selectedVPCId !== undefined &&

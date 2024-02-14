@@ -164,6 +164,7 @@ const errorMap = [
   'interfaces[1].ipam_address',
   'interfaces[0].subnet_id',
   'ipv4.vpc',
+  'placement_group',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -654,6 +655,7 @@ export class LinodeCreate extends React.PureComponent<
                 : undefined
             }
             data-qa-label-and-tags-panel
+            error={hasErrorFor.placement_group}
             regions={regionsData!}
           />
           {/* Hide for backups and clone */}
@@ -855,6 +857,8 @@ export class LinodeCreate extends React.PureComponent<
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
       type: this.props.selectedTypeID,
+
+      placement_group: this.props.placementGroupSelection,
     };
 
     if (

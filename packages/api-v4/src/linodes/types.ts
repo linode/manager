@@ -357,6 +357,7 @@ export interface CreateLinodeRequest {
   interfaces?: InterfacePayload[];
   metadata?: UserData;
   firewall_id?: number;
+  placement_group?: PlacementGroup;
 }
 
 export type RescueRequestObject = Pick<

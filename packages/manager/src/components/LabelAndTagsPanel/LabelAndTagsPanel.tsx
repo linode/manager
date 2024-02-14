@@ -31,6 +31,9 @@ interface LabelAndTagsProps {
   tagsInputProps?: TagsInputProps;
 }
 
+{
+  /* TODO VM_Placement: Consider renaming this to DetailsPanel */
+}
 export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
   const theme = useTheme();
   const flags = useFlags();
@@ -51,6 +54,13 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       }}
       data-qa-label-header
     >
+      <Typography
+        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+        variant="h2"
+      >
+        Details
+      </Typography>
+
       {error && <Notice text={error} variant="error" />}
       <TextField
         {...(labelFieldProps || {
