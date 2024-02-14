@@ -9,8 +9,16 @@ import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useDeletePlacementGroup } from 'src/queries/placementGroups';
-import { usePlacementGroupQuery } from 'src/queries/placementGroups';
+import {
+  useDeletePlacementGroup,
+  usePlacementGroupQuery,
+  useUnassignLinodesFromPlacementGroup,
+} from 'src/queries/placementGroups';
+
+import type {
+  Linode,
+  UnassignLinodesFromPlacementGroupPayload,
+} from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -35,17 +43,31 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     }
   );
   const {
-    error,
+    error: deletePlacementError,
     isLoading,
     mutateAsync: deletePlacementGroup,
     reset,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
+  const {
+    error: unassignLinodeError,
+    mutateAsync: unassignLinodes,
+  } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
+
+  const error = deletePlacementError ?? unassignLinodeError;
 
   React.useEffect(() => {
     if (open) {
       reset();
     }
   }, [open, reset]);
+
+  const handleUnassignLinode = async (linode: Linode) => {
+    const payload: UnassignLinodesFromPlacementGroupPayload = {
+      linodes: [linode.id],
+    };
+
+    await unassignLinodes(payload);
+  };
 
   const onDelete = async () => {
     await deletePlacementGroup();
@@ -96,7 +118,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             '& > li': {
               display: 'list-item',
               fontSize: '0.875rem',
-              pb: theme.spacing(),
+              pb: 0,
               pl: 0,
             },
             listStyle: 'disc',
@@ -116,7 +138,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         headerText={`Linodes assigned to ${placementGroupLabel}`}
         maxWidth={540}
         noDataText="No Linodes assigned to this Placement Group."
-        onRemove={() => null}
+        onRemove={handleUnassignLinode}
         removeButtonText="Unassign"
         selectionData={assignedLinodes ?? []}
         sx={{ mb: 3, mt: 1 }}
