@@ -8,7 +8,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import {
   useDeletePlacementGroup,
   usePlacementGroupQuery,
@@ -27,24 +27,18 @@ interface Props {
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const { onClose, open } = props;
-  const { placementGroupId } = useParams<{ placementGroupId: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
-    +placementGroupId
-  );
+  const { id } = useParams<{ id: string }>();
+  const { data: selectedPlacementGroup } = usePlacementGroupQuery(+id);
   const {
-    data: assignedLinodes,
-    error: assignedLinodesError,
-  } = useAllLinodesQuery(
-    {},
-    {
-      '+or': selectedPlacementGroup?.linode_ids.map((id) => ({
-        id,
-      })),
-    }
-  );
+    assignedLinodes,
+    isLoading: placementGroupDataLoading,
+    linodesCount: assignedLinodesCount,
+  } = usePlacementGroupData({
+    placementGroup: selectedPlacementGroup,
+  });
   const {
     error: deletePlacementError,
-    isLoading,
+    isLoading: deletePlacementLoading,
     mutateAsync: deletePlacementGroup,
     reset: resetDeletePlacementGroup,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
@@ -54,8 +48,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
 
-  const error =
-    deletePlacementError || unassignLinodeError || assignedLinodesError;
+  const error = deletePlacementError || unassignLinodeError;
 
   React.useEffect(() => {
     if (open) {
@@ -83,6 +76,8 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       })`
     : 'Placement Group';
 
+  const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
+
   return (
     <TypeToConfirmDialog
       entity={{
@@ -96,9 +91,12 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           ? [{ reason: 'Placement Group not found.' }]
           : undefined
       }
-      disabled={!selectedPlacementGroup}
+      inputProps={{
+        disabled: isDisabled,
+      }}
+      disabled={isDisabled}
       label="Placement Group"
-      loading={isLoading}
+      loading={placementGroupDataLoading || deletePlacementLoading}
       onClick={onDelete}
       onClose={onClose}
       open={open}
@@ -130,7 +128,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           })}
         >
           <ListItem>
-            deleting a placement group is permanent and can’t be undone.
+            deleting a placement group is permanent and cannot be undone.
           </ListItem>
           <ListItem>
             You need to unassign all Linodes before deleting a placement group.
@@ -139,6 +137,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       </Notice>
       <RemovableSelectionsList
         headerText={`Linodes assigned to ${placementGroupLabel}`}
+        id="assigned-linodes"
         maxWidth={540}
         noDataText="No Linodes assigned to this Placement Group."
         onRemove={handleUnassignLinode}

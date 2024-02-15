@@ -17,7 +17,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as LINODES_QUERY_KEY } from './linodes/linodes';
 import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
 import type {
@@ -119,20 +118,15 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   >({
     mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
+      // Invalidate paginated placement groups
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+
       // Invalidate placement group linodes
       queryClient.invalidateQueries([
         queryKey,
         'placement-group',
         placementGroupId,
-        'linodes',
-      ]);
-
-      // Invalidate linode placement group data
-      queryClient.invalidateQueries([
-        LINODES_QUERY_KEY,
-        'linode',
-        updatedPlacementGroup.linode_ids[0],
-        'placement_groups',
+        'linode_ids',
       ]);
 
       // Set the updated placement group
@@ -156,7 +150,17 @@ export const useUnassignLinodesFromPlacementGroup = (
     mutationFn: (data) =>
       unassignLinodesFromPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
+      // Invalidate paginated placement groups
       queryClient.invalidateQueries([queryKey, 'paginated']);
+
+      // Invalidate placement group linodes
+      queryClient.invalidateQueries([
+        queryKey,
+        'placement-group',
+        placementGroupId,
+      ]);
+
+      // Set the updated placement group
       queryClient.setQueryData(
         [queryKey, 'placement-group', placementGroupId],
         updatedPlacementGroup
