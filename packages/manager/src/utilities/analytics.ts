@@ -435,6 +435,37 @@ export const sendLinodeConfigurationDocsEvent = (label: string) => {
   });
 };
 
+// AccountLanding.tsx
+// UserMenu.tsx
+export const sendSwitchAccountEvent = (
+  label: 'Account Landing' | 'User Menu'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Switch Accounts Flow',
+    label,
+  });
+};
+
+// SwitchAccountDrawer.tsx
+export const sendSwitchToParentAccountEvent = () => {
+  sendEvent({
+    action: 'Click:link button',
+    category: 'Switch Accounts Flow - To Parent Account',
+  });
+};
+
+// SwitchAccountSessionDialog.tsx
+export const sendSwitchAccountSessionExpiryEvent = (
+  label: 'Close' | 'Log In'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Switch Accounts Flow - Session Expiration',
+    label,
+  });
+};
+
 // LinodeDetailHeader.tsx
 export const sendEditBreadcrumbEvent = () => {
   sendEvent({

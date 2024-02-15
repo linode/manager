@@ -13,6 +13,7 @@ import {
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 import { getStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
@@ -187,8 +188,11 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              onClick={() => {
+                sendSwitchToParentAccountEvent();
+                handleSwitchToParentAccount();
+              }}
               aria-label="parent-account-link"
-              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>
