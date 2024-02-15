@@ -17,6 +17,7 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
   resolvers: resolverFactory.build(),
+  site_type: 'core',
   status: 'ok',
 });
 
@@ -36,6 +37,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
     id: 'id-cgk',
     label: 'Jakarta, ID',
     resolvers: resolverFactory.build(),
+    site_type: 'core',
     status: 'ok',
   }
 );

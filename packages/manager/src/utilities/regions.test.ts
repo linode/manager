@@ -11,6 +11,7 @@ describe('getRegionsByRegionId', () => {
         id: 'us-east',
         label: 'Newark, NJ',
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
       {
@@ -19,6 +20,7 @@ describe('getRegionsByRegionId', () => {
         id: 'us-southeast',
         label: 'Atlanta, GA',
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
     ];
@@ -30,6 +32,7 @@ describe('getRegionsByRegionId', () => {
         id: 'us-east',
         label: 'Newark, NJ',
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
       'us-southeast': {
@@ -38,6 +41,7 @@ describe('getRegionsByRegionId', () => {
         id: 'us-southeast',
         label: 'Atlanta, GA',
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
     };
