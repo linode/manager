@@ -76,8 +76,10 @@ const UserSSHKeyPanel = (props: Props) => {
     isLoading: isAccountUsersLoading,
   } = useAccountUsers(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      params: {
+        page: pagination.page,
+        page_size: pagination.pageSize,
+      },
     }
     // { ssh_keys: { '+neq': null } }
   );
