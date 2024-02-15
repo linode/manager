@@ -44,6 +44,7 @@ interface Props extends ChartProps {
   rangeSelection: string;
   stats?: Stats;
   timezone: string;
+  xAxisTickFormat: string;
 }
 
 interface NetworkMetrics {
@@ -70,7 +71,7 @@ const _getMetrics = (data: NetworkStats) => {
 };
 
 export const NetworkGraphs = (props: Props) => {
-  const { rangeSelection, stats, ...rest } = props;
+  const { rangeSelection, stats, xAxisTickFormat, ...rest } = props;
 
   const theme = useTheme();
   const flags = useFlags();
@@ -137,6 +138,7 @@ export const NetworkGraphs = (props: Props) => {
     rangeSelection,
     theme,
     timezone: props.timezone,
+    xAxisTickFormat,
   };
 
   return (
@@ -187,6 +189,7 @@ interface GraphProps {
   timezone: string;
   totalTraffic: TotalTrafficProps;
   unit: string;
+  xAxisTickFormat: string;
 }
 
 const Graph = (props: GraphProps) => {
@@ -199,6 +202,7 @@ const Graph = (props: GraphProps) => {
     theme,
     timezone,
     unit,
+    xAxisTickFormat,
   } = props;
 
   const flags = useFlags();
@@ -286,7 +290,7 @@ const Graph = (props: GraphProps) => {
             },
           ]}
           xAxis={{
-            tickFormat: 'hh a',
+            tickFormat: xAxisTickFormat,
             tickGap: 60,
           }}
           ariaLabel={ariaLabel}

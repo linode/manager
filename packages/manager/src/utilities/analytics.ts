@@ -465,3 +465,24 @@ export const sendSwitchAccountSessionExpiryEvent = (
     label,
   });
 };
+
+// LinodeDetailHeader.tsx
+export const sendEditBreadcrumbEvent = () => {
+  sendEvent({
+    action: 'Click:pencil icon',
+    category: 'Breadcrumb',
+    label: 'Edit Breadcrumb',
+  });
+};
+
+// LinodeDetailHeader.tsx
+// LinodeSettingsLabelPanel.tsx
+export const sendUpdateLinodeLabelEvent = (
+  label: 'Breadcrumb' | 'Settings'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Linode Label',
+    label: `Update linode label from ${label}`,
+  });
+};

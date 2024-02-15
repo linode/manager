@@ -108,7 +108,7 @@ export const PlacementGroupsDetail = () => {
       />
       <Tabs
         index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(i) => history.push(tabs[i].routeName)}
+        onChange={(i: number) => history.push(tabs[i].routeName)}
       >
         <TabLinkList tabs={tabs} />
         <TabPanels>
