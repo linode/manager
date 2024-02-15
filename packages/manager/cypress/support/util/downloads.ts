@@ -22,3 +22,13 @@ export const getDownloadFilepath = (filename: string) => {
 export const readDownload = (filename: string) => {
   return cy.readFile(getDownloadFilepath(filename));
 };
+
+/**
+ * Deletes all downloaded files under the download directory.
+ *
+ *
+ * @returns Cypress chainable.
+ */
+export const cleanUpDownloadFiles = () => {
+  return cy.task('cleanUpFolder', downloadsPath);
+};
