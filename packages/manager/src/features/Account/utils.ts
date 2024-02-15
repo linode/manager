@@ -10,10 +10,22 @@ import type {
 } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
-type ActionType = 'create' | 'delete' | 'edit' | 'view';
+export type ActionType =
+  | 'clone'
+  | 'create'
+  | 'delete'
+  | 'edit'
+  | 'migrate'
+  | 'modify'
+  | 'reboot'
+  | 'rebuild'
+  | 'rescue'
+  | 'resize'
+  | 'view';
 
 interface GetRestrictedResourceText {
   action?: ActionType;
+  includeContactMessage?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
 }
@@ -43,6 +55,7 @@ export type RestrictedGlobalGrantType =
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
+  includeContactMessage = true,
   isSingular = true,
   resourceType,
 }: GetRestrictedResourceText): string => {
@@ -50,7 +63,14 @@ export const getRestrictedResourceText = ({
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  return `You don't have permissions to ${action} ${resource}. Please contact your account administrator to request the necessary permissions.`;
+  let message = `You don't have permissions to ${action} ${resource}.`;
+
+  if (includeContactMessage) {
+    message +=
+      ' Please contact your account administrator to request the necessary permissions.';
+  }
+
+  return message;
 };
 
 /**
