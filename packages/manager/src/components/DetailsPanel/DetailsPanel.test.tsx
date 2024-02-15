@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LabelAndTagsPanel } from './LabelAndTagsPanel';
+import { DetailsPanel } from './DetailsPanel';
 
 const onLabelChange = vi.fn();
 const onTagsChange = vi.fn();
@@ -12,7 +12,7 @@ const TAG_LABEL = 'Custom Label';
 describe('Tags list', () => {
   it('should render tags input if tagsInputProps are specified', () => {
     const { getByLabelText, queryByText } = renderWithTheme(
-      <LabelAndTagsPanel
+      <DetailsPanel
         labelFieldProps={{
           label: INPUT_LABEL,
           onChange: onLabelChange,
@@ -33,7 +33,7 @@ describe('Tags list', () => {
 
   it('should render error text if errorText or tagError is specified', () => {
     const { getByText } = renderWithTheme(
-      <LabelAndTagsPanel
+      <DetailsPanel
         labelFieldProps={{
           errorText: 'Your label is rude!',
           label: INPUT_LABEL,
@@ -58,7 +58,7 @@ describe('Tags list', () => {
 
   it('should NOT render tags input if tagsInputProps are NOT specified', () => {
     const { queryByLabelText } = renderWithTheme(
-      <LabelAndTagsPanel
+      <DetailsPanel
         labelFieldProps={{
           label: INPUT_LABEL,
           onChange: onLabelChange,

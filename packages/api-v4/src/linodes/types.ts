@@ -24,8 +24,10 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
+  // While the API returns an array of PlacementGroup objects for future proofing,
+  // we only support one PlacementGroup per Linode at this time, hence the tuple.
   placement_groups:
-    | [Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>] // While the API returns an array of PlacementGroup objects for future proofing, we only support one PlacementGroup per Linode at this time, hence the tuple.
+    | [Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>]
     | [];
   type: string | null;
   status: LinodeStatus;
@@ -338,6 +340,12 @@ export interface UserData {
   user_data: string | null;
 }
 
+// Should we use `CreatePlacementGroupPayload` instead?
+export interface CreateLinodePlacementGroupPayload {
+  id?: number | null;
+  strict?: boolean | null;
+}
+
 export interface CreateLinodeRequest {
   type?: string;
   region?: string;
@@ -357,7 +365,7 @@ export interface CreateLinodeRequest {
   interfaces?: InterfacePayload[];
   metadata?: UserData;
   firewall_id?: number;
-  placement_group?: PlacementGroup;
+  placement_group?: CreateLinodePlacementGroupPayload;
 }
 
 export type RescueRequestObject = Pick<

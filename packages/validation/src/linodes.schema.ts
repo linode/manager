@@ -3,7 +3,6 @@ import { array, boolean, lazy, mixed, number, object, string } from 'yup';
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
 import { vpcsValidateIP } from './vpcs.schema';
-// import { createPlacementGroupSchema } from './placement-groups.schema';
 
 // Functions for test validations
 const validateIP = (ipAddress?: string | null) => {
@@ -261,6 +260,11 @@ const MetadataSchema = object({
   user_data: string().notRequired().nullable(true),
 });
 
+const PlacementGroupPayloadSchema = object({
+  id: number().notRequired().nullable(true),
+  strict: boolean().notRequired().nullable(true),
+});
+
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
@@ -295,8 +299,7 @@ export const CreateLinodeSchema = object({
   interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().notRequired(),
-  //  TODO VM_Placement: Determine how to implement validation schema for placement groups at capacity
-  // placement_group: createPlacementGroupSchema,
+  placement_group: PlacementGroupPayloadSchema,
 });
 
 const alerts = object({

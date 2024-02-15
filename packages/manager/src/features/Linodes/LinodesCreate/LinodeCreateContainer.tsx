@@ -54,6 +54,7 @@ import {
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   accountAgreementsQueryKey,
   reportAgreementSigningError,
@@ -68,11 +69,11 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -86,6 +87,7 @@ import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
+  CreateLinodePlacementGroupPayload,
   CreateLinodeRequest,
   Interface,
   Linode,
@@ -109,6 +111,7 @@ interface State {
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
+  placementGroupPayload?: CreateLinodePlacementGroupPayload;
   placementGroupSelection?: PlacementGroup;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
@@ -160,6 +163,7 @@ const defaultState: State = {
   errors: undefined,
   formIsSubmitting: false,
   password: '',
+  placementGroupPayload: undefined,
   placementGroupSelection: undefined,
   privateIPEnabled: false,
   selectedBackupID: undefined,
@@ -609,6 +613,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setPassword = (password: string) => this.setState({ password });
 
+  setPlacementGroupPayload = (
+    placementGroupPayload: CreateLinodePlacementGroupPayload
+  ) => {
+    this.setState({ placementGroupPayload });
+  };
+
   setPlacementGroupSelection = (placementGroupSelection: PlacementGroup) => {
     this.setState({ placementGroupSelection });
   };
@@ -752,16 +762,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
 
     if (payload.placement_group) {
-      const placementGroupError =
-        payload.placement_group.linode_ids.length >=
-        payload.placement_group.capacity;
-      if (placementGroupError) {
+      const error = hasPlacementGroupReachedCapacity({
+        placementGroup: this.state.placementGroupSelection!,
+        region: this.props.regionsData.find(
+          (r) => r.id === this.state.selectedRegionID
+        )!,
+      });
+      if (error) {
         this.setState(
           {
             errors: [
               {
                 field: 'placement_group',
-                reason: `${payload.placement_group.label} (${payload.placement_group.affinity_type}) doesn't have any capacity for this Linode.`,
+                reason: `${this.state.placementGroupSelection?.label} (${this.state.placementGroupSelection?.affinity_type}) doesn't have any capacity for this Linode.`,
               },
             ],
           },
