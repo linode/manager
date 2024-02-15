@@ -89,4 +89,15 @@ describe('Removable Selections List', () => {
     const removeButton = screen.queryByLabelText(`remove my-linode-1`);
     expect(removeButton).not.toBeInTheDocument();
   });
+
+  it('should render the remove button as text when removeButtonText is declared', () => {
+    const { queryAllByText } = renderWithTheme(
+      <RemovableSelectionsList
+        {...props}
+        isRemovable
+        removeButtonText="Remove Linode"
+      />
+    );
+    expect(queryAllByText('Remove Linode')).toHaveLength(5);
+  });
 });
