@@ -33,7 +33,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   );
   const {
     data: assignedLinodes,
-    // error: assignedLinodesError,
+    error: assignedLinodesError,
   } = useAllLinodesQuery(
     {},
     {
@@ -46,20 +46,23 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     error: deletePlacementError,
     isLoading,
     mutateAsync: deletePlacementGroup,
-    reset,
+    reset: resetDeletePlacementGroup,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
     mutateAsync: unassignLinodes,
+    reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
 
-  const error = deletePlacementError ?? unassignLinodeError;
+  const error =
+    deletePlacementError || unassignLinodeError || assignedLinodesError;
 
   React.useEffect(() => {
     if (open) {
-      reset();
+      resetDeletePlacementGroup();
+      resetUnassignLinodes();
     }
-  }, [open, reset]);
+  }, [open, resetUnassignLinodes, resetDeletePlacementGroup]);
 
   const handleUnassignLinode = async (linode: Linode) => {
     const payload: UnassignLinodesFromPlacementGroupPayload = {
