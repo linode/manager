@@ -74,11 +74,18 @@ const MaintenanceTable = ({ type }: Props) => {
     type
   );
 
+  /**
+   * We use a different API filter depending on the table's `type`
+   */
+  const filters: Record<Props['type'], Filter> = {
+    completed: { status: 'completed' },
+    pending: { status: { '+or': ['pending', 'started'] } },
+  };
+
   const filter: Filter = {
     '+order': order,
     '+order_by': orderBy,
-    status:
-      type === 'completed' ? 'completed' : { '+or': ['pending', 'started'] },
+    ...filters[type],
   };
 
   const { data: csv, refetch: getCSVData } = useAllAccountMaintenanceQuery(
