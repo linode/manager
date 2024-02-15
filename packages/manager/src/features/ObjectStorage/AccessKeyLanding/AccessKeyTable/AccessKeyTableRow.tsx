@@ -17,7 +17,6 @@ import { OpenAccessDrawer } from '../types';
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';
 
-// Define the props type for AccessKeyTableRow
 type Props = {
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
