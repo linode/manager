@@ -7,16 +7,19 @@ import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 
 import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
+
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableBody } from 'src/components/TableBody';
+
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
 import { OpenAccessDrawer } from '../types';
+
 import { AccessKeyTableBody } from './AccessKeyTableBody';
 
 export interface AccessKeyTableProps {

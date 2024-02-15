@@ -1,16 +1,15 @@
+import React from 'react';
 import {
   ObjectStorageKey,
   RegionS3EndpointAndID,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
-import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-
-import { OpenAccessDrawer } from '../types';
 import { AccessKeyTableRows } from './AccessKeyTableRows';
+import { OpenAccessDrawer } from '../types';
 
 type Props = {
   data: ObjectStorageKey[] | undefined;
@@ -33,7 +32,7 @@ export const AccessKeyTableBody = ({
   setHostNames,
   setShowHostNamesDrawers,
 }: Props) => {
-  if (isRestrictedUser || !data?.length) {
+  if (isRestrictedUser) {
     return <TableRowEmpty colSpan={12} />;
   }
 
@@ -51,12 +50,18 @@ export const AccessKeyTableBody = ({
   }
 
   return (
-    <AccessKeyTableRows
-      objectStorageKeys={data}
-      openDrawer={openDrawer}
-      openRevokeDialog={openRevokeDialog}
-      setHostNames={setHostNames}
-      setShowHostNamesDrawers={setShowHostNamesDrawers}
-    />
+    <>
+      {data && data.length > 0 ? (
+        <AccessKeyTableRows
+          objectStorageKeys={data}
+          openDrawer={openDrawer}
+          openRevokeDialog={openRevokeDialog}
+          setHostNames={setHostNames}
+          setShowHostNamesDrawers={setShowHostNamesDrawers}
+        />
+      ) : (
+        <TableRowEmpty colSpan={12} />
+      )}
+    </>
   );
 };
