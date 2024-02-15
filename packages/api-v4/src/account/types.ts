@@ -71,6 +71,7 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
   | 'Object Storage'
+  | 'Placement Group'
   | 'Vlans'
   | 'VPCs';
 

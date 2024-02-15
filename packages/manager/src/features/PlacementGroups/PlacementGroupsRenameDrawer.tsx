@@ -59,6 +59,7 @@ export const PlacementGroupsRenameDrawer = (
       affinity_type: selectedPlacementGroup?.affinity_type as PlacementGroupDrawerFormikProps['affinity_type'],
       label: selectedPlacementGroup?.label ?? '',
       region: selectedPlacementGroup?.region ?? '',
+      strict: true,
     },
     onSubmit(values, { setErrors, setStatus, setSubmitting }) {
       setHasFormBeenSubmitted(false);

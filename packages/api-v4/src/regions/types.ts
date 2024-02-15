@@ -3,6 +3,7 @@ import { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
 export type Capabilities =
   | 'Bare Metal'
   | 'Block Storage'
+  | 'Block Storage Migrations'
   | 'Cloud Firewall'
   | 'GPU Linodes'
   | 'Kubernetes'
@@ -11,6 +12,7 @@ export type Capabilities =
   | 'Metadata'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Group'
   | 'Premium Plans'
   | 'Vlans'
   | 'VPCs';
@@ -27,6 +29,8 @@ export interface Region {
   label: string;
   country: Country;
   capabilities: Capabilities[];
+  maximum_pgs_per_customer: number;
+  maximum_vms_per_pg: number;
   status: RegionStatus;
   resolvers: DNSResolvers;
 }
