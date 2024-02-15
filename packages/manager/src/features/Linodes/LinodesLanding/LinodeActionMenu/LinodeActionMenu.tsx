@@ -54,7 +54,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
-  const hasHostMaintenance = true;
+  const hasHostMaintenance = linodeStatus === 'stopped';
   const { isLinodeReadOnly, isVisible } = useLinodeActionVisibility({
     inListView,
     linodeId,
