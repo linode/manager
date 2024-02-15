@@ -45,7 +45,7 @@ A composition of Core Styles and Elements. Normally with some code that defines 
 
 ##### Feature
 
-A Composition of Core Styles, Elements, and Components that defines a verticle slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
+A Composition of Core Styles, Elements, and Components that defines a vertical slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
 
 #### Best Practices
 Our stories are in the process of being updated to the latest Storybook 7.0 format.
