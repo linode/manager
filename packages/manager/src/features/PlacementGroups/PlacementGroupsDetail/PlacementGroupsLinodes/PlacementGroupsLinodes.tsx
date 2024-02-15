@@ -10,7 +10,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
 import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
@@ -18,7 +18,6 @@ import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
 } from '../../constants';
-import { hasPlacementGroupReachedCapacity } from '../../utils';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Linode, PlacementGroup } from '@linode/api-v4';
@@ -31,17 +30,14 @@ export const PlacementGroupsLinodes = (props: Props) => {
   const { placementGroup } = props;
   const history = useHistory();
   const {
-    data: placementGroupLinodes,
-    error: linodesError,
-    isLoading: linodesLoading,
-  } = useAllLinodesQuery(
-    {},
-    {
-      '+or': placementGroup?.linode_ids.map((id) => ({
-        id,
-      })),
-    }
-  );
+    assignedLinodes,
+    hasReachedCapacity,
+    isLoading,
+    linodesError,
+    region,
+  } = usePlacementGroupData({
+    placementGroup,
+  });
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [searchText, setSearchText] = React.useState('');
@@ -50,20 +46,18 @@ export const PlacementGroupsLinodes = (props: Props) => {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
   }
 
-  const { capacity } = placementGroup;
-
   const getLinodesList = () => {
-    if (!placementGroupLinodes) {
+    if (!assignedLinodes) {
       return [];
     }
 
     if (searchText) {
-      return placementGroupLinodes.filter((linode: Linode) => {
+      return assignedLinodes.filter((linode: Linode) => {
         return linode.label.toLowerCase().includes(searchText.toLowerCase());
       });
     }
 
-    return placementGroupLinodes;
+    return assignedLinodes;
   };
 
   const handleOpenAssignLinodesDrawer = () => {
@@ -87,7 +81,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
           Linode can only be assigned to a single Placement Group.
         </Typography>
         <Typography sx={{ mt: 1 }}>
-          Limit of Linodes for this Placement Group: {capacity}
+          Limit of Linodes for this Placement Group:{' '}
+          {region?.maximum_vms_per_pg}
         </Typography>
       </Box>
 
@@ -108,7 +103,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
           <Button
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
-            disabled={hasPlacementGroupReachedCapacity(placementGroup)}
+            disabled={hasReachedCapacity}
             onClick={handleOpenAssignLinodesDrawer}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
           >
@@ -119,7 +114,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <PlacementGroupsLinodesTable
         error={linodesError ?? []}
         linodes={getLinodesList() ?? []}
-        loading={linodesLoading}
+        loading={isLoading}
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
