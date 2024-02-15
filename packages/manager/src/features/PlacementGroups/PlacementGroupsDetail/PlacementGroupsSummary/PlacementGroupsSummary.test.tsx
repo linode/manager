@@ -11,9 +11,8 @@ describe('PlacementGroups Summary', () => {
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
           affinity_type: 'affinity',
-          capacity: 10,
-          compliant: true,
           id: 3,
+          is_compliant: true,
           label: 'pg-3',
           linode_ids: [2, 4, 6, 8, 10],
           region: 'us-east',
