@@ -83,7 +83,6 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
-import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
   CreateLinodeRequest,
@@ -589,19 +588,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * since the API does not infer this automatically.
        */
 
-      /**
-       * safe to ignore possibility of "undefined"
-       * null checking happens in CALinodeCreate
-       */
-      const selectedRegionID = getRegionIDFromLinodeID(
-        this.props.linodesData!,
-        id
-      );
       this.setState({
         selectedBackupID: undefined,
         selectedDiskSize: diskSize,
         selectedLinodeID: id,
-        selectedRegionID,
+        selectedRegionID: this.props.linodesData?.find(
+          (linode) => linode.id == id
+        )?.region,
         selectedTypeID: undefined,
       });
     }

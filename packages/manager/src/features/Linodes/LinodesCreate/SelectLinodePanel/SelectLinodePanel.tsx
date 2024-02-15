@@ -16,13 +16,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 
 import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
-import { SelectCards } from './SelectCards';
-import { SelectTable } from './SelectTable';
-
-export interface ExtendedLinode extends Linode {
-  heading: string;
-  subHeadings: string[];
-}
+import { SelectLinodeCards } from './SelectLinodeCards';
+import { SelectLinodeTable } from './SelectLinodeTable';
 
 interface Notice {
   level: 'error' | 'warning'; // most likely only going to need these two 'warning'; 'warning';
@@ -34,7 +29,7 @@ interface Props {
   error?: string;
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
-  linodes: ExtendedLinode[];
+  linodes: Linode[];
   notices?: Notice[];
   selectedLinodeID?: number;
 }
@@ -55,7 +50,7 @@ export const SelectLinodePanel = (props: Props) => {
     'create-select-linode'
   );
 
-  const orderedLinodes = sortData<ExtendedLinode>(orderBy, order)(linodes);
+  const orderedLinodes = sortData<Linode>(orderBy, order)(linodes);
 
   const flags = useFlags();
   const theme = useTheme();
@@ -93,7 +88,9 @@ export const SelectLinodePanel = (props: Props) => {
   );
 
   const SelectComponent =
-    matchesMdUp && flags.linodeCloneUIChanges ? SelectTable : SelectCards;
+    matchesMdUp && flags.linodeCloneUIChanges
+      ? SelectLinodeTable
+      : SelectLinodeCards;
 
   return (
     <>
@@ -203,7 +200,7 @@ export interface RenderLinodeProps {
   disabled: boolean;
   handlePowerOff: (linodeId: number) => void;
   handleSelection: Props['handleSelection'];
-  orderBy: OrderByProps<ExtendedLinode>;
+  orderBy: OrderByProps<Linode>;
   selectedLinodeId: number | undefined;
 }
 

@@ -8,7 +8,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { RenderLinodeProps } from './SelectLinodePanel';
 import { SelectLinodeRow, SelectLinodeTableRowHead } from './SelectLinodeRow';
 
-export const SelectTable = ({
+export const SelectLinodeTable = ({
   disabled,
   handlePowerOff,
   handleSelection,

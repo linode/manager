@@ -162,7 +162,7 @@ export const SelectLinodeTableRowHead = (props: {
   );
   return (
     <TableRow>
-      <TableCell sx={{ borderRight: 'none !important' }} />
+      <TableCell sx={{ borderRight: 'none !important', width: '2%' }} />
       <CustomSortCell
         label="label"
         sx={{ borderLeft: 'none !important', paddingLeft: '4em', width: '20%' }}

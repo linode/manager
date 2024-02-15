@@ -18,7 +18,7 @@ afterEach(() => {
 
 const loadingTestId = 'circle-progress';
 
-describe('SubnetLinodeRow', () => {
+describe('SelectLinodeRow', () => {
   const handlePowerOff = vi.fn();
   const handleSelection = vi.fn();
 

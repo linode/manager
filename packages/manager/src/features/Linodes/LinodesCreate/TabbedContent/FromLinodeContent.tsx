@@ -15,7 +15,6 @@ import {
   ReduxStateProps,
   WithLinodesTypesRegionsAndImages,
 } from '../types';
-import { extendLinodes } from '../utilities';
 import { StyledGrid } from './CommonTabbedContent.styles';
 
 const errorResources = {
@@ -32,7 +31,6 @@ export type CombinedProps = CloneFormStateHandlers &
 export const FromLinodeContent = (props: CombinedProps) => {
   const {
     errors,
-    imagesData,
     linodesData,
     regionsData,
     selectedLinodeID,
@@ -96,12 +94,6 @@ export const FromLinodeContent = (props: CombinedProps) => {
       ) : (
         <StyledGrid>
           <SelectLinodePanel
-            linodes={extendLinodes(
-              linodesData,
-              imagesData,
-              extendedTypes,
-              regionsData
-            )}
             notices={[
               {
                 level: 'warning',
@@ -123,6 +115,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
             error={hasErrorFor('linode_id')}
             handleSelection={handleSelectLinode}
             header={'Select Linode to Clone From'}
+            linodes={linodesData}
             selectedLinodeID={selectedLinodeID}
           />
         </StyledGrid>
