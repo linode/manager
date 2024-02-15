@@ -82,15 +82,18 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     }
   }, [selectedId]);
 
-  // Hide edge sites from Marketplace, Create NodeBalancer, Create LKE, and Image Upload
-  const unsupportedEdgeEntities =
-    ['Images', 'One-Click'].includes(createType) ||
-    [
-      '/images/create/upload',
-      '/kubernetes/create',
-      '/nodebalancers/create',
-    ].includes(location.pathname);
+  // Hide edge sites from Marketplace and Images
+  const unsupportedEdgeEntities = ['Images', 'One-Click'].includes(createType);
   const geckoEnabled = Boolean(flags.gecko && !unsupportedEdgeEntities);
+
+  const showGeckoHelperText =
+    geckoEnabled &&
+    currentCapability &&
+    regions.find(
+      (region) =>
+        region.site_type === 'edge' &&
+        region.capabilities.includes(currentCapability)
+    );
 
   const options = React.useMemo(
     () =>
@@ -172,7 +175,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         placeholder="Select a Region"
         value={selectedRegion}
       />
-      {geckoEnabled && ( // @TODO Gecko MVP: Add docs link
+      {showGeckoHelperText && ( // @TODO Gecko MVP: Add docs link
         <StyledEdgeBox>
           <EdgeServer />
           <Typography sx={{ textWrap: 'nowrap' }}>
