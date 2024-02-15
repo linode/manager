@@ -68,7 +68,7 @@ export const LimitedAccessControls = React.memo((props: Props) => {
           isObjMultiClusterEnabled ? (
             <LabelWithTooltip
               labelText="Limited Access"
-              tooltipText="A Limited Access key has no permissions and you can manually set them. If you don't turn on Limited Access the key is granted full permission in all regions."
+              tooltipText="A Limited Access key has no permissions and you can manually set them. If you don't turn on Limited Access, the key is granted full permission in all regions."
             />
           ) : (
             'Limited Access'
