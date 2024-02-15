@@ -47,7 +47,7 @@ describe('ServiceTargets', () => {
       'button'
     );
 
-    userEvent.click(addServiceTargetButton!);
+    await userEvent.click(addServiceTargetButton!);
 
     expect(handlers.handleAddServiceTarget).toHaveBeenCalled();
   });

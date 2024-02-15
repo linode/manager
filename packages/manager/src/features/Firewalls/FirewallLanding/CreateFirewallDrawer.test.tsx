@@ -14,9 +14,9 @@ const props = {
 };
 
 describe('Create Firewall Drawer', () => {
-  it('should close the drawer on cancel', () => {
+  it('should close the drawer on cancel', async () => {
     renderWithTheme(<CreateFirewallDrawer {...props} />);
-    userEvent.click(screen.getByTestId('cancel'));
+    await userEvent.click(screen.getByTestId('cancel'));
     expect(props.onClose).toHaveBeenCalledTimes(1);
   });
 
@@ -30,8 +30,8 @@ describe('Create Firewall Drawer', () => {
 
   it('should validate the form on submit', async () => {
     renderWithTheme(<CreateFirewallDrawer {...props} />);
-    userEvent.type(screen.getByLabelText('Label (required)'), 'a');
-    userEvent.click(screen.getByTestId('submit'));
+    await userEvent.type(screen.getByLabelText('Label (required)'), 'a');
+    await userEvent.click(screen.getByTestId('submit'));
     const error = await screen.findByText(
       /Label must be between 3 and 32 characters./i
     );

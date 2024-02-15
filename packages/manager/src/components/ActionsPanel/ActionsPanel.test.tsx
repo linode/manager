@@ -47,7 +47,7 @@ describe('ActionsPanel', () => {
     expect(screen.queryByTestId(secondaryButtonTestId)).not.toBeInTheDocument();
   });
 
-  it('should call primaryButtonHandler when primary button is clicked', () => {
+  it('should call primaryButtonHandler when primary button is clicked', async () => {
     const mockHandler = vi.fn();
     renderWithTheme(
       <ActionsPanel
@@ -58,11 +58,11 @@ describe('ActionsPanel', () => {
         }}
       />
     );
-    userEvent.click(screen.getByTestId(primaryButtonTestId));
+    await userEvent.click(screen.getByTestId(primaryButtonTestId));
     expect(mockHandler).toHaveBeenCalledTimes(1);
   });
 
-  it('should call secondaryButtonHandler when secondary button is clicked', () => {
+  it('should call secondaryButtonHandler when secondary button is clicked', async () => {
     const mockHandler = vi.fn();
     renderWithTheme(
       <ActionsPanel
@@ -73,7 +73,7 @@ describe('ActionsPanel', () => {
         }}
       />
     );
-    userEvent.click(screen.getByTestId(secondaryButtonTestId));
+    await userEvent.click(screen.getByTestId(secondaryButtonTestId));
     expect(mockHandler).toHaveBeenCalledTimes(1);
   });
 });

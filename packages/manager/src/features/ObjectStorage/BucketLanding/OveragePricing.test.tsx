@@ -41,7 +41,7 @@ describe('OveragePricing', () => {
 
     fireEvent.mouseEnter(getByText('network transfer pool for this region'));
 
-    const tooltip = await findByRole(/tooltip/);
+    const tooltip = await findByRole('tooltip');
 
     expect(tooltip).toBeInTheDocument();
     expect(getByText(DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT)).toBeVisible();
@@ -54,7 +54,7 @@ describe('OveragePricing', () => {
 
     fireEvent.mouseEnter(getByText('global network transfer pool'));
 
-    const tooltip = await findByRole(/tooltip/);
+    const tooltip = await findByRole('tooltip');
 
     expect(tooltip).toBeInTheDocument();
     expect(getByText(GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT)).toBeVisible();

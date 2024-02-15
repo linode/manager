@@ -86,7 +86,7 @@ describe('Editable Text', () => {
     expect(getByLabelText(BUTTON_LABEL)).toBeInTheDocument();
   });
 
-  it('calls onEdit if the text has been changed', () => {
+  it('calls onEdit if the text has been changed', async () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
       <EditableText {...props} />
     );
@@ -101,7 +101,7 @@ describe('Editable Text', () => {
     // editing text
     const textfield = getByTestId('textfield-input');
     expect(textfield).toHaveValue('Edit this');
-    userEvent.type(textfield, ' has now been edited');
+    await userEvent.type(textfield, ' has now been edited');
     expect(textfield).toHaveValue('Edit this has now been edited');
 
     // saving text

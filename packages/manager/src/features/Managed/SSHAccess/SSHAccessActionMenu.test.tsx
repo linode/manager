@@ -1,14 +1,12 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  SSHAccessActionMenu as ActionMenu,
+  SSHAccessActionMenu,
   SSHAccessActionMenuProps,
 } from './SSHAccessActionMenu';
-
-vi.mock('src/components/ActionMenu/ActionMenu');
 
 const mockOpenDrawer = vi.fn();
 
@@ -20,29 +18,33 @@ const props: SSHAccessActionMenuProps = {
 };
 
 describe('SSH Access Action Menu', () => {
-  it('should include basic actions', () => {
-    const { queryByText } = render(wrapWithTheme(<ActionMenu {...props} />));
-    includesActions(['Edit'], queryByText);
+  it('should include basic actions', async () => {
+    const { getByText } = renderWithTheme(<SSHAccessActionMenu {...props} />);
+
+    expect(getByText('Edit')).toBeVisible();
+    expect(getByText('Disable')).toBeVisible();
   });
 
   it('should include Enable if access to the Linode is disabled', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<ActionMenu {...props} isEnabled={false} />)
+    const { queryByText } = renderWithTheme(
+      <SSHAccessActionMenu {...props} isEnabled={false} />
     );
     expect(queryByText('Enable')).toBeInTheDocument();
     expect(queryByText('Disable')).not.toBeInTheDocument();
   });
 
   it('should include Disable if access to the Linode is enabled', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<ActionMenu {...props} isEnabled={true} />)
+    const { queryByText } = renderWithTheme(
+      wrapWithTheme(<SSHAccessActionMenu {...props} isEnabled={true} />)
     );
     expect(queryByText('Disable')).toBeInTheDocument();
     expect(queryByText('Enable')).not.toBeInTheDocument();
   });
 
   it('should open the drawer when "Edit" option is clicked', () => {
-    const { getByText } = render(wrapWithTheme(<ActionMenu {...props} />));
+    const { getByText } = renderWithTheme(
+      wrapWithTheme(<SSHAccessActionMenu {...props} />)
+    );
     fireEvent.click(getByText('Edit'));
     expect(mockOpenDrawer).toHaveBeenCalledWith(1);
   });

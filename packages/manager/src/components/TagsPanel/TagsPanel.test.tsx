@@ -7,6 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { TagsPanel } from './TagsPanel';
 
 import type { TagsPanelProps } from './TagsPanel';
+import userEvent from '@testing-library/user-event';
 
 const queryClient = new QueryClient();
 
@@ -43,14 +44,14 @@ describe('TagsPanel', () => {
       <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
     );
 
-    fireEvent.click(getByText('Add a tag'));
+    await userEvent.click(getByText('Add a tag'));
 
     fireEvent.change(getByLabelText('Create or Select a Tag'), {
       target: { value: 'NewTag' },
     });
 
     const newTagItem = getByText('Create "NewTag"');
-    fireEvent.click(newTagItem);
+    await userEvent.click(newTagItem);
 
     await waitFor(() => {
       expect(updateTagsMock).toHaveBeenCalledWith(['NewTag', 'Tag1', 'Tag2']);

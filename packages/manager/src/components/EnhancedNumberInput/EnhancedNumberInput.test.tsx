@@ -16,8 +16,6 @@ const disabledProps = {
   disabled: true,
 };
 
-beforeEach(vi.clearAllMocks);
-
 describe('EnhancedNumberInput', () => {
   it("should increment the input's value by 1 when the plus button is clicked", () => {
     const { getByTestId } = render(

@@ -19,7 +19,7 @@ describe('LinodeRow', () => {
     });
   });
 
-  it('should render a linode row', () => {
+  it('should render a linode row', async () => {
     const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
@@ -61,7 +61,7 @@ describe('LinodeRow', () => {
 
     // Open action menu
     const actionMenu = getByLabelText(`Action menu for Linode ${linode.label}`);
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     getByText('Power Off');
     getByText('Reboot');

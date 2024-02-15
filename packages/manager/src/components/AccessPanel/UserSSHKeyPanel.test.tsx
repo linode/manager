@@ -111,7 +111,7 @@ describe('UserSSHKeyPanel', () => {
         expect(getByText('test-user')).toBeInTheDocument();
         expect(getByText('ssh-key')).toBeInTheDocument();
       });
-      userEvent.click(getByRole('checkbox'));
+      await userEvent.click(getByRole('checkbox'));
       expect(props.setAuthorizedUsers).toBeCalledWith(['test-user']);
     });
   });

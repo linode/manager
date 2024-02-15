@@ -48,7 +48,7 @@ describe('Routes (ACLB full create flow)', () => {
       expect(getByText(route.label)).toBeVisible();
     }
   });
-  it('can remove a route', () => {
+  it('can remove a route', async () => {
     const routes: RoutePayload[] = [
       { label: 'test-1', protocol: 'http', rules: [] },
       { label: 'test-2', protocol: 'http', rules: [] },
@@ -78,10 +78,10 @@ describe('Routes (ACLB full create flow)', () => {
     );
 
     const actionMenu = getByLabelText(`Action Menu for Route test-2`);
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     const deleteButton = getByText('Remove');
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(queryByText('test-2')).not.toBeInTheDocument();
     expect(getByText('test-1')).toBeInTheDocument();

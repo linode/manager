@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -43,9 +43,7 @@ describe('DeleteSSHKeyDialog', () => {
 
     const submitButton = getByTestId('confirm-delete');
 
-    act(() => {
-      userEvent.click(submitButton);
-    });
+    await userEvent.click(submitButton);
 
     await waitFor(() => {
       expect(props.onClose).toBeCalled();
@@ -57,9 +55,7 @@ describe('DeleteSSHKeyDialog', () => {
 
     const cancelButton = getByTestId('cancel-delete');
 
-    act(() => {
-      userEvent.click(cancelButton);
-    });
+    await userEvent.click(cancelButton);
 
     await waitFor(() => {
       expect(props.onClose).toBeCalled();

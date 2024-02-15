@@ -111,7 +111,7 @@ describe('Payment Method Row', () => {
     expect(getByLabelText(expectedLabelPayPal)).toBeVisible();
   });
 
-  it('Disables "Make Default" and "Delete" actions if payment method is set as default', () => {
+  it('Disables "Make Default" and "Delete" actions if payment method is set as default', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
@@ -120,7 +120,7 @@ describe('Payment Method Row', () => {
         />
       </PayPalScriptProvider>
     );
-    userEvent.click(getByLabelText(/^Action menu for/));
+    await userEvent.click(getByLabelText(/^Action menu for/));
     expect(
       getByText('Make Default').closest('li')?.getAttribute('aria-disabled')
     ).toEqual('true');
@@ -129,7 +129,7 @@ describe('Payment Method Row', () => {
     ).toEqual('true');
   });
 
-  it('Calls `onDelete` callback when "Delete" action is clicked', () => {
+  it('Calls `onDelete` callback when "Delete" action is clicked', async () => {
     const mockFunction = vi.fn();
 
     const { getByLabelText, getByText } = renderWithTheme(
@@ -142,16 +142,16 @@ describe('Payment Method Row', () => {
     );
 
     const actionMenu = getByLabelText('Action menu for card ending in 1881');
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     const deleteActionButton = getByText('Delete');
     expect(deleteActionButton).toBeVisible();
-    userEvent.click(deleteActionButton);
+    await userEvent.click(deleteActionButton);
 
     expect(mockFunction).toBeCalledTimes(1);
   });
 
-  it('Makes payment method default when "Make Default" action is clicked', () => {
+  it('Makes payment method default when "Make Default" action is clicked', async () => {
     const paymentMethod = paymentMethodFactory.build({
       data: {
         card_type: 'Visa',
@@ -167,16 +167,16 @@ describe('Payment Method Row', () => {
     );
 
     const actionMenu = getByLabelText('Action menu for card ending in 1111');
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     const makeDefaultButton = getByText('Make Default');
     expect(makeDefaultButton).toBeVisible();
-    userEvent.click(makeDefaultButton);
+    await userEvent.click(makeDefaultButton);
 
     expect(makeDefaultPaymentMethod).toBeCalledTimes(1);
   });
 
-  it('Opens "Make a Payment" drawer if "Make a Payment" action is clicked', () => {
+  it('Opens "Make a Payment" drawer if "Make a Payment" action is clicked', async () => {
     const paymentMethod = paymentMethodFactory.build();
 
     /*
@@ -195,11 +195,11 @@ describe('Payment Method Row', () => {
     );
 
     const actionMenu = getByLabelText('Action menu for card ending in 1881');
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     const makePaymentButton = getByText('Make a Payment');
     expect(makePaymentButton).toBeVisible();
-    userEvent.click(makePaymentButton);
+    await userEvent.click(makePaymentButton);
 
     expect(getByTestId('drawer')).toBeVisible();
     expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');

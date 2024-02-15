@@ -29,7 +29,7 @@ describe('LinodeSettingsLabelPanel', () => {
 
     await waitFor(() => {
       // Verify the input contains the Linode's label when it loads it
-      expect(input).toHaveAttribute('value', 'my-linode-1');
+      expect(input).toHaveValue('my-linode-1');
     });
 
     // Verify that the save button is disabled (because the label is unmodified)

@@ -50,7 +50,8 @@ describe('EndpointTable', () => {
 
       expect(removeEndpointButton).toBeVisible();
 
-      userEvent.click(removeEndpointButton);
+      // eslint-disable-next-line no-await-in-loop
+      await userEvent.click(removeEndpointButton);
 
       expect(props.onRemove).toBeCalledWith(endpoints.indexOf(endpoint));
     }

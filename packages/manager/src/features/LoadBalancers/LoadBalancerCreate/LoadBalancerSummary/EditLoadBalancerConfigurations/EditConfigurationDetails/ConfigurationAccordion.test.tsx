@@ -43,7 +43,7 @@ describe('ConfigurationAccordion', () => {
     expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
   });
 
-  test('should click edit button and validate configuration details in the drawer', () => {
+  test('should click edit button and validate configuration details in the drawer', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <ConfigurationAccordion
         configuration={mockConfiguration}
@@ -58,7 +58,7 @@ describe('ConfigurationAccordion', () => {
       }
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Edit' }));
 
     expect(
       screen.getByRole('dialog', {
@@ -85,7 +85,7 @@ describe('ConfigurationAccordion', () => {
     ).toHaveDisplayValue('8080');
   });
 
-  test('should click to expand accordion and validate configuration details', () => {
+  test('should click to expand accordion and validate configuration details', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <ConfigurationAccordion
         configuration={mockConfiguration}
@@ -100,7 +100,7 @@ describe('ConfigurationAccordion', () => {
       }
     );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('heading', {
         name: configHeading,
       })

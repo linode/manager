@@ -39,9 +39,9 @@ describe('CaptureSnapshot', () => {
       <CaptureSnapshot isReadOnly={false} linodeId={1} />
     );
 
-    userEvent.type(getByLabelText('Name Snapshot'), 'my-linode-snapshot');
+    await userEvent.type(getByLabelText('Name Snapshot'), 'my-linode-snapshot');
 
-    userEvent.click(getByText('Take Snapshot'));
+    await userEvent.click(getByText('Take Snapshot'));
 
     expect(
       getByText(

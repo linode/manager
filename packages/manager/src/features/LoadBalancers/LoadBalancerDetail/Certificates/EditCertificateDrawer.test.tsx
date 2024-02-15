@@ -82,9 +82,9 @@ describe('EditCertificateDrawer', () => {
     expect(labelInput).toHaveDisplayValue(mockCACertificate.label);
     expect(certInput).toHaveDisplayValue(mockCACertificate.certificate.trim());
 
-    act(() => {
-      userEvent.type(labelInput, 'my-updated-cert-0');
-      userEvent.click(getByTestId('submit'));
+    await act(async () => {
+      await userEvent.type(labelInput, 'my-updated-cert-0');
+      await userEvent.click(getByTestId('submit'));
     });
 
     await waitFor(() => expect(onClose).toBeCalled());
@@ -105,12 +105,12 @@ describe('EditCertificateDrawer', () => {
     const certInput = getByLabelText('TLS Certificate');
     const keyInput = getByLabelText('Private Key');
 
-    act(() => {
-      userEvent.type(labelInput, 'my-cert-0');
-      userEvent.type(certInput, 'massive cert');
-      userEvent.type(keyInput, 'massive key');
+    await act(async () => {
+      await userEvent.type(labelInput, 'my-cert-0');
+      await userEvent.type(certInput, 'massive cert');
+      await userEvent.type(keyInput, 'massive key');
 
-      userEvent.click(getByTestId('submit'));
+      await userEvent.click(getByTestId('submit'));
     });
 
     await waitFor(() => expect(onClose).toBeCalled());

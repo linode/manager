@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 
 import { useAPIRequest } from './useAPIRequest';
 
@@ -15,44 +15,35 @@ const mockRequestFailure = (): Promise<number> =>
 
 describe('useAPIRequest', () => {
   it('sets `data` on load', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAPIRequest<number>(mockRequestSuccess, 0)
     );
 
-    await act(async () => {
-      await waitForNextUpdate();
-
+    await waitFor(() => {
       expect(result.current.data).toEqual(1);
     });
   });
 
   it('executes request when dependencies change', async () => {
-    let mockDep = 1;
-    const { rerender, result, waitForNextUpdate } = renderHook(() =>
-      useAPIRequest<number>(mockRequestWithDep(mockDep), 0, [mockDep])
+    const { rerender, result } = renderHook(
+      ({ mockVal }) =>
+        useAPIRequest<number>(mockRequestWithDep(mockVal), 0, [mockVal]),
+      { initialProps: { mockVal: 0 } }
     );
 
-    await act(async () => {
-      await waitForNextUpdate();
-      const data1 = result.current.data;
+    await waitFor(() => expect(result.current.data).toBe(0));
 
-      mockDep = 2;
-      rerender();
-      await waitForNextUpdate();
-      const data2 = result.current.data;
+    rerender({ mockVal: 2 });
 
-      expect(data1).not.toEqual(data2);
-    });
+    await waitFor(() => expect(result.current.data).toBe(2));
   });
 
   it('sets error when request fails', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAPIRequest<number>(mockRequestFailure, 0)
     );
 
-    await act(async () => {
-      await waitForNextUpdate();
-
+    await waitFor(() => {
       expect(result.current.error).toEqual(mockError);
     });
   });

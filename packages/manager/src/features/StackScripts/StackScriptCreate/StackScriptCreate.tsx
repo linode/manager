@@ -23,9 +23,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
+import { WithImagesProps, withImages } from 'src/containers/images.container';
 import {
   WithProfileProps,
   withProfile,
@@ -60,7 +58,7 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  ImagesProps &
+  WithImagesProps &
   WithProfileProps &
   RouteComponentProps<{ stackScriptID: string }> &
   WithQueryClientProps;

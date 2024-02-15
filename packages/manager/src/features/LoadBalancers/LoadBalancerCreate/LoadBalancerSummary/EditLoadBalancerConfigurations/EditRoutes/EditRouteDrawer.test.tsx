@@ -38,7 +38,7 @@ describe('EditRouteDrawer', () => {
       screen.getByRole('button', { name: 'Save Changes' })
     ).toBeInTheDocument();
   });
-  test('Should edit and save Route  Label', () => {
+  test('Should edit and save Route  Label', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <EditRouteDrawer
         configIndex={0}
@@ -72,10 +72,10 @@ describe('EditRouteDrawer', () => {
 
     userEvent.type(routeLabelFiled, 'rote-new-label');
 
-    userEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
   });
 
-  test('Should call onClose when close button is clicked', () => {
+  test('Should call onClose when close button is clicked', async () => {
     const onCloseMock = vi.fn();
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <EditRouteDrawer
@@ -91,7 +91,7 @@ describe('EditRouteDrawer', () => {
     );
 
     const closeButton = screen.getByRole('button', { name: 'Close drawer' });
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
 
     expect(onCloseMock).toHaveBeenCalled();
   });

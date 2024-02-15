@@ -34,7 +34,7 @@ import {
   withAccount,
 } from 'src/containers/account.container';
 import { WithFeatureFlagProps } from 'src/containers/flags.container';
-import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';

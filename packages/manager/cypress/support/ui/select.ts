@@ -25,6 +25,7 @@ export const select = {
    * @returns Cypress chainable.
    */
   findItemById: (id: string) => {
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     return cy
       .get(`[data-qa-option="${id}"]`)
       .scrollIntoView()
@@ -41,6 +42,7 @@ export const select = {
    * @returns Cypress chainable.
    */
   findItemByText: (text: string) => {
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     return cy
       .get('[data-qa-option]')
       .contains(text)
@@ -58,6 +60,7 @@ export const select = {
    * @returns Cypress chainable.
    */
   findLinodeItemByText: (text: string) => {
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     return cy
       .get('[data-qa-linode-option]')
       .contains(text)

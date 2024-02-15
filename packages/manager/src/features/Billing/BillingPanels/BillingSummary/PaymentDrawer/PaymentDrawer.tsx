@@ -22,15 +22,15 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
+import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PayPalErrorBoundary } from '../../PaymentInfoPanel/PayPalErrorBoundary';
 import GooglePayButton from './GooglePayButton';
 import PayPalButton from './PayPalButton';
-import CreditCardDialog from './PaymentBits/CreditCardDialog';
+import { CreditCardDialog } from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import { SetSuccess } from './types';
-import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles()(() => ({
   button: {

@@ -47,6 +47,8 @@ export interface UseAPIRequest<T> {
  * );
  * ```
  *
+ * @deprecated Please don't use this. Use React Query!
+ *
  * @param request The request function to execute when `deps` change.
  * @param defaultData Value to use for `data` before request is made.
  * @param deps The dependencies this hook relies on. Defaults to an empty array

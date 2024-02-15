@@ -63,7 +63,7 @@ describe('HostNamesDrawer', () => {
     ).toBeInTheDocument();
   });
 
-  it('calls onClose when the drawer is closed', () => {
+  it('calls onClose when the drawer is closed', async () => {
     renderWithTheme(
       <HostNamesDrawer
         onClose={mockOnClose}
@@ -73,7 +73,7 @@ describe('HostNamesDrawer', () => {
     );
 
     const closeButton = screen.getByRole('button', { name: 'Close drawer' });
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
 
     expect(mockOnClose).toHaveBeenCalled();
   });

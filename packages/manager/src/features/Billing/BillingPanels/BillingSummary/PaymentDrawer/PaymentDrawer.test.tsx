@@ -43,8 +43,8 @@ describe('Make a Payment Panel', () => {
 
       await waitForElementToBeRemoved(screen.getByTestId('loading-account'));
 
-      userEvent.click(screen.getByText(/pay now/i));
-      userEvent.click(screen.getByTestId('credit-card-submit'));
+      await userEvent.click(screen.getByText(/pay now/i));
+      await userEvent.click(screen.getByTestId('credit-card-submit'));
       expect(
         await screen.findByText(/your payment has been processed but/i)
       ).toBeInTheDocument();
@@ -57,8 +57,8 @@ describe('Make a Payment Panel', () => {
         })
       );
       render(wrapWithTheme(<PaymentDrawer {...props} />));
-      userEvent.click(screen.getByText(/pay via credit card/i));
-      userEvent.click(screen.getByTestId('credit-card-submit'));
+      await userEvent.click(screen.getByText(/pay via credit card/i));
+      await userEvent.click(screen.getByTestId('credit-card-submit'));
       expect(
         await screen.findByText(/submitted successfully/i)
       ).toBeInTheDocument();

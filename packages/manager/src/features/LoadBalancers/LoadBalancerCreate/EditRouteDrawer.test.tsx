@@ -60,10 +60,10 @@ describe('EditRouteDrawer (ACLB full create flow)', () => {
 
     expect(saveButton).toHaveAttribute('aria-disabled', 'true');
 
-    userEvent.type(routeLabelTextField, 'my-new-label');
+    await userEvent.type(routeLabelTextField, 'my-new-label');
 
     expect(saveButton).toHaveAttribute('aria-disabled', 'false');
 
-    userEvent.click(saveButton!);
+    await userEvent.click(saveButton!);
   });
 });

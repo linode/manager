@@ -60,7 +60,7 @@ describe('Link component', () => {
     expect(linkElement).toHaveTextContent(/External Link/);
   });
 
-  it('calls the onClick handler when the link is clicked', () => {
+  it('calls the onClick handler when the link is clicked', async () => {
     const mockOnClick = vi.fn();
     const mockProps: LinkProps = {
       children: 'External Link',
@@ -76,7 +76,7 @@ describe('Link component', () => {
     expect(linkElement.tagName).toBe('A');
     expect(linkElement).toHaveTextContent(/External Link/);
 
-    userEvent.click(linkElement);
+    await userEvent.click(linkElement);
 
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });

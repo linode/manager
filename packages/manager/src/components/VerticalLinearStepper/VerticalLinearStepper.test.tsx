@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/extend-expect';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -34,9 +33,9 @@ describe('VerticalLinearStepper', () => {
     expect(screen.getByText('Next: Summary')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Details')).toBeNull();
   });
-  test('Should navigate to second step conent', () => {
+  test('Should navigate to second step conent', async () => {
     renderWithTheme(<VerticalLinearStepper steps={steps} />);
-    userEvent.click(screen.getByTestId('summary'));
+    await userEvent.click(screen.getByTestId('summary'));
     expect(steps[0].handler).toHaveBeenCalledTimes(1);
     expect(screen.getByText('Step 2 Content')).toBeInTheDocument();
     expect(screen.queryByText('Step 1 Content')).toBeNull();
@@ -44,10 +43,10 @@ describe('VerticalLinearStepper', () => {
     expect(screen.getByText('Next: Next')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Summary')).toBeNull();
   });
-  test('Should navigate to final step conent', () => {
+  test('Should navigate to final step conent', async () => {
     renderWithTheme(<VerticalLinearStepper steps={steps} />);
-    userEvent.click(screen.getByTestId('summary'));
-    userEvent.click(screen.getByTestId('next'));
+    await userEvent.click(screen.getByTestId('summary'));
+    await userEvent.click(screen.getByTestId('next'));
     expect(steps[1].handler).toHaveBeenCalledTimes(1);
     expect(screen.queryByText('Step 1 Content')).toBeNull();
     expect(screen.queryByText('Step 2 Content')).toBeNull();
@@ -55,10 +54,10 @@ describe('VerticalLinearStepper', () => {
     expect(screen.queryByText('Next: Summary')).toBeNull();
     expect(screen.getByText('Previous: Summary')).toBeInTheDocument();
   });
-  test('Should be able to go previous step', () => {
+  test('Should be able to go previous step', async () => {
     renderWithTheme(<VerticalLinearStepper steps={steps} />);
-    userEvent.click(screen.getByTestId('summary'));
-    userEvent.click(screen.getByText('Previous: Details'));
+    await userEvent.click(screen.getByTestId('summary'));
+    await userEvent.click(screen.getByText('Previous: Details'));
     expect(steps[1].handler).toHaveBeenCalledTimes(1);
     expect(screen.getByText('Step 1 Content')).toBeInTheDocument();
   });
