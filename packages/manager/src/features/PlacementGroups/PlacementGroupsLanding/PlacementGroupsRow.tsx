@@ -10,10 +10,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
-import { getPlacementGroupLinodeCount } from '../utils';
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -31,23 +29,10 @@ export const PlacementGroupsRow = React.memo(
     handleRenamePlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
-    const {
-      affinity_type,
-      capacity,
-      compliant,
-      id,
-      label,
-      linode_ids,
-    } = placementGroup;
-    const { data: regions } = useRegionsQuery();
-    const { data: linodes } = useLinodesQuery();
-    const regionLabel =
-      regions?.find((region) => region.id === placementGroup.region)?.label ??
-      placementGroup.region;
-    const linodeCount = getPlacementGroupLinodeCount(placementGroup);
-    const listOfAssignedLinodes = linodes?.data.filter((linode) =>
-      linode_ids.includes(linode.id)
-    );
+    const { affinity_type, id, is_compliant, label } = placementGroup;
+    const { assignedLinodes, linodesCount, region } = usePlacementGroupData({
+      placementGroup,
+    });
     const actions: Action[] = [
       {
         onClick: handleRenamePlacementGroup,
@@ -72,7 +57,7 @@ export const PlacementGroupsRow = React.memo(
           >
             {label} ({AFFINITY_TYPES[affinity_type]})
           </Link>
-          {!compliant && (
+          {!is_compliant && (
             <Typography component="span" sx={{ whiteSpace: 'nowrap' }}>
               <StyledWarningIcon />
               Non-compliant
@@ -83,18 +68,18 @@ export const PlacementGroupsRow = React.memo(
           <TextTooltip
             tooltipText={
               <List>
-                {listOfAssignedLinodes?.map((linode, idx) => (
+                {assignedLinodes?.map((linode, idx) => (
                   <ListItem key={`pg-linode-${idx}`}>{linode.label}</ListItem>
                 ))}
               </List>
             }
-            displayText={`${linodeCount}`}
+            displayText={`${linodesCount}`}
             minWidth={200}
           />
-          &nbsp; of {capacity}
+          &nbsp; of {region?.maximum_vms_per_pg}
         </TableCell>
         <Hidden smDown>
-          <TableCell>{regionLabel}</TableCell>
+          <TableCell>{region?.label}</TableCell>
         </Hidden>
         <TableCell actionCell>
           {actions.map((action) => (
