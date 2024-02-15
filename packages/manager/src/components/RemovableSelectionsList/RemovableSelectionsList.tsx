@@ -137,31 +137,32 @@ export const RemovableSelectionsList = (
                       selection.label
                     )}
                   </StyledLabel>
-                  {isRemovable && removeButtonText ? (
-                    <Button
-                      sx={(theme) => ({
-                        fontFamily: theme.font.normal,
-                        fontSize: '0.875rem',
-                      })}
-                      onClick={() => handleOnClick(selection)}
-                      variant="text"
-                    >
-                      {removeButtonText}
-                    </Button>
-                  ) : (
-                    <IconButton
-                      aria-label={`remove ${
-                        preferredDataLabel
-                          ? selection[preferredDataLabel]
-                          : selection.label
-                      }`}
-                      disableRipple
-                      onClick={() => handleOnClick(selection)}
-                      size="medium"
-                    >
-                      <Close />
-                    </IconButton>
-                  )}
+                  {isRemovable &&
+                    (removeButtonText ? (
+                      <Button
+                        sx={(theme) => ({
+                          fontFamily: theme.font.normal,
+                          fontSize: '0.875rem',
+                        })}
+                        onClick={() => handleOnClick(selection)}
+                        variant="text"
+                      >
+                        {removeButtonText}
+                      </Button>
+                    ) : (
+                      <IconButton
+                        aria-label={`remove ${
+                          preferredDataLabel
+                            ? selection[preferredDataLabel]
+                            : selection.label
+                        }`}
+                        disableRipple
+                        onClick={() => handleOnClick(selection)}
+                        size="medium"
+                      >
+                        <Close />
+                      </IconButton>
+                    ))}
                 </SelectedOptionsListItem>
               ))}
             </SelectedOptionsList>

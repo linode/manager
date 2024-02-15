@@ -84,7 +84,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         action: 'deletion',
         name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
-        type: 'Placement Groups',
+        type: 'Placement Group',
       }}
       errors={
         !selectedPlacementGroup

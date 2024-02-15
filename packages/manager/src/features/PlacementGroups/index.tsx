@@ -36,7 +36,6 @@ export const PlacementGroups = () => {
             exact
             path={`${path}/rename/:id`}
           />
-
           <Route
             component={PlacementGroupsLanding}
             exact
