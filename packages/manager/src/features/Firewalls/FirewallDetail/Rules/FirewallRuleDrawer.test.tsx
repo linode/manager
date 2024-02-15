@@ -47,24 +47,21 @@ describe('AddRuleDrawer', () => {
     getByText('Add an Inbound Rule');
   });
 
-  it('disables the port input when the ICMP protocol is selected', () => {
+  it('disables the port input when the ICMP protocol is selected', async () => {
     renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
-    userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
+    await userEvent.selectOptions(screen.getByLabelText('Protocol'), 'ICMP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 
-  it('disables the port input when the IPENCAP protocol is selected', () => {
+  it('disables the port input when the IPENCAP protocol is selected', async () => {
     renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
-    userEvent.selectOptions(
-      screen.getByPlaceholderText(/protocol/i),
-      'IPENCAP'
-    );
+    await userEvent.selectOptions(screen.getByLabelText('Protocol'), 'IPENCAP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 });
