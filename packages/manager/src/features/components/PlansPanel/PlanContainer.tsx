@@ -82,7 +82,7 @@ export const PlanContainer = (props: Props) => {
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
 
-  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
+  // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
   const isDatabaseScaleUpFlow =
     location.pathname.match(/\/databases\/.*\/(\d+\/resize)/)?.[0] ===

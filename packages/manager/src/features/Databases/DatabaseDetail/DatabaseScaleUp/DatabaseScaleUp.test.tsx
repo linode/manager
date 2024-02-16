@@ -115,7 +115,7 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB scale up flow.
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
       const history = createMemoryHistory();
       history.push(`databases/${database.engine}/${database.id}/resize`);
       const { container, getByTestId, getByText } = renderWithTheme(
