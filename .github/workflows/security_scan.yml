@@ -5,11 +5,10 @@ on:
   push:
     branches:
       - develop
-  pull_request:
 
 jobs:
   security-scan:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     container:
       image: returntocorp/semgrep
     steps:
