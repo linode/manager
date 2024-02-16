@@ -340,7 +340,6 @@ export interface UserData {
   user_data: string | null;
 }
 
-// Should we use `CreatePlacementGroupPayload` instead?
 export interface CreateLinodePlacementGroupPayload {
   id?: number | null;
   strict?: boolean | null;
