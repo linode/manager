@@ -9,7 +9,7 @@ import {
   LinodeActionMenu,
   LinodeActionMenuProps,
 } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
-import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
+import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
 const props: LinodeActionMenuProps = {
