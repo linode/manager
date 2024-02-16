@@ -5,12 +5,10 @@ import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { linodeBackupsFactory } from 'src/factories/linodes';
 import { regionFactory } from 'src/factories/regions';
-import {
-  LinodeActionMenu,
-  LinodeActionMenuProps,
-} from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
-import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+
+import { LinodeActionMenu, LinodeActionMenuProps } from './LinodeActionMenu';
+import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 
 const props: LinodeActionMenuProps = {
   inListView: true,

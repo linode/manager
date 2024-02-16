@@ -1,4 +1,6 @@
 import { LinodeBackups, LinodeType } from '@linode/api-v4/lib/linodes';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -7,10 +9,8 @@ import {
   ActionType,
   getRestrictedResourceText,
 } from 'src/features/Account/utils';
-import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
-import { useLinodeActionVisibility } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/useLinodeActionVisibility';
-import { LinodeHandlers } from 'src/features/Linodes/LinodesLanding/LinodesLanding';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import {
@@ -19,6 +19,9 @@ import {
   sendMigrationNavigationEvent,
 } from 'src/utilities/analytics';
 import { extendType } from 'src/utilities/extendType';
+
+import { LinodeHandlers } from '../LinodesLanding';
+import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 
 export interface LinodeActionMenuProps extends LinodeHandlers {
   inListView?: boolean;
@@ -55,9 +58,14 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
-  const { isLinodeReadOnly, isVisible } = useLinodeActionVisibility({
-    inListView,
-    linodeId,
+  const theme = useTheme();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const isVisible = inListView || matchesSmDown;
+
+  const isLinodeReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
   });
 
   const maintenanceTooltipText =
