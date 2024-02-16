@@ -11,7 +11,7 @@ import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
 } from '@linode/validation/lib/objectStorageKeys.schema';
-import { useFormik, FormikProps } from 'formik';
+import { FormikProps, useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
