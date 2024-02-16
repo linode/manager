@@ -30,9 +30,7 @@ import {
   WithFeatureFlagProps,
   withFeatureFlags,
 } from 'src/containers/flags.container';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
+import { WithImagesProps, withImages } from 'src/containers/images.container';
 import {
   WithProfileProps,
   withProfile,
@@ -134,7 +132,7 @@ interface State {
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
-  ImagesProps &
+  WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &

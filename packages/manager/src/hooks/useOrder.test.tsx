@@ -1,4 +1,5 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { QueryClient } from 'react-query';
 
 import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
@@ -49,27 +50,6 @@ vi.mock('react-router-dom', async () => {
 const queryClient = queryClientFactory();
 
 describe('useOrder hook', () => {
-  // wait for preferences to load
-  beforeEach(async () => {
-    await act(async () => {
-      server.use(
-        rest.get('*/profile/preferences', (_, res, ctx) => {
-          return res(
-            ctx.json({
-              sortKeys: {
-                'account-maintenance-order': preferenceOrder,
-              },
-            })
-          );
-        })
-      );
-
-      await renderHook(() => usePreferences(), {
-        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
-      }).waitForNextUpdate();
-    });
-  });
-
   it('should use default sort options when there are no query params or preference', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
       wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
@@ -97,7 +77,31 @@ describe('useOrder hook', () => {
   });
 
   it('use preferences are used when there are no query params', async () => {
-    const { result, waitFor } = renderHook(
+    const queryClient = new QueryClient();
+
+    server.use(
+      rest.get('*/profile/preferences', (_, res, ctx) => {
+        return res(
+          ctx.json({
+            sortKeys: {
+              'account-maintenance-order': preferenceOrder,
+            },
+          })
+        );
+      })
+    );
+
+    const { result: preferencesResult } = renderHook(() => usePreferences(), {
+      wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
+    });
+
+    // This is kind of a bug. useOrder currently requires preferences to be cached
+    // before it works properly.
+    await waitFor(() => {
+      expect(preferencesResult.current.data).toBeDefined();
+    });
+
+    const { result } = renderHook(
       () => useOrder(defaultOrder, 'account-maintenance-order'),
       {
         wrapper: (ui) => wrapWithTheme(ui, { queryClient }),

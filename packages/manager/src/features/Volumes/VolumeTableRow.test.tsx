@@ -29,7 +29,7 @@ const handlers: ActionHandlers = {
 };
 
 describe('Volume table row', () => {
-  it("should show the attached Linode's label if present", () => {
+  it("should show the attached Linode's label if present", async () => {
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow handlers={handlers} volume={attachedVolume} />
@@ -42,13 +42,13 @@ describe('Volume table row', () => {
     expect(getByTestId('region'));
     expect(getByText(attachedVolume.linode_label!));
 
-    userEvent.click(getByLabelText(/^Action menu for/));
+    await userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is a detach button
     expect(getByText('Detach'));
   });
 
-  it('should show Unattached if the Volume is not attached to a Linode', () => {
+  it('should show Unattached if the Volume is not attached to a Linode', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow handlers={handlers} volume={unattachedVolume} />
@@ -56,7 +56,7 @@ describe('Volume table row', () => {
     );
     expect(getByText('Unattached'));
 
-    userEvent.click(getByLabelText(/^Action menu for/));
+    await userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is an attach button
     expect(getByText('Attach'));
@@ -64,7 +64,7 @@ describe('Volume table row', () => {
 });
 
 describe('Volume table row - for linodes detail page', () => {
-  it("should show the attached Linode's label if present", () => {
+  it("should show the attached Linode's label if present", async () => {
     const {
       getByLabelText,
       getByText,
@@ -91,7 +91,7 @@ describe('Volume table row - for linodes detail page', () => {
     // Because we are on a Linode details page, we don't need to show the Linode label
     expect(queryByText(attachedVolume.linode_label!)).toBeNull();
 
-    userEvent.click(getByLabelText(/^Action menu for/));
+    await userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is a detach button
     expect(getByText('Detach'));

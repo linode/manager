@@ -10,7 +10,7 @@ import {
 import { DateTime } from 'luxon';
 import { rest } from 'msw';
 
-import cachedRegions from 'src/cachedData/regions.json';
+import { regions } from 'src/__data__/regionsData';
 import {
   VLANFactory,
   abuseTicketNotificationFactory,
@@ -589,7 +589,7 @@ export const handlers = [
     return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(cachedRegions));
+    return res(ctx.json(makeResourcePage(regions)));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {
@@ -1319,6 +1319,10 @@ export const handlers = [
     return res(ctx.json(proxyToken));
   }),
   rest.get('*/account/users', (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+
     const accountUsers = [
       accountUserFactory.build({
         last_login: { login_datetime: '2023-10-16T17:04', status: 'failed' },
@@ -1336,6 +1340,52 @@ export const handlers = [
       proxyAccountUser,
       parentAccountNonAdminUser,
     ];
+
+    if (req.headers.get('x-filter')) {
+      let filteredAccountUsers = accountUsers;
+
+      if (headers['user_type']) {
+        if (headers['user_type']['+neq']) {
+          filteredAccountUsers = accountUsers.filter(
+            (user) => user.user_type !== headers['user_type']['+neq']
+          );
+        } else {
+          filteredAccountUsers = accountUsers.filter(
+            (user) => user.user_type === headers['user_type']
+          );
+        }
+      }
+
+      filteredAccountUsers.sort((a, b) => {
+        const statusA = a[headers['+order_by']];
+        const statusB = b[headers['+order_by']];
+
+        if (statusA < statusB) {
+          return -1;
+        }
+        if (statusA > statusB) {
+          return 1;
+        }
+        return 0;
+      });
+
+      if (headers['+order'] == 'desc') {
+        filteredAccountUsers.reverse();
+      }
+      return res(
+        ctx.json({
+          data: filteredAccountUsers.slice(
+            (page - 1) * pageSize,
+            (page - 1) * pageSize + pageSize
+          ),
+          page,
+          pages: Math.ceil(filteredAccountUsers.length / pageSize),
+          results: filteredAccountUsers.length,
+        })
+      );
+    }
+
+    // Return default response if 'x-filter' header is not present
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
   rest.get(`*/account/users/${childAccountUser.username}`, (req, res, ctx) => {
