@@ -2,11 +2,15 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { Stack } from 'src/components/Stack';
+import { TextField } from 'src/components/TextField';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -15,27 +19,17 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
-import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
+import { affinityTypeOptions } from './utils';
 
-import type {
-  PlacementGroupDrawerFormikProps,
-  PlacementGroupsCreateDrawerProps,
-} from './types';
+import type { PlacementGroupsCreateDrawerProps } from './types';
+import type { CreatePlacementGroupPayload } from '@linode/api-v4';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
-  const {
-    numberOfPlacementGroupsCreated,
-    onClose,
-    onPlacementGroupCreate,
-    open,
-    selectedRegionId,
-  } = props;
-  const queryClient = useQueryClient();
+  const { onClose, onPlacementGroupCreate, open, selectedRegionId } = props;
   const { data: regions } = useRegionsQuery();
-  const { mutateAsync } = useCreatePlacementGroup();
+  const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
   const {
     hasFormBeenSubmitted,
@@ -52,17 +46,16 @@ export const PlacementGroupsCreateDrawer = (
     setFieldValue,
     status,
     values,
-    ...rest
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: '' as PlacementGroupDrawerFormikProps['affinity_type'],
+      affinity_type: '' as CreatePlacementGroupPayload['affinity_type'],
       is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
     },
-    onSubmit(
-      values: PlacementGroupDrawerFormikProps,
+    async onSubmit(
+      values: CreatePlacementGroupPayload,
       { setErrors, setStatus, setSubmitting }
     ) {
       setHasFormBeenSubmitted(false);
@@ -70,65 +63,110 @@ export const PlacementGroupsCreateDrawer = (
       setErrors({});
       const payload = { ...values };
 
-      mutateAsync(payload)
-        .then((response) => {
-          setSubmitting(false);
-          queryClient.invalidateQueries([placementGroupQueryKey]);
+      try {
+        const response = await mutateAsync(payload);
+        setSubmitting(false);
 
-          enqueueSnackbar(
-            `Placement Group ${payload.label} successfully created`,
-            {
-              variant: 'success',
-            }
-          );
-
-          if (onPlacementGroupCreate) {
-            onPlacementGroupCreate(response);
+        enqueueSnackbar(
+          `Placement Group ${payload.label} successfully created`,
+          {
+            variant: 'success',
           }
-          onClose();
-        })
-        .catch((err) => {
-          const mapErrorToStatus = () =>
-            setStatus({ generalError: getErrorMap([], err).none });
+        );
 
-          setSubmitting(false);
-          handleFieldErrors(setErrors, err);
-          handleGeneralErrors(
-            mapErrorToStatus,
-            err,
-            'Error creating Placement Group.'
-          );
-        });
+        if (onPlacementGroupCreate) {
+          onPlacementGroupCreate(response);
+        }
+        onClose();
+      } catch {
+        const mapErrorToStatus = () =>
+          setStatus({ generalError: getErrorMap([], error).none });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, error ?? []);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          error ?? [],
+          'Error creating Placement Group.'
+        );
+      }
     },
     validateOnBlur: false,
     validateOnChange: hasFormBeenSubmitted,
     validationSchema: createPlacementGroupSchema,
   });
 
+  React.useEffect(() => {
+    resetForm();
+    setHasFormBeenSubmitted(false);
+  }, [open, resetForm]);
+
+  React.useEffect(() => {
+    if (isSubmitting) {
+      setHasFormBeenSubmitted(isSubmitting);
+    }
+  }, [isSubmitting]);
+
+  const generalError = status?.generalError;
+
   return (
     <Drawer onClose={onClose} open={open} title="Create Placement Group">
-      <PlacementGroupsDrawerContent
-        formik={{
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          setFieldValue,
-          status,
-          values,
-          ...rest,
-        }}
-        maxNumberOfPlacementGroups={MAX_NUMBER_OF_PLACEMENT_GROUPS}
-        mode="create"
-        numberOfPlacementGroupsCreated={numberOfPlacementGroupsCreated}
-        onClose={onClose}
-        open={open}
-        regions={regions ?? []}
-        selectedRegionId={selectedRegionId}
-        setHasFormBeenSubmitted={setHasFormBeenSubmitted}
-      />
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={1}>
+          {generalError && <Notice text={generalError} variant="error" />}
+          <TextField
+            inputProps={{
+              autoFocus: true,
+            }}
+            aria-label="Label for the Placement Group"
+            disabled={false}
+            errorText={errors.label}
+            label="Label"
+            name="label"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values.label}
+          />
+          <RegionSelect
+            handleSelection={(selection) => {
+              setFieldValue('region', selection);
+            }}
+            currentCapability="Linodes" // TODO VM_Placement: change to Placement Groups when available
+            disabled={Boolean(selectedRegionId)}
+            errorText={errors.region}
+            regions={regions ?? []}
+            selectedId={selectedRegionId ?? values.region}
+          />
+          <Autocomplete
+            onChange={(_, value) => {
+              setFieldValue('affinity_type', value?.value ?? '');
+            }}
+            value={
+              affinityTypeOptions.find(
+                (option) => option.value === values.affinity_type
+              ) ?? null
+            }
+            errorText={errors.affinity_type}
+            label="Affinity Type"
+            options={affinityTypeOptions}
+            placeholder="Select an Affinity Type"
+          />
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              label: 'Create Placement Group',
+              loading: isSubmitting,
+              type: 'submit',
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onClose,
+            }}
+            sx={{ pt: 4 }}
+          />
+        </Stack>
+      </form>
     </Drawer>
   );
 };

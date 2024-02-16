@@ -34,9 +34,6 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
-    PlacementGroup | undefined
-  >();
   const [query, setQuery] = React.useState<string>('');
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -70,12 +67,10 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/edit/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/delete/${placementGroup.id}`);
   };
 
@@ -98,7 +93,6 @@ export const PlacementGroupsLanding = React.memo(() => {
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
-          numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
         />
@@ -198,15 +192,12 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
-        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
       />
       <PlacementGroupsEditDrawer
-        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupEditDrawerOpen}
-        selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         onClose={onClosePlacementGroupDrawer}

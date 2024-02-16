@@ -1,34 +1,39 @@
+import { AFFINITY_TYPES } from '@linode/api-v4';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { queryKey as placementGroupQueryKey } from 'src/queries/placementGroups';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { useMutatePlacementGroup } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
+import { usePlacementGroupQuery } from 'src/queries/placementGroups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
-
-import type {
-  PlacementGroupDrawerFormikProps,
-  PlacementGroupsEditDrawerProps,
-} from './types';
+import type { PlacementGroupsEditDrawerProps } from './types';
+import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
 
 export const PlacementGroupsEditDrawer = (
   props: PlacementGroupsEditDrawerProps
 ) => {
-  const { onClose, onPlacementGroupEdit, open, selectedPlacementGroup } = props;
-  const queryClient = useQueryClient();
-  const { data: regions } = useRegionsQuery();
-  const { mutateAsync } = useMutatePlacementGroup(
+  const { onClose, onPlacementGroupEdit, open } = props;
+  const { id } = useParams<{ id: string }>();
+  const { data: selectedPlacementGroup } = usePlacementGroupQuery(+id);
+  const { region } = usePlacementGroupData({
+    placementGroup: selectedPlacementGroup,
+  });
+  const { error, mutateAsync } = useMutatePlacementGroup(
     selectedPlacementGroup?.id ?? -1
   );
   const { enqueueSnackbar } = useSnackbar();
@@ -44,87 +49,113 @@ export const PlacementGroupsEditDrawer = (
     handleSubmit,
     isSubmitting,
     resetForm,
-    setFieldValue,
     status,
     values,
-    ...rest
-  } = useFormik<PlacementGroupDrawerFormikProps>({
+  } = useFormik<UpdatePlacementGroupPayload>({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: selectedPlacementGroup?.affinity_type as PlacementGroupDrawerFormikProps['affinity_type'],
-      is_strict: true,
       label: selectedPlacementGroup?.label ?? '',
-      region: selectedPlacementGroup?.region ?? '',
     },
-    onSubmit(values, { setErrors, setStatus, setSubmitting }) {
+    async onSubmit(values, { setErrors, setStatus, setSubmitting }) {
       setHasFormBeenSubmitted(false);
       setStatus(undefined);
       setErrors({});
       const payload = { ...values };
-      // This is a bit of an outlier. We only need to pass the label since that's the only value the API accepts.
-      // Meanwhile formik is still keeping track of the other values since we're showing them in the UI.
-      const { label } = payload;
 
-      mutateAsync({ label })
-        .then((response) => {
-          setSubmitting(false);
-          queryClient.invalidateQueries([placementGroupQueryKey]);
+      try {
+        const response = await mutateAsync(payload);
 
-          enqueueSnackbar(
-            `Placement Group ${payload.label} successfully updated`,
-            {
-              variant: 'success',
-            }
-          );
-
-          if (onPlacementGroupEdit) {
-            onPlacementGroupEdit(response);
+        setSubmitting(false);
+        enqueueSnackbar(
+          `Placement Group ${payload.label} successfully updated`,
+          {
+            variant: 'success',
           }
-          onClose();
-        })
-        .catch((err) => {
-          const mapErrorToStatus = () =>
-            setStatus({ generalError: getErrorMap([], err).none });
+        );
 
-          setSubmitting(false);
-          handleFieldErrors(setErrors, err);
-          handleGeneralErrors(
-            mapErrorToStatus,
-            err,
-            'Error renaming Placement Group.'
-          );
-        });
+        if (onPlacementGroupEdit) {
+          onPlacementGroupEdit(response);
+        }
+        onClose();
+      } catch {
+        const mapErrorToStatus = () =>
+          setStatus({ generalError: getErrorMap([], error).none });
+        setSubmitting(false);
+        handleFieldErrors(setErrors, error ?? []);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          error || [],
+          'Error updating Placement Group.'
+        );
+      }
     },
     validateOnBlur: false,
     validateOnChange: hasFormBeenSubmitted,
     validationSchema: updatePlacementGroupSchema,
   });
 
+  React.useEffect(() => {
+    resetForm();
+    setHasFormBeenSubmitted(false);
+  }, [open, resetForm]);
+
+  React.useEffect(() => {
+    if (isSubmitting) {
+      setHasFormBeenSubmitted(isSubmitting);
+    }
+  }, [isSubmitting]);
+
+  const generalError = status?.generalError;
+
   return (
     <Drawer
+      title={
+        selectedPlacementGroup
+          ? `Edit Placement Group ${selectedPlacementGroup.label} (${
+              AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
+            })`
+          : ''
+      }
       onClose={onClose}
       open={open}
-      title={`Edit Placement Group ${selectedPlacementGroup?.label ?? ''}`}
     >
-      <PlacementGroupsDrawerContent
-        formik={{
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          setFieldValue,
-          status,
-          values,
-          ...rest,
-        }}
-        mode="update"
-        onClose={onClose}
-        open={open}
-        regions={regions ?? []}
-        setHasFormBeenSubmitted={setHasFormBeenSubmitted}
-      />
+      {generalError && <Notice text={generalError} variant="error" />}
+      <Typography>
+        <strong>Region: </strong>
+        {region ? `${region.label} (${region.id})` : 'Unknown'}
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={1}>
+          <TextField
+            inputProps={{
+              autoFocus: true,
+            }}
+            aria-label="Label for the Placement Group"
+            disabled={false}
+            errorText={errors.label}
+            label="Label"
+            name="label"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values.label}
+          />
+
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              label: 'Edit',
+              loading: isSubmitting,
+              type: 'submit',
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onClose,
+            }}
+            sx={{ pt: 4 }}
+          />
+        </Stack>
+      </form>
     </Drawer>
   );
 };

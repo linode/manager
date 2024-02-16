@@ -10,17 +10,28 @@ import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
 const commonProps = {
   onClose: vi.fn(),
-  onPlacementGroupCreated: vi.fn(),
   open: true,
 };
+
+const queryMocks = vi.hoisted(() => ({
+  useCreatePlacementGroup: vi.fn().mockReturnValue({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    reset: vi.fn(),
+  }),
+}));
+
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
+  return {
+    ...actual,
+    useCreatePlacementGroup: queryMocks.useCreatePlacementGroup,
+  };
+});
 
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render and have its fields enabled', () => {
     const { getByLabelText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer
-        numberOfPlacementGroupsCreated={0}
-        {...commonProps}
-      />
+      <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     expect(getByLabelText('Label')).toBeEnabled();
@@ -30,10 +41,7 @@ describe('PlacementGroupsCreateDrawer', () => {
 
   it('Affinity Type select should have the correct options', async () => {
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer
-        numberOfPlacementGroupsCreated={0}
-        {...commonProps}
-      />
+      <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     const inputElement = getByPlaceholderText('Select an Affinity Type');
@@ -46,32 +54,9 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(getByText('Anti-affinity')).toBeInTheDocument();
   });
 
-  it('should disable the submit button when the number of placement groups created is >= to the max', () => {
-    const { getByTestId } = renderWithTheme(
-      <PlacementGroupsCreateDrawer
-        numberOfPlacementGroupsCreated={5}
-        {...commonProps}
-      />
-    );
-
-    expect(getByTestId('submit')).toHaveAttribute('aria-disabled', 'true');
-  });
-
   it('should populate the region select with the selected region prop', async () => {
-    server.use(
-      rest.get('*/regions', (req, res, ctx) => {
-        const regions = regionFactory.buildList(1, {
-          id: 'us-east',
-          label: 'Newark, NJ',
-          capabilities: ['Linodes'],
-        });
-        return res(ctx.json(makeResourcePage(regions)));
-      })
-    );
-
     const { getByLabelText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
-        numberOfPlacementGroupsCreated={0}
         selectedRegionId="us-east"
         {...commonProps}
       />
