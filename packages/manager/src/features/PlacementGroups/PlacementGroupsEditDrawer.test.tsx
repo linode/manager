@@ -7,7 +7,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { PlacementGroupsRenameDrawer } from './PlacementGroupsRenameDrawer';
+import { PlacementGroupsEditDrawer } from './PlacementGroupsEditDrawer';
 
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
@@ -23,7 +23,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     );
 
     const { getByLabelText } = renderWithTheme(
-      <PlacementGroupsRenameDrawer
+      <PlacementGroupsEditDrawer
         selectedPlacementGroup={placementGroupFactory.build({
           affinity_type: 'anti_affinity',
           label: 'PG-1',
@@ -31,7 +31,7 @@ describe('PlacementGroupsCreateDrawer', () => {
         })}
         numberOfPlacementGroupsCreated={0}
         onClose={vi.fn()}
-        onPlacementGroupRenamed={vi.fn()}
+        onPlacementGroupEdit={vi.fn()}
         open={true}
       />
     );

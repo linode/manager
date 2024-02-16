@@ -11,6 +11,6 @@ export const createPlacementGroupSchema = object({
   region: string().required('Region is required.'),
 });
 
-export const renamePlacementGroupSchema = object({
+export const updatePlacementGroupSchema = object({
   label: labelValidation,
 });

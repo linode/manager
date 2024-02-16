@@ -29,7 +29,7 @@ export const PlacementGroupsCreateDrawer = (
   const {
     numberOfPlacementGroupsCreated,
     onClose,
-    onPlacementGroupCreated,
+    onPlacementGroupCreate,
     open,
     selectedRegionId,
   } = props;
@@ -82,8 +82,8 @@ export const PlacementGroupsCreateDrawer = (
             }
           );
 
-          if (onPlacementGroupCreated) {
-            onPlacementGroupCreated(response);
+          if (onPlacementGroupCreate) {
+            onPlacementGroupCreate(response);
           }
           onClose();
         })

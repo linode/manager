@@ -11,12 +11,12 @@ export type PlacementGroupsDrawerPropsBase = {
 };
 
 export type PlacementGroupsCreateDrawerProps = PlacementGroupsDrawerPropsBase & {
-  onPlacementGroupCreated?: (placementGroup: PlacementGroup) => void;
+  onPlacementGroupCreate?: (placementGroup: PlacementGroup) => void;
   selectedRegionId?: string;
 };
 
-export type PlacementGroupsRenameDrawerProps = PlacementGroupsDrawerPropsBase & {
-  onPlacementGroupRenamed?: (placementGroup: PlacementGroup) => void;
+export type PlacementGroupsEditDrawerProps = PlacementGroupsDrawerPropsBase & {
+  onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
   selectedPlacementGroup: PlacementGroup | undefined;
 };
 

@@ -23,7 +23,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
 import { PlacementGroupsDeleteModal } from '../PlacementGroupsDeleteModal';
-import { PlacementGroupsRenameDrawer } from '../PlacementGroupsRenameDrawer';
+import { PlacementGroupsEditDrawer } from '../PlacementGroupsEditDrawer';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
@@ -69,9 +69,9 @@ export const PlacementGroupsLanding = React.memo(() => {
     history.replace('/placement-groups/create');
   };
 
-  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
+  const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
-    history.replace(`/placement-groups/rename/${placementGroup.id}`);
+    history.replace(`/placement-groups/edit/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
@@ -84,8 +84,8 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
-  const isPlacementGroupRenameDrawerOpen = location.pathname.includes('rename');
   const isPlacementGroupDeleteModalOpen = location.pathname.includes('delete');
+  const isPlacementGroupEditDrawerOpen = location.pathname.includes('edit');
 
   if (isLoading) {
     return <CircleProgress />;
@@ -180,8 +180,8 @@ export const PlacementGroupsLanding = React.memo(() => {
               handleDeletePlacementGroup={() =>
                 handleDeletePlacementGroup(placementGroup)
               }
-              handleRenamePlacementGroup={() =>
-                handleRenamePlacementGroup(placementGroup)
+              handleEditPlacementGroup={() =>
+                handleEditPlacementGroup(placementGroup)
               }
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
@@ -202,10 +202,10 @@ export const PlacementGroupsLanding = React.memo(() => {
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
       />
-      <PlacementGroupsRenameDrawer
+      <PlacementGroupsEditDrawer
         numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupRenameDrawerOpen}
+        open={isPlacementGroupEditDrawerOpen}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal

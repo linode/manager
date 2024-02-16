@@ -1,4 +1,4 @@
-import { renamePlacementGroupSchema } from '@linode/validation';
+import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -19,18 +19,13 @@ import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 
 import type {
   PlacementGroupDrawerFormikProps,
-  PlacementGroupsRenameDrawerProps,
+  PlacementGroupsEditDrawerProps,
 } from './types';
 
-export const PlacementGroupsRenameDrawer = (
-  props: PlacementGroupsRenameDrawerProps
+export const PlacementGroupsEditDrawer = (
+  props: PlacementGroupsEditDrawerProps
 ) => {
-  const {
-    onClose,
-    onPlacementGroupRenamed,
-    open,
-    selectedPlacementGroup,
-  } = props;
+  const { onClose, onPlacementGroupEdit, open, selectedPlacementGroup } = props;
   const queryClient = useQueryClient();
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useMutatePlacementGroup(
@@ -76,14 +71,14 @@ export const PlacementGroupsRenameDrawer = (
           queryClient.invalidateQueries([placementGroupQueryKey]);
 
           enqueueSnackbar(
-            `Placement Group ${payload.label} successfully renamed`,
+            `Placement Group ${payload.label} successfully updated`,
             {
               variant: 'success',
             }
           );
 
-          if (onPlacementGroupRenamed) {
-            onPlacementGroupRenamed(response);
+          if (onPlacementGroupEdit) {
+            onPlacementGroupEdit(response);
           }
           onClose();
         })
@@ -102,14 +97,14 @@ export const PlacementGroupsRenameDrawer = (
     },
     validateOnBlur: false,
     validateOnChange: hasFormBeenSubmitted,
-    validationSchema: renamePlacementGroupSchema,
+    validationSchema: updatePlacementGroupSchema,
   });
 
   return (
     <Drawer
       onClose={onClose}
       open={open}
-      title={`Rename Placement Group ${selectedPlacementGroup?.label ?? ''}`}
+      title={`Edit Placement Group ${selectedPlacementGroup?.label ?? ''}`}
     >
       <PlacementGroupsDrawerContent
         formik={{
@@ -124,7 +119,7 @@ export const PlacementGroupsRenameDrawer = (
           values,
           ...rest,
         }}
-        mode="rename"
+        mode="update"
         onClose={onClose}
         open={open}
         regions={regions ?? []}

@@ -18,7 +18,7 @@ import type { FormikProps } from 'formik';
 interface Props {
   formik: FormikProps<PlacementGroupDrawerFormikProps>;
   maxNumberOfPlacementGroups?: number;
-  mode: 'create' | 'rename';
+  mode: 'create' | 'update';
   numberOfPlacementGroupsCreated?: number;
   onClose: () => void;
   open: boolean;
@@ -65,7 +65,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
   }, [isSubmitting]);
 
   const generalError = status?.generalError;
-  const isRenameDrawer = mode === 'rename';
+  const isEditDrawer = mode === 'update';
 
   return (
     <Grid>
@@ -90,7 +90,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
               setFieldValue('region', selection);
             }}
             currentCapability="Linodes" // TODO VM_Placement: change to Placement Groups when available
-            disabled={isRenameDrawer || Boolean(selectedRegionId)}
+            disabled={isEditDrawer || Boolean(selectedRegionId)}
             errorText={errors.region}
             regions={regions ?? []}
             selectedId={selectedRegionId ?? values.region}
@@ -104,7 +104,7 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
                 (option) => option.value === values.affinity_type
               ) ?? null
             }
-            disabled={isRenameDrawer}
+            disabled={isEditDrawer}
             errorText={errors.affinity_type}
             label="Affinity Type"
             options={affinityTypeOptions}
@@ -116,12 +116,12 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
               disabled:
                 // TODO VM_Placement: we may want to move this logic to the create button in the landing page
                 // We just need to wait to wait to see how we're going to get the max number of PGs (account/region)
-                !isRenameDrawer &&
+                !isEditDrawer &&
                 numberOfPlacementGroupsCreated &&
                 maxNumberOfPlacementGroups
                   ? numberOfPlacementGroupsCreated >= maxNumberOfPlacementGroups
                   : false,
-              label: `${isRenameDrawer ? 'Rename' : 'Create'} Placement Group`,
+              label: `${isEditDrawer ? 'Edit' : 'Create'} Placement Group`,
               loading: isSubmitting,
               tooltipText: MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
               type: 'submit',
