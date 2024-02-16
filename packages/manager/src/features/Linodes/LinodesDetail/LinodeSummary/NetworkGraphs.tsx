@@ -1,7 +1,6 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme, styled, useTheme } from '@mui/material/styles';
-import { map, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -13,14 +12,10 @@ import {
   formatBitsPerSecond,
   formatNetworkTooltip,
   generateNetworkUnits,
+  NetworkUnit,
 } from 'src/features/Longview/shared/utilities';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  Metrics,
-  getMetrics,
-  getTotalTraffic,
-} from 'src/utilities/statMetrics';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { Metrics, getMetrics } from 'src/utilities/statMetrics';
 
 import { StatsPanel } from './StatsPanel';
 
@@ -29,9 +24,6 @@ export interface TotalTrafficProps {
   inTraffic: string;
   outTraffic: string;
 }
-
-const formatTotalTraffic = (value: number) =>
-  readableBytes(value, { base10: true }).formatted;
 
 export interface ChartProps {
   height: number;
@@ -64,7 +56,7 @@ interface NetworkStats {
 const _getMetrics = (data: NetworkStats) => {
   return {
     privateIn: getMetrics(data.privateIn),
-    privateOut: getMetrics(data.privateOut ?? []),
+    privateOut: getMetrics(data.privateOut),
     publicIn: getMetrics(data.publicIn),
     publicOut: getMetrics(data.publicOut),
   };
@@ -77,41 +69,21 @@ export const NetworkGraphs = (props: Props) => {
   const flags = useFlags();
 
   const v4Data: NetworkStats = {
-    privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
-    privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats),
-    publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
-    publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
+    privateIn: stats?.data.netv4.private_in ?? [],
+    privateOut: stats?.data.netv4.private_out ?? [],
+    publicIn: stats?.data.netv4.in ?? [],
+    publicOut: stats?.data.netv4.out ?? [],
   };
 
   const v6Data: NetworkStats = {
-    privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
-    privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats),
-    publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-    publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
+    privateIn: stats?.data.netv6.private_in ?? [],
+    privateOut: stats?.data.netv6.private_out ?? [],
+    publicIn: stats?.data.netv6.in ?? [],
+    publicOut: stats?.data.netv6.out ?? [],
   };
 
   const v4Metrics = _getMetrics(v4Data);
   const v6Metrics = _getMetrics(v6Data);
-
-  const v4totalTraffic: TotalTrafficProps = map(
-    formatTotalTraffic,
-    getTotalTraffic(
-      v4Metrics.publicIn.total,
-      v4Metrics.publicOut.total,
-      v4Data.publicIn.length,
-      v6Metrics.publicIn.total,
-      v6Metrics.publicOut.total
-    )
-  );
-
-  const v6totalTraffic: TotalTrafficProps = map(
-    formatTotalTraffic,
-    getTotalTraffic(
-      v6Metrics.publicIn.total,
-      v6Metrics.publicOut.total,
-      v6Metrics.publicIn.length
-    )
-  );
 
   // Convert to bytes, which is what generateNetworkUnits expects.
   const maxV4InBytes =
@@ -150,7 +122,6 @@ export const NetworkGraphs = (props: Props) => {
               ariaLabel="IPv4 Network Traffic Graph"
               data={v4Data}
               metrics={v4Metrics}
-              totalTraffic={v4totalTraffic}
               unit={v4Unit}
               {...commonGraphProps}
             />
@@ -166,7 +137,6 @@ export const NetworkGraphs = (props: Props) => {
               ariaLabel="IPv6 Network Traffic Graph"
               data={v6Data}
               metrics={v6Metrics}
-              totalTraffic={v6totalTraffic}
               unit={v6Unit}
               {...commonGraphProps}
             />
@@ -187,8 +157,7 @@ interface GraphProps {
   rangeSelection: string;
   theme: Theme;
   timezone: string;
-  totalTraffic: TotalTrafficProps;
-  unit: string;
+  unit: NetworkUnit;
   xAxisTickFormat: string;
 }
 
@@ -210,7 +179,7 @@ const Graph = (props: GraphProps) => {
   const format = formatBitsPerSecond;
 
   const convertNetworkData = (value: number) => {
-    return convertNetworkToUnit(value, unit as any);
+    return convertNetworkToUnit(value, unit);
   };
 
   /**
@@ -298,7 +267,7 @@ const Graph = (props: GraphProps) => {
           height={420}
           showLegend
           timezone={timezone}
-          unit={' Kb/s'}
+          unit={` ${unit}/s`}
         />
       </Box>
     );
