@@ -8,12 +8,13 @@ import { InputLabel } from 'src/components/InputLabel';
 import { Tooltip } from 'src/components/Tooltip';
 
 export interface Props {
+  hideShowAll?: boolean;
   text: string;
 }
 
-export const CopyAll = (props: Props) => {
+export const CopyAllHostnames = (props: Props) => {
   const [copied, setCopied] = React.useState<boolean>(false);
-  const { text } = props;
+  const { hideShowAll = false, text } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -24,21 +25,23 @@ export const CopyAll = (props: Props) => {
   return (
     <StyledBox>
       <InputLabel>S3 Endpoint Hostnames</InputLabel>
-      <Tooltip
-        className="copy-tooltip"
-        data-qa-copied
-        placement="top"
-        title={copied ? 'Copied!' : 'Copy'}
-      >
-        <StyledLinkButton
-          aria-label={`Copy ${text} to clipboard`}
-          name={text}
-          onClick={handleIconClick}
-          type="button"
+      {!hideShowAll && (
+        <Tooltip
+          className="copy-tooltip"
+          data-qa-copied
+          placement="top"
+          title={copied ? 'Copied!' : 'Copy'}
         >
-          Copy all
-        </StyledLinkButton>
-      </Tooltip>
+          <StyledLinkButton
+            aria-label={`Copy ${text} to clipboard`}
+            name={text}
+            onClick={handleIconClick}
+            type="button"
+          >
+            Copy all
+          </StyledLinkButton>
+        </Tooltip>
+      )}
     </StyledBox>
   );
 };
