@@ -8,7 +8,7 @@ import { regionFactory } from 'src/factories/regions';
 import {
   LinodeActionMenu,
   LinodeActionMenuProps,
-} from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
+} from './LinodeActionMenu';
 import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
