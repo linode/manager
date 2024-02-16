@@ -25,6 +25,7 @@ interface EntityInfo {
     | 'Linode'
     | 'Load Balancer'
     | 'NodeBalancer'
+    | 'Placement Group'
     | 'Subnet'
     | 'VPC'
     | 'Volume';
@@ -49,6 +50,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     children,
     entity,
     errors,
+    inputProps,
     label,
     loading,
     onClick,
@@ -120,6 +122,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         data-testid={'dialog-confirm-text-input'}
         expand
         hideInstructions={entity.subType === 'CloseAccount'}
+        inputProps={inputProps}
         label={label}
         placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
         textFieldStyle={textFieldStyle}

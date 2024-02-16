@@ -22,6 +22,7 @@ import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
+import { PlacementGroupsDeleteModal } from '../PlacementGroupsDeleteModal';
 import { PlacementGroupsRenameDrawer } from '../PlacementGroupsRenameDrawer';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
@@ -75,15 +76,16 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
+    history.replace(`/placement-groups/delete/${placementGroup.id}`);
   };
 
   const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
-    setSelectedPlacementGroup(undefined);
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
   const isPlacementGroupRenameDrawerOpen = location.pathname.includes('rename');
+  const isPlacementGroupDeleteModalOpen = location.pathname.includes('delete');
 
   if (isLoading) {
     return <CircleProgress />;
@@ -206,7 +208,10 @@ export const PlacementGroupsLanding = React.memo(() => {
         open={isPlacementGroupRenameDrawerOpen}
         selectedPlacementGroup={selectedPlacementGroup}
       />
-      {/* TODO VM_Placement: add delete dialog */}
+      <PlacementGroupsDeleteModal
+        onClose={onClosePlacementGroupDrawer}
+        open={isPlacementGroupDeleteModalOpen}
+      />
     </>
   );
 });

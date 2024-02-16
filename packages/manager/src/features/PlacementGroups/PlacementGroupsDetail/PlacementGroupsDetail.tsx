@@ -26,7 +26,7 @@ export const PlacementGroupsDetail = () => {
   const flags = useFlags();
   const { id, tab } = useParams<{ id: string; tab?: string }>();
   const history = useHistory();
-  const placementGroupId = Number(id);
+  const placementGroupId = +id;
 
   const {
     data: placementGroup,
