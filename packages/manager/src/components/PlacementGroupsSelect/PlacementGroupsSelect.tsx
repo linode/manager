@@ -1,4 +1,4 @@
-import { PlacementGroup } from '@linode/api-v4';
+import { AFFINITY_TYPES, PlacementGroup } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
@@ -61,7 +61,9 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       getOptionLabel={(placementGroupsOptions: PlacementGroup) =>
         renderOptionLabel
           ? renderOptionLabel(placementGroupsOptions)
-          : `${placementGroupsOptions.label} (${placementGroupsOptions.affinity_type})`
+          : `${placementGroupsOptions.label} (${
+              AFFINITY_TYPES[placementGroupsOptions?.affinity_type]
+            })`
       }
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
