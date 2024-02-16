@@ -7,8 +7,11 @@ import {
   Scope,
   UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { useFormik, FormikProps } from 'formik';
+import {
+  createObjectStorageKeysSchema,
+  updateObjectStorageKeysSchema,
+} from '@linode/validation/lib/objectStorageKeys.schema';
+import { FormikProps, useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -166,7 +169,9 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     },
     validateOnBlur: true,
     validateOnChange: false,
-    validationSchema: createObjectStorageKeysSchema,
+    validationSchema: createMode
+      ? createObjectStorageKeysSchema
+      : updateObjectStorageKeysSchema,
   });
 
   // @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix to handle error cases when the feature flag is enabled without Mock Service Worker (MSW). This can be removed during the feature flag cleanup.
@@ -297,6 +302,17 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             required
             selectedRegion={formik.values.regions}
           />
+          {createMode && (
+            <Typography
+              sx={(theme) => ({
+                marginTop: theme.spacing(2),
+              })}
+            >
+              Unlimited S3 access key can be used to create buckets in the
+              selected region using S3 Endpoint returned on successful creation
+              of the key.
+            </Typography>
+          )}
           {createMode && !bucketsError && (
             <LimitedAccessControls
               bucket_access={formik.values.bucket_access}

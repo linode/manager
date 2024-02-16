@@ -55,7 +55,7 @@ describe('SubnetLinodeRow', () => {
 
   const handleUnassignLinode = vi.fn();
 
-  it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, and Reboot and Unassign buttons', async () => {
+  it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
       rest.get('*/instances/*/configs', async (req, res, ctx) => {
@@ -100,11 +100,15 @@ describe('SubnetLinodeRow', () => {
     getAllByText('10.0.0.0');
     getByText(mockFirewall0);
 
-    const rebootLinodeButton = getAllByRole('button')[1];
+    const plusChipButton = getAllByRole('button')[1];
+    expect(plusChipButton).toHaveTextContent('+1');
+
+    const rebootLinodeButton = getAllByRole('button')[2];
     expect(rebootLinodeButton).toHaveTextContent('Reboot');
     fireEvent.click(rebootLinodeButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
-    const unassignLinodeButton = getAllByRole('button')[2];
+
+    const unassignLinodeButton = getAllByRole('button')[3];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     fireEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();

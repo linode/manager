@@ -33,10 +33,10 @@ import {
   WithAccountProps,
   withAccount,
 } from 'src/containers/account.container';
-import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { WithFeatureFlagProps } from 'src/containers/flags.container';
+import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
-import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
@@ -45,7 +45,7 @@ import {
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { getPlacementGroupLinodeCount } from 'src/features/PlacementGroups/utils';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -64,6 +64,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -103,6 +104,7 @@ import {
 import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 export interface LinodeCreateProps {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
@@ -110,6 +112,7 @@ export interface LinodeCreateProps {
   firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
+  handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -170,7 +173,7 @@ type InnerProps = WithTypesRegionsAndImages &
 
 type CombinedProps = AllFormStateAndHandlers &
   AppsData &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   ImagesProps &
   InnerProps &
   ReduxStateProps &
@@ -339,9 +342,10 @@ export class LinodeCreate extends React.PureComponent<
 
     let errorText;
     if (
-      placementGroupSelection &&
-      getPlacementGroupLinodeCount(placementGroupSelection) >=
-        placementGroupSelection.capacity
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupSelection!,
+        region: regionsData.find((r) => r.id === selectedRegionID)!,
+      })
     ) {
       errorText = `This Placement Group doesn't have any capacity`;
     }
@@ -677,9 +681,11 @@ export class LinodeCreate extends React.PureComponent<
             toggleAutoassignIPv4WithinVPCEnabled={
               this.props.toggleAutoassignIPv4WithinVPCEnabled
             }
+            additionalIPv4RangesForVPC={this.props.additionalIPv4RangesForVPC}
             assignPublicIPv4Address={this.props.assignPublicIPv4Address}
             autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
             from="linodeCreate"
+            handleIPv4RangeChange={this.props.handleIPv4RangesForVPC}
             handleSelectVPC={this.props.setSelectedVPC}
             handleSubnetChange={this.props.handleSubnetChange}
             handleVPCIPv4Change={this.props.handleVPCIPv4Change}
@@ -858,6 +864,9 @@ export class LinodeCreate extends React.PureComponent<
       this.props.selectedVPCId !== -1
     ) {
       const vpcInterfaceData: InterfacePayload = {
+        ip_ranges: this.props.additionalIPv4RangesForVPC
+          .map((ipRange) => ipRange.address)
+          .filter((ipRange) => ipRange !== ''),
         ipam_address: null,
         ipv4: {
           nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,

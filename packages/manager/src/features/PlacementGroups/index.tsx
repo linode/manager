@@ -36,6 +36,15 @@ export const PlacementGroups = () => {
             exact
             path={`${path}/rename/:id`}
           />
+          <Route
+            component={PlacementGroupsLanding}
+            exact
+            path={`${path}/delete/:id`}
+          />
+          <Route
+            component={PlacementGroupsDetail}
+            path={`${path}/:id/:tab?/unassign/:linodeId?`}
+          />
           <Route component={PlacementGroupsDetail} path={`${path}/:id/:tab?`} />
           <Route component={PlacementGroupsLanding} />
         </Switch>

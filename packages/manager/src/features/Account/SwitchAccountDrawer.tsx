@@ -6,12 +6,14 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import {
   isParentTokenValid,
   setTokenInLocalStorage,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 import { getStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
@@ -153,11 +155,10 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const handleSwitchToParentAccount = React.useCallback(() => {
-    if (!isParentTokenValid({ isProxyUser })) {
+    if (!isParentTokenValid()) {
       const expiredTokenError: APIError = {
         field: 'token',
-        reason:
-          'The reseller account token has expired. You must log back into the account manually.',
+        reason: PARENT_SESSION_EXPIRED,
       };
 
       setIsParentTokenError([expiredTokenError]);
@@ -187,8 +188,11 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              onClick={() => {
+                sendSwitchToParentAccountEvent();
+                handleSwitchToParentAccount();
+              }}
               aria-label="parent-account-link"
-              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>
