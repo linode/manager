@@ -14,14 +14,21 @@ export interface PlacementGroup {
   affinity_type: AffinityType;
   is_compliant: boolean;
   linode_ids: number[];
+  strict: boolean;
 }
 
-// The `strict` parameter specifies whether placement groups should be ignored when looking for a host.
-// TODO VM_Placement: figure out the values for each create flow (create, clone, migrate etc)
-export type CreatePlacementGroupPayload = Pick<
+type PlacementGroupPayload = Pick<
   PlacementGroup,
-  'label' | 'affinity_type' | 'region'
-> & { strict: boolean };
+  'label' | 'affinity_type' | 'strict'
+>;
+
+export type LinodePlacementGroup = PlacementGroupPayload & {
+  id: number;
+};
+
+export type CreatePlacementGroupPayload = PlacementGroupPayload & {
+  region: Region['id'];
+};
 
 export type RenamePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 

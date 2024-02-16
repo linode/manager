@@ -14,6 +14,7 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   label: Factory.each((id) => `pg-${id}`),
   linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
   region: 'us-east',
+  strict: true,
 });
 
 export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<CreatePlacementGroupPayload>(
