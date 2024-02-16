@@ -41,7 +41,11 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
         </TableCell>
       </Hidden>
       <TableCell statusCell>
-        <StatusIcon pulse={false} status={accessIconMap[status] ?? 'other'} />
+        <StatusIcon
+          ariaLabel={`Status is ${status}`}
+          pulse={false}
+          status={accessIconMap[status] ?? 'other'}
+        />
         {capitalize(status)}
       </TableCell>
     </TableRow>

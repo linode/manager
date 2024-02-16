@@ -2,7 +2,7 @@
  * @file Integration tests for Akamai Cloud Load Balancer summary page.
  */
 
-import { loadbalancerFactory, configurationFactory } from '@src/factories/aglb';
+import { loadbalancerFactory, configurationFactory } from '@src/factories/aclb';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,

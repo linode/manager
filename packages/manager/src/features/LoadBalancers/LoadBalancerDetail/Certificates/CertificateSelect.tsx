@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { useLoadBalancerCertificatesInfiniteQuery } from 'src/queries/aglb/certificates';
+import { useLoadBalancerCertificatesInfiniteQuery } from 'src/queries/aclb/certificates';
 
 import type { Certificate, Filter } from '@linode/api-v4';
 import type { TextFieldProps } from 'src/components/TextField';

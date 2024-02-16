@@ -6,7 +6,6 @@ import {
   DocumentTitleSegment,
   withDocumentTitleProvider,
 } from 'src/components/DocumentTitle';
-import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
@@ -23,37 +22,35 @@ import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 export const App = () => <BaseApp />;
 
 const BaseApp = withDocumentTitleProvider(
-  withFeatureFlagProvider(
-    withFeatureFlagConsumer(() => {
-      const { isLoading } = useInitialRequests();
+  withFeatureFlagProvider(() => {
+    const { isLoading } = useInitialRequests();
 
-      const { areFeatureFlagsLoading } = useSetupFeatureFlags();
+    const { areFeatureFlagsLoading } = useSetupFeatureFlags();
 
-      if (isLoading || areFeatureFlagsLoading) {
-        return <SplashScreen />;
-      }
+    if (isLoading || areFeatureFlagsLoading) {
+      return <SplashScreen />;
+    }
 
-      return (
-        <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
-          {/** Accessibility helper */}
-          <a className="skip-link" href="#main-content">
-            Skip to main content
-          </a>
-          <div hidden>
-            <span id="new-window">Opens in a new window</span>
-            <span id="external-site">Opens an external site</span>
-            <span id="external-site-new-window">
-              Opens an external site in a new window
-            </span>
-          </div>
-          <GoTo />
-          <DocumentTitleSegment segment="Akamai Cloud Manager" />
-          <MainContent />
-          <GlobalListeners />
-        </ErrorBoundary>
-      );
-    })
-  )
+    return (
+      <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
+        {/** Accessibility helper */}
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
+        <div hidden>
+          <span id="new-window">Opens in a new window</span>
+          <span id="external-site">Opens an external site</span>
+          <span id="external-site-new-window">
+            Opens an external site in a new window
+          </span>
+        </div>
+        <GoTo />
+        <DocumentTitleSegment segment="Akamai Cloud Manager" />
+        <MainContent />
+        <GlobalListeners />
+      </ErrorBoundary>
+    );
+  })
 );
 
 const GlobalListeners = () => {
