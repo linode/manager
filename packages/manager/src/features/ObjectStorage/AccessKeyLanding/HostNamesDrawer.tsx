@@ -7,7 +7,7 @@ import { Drawer } from 'src/components/Drawer';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
-import { CopyAll } from './CopyAll';
+import { CopyAllHostnames } from './CopyAllHostnames';
 
 interface Props {
   onClose: () => void;
@@ -27,14 +27,12 @@ export const HostNamesDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Regions / S3 Hostnames">
       <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
-        <CopyAll
+        <CopyAllHostnames
           text={
             regions
               .map(
                 (region) =>
-                  `S3 Endpoint: ${regionsLookup[region.id]?.label}: ${
-                    region.s3_endpoint
-                  }`
+                  `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
               )
               .join('\n') ?? ''
           }
@@ -49,13 +47,11 @@ export const HostNamesDrawer = (props: Props) => {
       >
         {regions.map((region, index) => (
           <CopyableTextField
-            value={`S3 Endpoint: ${regionsLookup[region.id]?.label}: ${
-              region.s3_endpoint
-            }`}
             hideLabel
             key={index}
             label={`${region.id}: ${region.s3_endpoint}`}
             sx={{ border: 'none', maxWidth: '100%' }}
+            value={`${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`}
           />
         ))}
       </Box>
