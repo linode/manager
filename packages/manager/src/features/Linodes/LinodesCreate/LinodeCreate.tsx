@@ -853,7 +853,9 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
-      placement_group: placement_group_payload,
+      placement_group: this.props.flags.vmPlacement
+        ? placement_group_payload
+        : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID,
       root_pass: this.props.password,

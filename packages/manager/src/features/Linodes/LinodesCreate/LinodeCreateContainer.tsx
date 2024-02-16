@@ -87,7 +87,6 @@ import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
-  CreateLinodePlacementGroupPayload,
   CreateLinodeRequest,
   Interface,
   Linode,
@@ -111,7 +110,6 @@ interface State {
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
-  placementGroupPayload?: CreateLinodePlacementGroupPayload;
   placementGroupSelection?: PlacementGroup;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
@@ -163,7 +161,6 @@ const defaultState: State = {
   errors: undefined,
   formIsSubmitting: false,
   password: '',
-  placementGroupPayload: undefined,
   placementGroupSelection: undefined,
   privateIPEnabled: false,
   selectedBackupID: undefined,
@@ -612,12 +609,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   setPassword = (password: string) => this.setState({ password });
-
-  setPlacementGroupPayload = (
-    placementGroupPayload: CreateLinodePlacementGroupPayload
-  ) => {
-    this.setState({ placementGroupPayload });
-  };
 
   setPlacementGroupSelection = (placementGroupSelection: PlacementGroup) => {
     this.setState({ placementGroupSelection });
