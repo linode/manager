@@ -14,9 +14,9 @@ import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import { restrictedProxyUserTooltip } from '../Profile/constants';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
+import { RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';
 
 interface UserProfileProps {
   accountErrors?: APIError[];
@@ -102,7 +102,7 @@ export const UserProfile = (props: UserProfileProps) => {
           )}
           <TextField
             tooltipText={
-              isProxyUserProfile ? restrictedProxyUserTooltip : undefined
+              isProxyUserProfile ? RESTRICTED_FIELD_TOOLTIP : undefined
             }
             data-qa-username
             disabled={isProxyUserProfile}
@@ -143,7 +143,7 @@ export const UserProfile = (props: UserProfileProps) => {
             }
             tooltipText={
               isProxyUserProfile
-                ? restrictedProxyUserTooltip
+                ? RESTRICTED_FIELD_TOOLTIP
                 : profile?.username !== originalUsername
                 ? 'You can\u{2019}t change another user\u{2019}s email address.'
                 : undefined

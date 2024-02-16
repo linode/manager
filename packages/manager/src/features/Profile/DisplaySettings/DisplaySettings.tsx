@@ -17,8 +17,8 @@ import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 
-import { restrictedProxyUserTooltip } from '../constants';
 import { TimezoneForm } from './TimezoneForm';
+import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -106,7 +106,7 @@ export const DisplaySettings = () => {
           profile?.restricted
             ? 'Restricted users cannot update their username. Please contact an account administrator.'
             : isProxyUser
-            ? restrictedProxyUserTooltip
+            ? RESTRICTED_FIELD_TOOLTIP
             : undefined
         }
         disabled={profile?.restricted || isProxyUser}
@@ -136,7 +136,7 @@ export const DisplaySettings = () => {
         key={emailResetToken}
         label="Email"
         submitForm={updateEmail}
-        tooltipText={isProxyUser ? restrictedProxyUserTooltip : undefined}
+        tooltipText={isProxyUser ? RESTRICTED_FIELD_TOOLTIP : undefined}
         trimmed
         type="email"
       />
