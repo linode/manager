@@ -1,0 +1,165 @@
+import { profileFactory, securityQuestionsFactory } from '@src/factories';
+import { accountUserFactory } from '@src/factories/accountUsers';
+import { grantsFactory } from '@src/factories/grants';
+import {
+  mockGetUser,
+  mockGetUserGrants,
+  mockGetUsers,
+} from 'support/intercepts/account';
+import { mockGetSecurityQuestions } from 'support/intercepts/profile';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { ui } from 'support/ui';
+import { mockGetProfile } from 'support/intercepts/profile';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+
+describe('User verification banner', () => {
+  /*
+   * - Confirms that a banner is present the child users do not have a phone number or security questions.
+   * - Confirms that the "Add Verification Details" button redirects the user to /profile/auth.
+   */
+  it('can show up when a child user has not associated a phone number or set up security questions for their account', () => {
+    const mockChildProfile = profileFactory.build({
+      username: 'child-user',
+      user_type: 'child',
+      verified_phone_number: null,
+    });
+
+    const mockChildUser = accountUserFactory.build({
+      restricted: false,
+      username: 'child-user',
+      user_type: 'child',
+      verified_phone_number: null,
+    });
+
+    const mockRestrictedProxyUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'proxy',
+      username: 'restricted-proxy-user',
+      verified_phone_number: null,
+    });
+
+    const mockUserGrants = grantsFactory.build({
+      global: { account_access: 'read_write' },
+    });
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
+    mockGetUser(mockChildUser);
+    mockGetUserGrants(mockChildUser.username, mockUserGrants);
+    mockGetProfile(mockChildProfile);
+    mockGetUser(mockRestrictedProxyUser);
+    mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+
+    // A banner is displayed and prompts users to set up phone numbers or security questions.
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('be.visible');
+
+    // The banner should be present across all other pages
+    cy.visitWithLogin('/account/billings');
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('be.visible');
+
+    cy.visitWithLogin('/account/login-history');
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('be.visible');
+
+    cy.visitWithLogin('/account/service-transfers');
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('be.visible');
+
+    cy.visitWithLogin('/account/maintenance');
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('be.visible');
+
+    cy.visitWithLogin('/account/settings');
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('be.visible');
+
+    // "Add verification details" button should redirect to url '/profile/auth'
+    ui.button
+      .findByTitle('Add verification details')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.url().should('endWith', `/profile/auth`);
+  });
+
+  /*
+   * - Confirms that a banner is not shown when the child user sets up security questions.
+   */
+  it('does not show up when a child user adds a phone number or set up security questions', () => {
+    const mockChildProfile = profileFactory.build({
+      username: 'child-user',
+      user_type: 'child',
+      verified_phone_number: '+15555555555',
+    });
+
+    const mockChildUser = accountUserFactory.build({
+      restricted: false,
+      username: 'child-user',
+      user_type: 'child',
+      verified_phone_number: '+15555555555',
+    });
+
+    const mockRestrictedProxyUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'proxy',
+      username: 'restricted-proxy-user',
+      verified_phone_number: '+15555555555',
+    });
+
+    const mockUserGrants = grantsFactory.build({
+      global: { account_access: 'read_write' },
+    });
+
+    const securityQuestions = securityQuestionsFactory.build();
+    const securityQuestionAnswers = ['Answer 1', 'Answer 2', 'Answer 3'];
+    securityQuestions.security_questions[0].response =
+      securityQuestionAnswers[0];
+    securityQuestions.security_questions[1].response =
+      securityQuestionAnswers[1];
+    securityQuestions.security_questions[2].response =
+      securityQuestionAnswers[2];
+
+    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
+    mockGetUser(mockChildUser);
+    mockGetUserGrants(mockChildUser.username, mockUserGrants);
+    mockGetProfile(mockChildProfile);
+    mockGetUser(mockRestrictedProxyUser);
+    mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
+    mockGetSecurityQuestions(securityQuestions).as('getSecurityQuestions');
+
+    // Navigate to Users & Grants page and confirm "Business partner settings" and "User settings" sections are visible.
+    cy.visitWithLogin('/account/users');
+    cy.wait(['@getUsers', '@getSecurityQuestions']);
+
+    // The banner should not show up.
+    cy.findByText(
+      'Add verification details to enhance account security and ensure prompt assistance when needed.'
+    ).should('not.exist');
+    cy.get('[data-testid="confirmButton"]').should('not.exist');
+  });
+});
