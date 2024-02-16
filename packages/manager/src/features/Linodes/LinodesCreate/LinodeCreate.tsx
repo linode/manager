@@ -837,8 +837,8 @@ export class LinodeCreate extends React.PureComponent<
     );
 
     const placement_group_payload: CreateLinodePlacementGroupPayload = {
+      compliant_only: true,
       id: this.props.placementGroupSelection?.id,
-      strict: true,
     };
 
     // eslint-disable-next-line sonarjs/no-unused-collection

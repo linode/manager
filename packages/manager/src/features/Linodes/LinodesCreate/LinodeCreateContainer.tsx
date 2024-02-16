@@ -774,7 +774,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             errors: [
               {
                 field: 'placement_group',
-                reason: `${this.state.placementGroupSelection?.label} (${this.state.placementGroupSelection?.affinity_type}) doesn't have any capacity for this Linode.`,
+                reason: `${this.state.placementGroupSelection?.label} (${
+                  this.state.placementGroupSelection?.affinity_type ===
+                  'affinity'
+                    ? 'Affinity'
+                    : 'Anti-affinity'
+                }) doesn't have any capacity for this Linode.`,
               },
             ],
           },
