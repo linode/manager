@@ -5,7 +5,7 @@ import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { linodeBackupsFactory } from 'src/factories/linodes';
 import { regionFactory } from 'src/factories/regions';
-import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeActionMenu, LinodeActionMenuProps } from './LinodeActionMenu';
 import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
@@ -28,65 +28,98 @@ const props: LinodeActionMenuProps = {
 
 describe('LinodeActionMenu', () => {
   describe('Action menu', () => {
-    it('should contain all basic actions when the Linode is running', () => {
-      renderWithTheme(<LinodeActionMenu {...props} />);
-      expect(
-        includesActions(
-          [
-            'Power Off',
-            'Reboot',
-            'Launch LISH Console',
-            'Clone',
-            'Resize',
-            'Rebuild',
-            'Rescue',
-            'Migrate',
-            'Delete',
-          ],
-          screen.queryByText
-        )
+    it('should contain all basic actions when the Linode is running', async () => {
+      const { getByLabelText, getByText } = renderWithTheme(
+        <LinodeActionMenu {...props} />
       );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Linode ${props.linodeLabel}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const actions = [
+        'Power Off',
+        'Reboot',
+        'Launch LISH Console',
+        'Clone',
+        'Resize',
+        'Rebuild',
+        'Rescue',
+        'Migrate',
+        'Delete',
+      ];
+
+      for (const action of actions) {
+        expect(getByText(action)).toBeVisible();
+      }
     });
 
-    it('should contain Power On when the Linode is offline', () => {
-      renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
-      expect(includesActions(['Power On'], screen.queryByText));
-      expect(screen.queryByText('Power Off')).toBeNull();
+    it('should contain Power On when the Linode is offline', async () => {
+      const { getByLabelText, queryByText } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeStatus="offline" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Linode ${props.linodeLabel}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      expect(queryByText('Power On')).toBeVisible();
+      expect(queryByText('Power Off')).toBeNull();
     });
 
-    it('should contain all actions except Power Off, Reboot, and Launch Console when not in table context', () => {
-      renderWithTheme(
+    it('should contain all actions except Power Off, Reboot, and Launch Console when not in table context', async () => {
+      const { getByLabelText, getByText, queryByText } = renderWithTheme(
         <LinodeActionMenu
           {...props}
           inListView={false}
           linodeStatus="offline"
         />
       );
-      expect(
-        includesActions(
-          ['Clone', 'Resize', 'Rebuild', 'Rescue', 'Migrate', 'Delete'],
-          screen.queryByText
-        )
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Linode ${props.linodeLabel}`
       );
-      expect(
-        includesActions(
-          ['Launch LISH Console', 'Power On', 'Reboot'],
-          screen.queryByText,
-          false
-        )
-      );
+
+      await userEvent.click(actionMenuButton);
+
+      const actionsThatShouldBeVisible = [
+        'Clone',
+        'Resize',
+        'Rebuild',
+        'Rescue',
+        'Migrate',
+        'Delete',
+      ];
+
+      for (const action of actionsThatShouldBeVisible) {
+        expect(getByText(action)).toBeVisible();
+      }
+
+      const actionsThatShouldNotBeShown = [
+        'Launch LISH Console',
+        'Power On',
+        'Reboot',
+      ];
+
+      for (const action of actionsThatShouldNotBeShown) {
+        expect(queryByText(action)).toBeNull();
+      }
     });
 
-    it('should allow a reboot if the Linode is running', () => {
+    it('should allow a reboot if the Linode is running', async () => {
       renderWithTheme(<LinodeActionMenu {...props} />);
-      userEvent.click(screen.getByLabelText(/^Action menu for/));
+      await userEvent.click(screen.getByLabelText(/^Action menu for/));
       expect(screen.queryByText('Reboot')).not.toHaveAttribute('aria-disabled');
     });
 
-    it('should disable the reboot action if the Linode is not running', () => {
+    it('should disable the reboot action if the Linode is not running', async () => {
       // TODO: Should check for "read_only" permissions too
       renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
-      userEvent.click(screen.getByLabelText(/^Action menu for/));
+      await userEvent.click(screen.getByLabelText(/^Action menu for/));
       expect(screen.queryByText('Reboot')?.closest('li')).toHaveAttribute(
         'aria-disabled',
         'true'
