@@ -145,7 +145,7 @@ export const UserProfile = (props: UserProfileProps) => {
               isProxyUserProfile
                 ? restrictedProxyUserTooltip
                 : profile?.username !== originalUsername
-                ? "You can't change another user\u{2019}s email address."
+                ? 'You can\u{2019}t change another user\u{2019}s email address.'
                 : undefined
             }
             data-qa-email
@@ -197,9 +197,9 @@ export const UserProfile = (props: UserProfileProps) => {
           }}
           tooltipText={
             profile?.username === originalUsername
-              ? "You can't delete the currently active user."
+              ? 'You can\u{2019}t delete the currently active user.'
               : isProxyUserProfile
-              ? "You can't delete the proxy user."
+              ? 'You can\u{2019}t delete the proxy user.'
               : undefined
           }
           buttonType="outlined"
