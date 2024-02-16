@@ -17,6 +17,7 @@ import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 
+import { restrictedProxyUserTooltip } from '../constants';
 import { TimezoneForm } from './TimezoneForm';
 
 export const DisplaySettings = () => {
@@ -64,9 +65,6 @@ export const DisplaySettings = () => {
       automatically linked.
     </>
   );
-
-  const restrictedProxyUserTooltip =
-    'This account type cannot update this field.';
 
   return (
     <Paper>

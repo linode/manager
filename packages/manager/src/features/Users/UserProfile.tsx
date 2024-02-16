@@ -9,11 +9,12 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { useAccountUser } from 'src/queries/accountUsers';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import { restrictedProxyUserTooltip } from '../Profile/constants';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
 
@@ -59,11 +60,14 @@ export const UserProfile = (props: UserProfileProps) => {
   } = props;
 
   const { data: profile } = useProfile();
+  const { data: currentUser } = useAccountUser(username);
 
   const [
     deleteConfirmDialogOpen,
     setDeleteConfirmDialogOpen,
   ] = React.useState<boolean>(false);
+
+  const isProxyUserProfile = currentUser?.user_type === 'proxy';
 
   const renderProfileSection = () => {
     const hasAccountErrorFor = getAPIErrorFor(
@@ -97,7 +101,11 @@ export const UserProfile = (props: UserProfileProps) => {
             />
           )}
           <TextField
+            tooltipText={
+              isProxyUserProfile ? restrictedProxyUserTooltip : undefined
+            }
             data-qa-username
+            disabled={isProxyUserProfile}
             errorText={hasAccountErrorFor('username')}
             label="Username"
             onBlur={changeUsername}
@@ -129,14 +137,18 @@ export const UserProfile = (props: UserProfileProps) => {
             />
           )}
           <TextField
+            // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
+            disabled={
+              profile?.username !== originalUsername || isProxyUserProfile
+            }
             tooltipText={
-              profile?.username !== originalUsername
-                ? "You can't change another user\u{2019}s email address"
-                : ''
+              isProxyUserProfile
+                ? restrictedProxyUserTooltip
+                : profile?.username !== originalUsername
+                ? "You can't change another user\u{2019}s email address."
+                : undefined
             }
             data-qa-email
-            // This should be disabled if this is NOT the current user.
-            disabled={profile?.username !== originalUsername}
             errorText={hasProfileErrorFor('email')}
             label="Email"
             onChange={changeEmail}
@@ -176,27 +188,26 @@ export const UserProfile = (props: UserProfileProps) => {
           Delete User
         </Typography>
         <Button
+          disabled={
+            profile?.username === originalUsername || isProxyUserProfile
+          }
           sx={{
             marginLeft: 0,
             marginTop: theme.spacing(2),
           }}
+          tooltipText={
+            profile?.username === originalUsername
+              ? "You can't delete the currently active user."
+              : isProxyUserProfile
+              ? "You can't delete the proxy user."
+              : undefined
+          }
           buttonType="outlined"
           data-qa-confirm-delete
-          disabled={profile?.username === originalUsername}
           onClick={onDelete}
         >
           Delete
         </Button>
-        {profile?.username === originalUsername && (
-          <TooltipIcon
-            sxTooltipIcon={{
-              marginLeft: 0,
-              marginTop: theme.spacing(2),
-            }}
-            status="help"
-            text="You can't delete the currently active user"
-          />
-        )}
         <Typography
           sx={{
             marginLeft: 0,
