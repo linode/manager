@@ -2,6 +2,7 @@ export const BUSINESS_PARTNER = 'business partner';
 export const ADMINISTRATOR = 'administrator';
 
 export const grantTypeMap = {
+  account: 'Account',
   database: 'Databases',
   domain: 'Domains',
   firewall: 'Firewalls',

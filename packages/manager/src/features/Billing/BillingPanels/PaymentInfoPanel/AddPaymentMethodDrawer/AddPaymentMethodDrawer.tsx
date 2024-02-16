@@ -1,9 +1,9 @@
 import { PaymentMethod } from '@linode/api-v4/lib/account';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { VariantType } from 'notistack';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
@@ -11,6 +11,11 @@ import { Notice, NoticeVariant } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
+import {
+  getRestrictedResourceText,
+  isRestrictedGlobalGrantType,
+} from 'src/features/Account/utils';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
@@ -45,10 +50,20 @@ const sxTooltipIcon = {
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
     PaymentMessage | undefined
   >(undefined);
+  const isChildUser = profile?.user_type === 'child';
+  const isReadOnly =
+    isRestrictedGlobalGrantType({
+      globalGrantType: 'account_access',
+      grants,
+      permittedGrantLevel: 'read_write',
+      profile,
+    }) || isChildUser;
 
   React.useEffect(() => {
     if (open) {
@@ -75,7 +90,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
     ? paymentMethods.length >= MAXIMUM_PAYMENT_METHODS
     : false;
 
-  const disabled = isProcessing || hasMaxPaymentMethods;
+  const disabled = isProcessing || hasMaxPaymentMethods || isReadOnly;
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Payment Method">
@@ -88,6 +103,16 @@ export const AddPaymentMethodDrawer = (props: Props) => {
           }}
         />
       ) : null}
+      {isReadOnly && (
+        <Grid xs={12}>
+          <Notice
+            text={getRestrictedResourceText({
+              resourceType: 'Account',
+            })}
+            variant="error"
+          />
+        </Grid>
+      )}
       {hasMaxPaymentMethods ? (
         <Notice
           text="You reached the maximum number of payment methods on your account. Delete an existing payment method to add a new one."
@@ -110,21 +135,23 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                 You&rsquo;ll be taken to Google Pay to complete sign up.
               </Typography>
             </Grid>
-            <Grid
-              alignContent="center"
-              container
-              justifyContent="flex-end"
-              md={3}
-              xs={4}
-            >
-              <GooglePayChip
-                disabled={disabled}
-                onClose={onClose}
-                renderError={renderError}
-                setMessage={setMessage}
-                setProcessing={setIsProcessing}
-              />
-            </Grid>
+            {!isReadOnly && (
+              <Grid
+                alignContent="center"
+                container
+                justifyContent="flex-end"
+                md={3}
+                xs={4}
+              >
+                <GooglePayChip
+                  disabled={disabled}
+                  onClose={onClose}
+                  renderError={renderError}
+                  setMessage={setMessage}
+                  setProcessing={setIsProcessing}
+                />
+              </Grid>
+            )}
           </Grid>
         </Box>
         <Divider />
@@ -136,23 +163,25 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                 You&rsquo;ll be taken to PayPal to complete sign up.
               </Typography>
             </Grid>
-            <Grid
-              alignContent="center"
-              container
-              justifyContent="flex-end"
-              md={3}
-              xs={4}
-            >
-              <PayPalErrorBoundary renderError={renderError}>
-                <PayPalChip
-                  disabled={disabled}
-                  onClose={onClose}
-                  renderError={renderError}
-                  setMessage={setMessage}
-                  setProcessing={setIsProcessing}
-                />
-              </PayPalErrorBoundary>
-            </Grid>
+            {!isReadOnly && (
+              <Grid
+                alignContent="center"
+                container
+                justifyContent="flex-end"
+                md={3}
+                xs={4}
+              >
+                <PayPalErrorBoundary renderError={renderError}>
+                  <PayPalChip
+                    disabled={disabled}
+                    onClose={onClose}
+                    renderError={renderError}
+                    setMessage={setMessage}
+                    setProcessing={setIsProcessing}
+                  />
+                </PayPalErrorBoundary>
+              </Grid>
+            )}
           </Grid>
         </Box>
         <Divider spacingBottom={16} />

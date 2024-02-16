@@ -13,6 +13,10 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import {
+  getRestrictedResourceText,
+  isRestrictedGlobalGrantType,
+} from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -54,11 +58,18 @@ const AccountLanding = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
-  const accountAccessGrant = grants?.global?.account_access;
-  const readOnlyAccountAccess = accountAccessGrant === 'read_only';
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
+  const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
+
+  const isReadOnly =
+    isRestrictedGlobalGrantType({
+      globalGrantType: 'account_access',
+      grants,
+      permittedGrantLevel: 'read_write',
+      profile,
+    }) || isChildUser;
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
@@ -138,6 +149,12 @@ const AccountLanding = () => {
     breadcrumbProps: {
       pathname: '/account',
     },
+    buttonDataAttrs: {
+      disabled: isReadOnly,
+      tooltipText: getRestrictedResourceText({
+        resourceType: 'Account',
+      }),
+    },
     title: 'Account',
   };
 
@@ -150,7 +167,6 @@ const AccountLanding = () => {
       landingHeaderProps.onButtonClick = () =>
         history.replace('/account/billing/make-payment');
     }
-    landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton onClick={handleAccountSwitch} />
     ) : undefined;
