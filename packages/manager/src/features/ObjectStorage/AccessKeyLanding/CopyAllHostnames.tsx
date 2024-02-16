@@ -24,7 +24,7 @@ export const CopyAllHostnames = (props: Props) => {
 
   return (
     <StyledBox>
-      <InputLabel>S3 Endpoint Hostnames</InputLabel>
+      <InputLabel sx={{ margin: 0 }}>S3 Endpoint Hostnames</InputLabel>
       {!hideShowAll && (
         <Tooltip
           className="copy-tooltip"
@@ -47,7 +47,8 @@ export const CopyAllHostnames = (props: Props) => {
 };
 
 const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
-  borderColor: theme.name === 'light' ? '#ccc' : '#222',
+  borderColor: theme.name === 'light' ? theme.color.grey3 : theme.color.black,
   display: 'flex',
   justifyContent: 'space-between',
+  marginBottom: theme.spacing(1),
 }));
