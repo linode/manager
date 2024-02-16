@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { Button } from '../Button/Button';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 const defaultList = Array.from({ length: 5 }, (_, index) => {
@@ -94,8 +95,8 @@ describe('Removable Selections List', () => {
     const { queryAllByText } = renderWithTheme(
       <RemovableSelectionsList
         {...props}
+        RemoveButton={() => <Button>Remove Linode</Button>}
         isRemovable
-        removeButtonText="Remove Linode"
       />
     );
     expect(queryAllByText('Remove Linode')).toHaveLength(5);

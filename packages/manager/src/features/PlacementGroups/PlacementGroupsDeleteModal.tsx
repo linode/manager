@@ -2,6 +2,7 @@ import { AFFINITY_TYPES } from '@linode/api-v4';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Button } from 'src/components/Button/Button';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
@@ -44,6 +45,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
+    isLoading: unassignLinodeLoading,
     mutateAsync: unassignLinodes,
     reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
@@ -128,7 +130,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           })}
         >
           <ListItem>
-            deleting a placement group is permanent and cannot be undone.
+            Deleting a placement group is permanent and cannot be undone.
           </ListItem>
           <ListItem>
             You need to unassign all Linodes before deleting a placement group.
@@ -136,12 +138,23 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         </List>
       </Notice>
       <RemovableSelectionsList
+        RemoveButton={() => (
+          <Button
+            sx={(theme) => ({
+              fontFamily: theme.font.normal,
+              fontSize: '0.875rem',
+            })}
+            loading={unassignLinodeLoading}
+            variant="text"
+          >
+            Unassign
+          </Button>
+        )}
         headerText={`Linodes assigned to ${placementGroupLabel}`}
         id="assigned-linodes"
         maxWidth={540}
         noDataText="No Linodes assigned to this Placement Group."
         onRemove={handleUnassignLinode}
-        removeButtonText="Unassign"
         selectionData={assignedLinodes ?? []}
         sx={{ mb: 3, mt: 1 }}
       />

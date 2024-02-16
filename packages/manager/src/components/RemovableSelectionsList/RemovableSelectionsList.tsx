@@ -2,7 +2,6 @@ import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { IconButton } from 'src/components/IconButton';
 
 import {
@@ -16,6 +15,7 @@ import {
 } from './RemovableSelectionsList.style';
 
 import type { SxProps, Theme } from '@mui/material';
+import type { ButtonProps } from 'src/components/Button/Button';
 
 export type RemovableItem = {
   id: number;
@@ -30,6 +30,11 @@ export interface RemovableSelectionsListProps {
    * The custom label component
    */
   LabelComponent?: React.ComponentType<{ selection: RemovableItem }>;
+  /**
+   * Overrides the render of the X Button
+   * Has no effect if isRemovable is false
+   */
+  RemoveButton?: (props: ButtonProps) => JSX.Element;
   /**
    * The descriptive text to display above the list
    */
@@ -65,11 +70,6 @@ export interface RemovableSelectionsListProps {
    */
   preferredDataLabel?: string;
   /**
-   * Overrides the render of the X Button
-   * Has no effect if isRemovable is false
-   */
-  removeButtonText?: string;
-  /**
    * The data to display in the list
    */
   selectionData: RemovableItem[];
@@ -84,6 +84,7 @@ export const RemovableSelectionsList = (
 ) => {
   const {
     LabelComponent,
+    RemoveButton,
     headerText,
     id,
     isRemovable = true,
@@ -92,7 +93,6 @@ export const RemovableSelectionsList = (
     noDataText,
     onRemove,
     preferredDataLabel,
-    removeButtonText,
     selectionData,
     sx,
   } = props;
@@ -138,17 +138,8 @@ export const RemovableSelectionsList = (
                     )}
                   </StyledLabel>
                   {isRemovable &&
-                    (removeButtonText ? (
-                      <Button
-                        sx={(theme) => ({
-                          fontFamily: theme.font.normal,
-                          fontSize: '0.875rem',
-                        })}
-                        onClick={() => handleOnClick(selection)}
-                        variant="text"
-                      >
-                        {removeButtonText}
-                      </Button>
+                    (RemoveButton ? (
+                      <RemoveButton onClick={() => handleOnClick(selection)} />
                     ) : (
                       <IconButton
                         aria-label={`remove ${

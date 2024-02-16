@@ -129,10 +129,20 @@ export const WithReadableRemoveCTA: Story = {
       return (
         <>
           <RemovableSelectionsList
+            RemoveButton={() => (
+              <Button
+                sx={(theme) => ({
+                  fontFamily: theme.font.normal,
+                  fontSize: '0.875rem',
+                })}
+                variant="text"
+              >
+                Remove
+              </Button>
+            )}
             headerText="Linodes to remove"
             noDataText="No Linodes available"
             onRemove={handleRemove}
-            removeButtonText="Remove"
             selectionData={data}
           />
           <Button onClick={resetList} sx={{ marginTop: 2 }}>
