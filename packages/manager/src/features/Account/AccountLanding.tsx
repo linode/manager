@@ -153,6 +153,7 @@ const AccountLanding = () => {
       disabled: isReadOnly,
       tooltipText: getRestrictedResourceText({
         resourceType: 'Account',
+        useBusinessContact: isChildUser,
       }),
     },
     title: 'Account',

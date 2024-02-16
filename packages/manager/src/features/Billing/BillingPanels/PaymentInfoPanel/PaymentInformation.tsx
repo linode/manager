@@ -7,10 +7,12 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { Typography } from 'src/components/Typography';
+import {
+  getRestrictedResourceText,
+  isRestrictedGlobalGrantType,
+} from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { queryKey } from 'src/queries/accountPayment';
 import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -47,16 +49,19 @@ const PaymentInformation = (props: Props) => {
   ] = React.useState<PaymentMethod | undefined>();
   const { replace } = useHistory();
   const queryClient = useQueryClient();
-  const flags = useFlags();
   const { data: grants } = useGrants();
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
-  const isChildUser =
-    flags.parentChildAccountAccess && profile?.user_type === 'child';
+  const isChildUser = profile?.user_type === 'child';
 
-  const isRestrictedUser =
-    isChildUser || grants?.global.account_access === 'read_only';
+  const isReadOnly =
+    isRestrictedGlobalGrantType({
+      globalGrantType: 'account_access',
+      grants,
+      permittedGrantLevel: 'read_write',
+      profile,
+    }) || isChildUser;
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -97,11 +102,6 @@ const PaymentInformation = (props: Props) => {
     }
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
-  const conditionalTooltipText = getDisabledTooltipText({
-    isChildUser,
-    isRestrictedUser,
-  });
-
   return (
     <Grid md={6} xs={12}>
       <BillingPaper data-qa-billing-summary variant="outlined">
@@ -109,13 +109,16 @@ const PaymentInformation = (props: Props) => {
           <Typography variant="h3">Payment Methods</Typography>
           {!isAkamaiCustomer ? (
             <BillingActionButton
+              tooltipText={getRestrictedResourceText({
+                resourceType: 'Account',
+                useBusinessContact: isChildUser,
+              })}
               data-testid="payment-info-add-payment-method"
               disableFocusRipple
               disableRipple
               disableTouchRipple
-              disabled={isRestrictedUser}
+              disabled={isReadOnly}
               onClick={() => replace(drawerLink)}
-              tooltipText={conditionalTooltipText}
             >
               {ADD_PAYMENT_METHOD}
             </BillingActionButton>
@@ -125,7 +128,7 @@ const PaymentInformation = (props: Props) => {
           <PaymentMethods
             error={error}
             isChildUser={isChildUser}
-            isRestrictedUser={isRestrictedUser}
+            isRestrictedUser={isReadOnly}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}

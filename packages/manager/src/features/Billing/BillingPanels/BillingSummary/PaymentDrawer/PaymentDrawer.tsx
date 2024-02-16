@@ -92,7 +92,6 @@ export const PaymentDrawer = (props: Props) => {
   } = useAccount();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
-
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -246,6 +245,7 @@ export const PaymentDrawer = (props: Props) => {
           <Notice
             text={getRestrictedResourceText({
               resourceType: 'Account',
+              useBusinessContact: isChildUser,
             })}
             variant="error"
           />

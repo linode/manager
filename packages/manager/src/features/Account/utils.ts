@@ -1,12 +1,13 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
+import { ADMINISTRATOR, BUSINESS_PARTNER } from './constants';
+
 import type {
   GlobalGrantTypes,
   GrantLevel,
   Grants,
   Profile,
   Token,
-  UserType,
 } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
@@ -16,6 +17,7 @@ interface GetRestrictedResourceText {
   action?: ActionType;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
+  useBusinessContact?: boolean;
 }
 
 interface GrantsProfileSchema {
@@ -45,26 +47,15 @@ export const getRestrictedResourceText = ({
   action = 'edit',
   isSingular = true,
   resourceType,
+  useBusinessContact = false,
 }: GetRestrictedResourceText): string => {
   const resource = isSingular
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  return `You don't have permissions to ${action} ${resource}. Please contact your account administrator to request the necessary permissions.`;
-};
+  const contactPerson = useBusinessContact ? BUSINESS_PARTNER : ADMINISTRATOR;
 
-/**
- * Get an 'access restricted' message based on user type.
- */
-export const getAccessRestrictedText = (
-  userType: UserType | undefined,
-  isParentChildFeatureEnabled?: boolean
-) => {
-  return `Access restricted. Please contact your ${
-    isParentChildFeatureEnabled && userType === 'child'
-      ? 'business partner'
-      : 'account administrator'
-  } to request the necessary permission.`;
+  return `You don't have permissions to ${action} ${resource}. Please contact your ${contactPerson} to request the necessary permissions.`;
 };
 
 /**

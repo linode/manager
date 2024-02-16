@@ -108,6 +108,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
           <Notice
             text={getRestrictedResourceText({
               resourceType: 'Account',
+              useBusinessContact: isChildUser,
             })}
             variant="error"
           />

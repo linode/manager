@@ -172,6 +172,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             <Notice
               text={getRestrictedResourceText({
                 resourceType: 'Account',
+                useBusinessContact: isChildUser,
               })}
               variant="error"
             />
