@@ -114,10 +114,8 @@ export const CreateNamespaceDrawer = React.memo(
             inputProps={{
               autoFocus: true,
             }}
-            aria-label="Label for your new Namespace"
             errorText={errors.label}
             label="Label"
-            name="label"
             onBlur={handleBlur}
             onChange={handleChange}
             value={values.label}
@@ -131,7 +129,9 @@ export const CreateNamespaceDrawer = React.memo(
             }}
             defaultValue={options[0]}
             disabled={true}
+            errorText={errors.type}
             label={'Data Type'}
+            onBlur={handleBlur}
             options={options}
             placeholder="Select a Data type"
           />
@@ -144,7 +144,7 @@ export const CreateNamespaceDrawer = React.memo(
             }
             currentCapability={undefined}
             errorText={errors.region}
-            isClearable
+            isClearable={false}
             label="Deployment Region"
             onBlur={handleBlur}
             selectedId={values.region}
