@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
@@ -10,7 +11,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CreateNamespaceDrawer } from './CreateNamespace/CreateNamespaceDrawer';
 import { NamespaceLandingEmptyState } from './NamespaceLandingEmptyState';
-import { Divider } from 'src/components/Divider';
 
 export const Namespaces = React.memo(() => {
   const location = useLocation();
@@ -72,6 +72,8 @@ export const Namespaces = React.memo(() => {
       <Paper>
         <LandingHeader
           breadcrumbProps={{ pathname: '/Namespaces' }}
+          docsLabel="Docs"
+          docsLink="https://www.linode.com/docs/"
           entity="Namespace"
           onButtonClick={onOpenCreateDrawer}
         />
