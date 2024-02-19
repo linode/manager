@@ -520,7 +520,11 @@ const vpc = [
 
 const cloudView = [
   rest.get('*/cloudview/namespaces', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(namespaceFactory.buildList(30))));
+    return res(ctx.json(makeResourcePage(namespaceFactory.buildList(0))));
+  }),
+  rest.post('*/cloudview/namespaces', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
   }),
 ];
 

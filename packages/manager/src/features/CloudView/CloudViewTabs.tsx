@@ -31,7 +31,11 @@ export const CloudViewTabs = React.memo((props: Props) => {
 
   return (
     <>
-      <LandingHeader removeCrumbX={1} title="Cloud View" />
+      <LandingHeader
+        breadcrumbProps={{ pathname: '/Cloud View' }}
+        docsLabel="Getting Started"
+        docsLink="https://www.linode.com/docs/"
+      />
       <StyledTabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),
