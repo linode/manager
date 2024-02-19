@@ -11,3 +11,9 @@ export interface Namespace {
   created: string;
   updated: string;
 }
+
+export interface CreateNameSpacePayload {
+  label: string | null;
+  region: string | null;
+  type: string | null;
+}
