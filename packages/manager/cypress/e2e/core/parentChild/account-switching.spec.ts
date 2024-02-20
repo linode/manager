@@ -151,7 +151,6 @@ describe('Parent/Child account switching', () => {
       mockAllApiRequests();
       mockGetAccount(mockChildAccount);
       mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
 
       // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
       // TODO Add assertions for toast upon account switch.
@@ -226,7 +225,6 @@ describe('Parent/Child account switching', () => {
       mockAllApiRequests();
       mockGetAccount(mockChildAccount);
       mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
 
       // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
       // TODO Add assertions for toast upon account switch.
