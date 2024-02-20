@@ -6,11 +6,27 @@ import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
 import { MODE } from './types';
+
+type LabelWithTooltipProps = {
+  labelText: string;
+  tooltipText: string;
+};
+
+const LabelWithTooltip = ({
+  labelText,
+  tooltipText,
+}: LabelWithTooltipProps) => (
+  <React.Fragment>
+    <Typography component="span">{labelText}</Typography>
+    {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
+  </React.Fragment>
+);
 
 interface Props {
   bucket_access: Scope[] | null;
@@ -36,6 +52,10 @@ export const LimitedAccessControls = React.memo((props: Props) => {
   return (
     <>
       <FormControlLabel
+        sx={(theme) => ({
+          marginTop: theme.spacing(0.5),
+          marginBottom: theme.spacing(0.5),
+        })}
         control={
           <Toggle
             checked={checked}
@@ -44,7 +64,16 @@ export const LimitedAccessControls = React.memo((props: Props) => {
             onChange={handleToggle}
           />
         }
-        label={'Limited Access'}
+        label={
+          isObjMultiClusterEnabled ? (
+            <LabelWithTooltip
+              labelText="Limited Access"
+              tooltipText="A Limited Access key has no permissions and you can manually set them. If you don't turn on Limited Access, the key is granted full permission in all regions."
+            />
+          ) : (
+            'Limited Access'
+          )
+        }
       />
       <Typography>
         Limited access keys can list all buckets, regardless of access. They can

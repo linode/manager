@@ -34,7 +34,7 @@ import {
   withAccount,
 } from 'src/containers/account.container';
 import { WithFeatureFlagProps } from 'src/containers/flags.container';
-import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
@@ -45,7 +45,7 @@ import {
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { getPlacementGroupLinodeCount } from 'src/features/PlacementGroups/utils';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -342,9 +342,10 @@ export class LinodeCreate extends React.PureComponent<
 
     let errorText;
     if (
-      placementGroupSelection &&
-      getPlacementGroupLinodeCount(placementGroupSelection) >=
-        placementGroupSelection.capacity
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupSelection!,
+        region: regionsData.find((r) => r.id === selectedRegionID)!,
+      })
     ) {
       errorText = `This Placement Group doesn't have any capacity`;
     }
