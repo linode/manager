@@ -13,12 +13,15 @@ import {
   mockGetChildAccountsError,
   mockGetUser,
 } from 'support/intercepts/account';
+import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
@@ -149,11 +152,17 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+
       mockGetAccount(mockChildAccount);
       mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
 
       // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-      // TODO Add assertions for toast upon account switch.
+      // TODO Add assertions for toast upon account switch. This might involve improving mocks for events/notifications.
       cy.reload();
 
       // Confirm expected username and company are shown in user menu button.
@@ -223,11 +232,16 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
       mockGetAccount(mockChildAccount);
       mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
 
       // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-      // TODO Add assertions for toast upon account switch.
+      // TODO Add assertions for toast upon account switch. This might involve improving mocks for events/notifications.
       cy.reload();
 
       // Confirm expected username and company are shown in user menu button.
