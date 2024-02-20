@@ -9,7 +9,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates';
+import { useLoadBalancerCertificatesQuery } from 'src/queries/aclb/certificates';
 
 import type { CertificateConfig, Configuration } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';

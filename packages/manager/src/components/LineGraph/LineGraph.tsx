@@ -8,7 +8,6 @@ import {
   ChartTooltipItem,
   ChartXAxe,
 } from 'chart.js';
-import 'chartjs-adapter-luxon';
 import { curry } from 'ramda';
 import * as React from 'react';
 

@@ -208,7 +208,7 @@ describe('restricted user billing flows', () => {
 
       const mockUser = accountUserFactory.build({
         username: mockProfile.username,
-        user_type: null,
+        user_type: 'default',
         restricted: false,
       });
 
@@ -248,7 +248,7 @@ describe('restricted user billing flows', () => {
       const mockUser = accountUserFactory.build({
         username: mockProfile.username,
         restricted: true,
-        user_type: null,
+        user_type: 'default',
       });
 
       const mockGrants = grantsFactory.build({
@@ -304,7 +304,7 @@ describe('restricted user billing flows', () => {
 
       const mockUserRegular = accountUserFactory.build({
         username: mockProfileRegular.username,
-        user_type: null,
+        user_type: 'default',
         restricted: false,
       });
 

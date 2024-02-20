@@ -9,7 +9,7 @@ describe('IssueDay', () => {
   it('should include basic Monitor actions', () => {
     const date = DateTime.fromISO('2020-10-01');
     const props: IssueDayProps = {
-      day: date.toISO(),
+      day: date.toISO()!,
       issues: [],
     };
     const { getByText } = renderWithTheme(<IssueDay {...props} />);

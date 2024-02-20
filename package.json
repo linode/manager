@@ -23,7 +23,7 @@
     "build:sdk": "yarn workspace @linode/api-v4 build",
     "build:validation": "yarn workspace @linode/validation build",
     "build": "yarn build:validation && yarn build:sdk && yarn workspace linode-manager build",
-    "build:analyze": "yarn build --bundle-analyze",
+    "build:analyze": "yarn workspace linode-manager build:analyze",
     "up": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all",
     "up:expose": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all:expose",
     "dev": "yarn install:all && yarn start:all",

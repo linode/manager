@@ -29,7 +29,7 @@ export const getLoadbalancerServiceTargets = (
 ) =>
   Request<ResourcePage<ServiceTarget>>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets`
     ),
@@ -49,7 +49,7 @@ export const getServiceTarget = (
 ) =>
   Request<ServiceTarget>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets/${encodeURIComponent(serviceTargetId)}`
     ),
@@ -64,7 +64,7 @@ export const getServiceTarget = (
 export const getServiceTargetsEndpointHealth = (loadbalancerId: number) =>
   Request<ServiceTargetsEndpointHealth>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets/endpoints-health`
     ),
@@ -82,7 +82,7 @@ export const createLoadbalancerServiceTarget = (
 ) =>
   Request<ServiceTarget>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets`
     ),
@@ -102,7 +102,7 @@ export const updateLoadbalancerServiceTarget = (
 ) =>
   Request<ServiceTarget>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets/${encodeURIComponent(serviceTargetId)}`
     ),
@@ -121,7 +121,7 @@ export const deleteLoadbalancerServiceTarget = (
 ) =>
   Request<{}>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/service-targets/${encodeURIComponent(serviceTargetId)}`
     ),

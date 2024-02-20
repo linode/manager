@@ -48,6 +48,7 @@ describe('PlacementGroupsLanding', () => {
       data: placementGroupFactory.build({
         affinity_type: 'anti_affinity',
         id: 1,
+        is_compliant: true,
         label: 'My first PG',
       }),
     });
@@ -64,6 +65,6 @@ describe('PlacementGroupsLanding', () => {
     expect(getByText(/my first pg \(Anti-affinity\)/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
     expect(getByRole('tab', { name: 'Summary' })).toBeInTheDocument();
-    expect(getByRole('tab', { name: 'Linodes (3)' })).toBeInTheDocument();
+    expect(getByRole('tab', { name: 'Linodes (9)' })).toBeInTheDocument();
   });
 });

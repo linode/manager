@@ -1,6 +1,6 @@
 export * from './account';
 
-export * from './aglb';
+export * from './aclb';
 
 export * from './databases';
 

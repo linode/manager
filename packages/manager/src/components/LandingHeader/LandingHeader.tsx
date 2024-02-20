@@ -156,5 +156,6 @@ export const LandingHeader = ({
 
 const Actions = styled('div')(() => ({
   display: 'flex',
+  gap: '24px',
   justifyContent: 'flex-end',
 }));

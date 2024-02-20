@@ -11,9 +11,10 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
+import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 import AccountLogins from './AccountLogins';
@@ -48,14 +49,18 @@ const AccountLanding = () => {
   const { data: account } = useAccount();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
 
   const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
   const isAkamaiAccount = account?.billing_source === 'akamai';
+  const isProxyUser = profile?.user_type === 'proxy';
+  const isParentUser = profile?.user_type === 'parent';
+
+  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   const tabs = [
     {
@@ -90,6 +95,16 @@ const AccountLanding = () => {
     '/account/billing/edit',
   ];
 
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired) {
+      return sessionContext.updateState({
+        isOpen: true,
+      });
+    }
+
+    setIsDrawerOpen(true);
+  };
+
   const getDefaultTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
@@ -117,8 +132,7 @@ const AccountLanding = () => {
 
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
-    flags.parentChildAccountAccess &&
-    (user?.user_type === 'parent' || user?.user_type === 'proxy');
+    flags.parentChildAccountAccess && (isParentUser || isProxyUser);
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -138,7 +152,7 @@ const AccountLanding = () => {
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
-      <SwitchAccountButton onClick={() => setIsDrawerOpen(true)} />
+      <SwitchAccountButton onClick={handleAccountSwitch} />
     ) : undefined;
   }
 
@@ -174,7 +188,7 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
-        isProxyUser={user?.user_type === 'proxy'}
+        isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
       />

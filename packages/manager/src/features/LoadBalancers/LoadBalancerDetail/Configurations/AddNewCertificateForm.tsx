@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
+import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aclb/certificates';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import {

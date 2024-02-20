@@ -20,7 +20,7 @@ const CloseAccountSetting = () => {
 
   // Disable the Close Account button for users with a Parent/Proxy/Child user type.
   const isCloseAccountDisabled = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type !== null
+    flags.parentChildAccountAccess && profile?.user_type !== 'default'
   );
   const closeAccountButtonTooltipText =
     isCloseAccountDisabled && profile?.user_type === 'child'

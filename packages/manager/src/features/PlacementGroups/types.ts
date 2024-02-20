@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4';
 
 export type PlacementGroupsDrawerPropsBase = {
-  numberOfPlacementGroupsCreated: number;
+  numberOfPlacementGroupsCreated?: number;
   onClose: () => void;
   open: boolean;
 };
@@ -22,3 +22,8 @@ export type PlacementGroupsRenameDrawerProps = PlacementGroupsDrawerPropsBase & 
 
 export type PlacementGroupDrawerFormikProps = RenamePlacementGroupPayload &
   CreatePlacementGroupPayload;
+
+export type PlacementGroupsAssignLinodesDrawerProps = PlacementGroupsDrawerPropsBase & {
+  onLinodeAddedToPlacementGroup?: (placementGroup: PlacementGroup) => void;
+  selectedPlacementGroup: PlacementGroup | undefined;
+};

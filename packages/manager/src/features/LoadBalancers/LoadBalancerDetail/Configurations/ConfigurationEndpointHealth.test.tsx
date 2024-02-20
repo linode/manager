@@ -13,7 +13,7 @@ describe('ConfigurationEndpointHealth', () => {
   it('renders endpoint health from API data', async () => {
     server.use(
       rest.get(
-        '*/v4beta/aglb/:id/configurations/endpoints-health',
+        '*/v4beta/aclb/:id/configurations/endpoints-health',
         (req, res, ctx) => {
           const health = configurationsEndpointHealthFactory.build({
             configurations: [

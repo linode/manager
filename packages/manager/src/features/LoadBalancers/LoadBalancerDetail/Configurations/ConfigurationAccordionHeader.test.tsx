@@ -54,7 +54,7 @@ describe('ConfigurationAccordionHeader', () => {
 
     server.use(
       rest.get(
-        '*/v4beta/aglb/5/configurations/endpoints-health',
+        '*/v4beta/aclb/5/configurations/endpoints-health',
         (req, res, ctx) => res(ctx.json(allConfigurationsEndpointHealth))
       )
     );

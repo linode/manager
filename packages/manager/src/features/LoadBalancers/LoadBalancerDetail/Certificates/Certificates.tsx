@@ -17,7 +17,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates';
+import { useLoadBalancerCertificatesQuery } from 'src/queries/aclb/certificates';
 
 import { CreateCertificateDrawer } from './CreateCertificateDrawer';
 import { DeleteCertificateDialog } from './DeleteCertificateDialog';

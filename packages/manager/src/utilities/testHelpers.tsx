@@ -7,7 +7,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import mediaQuery from 'css-mediaquery';
 import { Formik, FormikConfig, FormikValues } from 'formik';
-import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
+import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
@@ -95,10 +95,10 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
-            value={{
-              flagKeyMap: {},
-              flags: options.flags ?? {},
-            }}
+            clientSideID={''}
+            deferInitialization
+            flags={options.flags ?? {}}
+            options={{ bootstrap: options.flags }}
           >
             <SnackbarProvider>
               <MemoryRouter {...options.MemoryRouter}>

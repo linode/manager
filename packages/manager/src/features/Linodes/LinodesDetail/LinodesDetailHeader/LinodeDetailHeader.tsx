@@ -21,7 +21,11 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import {
+  sendEditBreadcrumbEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+  sendUpdateLinodeLabelEvent,
+} from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -160,6 +164,7 @@ const LinodeDetailHeader = () => {
     return updateLinodeLabel(label)
       .then(() => {
         resetEditableLabel();
+        sendUpdateLinodeLabelEvent('Breadcrumb');
       })
       .catch((updateError) => {
         const errorReasons: string[] = [updateError.message];
@@ -226,6 +231,7 @@ const LinodeDetailHeader = () => {
           onEditHandlers: {
             editableTextTitle: linode?.label ?? '',
             errorText: editableLabelError,
+            handleAnalyticsEvent: () => sendEditBreadcrumbEvent(),
             onCancel: resetEditableLabel,
             onEdit: handleLinodeLabelUpdate,
           },
