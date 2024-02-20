@@ -8,6 +8,8 @@ import {
   deleteSSHKey,
   deleteTrustedDevice,
   disableTwoFactor,
+  getAppTokens,
+  getPersonalAccessTokens,
   getProfile,
   getSSHKeys,
   getTrustedDevices,
@@ -17,8 +19,6 @@ import {
   updateProfile,
   updateSSHKey,
   verifyPhoneNumberCode,
-  getAppTokens,
-  getPersonalAccessTokens,
 } from '@linode/api-v4/lib/profile';
 import {
   APIError,
