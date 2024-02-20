@@ -140,6 +140,7 @@ const ContactInformation = (props: Props) => {
               handleEditDrawerOpen();
             }}
             tooltipText={getRestrictedResourceText({
+              includeContactMessage: false,
               resourceType: 'Account',
               useBusinessContact: isChildUser,
             })}

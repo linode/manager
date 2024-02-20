@@ -104,6 +104,7 @@ const PaymentInformation = (props: Props) => {
           {!isAkamaiCustomer ? (
             <BillingActionButton
               tooltipText={getRestrictedResourceText({
+                includeContactMessage: false,
                 resourceType: 'Account',
                 useBusinessContact: isChildUser,
               })}

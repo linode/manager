@@ -33,6 +33,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
   const isChildUser = profile?.user_type === 'child';
+  const isParentUser = profile?.user_type === 'parent';
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
@@ -219,7 +220,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-company
-            disabled={isReadOnly}
+            disabled={isReadOnly || isParentUser}
             errorText={errorMap.company}
             label="Company Name"
             name="company"
