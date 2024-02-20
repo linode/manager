@@ -23,7 +23,7 @@ import { CreateBasicLoadbalancerSchema } from '@linode/validation';
  */
 export const getLoadbalancers = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<Loadbalancer>>(
-    setURL(`${BETA_API_ROOT}/aglb`),
+    setURL(`${BETA_API_ROOT}/aclb`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
@@ -36,7 +36,7 @@ export const getLoadbalancers = (params?: Params, filter?: Filter) =>
  */
 export const getLoadbalancer = (id: number) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
+    setURL(`${BETA_API_ROOT}/aclb/${encodeURIComponent(id)}`),
     setMethod('GET')
   );
 
@@ -47,7 +47,7 @@ export const getLoadbalancer = (id: number) =>
  */
 export const getLoadbalancerEndpointHealth = (id: number) =>
   Request<LoadBalancerEndpointHealth>(
-    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}/endpoints-health`),
+    setURL(`${BETA_API_ROOT}/aclb/${encodeURIComponent(id)}/endpoints-health`),
     setMethod('GET')
   );
 
@@ -58,7 +58,7 @@ export const getLoadbalancerEndpointHealth = (id: number) =>
  */
 export const createLoadbalancer = (data: CreateLoadbalancerPayload) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb`),
+    setURL(`${BETA_API_ROOT}/aclb`),
     setData(data),
     setMethod('POST')
   );
@@ -70,7 +70,7 @@ export const createLoadbalancer = (data: CreateLoadbalancerPayload) =>
  */
 export const createBasicLoadbalancer = (data: CreateBasicLoadbalancerPayload) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb`),
+    setURL(`${BETA_API_ROOT}/aclb`),
     setData(data, CreateBasicLoadbalancerSchema),
     setMethod('POST')
   );
@@ -85,7 +85,7 @@ export const updateLoadbalancer = (
   data: UpdateLoadbalancerPayload
 ) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
+    setURL(`${BETA_API_ROOT}/aclb/${encodeURIComponent(id)}`),
     setData(data),
     setMethod('PUT')
   );
@@ -97,6 +97,6 @@ export const updateLoadbalancer = (
  */
 export const deleteLoadbalancer = (id: number) =>
   Request<{}>(
-    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
+    setURL(`${BETA_API_ROOT}/aclb/${encodeURIComponent(id)}`),
     setMethod('DELETE')
   );

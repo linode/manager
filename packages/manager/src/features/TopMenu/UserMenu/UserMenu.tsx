@@ -16,11 +16,12 @@ import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
+import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getStorage } from 'src/utilities/storage';
 
@@ -56,10 +57,10 @@ export const UserMenu = React.memo(() => {
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
+  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const hasGrant = (grant: GlobalGrantTypes) =>
     grants?.global?.[grant] ?? false;
@@ -67,14 +68,19 @@ export const UserMenu = React.memo(() => {
   const hasAccountAccess = !isRestrictedUser || hasGrant('account_access');
   const hasReadWriteAccountAccess = hasGrant('account_access') === 'read_write';
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
-  const isParentUser = user?.user_type === 'parent';
-  const isProxyUser = user?.user_type === 'proxy';
+  const isParentUser = profile?.user_type === 'parent';
+  const isProxyUser = profile?.user_type === 'proxy';
   const canSwitchBetweenParentOrProxyAccount =
     hasParentChildAccountAccess && (isParentUser || isProxyUser);
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
-  const companyName = (user?.user_type && account?.company) ?? '';
+  const companyName =
+    (hasParentChildAccountAccess &&
+      profile?.user_type !== 'default' &&
+      account?.company) ??
+    '';
   const showCompanyName = hasParentChildAccountAccess && companyName;
+  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders =
@@ -175,6 +181,16 @@ export const UserMenu = React.memo(() => {
     );
   };
 
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired) {
+      return sessionContext.updateState({
+        isOpen: true,
+      });
+    }
+
+    setIsDrawerOpen(true);
+  };
+
   return (
     <>
       <Tooltip
@@ -257,7 +273,7 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
-              onClick={() => setIsDrawerOpen(true)}
+              onClick={handleAccountSwitch}
             />
           )}
           <Box>

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLoadBalancerConfigurationDeleteMutation } from 'src/queries/aglb/configurations';
+import { useLoadBalancerConfigurationDeleteMutation } from 'src/queries/aclb/configurations';
 
 import type { Configuration } from '@linode/api-v4';
 

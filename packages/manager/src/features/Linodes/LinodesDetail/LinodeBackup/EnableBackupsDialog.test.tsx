@@ -131,8 +131,6 @@ describe('EnableBackupsDialog component', () => {
     expect(await findByText(PRICES_RELOAD_ERROR_NOTICE_TEXT)).toBeVisible();
 
     // Confirm that "Enable Backups" button is disabled.
-    expect(getByTestId('confirm-enable-backups')).toHaveAttribute(
-      'aria-disabled'
-    );
+    expect(getByTestId('confirm-enable-backups')).toBeDisabled();
   });
 });

@@ -3,7 +3,7 @@ import React from 'react';
 import { Skeleton } from 'src/components/Skeleton';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerConfigurationsEndpointsHealth } from 'src/queries/aglb/configurations';
+import { useLoadBalancerConfigurationsEndpointsHealth } from 'src/queries/aclb/configurations';
 
 import { EndpointHealth } from '../EndpointHealth';
 

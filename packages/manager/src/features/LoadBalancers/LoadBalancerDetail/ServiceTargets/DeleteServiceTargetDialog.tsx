@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLoadBalancerServiceTargetDeleteMutation } from 'src/queries/aglb/serviceTargets';
+import { useLoadBalancerServiceTargetDeleteMutation } from 'src/queries/aclb/serviceTargets';
 
 interface Props {
   loadbalancerId: number;

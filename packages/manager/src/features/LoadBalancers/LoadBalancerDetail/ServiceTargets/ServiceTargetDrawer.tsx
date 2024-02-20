@@ -22,7 +22,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useServiceTargetCreateMutation,
   useServiceTargetUpdateMutation,
-} from 'src/queries/aglb/serviceTargets';
+} from 'src/queries/aclb/serviceTargets';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
