@@ -12,6 +12,7 @@ export const regions: Region[] = [
     id: 'ap-west',
     label: 'Mumbai, IN',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -20,6 +21,7 @@ export const regions: Region[] = [
     id: 'ap-southeast',
     label: 'Sydney, AU',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -28,6 +30,7 @@ export const regions: Region[] = [
     id: 'ca-central',
     label: 'Toronto, CA',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -36,6 +39,7 @@ export const regions: Region[] = [
     id: 'us-central',
     label: 'Dallas, TX',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -44,6 +48,7 @@ export const regions: Region[] = [
     id: 'us-west',
     label: 'Fremont, CA',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -52,6 +57,7 @@ export const regions: Region[] = [
     id: 'us-southeast',
     label: 'Atlanta, GA',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -65,6 +71,7 @@ export const regions: Region[] = [
     id: 'us-east',
     label: 'Newark, NJ',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -73,6 +80,7 @@ export const regions: Region[] = [
     id: 'eu-west',
     label: 'London, UK',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -81,6 +89,7 @@ export const regions: Region[] = [
     id: 'ap-south',
     label: 'Singapore, SG',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -89,6 +98,7 @@ export const regions: Region[] = [
     id: 'eu-central',
     label: 'Frankfurt, DE',
     resolvers,
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -97,6 +107,16 @@ export const regions: Region[] = [
     id: 'ap-northeast',
     label: 'Tokyo, JP',
     resolvers,
+    site_type: 'core',
+    status: 'ok',
+  },
+  {
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edgetest',
+    label: 'Gecko Edge Test',
+    resolvers,
+    site_type: 'edge',
     status: 'ok',
   },
 ];
