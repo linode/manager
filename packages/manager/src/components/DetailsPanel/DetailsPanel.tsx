@@ -11,7 +11,6 @@ import {
 } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -23,7 +22,7 @@ Add your virtual machine (VM) to a group to best meet your needs.
 You may want to group VMs closer together to help improve performance, or further apart to enable high-availability configurations.
 Learn more.`;
 
-interface LabelAndTagsProps {
+interface DetailsPanelProps {
   error?: string;
   labelFieldProps?: TextFieldProps;
   placementGroupsSelectProps?: PlacementGroupsSelectProps;
@@ -31,7 +30,7 @@ interface LabelAndTagsProps {
   tagsInputProps?: TagsInputProps;
 }
 
-export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
+export const DetailsPanel = (props: DetailsPanelProps) => {
   const theme = useTheme();
   const flags = useFlags();
   const showPlacementGroups = Boolean(flags.vmPlacement);
@@ -51,7 +50,15 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       }}
       data-qa-label-header
     >
+      <Typography
+        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+        variant="h2"
+      >
+        Details
+      </Typography>
+
       {error && <Notice text={error} variant="error" />}
+
       <TextField
         {...(labelFieldProps || {
           label: 'Label',
@@ -60,7 +67,9 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
         data-qa-label-input
         noMarginTop
       />
+
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
+
       {showPlacementGroups && (
         <>
           {!placementGroupsSelectProps?.selectedRegionId && (
@@ -85,16 +94,7 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
                   },
                   width: '400px',
                 }}
-              />
-              <TooltipIcon
-                sxTooltipIcon={{
-                  marginBottom: '6px',
-                  marginLeft: theme.spacing(),
-                  padding: 0,
-                }}
-                status="help"
-                text={tooltipText}
-                tooltipPosition="right"
+                textFieldProps={{ tooltipText }}
               />
             </Box>
           )}
