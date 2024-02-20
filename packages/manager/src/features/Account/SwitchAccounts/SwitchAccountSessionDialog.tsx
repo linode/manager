@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
+import { sendSwitchAccountSessionExpiryEvent } from 'src/utilities/analytics';
 
 export const SwitchAccountSessionDialog = React.memo(
   ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -13,18 +14,30 @@ export const SwitchAccountSessionDialog = React.memo(
       <ActionsPanel
         primaryButtonProps={{
           label: 'Log in',
-          onClick: () => history.push('/logout'),
+          onClick: () => {
+            sendSwitchAccountSessionExpiryEvent('Log In');
+            history.push('/logout');
+          },
         }}
-        secondaryButtonProps={{ label: 'Close', onClick: onClose }}
+        secondaryButtonProps={{
+          label: 'Close',
+          onClick: () => {
+            sendSwitchAccountSessionExpiryEvent('Close');
+            onClose();
+          },
+        }}
       />
     );
 
     return (
       <ConfirmationDialog
+        onClose={() => {
+          sendSwitchAccountSessionExpiryEvent('Close');
+          onClose();
+        }}
         actions={actions}
         data-testid="switch-account-session-dialog"
         maxWidth="xs"
-        onClose={onClose}
         open={isOpen}
         title="Session expired"
       >

@@ -10,7 +10,7 @@ export const createObjectStorageKeysSchema = object({
     .trim(),
   regions: array()
     .of(string())
-    .min(1, 'Regions must include at least one region')
+    .min(1, 'Select at least one region to continue')
     .notRequired(),
 });
 
@@ -22,6 +22,9 @@ export const updateObjectStorageKeysSchema = object({
     .trim(),
   regions: array()
     .of(string())
-    .min(1, 'Regions must include at least one region')
+    .min(
+      1,
+      'You need to select at least one region. To delete all keys, go to the Access Keys page in Cloud Manager and select Revoke.'
+    )
     .notRequired(),
 });
