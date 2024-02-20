@@ -9,7 +9,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { useLoabalancerConfigurationsInfiniteQuery } from 'src/queries/aglb/configurations';
+import { useLoabalancerConfigurationsInfiniteQuery } from 'src/queries/aclb/configurations';
 
 import { ConfigurationAccordion } from './Configurations/ConfigurationAccordion';
 import { ConfigurationForm } from './Configurations/ConfigurationForm';

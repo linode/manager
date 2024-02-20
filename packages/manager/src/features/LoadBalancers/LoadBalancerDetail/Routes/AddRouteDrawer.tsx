@@ -12,7 +12,7 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteCreateMutation } from 'src/queries/aclb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { RouteSelect } from './RouteSelect';

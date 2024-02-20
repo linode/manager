@@ -5,11 +5,15 @@ import {
   getChildAccounts,
   updateAccountInfo,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 
-import { useAccountUser } from './accountUsers';
 import { queryPresets } from './base';
 
 import type {
@@ -54,18 +58,55 @@ export const useChildAccounts = ({
   params,
 }: RequestOptions) => {
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
+  const enabled =
+    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+    Boolean(grants?.global?.child_account_access) ||
+    hasExplicitAuthToken;
 
   return useQuery<ResourcePage<Account>, APIError[]>(
     [queryKey, 'childAccounts', 'paginated', params, filter],
     () => getChildAccounts({ filter, headers, params }),
     {
-      enabled:
-        (Boolean(user?.user_type === 'parent') && !profile?.restricted) ||
-        Boolean(grants?.global?.child_account_access) ||
-        hasExplicitAuthToken,
+      enabled,
+      keepPreviousData: true,
+    }
+  );
+};
+
+export const useChildAccountsInfiniteQuery = ({
+  filter,
+  headers,
+  params,
+}: RequestOptions) => {
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+  const hasExplicitAuthToken = Boolean(headers?.Authorization);
+  const enabled =
+    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+    Boolean(grants?.global?.child_account_access) ||
+    hasExplicitAuthToken;
+
+  return useInfiniteQuery<ResourcePage<Account>, APIError[]>(
+    [queryKey, 'childAccounts', 'infinite', params, filter],
+    ({ pageParam }) =>
+      getChildAccounts({
+        filter,
+        headers,
+        params: {
+          page: pageParam,
+          page_size: 25,
+        },
+      }),
+    {
+      enabled,
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
+      },
       keepPreviousData: true,
     }
   );
@@ -73,18 +114,18 @@ export const useChildAccounts = ({
 
 export const useChildAccount = ({ euuid, headers }: ChildAccountPayload) => {
   const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(headers?.Authorization);
+  const enabled =
+    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+    Boolean(grants?.global?.child_account_access) ||
+    hasExplicitAuthToken;
 
   return useQuery<Account, APIError[]>(
     [queryKey, 'childAccounts', 'childAccount', euuid],
     () => getChildAccount({ euuid }),
     {
-      enabled:
-        (Boolean(user?.user_type === 'parent') && !profile?.restricted) ||
-        Boolean(grants?.global?.child_account_access) ||
-        hasExplicitAuthToken,
+      enabled,
     }
   );
 };

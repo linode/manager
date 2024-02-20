@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Skeleton } from 'src/components/Skeleton';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurations';
+import { useLoadBalancerConfigurationsQuery } from 'src/queries/aclb/configurations';
 
 interface PortProps {
   loadbalancerId: number;

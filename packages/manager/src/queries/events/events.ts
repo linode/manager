@@ -24,7 +24,7 @@ import {
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 
 /**
- * Gets an infinitly scrollable list of all Events
+ * Gets an infinitely scrollable list of all Events
  *
  * This query is kept up to date by `useEventsPoller`.
  *
@@ -33,7 +33,7 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
  *
  * The magic here is that we're doing cursor based pagination using the event `id`.
  * We are doing this as opposed to page based pagination because we need an accurate way to get
- * the next set of events when the items retrned by the server may have shifted.
+ * the next set of events when the items returned by the server may have shifted.
  */
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(

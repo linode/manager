@@ -33,9 +33,10 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
 import {
   WithQueryClientProps,
   withQueryClient,
@@ -89,7 +90,7 @@ interface State {
 type CombinedProps = Props &
   WithSnackbarProps &
   WithQueryClientProps &
-  FeatureFlagConsumerProps;
+  WithFeatureFlagProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -815,5 +816,5 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 export default recompose<CombinedProps, Props>(
   withSnackbar,
   withQueryClient,
-  withFlags
+  withFeatureFlags
 )(UserPermissions);

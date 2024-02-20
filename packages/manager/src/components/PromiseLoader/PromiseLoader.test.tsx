@@ -1,46 +1,25 @@
-import { ShallowWrapper, shallow } from 'enzyme';
 import * as React from 'react';
+
+import { Box } from 'src/components/Box';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import PromiseLoader from './PromiseLoader';
 
-const mockAxiosResponse = (ms: number, result?: any) =>
-  new Promise((resolve) => setTimeout(() => resolve(result), ms));
-
 describe('PromiseLoaderSpec', () => {
-  const Component = () => <div id="component" />;
-  const data = { name: 'whatever' };
-  const preloaded = PromiseLoader({
-    resource: async () => {
-      await mockAxiosResponse(100);
-      return Promise.resolve(data);
-    },
-  });
-  const LoadedComponent = preloaded(Component);
-  let wrapper: ShallowWrapper;
+  it('shows a loading state initially and the component afterwards', async () => {
+    const ExampleComponent = () => <Box>Hey</Box>;
 
-  describe('before resolution', () => {
-    beforeEach(async () => {
-      wrapper = shallow(<LoadedComponent />);
-    });
+    const examplePromise = async () => {
+      await new Promise((r) => setTimeout(r, 100));
+      return 'OMG!';
+    };
 
-    it('should display loading component.', async () => {
-      expect(wrapper.find('[data-qa-circle-progress]').exists()).toBeTruthy();
-    });
-  });
+    const Component = PromiseLoader({ data: examplePromise })(ExampleComponent);
 
-  describe('after resolution', () => {
-    beforeEach(async () => {
-      wrapper = shallow(<LoadedComponent />);
-      await mockAxiosResponse(120);
-      wrapper.update();
-    });
+    const { findByText, getByTestId } = renderWithTheme(<Component />);
 
-    it('should render the Component.', () => {
-      expect(wrapper.find('Component').exists()).toBeTruthy();
-    });
+    expect(getByTestId('circle-progress')).toBeVisible();
 
-    it('should inject props onto Component.', async () => {
-      expect(wrapper.props()).toHaveProperty('resource', { response: data });
-    });
+    await findByText('Hey');
   });
 });

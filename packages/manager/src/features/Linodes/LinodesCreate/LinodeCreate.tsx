@@ -1,3 +1,4 @@
+import { PlacementGroup } from '@linode/api-v4';
 import {
   InterfacePayload,
   PriceObject,
@@ -32,18 +33,19 @@ import {
   WithAccountProps,
   withAccount,
 } from 'src/containers/account.container';
+import { WithFeatureFlagProps } from 'src/containers/flags.container';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
-import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -120,6 +122,7 @@ export interface LinodeCreateProps {
   imageDisplayInfo: Info;
   ipamAddress: null | string;
   label: string;
+  placementGroupSelection?: PlacementGroup;
   regionDisplayInfo: Info;
   resetCreationState: () => void;
   selectedSubnetId?: number;
@@ -140,6 +143,7 @@ export interface LinodeCreateProps {
   updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
+  updatePlacementGroupSelection: (placementGroup: PlacementGroup) => void;
   updateTags: (tags: Tag[]) => void;
   updateUserData: (userData: string) => void;
   userData: string | undefined;
@@ -169,7 +173,7 @@ type InnerProps = WithTypesRegionsAndImages &
 
 type CombinedProps = AllFormStateAndHandlers &
   AppsData &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   ImagesProps &
   InnerProps &
   ReduxStateProps &
@@ -277,6 +281,7 @@ export class LinodeCreate extends React.PureComponent<
       linodesData,
       linodesError,
       linodesLoading,
+      placementGroupSelection,
       regionDisplayInfo,
       regionsData,
       regionsError,
@@ -292,6 +297,7 @@ export class LinodeCreate extends React.PureComponent<
       typesError,
       typesLoading,
       updateLabel,
+      updatePlacementGroupSelection,
       updateTags,
       updateUserData,
       userCannotCreateLinode,
@@ -315,12 +321,34 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
+    {
+      /* TODO VM_Placement: Refactor this into a util method */
+    }
+    const regionLabel = regionsData?.find((r) => r.id === selectedRegionID)
+      ?.label;
+    let placementGroupsLabel;
+    if (selectedRegionID && regionLabel) {
+      placementGroupsLabel = `Placement Groups in ${regionLabel} (${selectedRegionID})`;
+    } else {
+      placementGroupsLabel = 'Placement Group';
+    }
+
     const tagsInputProps = {
       disabled: userCannotCreateLinode,
       onChange: updateTags,
       tagError: hasErrorFor.tags,
       value: tags || [],
     };
+
+    let errorText;
+    if (
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupSelection!,
+        region: regionsData.find((r) => r.id === selectedRegionID)!,
+      })
+    ) {
+      errorText = `This Placement Group doesn't have any capacity`;
+    }
 
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
@@ -613,12 +641,21 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
+            placementGroupsSelectProps={{
+              disabled: !selectedRegionID,
+              errorText,
+              handlePlacementGroupSelection: updatePlacementGroupSelection,
+              label: placementGroupsLabel,
+              noOptionsMessage: 'There are no Placement Groups in this region',
+              selectedRegionId: selectedRegionID,
+            }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
                 : undefined
             }
             data-qa-label-and-tags-panel
+            regions={regionsData!}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (

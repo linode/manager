@@ -29,7 +29,7 @@ export const getLoadbalancerCertificates = (
 ) =>
   Request<ResourcePage<Certificate>>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/certificates`
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(loadbalancerId)}/certificates`
     ),
     setMethod('GET'),
     setParams(params),
@@ -47,7 +47,7 @@ export const getLoadbalancerCertificate = (
 ) =>
   Request<Certificate>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/certificates/${encodeURIComponent(certificateId)}`
     ),
@@ -65,7 +65,7 @@ export const createLoadbalancerCertificate = (
 ) =>
   Request<Certificate>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/certificates`
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(loadbalancerId)}/certificates`
     ),
     setMethod('POST'),
     setData(data, CreateCertificateSchema)
@@ -83,7 +83,7 @@ export const updateLoadbalancerCertificate = (
 ) =>
   Request<Certificate>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/certificates/${encodeURIComponent(certificateId)}`
     ),
@@ -102,7 +102,7 @@ export const deleteLoadbalancerCertificate = (
 ) =>
   Request<{}>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/certificates/${encodeURIComponent(certificateId)}`
     ),

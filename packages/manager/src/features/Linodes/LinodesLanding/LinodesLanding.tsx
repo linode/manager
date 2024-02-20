@@ -15,7 +15,6 @@ import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
-import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
@@ -432,7 +431,6 @@ const sendGroupByAnalytic = (value: boolean) => {
 
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
-  withFeatureFlagConsumer,
   withProfile
 );
 

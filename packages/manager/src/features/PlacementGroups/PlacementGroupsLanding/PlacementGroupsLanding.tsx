@@ -16,7 +16,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
@@ -24,7 +23,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
 import { PlacementGroupsRenameDrawer } from '../PlacementGroupsRenameDrawer';
-import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from '../constants';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
@@ -120,22 +118,12 @@ export const PlacementGroupsLanding = React.memo(() => {
   return (
     <>
       <LandingHeader
-        buttonDataAttrs={{
-          disabled:
-            (placementGroups?.results &&
-              placementGroups?.results >= MAX_NUMBER_OF_PLACEMENT_GROUPS) ||
-            false,
-        }}
         breadcrumbProps={{ pathname: '/placement-groups' }}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
       />
-      <Typography sx={{ mb: 4, mt: 2 }}>
-        The maximum amount of Placement Groups is{' '}
-        {MAX_NUMBER_OF_PLACEMENT_GROUPS} per account.
-      </Typography>
       <TextField
         InputProps={{
           endAdornment: query && (
@@ -166,6 +154,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '40%' }}
             >
               Label
             </TableSortCell>
@@ -180,7 +169,7 @@ export const PlacementGroupsLanding = React.memo(() => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

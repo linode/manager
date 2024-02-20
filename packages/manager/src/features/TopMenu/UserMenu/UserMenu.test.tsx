@@ -2,7 +2,6 @@ import { fireEvent, within } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountFactory, profileFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories/accountUsers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -25,10 +24,14 @@ describe('UserMenu', () => {
         );
       }),
       rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
-      }),
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+        return res(
+          ctx.json(
+            profileFactory.build({
+              user_type: 'parent',
+              username: 'parent-user',
+            })
+          )
+        );
       })
     );
 
@@ -48,10 +51,14 @@ describe('UserMenu', () => {
         );
       }),
       rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ username: 'parent-user' })));
-      }),
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'proxy' })));
+        return res(
+          ctx.json(
+            profileFactory.build({
+              user_type: 'proxy',
+              username: 'parent-user',
+            })
+          )
+        );
       })
     );
 
@@ -71,10 +78,11 @@ describe('UserMenu', () => {
         );
       }),
       rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ username: 'child-user' })));
-      }),
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'child' })));
+        return res(
+          ctx.json(
+            profileFactory.build({ user_type: 'child', username: 'child-user' })
+          )
+        );
       })
     );
 
@@ -93,11 +101,13 @@ describe('UserMenu', () => {
       }),
       rest.get('*/profile', (req, res, ctx) => {
         return res(
-          ctx.json(profileFactory.build({ username: 'regular-user' }))
+          ctx.json(
+            profileFactory.build({
+              user_type: 'default',
+              username: 'regular-user',
+            })
+          )
         );
-      }),
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: null })));
       })
     );
 
@@ -116,8 +126,8 @@ describe('UserMenu', () => {
           ctx.json(accountFactory.build({ company: 'Parent Company' }))
         );
       }),
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
       })
     );
 
@@ -141,8 +151,8 @@ describe('UserMenu', () => {
           ctx.json(accountFactory.build({ company: 'Child Company' }))
         );
       }),
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'proxy' })));
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(ctx.json(profileFactory.build({ user_type: 'proxy' })));
       })
     );
 

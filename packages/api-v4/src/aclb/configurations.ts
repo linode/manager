@@ -30,7 +30,7 @@ export const getLoadbalancerConfigurations = (
 ) =>
   Request<ResourcePage<Configuration>>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/configurations`
     ),
@@ -50,7 +50,7 @@ export const getLoadbalancerConfiguration = (
 ) =>
   Request<Configuration>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/configurations/${encodeURIComponent(configurationId)}`
     ),
@@ -67,7 +67,7 @@ export const getLoadbalancerConfigurationsEndpointHealth = (
 ) =>
   Request<ConfigurationsEndpointHealth>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/configurations/endpoints-health`
     ),
@@ -85,7 +85,7 @@ export const createLoadbalancerConfiguration = (
 ) =>
   Request<Configuration>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/configurations`
     ),
@@ -105,7 +105,7 @@ export const updateLoadbalancerConfiguration = (
 ) =>
   Request<Configuration>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/configurations/${encodeURIComponent(configurationId)}`
     ),
@@ -124,7 +124,7 @@ export const deleteLoadbalancerConfiguration = (
 ) =>
   Request<{}>(
     setURL(
-      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+      `${BETA_API_ROOT}/aclb/${encodeURIComponent(
         loadbalancerId
       )}/configurations/${encodeURIComponent(configurationId)}`
     ),

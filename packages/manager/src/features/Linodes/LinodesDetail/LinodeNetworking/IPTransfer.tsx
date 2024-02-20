@@ -91,19 +91,27 @@ export const getLinodeIPv6Ranges = (
   );
 };
 
-const LinodeNetworkingIPTransferPanel = (props: Props) => {
+export const IPTransfer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
   const theme = useTheme();
-  const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
+  const { mutateAsync: assignAddresses } = useAssignAdressesMutation({
+    currentLinodeId: linodeId,
+  });
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const { data: _ips } = useLinodeIPsQuery(linodeId);
 
-  const publicIPs = _ips?.ipv4.public.map((i) => i.address) ?? [];
-  const privateIPs = _ips?.ipv4.private.map((i) => i.address) ?? [];
+  const publicIPv4Addresses = _ips?.ipv4.public.map((i) => i.address) ?? [];
+  const privateIPv4Addresses = _ips?.ipv4.private.map((i) => i.address) ?? [];
+  const ipv6Addresses =
+    _ips?.ipv6?.global.map((i) => `${i.range}/${i.prefix}`) ?? [];
 
-  const ipAddresses = [...publicIPs, ...privateIPs];
+  const ipAddresses = [
+    ...publicIPv4Addresses,
+    ...privateIPv4Addresses,
+    ...ipv6Addresses,
+  ];
 
   const [ips, setIPs] = React.useState<IPRowState>(
     ipAddresses.reduce(
@@ -252,30 +260,42 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     ];
 
     return (
-      <Grid container key={state.sourceIP} spacing={2} sx={{ width: '100%' }}>
+      <Grid
+        sx={{
+          [theme.breakpoints.down('md')]: {
+            backgroundColor: theme.color.grey5,
+            mb: 3,
+          },
+        }}
+        container
+        key={state.sourceIP}
+        spacing={2}
+        xs={12}
+      >
         <Grid
           sx={{
             alignItems: 'center',
             display: 'flex',
-            [theme.breakpoints.down('sm')]: {
-              width: '100%',
-            },
           }}
+          md={3}
+          xs={12}
         >
-          <Typography
-            sx={{
-              marginTop: 0,
-              [theme.breakpoints.up('sm')]: {
-                width: 175,
-              },
-              width: '100%',
-            }}
-            variant="body1"
-          >
+          <Typography>
+            <Typography
+              sx={{
+                [theme.breakpoints.up('md')]: {
+                  display: 'none',
+                },
+              }}
+              component="span"
+              fontFamily={theme.font.bold}
+            >
+              IP address:{' '}
+            </Typography>
             {state.sourceIP}
           </Typography>
         </Grid>
-        <StyledAudoGrid>
+        <StyledAutoGrid md={3} xs={12}>
           <Select
             textFieldProps={{
               dataAttrs: {
@@ -299,7 +319,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
             overflowPortal
             placeholder="Select Action"
           />
-        </StyledAudoGrid>
+        </StyledAutoGrid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
         {renderIPSelect && renderIPSelect(state as Swap)}
       </Grid>
@@ -316,7 +336,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     });
 
     return (
-      <StyledAudoGrid xs={12}>
+      <StyledAutoGrid md={3} xs={12}>
         <Select
           textFieldProps={{
             dataAttrs: {
@@ -336,7 +356,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           overflowPortal
           value={defaultLinode}
         />
-      </StyledAudoGrid>
+      </StyledAutoGrid>
     );
   };
 
@@ -350,7 +370,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     });
 
     return (
-      <StyledAudoGrid xs={12}>
+      <StyledAutoGrid md={3} xs={12}>
         <Select
           textFieldProps={{
             dataAttrs: {
@@ -367,7 +387,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           overflowPortal
           value={defaultIP}
         />
-      </StyledAudoGrid>
+      </StyledAutoGrid>
     );
   };
 
@@ -474,7 +494,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           the DNS records.
         </Typography>
       </Grid>
-      <Grid container spacing={2} xs={12}>
+      <Grid container xs={12}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
           <Notice
             text={'There was an error loading IPv6 Ranges'}
@@ -487,21 +507,23 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           </div>
         ) : (
           <>
-            <Grid container spacing={2} sx={{ width: '100%' }}>
+            <Grid container xs={12}>
               <Grid
                 sx={{
-                  [theme.breakpoints.up('sm')]: {
-                    width: `calc(175px + ${theme.spacing(2)})`,
+                  [theme.breakpoints.down('md')]: {
+                    display: 'none',
                   },
-                  width: '100%',
                 }}
                 data-qa-transfer-ip-label
+                sm={3}
+                xs={12}
               >
                 <Typography>IP Address</Typography>
               </Grid>
               <Grid
                 sx={{
-                  [theme.breakpoints.down('sm')]: {
+                  pl: 0.5,
+                  [theme.breakpoints.down('md')]: {
                     display: 'none',
                   },
                 }}
@@ -509,8 +531,15 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                 <Typography>Actions</Typography>
               </Grid>
             </Grid>
-            <Grid sx={{ paddingTop: 0 }} xs={12}>
-              <Divider spacingBottom={0} />
+            <Grid
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  visibility: 'hidden',
+                },
+              }}
+              xs={12}
+            >
+              <Divider />
             </Grid>
             {linodes.length === 0 && searchText === '' ? (
               <Typography
@@ -523,33 +552,35 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                 with which to transfer IPs.
               </Typography>
             ) : (
-              <Grid container spacing={2} sx={{ width: '100%' }}>
+              <Grid spacing={2} xs={12}>
                 {Object.values(ips).map(ipRow)}
               </Grid>
             )}
           </>
         )}
       </Grid>
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'ip-transfer-save',
-          disabled: readOnly || linodes.length === 0,
-          label: 'Save',
-          loading: submitting,
-          onClick: onSubmit,
-        }}
-        secondaryButtonProps={{
-          'data-testid': 'ip-transfer-reset',
-          disabled: submitting || linodes.length === 0,
-          label: 'Reset Form',
-          onClick: onReset,
-        }}
-      />
+      <Grid container justifyContent="flex-end" xs={12}>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'ip-transfer-save',
+            disabled: readOnly || linodes.length === 0,
+            label: 'Save',
+            loading: submitting,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'ip-transfer-reset',
+            disabled: submitting || linodes.length === 0,
+            label: 'Reset Form',
+            onClick: onReset,
+          }}
+        />
+      </Grid>
     </Dialog>
   );
 };
 
-const StyledAudoGrid = styled(Grid, { label: 'StyledAutoGrid' })(
+const StyledAutoGrid = styled(Grid, { label: 'StyledAutoGrid' })(
   ({ theme }) => ({
     minWidth: 175,
     [theme.breakpoints.up('sm')]: {
@@ -636,5 +667,3 @@ const createRequestData = (state: IPRowState, region: string) => ({
   assignments: Object.values(state).reduce(stateToAssignmentsReducer, []),
   region,
 });
-
-export default LinodeNetworkingIPTransferPanel;

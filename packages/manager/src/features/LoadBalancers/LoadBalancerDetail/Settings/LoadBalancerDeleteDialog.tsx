@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useLoadBalancerDeleteMutation } from 'src/queries/aglb/loadbalancers';
+import { useLoadBalancerDeleteMutation } from 'src/queries/aclb/loadbalancers';
 
 import type { Loadbalancer } from '@linode/api-v4';
 

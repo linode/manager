@@ -1,8 +1,7 @@
 import { waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountFactory } from 'src/factories/account';
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { accountFactory, profileFactory } from 'src/factories';
 import { ChildAccountList } from 'src/features/Account/SwitchAccounts/ChildAccountList';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
@@ -17,8 +16,8 @@ const props = {
 
 it('should display a list of child accounts', async () => {
   server.use(
-    rest.get('*/account/users/*', (req, res, ctx) => {
-      return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+    rest.get('*/profile', (req, res, ctx) => {
+      return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
     }),
     rest.get('*/account/child-accounts', (req, res, ctx) => {
       return res(

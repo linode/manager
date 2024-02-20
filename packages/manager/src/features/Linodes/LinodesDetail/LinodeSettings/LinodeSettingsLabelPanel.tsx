@@ -11,6 +11,7 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { sendUpdateLinodeLabelEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
@@ -40,6 +41,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
       enqueueSnackbar(`Successfully updated Linode label to ${label}`, {
         variant: 'success',
       });
+      sendUpdateLinodeLabelEvent('Settings');
     },
   });
 

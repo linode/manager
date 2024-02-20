@@ -12,7 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
-import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aclb/routes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
