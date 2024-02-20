@@ -5,12 +5,9 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
-import { useGrants } from 'src/queries/profile';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import {
   BillingActionButton,
@@ -79,16 +76,12 @@ const ContactInformation = (props: Props) => {
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
-  const { data: grants } = useGrants();
-
   const isChildUser = Boolean(profile?.user_type === 'child');
 
   const isReadOnly =
-    isRestrictedGlobalGrantType({
+    useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-      grants,
       permittedGrantLevel: 'read_write',
-      profile,
     }) || isChildUser;
 
   const handleEditDrawerOpen = React.useCallback(

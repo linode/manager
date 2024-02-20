@@ -173,11 +173,15 @@ export const AreaChart = (props: AreaChartProps) => {
                   {value}
                 </span>
               )}
+              onClick={({ dataKey }) => {
+                if (dataKey) {
+                  handleLegendClick(dataKey as string);
+                }
+              }}
               wrapperStyle={{
                 left: 25,
               }}
               iconType="square"
-              onClick={(props) => handleLegendClick(props.dataKey)}
             />
           )}
           {showLegend && legendRows && (

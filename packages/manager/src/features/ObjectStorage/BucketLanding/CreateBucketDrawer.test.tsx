@@ -92,7 +92,10 @@ describe('CreateBucketDrawer', () => {
       getByTestId,
     } = renderWithTheme(<CreateBucketDrawer {...props} />, { queryClient });
 
-    userEvent.type(getByLabelText('Label', { exact: false }), 'my-test-bucket');
+    await userEvent.type(
+      getByLabelText('Label', { exact: false }),
+      'my-test-bucket'
+    );
 
     // We must waitFor because we need to load region and cluster data from the API
     await waitFor(() =>
@@ -104,7 +107,7 @@ describe('CreateBucketDrawer', () => {
 
     const saveButton = getByTestId('create-bucket-button');
 
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await findByText('Object Storage is offline!');
   });

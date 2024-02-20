@@ -13,13 +13,12 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 
 import AccountLogins from './AccountLogins';
 import { SwitchAccountButton } from './SwitchAccountButton';
@@ -51,7 +50,6 @@ const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: account } = useAccount();
-  const { data: grants } = useGrants();
   const { data: profile } = useProfile();
 
   const flags = useFlags();
@@ -64,11 +62,9 @@ const AccountLanding = () => {
   const isParentUser = profile?.user_type === 'parent';
 
   const isReadOnly =
-    isRestrictedGlobalGrantType({
+    useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-      grants,
       permittedGrantLevel: 'read_write',
-      profile,
     }) || isChildUser;
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
@@ -169,7 +165,12 @@ const AccountLanding = () => {
         history.replace('/account/billing/make-payment');
     }
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
-      <SwitchAccountButton onClick={handleAccountSwitch} />
+      <SwitchAccountButton
+        onClick={() => {
+          sendSwitchAccountEvent('Account Landing');
+          handleAccountSwitch();
+        }}
+      />
     ) : undefined;
   }
 

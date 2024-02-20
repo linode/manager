@@ -9,13 +9,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { Country } from './types';
@@ -33,15 +31,12 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
-  const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isChildUser = profile?.user_type === 'child';
   const isReadOnly =
-    isRestrictedGlobalGrantType({
+    useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-      grants,
       permittedGrantLevel: 'read_write',
-      profile,
     }) || isChildUser;
 
   const formik = useFormik({

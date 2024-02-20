@@ -2,35 +2,36 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { ADMINISTRATOR, BUSINESS_PARTNER } from './constants';
 
-import type {
-  GlobalGrantTypes,
-  GrantLevel,
-  Grants,
-  Profile,
-  Token,
-} from '@linode/api-v4';
+import type { GlobalGrantTypes, GrantLevel, Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
-type ActionType = 'create' | 'delete' | 'edit' | 'view';
+export type ActionType =
+  | 'clone'
+  | 'create'
+  | 'delete'
+  | 'edit'
+  | 'migrate'
+  | 'modify'
+  | 'reboot'
+  | 'rebuild'
+  | 'rescue'
+  | 'resize'
+  | 'view';
 
 interface GetRestrictedResourceText {
   action?: ActionType;
+  includeContactMessage?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
   useBusinessContact?: boolean;
 }
 
-interface GrantsProfileSchema {
-  grants: Grants | undefined;
-  profile: Profile | undefined;
-}
-
-interface AccountAccessGrant extends GrantsProfileSchema {
+interface AccountAccessGrant {
   globalGrantType: 'account_access';
   permittedGrantLevel: GrantLevel;
 }
 
-interface NonAccountAccessGrant extends GrantsProfileSchema {
+interface NonAccountAccessGrant {
   globalGrantType: Exclude<GlobalGrantTypes, 'account_access'>;
   permittedGrantLevel?: GrantLevel;
 }
@@ -45,6 +46,7 @@ export type RestrictedGlobalGrantType =
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
+  includeContactMessage = true,
   isSingular = true,
   resourceType,
   useBusinessContact = false,
@@ -55,36 +57,13 @@ export const getRestrictedResourceText = ({
 
   const contactPerson = useBusinessContact ? BUSINESS_PARTNER : ADMINISTRATOR;
 
-  return `You don't have permissions to ${action} ${resource}. Please contact your ${contactPerson} to request the necessary permissions.`;
-};
+  let message = `You don't have permissions to ${action} ${resource}.`;
 
-/**
- * Determine whether the user has restricted access to a specific resource.
- *
- * @example
- * // If account access does not equal 'read_write', the user has restricted access.
- * isRestrictedGlobalGrantType({
- *   globalGrantType: 'account_access',
- *   permittedGrantLevel: 'read_write',
- *   grants,
- *   profile
- * });
- * // Returns: true
- */
-export const isRestrictedGlobalGrantType = ({
-  globalGrantType,
-  grants,
-  permittedGrantLevel,
-  profile,
-}: RestrictedGlobalGrantType): boolean => {
-  if (globalGrantType !== 'account_access') {
-    return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+  if (includeContactMessage) {
+    message += ` Please contact your ${contactPerson} to request the necessary permissions.`;
   }
 
-  return (
-    Boolean(profile?.restricted) &&
-    grants?.global[globalGrantType] !== permittedGrantLevel
-  );
+  return message;
 };
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY

@@ -20,20 +20,18 @@ import { SupportLink } from 'src/components/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PayPalErrorBoundary } from '../../PaymentInfoPanel/PayPalErrorBoundary';
 import GooglePayButton from './GooglePayButton';
 import PayPalButton from './PayPalButton';
-import CreditCardDialog from './PaymentBits/CreditCardDialog';
+import { CreditCardDialog } from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import { SetSuccess } from './types';
 
@@ -90,7 +88,6 @@ export const PaymentDrawer = (props: Props) => {
     isLoading: accountLoading,
     refetch: accountRefetch,
   } = useAccount();
-  const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -119,11 +116,10 @@ export const PaymentDrawer = (props: Props) => {
 
   const isChildUser = profile?.user_type === 'child';
   const isReadOnly =
-    isRestrictedGlobalGrantType({
+    useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-      grants,
+
       permittedGrantLevel: 'read_write',
-      profile,
     }) || isChildUser;
 
   React.useEffect(() => {

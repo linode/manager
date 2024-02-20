@@ -11,11 +11,9 @@ import { Notice, NoticeVariant } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useProfile } from 'src/queries/profile';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
@@ -50,7 +48,6 @@ const sxTooltipIcon = {
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
-  const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
@@ -58,11 +55,9 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   >(undefined);
   const isChildUser = profile?.user_type === 'child';
   const isReadOnly =
-    isRestrictedGlobalGrantType({
+    useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-      grants,
       permittedGrantLevel: 'read_write',
-      profile,
     }) || isChildUser;
 
   React.useEffect(() => {

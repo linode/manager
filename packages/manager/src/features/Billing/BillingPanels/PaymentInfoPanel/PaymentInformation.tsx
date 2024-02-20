@@ -7,14 +7,11 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { Typography } from 'src/components/Typography';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { queryKey } from 'src/queries/accountPayment';
-import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -49,18 +46,15 @@ const PaymentInformation = (props: Props) => {
   ] = React.useState<PaymentMethod | undefined>();
   const { replace } = useHistory();
   const queryClient = useQueryClient();
-  const { data: grants } = useGrants();
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
   const isChildUser = profile?.user_type === 'child';
 
   const isReadOnly =
-    isRestrictedGlobalGrantType({
+    useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-      grants,
       permittedGrantLevel: 'read_write',
-      profile,
     }) || isChildUser;
 
   const doDelete = () => {

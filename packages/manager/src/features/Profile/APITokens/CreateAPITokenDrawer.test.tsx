@@ -65,9 +65,9 @@ describe('Create API Token Drawer', () => {
     );
 
     const labelField = getByTestId('textfield-input');
-    userEvent.type(labelField, 'my-test-token');
+    await userEvent.type(labelField, 'my-test-token');
     const submit = getByText('Create Token');
-    userEvent.click(submit);
+    await userEvent.click(submit);
 
     await waitFor(() =>
       expect(props.showSecret).toBeCalledWith('secret-value')
@@ -135,10 +135,10 @@ describe('Create API Token Drawer', () => {
     expect(vpcScope).not.toBeInTheDocument();
   });
 
-  it('Should close when Cancel is pressed', () => {
+  it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
 });
