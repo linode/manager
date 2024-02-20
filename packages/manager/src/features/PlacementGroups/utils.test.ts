@@ -1,4 +1,4 @@
-import { PlacementGroup } from '@linode/api-v4';
+import { placementGroupFactory, regionFactory } from 'src/factories';
 
 import {
   affinityTypeOptions,
@@ -6,6 +6,8 @@ import {
   getPlacementGroupLinodeCount,
   hasPlacementGroupReachedCapacity,
 } from './utils';
+
+import type { PlacementGroup } from '@linode/api-v4';
 
 describe('getPlacementGroupLinodeCount', () => {
   it('returns the length of the linode_ids array', () => {
@@ -34,18 +36,26 @@ describe('hasPlacementGroupReachedCapacity', () => {
   it('returns true if the linode_ids array is equal to or greater than the capacity', () => {
     expect(
       hasPlacementGroupReachedCapacity({
-        capacity: 3,
-        linode_ids: [1, 2, 3],
-      } as PlacementGroup)
+        placementGroup: placementGroupFactory.build({
+          linode_ids: [1, 2, 3],
+        }),
+        region: regionFactory.build({
+          maximum_vms_per_pg: 3,
+        }),
+      })
     ).toBe(true);
   });
 
   it('returns false if the linode_ids array is less than the capacity', () => {
     expect(
       hasPlacementGroupReachedCapacity({
-        capacity: 4,
-        linode_ids: [1, 2, 3],
-      } as PlacementGroup)
+        placementGroup: placementGroupFactory.build({
+          linode_ids: [1, 2, 3],
+        }),
+        region: regionFactory.build({
+          maximum_vms_per_pg: 4,
+        }),
+      })
     ).toBe(false);
   });
 });

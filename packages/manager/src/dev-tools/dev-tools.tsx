@@ -1,15 +1,15 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { ApplicationStore } from 'src/store';
 
+import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
 import { MockDataTool } from './MockDataTool';
-import './dev-tools.css';
 
 function install(store: ApplicationStore) {
   function DevTools() {
@@ -37,11 +37,11 @@ function install(store: ApplicationStore) {
 
   const devToolsRoot = document.createElement('div');
   document.body.appendChild(devToolsRoot);
-  ReactDOM.render(
+  const root = createRoot(devToolsRoot);
+  root.render(
     <Provider store={store}>
       <DevTools />
-    </Provider>,
-    devToolsRoot
+    </Provider>
   );
 }
 

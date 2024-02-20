@@ -434,3 +434,55 @@ export const sendLinodeConfigurationDocsEvent = (label: string) => {
     label,
   });
 };
+
+// AccountLanding.tsx
+// UserMenu.tsx
+export const sendSwitchAccountEvent = (
+  label: 'Account Landing' | 'User Menu'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Switch Accounts Flow',
+    label,
+  });
+};
+
+// SwitchAccountDrawer.tsx
+export const sendSwitchToParentAccountEvent = () => {
+  sendEvent({
+    action: 'Click:link button',
+    category: 'Switch Accounts Flow - To Parent Account',
+  });
+};
+
+// SwitchAccountSessionDialog.tsx
+export const sendSwitchAccountSessionExpiryEvent = (
+  label: 'Close' | 'Log In'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Switch Accounts Flow - Session Expiration',
+    label,
+  });
+};
+
+// LinodeDetailHeader.tsx
+export const sendEditBreadcrumbEvent = () => {
+  sendEvent({
+    action: 'Click:pencil icon',
+    category: 'Breadcrumb',
+    label: 'Edit Breadcrumb',
+  });
+};
+
+// LinodeDetailHeader.tsx
+// LinodeSettingsLabelPanel.tsx
+export const sendUpdateLinodeLabelEvent = (
+  label: 'Breadcrumb' | 'Settings'
+) => {
+  sendEvent({
+    action: 'Click:button',
+    category: 'Linode Label',
+    label: `Update linode label from ${label}`,
+  });
+};
