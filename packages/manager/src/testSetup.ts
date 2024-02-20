@@ -1,12 +1,5 @@
-import Enzyme from 'enzyme';
-// @ts-expect-error not a big deal, we can suffer
-import Adapter from 'enzyme-adapter-react-16';
-
-import { expect } from 'vitest';
 import matchers from '@testing-library/jest-dom/matchers';
-
-// // Enzyme React 17 adapter.
-// Enzyme.configure({ adapter: new Adapter() });
+import { expect } from 'vitest';
 
 // JSDom matchers.
 expect.extend(matchers);
@@ -18,8 +11,6 @@ afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
 
 require('@testing-library/jest-dom/extend-expect');
-
-Enzyme.configure({ adapter: new Adapter() });
 
 // @ts-expect-error this prevents some console errors
 HTMLCanvasElement.prototype.getContext = () => {
@@ -60,3 +51,75 @@ vi.mock('highlight.js/lib/highlight', () => ({
     registerLanguage: vi.fn(),
   },
 }));
+
+/**
+ ***************************************
+ *  Custom matchers & matchers overrides
+ ***************************************
+ */
+
+/**
+ * Matcher override for toBeDisabled and toBeEnabled
+ *
+ * The reason for overriding those matchers is that we need to check for the aria-disabled attribute as well.
+ * When a button is disabled, it will not necessarily have the `disabled` attribute. but it will have an aria-disabled attribute set to true.
+ */
+const ariaDisabledAttribute = 'aria-disabled';
+
+const isElementDisabled = (element: HTMLElement) => {
+  // We really only want to check for `aria-disabled` on buttons since this is a Cloud Manager customization
+  return element.tagName.toLowerCase() === 'button'
+    ? element.getAttribute(ariaDisabledAttribute) === 'true' ||
+        element.hasAttribute('disabled')
+    : element.hasAttribute('disabled');
+};
+
+interface HandleResult {
+  condition: boolean;
+  element: HTMLElement;
+  expectedState: 'disabled' | 'enabled';
+  thisInstance: any;
+}
+
+const handleResult = ({
+  condition,
+  element,
+  expectedState,
+  thisInstance,
+}: HandleResult) => {
+  const message = `${thisInstance?.utils?.printReceived(
+    element ?? ''
+  )}\n\n expected ${element?.tagName} to be ${expectedState}`;
+  return condition
+    ? {
+        message: () => '',
+        pass: true,
+      }
+    : {
+        message: () => message,
+        pass: false,
+      };
+};
+
+expect.extend({
+  toBeDisabled(this: any, element: HTMLElement) {
+    const isDisabled = isElementDisabled(element);
+
+    return handleResult({
+      condition: isDisabled,
+      element,
+      expectedState: 'disabled',
+      thisInstance: this,
+    });
+  },
+  toBeEnabled(this: any, element: HTMLElement) {
+    const isEnabled = !isElementDisabled(element);
+
+    return handleResult({
+      condition: isEnabled,
+      element,
+      expectedState: 'enabled',
+      thisInstance: this,
+    });
+  },
+});

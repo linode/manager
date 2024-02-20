@@ -1,0 +1,32 @@
+import * as React from 'react';
+
+import { placementGroupFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
+import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
+
+describe('PlacementGroupsLinodes', () => {
+  it('renders an error state if placement groups are undefined', () => {
+    const { getByText } = renderWithTheme(
+      <PlacementGroupsLinodes placementGroup={undefined} />
+    );
+
+    expect(
+      getByText(PLACEMENT_GROUP_LINODES_ERROR_MESSAGE)
+    ).toBeInTheDocument();
+  });
+
+  it('features the linodes table, a filter field, a create button and a docs link', () => {
+    const placementGroup = placementGroupFactory.build({
+      linode_ids: [1],
+    });
+
+    const { getByPlaceholderText, getByRole } = renderWithTheme(
+      <PlacementGroupsLinodes placementGroup={placementGroup} />
+    );
+
+    expect(getByPlaceholderText('Search Linodes')).toBeInTheDocument();
+    expect(getByRole('table')).toBeInTheDocument();
+  });
+});

@@ -19,14 +19,22 @@ import type {
   User,
 } from '@linode/api-v4';
 
-export const useAccountUsers = (params?: Params, filters?: Filter) => {
+export const useAccountUsers = ({
+  enabled = true,
+  filters,
+  params,
+}: {
+  enabled?: boolean;
+  filters?: Filter;
+  params?: Params;
+}) => {
   const { data: profile } = useProfile();
 
   return useQuery<ResourcePage<User>, APIError[]>(
     [queryKey, 'users', 'paginated', params, filters],
     () => getUsers(params, filters),
     {
-      enabled: !profile?.restricted,
+      enabled: enabled && !profile?.restricted,
       keepPreviousData: true,
     }
   );

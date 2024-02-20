@@ -10,6 +10,7 @@ import { makeResponse } from 'support/util/response';
 
 import type {
   Account,
+  AccountLogin,
   AccountSettings,
   Agreements,
   CancelAccount,
@@ -512,5 +513,21 @@ export const mockGetAccountAgreements = (
     'GET',
     apiMatcher(`account/agreements`),
     makeResponse(agreements)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch the account logins and mocks the response.
+ *
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAccountLogins = (
+  accountLogins: AccountLogin[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/logins*`),
+    paginateResponse(accountLogins)
   );
 };

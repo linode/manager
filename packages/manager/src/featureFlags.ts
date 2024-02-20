@@ -46,7 +46,6 @@ export interface Flags {
   databaseBeta: boolean;
   databaseScaleUp: boolean;
   databases: boolean;
-  dcGetWell: boolean;
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
   linodeCloneUIChanges: boolean;
@@ -62,7 +61,6 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   recharts: boolean;
   referralBannerText: ReferralBannerText;
-  regionDropdown: boolean;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   taxBanner: TaxBanner;
