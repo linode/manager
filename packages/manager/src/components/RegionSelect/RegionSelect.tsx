@@ -82,8 +82,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     }
   }, [selectedId]);
 
-  // Hide edge sites from Marketplace and Images
-  const unsupportedEdgeEntities = ['Images', 'One-Click'].includes(createType);
+  // Hide edge sites from Marketplace, Cloning, and Images
+  const unsupportedEdgeEntities = [
+    'Clone Linode',
+    'Images',
+    'One-Click',
+  ].includes(createType);
   const geckoEnabled = Boolean(flags.gecko && !unsupportedEdgeEntities);
 
   const showGeckoHelperText =
