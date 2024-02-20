@@ -276,7 +276,7 @@ describe('User Profile', () => {
         .trigger('mouseover');
       // Click the button first, then confirm the tooltip is shown.
       ui.tooltip
-        .findByText('You can\u{2019}t delete the proxy user.')
+        .findByText('You can\u{2019}t delete a business partner user.')
         .should('be.visible');
     });
   });
