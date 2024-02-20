@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-02-20] - v1.113.0
+
+### Added:
+
+- Feb 2024 Marketplace apps ([#10149](https://github.com/linode/manager/pull/10149))
+
+### Changed:
+
+- Improve Linode Graph X Axis Labels when viewing historic data ([#10186](https://github.com/linode/manager/pull/10186))
+
+### Fixed:
+
+- EditableText interaction styling ([#10132](https://github.com/linode/manager/pull/10132))
+- Inability to transfer IPv6 ranges ([#10156](https://github.com/linode/manager/pull/10156))
+- Incorrect `X-Filter` on the Account Maintenance "Pending" Table (#10196)
+- Bundle analyzer script ([#10175](https://github.com/linode/manager/pull/10175))
+
+### Tech Stories:
+
+- Clean up DC Get Well feature flag logic ([#10146](https://github.com/linode/manager/pull/10146))
+- Clean up `regionDropdown` feature flag ([#10148](https://github.com/linode/manager/pull/10148))
+- Update `react-router-dom` in preparation for React 18 ([#10154](https://github.com/linode/manager/pull/10154))
+- Remove Enzyme ([#10160](https://github.com/linode/manager/pull/10160))
+- Update Luxon ([#10163](https://github.com/linode/manager/pull/10163))
+- Update `launchdarkly-react-client-sdk` ([#10165](https://github.com/linode/manager/pull/10165))
+- Add analytics event for breadcrumb label edit icon on Linode details page ([#10183](https://github.com/linode/manager/pull/10183))
+
+### Tests:
+
+- Add integration test coverage for Account Login History ([#10125](https://github.com/linode/manager/pull/10125))
+- Add integration test to check proxy user disabled username/email field ([#10139](https://github.com/linode/manager/pull/10139))
+- Add Cypress tests for OBJ Multicluster access key operations ([#10144](https://github.com/linode/manager/pull/10144))
+- Fix billing contact Cypress test by narrowing element selection scope ([#10150](https://github.com/linode/manager/pull/10150))
+- Update Cypress tests to use `"default"` `user_type` for non-parent/child/proxy users ([#10176](https://github.com/linode/manager/pull/10176))
+- Fix Button enabled assertions ([#10142](https://github.com/linode/manager/pull/10142))
+
+### Upcoming Features:
+
+- Disable "Save" button in Edit Access Key drawer unless field values are changed ([#10118](https://github.com/linode/manager/pull/10118))
+- Add Placement Groups Select component (#10100)
+- Update Placement Groups limits ([#10191](https://github.com/linode/manager/pull/10191))
+- Add Placement Group Linodes List ([#10123](https://github.com/linode/manager/pull/10123))
+- Add AssignLinodesToPlacementGroup drawer ([#10140](https://github.com/linode/manager/pull/10140))
+- Add PlacementGroups Summary component ([#10164](https://github.com/linode/manager/pull/10164))
+- Add unassign linode from Placement Group modal (#10172)
+- Improve restricted access Login History experience for child and restricted users ([#10125](https://github.com/linode/manager/pull/10125))
+- Add session expiry confirmation dialog for proxy to parent user account switching ([#10152](https://github.com/linode/manager/pull/10152))
+- Clean up files to use profile to get `user_type` ([#10102](https://github.com/linode/manager/pull/10102))
+- Update components and unit tests to use `"default"` `user_type` for non-parent/child/proxy users ([#10176](https://github.com/linode/manager/pull/10176))
+- Use infinite query for fetching child accounts ([#10179](https://github.com/linode/manager/pull/10179))
+- Use API filtering on user_type to populate the two Users & Grants tables ([#10192](https://github.com/linode/manager/pull/10192))
+
 ## [2024-02-13] - v1.112.0
 
 ### Added:
@@ -26,6 +78,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Display $0.00 prices in Linode Migration dialog ([#10166](https://github.com/linode/manager/pull/10166))
 
 ## [2024-02-05] - v1.111.0
+
 ### Changed:
 
 - Table CollapsibleRow icon orientation ([#10119](https://github.com/linode/manager/pull/10119))
@@ -82,24 +135,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add Placement Groups Landing Page ([#10068](https://github.com/linode/manager/pull/10068))
 - Add Placement Groups Landing Page empty state ([#10075](https://github.com/linode/manager/pull/10075))
 
-
 ## [2024-01-31] - v1.110.3
 
 ### Fix:
+
 - Enable `Can add VPCs to this account` for user permissions
 
 ## [2024-01-31] - v1.110.2
 
 ### Changed:
+
 - Remove VPC beta feedback link
 
 ## [2024-01-31] - v1.110.1
 
 ### Changed:
+
 - Updated VPC flag for primary navigation
 
 ## [2024-01-22] - v1.110.0
-
 
 ### Added:
 
@@ -152,7 +206,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Add AGLB Endpoint Health ([#10008](https://github.com/linode/manager/pull/10008))
 - Add child account access column and disable delete account button when account has child accounts ([#10025](https://github.com/linode/manager/pull/10025))
-- Add parent/proxy 'Switch Account' button and drawer to user profile dropdown menu  ([#10031](https://github.com/linode/manager/pull/10031))
+- Add parent/proxy 'Switch Account' button and drawer to user profile dropdown menu ([#10031](https://github.com/linode/manager/pull/10031))
 - Disable Contact / Billing Info for Restricted Users ([#10036](https://github.com/linode/manager/pull/10036))
 - Disable Billing Access user permission for child accounts ([#10045](https://github.com/linode/manager/pull/10045))
 - Fix AGLB Configuration "Save" button remaining disabled when trying to remove a route ([#10048](https://github.com/linode/manager/pull/10048))
@@ -175,9 +229,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Remove obsolete VPC disabled state tests ([#10047](https://github.com/linode/manager/pull/10047))
 
-
 ## [2024-01-08] - v1.109.0
-
 
 ### Changed:
 
@@ -231,7 +283,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add `child_account` oauth scope to Personal Access Token drawers ([#9992](https://github.com/linode/manager/pull/9992))
 - Add AGLB Routes section of full create page ([#9997](https://github.com/linode/manager/pull/9997))
 
-
 ## [2023-12-11] - v1.108.0
 
 ### Added:
@@ -244,9 +295,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Improve MainConcept Transcoders Marketplace app name, description, and website ([#9858](https://github.com/linode/manager/pull/9858))
 - Move Linode Details Add/Edit Config button alignment to the right ([#9925](https://github.com/linode/manager/pull/9925))
-- Add pricing Docs Link to create/clone flows and remove DC-specific pricing warning notice  ([#9946](https://github.com/linode/manager/pull/9946))
+- Add pricing Docs Link to create/clone flows and remove DC-specific pricing warning notice ([#9946](https://github.com/linode/manager/pull/9946))
 - Update MainConcept app names to include “Demo” ([#9950](https://github.com/linode/manager/pull/9950))
-
 
 ### Fixed:
 
@@ -324,14 +374,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2023-11-13] - v1.107.0
 
-
 ### Changed:
 
 - Logic governing inclusion of public interfaces in Linode Create payload ([#9834](https://github.com/linode/manager/pull/9834))
 - Improve layout of breadcrumb for support tickets ([#9855](https://github.com/linode/manager/pull/9855))
 - Logic governing display of Network Interfaces/Networking section in Linode Config dialog ([#9868](https://github.com/linode/manager/pull/9868))
 - Temporarily remove region sorting on DBaaS landing page ([#9861](https://github.com/linode/manager/pull/9861))
-
 
 ### Fixed:
 
@@ -356,7 +404,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add integration tests for AGLB certificate edit flow ([#9880](https://github.com/linode/manager/pull/9880))
 - Add integration tests for AGLB certificate delete flow ([#9846](https://github.com/linode/manager/pull/9846))
 
-
 ### Upcoming Features:
 
 - Fix Unassign multiple Linodes from Subnet ([#9820](https://github.com/linode/manager/pull/9820))
@@ -379,7 +426,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Manage state in Create Load Balancer flow ([#9848](https://github.com/linode/manager/pull/9848))
 - AGLB Configurations Add Route Drawer and other refinements ([#9853](https://github.com/linode/manager/pull/9853))
 - Add missing label field validation in AGLB Edit Certificate drawer ([#9880](https://github.com/linode/manager/pull/9880))
-
 
 ## [2023-10-30] - v1.106.0
 
