@@ -10,7 +10,7 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypographyProps } from 'src/components/Typography';
-import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
