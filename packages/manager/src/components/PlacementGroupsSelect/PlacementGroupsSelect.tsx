@@ -4,6 +4,7 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { TextFieldProps } from 'src/components/TextField';
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 export interface PlacementGroupsSelectProps {
@@ -23,6 +24,7 @@ export interface PlacementGroupsSelectProps {
   renderOptionLabel?: (placementGroups: PlacementGroup) => string;
   selectedRegionId?: string;
   sx?: SxProps;
+  textFieldProps?: Partial<TextFieldProps>;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
@@ -40,6 +42,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     renderOptionLabel,
     selectedRegionId,
     sx,
+    ...textFieldProps
   } = props;
 
   const {
@@ -95,6 +98,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
       sx={sx}
+      {...textFieldProps}
     />
   );
 };

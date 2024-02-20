@@ -11,7 +11,6 @@ import {
 } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -95,16 +94,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
                   },
                   width: '400px',
                 }}
-              />
-              <TooltipIcon
-                sxTooltipIcon={{
-                  marginBottom: '6px',
-                  marginLeft: theme.spacing(),
-                  padding: 0,
-                }}
-                status="help"
-                text={tooltipText}
-                tooltipPosition="right"
+                textFieldProps={{ tooltipText }}
               />
             </Box>
           )}
