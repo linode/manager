@@ -210,8 +210,6 @@ const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
  * Creates the totals table for Invoice PDF
  */
 export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
-  let finalY = 0; // Initialize a variable to hold the final Y position after the table is drawn
-
   autoTable(doc, {
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
@@ -236,6 +234,8 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       },
     },
     didDrawPage: (data) => {
+      let finalY = 0; // Initialize a variable to hold the final Y position after the table is drawn
+
       if (data?.cursor?.y) {
         finalY = data.cursor.y;
       }
