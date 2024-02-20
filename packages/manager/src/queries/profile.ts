@@ -57,6 +57,7 @@ export const { profile: profileQueries } = getQueryKeys({
     }),
     profile: (options: RequestOptions = {}) => ({
       queryFn: () => getProfile(options),
+      queryKey: [options],
     }),
     sshKeys: (params: Params = {}, filter: Filter = {}) => ({
       queryFn: () => getSSHKeys(params, filter),

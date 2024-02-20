@@ -226,3 +226,18 @@ test("can passthrough options", async () => {
   expect(queries.linode("test").enabled).toBe(true);
   expect(queries.volumes.onSuccess()).toBe(true);
 });
+
+test("training undefined", async () => {
+  const queries = getQueryKeys({
+    linode: (id: { label?: string } = {}) => ({
+      queryFn: () => Promise.resolve(id),
+      queryKey: [id],
+    }),
+  });
+
+  // expect(queries.linode({ label: 'test' }).queryKey).toStrictEqual([
+  //   'linode',
+  //   { label: test },
+  // ]);
+  expect(queries.linode().queryKey).toStrictEqual(['linode', {}]);
+});
