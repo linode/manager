@@ -31,46 +31,52 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { getQueryKeys } from 'src/utilities/queryKeys';
+
 import { Grants } from '../../../api-v4/lib';
 import { queryKey as accountQueryKey } from './account';
 import { queryPresets } from './base';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import type { RequestOptions } from '@linode/api-v4';
 
-export const queryKey = 'profile';
+const profileQueries = getQueryKeys({
+  profile: (options: RequestOptions = {}) => ({
+    grants: {
+      queryFn: listGrants,
+    },
+    profile: {
+      queryFn: () => getProfile(options),
+    },
+  }),
+});
 
 export const useProfile = (options?: RequestOptions) => {
-  const key = [
-    queryKey,
-    options?.headers ? { headers: options.headers } : null,
-  ];
-
-  return useQuery<Profile, APIError[]>(
-    key,
-    () => getProfile({ headers: options?.headers }),
-    {
-      ...queryPresets.oneTimeFetch,
-    }
-  );
+  return useQuery<Profile, APIError[]>({
+    ...profileQueries.profile(options).profile,
+    ...queryPresets.oneTimeFetch,
+  });
 };
 
 export const useMutateProfile = () => {
   const queryClient = useQueryClient();
-  return useMutation<Profile, APIError[], Partial<Profile>>(
-    (data) => updateProfile(data),
-    { onSuccess: (newData) => updateProfileData(newData, queryClient) }
-  );
+  return useMutation<Profile, APIError[], Partial<Profile>>({
+    mutationFn: (data) => updateProfile(data),
+    onSuccess: (newData) => updateProfileData(newData, queryClient),
+  });
 };
 
 export const updateProfileData = (
   newData: Partial<Profile>,
   queryClient: QueryClient
 ): void => {
-  queryClient.setQueryData([queryKey, null], (oldData: Profile) => ({
-    ...oldData,
-    ...newData,
-  }));
+  queryClient.setQueryData(
+    profileQueries.profile().profile.queryKey,
+    (oldData: Profile) => ({
+      ...oldData,
+      ...newData,
+    })
+  );
 };
 
 export const useGrants = () => {
