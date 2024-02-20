@@ -99,9 +99,10 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Reboot',
       tooltipAction: 'reboot',
-      tooltipText: !isLinodeReadOnly
-        ? 'This action is unavailable while your Linode is offline.'
-        : undefined,
+      tooltipText:
+        !isLinodeReadOnly && linodeStatus !== 'running'
+          ? 'This action is unavailable while your Linode is offline.'
+          : undefined,
     },
     {
       condition: isVisible,
