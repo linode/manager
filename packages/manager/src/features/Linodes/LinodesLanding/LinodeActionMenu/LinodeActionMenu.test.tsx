@@ -7,11 +7,8 @@ import { linodeBackupsFactory } from 'src/factories/linodes';
 import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  LinodeActionMenu,
-  LinodeActionMenuProps,
-  buildQueryStringForLinodeClone,
-} from './LinodeActionMenu';
+import { LinodeActionMenu, LinodeActionMenuProps } from './LinodeActionMenu';
+import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 
 const props: LinodeActionMenuProps = {
   inListView: true,
