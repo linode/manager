@@ -69,7 +69,7 @@ export const { profile: profileQueries } = getQueryKeys({
   },
 });
 
-export const useProfile = (options?: RequestOptions) => {
+export const useProfile = (options: RequestOptions = {}) => {
   return useQuery<Profile, APIError[]>({
     ...profileQueries.profile(options),
     ...queryPresets.oneTimeFetch,
