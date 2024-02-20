@@ -17,6 +17,8 @@ import {
   updateProfile,
   updateSSHKey,
   verifyPhoneNumberCode,
+  getAppTokens,
+  getPersonalAccessTokens,
 } from '@linode/api-v4/lib/profile';
 import {
   APIError,
@@ -40,20 +42,36 @@ import { queryPresets } from './base';
 
 import type { RequestOptions } from '@linode/api-v4';
 
-const profileQueries = getQueryKeys({
-  profile: (options: RequestOptions = {}) => ({
+export const { profile: profileQueries } = getQueryKeys({
+  profile: {
+    appTokens: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: () => getAppTokens(params, filter),
+      queryKey: [params, filter],
+    }),
     grants: {
       queryFn: listGrants,
     },
-    profile: {
+    personalAccessTokens: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: () => getPersonalAccessTokens(params, filter),
+      queryKey: [params, filter],
+    }),
+    profile: (options: RequestOptions = {}) => ({
       queryFn: () => getProfile(options),
-    },
-  }),
+    }),
+    sshKeys: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: () => getSSHKeys(params, filter),
+      queryKey: [params, filter],
+    }),
+    trustedDevices: (params: Params = {}, filter: Filter = {}) => ({
+      queryFn: () => getTrustedDevices(params, filter),
+      queryKey: [params, filter],
+    }),
+  },
 });
 
 export const useProfile = (options?: RequestOptions) => {
   return useQuery<Profile, APIError[]>({
-    ...profileQueries.profile(options).profile,
+    ...profileQueries.profile(options),
     ...queryPresets.oneTimeFetch,
   });
 };
@@ -71,7 +89,7 @@ export const updateProfileData = (
   queryClient: QueryClient
 ): void => {
   queryClient.setQueryData(
-    profileQueries.profile().profile.queryKey,
+    profileQueries.profile().queryKey,
     (oldData: Profile) => ({
       ...oldData,
       ...newData,
@@ -81,17 +99,12 @@ export const updateProfileData = (
 
 export const useGrants = () => {
   const { data: profile } = useProfile();
-  return useQuery<Grants, APIError[]>([queryKey, 'grants'], listGrants, {
+  return useQuery<Grants, APIError[]>({
+    ...profileQueries.grants,
     ...queryPresets.oneTimeFetch,
     enabled: Boolean(profile?.restricted),
   });
 };
-
-export const getProfileData = (queryClient: QueryClient) =>
-  queryClient.getQueryData<Profile>([queryKey, null]);
-
-export const getGrantData = (queryClient: QueryClient) =>
-  queryClient.getQueryData<Grants>([queryKey, 'grants']);
 
 export const useSMSOptOutMutation = () => {
   const queryClient = useQueryClient();
@@ -117,14 +130,11 @@ export const useSSHKeysQuery = (
   filter?: Filter,
   enabled = true
 ) =>
-  useQuery(
-    [queryKey, 'ssh-keys', 'paginated', params, filter],
-    () => getSSHKeys(params, filter),
-    {
-      enabled,
-      keepPreviousData: true,
-    }
-  );
+  useQuery({
+    ...profileQueries.sshKeys(params, filter),
+    enabled,
+    keepPreviousData: true,
+  });
 
 export const useCreateSSHKeyMutation = () => {
   const queryClient = useQueryClient();
@@ -132,7 +142,7 @@ export const useCreateSSHKeyMutation = () => {
     createSSHKey,
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+        queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
         // also invalidate the /account/users data because that endpoint returns some SSH key data
         queryClient.invalidateQueries([accountQueryKey, 'users']);
       },
@@ -146,7 +156,7 @@ export const useUpdateSSHKeyMutation = (id: number) => {
     (data) => updateSSHKey(id, data),
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+        queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
         // also invalidate the /account/users data because that endpoint returns some SSH key data
         queryClient.invalidateQueries([accountQueryKey, 'users']);
       },
@@ -158,7 +168,7 @@ export const useDeleteSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteSSHKey(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+      queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
       queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
@@ -169,25 +179,22 @@ export const sshKeyEventHandler = (event: EventHandlerData) => {
   // This event handler is a bit agressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 
-  event.queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+  event.queryClient.invalidateQueries(profileQueries.sshKeys.queryKey);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
   event.queryClient.invalidateQueries([accountQueryKey, 'users']);
 };
 
 export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
-  useQuery<ResourcePage<TrustedDevice>, APIError[]>(
-    [queryKey, 'trusted-devices', 'paginated', params, filter],
-    () => getTrustedDevices(params, filter),
-    {
-      keepPreviousData: true,
-    }
-  );
+  useQuery<ResourcePage<TrustedDevice>, APIError[]>({
+    ...profileQueries.trustedDevices(params, filter),
+    keepPreviousData: true,
+  });
 
 export const useRevokeTrustedDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteTrustedDevice(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'trusted-devices']);
+      queryClient.invalidateQueries(profileQueries.trustedDevices.queryKey);
     },
   });
 };
@@ -196,7 +203,8 @@ export const useDisableTwoFactorMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(disableTwoFactor, {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, null]);
+      // invalidate the profile because the /v4/profile endpoint returns 2FA info
+      queryClient.invalidateQueries(profileQueries.profile().queryKey);
       // also invalidate the /account/users data because that endpoint returns 2FA status for each user
       queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
