@@ -36,7 +36,7 @@ const walk = async (dir: string) => {
     if (file.isDirectory()) {
       sidebar.push({ text: file.name, items: await walk(filepath) });
     } else {
-      sidebar.push({ text: file.name, link: filepath });
+      sidebar.push({ text: file.name, link: filepath.split(DOCS_PATH)[1] });
     }
   }
 
