@@ -41,6 +41,9 @@ function capitalize(s: string) {
   );
 }
 
+/**
+ * Given a file name, this function returns a formatted title.
+ */
 function formatSidebarItemText(fileName: string) {
   // removes -, _, and .md from files names to generate the title
   for (const [from, to] of replacements) {
@@ -53,6 +56,9 @@ function formatSidebarItemText(fileName: string) {
   return fileName;
 }
 
+/**
+ * Generates a VitePress sidebar by recursively traversing the given directory.
+ */
 export function generateSidebar(dir: string) {
   const files = readdirSync(dir, { withFileTypes: true });
 
