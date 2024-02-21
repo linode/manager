@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import CloudViewIcon from 'src/assets/icons/entityIcons/cloudview.svg';
+import CloudViewIcon from 'src/assets/icons/entityIcons/cv_namespace.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
 
