@@ -3,7 +3,7 @@
     /* Language and Environment */
     "jsx": "react",
     "lib": ["dom", "es2020"],
-    "target": "es5",
+    "target": "es2021",
 
     /* Modules */
     "baseUrl": ".",

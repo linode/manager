@@ -11,7 +11,13 @@ type SidebarItem = {
 
 const DOCS_PATH = resolve(__dirname + '/../../');
 
-const exclude = ["cache", "public", "PULL_REQUEST_TEMPLATE.md", ".vitepress"];
+const exclude = ["cache", "public", "PULL_REQUEST_TEMPLATE.md", ".vitepress", "index.md"];
+
+const replacements = [
+  ['-', ' '],
+  ['_', ' '],
+  ['.md', ''],
+];
 
 function isPathIgnored(path: string) {
   for (const item of exclude) {
@@ -22,7 +28,14 @@ function isPathIgnored(path: string) {
   return false;
 }
 
-const walk = (dir: string) => {
+function formatSidebarItemText(fileName: string) {
+  for (const [from, to] of replacements) {
+    fileName = fileName.replaceAll(from, to);
+  }
+  return fileName;
+}
+
+export function generateSidebar(dir: string) {
   const files = readdirSync(dir, { withFileTypes: true });
 
   const sidebar: SidebarItem[] = [];
@@ -35,17 +48,11 @@ const walk = (dir: string) => {
     }
 
     if (file.isDirectory()) {
-      sidebar.push({ text: file.name, collapsed: false, items: walk(filepath) });
+      sidebar.push({ text: formatSidebarItemText(file.name), collapsed: false, items: generateSidebar(filepath) });
     } else {
-      sidebar.push({ text: file.name, link: filepath.split(DOCS_PATH)[1] });
+      sidebar.push({ text: formatSidebarItemText(file.name), link: filepath.split(DOCS_PATH)[1] });
     }
   }
 
   return sidebar;
-}
-
-export function getSidebar() {
-  const files = walk(DOCS_PATH)
-  console.log(files)
-  return files;
 }

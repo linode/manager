@@ -1,9 +1,11 @@
-import { getSidebar } from "./plugins/sidebar";
+import { generateSidebar } from "./plugins/sidebar";
+
+const DOCS_SRC_DIR = new URL('./../', import.meta.url).pathname;
 
 export default {
   title: "Cloud Manager Docs",
   description: "Akamai Cloud Manger Documentation",
-  srcDir: "./",
+  srcDir: DOCS_SRC_DIR,
   base: "/manager/",
   themeConfig: {
     logo: "/akamai-wave.svg",
@@ -15,7 +17,7 @@ export default {
     search: {
       provider: "local",
     },
-    sidebar: getSidebar(),
+    sidebar: generateSidebar(DOCS_SRC_DIR),
     socialLinks: [
       { icon: "github", link: "https://github.com/linode/manager" },
     ],
