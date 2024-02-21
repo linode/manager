@@ -76,7 +76,7 @@ const tooltipCopy: Record<IPType, JSX.Element | null> = {
 
 interface Props {
   linodeId: number;
-  linodeIsInEdgeRegion: boolean;
+  linodeIsInEdgeRegion?: boolean;
   onClose: () => void;
   open: boolean;
   readOnly: boolean;

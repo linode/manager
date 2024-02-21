@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Currency } from 'src/components/Currency';
+import { Notice } from 'src/components/Notice/Notice';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
 
@@ -14,10 +15,16 @@ interface Props {
   backupsMonthlyPrice?: PriceObject['monthly'];
   disabled: boolean;
   linodeId: number;
+  linodeIsInEdgeRegion?: boolean;
 }
 
 export const BackupsPlaceholder = React.memo((props: Props) => {
-  const { backupsMonthlyPrice, disabled, linodeId } = props;
+  const {
+    backupsMonthlyPrice,
+    disabled,
+    linodeId,
+    linodeIsInEdgeRegion,
+  } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -42,11 +49,17 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
   return (
     <>
       {disabled && <LinodePermissionsError />}
+      {linodeIsInEdgeRegion && (
+        <Notice
+          text="Backups are currently not available for Edge regions"
+          variant="warning"
+        />
+      )}
       <StyledPlaceholder
         buttonProps={[
           {
             children: 'Enable Backups',
-            disabled,
+            disabled: disabled || linodeIsInEdgeRegion,
             onClick: () => setDialogOpen(true),
           },
         ]}

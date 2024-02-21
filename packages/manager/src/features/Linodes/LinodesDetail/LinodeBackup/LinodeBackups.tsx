@@ -15,9 +15,11 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
@@ -35,9 +37,11 @@ export const LinodeBackups = () => {
 
   const history = useHistory();
 
+  const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
+  const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
     Boolean(linode?.type)
@@ -92,11 +96,17 @@ export const LinodeBackups = () => {
   }
 
   if (!linode?.backups.enabled) {
+    const linodeIsInEdgeRegion =
+      flags.gecko &&
+      regions?.find((region) => region.id === linode?.region)?.site_type ===
+        'edge';
+
     return (
       <BackupsPlaceholder
         backupsMonthlyPrice={backupsMonthlyPrice}
         disabled={doesNotHavePermission}
         linodeId={id}
+        linodeIsInEdgeRegion={linodeIsInEdgeRegion}
       />
     );
   }
