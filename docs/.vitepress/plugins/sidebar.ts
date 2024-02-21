@@ -1,5 +1,6 @@
 import { readdirSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
+import { DOCS_SRC_DIR } from "../config";
 
 type LinkItem = { text: string; link: string };
 
@@ -10,8 +11,6 @@ type SidebarItem =
       items: SidebarItem[] | LinkItem[];
     }
   | LinkItem;
-
-const DOCS_PATH = resolve(__dirname + "/../../");
 
 const exclude = [
   "cache",
@@ -75,7 +74,7 @@ export function generateSidebar(dir: string) {
     } else {
       sidebar.push({
         text: formatSidebarItemText(file.name),
-        link: filepath.split(DOCS_PATH)[1],
+        link: filepath.split(DOCS_SRC_DIR)[1],
       });
     }
   }

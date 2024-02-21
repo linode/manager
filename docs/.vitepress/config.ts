@@ -1,6 +1,6 @@
 import { generateSidebar } from "./plugins/sidebar";
 
-const DOCS_SRC_DIR = new URL('./../', import.meta.url).pathname;
+export const DOCS_SRC_DIR = new URL("./../", import.meta.url).pathname;
 
 export default {
   title: "Cloud Manager Docs",
