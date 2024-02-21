@@ -17,8 +17,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
@@ -50,6 +52,12 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const { data: grants } = useGrants();
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
+  const { data: linode } = useLinodeQuery(linodeID);
+  const { data: regions } = useRegionsQuery();
+
+  const linodeIsInEdgeRegion =
+    regions?.find((region) => region.id === linode?.region)?.site_type ===
+    'edge';
 
   const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
   const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(
@@ -241,6 +249,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
       />
       <AddIPDrawer
         linodeId={linodeID}
+        linodeIsInEdgeRegion={linodeIsInEdgeRegion}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
         readOnly={readOnly}

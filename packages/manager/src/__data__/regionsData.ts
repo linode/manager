@@ -604,7 +604,7 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edgetest',
+    id: 'us-edge-1',
     label: 'Gecko Edge Test',
     maximum_pgs_per_customer: 5,
     maximum_vms_per_pg: 10,

@@ -766,8 +766,8 @@ export const handlers = [
         linodeFactory.build({
           backups: { enabled: false },
           id,
-          label: 'DC-Specific Pricing Linode',
-          region: 'id-cgk',
+          label: 'Gecko Edge Test',
+          region: 'us-edge-1',
         })
       )
     );
