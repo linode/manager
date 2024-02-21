@@ -1,6 +1,6 @@
 import { getSidebar } from "./plugins/sidebar";
 
-export default async () => ({
+export default {
   title: "Cloud Manager Docs",
   description: "Akamai Cloud Manger Documentation",
   srcDir: "./",
@@ -15,10 +15,10 @@ export default async () => ({
     search: {
       provider: "local",
     },
-    sidebar: await getSidebar(),
+    sidebar: getSidebar(),
     socialLinks: [
       { icon: "github", link: "https://github.com/linode/manager" },
     ],
   },
   head: [["link", { rel: "icon", href: "/manager/favicon.ico" }]],
-});
+};

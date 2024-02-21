@@ -1,10 +1,11 @@
-import { readdir } from "fs/promises";
+import { readdirSync } from "fs";
 import { join, resolve } from "path";
 
 type LinkItem = { text: string; link: string }
 
 type SidebarItem = {
   text: string;
+  collapsed?: boolean;
   items: SidebarItem[] | LinkItem[]
 } | LinkItem;
 
@@ -21,8 +22,8 @@ function isPathIgnored(path: string) {
   return false;
 }
 
-const walk = async (dir: string) => {
-  const files = await readdir(dir, { withFileTypes: true });
+const walk = (dir: string) => {
+  const files = readdirSync(dir, { withFileTypes: true });
 
   const sidebar: SidebarItem[] = [];
 
@@ -34,7 +35,7 @@ const walk = async (dir: string) => {
     }
 
     if (file.isDirectory()) {
-      sidebar.push({ text: file.name, items: await walk(filepath) });
+      sidebar.push({ text: file.name, collapsed: false, items: walk(filepath) });
     } else {
       sidebar.push({ text: file.name, link: filepath.split(DOCS_PATH)[1] });
     }
@@ -43,8 +44,8 @@ const walk = async (dir: string) => {
   return sidebar;
 }
 
-export async function getSidebar(): Promise<SidebarItem[]> {
-  const files = await walk(DOCS_PATH)
+export function getSidebar() {
+  const files = walk(DOCS_PATH)
   console.log(files)
   return files;
 }
