@@ -394,7 +394,7 @@ describe('object storage access keys smoke tests', () => {
           mockBuckets.forEach((mockBucket) => {
             // TODO M3-7733 Update this selector when ARIA label is fixed.
             cy.findByLabelText(
-              `This token has read-only access for -${mockRegion.id}-${mockBucket.label}`
+              `This token has read-only access for ${mockRegion.id}-${mockBucket.label}`
             );
           });
         });
