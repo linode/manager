@@ -9,7 +9,6 @@ import {
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { rest } from 'msw';
-import { useStore } from 'react-redux';
 
 import { regions } from 'src/__data__/regionsData';
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
@@ -119,8 +118,6 @@ export const makeResourcePage = <T>(
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
 });
-
-const store = useStore();
 
 const statusPage = [
   rest.get('*/api/v2/incidents*', (req, res, ctx) => {
@@ -1153,7 +1150,7 @@ export const handlers = [
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(
       ctx.json({
-        theme: getStorage(MOCK_THEME_STORAGE_KEY),
+        theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
       })
     );
   }),
