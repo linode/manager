@@ -56,6 +56,9 @@ export const StyledEdgeBox = styled(Box, { label: 'StyledEdgeBox' })(
     marginLeft: 8,
     padding: '8px 0',
     [theme.breakpoints.down('md')]: {
+      '& svg': {
+        marginLeft: 0,
+      },
       alignSelf: 'start',
       marginLeft: 0,
     },

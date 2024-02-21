@@ -1,15 +1,12 @@
 import { Typography } from '@mui/material';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { RegionOption } from './RegionOption';
 import {
@@ -37,6 +34,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     currentCapability,
     disabled,
     errorText,
+    geckoEnabled,
     handleSelection,
     helperText,
     isClearable,
@@ -44,12 +42,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     regions,
     required,
     selectedId,
+    showGeckoHelperText,
     width,
   } = props;
-
-  const flags = useFlags();
-  const location = useLocation();
-  const createType = getQueryParamFromQueryString(location.search, 'type');
 
   const {
     data: accountAvailability,
@@ -81,23 +76,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       setSelectedRegion(null);
     }
   }, [selectedId]);
-
-  // Hide edge sites from Marketplace, Cloning, and Images
-  const unsupportedEdgeEntities = [
-    'Clone Linode',
-    'Images',
-    'One-Click',
-  ].includes(createType);
-  const geckoEnabled = Boolean(flags.gecko && !unsupportedEdgeEntities);
-
-  const showGeckoHelperText =
-    geckoEnabled &&
-    currentCapability &&
-    regions.find(
-      (region) =>
-        region.site_type === 'edge' &&
-        region.capabilities.includes(currentCapability)
-    );
 
   const options = React.useMemo(
     () =>
@@ -182,9 +160,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       {showGeckoHelperText && ( // @TODO Gecko MVP: Add docs link
         <StyledEdgeBox>
           <EdgeServer />
-          <Typography sx={{ textWrap: 'nowrap' }}>
+          <Typography
+            data-testid="region-select-edge-text"
+            sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
+          >
             {' '}
-            Indicates an Edge server region. <Link to="#">Learn more</Link>
+            Indicates an Edge server region. <Link to="#">Learn more</Link>.
           </Typography>
         </StyledEdgeBox>
       )}

@@ -9,6 +9,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import {
@@ -48,6 +49,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     selectedLinodeTypeId,
   } = props;
 
+  const flags = useFlags();
   const location = useLocation();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
@@ -71,6 +73,24 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       regionB: selectedId,
       type,
     });
+
+  // Hide edge sites from Marketplace, Cloning, and Images
+  const unsupportedEdgeEntities = [
+    'Clone Linode',
+    'Images',
+    'One-Click',
+  ].includes(params.type);
+  const geckoEnabled = Boolean(flags.gecko && !unsupportedEdgeEntities);
+
+  const showGeckoHelperText = Boolean(
+    geckoEnabled &&
+      currentCapability &&
+      regions.find(
+        (region) =>
+          region.site_type === 'edge' &&
+          region.capabilities.includes(currentCapability)
+      )
+  );
 
   if (props.regions.length === 0) {
     return null;
@@ -116,10 +136,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         currentCapability={currentCapability}
         disabled={disabled}
         errorText={error}
+        geckoEnabled={geckoEnabled}
         handleSelection={handleSelection}
         helperText={helperText}
         regions={regions}
         selectedId={selectedId || null}
+        showGeckoHelperText={showGeckoHelperText}
       />
       {showClonePriceWarning && (
         <Notice
