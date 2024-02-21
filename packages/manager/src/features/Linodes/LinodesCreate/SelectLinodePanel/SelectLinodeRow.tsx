@@ -132,7 +132,7 @@ export const SelectLinodeRow = (props: Props) => {
         <RegionIndicator region={linode.region} />
       </TableCell>
       <TableCell actionCell>
-        {isRunning && (
+        {isRunning && selected && (
           <InlineMenuAction
             actionText="Power Off"
             buttonHeight={47}
