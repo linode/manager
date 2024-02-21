@@ -23,10 +23,12 @@ const AccountActivationError = (props: CombinedProps) => {
 
   return (
     <React.Fragment>
-      {getAPIErrorOrDefault(
-        props.errors,
-        'Your account is not yet activated. Please reach out to support@linode.com for more information'
-      )[0].reason}
+      {
+        getAPIErrorOrDefault(
+          props.errors,
+          'Your account is not yet activated. Please reach out to support@linode.com for more information'
+        )[0].reason
+      }
     </React.Fragment>
   );
 };
