@@ -100,7 +100,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
                 text:
                   'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
               },
-              ...(flags.linodeCloneUIChanges
+              ...(flags.linodeCloneUiChanges
                 ? [
                     {
                       level: 'warning' as const,

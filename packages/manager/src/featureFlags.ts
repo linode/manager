@@ -48,7 +48,7 @@ export interface Flags {
   databases: boolean;
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
-  linodeCloneUIChanges: boolean;
+  linodeCloneUiChanges: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;

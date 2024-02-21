@@ -67,7 +67,7 @@ export const SelectLinodePanel = (props: Props) => {
   // Capture the selected linode when this component mounts,
   // so it doesn't change when the user selects a different one.
   const [preselectedLinodeID] = React.useState(
-    flags.linodeCloneUIChanges && selectedLinodeID
+    flags.linodeCloneUiChanges && selectedLinodeID
   );
 
   const searchText = React.useMemo(
@@ -88,7 +88,7 @@ export const SelectLinodePanel = (props: Props) => {
   );
 
   const SelectComponent =
-    matchesMdUp && flags.linodeCloneUIChanges
+    matchesMdUp && flags.linodeCloneUiChanges
       ? SelectLinodeTable
       : SelectLinodeCards;
 
@@ -129,14 +129,14 @@ export const SelectLinodePanel = (props: Props) => {
                 </Stack>
                 <Typography
                   marginBottom={
-                    flags.linodeCloneUIChanges ? theme.spacing(2) : undefined
+                    flags.linodeCloneUiChanges ? theme.spacing(2) : undefined
                   }
                   data-qa-select-linode-header
                   variant="h2"
                 >
                   {!!header ? header : 'Select Linode'}
                 </Typography>
-                {flags.linodeCloneUIChanges && (
+                {flags.linodeCloneUiChanges && (
                   <DebouncedSearchTextField
                     customValue={{
                       onChange: setUserSearchText,
