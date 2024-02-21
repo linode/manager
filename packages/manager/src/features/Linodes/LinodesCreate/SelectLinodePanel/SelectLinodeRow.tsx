@@ -32,6 +32,7 @@ interface Props {
   handleSelection: () => void;
   linodeId: number;
   selected: boolean;
+  showPowerActions: boolean;
 }
 
 export const SelectLinodeRow = (props: Props) => {
@@ -42,6 +43,7 @@ export const SelectLinodeRow = (props: Props) => {
     handleSelection,
     linodeId,
     selected,
+    showPowerActions,
   } = props;
 
   const theme = useTheme();
@@ -131,23 +133,26 @@ export const SelectLinodeRow = (props: Props) => {
       <TableCell>
         <RegionIndicator region={linode.region} />
       </TableCell>
-      <TableCell actionCell>
-        {isRunning && selected && (
-          <InlineMenuAction
-            actionText="Power Off"
-            buttonHeight={47}
-            onClick={handlePowerOff}
-          />
-        )}
-      </TableCell>
+      {showPowerActions && (
+        <TableCell actionCell>
+          {isRunning && selected && (
+            <InlineMenuAction
+              actionText="Power Off"
+              buttonHeight={47}
+              onClick={handlePowerOff}
+            />
+          )}
+        </TableCell>
+      )}
     </TableRow>
   );
 };
 
 export const SelectLinodeTableRowHead = (props: {
   orderBy: Omit<OrderByProps<{}>, 'data'>;
+  showPowerActions: boolean;
 }) => {
-  const { orderBy } = props;
+  const { orderBy, showPowerActions } = props;
   const CustomSortCell = (
     props: TableCellProps & {
       label: string;
@@ -181,7 +186,7 @@ export const SelectLinodeTableRowHead = (props: {
       <CustomSortCell label="region" sx={{ width: '13%' }}>
         Region
       </CustomSortCell>
-      <TableCell />
+      {showPowerActions && <TableCell />}
     </TableRow>
   );
 };

@@ -43,6 +43,7 @@ describe('SelectLinodeRow', () => {
           handleSelection={handleSelection}
           linodeId={linode1.id}
           selected
+          showPowerActions
         />
       )
     );
@@ -93,6 +94,7 @@ describe('SelectLinodeRow', () => {
           handleSelection={handleSelection}
           linodeId={linode1.id}
           selected
+          showPowerActions
         />
       )
     );
@@ -104,6 +106,50 @@ describe('SelectLinodeRow', () => {
 
     getByText(linode1.label);
     getByText('Offline');
+    await findByText('Debian 10');
+    await findByText('Linode 1 GB');
+    await findByText('Newark, NJ');
+
+    expect(queryByText('Power Off')).not.toBeInTheDocument();
+  });
+
+  it('should not display power off linode button if not enabled', async () => {
+    const linode1 = linodeFactory.build({
+      id: 1,
+      label: 'linode-1',
+    });
+    const image1 = imageFactory.build({
+      id: 'linode/debian10',
+      label: 'Debian 10',
+    });
+    server.use(
+      rest.get('*/linode/instances/:linodeId', (req, res, ctx) => {
+        return res(ctx.json(linode1));
+      }),
+      rest.get('*/images/:imageId', (req, res, ctx) => {
+        return res(ctx.json(image1));
+      })
+    );
+
+    const { findByText, getByTestId, getByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(
+        <SelectLinodeRow
+          handlePowerOff={handlePowerOff}
+          handleSelection={handleSelection}
+          linodeId={linode1.id}
+          selected
+          showPowerActions={false}
+        />
+      )
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    getByText(linode1.label);
+    getByText('Running');
     await findByText('Debian 10');
     await findByText('Linode 1 GB');
     await findByText('Newark, NJ');

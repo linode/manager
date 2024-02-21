@@ -29,6 +29,7 @@ interface Props {
   linodes: Linode[];
   notices?: string[];
   selectedLinodeID?: number;
+  showPowerActions?: boolean;
 }
 
 export const SelectLinodePanel = (props: Props) => {
@@ -40,6 +41,7 @@ export const SelectLinodePanel = (props: Props) => {
     linodes,
     notices,
     selectedLinodeID,
+    showPowerActions,
   } = props;
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -179,6 +181,7 @@ export const SelectLinodePanel = (props: Props) => {
                     disabled={disabled ?? false}
                     handleSelection={handleSelection}
                     selectedLinodeId={selectedLinodeID}
+                    showPowerActions={showPowerActions ?? false}
                   />
                 </StyledBox>
               </StyledPaper>
@@ -213,6 +216,7 @@ export interface RenderLinodeProps {
   handleSelection: Props['handleSelection'];
   orderBy: OrderByProps<Linode>;
   selectedLinodeId: number | undefined;
+  showPowerActions: boolean;
 }
 
 const StyledBox = styled(Box, {

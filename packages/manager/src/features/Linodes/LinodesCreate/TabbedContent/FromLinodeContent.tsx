@@ -109,6 +109,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
             header={'Select Linode to Clone From'}
             linodes={linodesData}
             selectedLinodeID={selectedLinodeID}
+            showPowerActions
           />
         </StyledGrid>
       )}

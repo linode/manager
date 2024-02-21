@@ -14,10 +14,14 @@ export const SelectLinodeTable = ({
   handleSelection,
   orderBy,
   selectedLinodeId,
+  showPowerActions,
 }: RenderLinodeProps) => (
   <Table aria-label="Linode" size="small">
     <TableHead style={{ fontSize: '.875rem' }}>
-      <SelectLinodeTableRowHead orderBy={orderBy} />
+      <SelectLinodeTableRowHead
+        orderBy={orderBy}
+        showPowerActions={showPowerActions}
+      />
     </TableHead>
     <TableBody role="radiogroup">
       {orderBy.data.length > 0 ? (
@@ -31,6 +35,7 @@ export const SelectLinodeTable = ({
             key={linode.id}
             linodeId={linode.id}
             selected={Number(selectedLinodeId) === linode.id}
+            showPowerActions={showPowerActions}
           />
         ))
       ) : (
