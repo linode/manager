@@ -1,38 +1,49 @@
-import * as fs from "fs";
-import * as path from "path";
+import { readdir } from "fs/promises";
+import { join, resolve } from "path";
 
-const DEVELOPMENT_GUIDE_PATH = "./docs/development-guide";
+type Item = { text: string; link: string }
 
-interface MarkdownInfo {
+type Sidebar = {
   text: string;
-  link: string;
+  items: Sidebar[] | Item[]
+} | Item;
+
+const DOCS_PATH = resolve(__dirname + '/../../');
+
+const exclude = ["cache", "public", "PULL_REQUEST_TEMPLATE.md", ".vitepress"];
+
+function isPathIgnored(path: string) {
+  for (const item of exclude) {
+    if (path.includes(item)) {
+      return true;
+    }
+  }
+  return false;
 }
 
-/**
- * Aggregates the pages in the development-guide and populates the left sidebar.
- */
-const scanDirectory = (directoryPath: string): MarkdownInfo[] => {
-  const markdownFiles = fs
-    .readdirSync(directoryPath)
-    .filter((file) => file.endsWith(".md"));
-  const markdownInfoArray: MarkdownInfo[] = [];
+const walk = async (dir: string, sidebar: Sidebar[] = []) => {
+  const files = await readdir(dir, { withFileTypes: true });
 
-  markdownFiles.forEach((file) => {
-    const filePath = path.join(directoryPath, file);
-    const fileContent = fs.readFileSync(filePath, "utf-8");
+  for (const file of files) {
+    const filepath = join(dir, file.name);
 
-    const titleMatch = fileContent.match(/^#\s+(.*)/m);
-    const title = titleMatch ? titleMatch[1] : "Untitled";
+    if (isPathIgnored(filepath)) {
+      continue;
+    }
 
-    const markdownInfo: MarkdownInfo = {
-      text: title,
-      link: `/development-guide/${file}`,
-    };
+    if (file.isDirectory()) {
+      const items = await walk(filepath, sidebar)
+      sidebar.push({ text: file.name, items });
+    } else {
+      sidebar = [...sidebar, { text: file.name, link: filepath.split(DOCS_PATH)[1] }];
+    }
+  }
 
-    markdownInfoArray.push(markdownInfo);
-  });
+  return sidebar;
+}
 
-  return markdownInfoArray;
-};
-
-export const guides = scanDirectory(DEVELOPMENT_GUIDE_PATH);
+export async function getSidebar(): Promise<Sidebar[]> {
+  const files = await walk(DOCS_PATH)
+  console.log(files)
+  return files;
+}
