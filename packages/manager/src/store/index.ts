@@ -1,4 +1,5 @@
 import { Store, applyMiddleware, combineReducers, createStore } from 'redux';
+import thunk from 'redux-thunk';
 
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
@@ -29,11 +30,11 @@ import mockFeatureFlags, {
   MockFeatureFlagState,
   defaultMockFeatureFlagState,
 } from './mockFeatureFlags';
+import mockTheme, { MockTheme, defaultMockTheme } from './mockTheme';
 import pendingUpload, {
   State as PendingUploadState,
   defaultState as pendingUploadState,
 } from './pendingUpload';
-import thunk from 'redux-thunk';
 
 export interface ApplicationState {
   authentication: AuthState;
@@ -42,6 +43,7 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
+  mockTheme: MockTheme;
   pendingUpload: PendingUploadState;
   stackScriptDialog: StackScriptDialogState;
 }
@@ -53,6 +55,7 @@ export const defaultState: ApplicationState = {
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
   mockFeatureFlags: defaultMockFeatureFlagState,
+  mockTheme: defaultMockTheme,
   pendingUpload: pendingUploadState,
   stackScriptDialog: stackScriptDialogDefaultState,
 };
@@ -67,6 +70,7 @@ const reducers = combineReducers<ApplicationState>({
   longviewClients: longview,
   longviewStats,
   mockFeatureFlags,
+  mockTheme,
   pendingUpload,
   stackScriptDialog,
 });

@@ -9,8 +9,10 @@ import {
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { rest } from 'msw';
+import { useStore } from 'react-redux';
 
 import { regions } from 'src/__data__/regionsData';
+import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
   abuseTicketNotificationFactory,
@@ -103,6 +105,7 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
+import { getStorage } from 'src/utilities/storage';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -116,6 +119,8 @@ export const makeResourcePage = <T>(
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
 });
+
+const store = useStore();
 
 const statusPage = [
   rest.get('*/api/v2/incidents*', (req, res, ctx) => {
@@ -1146,7 +1151,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(
+      ctx.json({
+        theme: getStorage(MOCK_THEME_STORAGE_KEY),
+      })
+    );
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));

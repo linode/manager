@@ -10,6 +10,7 @@ import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
 import { MockDataTool } from './MockDataTool';
+import { ThemeSelector } from './ThemeSelector';
 
 function install(store: ApplicationStore) {
   function DevTools() {
@@ -28,6 +29,7 @@ function install(store: ApplicationStore) {
           {!isProductionBuild || ENABLE_DEV_TOOLS ? (
             <Grid md={3} sm={5} xs={4}>
               <MockDataTool />
+              <ThemeSelector />
             </Grid>
           ) : null}
         </Grid>
