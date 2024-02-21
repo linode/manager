@@ -38,7 +38,12 @@ describe('SelectLinodeRow', () => {
       })
     );
 
-    const { getAllByRole, getByTestId, getByText } = renderWithTheme(
+    const {
+      findByText,
+      getAllByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
@@ -59,9 +64,9 @@ describe('SelectLinodeRow', () => {
 
     getByText(linode1.label);
     getByText('Running');
-    getByText('Debian 10');
-    getByText('Linode 1 GB');
-    getByText('Newark, NJ');
+    await findByText('Debian 10');
+    await findByText('Linode 1 GB');
+    await findByText('Newark, NJ');
 
     const selectButton = getAllByRole('button')[0];
     fireEvent.click(selectButton);
@@ -91,7 +96,7 @@ describe('SelectLinodeRow', () => {
       })
     );
 
-    const { getByTestId, getByText, queryByText } = renderWithTheme(
+    const { findByText, getByTestId, getByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
@@ -112,9 +117,9 @@ describe('SelectLinodeRow', () => {
 
     getByText(linode1.label);
     getByText('Offline');
-    getByText('Debian 10');
-    getByText('Linode 1 GB');
-    getByText('Newark, NJ');
+    await findByText('Debian 10');
+    await findByText('Linode 1 GB');
+    await findByText('Newark, NJ');
 
     expect(queryByText('Power Off')).not.toBeInTheDocument();
   });

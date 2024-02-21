@@ -147,6 +147,7 @@ export const SelectLinodePanel = (props: Props) => {
                       width: '330px',
                     }}
                     clearable
+                    data-qa-linode-search
                     debounceTime={0}
                     expand={true}
                     hideLabel
