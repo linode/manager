@@ -3,8 +3,12 @@ import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
+import { BucketPermissionsTable } from './BucketPermissionsTable';
 
 export interface Props {
   objectStorageKey: ObjectStorageKey | null;
@@ -16,6 +20,15 @@ type CombinedProps = Props;
 
 export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
   const { objectStorageKey, onClose, open } = props;
+
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   if (objectStorageKey === null) {
     return null;
@@ -37,12 +50,21 @@ export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
           <Typography>
             This access key has the following permissions:
           </Typography>
-          <AccessTable
-            bucket_access={objectStorageKey.bucket_access}
-            checked={objectStorageKey.limited}
-            mode={'viewing'}
-            updateScopes={() => null}
-          />
+          {isObjMultiClusterEnabled ? (
+            <BucketPermissionsTable
+              bucket_access={objectStorageKey.bucket_access}
+              checked={objectStorageKey.limited}
+              mode={'viewing'}
+              updateScopes={() => null}
+            />
+          ) : (
+            <AccessTable
+              bucket_access={objectStorageKey.bucket_access}
+              checked={objectStorageKey.limited}
+              mode={'viewing'}
+              updateScopes={() => null}
+            />
+          )}
         </>
       )}
     </Drawer>

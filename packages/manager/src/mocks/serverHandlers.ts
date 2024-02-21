@@ -1045,6 +1045,21 @@ export const handlers = [
             ],
           }),
           ...objectStorageKeyFactory.buildList(1, {
+            bucket_access: [
+              {
+                bucket_name: 'test007',
+                cluster: 'us-east-1',
+                permissions: 'read_only',
+                region: 'us-east',
+              },
+              {
+                bucket_name: 'test001',
+                cluster: 'nl-ams-1',
+                permissions: 'read_write',
+                region: 'nl-ams',
+              },
+            ],
+            limited: true,
             regions: [
               { id: 'us-east', s3_endpoint: 'us-east.com' },
               { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
