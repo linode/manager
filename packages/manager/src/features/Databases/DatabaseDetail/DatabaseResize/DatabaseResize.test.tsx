@@ -13,7 +13,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DatabaseScaleUp } from './DatabaseScaleUp';
+import { DatabaseResize } from './DatabaseResize';
 
 const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
@@ -31,7 +31,7 @@ describe('database resize', () => {
 
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseScaleUp database={database} />,
+      <DatabaseResize database={database} />,
       {
         queryClient,
       }
@@ -61,7 +61,7 @@ describe('database resize', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseScaleUp database={database} />,
+      <DatabaseResize database={database} />,
       {
         queryClient,
       }
@@ -103,7 +103,7 @@ describe('database resize', () => {
 
     it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseScaleUp database={database} />,
+        <DatabaseResize database={database} />,
         {
           queryClient,
         }
@@ -120,7 +120,7 @@ describe('database resize', () => {
       history.push(`databases/${database.engine}/${database.id}/resize`);
       const { container, getByTestId, getByText } = renderWithTheme(
         <Router history={history}>
-          <DatabaseScaleUp database={database} />
+          <DatabaseResize database={database} />
         </Router>,
         {
           queryClient,
@@ -129,12 +129,12 @@ describe('database resize', () => {
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const getById = queryByAttribute.bind(null, 'id');
       fireEvent.click(getById(container, examplePlanType));
-      const scaleUpButton = getByText(/Resize Database Cluster/i);
-      expect(scaleUpButton.closest('button')).toHaveAttribute(
+      const resizeButton = getByText(/Resize Database Cluster/i);
+      expect(resizeButton.closest('button')).toHaveAttribute(
         'aria-disabled',
         'false'
       );
-      fireEvent.click(scaleUpButton);
+      fireEvent.click(resizeButton);
       getByText(`Resize ${database.label}?`);
     });
   });
