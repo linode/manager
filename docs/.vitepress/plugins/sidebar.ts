@@ -1,12 +1,12 @@
 import { readdir } from "fs/promises";
 import { join, resolve } from "path";
 
-type Item = { text: string; link: string }
+type LinkItem = { text: string; link: string }
 
-type Sidebar = {
+type SidebarItem = {
   text: string;
-  items: Sidebar[] | Item[]
-} | Item;
+  items: SidebarItem[] | LinkItem[]
+} | LinkItem;
 
 const DOCS_PATH = resolve(__dirname + '/../../');
 
@@ -21,8 +21,10 @@ function isPathIgnored(path: string) {
   return false;
 }
 
-const walk = async (dir: string, sidebar: Sidebar[] = []) => {
+const walk = async (dir: string) => {
   const files = await readdir(dir, { withFileTypes: true });
+
+  const sidebar: SidebarItem[] = [];
 
   for (const file of files) {
     const filepath = join(dir, file.name);
@@ -32,17 +34,16 @@ const walk = async (dir: string, sidebar: Sidebar[] = []) => {
     }
 
     if (file.isDirectory()) {
-      const items = await walk(filepath, sidebar)
-      sidebar.push({ text: file.name, items });
+      sidebar.push({ text: file.name, items: await walk(filepath) });
     } else {
-      sidebar = [...sidebar, { text: file.name, link: filepath.split(DOCS_PATH)[1] }];
+      sidebar.push({ text: file.name, link: filepath });
     }
   }
 
   return sidebar;
 }
 
-export async function getSidebar(): Promise<Sidebar[]> {
+export async function getSidebar(): Promise<SidebarItem[]> {
   const files = await walk(DOCS_PATH)
   console.log(files)
   return files;
