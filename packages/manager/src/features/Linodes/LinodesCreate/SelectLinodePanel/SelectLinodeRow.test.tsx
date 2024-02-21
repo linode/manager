@@ -1,7 +1,6 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { imageFactory } from 'src/factories';
 import { linodeFactory } from 'src/factories/linodes';
@@ -9,12 +8,6 @@ import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { SelectLinodeRow } from './SelectLinodeRow';
-
-const queryClient = new QueryClient();
-
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 
@@ -51,10 +44,7 @@ describe('SelectLinodeRow', () => {
           linodeId={linode1.id}
           selected
         />
-      ),
-      {
-        queryClient,
-      }
+      )
     );
 
     // Loading state should render
@@ -104,10 +94,7 @@ describe('SelectLinodeRow', () => {
           linodeId={linode1.id}
           selected
         />
-      ),
-      {
-        queryClient,
-      }
+      )
     );
 
     // Loading state should render
