@@ -114,7 +114,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
         {...defaultProps}
         error={'Example error'}
         header={'Example header'}
-        notices={[{ level: 'warning', text: 'Example notice' }]}
+        notices={['Example notice']}
       />,
       {
         flags: { linodeCloneUiChanges: true },
@@ -233,7 +233,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
         {...defaultProps}
         error={'Example error'}
         header={'Example header'}
-        notices={[{ level: 'warning', text: 'Example notice' }]}
+        notices={['Example notice']}
       />,
       {
         flags: { linodeCloneUiChanges: true },

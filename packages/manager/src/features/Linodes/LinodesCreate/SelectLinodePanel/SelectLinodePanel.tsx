@@ -5,6 +5,8 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { OrderByProps, sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -19,18 +21,13 @@ import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
 import { SelectLinodeCards } from './SelectLinodeCards';
 import { SelectLinodeTable } from './SelectLinodeTable';
 
-interface Notice {
-  level: 'error' | 'warning'; // most likely only going to need these two 'warning'; 'warning';
-  text: string;
-}
-
 interface Props {
   disabled?: boolean;
   error?: string;
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: Linode[];
-  notices?: Notice[];
+  notices?: string[];
   selectedLinodeID?: number;
 }
 
@@ -115,17 +112,30 @@ export const SelectLinodePanel = (props: Props) => {
                       variant="error"
                     />
                   )}
-                  {notices &&
-                    !disabled &&
-                    notices.map((notice, i) => (
-                      <Notice
-                        key={i}
-                        spacingBottom={0}
-                        spacingTop={0}
-                        text={notice.text}
-                        variant={notice.level}
-                      />
-                    ))}
+                  {notices && !disabled && notices.length > 0 && (
+                    <Notice variant="warning">
+                      <Typography>
+                        <strong>Notice:</strong>
+                      </Typography>
+                      <List
+                        sx={(theme) => ({
+                          '& > li': {
+                            display: 'list-item',
+                            fontSize: '0.875rem',
+                            pb: 0,
+                            pl: 0,
+                          },
+                          listStyle: 'disc',
+                          ml: theme.spacing(2),
+                          mt: theme.spacing(),
+                        })}
+                      >
+                        {notices.map((notice, i) => (
+                          <ListItem key={i}>{notice}</ListItem>
+                        ))}
+                      </List>
+                    </Notice>
+                  )}
                 </Stack>
                 <Typography
                   marginBottom={

@@ -103,13 +103,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <SelectLinodePanel
               notices={[
-                {
-                  level: 'warning',
-                  text: `This newly created Linode will be created with
-                          the same password and SSH Keys (if any) as the original Linode.
-                          Also note that this Linode will need to be manually booted after it finishes
-                          provisioning.`,
-                },
+                `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.`,
+                'This Linode will need to be manually booted after it finishes provisioning.',
               ]}
               disabled={disabled}
               error={hasErrorFor('linode_id')}
