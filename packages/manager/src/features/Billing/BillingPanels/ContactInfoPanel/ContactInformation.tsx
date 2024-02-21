@@ -140,9 +140,9 @@ const ContactInformation = (props: Props) => {
               handleEditDrawerOpen();
             }}
             tooltipText={getRestrictedResourceText({
-              includeContactMessage: false,
+              includeContactInfo: false,
+              isChildUser,
               resourceType: 'Account',
-              useBusinessContact: isChildUser,
             })}
             data-testid="edit-contact-info"
             disableFocusRipple

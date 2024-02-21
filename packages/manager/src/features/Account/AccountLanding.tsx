@@ -148,8 +148,8 @@ const AccountLanding = () => {
     buttonDataAttrs: {
       disabled: isReadOnly,
       tooltipText: getRestrictedResourceText({
+        isChildUser,
         resourceType: 'Account',
-        useBusinessContact: isChildUser,
       }),
     },
     title: 'Account',

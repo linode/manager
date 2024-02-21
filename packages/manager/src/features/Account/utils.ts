@@ -20,10 +20,10 @@ export type ActionType =
 
 interface GetRestrictedResourceText {
   action?: ActionType;
-  includeContactMessage?: boolean;
+  includeContactInfo?: boolean;
+  isChildUser?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
-  useBusinessContact?: boolean;
 }
 
 interface AccountAccessGrant {
@@ -46,20 +46,20 @@ export type RestrictedGlobalGrantType =
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
-  includeContactMessage = true,
+  includeContactInfo = true,
+  isChildUser = false,
   isSingular = true,
   resourceType,
-  useBusinessContact = false,
 }: GetRestrictedResourceText): string => {
   const resource = isSingular
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  const contactPerson = useBusinessContact ? BUSINESS_PARTNER : ADMINISTRATOR;
+  const contactPerson = isChildUser ? BUSINESS_PARTNER : ADMINISTRATOR;
 
   let message = `You don't have permissions to ${action} ${resource}.`;
 
-  if (includeContactMessage) {
+  if (includeContactInfo) {
     message += ` Please contact your ${contactPerson} to request the necessary permissions.`;
   }
 

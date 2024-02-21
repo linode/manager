@@ -240,8 +240,8 @@ export const PaymentDrawer = (props: Props) => {
         {isReadOnly && (
           <Notice
             text={getRestrictedResourceText({
+              isChildUser,
               resourceType: 'Account',
-              useBusinessContact: isChildUser,
             })}
             variant="error"
           />

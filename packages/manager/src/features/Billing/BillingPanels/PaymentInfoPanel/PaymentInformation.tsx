@@ -104,9 +104,9 @@ const PaymentInformation = (props: Props) => {
           {!isAkamaiCustomer ? (
             <BillingActionButton
               tooltipText={getRestrictedResourceText({
-                includeContactMessage: false,
+                includeContactInfo: false,
+                isChildUser,
                 resourceType: 'Account',
-                useBusinessContact: isChildUser,
               })}
               data-testid="payment-info-add-payment-method"
               disableFocusRipple

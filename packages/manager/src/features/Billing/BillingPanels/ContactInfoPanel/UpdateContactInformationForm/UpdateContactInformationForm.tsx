@@ -167,8 +167,8 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           <Grid xs={12}>
             <Notice
               text={getRestrictedResourceText({
+                isChildUser,
                 resourceType: 'Account',
-                useBusinessContact: isChildUser,
               })}
               variant="error"
             />

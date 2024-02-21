@@ -168,8 +168,8 @@ const AccountLogins = () => {
   ) : (
     <Notice
       text={getRestrictedResourceText({
+        isChildUser,
         resourceType: 'Account',
-        useBusinessContact: isChildUser,
       })}
       important
       variant="warning"
