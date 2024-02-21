@@ -53,9 +53,6 @@ const errorResources = {
   type: 'A plan selection',
 };
 
-const filterLinodesWithBackups = (linodes: Linode[]) =>
-  linodes.filter((linode) => linode.backups.enabled);
-
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
@@ -92,6 +89,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const userHasBackups = linodesData.some(
       (thisLinode) => thisLinode.backups.enabled
     );
+
+    const linodeIsInEdgeRegion = (linodeRegion: string) =>
+      regionsData?.find((region) => region.id === linodeRegion)?.site_type ===
+      'edge';
+
+    const filterLinodesWithBackups = (linodes: Linode[]) =>
+      linodes.filter(
+        (linode) =>
+          linode.backups.enabled && !linodeIsInEdgeRegion(linode.region) // Hide linodes that are in an edge region
+      );
 
     return (
       <StyledGrid>
