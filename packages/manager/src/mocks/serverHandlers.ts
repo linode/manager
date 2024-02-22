@@ -1583,12 +1583,18 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupEvents = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+    });
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupEvents,
           eventWithSpecialCharacters,
         ])
       )
