@@ -28,7 +28,10 @@ export const ThemeSelector = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginBottom: 8 }}>Theme Selector</h4>
+        <h4 style={{ marginBottom: 0 }}>MSW Theme Selector</h4>
+        <p style={{ marginBottom: 8, marginTop: 0 }}>
+          (only when MSW is enabled)
+        </p>
       </Grid>
       <Grid xs={12}>
         <select onChange={handleSetTheme} value={mockTheme}>
