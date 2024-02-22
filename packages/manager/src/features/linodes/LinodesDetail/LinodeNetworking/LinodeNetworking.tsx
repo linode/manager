@@ -113,6 +113,7 @@ interface State {
   removeIPDialogOpen: boolean;
   removeIPRangeDialogOpen: boolean;
   initialLoading: boolean;
+  showNetworkSummary: boolean;
   ipv6Loading: boolean;
   ipv6Error?: string;
   currentlySelectedIP?: IPAddress;
@@ -160,6 +161,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     sharedRanges: [],
     availableRanges: [],
     staticRanges: [],
+    showNetworkSummary: false,
   };
 
   componentDidMount() {
@@ -551,6 +553,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       currentlySelectedIPRange,
     } = this.state;
 
+    const { showNetworkSummary } = this.state;
     /* Loading state */
     if (initialLoading || ipv6Loading) {
       return this.renderLoadingState();
@@ -599,12 +602,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return (
       <div>
         {readOnly && <LinodePermissionsError />}
-        <LinodeNetworkingSummaryPanel
-          linodeRegion={linodeRegion}
-          linodeID={linodeID}
-          linodeCreated={linodeCreated}
-          linodeLabel={linodeLabel}
-        />
+        {showNetworkSummary ? (
+          <LinodeNetworkingSummaryPanel
+            linodeRegion={linodeRegion}
+            linodeID={linodeID}
+            linodeCreated={linodeCreated}
+            linodeLabel={linodeLabel}
+          />
+        ) : null}
 
         {this.renderIPTable()}
 

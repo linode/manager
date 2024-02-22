@@ -170,6 +170,7 @@ interface State {
   loading: boolean;
   cancelBackupsAlertOpen: boolean;
   enabling: boolean;
+  showAutomaticBackupSettings: boolean;
 }
 
 type CombinedProps = PreloadedProps &
@@ -217,6 +218,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     loading: false,
     cancelBackupsAlertOpen: false,
     enabling: false,
+    showAutomaticBackupSettings: false,
   };
 
   windows: string[][] = [];
@@ -588,6 +590,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   SettingsForm = (): JSX.Element | null => {
     const { classes, backupsSchedule, permissions } = this.props;
     const { settingsForm } = this.state;
+    const { showAutomaticBackupSettings } = this.state;
     const getErrorFor = getAPIErrorFor(
       {
         day: 'backups.day',
@@ -622,76 +625,80 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <Paper className={classes.paper}>
-        <Typography
-          variant="h2"
-          className={classes.subTitle}
-          data-qa-settings-heading
-        >
-          Settings
-        </Typography>
-        <Typography variant="body1" data-qa-settings-desc>
-          Configure when automatic backups are initiated. The Linode Backup
-          Service will generate a backup between the selected hours every day,
-          and will overwrite the previous daily backup. The selected day is when
-          the backup is promoted to the weekly slot. Up to two weekly backups
-          are saved.
-        </Typography>
-        <FormControl className={classes.chooseDay}>
-          <Select
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-weekday-select': true,
-              },
-            }}
-            options={daySelection}
-            defaultValue={defaultDaySelection}
-            onChange={this.handleSelectBackupTime}
-            label="Day of Week"
-            placeholder="Choose a day"
-            isClearable={false}
-            menuPlacement="top"
-            name="Day of Week"
-            noMarginTop
-          />
-        </FormControl>
-        <FormControl>
-          <Select
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-time-select': true,
-              },
-            }}
-            options={timeSelection}
-            onChange={this.handleSelectBackupWindow}
-            label="Time of Day"
-            placeholder="Choose a time"
-            isClearable={false}
-            defaultValue={defaultTimeSelection}
-            menuPlacement="top"
-            name="Time of Day"
-            noMarginTop
-          />
-          <FormHelperText>
-            Time displayed in {getUserTimezone().replace('_', ' ')}
-          </FormHelperText>
-        </FormControl>
-        <ActionsPanel className={classes.scheduleAction}>
-          <Button
-            buttonType="primary"
-            onClick={this.saveSettings}
-            disabled={
-              isReadOnly(permissions) ||
-              this.inputHasChanged(backupsSchedule, settingsForm)
-            }
-            loading={this.state.settingsForm.loading}
-            data-qa-schedule
-          >
-            Save Schedule
-          </Button>
-        </ActionsPanel>
-        {errorText && <FormHelperText error>{errorText}</FormHelperText>}
-      </Paper>
+      <div>
+        {showAutomaticBackupSettings ? (
+          <Paper className={classes.paper}>
+            <Typography
+              variant="h2"
+              className={classes.subTitle}
+              data-qa-settings-heading
+            >
+              Settings
+            </Typography>
+            <Typography variant="body1" data-qa-settings-desc>
+              Configure when automatic backups are initiated. The Linode Backup
+              Service will generate a backup between the selected hours every
+              day, and will overwrite the previous daily backup. The selected
+              day is when the backup is promoted to the weekly slot. Up to two
+              weekly backups are saved.
+            </Typography>
+            <FormControl className={classes.chooseDay}>
+              <Select
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-weekday-select': true,
+                  },
+                }}
+                options={daySelection}
+                defaultValue={defaultDaySelection}
+                onChange={this.handleSelectBackupTime}
+                label="Day of Week"
+                placeholder="Choose a day"
+                isClearable={false}
+                menuPlacement="top"
+                name="Day of Week"
+                noMarginTop
+              />
+            </FormControl>
+            <FormControl>
+              <Select
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-time-select': true,
+                  },
+                }}
+                options={timeSelection}
+                onChange={this.handleSelectBackupWindow}
+                label="Time of Day"
+                placeholder="Choose a time"
+                isClearable={false}
+                defaultValue={defaultTimeSelection}
+                menuPlacement="top"
+                name="Time of Day"
+                noMarginTop
+              />
+              <FormHelperText>
+                Time displayed in {getUserTimezone().replace('_', ' ')}
+              </FormHelperText>
+            </FormControl>
+            <ActionsPanel className={classes.scheduleAction}>
+              <Button
+                buttonType="primary"
+                onClick={this.saveSettings}
+                disabled={
+                  isReadOnly(permissions) ||
+                  this.inputHasChanged(backupsSchedule, settingsForm)
+                }
+                loading={this.state.settingsForm.loading}
+                data-qa-schedule
+              >
+                Save Schedule
+              </Button>
+            </ActionsPanel>
+            {errorText && <FormHelperText error>{errorText}</FormHelperText>}
+          </Paper>
+        ) : null}
+      </div>
     );
   };
 
