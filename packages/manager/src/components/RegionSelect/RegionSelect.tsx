@@ -167,7 +167,11 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
           >
             {' '}
-            Indicates an Edge server region. <Link to="#">Learn more</Link>.
+            Indicates an Edge server region.{' '}
+            <Link aria-label="Learn more about Akamai Edge servers" to="#">
+              Learn more
+            </Link>
+            .
           </Typography>
         </StyledEdgeBox>
       )}

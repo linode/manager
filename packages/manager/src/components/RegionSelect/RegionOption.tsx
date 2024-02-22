@@ -87,6 +87,11 @@ export const RegionOption = ({
               <Flag country={option.data.country} />
             </StyledFlagContainer>
             {option.label}
+            {displayEdgeServerIcon && (
+              <Box sx={visuallyHidden}>
+                &nbsp;(This region is an Edge site.)
+              </Box>
+            )}
             {isDisabledMenuItem && (
               <Box sx={visuallyHidden}>
                 Disabled option - There may be limited capacity in this region.
