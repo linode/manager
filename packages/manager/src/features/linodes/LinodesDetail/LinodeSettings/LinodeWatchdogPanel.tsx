@@ -27,7 +27,7 @@ type CombinedProps = Props &
 
 export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
   // Feature flag condition to hide the Shutdown Watchdog feature
-  const isWatchdogFeatureHidden = true;
+  const isWatchdogFeatureHidden = false;
 
   const {
     linodeId,
