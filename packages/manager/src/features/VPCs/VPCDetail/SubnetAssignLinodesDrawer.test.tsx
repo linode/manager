@@ -1,7 +1,6 @@
 import { Subnet } from '@linode/api-v4';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -10,12 +9,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props = {
   onClose: vi.fn(),
@@ -43,10 +37,7 @@ describe('Subnet Assign Linodes Drawer', () => {
 
   it('should render a subnet assign linodes drawer', () => {
     const { getByText, queryAllByText } = renderWithTheme(
-      <SubnetAssignLinodesDrawer {...props} />,
-      {
-        queryClient,
-      }
+      <SubnetAssignLinodesDrawer {...props} />
     );
 
     const header = getByText(
@@ -74,10 +65,7 @@ describe('Subnet Assign Linodes Drawer', () => {
 
   it.skip('should show the IPv4 textbox when the checkmark is clicked', async () => {
     const { findByText, getByLabelText } = renderWithTheme(
-      <SubnetAssignLinodesDrawer {...props} />,
-      {
-        queryClient,
-      }
+      <SubnetAssignLinodesDrawer {...props} />
     );
 
     const selectField = getByLabelText('Linode');
