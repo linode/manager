@@ -89,7 +89,7 @@ module.exports = {
   parserOptions: {
     // Warning if you want to set tsconfig.json, you ll need laso to set `tsconfigRootDir:__dirname`
     // BUT we decided not to use this feature due to a very important performance impact
-    // project: true,
+    // project: 'tsconfig.json',
     ecmaFeatures: {
       jsx: true,
     },
