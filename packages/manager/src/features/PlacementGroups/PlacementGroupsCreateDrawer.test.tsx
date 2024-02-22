@@ -1,5 +1,8 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { regionFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -54,7 +57,17 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(getByTestId('submit')).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should populate the region select with the selected region prop', () => {
+  it('should populate the region select with the selected region prop', async () => {
+    server.use(
+      rest.get('*/regions', (req, res, ctx) => {
+        const regions = regionFactory.buildList(1, {
+          id: 'us-east',
+          label: 'Newark, NJ',
+        });
+        return res(ctx.json(makeResourcePage(regions)));
+      })
+    );
+
     const { getByLabelText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         numberOfPlacementGroupsCreated={0}
@@ -63,6 +76,8 @@ describe('PlacementGroupsCreateDrawer', () => {
       />
     );
 
-    expect(getByLabelText('Region')).toHaveValue('Newark, NJ (us-east)');
+    await waitFor(() => {
+      expect(getByLabelText('Region')).toHaveValue('Newark, NJ (us-east)');
+    });
   });
 });
