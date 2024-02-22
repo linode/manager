@@ -49,6 +49,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, updatedFlags);
   };
 
+  /**
+   * This will reset the flags values to the Launch Darkly defaults (as returned from the LD dev environment)
+   */
   const resetFlags = () => {
     dispatch(setMockFeatureFlags(ldFlags));
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, '');

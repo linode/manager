@@ -2,7 +2,7 @@
 
 To facilitate development and debugging, Cloud Manager includes a "Dev Tools" mode. Currently this mode is used for feature flag toggling, data mocking, and theme & environment switching.
 
-In order to access the dev tools, hover or click (mobile) on the 🛠 icon in the lower left corner of your browser window. The icon will be colored red if MSW is enabled.
+In order to access the dev tools, hover or click (mobile) on the 🛠 icon in the lower left corner of your browser window. The icon will be colored green if MSW is enabled.
 
 This mode is enabled by default while running the development server. To disable it, add `?dev-tools=false` to the URL, or write `dev-tools: false` to local storage.
 
