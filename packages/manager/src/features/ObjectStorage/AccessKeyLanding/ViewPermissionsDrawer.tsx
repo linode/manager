@@ -54,14 +54,14 @@ export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
             <BucketPermissionsTable
               bucket_access={objectStorageKey.bucket_access}
               checked={objectStorageKey.limited}
-              mode={'viewing'}
+              mode="viewing"
               updateScopes={() => null}
             />
           ) : (
             <AccessTable
               bucket_access={objectStorageKey.bucket_access}
               checked={objectStorageKey.limited}
-              mode={'viewing'}
+              mode="viewing"
               updateScopes={() => null}
             />
           )}
