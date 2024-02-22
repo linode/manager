@@ -7,13 +7,12 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
-
 import type {
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageCluster,
 } from '@linode/api-v4';
+import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts GET requests to fetch buckets.
@@ -80,25 +79,38 @@ export const interceptCreateBucket = (): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts POST request to create bucket and mocks response.
+ * Intercepts POST request to create a bucket and mocks response.
  *
- * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param bucket - Bucket with which to mock response.
  *
  * @returns Cypress chainable.
  */
 export const mockCreateBucket = (
-  label: string,
-  cluster: string
+  bucket: ObjectStorageBucket
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
     apiMatcher('object-storage/buckets'),
-    objectStorageBucketFactory.build({
-      cluster,
-      hostname: `${label}.${cluster}.linodeobjects.com`,
-      label,
-    })
+    makeResponse(bucket)
+  );
+};
+
+/**
+ * Intercepts POST request to create a bucket and mocks an error response.
+ *
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateBucketError = (
+  errorMessage: string = 'An unknown error occurred.',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('object-storage/buckets'),
+    makeErrorResponse(errorMessage, statusCode)
   );
 };
 
