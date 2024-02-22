@@ -63,9 +63,9 @@ export const DatabaseRow = ({ database }: Props) => {
       <>
         {`Primary +${cluster_size - 1}`}
         <Chip
-          sx={{ mx: 2, borderColor: 'green' }}
           label="HA"
           size="small"
+          sx={(theme) => ({ borderColor: theme.color.green, mx: 2 })}
           variant="outlined"
         />
       </>

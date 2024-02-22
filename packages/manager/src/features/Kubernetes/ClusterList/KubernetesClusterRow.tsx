@@ -110,10 +110,10 @@ export const KubernetesClusterRow = (props: Props) => {
           {cluster.control_plane.high_availability && (
             <Grid>
               <Chip
-                sx={{ borderColor: 'green' }}
-                data-testid={'ha-chip'}
+                data-testid="ha-chip"
                 label="HA"
                 size="small"
+                sx={(theme) => ({ borderColor: theme.color.green })}
                 variant="outlined"
               />
             </Grid>
