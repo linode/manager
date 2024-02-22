@@ -176,6 +176,11 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
 
   const options = React.useMemo(() => getRegionOptions(regions), [regions]);
 
+  /* -- Clanode Change -- */
+  if (!selectedID) handleSelection(regions[0].id);
+  return null;
+  /* -- Change Change End -- */
+
   return (
     <div className={classes.root} style={{ width }}>
       <Select

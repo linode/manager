@@ -70,6 +70,11 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
     return null;
   }
 
+  /* -- Clanode Change -- */
+  if (!selectedID) handleSelection(regions[0].id);
+  return null;
+  /* -- Clanode Change End -- */
+
   return (
     <Paper className={classes.root}>
       <Typography variant="h2" data-qa-tp="Region">
