@@ -8,8 +8,7 @@ import { Link } from 'react-router-dom';
 
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Status } from 'src/components/StatusIcon/StatusIcon';
+import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
@@ -64,9 +63,8 @@ export const DatabaseRow = ({ database }: Props) => {
       <>
         {`Primary +${cluster_size - 1}`}
         <Chip
-          inTable
+          sx={{ mx: 2, borderColor: 'green' }}
           label="HA"
-          outlineColor="green"
           size="small"
           variant="outlined"
         />

@@ -107,32 +107,31 @@ export const KubernetesClusterRow = (props: Props) => {
               </Link>
             </div>
           </Grid>
-          {cluster.control_plane.high_availability ? (
+          {cluster.control_plane.high_availability && (
             <Grid>
               <Chip
+                sx={{ borderColor: 'green' }}
                 data-testid={'ha-chip'}
                 label="HA"
-                outlineColor="green"
                 size="small"
                 variant="outlined"
               />
             </Grid>
-          ) : null}
+          )}
         </Grid>
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-cluster-version>
           <div className={classes.version}>
             {cluster.k8s_version}
-            {hasUpgrade ? (
+            {hasUpgrade && (
               <Chip
                 clickable
-                inTable
                 label="UPGRADE"
                 onClick={openUpgradeDialog}
                 size="small"
               />
-            ) : null}
+            )}
           </div>
         </TableCell>
         <TableCell data-qa-cluster-date>
