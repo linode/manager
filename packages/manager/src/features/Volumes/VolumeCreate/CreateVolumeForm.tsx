@@ -181,10 +181,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           linode_id:
             linode_id === initialValueDefaultId
               ? undefined
-              /* -- Clanode Change -- */
-              //: maybeCastToNumber(linode_id),
-              : linode_id,
-              /* -- Clanode Change End -- */
+              : /* -- Clanode Change -- */
+                //: maybeCastToNumber(linode_id),
+                linode_id,
+          /* -- Clanode Change End -- */
           config_id:
             config_id === initialValueDefaultId
               ? undefined
@@ -340,9 +340,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     selectedID={values.region}
                     width={320}
                   />
-                  {renderSelectTooltip(
+                  {/* -- Clanode Change -- */
+                  /*renderSelectTooltip(
                     'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
-                  )}
+                  )*/
+                  /* -- Clanode Change End -- */}
                 </Box>
                 <Box
                   display="flex"
