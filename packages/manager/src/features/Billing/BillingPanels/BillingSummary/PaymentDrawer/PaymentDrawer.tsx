@@ -118,7 +118,6 @@ export const PaymentDrawer = (props: Props) => {
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
-
       permittedGrantLevel: 'read_write',
     }) || isChildUser;
 
