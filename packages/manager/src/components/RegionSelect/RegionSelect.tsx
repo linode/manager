@@ -26,8 +26,10 @@ import type {
  * A specific select for regions.
  *
  * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
- * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. There is no need to
- * prefilter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Edge regions are filtered based on the `hideEdgeServers` prop.
+ * There is no need to pre-filter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ *
+ * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
