@@ -13,10 +13,18 @@
   overflow: auto;
 }
 
+#dev-tools.mswEnabled svg {
+  color: #ff4d4f;
+}
+
 #dev-tools:hover {
-  height: 325px;
+  height: 375px;
   width: 100%;
   opacity: 0.9;
+}
+
+#dev-tools:hover svg {
+  color: white;
 }
 
 #dev-tools .tools {

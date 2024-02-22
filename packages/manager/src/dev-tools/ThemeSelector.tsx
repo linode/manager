@@ -5,15 +5,10 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 export const MOCK_THEME_STORAGE_KEY = 'devTools/theme';
 
-export interface ThemeSelectionOptions {
-  label: string;
-  value: 'dark' | 'light' | 'system';
-}
+import type { ThemeChoice } from 'src/utilities/theme';
 
 export const ThemeSelector = () => {
-  const [mockTheme, setMockTheme] = React.useState<
-    ThemeSelectionOptions['value']
-  >('system');
+  const [mockTheme, setMockTheme] = React.useState<ThemeChoice>('system');
 
   React.useEffect(() => {
     const storedTheme = getStorage(MOCK_THEME_STORAGE_KEY);
@@ -23,8 +18,9 @@ export const ThemeSelector = () => {
   }, []);
 
   const handleSetTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value as ThemeSelectionOptions['value'];
+    const selectedValue = e.target.value as ThemeChoice;
 
+    setMockTheme(selectedValue);
     setStorage(MOCK_THEME_STORAGE_KEY, selectedValue);
     window.location.reload();
   };
@@ -35,7 +31,7 @@ export const ThemeSelector = () => {
         <h4 style={{ marginBottom: 8 }}>Theme Selector</h4>
       </Grid>
       <Grid xs={12}>
-        <select onChange={(e) => handleSetTheme(e)} value={mockTheme}>
+        <select onChange={handleSetTheme} value={mockTheme}>
           <option value="system">System</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>

@@ -1,3 +1,4 @@
+import Handyman from '@mui/icons-material/Handyman';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -10,13 +11,16 @@ import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
 import { MockDataTool } from './MockDataTool';
+import { isMSWEnabled } from './ServiceWorkerTool';
 import { ThemeSelector } from './ThemeSelector';
 
 function install(store: ApplicationStore) {
   function DevTools() {
     return (
-      <div id="dev-tools">
-        <div>🛠</div>
+      <div className={isMSWEnabled ? 'mswEnabled' : ''} id="dev-tools">
+        <div>
+          <Handyman />
+        </div>
         <Grid className="tools" container spacing={2}>
           <Grid sm={2} xs={4}>
             <FeatureFlagTool />
