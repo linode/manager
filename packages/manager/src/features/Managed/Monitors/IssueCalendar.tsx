@@ -51,10 +51,14 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
       createdOnTargetDay(timezone, thisIssue, day)
     );
 
-    days.push({
-      day: day.toISO(),
-      issues: relevantIssues,
-    });
+    const isoDate = day.toISO();
+
+    if (isoDate) {
+      days.push({
+        day: isoDate,
+        issues: relevantIssues,
+      });
+    }
   }
 
   return days;

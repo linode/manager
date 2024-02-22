@@ -77,10 +77,10 @@ describe('TPADialog', () => {
     const title = screen.getByText('Change login method to GitHub?');
     expect(title).toBeInTheDocument();
   });
-  it('Should close TPADialog upon clicking close button', () => {
+  it('Should close TPADialog upon clicking close button', async () => {
     renderWithTheme(<TPADialog {...props} />);
     const cancelButton = screen.getByTestId('confirm-cancel');
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
   it('Should redirect to disable TPA', async () => {
@@ -89,7 +89,7 @@ describe('TPADialog', () => {
     renderWithTheme(<TPADialog {...props} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
-    userEvent.click(changeButton);
+    await userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
     expect(mockWindow).toHaveBeenCalledWith(
@@ -114,7 +114,7 @@ describe('TPADialog', () => {
     renderWithTheme(<TPADialog {...newProps} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
-    userEvent.click(changeButton);
+    await userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
     expect(mockWindow).toHaveBeenCalledWith(
@@ -139,7 +139,7 @@ describe('TPADialog', () => {
     renderWithTheme(<TPADialog {...newProps} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
-    userEvent.click(changeButton);
+    await userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
     expect(mockWindow).toHaveBeenCalledWith(

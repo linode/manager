@@ -134,7 +134,7 @@ describe('BillingSummary', () => {
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
   });
 
-  it('opens "Make a Payment" drawer when "Make a payment." is clicked', () => {
+  it('opens "Make a Payment" drawer when "Make a payment." is clicked', async () => {
     const { getByTestId, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
@@ -142,7 +142,7 @@ describe('BillingSummary', () => {
     );
 
     const paymentButton = getByText('Make a payment', { exact: false });
-    userEvent.click(paymentButton);
+    await userEvent.click(paymentButton);
 
     expect(getByTestId('drawer')).toBeVisible();
     expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');

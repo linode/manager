@@ -7,10 +7,12 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { CopyAll } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAll';
+import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 interface Props {
@@ -36,6 +38,9 @@ const renderActions = (
 
 export const SecretTokenDialog = (props: Props) => {
   const { objectStorageKey, onClose, open, title, value } = props;
+
+  const { data: regionsData } = useRegionsQuery();
+  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
@@ -71,43 +76,61 @@ export const SecretTokenDialog = (props: Props) => {
         spacingTop={8}
         variant="warning"
       />
-      {isObjMultiClusterEnabled && (
-        <div>
-          <CopyAll
-            text={
-              objectStorageKey?.regions
-                .map(
-                  (region) => `S3 Endpoint: ${region.id}: ${region.s3_endpoint}`
-                )
-                .join('\n') ?? ''
-            }
-          />
-        </div>
-      )}
-      {isObjMultiClusterEnabled && (
-        <Box
-          sx={(theme) => ({
-            '.copyIcon': {
-              marginRight: 0,
-              paddingRight: 0,
-            },
-            backgroundColor: theme.bg.main,
-            border: `1px solid ${theme.color.grey3}`,
-            borderColor: theme.name === 'light' ? '#ccc' : '#222',
-            padding: theme.spacing(1),
-          })}
-        >
-          {objectStorageKey?.regions.map((region, index) => (
-            <CopyableTextField
-              hideLabel
-              key={index}
-              label="Create a Filesystem"
-              sx={{ border: 'none', maxWidth: '100%' }}
-              value={`S3 Endpoint: ${region.id}: ${region.s3_endpoint}`}
+      {/* @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix
+      to handle error cases when the feature flag is enabled without Mock
+      Service Worker (MSW). This can be removed during the feature flag cleanup. */}
+      {isObjMultiClusterEnabled &&
+        objectStorageKey &&
+        objectStorageKey?.regions?.length > 0 && (
+          <div>
+            <CopyAllHostnames
+              hideShowAll={Boolean(
+                objectStorageKey && objectStorageKey?.regions?.length <= 1
+              )}
+              text={
+                objectStorageKey?.regions
+                  .map(
+                    (region) =>
+                      `${regionsLookup?.[region.id]?.label}: ${
+                        region.s3_endpoint
+                      }`
+                  )
+                  .join('\n') ?? ''
+              }
             />
-          ))}
-        </Box>
-      )}
+          </div>
+        )}
+      {/* @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix
+      to handle error cases when the feature flag is enabled without Mock
+      Service Worker (MSW). This can be removed during the feature flag cleanup. */}
+      {isObjMultiClusterEnabled &&
+        objectStorageKey &&
+        objectStorageKey?.regions?.length > 0 && (
+          <Box
+            sx={(theme) => ({
+              '.copyIcon': {
+                marginRight: 0,
+                paddingRight: 0,
+              },
+              backgroundColor: theme.bg.main,
+              border: `1px solid ${theme.color.grey3}`,
+              borderColor: theme.name === 'light' ? '#ccc' : '#222',
+              padding: theme.spacing(1),
+            })}
+          >
+            {objectStorageKey?.regions.map((region, index) => (
+              <CopyableTextField
+                value={`${regionsLookup?.[region.id]?.label}: ${
+                  region.s3_endpoint
+                }`}
+                hideLabel
+                key={index}
+                label="Create a Filesystem"
+                sx={{ border: 'none', maxWidth: '100%' }}
+              />
+            ))}
+          </Box>
+        )}
       {objectStorageKey ? (
         <>
           <Box marginBottom="16px">

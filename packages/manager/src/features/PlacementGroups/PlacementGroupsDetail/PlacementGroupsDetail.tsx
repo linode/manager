@@ -20,22 +20,26 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getPlacementGroupLinodeCount } from '../utils';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
+import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
   const { id, tab } = useParams<{ id: string; tab?: string }>();
   const history = useHistory();
-  const placementGroupId = Number(id);
+  const placementGroupId = +id;
+
   const {
     data: placementGroup,
     error: placementGroupError,
     isLoading,
   } = usePlacementGroupQuery(placementGroupId, Boolean(flags.vmPlacement));
+
   const {
     error: updatePlacementGroupError,
     mutateAsync: updatePlacementGroup,
     reset,
   } = useMutatePlacementGroup(placementGroupId);
+
   const errorText = getErrorStringOrDefault(updatePlacementGroupError ?? '');
 
   if (isLoading) {
@@ -104,11 +108,13 @@ export const PlacementGroupsDetail = () => {
       />
       <Tabs
         index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(i) => history.push(tabs[i].routeName)}
+        onChange={(i: number) => history.push(tabs[i].routeName)}
       >
         <TabLinkList tabs={tabs} />
         <TabPanels>
-          <SafeTabPanel index={0}>TODO VM_Placement: summary</SafeTabPanel>
+          <SafeTabPanel index={0}>
+            <PlacementGroupsSummary placementGroup={placementGroup} />
+          </SafeTabPanel>
           <SafeTabPanel index={1}>
             <PlacementGroupsLinodes placementGroup={placementGroup} />
           </SafeTabPanel>

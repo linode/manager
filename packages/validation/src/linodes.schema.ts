@@ -195,7 +195,7 @@ export const LinodeInterfaceSchema = object().shape({
     .of(string())
     .when('purpose', {
       is: 'vpc',
-      then: array().of(string().test(validateIP)).max(1).notRequired(),
+      then: array().of(string().test(validateIP)).notRequired(),
       otherwise: array().test({
         name: testnameDisallowedBasedOnPurpose('VPC'),
         message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
@@ -260,6 +260,11 @@ const MetadataSchema = object({
   user_data: string().notRequired().nullable(true),
 });
 
+const PlacementGroupPayloadSchema = object({
+  id: number().notRequired().nullable(true),
+  compliant_only: boolean().notRequired().nullable(true),
+});
+
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
@@ -294,6 +299,7 @@ export const CreateLinodeSchema = object({
   interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().notRequired(),
+  placement_group: PlacementGroupPayloadSchema,
 });
 
 const alerts = object({

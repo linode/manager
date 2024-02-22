@@ -132,11 +132,11 @@ const UsernameDisplay = () => {
 ## When to use React Query or an api-v4 method directly
 
 Because **api-v4** methods don't commit data to a cache, it is acceptable to use **api-v4** methods directly
-when performing ***one-time actions*** that do not require any immediate state change in Cloud Manager's UI. 
+when performing ***one-time actions*** that do not require any immediate state change in Cloud Manager's UI.
 
 While use of **api-v4** methods directly are acceptable, use of **React Query** Queries or Mutations are **still prefered** for the benefits described above.
 
-A minimal example of accepable direct **api-v4** use: 
+A minimal example of acceptable direct **api-v4** use:
 
 ```ts
 resetKubeConfig({ id }).then(() => {
@@ -229,3 +229,8 @@ console.log(errorMap);
   none: 'a linode_id error or similar'
 }
 ```
+
+### Toast / Event Message Punctuation
+**Best practice:**
+- If a message is a sentence or a sentence fragment with a subject and a verb, add punctuation. Otherwise, leave punctuation off.
+- If a developer notices inconsistencies within files they are already working in, they can progressively fix them. In this case, be prepared to fix any Cypress test failures.

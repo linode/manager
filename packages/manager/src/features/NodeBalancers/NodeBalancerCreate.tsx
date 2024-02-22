@@ -30,18 +30,16 @@ import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -94,7 +92,6 @@ const defaultFieldsStates = {
 const NodeBalancerCreate = () => {
   const flags = useFlags();
   const { data: agreements } = useAccountAgreements();
-  const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
 
@@ -130,10 +127,8 @@ const NodeBalancerCreate = () => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const isRestricted = isRestrictedGlobalGrantType({
+  const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
-    grants,
-    profile,
   });
 
   const addNodeBalancer = () => {

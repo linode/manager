@@ -15,7 +15,7 @@ describe('ServiceTargetEndpontHeath', () => {
 
     server.use(
       rest.get(
-        '*/v4beta/aglb/:id/service-targets/endpoints-health',
+        '*/v4beta/aclb/:id/service-targets/endpoints-health',
         (req, res, ctx) => {
           const health = serviceTargetsEndpointHealthFactory.build({
             service_targets: [
