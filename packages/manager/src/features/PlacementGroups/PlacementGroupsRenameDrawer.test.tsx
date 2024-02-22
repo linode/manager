@@ -16,6 +16,7 @@ describe('PlacementGroupsCreateDrawer', () => {
         const regions = regionFactory.buildList(1, {
           id: 'us-east',
           label: 'Fake Region, NC',
+          capabilities: ['Linodes'],
         });
         return res(ctx.json(makeResourcePage(regions)));
       })

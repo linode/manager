@@ -63,6 +63,7 @@ describe('PlacementGroupsCreateDrawer', () => {
         const regions = regionFactory.buildList(1, {
           id: 'us-east',
           label: 'Newark, NJ',
+          capabilities: ['Linodes'],
         });
         return res(ctx.json(makeResourcePage(regions)));
       })
