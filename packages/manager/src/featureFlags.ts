@@ -46,6 +46,7 @@ export interface Flags {
   databaseBeta: boolean;
   databaseScaleUp: boolean;
   databases: boolean;
+  disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;
   linodeCloneUIChanges: boolean;

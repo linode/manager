@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvailabilityNotice';
 import { MetalNotice } from './MetalNotice';
@@ -27,6 +28,12 @@ export const PlanInformation = (props: PlanInformationProps) => {
     planType,
     regionsData,
   } = props;
+
+  const flags = useFlags();
+
+  if (flags.disableLargestGbPlans) {
+    console.log('disableLargestGbPlans flag ON');
+  }
 
   const getDisabledClass = (thisClass: LinodeTypeClass) => {
     return Boolean(disabledClasses?.includes(thisClass));
