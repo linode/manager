@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
-
 import { useDispatch } from 'react-redux';
+
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { FlagSet, Flags } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';

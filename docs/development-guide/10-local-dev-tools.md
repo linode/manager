@@ -1,10 +1,24 @@
 # Local Dev Tools
 
-To facilitate development and debugging, Cloud Manager includes a "Dev Tools" mode. Currently this mode is used for feature flag toggling, data mocking, and environment switching.
+To facilitate development and debugging, Cloud Manager includes a "Dev Tools" mode. Currently this mode is used for feature flag toggling, data mocking, and theme & environment switching.
+
+In order to access the dev tools, hover or click (mobile) on the 🛠 icon in the lower left corner of your browser window. The icon will be colored red if MSW is enabled.
 
 This mode is enabled by default while running the development server. To disable it, add `?dev-tools=false` to the URL, or write `dev-tools: false` to local storage.
 
-This mode is disabled by default in production builds, but can be enabled by adding `?dev-tools=true` to the URL, or `dev-tools: true` to local storage.
+This mode is disabled by default in production builds.
+
+## Feature Flags
+
+The display of the Flags in dev tools is defined in the `options` array in `FeatureFlagTool.tsx`. While it is convenient to add those switches to the dev tools, it is not always necessary as they can clutter the UI. Additionally, it is important to clean them up once the feature has been battle tested in production.
+
+The flags on/off values are stored in local storage for convenience and will be remembered on reload or app restart.
+
+By default, the boolean flags checkboxes represent their true values as returned by Launch Darkly (dev environment). Hitting the reset button will bring them back to those default values and clear local storage.
+
+## Theme Select
+
+The theme select in dev tools is a convenient way to store the theme choice while MSW is enabled (it won't affect your actual Application settings/preferences). The default is "system".
 
 ## Writing a new tool
 

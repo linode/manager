@@ -11,6 +11,7 @@ import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
 import { MockDataTool } from './MockDataTool';
+import { Preferences } from './Preferences';
 import { isMSWEnabled } from './ServiceWorkerTool';
 import { ThemeSelector } from './ThemeSelector';
 
@@ -34,6 +35,7 @@ function install(store: ApplicationStore) {
             <Grid md={3} sm={5} xs={4}>
               <MockDataTool />
               <ThemeSelector />
+              <Preferences />
             </Grid>
           ) : null}
         </Grid>
