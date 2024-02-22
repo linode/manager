@@ -59,11 +59,6 @@ export const SecretTokenDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      sx={() => ({
-        '.MuiPaper-root': {
-          overflow: 'hidden',
-        },
-      })}
       actions={actions}
       disableEscapeKeyDown
       fullWidth
@@ -113,13 +108,14 @@ export const SecretTokenDialog = (props: Props) => {
         objectStorageKey?.regions?.length > 0 && (
           <Box
             sx={(theme) => ({
+              '.copyIcon': {
+                marginRight: 0,
+                paddingRight: 0,
+              },
               backgroundColor: theme.bg.main,
               border: `1px solid ${theme.color.grey3}`,
-              borderColor:
-                theme.name === 'light' ? theme.color.grey3 : theme.color.black,
-              boxSizing: 'border-box',
-              maxHeight: '200px',
-              overflowY: 'auto',
+              borderColor: theme.name === 'light' ? '#ccc' : '#222',
+              padding: theme.spacing(1),
             })}
           >
             {objectStorageKey?.regions.map((region, index) => (
