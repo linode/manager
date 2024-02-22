@@ -1,3 +1,4 @@
+import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -75,6 +76,17 @@ export const FromLinodeContent = (props: CombinedProps) => {
     }
   };
 
+  const linodeIsInEdgeRegion = (linodeRegion: string) =>
+    regionsData?.find((region) => region.id === linodeRegion)?.site_type ===
+    'edge';
+
+  const filterEdgeLinodes = (linodes: Linode[]) =>
+    linodes.filter(
+      (linode) => !linodeIsInEdgeRegion(linode.region) // Hide linodes that are in an edge region
+    );
+
+  const filteredLinodes = filterEdgeLinodes(linodesData);
+
   return (
     // eslint-disable-next-line
     <React.Fragment>
@@ -97,7 +109,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
         <StyledGrid>
           <SelectLinodePanel
             linodes={extendLinodes(
-              linodesData,
+              filteredLinodes,
               imagesData,
               extendedTypes,
               regionsData
