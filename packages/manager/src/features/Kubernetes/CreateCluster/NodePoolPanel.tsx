@@ -73,7 +73,6 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
       id: Math.random(),
       type: selectedPlanType,
     });
-    updatePlanCount(selectedPlanType, 0);
     setSelectedType(undefined);
   };
 
