@@ -20,6 +20,7 @@ import type {
   InvoiceItem,
   Payment,
   PaymentMethod,
+  Token,
   User,
 } from '@linode/api-v4';
 
@@ -503,6 +504,7 @@ export const mockCancelAccountError = (
 /**
  * Intercepts GET request to fetch the account agreements and mocks the response.
  *
+ * @param agreements - Agreements with which to mock response.
  *
  * @returns Cypress chainable.
  */
@@ -517,8 +519,85 @@ export const mockGetAccountAgreements = (
 };
 
 /**
+ * Intercepts GET request to fetch child accounts and mocks the response.
+ *
+ * @param childAccounts - Child account objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetChildAccounts = (
+  childAccounts: Account[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/child-accounts*'),
+    paginateResponse(childAccounts)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch child accounts and mocks an error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetChildAccountsError = (
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 500
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/child-accounts*'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
+ * Intercepts POST request to create a child account token and mocks the response.
+ *
+ * @param childAccount - Child account for which to create a token.
+ * @param childAccountToken - Token object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateChildAccountToken = (
+  childAccount: Account,
+  childAccountToken: Token
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/child-accounts/${childAccount.euuid}/token`),
+    makeResponse(childAccountToken)
+  );
+};
+
+/**
+ * Intercepts POST request to create a child account token and mocks error response.
+ *
+ * @param childAccount - Child account for which to mock error response.
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateChildAccountTokenError = (
+  childAccount: Account,
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/child-accounts/${childAccount.euuid}/token`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
  * Intercepts GET request to fetch the account logins and mocks the response.
  *
+ * @param accountLogins - Account login objects with which to mock response.
  *
  * @returns Cypress chainable.
  */
