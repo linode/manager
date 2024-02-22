@@ -256,7 +256,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
               src={CompasLogo}
               width={'100%'}
               alt="COMPAS Logo"
-              style={{ backgroundColor: 'white' }}
+              style={{ backgroundColor: 'transparent' }}
             />
             {/* <Logo width={115} height={43} /> */}
           </Link>
