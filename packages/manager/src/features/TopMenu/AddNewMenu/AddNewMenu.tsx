@@ -157,6 +157,11 @@ class AddNewMenu extends React.Component<CombinedProps> {
       account?.capabilities ?? []
     );
 
+    const showDomains = Boolean(flags.domains);
+    const showKubernetes = Boolean(flags.kubernetes);
+    const showNodeBalancer = Boolean(flags.nodeBalancer);
+    const showObjectStorage = Boolean(flags.objectStorage);
+
     return (
       <dbaasContext.Consumer>
         {(dbaas) => (
@@ -193,17 +198,19 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={VolumeIcon}
                     />
                   </MenuLink>
-                  <MenuLink
-                    as={Link}
-                    to="/nodebalancers/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="NodeBalancer"
-                      body="Ensure your services are highly available"
-                      ItemIcon={NodebalancerIcon}
-                    />
-                  </MenuLink>
+                  {showNodeBalancer ? (
+                    <MenuLink
+                      as={Link}
+                      to="/nodebalancers/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="NodeBalancer"
+                        body="Ensure your services are highly available"
+                        ItemIcon={NodebalancerIcon}
+                      />
+                    </MenuLink>
+                  ) : null}
                   <MenuLink
                     as={Link}
                     to="/firewalls/create"
@@ -215,17 +222,19 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={FirewallIcon}
                     />
                   </MenuLink>
-                  <MenuLink
-                    as={Link}
-                    to="/domains/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="Domain"
-                      body="Manage your DNS records"
-                      ItemIcon={DomainIcon}
-                    />
-                  </MenuLink>
+                  {showDomains ? (
+                    <MenuLink
+                      as={Link}
+                      to="/domains/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Domain"
+                        body="Manage your DNS records"
+                        ItemIcon={DomainIcon}
+                      />
+                    </MenuLink>
+                  ) : null}
                   {showDatabases ? (
                     <MenuLink
                       as={Link}
@@ -240,28 +249,32 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       />
                     </MenuLink>
                   ) : null}
-                  <MenuLink
-                    as={Link}
-                    to="/kubernetes/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="Kubernetes"
-                      body="Highly available container workloads"
-                      ItemIcon={KubernetesIcon}
-                    />
-                  </MenuLink>
-                  <MenuLink
-                    as={Link}
-                    to="/object-storage/buckets/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="Bucket"
-                      body="S3-compatible object storage"
-                      ItemIcon={BucketIcon} // to be replaced with database icon
-                    />
-                  </MenuLink>
+                  {showKubernetes ? (
+                    <MenuLink
+                      as={Link}
+                      to="/kubernetes/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Kubernetes"
+                        body="Highly available container workloads"
+                        ItemIcon={KubernetesIcon}
+                      />
+                    </MenuLink>
+                  ) : null}
+                  {showObjectStorage ? (
+                    <MenuLink
+                      as={Link}
+                      to="/object-storage/buckets/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Bucket"
+                        body="S3-compatible object storage"
+                        ItemIcon={BucketIcon} // to be replaced with database icon
+                      />
+                    </MenuLink>
+                  ) : null}
                   <MenuLink
                     as={Link}
                     to="/linodes/create?type=One-Click"

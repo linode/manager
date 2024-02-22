@@ -10,7 +10,7 @@ import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
-// import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
@@ -106,6 +106,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     account?.capabilities ?? []
   );
 
+  const showDomains = Boolean(flags.domains);
+  const showKubernetes = Boolean(flags.kubernetes);
+  const showNodeBalancer = Boolean(flags.nodeBalancer);
+  const showObjectStorage = Boolean(flags.objectStorage);
+  const showLongView = Boolean(flags.longView);
+
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
       setEnableObjectPrefetch(true);
@@ -134,11 +140,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           href: '/volumes',
           icon: <Volume />,
         },
-        // {
-        //   display: 'NodeBalancers',
-        //   href: '/nodebalancers',
-        //   icon: <NodeBalancer />,
-        // },
+        {
+          hide: !showNodeBalancer,
+          display: 'NodeBalancers',
+          href: '/nodebalancers',
+          icon: <NodeBalancer />,
+        },
         {
           display: 'Firewalls',
           href: '/firewalls',
@@ -161,6 +168,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       ],
       [
         {
+          hide: !showDomains,
           display: 'Domains',
           href: '/domains',
           icon: <Domain />,
@@ -173,12 +181,14 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           isBeta: flags.databaseBeta,
         },
         {
+          hide: !showKubernetes,
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
           activeLinks: ['/kubernetes/create'],
           icon: <Kubernetes />,
         },
         {
+          hide: !showObjectStorage,
           display: 'Object Storage',
           href: '/object-storage/buckets',
           activeLinks: [
@@ -190,6 +200,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           prefetchRequestCondition: allowObjPrefetch,
         },
         {
+          hide: !showLongView,
           display: 'Longview',
           href: '/longview',
           icon: <Longview />,

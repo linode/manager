@@ -25,6 +25,11 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
   databases: boolean;
+  domains: boolean;
+  kubernetes: boolean;
+  nodeBalancer: boolean;
+  objectStorage: boolean;
+  longView: boolean;
   tpaProviders: Provider[];
   ipv6Sharing: boolean;
   referralBannerText: ReferralBannerText;
