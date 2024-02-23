@@ -9,8 +9,10 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { LINODE_NETWORK_IN } from 'src/constants';
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
+import { LINODE_NETWORK_IN } from 'src/constants';
+import { UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS } from 'src/features/components/PlansPanel/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -25,6 +27,7 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;
@@ -65,6 +68,16 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     showTransfer,
     type,
   } = props;
+
+  const flags = useFlags();
+
+  // Determine if the plan should be disabled solely due to being a 512GB plan
+  const disabled512GbPlan =
+    type.label.includes('512GB') &&
+    Boolean(flags.disableLargestGbPlans) &&
+    !isPlanSoldOut &&
+    !disabled;
+
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const tooltip = planTooSmall
@@ -104,17 +117,26 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
           aria-disabled={
-            isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
+            isSamePlan ||
+            planTooSmall ||
+            isPlanSoldOut ||
+            isDisabledClass ||
+            disabled512GbPlan
           }
           disabled={
-            isSamePlan || planTooSmall || isPlanSoldOut || isDisabledClass
+            isSamePlan ||
+            planTooSmall ||
+            isPlanSoldOut ||
+            isDisabledClass ||
+            disabled512GbPlan
           }
           onClick={() =>
             !isSamePlan &&
             !disabled &&
             !isPlanSoldOut &&
             !isDisabledClass &&
-            !planTooSmall
+            !planTooSmall &&
+            !disabled512GbPlan
               ? onSelect(type.id)
               : undefined
           }
@@ -136,7 +158,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                       planTooSmall ||
                       disabled ||
                       isPlanSoldOut ||
-                      isDisabledClass
+                      isDisabledClass ||
+                      disabled512GbPlan
                     }
                     id={type.id}
                     onChange={() => onSelect(type.id)}
@@ -150,11 +173,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </StyledRadioCell>
           <TableCell data-qa-plan-name>
             {type.heading} &nbsp;
-            {isPlanSoldOut && (
+            {(disabled512GbPlan || isPlanSoldOut) && (
               <Tooltip
+                title={
+                  disabled512GbPlan
+                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+                    : PLAN_IS_SOLD_OUT_COPY
+                }
                 data-testid="sold-out-chip"
                 placement="right-start"
-                title={PLAN_IS_SOLD_OUT_COPY}
               >
                 <span>
                   <Chip label="Sold Out" />
@@ -231,7 +258,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             isSamePlan ||
             disabled ||
             isPlanSoldOut ||
-            isDisabledClass
+            isDisabledClass ||
+            disabled512GbPlan
           }
           headingDecoration={
             isSamePlan || type.id === selectedLinodePlanType ? (
@@ -244,13 +272,19 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...type.subHeadings,
-            isPlanSoldOut ? <Chip label="Sold Out" /> : '',
+            isPlanSoldOut || disabled512GbPlan ? <Chip label="Sold Out" /> : '',
           ]}
+          tooltip={
+            disabled512GbPlan
+              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+              : isPlanSoldOut
+              ? PLAN_IS_SOLD_OUT_COPY
+              : tooltip
+          }
           checked={type.id === String(selectedId)}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
-          tooltip={isPlanSoldOut ? PLAN_IS_SOLD_OUT_COPY : tooltip}
         />
       </Hidden>
     </React.Fragment>

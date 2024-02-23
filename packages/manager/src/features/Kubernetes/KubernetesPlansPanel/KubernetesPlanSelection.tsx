@@ -13,6 +13,8 @@ import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
+import { UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS } from 'src/features/components/PlansPanel/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -51,6 +53,15 @@ export const KubernetesPlanSelection = (
     updatePlanCount,
   } = props;
 
+  const flags = useFlags();
+
+  // Determine if the plan should be disabled solely due to being a 512GB plan
+  const disabled512GbPlan =
+    type.label.includes('512GB') &&
+    Boolean(flags.disableLargestGbPlans) &&
+    !isPlanSoldOut &&
+    !disabled;
+
   const count = getTypeCount(type.id);
 
   const price: PriceObject | undefined = getLinodeRegionPrice(
@@ -70,14 +81,16 @@ export const KubernetesPlanSelection = (
     <Grid xs={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
-          disabled={disabled || isPlanSoldOut}
+          disabled={disabled || isPlanSoldOut || disabled512GbPlan}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           value={count}
         />
         {onAdd && (
           <Button
+            disabled={
+              count < 1 || disabled || isPlanSoldOut || disabled512GbPlan
+            }
             buttonType="primary"
-            disabled={count < 1 || disabled || isPlanSoldOut}
             onClick={() => onAdd(type.id, count)}
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
@@ -93,16 +106,20 @@ export const KubernetesPlanSelection = (
       <Hidden mdDown>
         <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
-          disabled={disabled || isPlanSoldOut}
+          disabled={disabled || isPlanSoldOut || disabled512GbPlan}
           key={type.id}
         >
           <TableCell data-qa-plan-name>
             {type.heading} &nbsp;
-            {isPlanSoldOut && (
+            {(isPlanSoldOut || disabled512GbPlan) && (
               <Tooltip
+                title={
+                  disabled512GbPlan
+                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+                    : PLAN_IS_SOLD_OUT_COPY
+                }
                 data-testid="sold-out-chip"
                 placement="right-start"
-                title={PLAN_IS_SOLD_OUT_COPY}
               >
                 <span>
                   <Chip label="Sold Out" />
@@ -143,7 +160,8 @@ export const KubernetesPlanSelection = (
                   (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
                   disabled ||
                   typeof price?.hourly !== 'number' ||
-                  isPlanSoldOut
+                  isPlanSoldOut ||
+                  disabled512GbPlan
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(type.id, newCount)
@@ -157,7 +175,8 @@ export const KubernetesPlanSelection = (
                     count < 1 ||
                     disabled ||
                     typeof price?.hourly !== 'number' ||
-                    isPlanSoldOut
+                    isPlanSoldOut ||
+                    disabled512GbPlan
                   }
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}
@@ -177,13 +196,19 @@ export const KubernetesPlanSelection = (
             ...subHeadings,
             isPlanSoldOut ? <Chip label="Sold Out" /> : '',
           ]}
+          tooltip={
+            disabled512GbPlan && !isPlanSoldOut
+              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+              : isPlanSoldOut
+              ? PLAN_IS_SOLD_OUT_COPY
+              : undefined
+          }
           checked={type.id === String(selectedId)}
-          disabled={disabled || isPlanSoldOut}
+          disabled={disabled || isPlanSoldOut || disabled512GbPlan}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
-          tooltip={isPlanSoldOut ? PLAN_IS_SOLD_OUT_COPY : undefined}
         />
       </Hidden>
     </React.Fragment>

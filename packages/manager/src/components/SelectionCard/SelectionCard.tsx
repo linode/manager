@@ -86,7 +86,7 @@ export interface SelectionCardProps {
   /**
    * Optional text to set in a tooltip when hovering over the card.
    */
-  tooltip?: string;
+  tooltip?: JSX.Element | string;
 }
 
 /**

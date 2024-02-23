@@ -1,6 +1,7 @@
 import { arrayToList } from 'src/utilities/arrayToList';
 import { ExtendedType } from 'src/utilities/extendType';
 
+import { DEDICATED_512_GB_PLAN, PREMIUM_512_GB_PLAN } from './constants';
 import { PlanSelectionType } from './types';
 
 import type {
@@ -196,4 +197,34 @@ export const planTabInfoContent = {
     typography:
       ' Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
   },
+};
+
+export const replaceOrAppend512GbPlans = (
+  types: ExtendedType[] | PlanSelectionType[]
+) => {
+  // const typesCopy = [...types]
+  const dedicated512GbIndex = types.findIndex(
+    (type) => type.label === 'Dedicated 512GB'
+  );
+  const premium512GbIndex = types.findIndex(
+    (type) => type.label === 'Premium 512GB'
+  );
+
+  /*
+    If the Dedicated 512 GB plan is present in the response, overwrite it.
+    If it isn't, insert a placeholder at the end of the array.
+  */
+  if (dedicated512GbIndex !== -1) {
+    types[dedicated512GbIndex] = DEDICATED_512_GB_PLAN;
+  } else {
+    types.push(DEDICATED_512_GB_PLAN);
+  }
+
+  if (premium512GbIndex !== -1) {
+    types[premium512GbIndex] = PREMIUM_512_GB_PLAN;
+  } else {
+    types.push(PREMIUM_512_GB_PLAN);
+  }
+
+  return types;
 };

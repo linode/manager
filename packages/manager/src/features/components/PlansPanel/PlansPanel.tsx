@@ -2,6 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { useFlags } from 'src/hooks/useFlags';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 import { PlanContainer } from './PlanContainer';
@@ -10,6 +11,7 @@ import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTabInfoContent,
+  replaceOrAppend512GbPlans,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -57,8 +59,13 @@ export const PlansPanel = (props: Props) => {
   } = props;
 
   const theme = useTheme();
+  const flags = useFlags();
 
-  const plans = getPlanSelectionsByPlanType(types);
+  const _types = replaceOrAppend512GbPlans(types);
+  const plans = getPlanSelectionsByPlanType(
+    flags.disableLargestGbPlans ? _types : types
+  );
+
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,

@@ -6,7 +6,9 @@ import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTabInfoContent,
+  replaceOrAppend512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
@@ -57,7 +59,12 @@ export const KubernetesPlansPanel = (props: Props) => {
     updatePlanCount,
   } = props;
 
-  const plans = getPlanSelectionsByPlanType(types);
+  const flags = useFlags();
+
+  const _types = replaceOrAppend512GbPlans(types);
+  const plans = getPlanSelectionsByPlanType(
+    flags.disableLargestGbPlans ? _types : types
+  );
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
