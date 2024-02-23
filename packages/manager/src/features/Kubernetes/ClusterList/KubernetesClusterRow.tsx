@@ -130,6 +130,7 @@ export const KubernetesClusterRow = (props: Props) => {
                 label="UPGRADE"
                 onClick={openUpgradeDialog}
                 size="small"
+                sx={{ mx: 2 }}
               />
             )}
           </div>

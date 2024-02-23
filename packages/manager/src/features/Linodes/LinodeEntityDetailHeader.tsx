@@ -155,7 +155,7 @@ export const LinodeEntityDetailHeader = (
           data-qa-linode-status
           direction="row"
           spacing={1.5}
-          sx={{ paddingLeft: 2 }}
+          sx={{ paddingX: 2 }}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
           <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
