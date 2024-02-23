@@ -114,9 +114,7 @@ export const SecretTokenDialog = (props: Props) => {
           <Box
             sx={(theme) => ({
               backgroundColor: theme.bg.main,
-              border: `1px solid ${theme.color.grey3}`,
-              borderColor:
-                theme.name === 'light' ? theme.color.grey3 : theme.color.black,
+              border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
               maxHeight: '200px',
               overflowY: 'auto',
             })}
