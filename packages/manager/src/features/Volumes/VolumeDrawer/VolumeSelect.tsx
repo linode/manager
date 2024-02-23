@@ -50,9 +50,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     }
 
     const { volumes } = this.state;
-    const idx = volumes.findIndex(
-      (linode) => Number(linodeId) === Number(linode.value)
-    );
+    const idx = volumes.findIndex((linode) => linodeId === linode.value);
     return idx > -1 ? volumes[idx] : -1;
   };
 
