@@ -232,10 +232,13 @@ export interface Kernel {
   label: string;
   version: string;
   kvm: boolean;
-  xen: boolean;
   architecture: KernelArchitecture;
   pvops: boolean;
   deprecated: boolean;
+  /**
+   * @example 2009-10-26T04:00:00
+   */
+  built: string;
 }
 
 export interface NetStats {
