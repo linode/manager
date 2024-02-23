@@ -91,3 +91,5 @@ export interface GetSelectedRegionsByIdsArgs {
   regions: Region[];
   selectedRegionIds: string[];
 }
+
+export type SupportedEdgeTypes = 'Distributions' | 'StackScripts';

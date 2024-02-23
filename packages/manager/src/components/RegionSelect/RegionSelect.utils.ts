@@ -1,5 +1,6 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
+import { useFlags } from 'src/hooks/useFlags';
 import {
   getRegionCountryGroup,
   getSelectedRegion,
@@ -11,8 +12,10 @@ import type {
   GetSelectedRegionById,
   GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
+  SupportedEdgeTypes,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -183,4 +186,22 @@ export const getSelectedRegionsByIds = ({
       })
     )
     .filter((region): region is RegionSelectOption => !!region);
+};
+
+/**
+ * Util to determine whether a create type has support for edge regions.
+ *
+ * @returns a boolean indicating whether or not to enable gecko.
+ */
+export const useIsGeckoEnabled = (createType: LinodeCreateType) => {
+  const flags = useFlags();
+
+  const supportedEdgeTypes: SupportedEdgeTypes[] = [
+    'Distributions',
+    'StackScripts',
+  ];
+  return Boolean(
+    flags.gecko &&
+      !supportedEdgeTypes.includes(createType as SupportedEdgeTypes)
+  );
 };

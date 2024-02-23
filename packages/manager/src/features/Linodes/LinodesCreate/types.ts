@@ -167,3 +167,11 @@ export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &
   StackScriptFormStateHandlers &
   BackupFormStateHandlers;
+
+export type LinodeCreateType =
+  | 'Backups'
+  | 'Clone Linode'
+  | 'Distributions'
+  | 'Images'
+  | 'One-Click'
+  | 'StackScripts';
