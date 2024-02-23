@@ -62,9 +62,9 @@ describe('volume upgrade/migration', () => {
         percent_complete: percentage,
       });
 
-      mockGetEvents([mockStartedMigrationEvent]).as('getEvents1');
+      mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
 
-      cy.wait('@getEvents1');
+      cy.wait('@getEvents');
 
       cy.findByText(`migrating (${percentage}%)`).should('be.visible');
     }
@@ -75,10 +75,10 @@ describe('volume upgrade/migration', () => {
       status: 'finished',
     });
 
-    mockGetEvents([mockFinishedMigrationEvent]).as('getEvents2');
+    mockGetEvents([mockFinishedMigrationEvent]).as('getEvents');
     mockGetNotifications([]).as('getNotifications');
 
-    cy.wait(['@getEvents2', '@getVolumes', '@getNotifications']);
+    cy.wait(['@getEvents', '@getVolumes', '@getNotifications']);
 
     cy.findByText('active').should('be.visible');
   });
