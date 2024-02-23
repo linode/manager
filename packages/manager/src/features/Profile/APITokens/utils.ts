@@ -188,8 +188,8 @@ export const allScopesAreTheSame = (
   const sample = scopes[0];
 
   // Remove any scopes not to be included in the comparison.
-  const filteredScopes = scopes.filter((scope: Permission) =>
-    exceptions?.includes(scope[0])
+  const filteredScopes = scopes.filter(
+    (scope: Permission) => !exceptions?.includes(scope[0])
   );
 
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
