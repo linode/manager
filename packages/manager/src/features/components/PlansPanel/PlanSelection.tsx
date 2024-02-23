@@ -6,12 +6,13 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { SupportLink } from 'src/components/SupportLink';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS } from 'src/features/components/PlansPanel/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
@@ -27,6 +28,7 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
@@ -177,7 +179,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               <Tooltip
                 title={
                   disabled512GbPlan
-                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
+                    ? generateUnavailableMessageFor512GbPlans(type)
                     : PLAN_IS_SOLD_OUT_COPY
                 }
                 data-testid="sold-out-chip"
@@ -272,11 +274,17 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...type.subHeadings,
-            isPlanSoldOut || disabled512GbPlan ? <Chip label="Sold Out" /> : '',
+            isPlanSoldOut ? (
+              <Chip label="Sold Out" />
+            ) : disabled512GbPlan ? (
+              <Chip label="LA" />
+            ) : (
+              ''
+            ),
           ]}
           tooltip={
             disabled512GbPlan
-              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
+              ? generateUnavailableMessageFor512GbPlans(type)
               : isPlanSoldOut
               ? PLAN_IS_SOLD_OUT_COPY
               : tooltip
@@ -288,5 +296,19 @@ export const PlanSelection = (props: PlanSelectionProps) => {
         />
       </Hidden>
     </React.Fragment>
+  );
+};
+
+export const generateUnavailableMessageFor512GbPlans = (
+  type: ExtendedType | PlanSelectionType
+) => {
+  // Only Dedicated or Premium plans will hit this function
+  const planType = type.label.includes('Dedicated') ? 'Dedicated' : 'Premium';
+
+  return (
+    <Typography>
+      {planType} 512GB plans are currently unavailable. If you have questions,
+      open a <SupportLink text="support ticket" />.
+    </Typography>
   );
 };

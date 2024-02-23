@@ -12,8 +12,8 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
+import { generateUnavailableMessageFor512GbPlans } from 'src/features/components/PlansPanel/PlanSelection';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
-import { UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS } from 'src/features/components/PlansPanel/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -115,7 +115,7 @@ export const KubernetesPlanSelection = (
               <Tooltip
                 title={
                   disabled512GbPlan
-                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
+                    ? generateUnavailableMessageFor512GbPlans(type)
                     : PLAN_IS_SOLD_OUT_COPY
                 }
                 data-testid="sold-out-chip"
@@ -198,7 +198,7 @@ export const KubernetesPlanSelection = (
           ]}
           tooltip={
             disabled512GbPlan && !isPlanSoldOut
-              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
+              ? generateUnavailableMessageFor512GbPlans(type)
               : isPlanSoldOut
               ? PLAN_IS_SOLD_OUT_COPY
               : undefined

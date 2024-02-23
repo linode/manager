@@ -1,24 +1,5 @@
-import * as React from 'react';
-
-import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
-
 import type { PlanSelectionType } from './types';
 import type { ExtendedType } from 'src/utilities/extendType';
-
-export const UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS = (
-  type: ExtendedType | PlanSelectionType
-) => {
-  // Only Dedicated or Premium plans will hit this function
-  const planType = type.label.includes('Dedicated') ? 'Dedicated' : 'Premium';
-
-  return (
-    <Typography>
-      {planType} 512GB plans are currently unavailable. If you have questions,
-      open a <SupportLink text="support ticket" />.
-    </Typography>
-  );
-};
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   addons: {
