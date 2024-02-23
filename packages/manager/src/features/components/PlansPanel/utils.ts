@@ -1,7 +1,11 @@
 import { arrayToList } from 'src/utilities/arrayToList';
 import { ExtendedType } from 'src/utilities/extendType';
 
-import { DEDICATED_512_GB_PLAN, PREMIUM_512_GB_PLAN } from './constants';
+import {
+  DBAAS_DEDICATED_512_GB_PLAN,
+  DEDICATED_512_GB_PLAN,
+  PREMIUM_512_GB_PLAN,
+} from './constants';
 import { PlanSelectionType } from './types';
 
 import type {
@@ -195,20 +199,38 @@ export const planTabInfoContent = {
     key: 'shared',
     title: 'Shared CPU',
     typography:
-      ' Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
+      'Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
   },
 };
 
 export const replaceOrAppend512GbPlans = (
   types: ExtendedType[] | PlanSelectionType[]
 ) => {
-  // const typesCopy = [...types]
+  const isInDatabasesFlow = types.some((type) => type.label.includes('DBaaS'));
+
+  // For Linodes and LKE
   const dedicated512GbIndex = types.findIndex(
     (type) => type.label === 'Dedicated 512GB'
   );
+
   const premium512GbIndex = types.findIndex(
     (type) => type.label === 'Premium 512GB'
   );
+
+  // For DBaaS
+  const dbaasDedicated512GbIndex = types.findIndex(
+    (type) => type.label === 'DBaaS - Dedicated 512GB'
+  );
+
+  if (isInDatabasesFlow) {
+    if (dbaasDedicated512GbIndex !== -1) {
+      types[dbaasDedicated512GbIndex] = DBAAS_DEDICATED_512_GB_PLAN;
+    } else {
+      types.push(DBAAS_DEDICATED_512_GB_PLAN);
+    }
+
+    return types;
+  }
 
   /*
     If the Dedicated 512 GB plan is present in the response, overwrite it.

@@ -115,7 +115,7 @@ export const KubernetesPlanSelection = (
               <Tooltip
                 title={
                   disabled512GbPlan
-                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
                     : PLAN_IS_SOLD_OUT_COPY
                 }
                 data-testid="sold-out-chip"
@@ -198,7 +198,7 @@ export const KubernetesPlanSelection = (
           ]}
           tooltip={
             disabled512GbPlan && !isPlanSoldOut
-              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
               : isPlanSoldOut
               ? PLAN_IS_SOLD_OUT_COPY
               : undefined

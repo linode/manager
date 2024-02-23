@@ -3,14 +3,22 @@ import * as React from 'react';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 
+import type { PlanSelectionType } from './types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS = (
-  <Typography>
-    Premium 512GB plans are currently unavailable. If you have questions, open a{' '}
-    <SupportLink text="support ticket" />.
-  </Typography>
-);
+  type: ExtendedType | PlanSelectionType
+) => {
+  // Only Dedicated or Premium plans will hit this function
+  const planType = type.label.includes('Dedicated') ? 'Dedicated' : 'Premium';
+
+  return (
+    <Typography>
+      {planType} 512GB plans are currently unavailable. If you have questions,
+      open a <SupportLink text="support ticket" />.
+    </Typography>
+  );
+};
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   addons: {
@@ -69,6 +77,70 @@ export const DEDICATED_512_GB_PLAN: ExtendedType = {
   transfer: 12000,
   vcpus: 64,
 };
+
+export const DBAAS_DEDICATED_512_GB_PLAN = {
+  class: 'dedicated',
+  disk: 7372800,
+  engines: {
+    mysql: [
+      {
+        price: {
+          hourly: 12.48,
+          monthly: 8320,
+        },
+        quantity: 1,
+      },
+      {
+        price: {
+          hourly: 24.96,
+          monthly: 16640,
+        },
+        quantity: 2,
+      },
+      {
+        price: {
+          hourly: 37.44,
+          monthly: 24960,
+        },
+        quantity: 3,
+      },
+    ],
+    postgresql: [
+      {
+        price: {
+          hourly: 12.48,
+          monthly: 8320,
+        },
+        quantity: 1,
+      },
+      {
+        price: {
+          hourly: 24.96,
+          monthly: 16640,
+        },
+        quantity: 2,
+      },
+      {
+        price: {
+          hourly: 37.44,
+          monthly: 24960,
+        },
+        quantity: 3,
+      },
+    ],
+  },
+  formattedLabel: 'Dedicated 512 GB',
+  heading: 'Dedicated 512 GB',
+  id: 'g6-dedicated-64',
+  label: 'DBaaS - Dedicated 512GB',
+  memory: 524288,
+  price: {
+    hourly: 12.48,
+    monthly: 8320,
+  },
+  subHeadings: ['$8320/mo ($12.48/hr)', '64 CPU, 7200 GB Storage, 512 GB RAM'],
+  vcpus: 64,
+} as PlanSelectionType;
 
 export const PREMIUM_512_GB_PLAN: ExtendedType = {
   addons: {

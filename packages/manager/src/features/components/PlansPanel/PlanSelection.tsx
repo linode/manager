@@ -177,7 +177,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               <Tooltip
                 title={
                   disabled512GbPlan
-                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+                    ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
                     : PLAN_IS_SOLD_OUT_COPY
                 }
                 data-testid="sold-out-chip"
@@ -276,7 +276,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           ]}
           tooltip={
             disabled512GbPlan
-              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS
+              ? UNAVAILABLE_MESSAGE_FOR_512_GB_PLANS(type)
               : isPlanSoldOut
               ? PLAN_IS_SOLD_OUT_COPY
               : tooltip
