@@ -180,8 +180,11 @@ export const CreateAPITokenDrawer = (props: Props) => {
     form.setFieldValue('expiry', e.value);
   };
 
+  const excludedScopesFromSelectAll = ['vpc'];
+
   const indexOfColumnWhereAllAreSelected = allScopesAreTheSame(
-    form.values.scopes
+    form.values.scopes,
+    excludedScopesFromSelectAll
   );
 
   const errorMap = getErrorMap(['label', 'scopes'], error);
