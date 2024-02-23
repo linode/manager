@@ -65,6 +65,18 @@ const getDerivedVolumeStatusFromStatusAndEvent = (
   return status;
 };
 
+const getEventProgress = (event: Event | undefined) => {
+  if (
+    event === undefined ||
+    event.percent_complete === null ||
+    event.status !== 'started'
+  ) {
+    return null;
+  }
+
+  return `(${event.percent_complete}%)`;
+};
+
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
@@ -149,7 +161,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[volumeStatus]} />
-        {volumeStatus}
+        {volumeStatus} {getEventProgress(mostRecentVolumeEvent)}
       </TableCell>
       {isVolumesLanding && (
         <TableCell data-qa-volume-region data-testid="region" noWrap>

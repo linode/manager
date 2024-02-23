@@ -54,17 +54,20 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('UPGRADE PENDING').should('be.visible');
 
-    const mockStartedMigrationEvent = eventFactory.build({
-      action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume' },
-      status: 'started',
-    });
+    for (const percentage of [10, 20, 50, 75]) {
+      const mockStartedMigrationEvent = eventFactory.build({
+        action: 'volume_migrate',
+        entity: { id: volume.id, type: 'volume' },
+        status: 'started',
+        percent_complete: percentage,
+      });
 
-    mockGetEvents([mockStartedMigrationEvent]).as('getEvents1');
+      mockGetEvents([mockStartedMigrationEvent]).as('getEvents1');
 
-    cy.wait('@getEvents1');
+      cy.wait('@getEvents1');
 
-    cy.findByText('migrating').should('be.visible');
+      cy.findByText(`migrating (${percentage}%)`).should('be.visible');
+    }
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
