@@ -165,7 +165,13 @@ export const CreateAPITokenDrawer = (props: Props) => {
   ): void => {
     const value = +e.currentTarget.value;
     const newScopes = form.values.scopes.map(
-      (scope): Permission => [scope[0], value]
+      (scope): Permission => {
+        // VPC does not support Read Only access; default to None.
+        if (scope[0] === 'vpc' && value === 1) {
+          return [scope[0], 0];
+        }
+        return [scope[0], value];
+      }
     );
     form.setFieldValue('scopes', newScopes);
   };
