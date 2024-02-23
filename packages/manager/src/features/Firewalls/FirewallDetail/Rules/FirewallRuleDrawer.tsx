@@ -428,26 +428,30 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           isClearable={false}
           onBlur={handleBlur}
         />
-        <TextField
-          label="Label"
-          name="label"
-          placeholder="Enter a label..."
-          aria-label="Label for firewall rule"
-          value={values.label}
-          errorText={errors.label}
-          onChange={handleTextFieldChange}
-          onBlur={handleBlur}
-        />
-        <TextField
-          label="Description"
-          name="description"
-          placeholder="Enter a description..."
-          aria-label="Description for firewall rule"
-          value={values.description}
-          errorText={errors.description}
-          onChange={handleTextFieldChange}
-          onBlur={handleBlur}
-        />
+        {
+          /* -- Clanode Change -- */
+          // <TextField
+          //   label="Label"
+          //   name="label"
+          //   placeholder="Enter a label..."
+          //   aria-label="Label for firewall rule"
+          //   value={values.label}
+          //   errorText={errors.label}
+          //   onChange={handleTextFieldChange}
+          //   onBlur={handleBlur}
+          // />
+          // <TextField
+          //   label="Description"
+          //   name="description"
+          //   placeholder="Enter a description..."
+          //   aria-label="Description for firewall rule"
+          //   value={values.description}
+          //   errorText={errors.description}
+          //   onChange={handleTextFieldChange}
+          //   onBlur={handleBlur}
+          // />
+          /* -- Clanode Change End -- */
+        }
         <Select
           label="Protocol"
           name="protocol"
