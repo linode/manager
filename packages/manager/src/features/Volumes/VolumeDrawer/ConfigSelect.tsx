@@ -36,12 +36,8 @@ export const ConfigSelect = React.memo((props: Props) => {
     return { label: config.label, value: config.id };
   });
 
-  React.useEffect(() => {
-    if (configList?.length === 1 && value === null) {
-      const newValue = configList[0].value;
-      onChange(newValue);
-    }
-  }, [configList, onChange, value]);
+  // If there's only one config, select it by default
+  const initialConfig = configList?.length === 1 ? configList[0] : null;
 
   if (linodeId === null) {
     return null;
@@ -67,6 +63,7 @@ export const ConfigSelect = React.memo((props: Props) => {
         onChange={(e: Item<number>) => {
           onChange(+e.value);
         }}
+        defaultValue={initialConfig}
         id={name}
         isClearable={false}
         label="Config"
