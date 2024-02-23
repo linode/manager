@@ -154,7 +154,7 @@ describe('Create API Token Drawer', () => {
     const vpcReadOnlyPermRadioButton = vpcPermRadioButtons[1].firstChild;
 
     const selectAllReadOnlyPermRadioButton = getByLabelText(
-      'Select none for all'
+      'Select read-only for all'
     );
     await userEvent.click(selectAllReadOnlyPermRadioButton);
     expect(selectAllReadOnlyPermRadioButton).toBeChecked();
