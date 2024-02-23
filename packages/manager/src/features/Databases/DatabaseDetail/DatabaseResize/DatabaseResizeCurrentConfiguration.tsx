@@ -22,7 +22,7 @@ import {
   StyledSummaryTextBox,
   StyledSummaryTextTypography,
   StyledTitleTypography,
-} from './DatabaseScaleUpCurrentConfiguration.style';
+} from './DatabaseResizeCurrentConfiguration.style';
 
 interface Props {
   database: Database;
@@ -32,7 +32,7 @@ export const getDatabaseVersionNumber = (
   version: DatabaseInstance['version']
 ) => version.split('/')[1];
 
-export const DatabaseScaleUpCurrentConfiguration = ({ database }: Props) => {
+export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   const {
     data: types,
     error: typesError,

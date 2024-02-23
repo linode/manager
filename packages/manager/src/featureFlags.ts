@@ -44,7 +44,7 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
-  databaseScaleUp: boolean;
+  databaseResize: boolean;
   databases: boolean;
   firewallNodebalancer: boolean;
   ipv6Sharing: boolean;

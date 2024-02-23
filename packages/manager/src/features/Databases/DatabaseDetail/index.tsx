@@ -23,9 +23,9 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
-const DatabaseScaleUp = React.lazy(() =>
-  import('./DatabaseScaleUp/DatabaseScaleUp').then(({ DatabaseScaleUp }) => ({
-    default: DatabaseScaleUp,
+const DatabaseResize = React.lazy(() =>
+  import('./DatabaseResize/DatabaseResize').then(({ DatabaseResize }) => ({
+    default: DatabaseResize,
   }))
 );
 
@@ -84,10 +84,10 @@ export const DatabaseDetail = () => {
     },
   ];
 
-  if (flags.databaseScaleUp) {
+  if (flags.databaseResize) {
     tabs.push({
-      routeName: `/databases/${engine}/${id}/scale-up`,
-      title: 'Scale Up',
+      routeName: `/databases/${engine}/${id}/resize`,
+      title: 'Resize',
     });
   }
 
@@ -164,9 +164,9 @@ export const DatabaseDetail = () => {
           <SafeTabPanel index={2}>
             <DatabaseSettings database={database} />
           </SafeTabPanel>
-          {flags.databaseScaleUp ? (
+          {flags.databaseResize ? (
             <SafeTabPanel index={3}>
-              <DatabaseScaleUp database={database} />
+              <DatabaseResize database={database} />
             </SafeTabPanel>
           ) : null}
         </TabPanels>

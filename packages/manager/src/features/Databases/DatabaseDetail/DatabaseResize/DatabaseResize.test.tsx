@@ -13,7 +13,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DatabaseScaleUp } from './DatabaseScaleUp';
+import { DatabaseResize } from './DatabaseResize';
 
 const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
@@ -23,7 +23,7 @@ afterEach(() => {
   queryClient.clear();
 });
 
-describe('database scale up', () => {
+describe('database resize', () => {
   const database = databaseFactory.build();
   const dedicatedTypes = databaseTypeFactory.buildList(7, {
     class: 'dedicated',
@@ -31,7 +31,7 @@ describe('database scale up', () => {
 
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseScaleUp database={database} />,
+      <DatabaseResize database={database} />,
       {
         queryClient,
       }
@@ -61,7 +61,7 @@ describe('database scale up', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseScaleUp database={database} />,
+      <DatabaseResize database={database} />,
       {
         queryClient,
       }
@@ -101,26 +101,26 @@ describe('database scale up', () => {
       );
     });
 
-    it('scale up button should be disabled when no input is provided in the form', async () => {
+    it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseScaleUp database={database} />,
+        <DatabaseResize database={database} />,
         {
           queryClient,
         }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       expect(
-        getByText(/Scale Up Database Cluster/i).closest('button')
+        getByText(/Resize Database Cluster/i).closest('button')
       ).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('when a plan is selected, scale up button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB scale up flow.
+    it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
       const history = createMemoryHistory();
-      history.push(`databases/${database.engine}/${database.id}/scale-up`);
+      history.push(`databases/${database.engine}/${database.id}/resize`);
       const { container, getByTestId, getByText } = renderWithTheme(
         <Router history={history}>
-          <DatabaseScaleUp database={database} />
+          <DatabaseResize database={database} />
         </Router>,
         {
           queryClient,
@@ -129,13 +129,13 @@ describe('database scale up', () => {
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const getById = queryByAttribute.bind(null, 'id');
       fireEvent.click(getById(container, examplePlanType));
-      const scaleUpButton = getByText(/Scale Up Database Cluster/i);
-      expect(scaleUpButton.closest('button')).toHaveAttribute(
+      const resizeButton = getByText(/Resize Database Cluster/i);
+      expect(resizeButton.closest('button')).toHaveAttribute(
         'aria-disabled',
         'false'
       );
-      fireEvent.click(scaleUpButton);
-      getByText(`Scale up ${database.label}?`);
+      fireEvent.click(resizeButton);
+      getByText(`Resize ${database.label}?`);
     });
   });
 });
