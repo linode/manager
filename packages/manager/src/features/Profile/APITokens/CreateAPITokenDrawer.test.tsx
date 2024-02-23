@@ -150,8 +150,8 @@ describe('Create API Token Drawer', () => {
       }
     );
     const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
-    const vpcNonePermButton = vpcPermRadioButtons[0].firstChild;
-    const vpcReadOnlyPermButton = vpcPermRadioButtons[1].firstChild;
+    const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;
+    const vpcReadOnlyPermRadioButton = vpcPermRadioButtons[1].firstChild;
 
     const selectAllReadOnlyPermRadioButton = getByLabelText(
       'Select none for all'
@@ -159,8 +159,8 @@ describe('Create API Token Drawer', () => {
     await userEvent.click(selectAllReadOnlyPermRadioButton);
     expect(selectAllReadOnlyPermRadioButton).toBeChecked();
 
-    expect(vpcNonePermButton).toBeChecked();
-    expect(vpcReadOnlyPermButton).not.toBeChecked();
-    expect(vpcReadOnlyPermButton).toBeDisabled();
+    expect(vpcNonePermRadioButton).toBeChecked();
+    expect(vpcReadOnlyPermRadioButton).not.toBeChecked();
+    expect(vpcReadOnlyPermRadioButton).toBeDisabled();
   });
 });
