@@ -28,15 +28,15 @@ import {
   StyledGrid,
   StyledPlanSummarySpan,
   StyledPlansPanel,
-  StyledScaleUpButton,
-} from './DatabaseScaleUp.style';
-import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
+  StyledResizeButton,
+} from './DatabaseResize.style';
+import { DatabaseResizeCurrentConfiguration } from './DatabaseResizeCurrentConfiguration';
 
 interface Props {
   database: Database;
 }
 
-export const DatabaseScaleUp = ({ database }: Props) => {
+export const DatabaseResize = ({ database }: Props) => {
   const history = useHistory();
 
   const [planSelected, setPlanSelected] = React.useState<string>();
@@ -46,19 +46,19 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     price: string;
   }>();
   // This will be set to `false` once one of the configuration is selected from available plan. This is used to disable the
-  // "Scale up" button unless there have been changes to the form.
+  // "Resize" button unless there have been changes to the form.
   const [
     shouldSubmitBeDisabled,
     setShouldSubmitBeDisabled,
   ] = React.useState<boolean>(true);
 
   const [
-    isScaleUpConfirmationDialogOpen,
-    setIsScaleUpConfirmationDialogOpen,
+    isResizeConfirmationDialogOpen,
+    setIsResizeConfirmationDialogOpen,
   ] = React.useState(false);
 
   const {
-    error: scaleUpError,
+    error: resizeError,
     isLoading: submitInProgress,
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(database.engine, database.id);
@@ -71,12 +71,12 @@ export const DatabaseScaleUp = ({ database }: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const onScaleUp = () => {
+  const onResize = () => {
     updateDatabase({
       type: planSelected,
     }).then(() => {
       enqueueSnackbar(
-        `Your database cluster ${database.label} is being scaled up.`,
+        `Your database cluster ${database.label} is being resized.`,
         {
           variant: 'info',
         }
@@ -85,12 +85,12 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     });
   };
 
-  const scaleUpDescription = (
+  const resizeDescription = (
     <>
-      <Typography variant="h2">Scaling up a Database Cluster</Typography>
+      <Typography variant="h2">Resize a Database Cluster</Typography>
       <Typography sx={{ marginTop: '4px' }}>
-        Adapt the cluster to your needs by scaling it up. Clusters cannot be
-        scaled down.
+        Adapt the cluster to your needs by resizing to a larger plan. Clusters
+        cannot be resized to smaller plans.
       </Typography>
     </>
   );
@@ -121,21 +121,21 @@ export const DatabaseScaleUp = ({ database }: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'button-confirm',
-        label: 'Scale Up',
+        label: 'Resize',
         loading: submitInProgress,
-        onClick: onScaleUp,
+        onClick: onResize,
       }}
       secondaryButtonProps={{
         'data-testid': 'button-cancel',
         label: 'Cancel',
-        onClick: () => setIsScaleUpConfirmationDialogOpen(false),
+        onClick: () => setIsResizeConfirmationDialogOpen(false),
       }}
     />
   );
 
   const costSummary = (
     <Typography sx={{ marginBottom: '10px' }} variant="h3">
-      {`The cost of the scaled-up database is ${summaryText?.price}.`}
+      {`The cost of the resized database is ${summaryText?.price}.`}
     </Typography>
   );
   const confirmationPopUpMessage =
@@ -143,7 +143,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       <>
         {costSummary}
         <Notice variant="warning">
-          <Typography variant="h3">{`Warning: This operation will cause downtime for your upscaled node cluster.`}</Typography>
+          <Typography variant="h3">{`Warning: This operation will cause downtime for your resized node cluster.`}</Typography>
         </Notice>
       </>
     ) : (
@@ -228,7 +228,7 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   // We don't have a "Nanodes" tab anymore, so use `shared`
   const selectedTypeClass =
     currentPlanClass === 'nanode' ? 'standard' : currentPlanClass;
-  // User cannot switch to different plan type apart from current plan while scaling up a DB cluster. So disable rest of the tabs.
+  // User cannot switch to different plan type apart from current plan while resizing a DB cluster. So disable rest of the tabs.
   const tabsToBeDisabled = typeClasses
     .filter((typeClass) => typeClass !== selectedTypeClass)
     .map((plan) => (plan === 'standard' ? 'shared' : plan));
@@ -242,15 +242,15 @@ export const DatabaseScaleUp = ({ database }: Props) => {
   return (
     <>
       <Paper sx={{ marginTop: 2 }}>
-        {scaleUpDescription}
+        {resizeDescription}
         <Box sx={{ marginTop: 2 }}>
-          <DatabaseScaleUpCurrentConfiguration database={database} />
+          <DatabaseResizeCurrentConfiguration database={database} />
         </Box>
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
           tabDisabledMessage={
-            'You can upscale your cluster only within already selected plan.'
+            'You can resize your cluster only within already selected plan.'
           }
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
@@ -264,23 +264,23 @@ export const DatabaseScaleUp = ({ database }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>{summaryPanel}</Paper>
       <StyledGrid>
-        <StyledScaleUpButton
+        <StyledResizeButton
           onClick={() => {
-            setIsScaleUpConfirmationDialogOpen(true);
+            setIsResizeConfirmationDialogOpen(true);
           }}
           buttonType="primary"
           disabled={shouldSubmitBeDisabled}
           type="submit"
         >
-          Scale Up Database Cluster
-        </StyledScaleUpButton>
+          Resize Database Cluster
+        </StyledResizeButton>
       </StyledGrid>
       <ConfirmationDialog
         actions={confirmationDialogActions}
-        error={scaleUpError?.[0].reason}
-        onClose={() => setIsScaleUpConfirmationDialogOpen(false)}
-        open={isScaleUpConfirmationDialogOpen}
-        title={`Scale up ${database.label}?`}
+        error={resizeError?.[0].reason}
+        onClose={() => setIsResizeConfirmationDialogOpen(false)}
+        open={isResizeConfirmationDialogOpen}
+        title={`Resize ${database.label}?`}
       >
         {confirmationPopUpMessage}
       </ConfirmationDialog>
