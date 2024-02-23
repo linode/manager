@@ -9,8 +9,11 @@ import { uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+/* -- Clanode Change -- */
+//import FormControlLabel from 'src/components/core/FormControlLabel';
+//import RadioGroup from 'src/components/core/RadioGroup';
+//import Radio from 'src/components/Radio';
+/* -- Clanode CHange End -- */
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -18,7 +21,6 @@ import Select from 'src/components/EnhancedSelect';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import {
   addressOptions,
@@ -353,8 +355,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
       },
       [formTouched, setFieldValue, setFormTouched, setIPs]
     );
-
-    const handleActionChange = React.useCallback(
+    /* -- Clanode Change -- */
+    /*const handleActionChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
         if (!formTouched) {
           setFormTouched(true);
@@ -363,8 +365,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         setFieldValue('action', value);
       },
       [formTouched, setFieldValue, setFormTouched]
-    );
-
+    ); */
+    /* -- Clanode Change End -- */
     const handleIPChange = React.useCallback(
       (_ips: ExtendedIP[]) => {
         if (!formTouched) {
@@ -426,26 +428,30 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           isClearable={false}
           onBlur={handleBlur}
         />
-        <TextField
-          label="Label"
-          name="label"
-          placeholder="Enter a label..."
-          aria-label="Label for firewall rule"
-          value={values.label}
-          errorText={errors.label}
-          onChange={handleTextFieldChange}
-          onBlur={handleBlur}
-        />
-        <TextField
-          label="Description"
-          name="description"
-          placeholder="Enter a description..."
-          aria-label="Description for firewall rule"
-          value={values.description}
-          errorText={errors.description}
-          onChange={handleTextFieldChange}
-          onBlur={handleBlur}
-        />
+        {
+          /* -- Clanode Change -- */
+          // <TextField
+          //   label="Label"
+          //   name="label"
+          //   placeholder="Enter a label..."
+          //   aria-label="Label for firewall rule"
+          //   value={values.label}
+          //   errorText={errors.label}
+          //   onChange={handleTextFieldChange}
+          //   onBlur={handleBlur}
+          // />
+          // <TextField
+          //   label="Description"
+          //   name="description"
+          //   placeholder="Enter a description..."
+          //   aria-label="Description for firewall rule"
+          //   value={values.description}
+          //   errorText={errors.description}
+          //   onChange={handleTextFieldChange}
+          //   onBlur={handleBlur}
+          // />
+          /* -- Clanode Change End -- */
+        }
         <Select
           label="Protocol"
           name="protocol"
@@ -514,11 +520,13 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             placeholder={ipFieldPlaceholder}
           />
         )}
-        <div className={classes.actionSection}>
+
+        {/* -- Clanode Change -- */
+        /*<div className={classes.actionSection}>
           <Typography>
             <strong>Action</strong>
           </Typography>
-
+          
           <RadioGroup
             aria-label="action"
             name="action"
@@ -537,7 +545,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
               policy.
             </Typography>
           </RadioGroup>
-        </div>
+        </div>*/
+        /* -- Clanode Change End -- */}
 
         <ActionsPanel>
           <Button

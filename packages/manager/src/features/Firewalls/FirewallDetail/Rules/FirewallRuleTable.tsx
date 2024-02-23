@@ -279,7 +279,9 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           <PolicyRow
             category={category}
             policy={policy}
-            disabled={disabled}
+            disabled={
+              /* -- Clanode Change -- */ /* disabled */ true /* -- Clanode Change End -- */
+            }
             handlePolicyChange={onPolicyChange}
           />
         </TableFooter>
@@ -349,7 +351,10 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       >
         <TableCell className={classes.labelCol}>
           <DragIndicator className={classes.dragIcon} />
-          {label || (
+          {
+            label || ''
+            /* -- Clanode Change -- */
+            /*(
             <button
               className={classes.addLabelButton}
               style={{ color: disabled ? 'inherit' : '' }}
@@ -358,7 +363,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             >
               Add a label
             </button>
-          )}
+          )*/
+            /* -- Clanode Change End -- */
+          }
         </TableCell>
         <Hidden mdDown>
           <TableCell>
