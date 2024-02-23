@@ -177,19 +177,19 @@ export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
  * returned. Otherwise, `null` is returned.
  *
  * @param scopes - Permission scopes for which to check access levels.
- * @param exceptions - Permission scopes for which to exclude for the access level check. (e.g. they have a different default)
+ * @param excludedScopeNames - Permission scopes for which to exclude for the access level check. (e.g. they have a different default)
  *
  * @returns Access level for the given scopes if they are all the same; `null` otherwise.
  */
 export const allScopesAreTheSame = (
   scopes: Permission[],
-  exceptions?: string[]
+  excludedScopeNames?: string[]
 ) => {
   const sample = scopes[0];
 
   // Remove any scopes not to be included in the comparison.
   const filteredScopes = scopes.filter(
-    (scope: Permission) => !exceptions?.includes(scope[0])
+    (scope: Permission) => !excludedScopeNames?.includes(scope[0])
   );
 
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];

@@ -343,8 +343,8 @@ describe('APIToken utils', () => {
         ['volumes', 1],
         ['vpc', 0],
       ];
-      const exclusions = ['vpc', 'longview'];
-      expect(allScopesAreTheSame(scopes, exclusions)).toBe(1);
+      const excludedScopeNames = ['vpc', 'longview'];
+      expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
     });
   });
 });
