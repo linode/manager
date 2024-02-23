@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 
+import { ExcludedScope } from './CreateAPITokenDrawer';
 import {
   Permission,
   allScopesAreTheSame,
@@ -343,7 +344,10 @@ describe('APIToken utils', () => {
         ['volumes', 1],
         ['vpc', 0],
       ];
-      const excludedScopeNames = ['vpc', 'longview'];
+      const excludedScopeNames: ExcludedScope[] = [
+        { accessLevelToExcludeFrom: 1, name: 'vpc' },
+        { accessLevelToExcludeFrom: 1, name: 'longview' },
+      ];
       expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
     });
   });

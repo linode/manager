@@ -74,6 +74,11 @@ export const genExpiryTups = (): Expiry[] => {
   ];
 };
 
+export interface ExcludedScope {
+  accessLevelToExcludeFrom: number;
+  name: string;
+}
+
 interface RadioButton extends HTMLInputElement {
   name: string;
 }
@@ -180,7 +185,13 @@ export const CreateAPITokenDrawer = (props: Props) => {
     form.setFieldValue('expiry', e.value);
   };
 
-  const excludedScopesFromSelectAll = ['vpc'];
+  // Permission scopes with a different default when Selecting All for the specified access level.
+  const excludedScopesFromSelectAll: ExcludedScope[] = [
+    {
+      accessLevelToExcludeFrom: 1,
+      name: 'vpc',
+    },
+  ];
 
   const indexOfColumnWhereAllAreSelected = allScopesAreTheSame(
     form.values.scopes,

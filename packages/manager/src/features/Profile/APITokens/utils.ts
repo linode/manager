@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 
 import { isPast } from 'src/utilities/isPast';
 
+import { ExcludedScope } from './CreateAPITokenDrawer';
+
 export type Permission = [string, number];
 
 export const basePerms = [
@@ -177,19 +179,25 @@ export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
  * returned. Otherwise, `null` is returned.
  *
  * @param scopes - Permission scopes for which to check access levels.
- * @param excludedScopeNames - Permission scopes for which to exclude for the access level check. (e.g. they have a different default)
+ * @param excludedScopes - Permission scopes for which to exclude from the access level check. (e.g. they have a different default)
+ * Example: { name: 'vpc', accessLevelToExcludeFrom: 1 } would not check the VPC scope for the Read Only column.
  *
  * @returns Access level for the given scopes if they are all the same; `null` otherwise.
  */
 export const allScopesAreTheSame = (
   scopes: Permission[],
-  excludedScopeNames?: string[]
+  excludedScopes?: ExcludedScope[]
 ) => {
   const sample = scopes[0];
 
   // Remove any scopes not to be included in the comparison.
   const filteredScopes = scopes.filter(
-    (scope: Permission) => !excludedScopeNames?.includes(scope[0])
+    (scope: Permission) =>
+      !excludedScopes?.find(
+        (excludedScope) =>
+          excludedScope.name === scope[0] &&
+          excludedScope.accessLevelToExcludeFrom === sample[1]
+      )
   );
 
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
