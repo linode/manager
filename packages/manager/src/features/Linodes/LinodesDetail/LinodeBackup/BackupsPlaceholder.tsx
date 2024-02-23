@@ -63,6 +63,7 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
             onClick: () => setDialogOpen(true),
           },
         ]}
+        data-testid="backups"
         icon={VolumeIcon}
         isEntity
         renderAsSecondary

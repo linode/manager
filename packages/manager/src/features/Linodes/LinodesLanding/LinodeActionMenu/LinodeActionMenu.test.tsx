@@ -125,6 +125,17 @@ describe('LinodeActionMenu', () => {
         'true'
       );
     });
+    it('should disable the clone action if the Linode is in an edge region', async () => {
+      const propsWithEdge = {
+        ...props,
+        linodeRegion: 'us-edge-1',
+      };
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...propsWithEdge} />
+      );
+      await userEvent.click(getByLabelText(/^Action menu for/));
+      expect(getByTestId('Clone')).toHaveAttribute('aria-disabled', 'true');
+    });
   });
 
   describe('buildQueryStringForLinodeClone', () => {
