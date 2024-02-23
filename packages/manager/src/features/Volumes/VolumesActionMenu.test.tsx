@@ -17,6 +17,7 @@ const props: Props = {
     handleDetails: vi.fn(),
     handleEdit: vi.fn(),
     handleResize: vi.fn(),
+    handleUpgrade: vi.fn(),
   },
   isVolumesLanding: true,
   volume,

@@ -1,11 +1,13 @@
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { volumeFactory } from 'src/factories';
+import { notificationFactory, volumeFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import { VolumeTableRow } from './VolumeTableRow';
 import { ActionHandlers } from './VolumesActionMenu';
+import { VolumeTableRow } from './VolumeTableRow';
 
 const attachedVolume = volumeFactory.build({
   linode_id: 0,
@@ -26,6 +28,7 @@ const handlers: ActionHandlers = {
   handleDetails: vi.fn(),
   handleEdit: vi.fn(),
   handleResize: vi.fn(),
+  handleUpgrade: vi.fn(),
 };
 
 describe('Volume table row', () => {
@@ -60,6 +63,46 @@ describe('Volume table row', () => {
 
     // Make sure there is an attach button
     expect(getByText('Attach'));
+  });
+
+  it('should should render an upgrade chip if the volume is eligible for an upgrade', async () => {
+    const volume = volumeFactory.build({ id: 5 });
+    const notification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
+      type: 'volume_migration_scheduled',
+    });
+
+    server.use(
+      rest.get('*/account/notifications', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([notification])));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
+    );
+
+    await findByText('UPGRADE TO NVMe');
+  });
+
+  it('should should render an "UPGRADE PENDING" chip if the volume upgrade is imminent', async () => {
+    const volume = volumeFactory.build({ id: 5 });
+    const notification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
+      type: 'volume_migration_imminent',
+    });
+
+    server.use(
+      rest.get('*/account/notifications', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([notification])));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
+    );
+
+    await findByText('UPGRADE PENDING');
   });
 });
 

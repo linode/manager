@@ -1,24 +1,24 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
+import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
 
+import type { Event, Volume } from '@linode/api-v4';
+
 export const useStyles = makeStyles()({
-  chipWrapper: {
-    alignSelf: 'center',
-  },
   volumePath: {
     width: '35%',
     wordBreak: 'break-all',
@@ -31,30 +31,6 @@ interface Props {
   volume: Volume;
 }
 
-export const progressFromEvent = (e?: Event) => {
-  if (!e) {
-    return undefined;
-  }
-
-  if (e.status === 'started' && e.percent_complete) {
-    return e.percent_complete;
-  }
-
-  return undefined;
-};
-
-export const isVolumeUpdating = (e?: Event) => {
-  // Make Typescript happy, since this function can otherwise technically return undefined
-  if (!e) {
-    return false;
-  }
-  return (
-    e &&
-    ['volume_attach', 'volume_create', 'volume_detach'].includes(e.action) &&
-    ['scheduled', 'started'].includes(e.status)
-  );
-};
-
 export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   active: 'active',
   creating: 'other',
@@ -63,12 +39,85 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   resizing: 'other',
 };
 
+/**
+ * Given an in-progress event and a volume's status, this function
+ * returns a volume's status with event info taken into account.
+ *
+ * We do this to provide users with a real-time feeling experience
+ * without having to refetch a volume's status agressivly.
+ *
+ * @param status The actual volume status from the volumes endpoint
+ * @param event An in-progress event for the volume
+ * @returns a volume status
+ */
+const getDerivedVolumeStatusFromStatusAndEvent = (
+  status: Volume['status'],
+  event: Event | undefined
+): Volume['status'] => {
+  if (event === undefined) {
+    return status;
+  }
+
+  if (event.action === 'volume_migrate' && event.status === 'started') {
+    return 'migrating';
+  }
+
+  return status;
+};
+
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
   const { handlers, isDetailsPageRow, volume } = props;
 
   const isVolumesLanding = !isDetailsPageRow;
+
+  const { data: notifications } = useNotificationsQuery();
+  const { data: inProgressEvents } = useInProgressEvents();
+
+  /**
+   * Once a migration is scheduled by Linode and eligible for an upgrade,
+   * the customer will receive a `volume_migration_scheduled` notification
+   */
+  const isEligibleForUpgradeToNVMe = notifications?.some(
+    (notification) =>
+      notification.type === 'volume_migration_scheduled' &&
+      notification.entity?.id === volume.id
+  );
+
+  /**
+   * Once a migration's scheduled date has passed, the customer will receive
+   * a `volume_migration_imminent` notification instead of the `volume_migration_scheduled` notification.
+   *
+   * This means that the migration will start when it gets picked up by a backend worker.
+   * The volume's status is set to `migrating` and a `volume_migrate` event is created.
+   */
+  const isNVMeUpgradeImminent = notifications?.some(
+    (notification) =>
+      notification.type === 'volume_migration_imminent' &&
+      notification.entity?.id === volume.id
+  );
+
+  const mostRecentVolumeEvent = inProgressEvents?.find(
+    (event) => event.entity?.id === volume.id && event.entity.type === 'volume'
+  );
+
+  const volumeStatus = getDerivedVolumeStatusFromStatusAndEvent(
+    volume.status,
+    mostRecentVolumeEvent
+  );
+
+  const isVolumeMigrating = volumeStatus === 'migrating';
+
+  const handleUpgrade = () => {
+    if (isDetailsPageRow) {
+      // If we try to upgrade a volume from the Linode details page, we
+      // open a dialog that makes the user upgrade all of the attached volumes at once.
+      // @todo add this
+    } else {
+      handlers.handleUpgrade();
+    }
+  };
 
   const regionLabel =
     regions?.find((r) => r.id === volume.region)?.label ?? volume.region;
@@ -85,25 +134,36 @@ export const VolumeTableRow = React.memo((props: Props) => {
           }}
         >
           {volume.label}
+          {isEligibleForUpgradeToNVMe && (
+            <Chip
+              clickable
+              label="UPGRADE TO NVMe"
+              onClick={handleUpgrade}
+              size="small"
+            />
+          )}
+          {isNVMeUpgradeImminent && !isVolumeMigrating && (
+            <Chip color="default" label="UPGRADE PENDING" size="small" />
+          )}
         </Box>
       </TableCell>
       <TableCell statusCell>
-        <StatusIcon status={volumeStatusIconMap[volume.status]} />
-        {volume.status.replace('_', ' ')}
+        <StatusIcon status={volumeStatusIconMap[volumeStatus]} />
+        {volumeStatus}
       </TableCell>
-      {isVolumesLanding && volume.region ? (
+      {isVolumesLanding && (
         <TableCell data-qa-volume-region data-testid="region" noWrap>
           {regionLabel}
         </TableCell>
-      ) : null}
+      )}
       <TableCell data-qa-volume-size>{volume.size} GB</TableCell>
-      {!isVolumesLanding ? (
+      {!isVolumesLanding && (
         <Hidden smDown>
           <TableCell className={classes.volumePath} data-qa-fs-path>
             {volume.filesystem_path}
           </TableCell>
         </Hidden>
-      ) : null}
+      )}
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={volume.linode_label}>
           {volume.linode_id !== null ? (
