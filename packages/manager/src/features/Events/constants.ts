@@ -16,7 +16,7 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'database_delete',
   'database_update_failed',
   'database_update',
-  'database_scale',
+  'database_resize',
   'disk_create',
   'disk_delete',
   'disk_duplicate',
