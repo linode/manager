@@ -13,6 +13,7 @@ import { TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 
@@ -77,6 +78,12 @@ export const LinodeEntityDetailHeader = (
     type,
     variant,
   } = props;
+
+  const isLinodesReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
+  });
 
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
@@ -186,14 +193,14 @@ export const LinodeEntityDetailHeader = (
               handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
             buttonType="secondary"
-            disabled={!(isRunning || isOffline)}
+            disabled={!(isRunning || isOffline) || isLinodesReadOnly}
             sx={sxActionItem}
           >
             {isRunning ? 'Power Off' : 'Power On'}
           </Button>
           <Button
             buttonType="secondary"
-            disabled={isOffline}
+            disabled={isOffline || isLinodesReadOnly}
             onClick={() => handlers.onOpenPowerDialog('Reboot')}
             sx={sxActionItem}
           >
@@ -204,6 +211,7 @@ export const LinodeEntityDetailHeader = (
               handleConsoleButtonClick(linodeId);
             }}
             buttonType="secondary"
+            disabled={isLinodesReadOnly}
             sx={sxActionItem}
           >
             Launch LISH Console

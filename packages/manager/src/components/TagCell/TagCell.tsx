@@ -1,6 +1,6 @@
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
@@ -13,6 +13,7 @@ import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { AddTag } from './AddTag';
 
 interface TagCellProps {
+  disabled?: boolean;
   listAllTags: (tags: string[]) => void;
   sx?: SxProps;
   tags: string[];
@@ -35,7 +36,7 @@ const checkOverflow = (el: any) => {
 };
 
 const TagCell = (props: TagCellProps) => {
-  const { sx, tags, updateTags } = props;
+  const { disabled, sx, tags, updateTags } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -110,6 +111,7 @@ const TagCell = (props: TagCellProps) => {
           ) : null}
           <StyledTagButton
             buttonType="outlined"
+            disabled={disabled}
             endIcon={<StyledPlusIcon />}
             onClick={() => setAddingTag(true)}
             title="Add a tag"

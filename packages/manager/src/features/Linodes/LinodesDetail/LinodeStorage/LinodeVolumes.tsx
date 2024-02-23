@@ -1,10 +1,10 @@
 import { Volume } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -22,7 +22,9 @@ import { DetachVolumeDialog } from 'src/features/Volumes/DetachVolumeDialog';
 import { EditVolumeDrawer } from 'src/features/Volumes/EditVolumeDrawer';
 import { ResizeVolumeDrawer } from 'src/features/Volumes/ResizeVolumeDrawer';
 import { VolumeDetailsDrawer } from 'src/features/Volumes/VolumeDetailsDrawer';
+import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawer/LinodeVolumeAddDrawer';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -30,8 +32,6 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 import { StyledRootGrid, StyledTypography } from './CommonLinodeStorage.styles';
-import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawer/LinodeVolumeAddDrawer';
-
 export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = () => {
@@ -39,6 +39,12 @@ export const LinodeVolumes = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
+
+  const isLinodesReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id,
+  });
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -168,11 +174,13 @@ export const LinodeVolumes = () => {
           <StyledTypography variant="h3">Volumes</StyledTypography>
         </Grid>
         <StyledNewWrapperGrid>
-          <AddNewLink
-            disabled={false}
-            label="Create Volume"
+          <Button
+            buttonType="primary"
+            disabled={isLinodesReadOnly}
             onClick={handleCreateVolume}
-          />
+          >
+            Create Volume
+          </Button>
         </StyledNewWrapperGrid>
       </StyledRootGrid>
       <Table>

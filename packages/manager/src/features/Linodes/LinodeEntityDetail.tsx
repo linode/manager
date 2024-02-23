@@ -1,7 +1,10 @@
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
+import { Notice } from 'src/components/Notice/Notice';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -64,6 +67,12 @@ export const LinodeEntityDetail = (props: Props) => {
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
+  const isLinodesReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linode.id,
+  });
+
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
@@ -83,55 +92,67 @@ export const LinodeEntityDetail = (props: Props) => {
   const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
   return (
-    <EntityDetail
-      body={
-        <LinodeEntityDetailBody
-          configInterfaceWithVPC={configInterfaceWithVPC}
-          displayVPCSection={showVPCs}
-          gbRAM={linode.specs.memory / 1024}
-          gbStorage={linode.specs.disk / 1024}
-          ipv4={linode.ipv4}
-          ipv6={trimmedIPv6}
-          isVPCOnlyLinode={isVPCOnlyLinode}
-          linodeId={linode.id}
-          linodeLabel={linode.label}
-          numCPUs={linode.specs.vcpus}
-          numVolumes={numberOfVolumes}
-          region={linode.region}
-          vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
+    <>
+      {isLinodesReadOnly && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'Linodes',
+          })}
+          important
+          variant="warning"
         />
-      }
-      footer={
-        <LinodeEntityDetailFooter
-          linodeCreated={linode.created}
-          linodeId={linode.id}
-          linodeLabel={linode.label}
-          linodePlan={linodePlan}
-          linodeRegionDisplay={linodeRegionDisplay}
-          linodeTags={linode.tags}
-          openTagDrawer={openTagDrawer}
-        />
-      }
-      header={
-        <LinodeEntityDetailHeader
-          backups={linode.backups}
-          configs={configs}
-          enableVPCLogic={showVPCs}
-          handlers={handlers}
-          image={linode.image ?? 'Unknown Image'}
-          imageVendor={imageVendor}
-          isSummaryView={isSummaryView}
-          linodeId={linode.id}
-          linodeLabel={linode.label}
-          linodeRegionDisplay={linodeRegionDisplay}
-          linodeStatus={linode.status}
-          openNotificationMenu={notificationContext.openMenu}
-          progress={progress}
-          transitionText={transitionText}
-          type={type ?? null}
-          variant={variant}
-        />
-      }
-    />
+      )}
+      <EntityDetail
+        body={
+          <LinodeEntityDetailBody
+            configInterfaceWithVPC={configInterfaceWithVPC}
+            displayVPCSection={showVPCs}
+            gbRAM={linode.specs.memory / 1024}
+            gbStorage={linode.specs.disk / 1024}
+            ipv4={linode.ipv4}
+            ipv6={trimmedIPv6}
+            isVPCOnlyLinode={isVPCOnlyLinode}
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            numCPUs={linode.specs.vcpus}
+            numVolumes={numberOfVolumes}
+            region={linode.region}
+            vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
+          />
+        }
+        footer={
+          <LinodeEntityDetailFooter
+            isLinodesReadOnly
+            linodeCreated={linode.created}
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            linodePlan={linodePlan}
+            linodeRegionDisplay={linodeRegionDisplay}
+            linodeTags={linode.tags}
+            openTagDrawer={openTagDrawer}
+          />
+        }
+        header={
+          <LinodeEntityDetailHeader
+            backups={linode.backups}
+            configs={configs}
+            enableVPCLogic={showVPCs}
+            handlers={handlers}
+            image={linode.image ?? 'Unknown Image'}
+            imageVendor={imageVendor}
+            isSummaryView={isSummaryView}
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            linodeRegionDisplay={linodeRegionDisplay}
+            linodeStatus={linode.status}
+            openNotificationMenu={notificationContext.openMenu}
+            progress={progress}
+            transitionText={transitionText}
+            type={type ?? null}
+            variant={variant}
+          />
+        }
+      />
+    </>
   );
 };
