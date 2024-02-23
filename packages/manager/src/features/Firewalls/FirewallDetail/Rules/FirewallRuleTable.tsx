@@ -352,8 +352,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <TableCell className={classes.labelCol}>
           <DragIndicator className={classes.dragIcon} />
           {
-            label ||
-              '' /*(
+            label || ''
+            /* -- Clanode Change -- */
+            /*(
             <button
               className={classes.addLabelButton}
               style={{ color: disabled ? 'inherit' : '' }}
@@ -363,7 +364,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
               Add a label
             </button>
           )*/
-            /* -- Clanode Change -- */
             /* -- Clanode Change End -- */
           }
         </TableCell>
