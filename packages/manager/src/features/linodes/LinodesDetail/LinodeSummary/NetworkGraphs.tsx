@@ -130,14 +130,14 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
     )
   );
 
-  const v6totalTraffic: TotalTrafficProps = map(
-    formatTotalTraffic,
-    getTotalTraffic(
-      v6Metrics.publicIn.total,
-      v6Metrics.publicOut.total,
-      v6Metrics.publicIn.length
-    )
-  );
+  // const v6totalTraffic: TotalTrafficProps = map(
+  //   formatTotalTraffic,
+  //   getTotalTraffic(
+  //     v6Metrics.publicIn.total,
+  //     v6Metrics.publicOut.total,
+  //     v6Metrics.publicIn.length
+  //   )
+  // );
 
   // Convert to bytes, which is what generateNetworkUnits expects.
   const maxV4InBytes =
@@ -150,14 +150,14 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   const v4Unit = generateNetworkUnits(maxV4InBytes);
 
   // Convert to bytes, which is what generateNetworkUnits expects.
-  const maxV6InBytes =
-    Math.max(
-      v6Metrics.publicIn.max,
-      v6Metrics.publicOut.max,
-      v6Metrics.privateIn.max,
-      v6Metrics.privateOut.max
-    ) / 8;
-  const v6Unit = generateNetworkUnits(maxV6InBytes);
+  // const maxV6InBytes =
+  //   Math.max(
+  //     v6Metrics.publicIn.max,
+  //     v6Metrics.publicOut.max,
+  //     v6Metrics.privateIn.max,
+  //     v6Metrics.privateOut.max
+  //   ) / 8;
+  // const v6Unit = generateNetworkUnits(maxV6InBytes);
 
   const commonGraphProps = {
     timezone: props.timezone,
@@ -170,7 +170,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
     <Grid container className={`${classes.graphGrids} p0`}>
       <Grid item className={classes.grid} xs={12}>
         <StatsPanel
-          title={`Network — IPv4 (${v4Unit}/s)`}
+          title={`Network Usage`}
           renderBody={() => (
             <Graph
               data={v4Data}
@@ -183,7 +183,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           {...rest}
         />
       </Grid>
-      <Grid item className={classes.grid} xs={12}>
+      {/* <Grid item className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv6 (${v6Unit}/s)`}
           renderBody={() => (
@@ -197,7 +197,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           )}
           {...rest}
         />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
@@ -243,8 +243,8 @@ const Graph: React.FC<GraphProps> = (props) => {
 
   const convertedPublicIn = data.publicIn;
   const convertedPublicOut = data.publicOut;
-  const convertedPrivateIn = data.privateIn;
-  const convertedPrivateOut = data.privateOut;
+  // const convertedPrivateIn = data.privateIn;
+  // const convertedPrivateOut = data.privateOut;
 
   return (
     <LineGraph
@@ -267,18 +267,18 @@ const Graph: React.FC<GraphProps> = (props) => {
           data: convertedPublicOut,
           label: 'Public Out',
         },
-        {
-          borderColor: 'transparent',
-          backgroundColor: theme.graphs.purple,
-          data: convertedPrivateIn,
-          label: 'Private In',
-        },
-        {
-          borderColor: 'transparent',
-          backgroundColor: theme.graphs.yellow,
-          data: convertedPrivateOut,
-          label: 'Private Out',
-        },
+        // {
+        //   borderColor: 'transparent',
+        //   backgroundColor: theme.graphs.purple,
+        //   data: convertedPrivateIn,
+        //   label: 'Private In',
+        // },
+        // {
+        //   borderColor: 'transparent',
+        //   backgroundColor: theme.graphs.yellow,
+        //   data: convertedPrivateOut,
+        //   label: 'Private Out',
+        // },
       ]}
       legendRows={[
         {
@@ -289,14 +289,14 @@ const Graph: React.FC<GraphProps> = (props) => {
           data: metrics.publicOut,
           format,
         },
-        {
-          data: metrics.privateIn,
-          format,
-        },
-        {
-          data: metrics.privateOut,
-          format,
-        },
+        // {
+        //   data: metrics.privateIn,
+        //   format,
+        // },
+        // {
+        //   data: metrics.privateOut,
+        //   format,
+        // },
       ]}
     />
   );

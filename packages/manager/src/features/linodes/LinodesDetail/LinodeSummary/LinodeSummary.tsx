@@ -200,13 +200,13 @@ const LinodeSummary: React.FC<Props> = (props) => {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.diskIO.read,
             data: data.io,
-            label: 'I/O Rate',
+            label: 'Swap In Rate',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.diskIO.swap,
             data: data.swap,
-            label: 'Swap Rate',
+            label: 'Swap Out Rate',
           },
         ]}
         legendRows={[
@@ -288,7 +288,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
           />
         </Grid>
         {!isBareMetalInstance ? (
-          <Grid container item xs={12} className={`${classes.graphGrids} p0`}>
+          <Grid item xs={12} className={`${classes.graphGrids} p0`}>
             <Grid item className={classes.grid} xs={12}>
               <StatsPanel
                 title="CPU (%)"
@@ -298,7 +298,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
             </Grid>
             <Grid item className={classes.grid} xs={12}>
               <StatsPanel
-                title="Disk IO (blocks/s)"
+                title="Disk Swap Rate (Bytes/s)"
                 renderBody={renderDiskIOChart}
                 {...chartProps}
               />
