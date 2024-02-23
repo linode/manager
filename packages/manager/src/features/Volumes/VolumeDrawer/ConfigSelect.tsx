@@ -37,11 +37,9 @@ export const ConfigSelect = React.memo((props: Props) => {
   });
 
   React.useEffect(() => {
-    if (configList?.length === 1) {
+    if (configList?.length === 1 && value === null) {
       const newValue = configList[0].value;
-      if (value !== newValue) {
-        onChange(configList[0].value);
-      }
+      onChange(newValue);
     }
   }, [configList, onChange, value]);
 
