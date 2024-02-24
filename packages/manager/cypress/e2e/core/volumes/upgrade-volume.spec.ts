@@ -86,6 +86,8 @@ describe('volume upgrade/migration', () => {
 
     cy.wait(['@getEvents', '@getVolumes', '@getNotifications']);
 
+    mockGetEvents([]);
+
     cy.findByText('active').should('be.visible');
 
     ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
@@ -174,6 +176,8 @@ describe('volume upgrade/migration', () => {
     mockGetNotifications([]).as('getNotifications');
 
     cy.wait(['@getEvents', '@getLinodeVolumes', '@getNotifications']);
+
+    mockGetEvents([]);
 
     cy.findByText('active').should('be.visible');
 
