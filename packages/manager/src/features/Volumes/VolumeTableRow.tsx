@@ -6,7 +6,6 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
@@ -14,9 +13,14 @@ import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions';
 
+import {
+  getDerivedVolumeStatusFromStatusAndEvent,
+  getEventProgress,
+  volumeStatusIconMap,
+} from './utils';
 import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
 
-import type { Event, Volume } from '@linode/api-v4';
+import type { Volume } from '@linode/api-v4';
 
 export const useStyles = makeStyles()({
   volumePath: {
@@ -30,61 +34,6 @@ interface Props {
   isDetailsPageRow?: boolean;
   volume: Volume;
 }
-
-export const volumeStatusIconMap: Record<Volume['status'], Status> = {
-  active: 'active',
-  creating: 'other',
-  migrating: 'other',
-  offline: 'inactive',
-  resizing: 'other',
-};
-
-/**
- * Given an in-progress event and a volume's status, this function
- * returns a volume's status with event info taken into account.
- *
- * We do this to provide users with a real-time feeling experience
- * without having to refetch a volume's status agressivly.
- *
- * @param status The actual volume status from the volumes endpoint
- * @param event An in-progress event for the volume
- * @returns a volume status
- */
-export const getDerivedVolumeStatusFromStatusAndEvent = (
-  status: Volume['status'],
-  event: Event | undefined
-): Volume['status'] => {
-  if (event === undefined) {
-    return status;
-  }
-
-  if (event.action === 'volume_migrate' && event.status === 'started') {
-    return 'migrating';
-  }
-
-  return status;
-};
-
-/**
- * Returns a nicely formated percentage from an event
- * only if the event is in progress and has a percentage.
- *
- * This allows us to show the user the progress of a
- * volume migration.
- *
- * @returns "(50%)" for example
- */
-export const getEventProgress = (event: Event | undefined) => {
-  if (
-    event === undefined ||
-    event.percent_complete === null ||
-    event.status !== 'started'
-  ) {
-    return null;
-  }
-
-  return `(${event.percent_complete}%)`;
-};
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();

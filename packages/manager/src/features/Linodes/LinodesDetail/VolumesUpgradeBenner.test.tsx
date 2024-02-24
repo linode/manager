@@ -5,10 +5,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  VolumesUpgradeBanner,
-  getUpgradeableVolumeIds,
-} from './VolumesUpgradeBanner';
+import { VolumesUpgradeBanner } from './VolumesUpgradeBanner';
 
 describe('VolumesUpgradeBanner', () => {
   it('should render if there is an upgradable volume', async () => {
@@ -66,35 +63,5 @@ describe('VolumesUpgradeBanner', () => {
     await findByText('Volumes attached to this Linode are eligible', {
       exact: false,
     });
-  });
-});
-
-describe('getUpgradeableVolumeIds', () => {
-  it('should return the id of volumes that have a corosponding upgrade notification', () => {
-    const volumes = [
-      volumeFactory.build({ id: 1 }),
-      volumeFactory.build({ id: 2 }),
-      volumeFactory.build({ id: 3 }),
-    ];
-
-    const notifications = [
-      notificationFactory.build({
-        entity: { id: 1 },
-        type: 'volume_migration_scheduled',
-      }),
-      notificationFactory.build({
-        entity: { id: 3 },
-        type: 'volume_migration_scheduled',
-      }),
-    ];
-
-    expect(getUpgradeableVolumeIds(volumes, notifications)).toStrictEqual([
-      1,
-      3,
-    ]);
-  });
-
-  it('should return an empty array given empty data', () => {
-    expect(getUpgradeableVolumeIds([], [])).toStrictEqual([]);
   });
 });

@@ -7,12 +7,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
+import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { getUpgradeableVolumeIds } from '../VolumesUpgradeBanner';
 
 import type { Linode } from '@linode/api-v4';
 
