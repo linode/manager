@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
@@ -50,7 +50,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
  * @param event An in-progress event for the volume
  * @returns a volume status
  */
-const getDerivedVolumeStatusFromStatusAndEvent = (
+export const getDerivedVolumeStatusFromStatusAndEvent = (
   status: Volume['status'],
   event: Event | undefined
 ): Volume['status'] => {
@@ -65,7 +65,16 @@ const getDerivedVolumeStatusFromStatusAndEvent = (
   return status;
 };
 
-const getEventProgress = (event: Event | undefined) => {
+/**
+ * Returns a nicely formated percentage from an event
+ * only if the event is in progress and has a percentage.
+ *
+ * This allows us to show the user the progress of a
+ * volume migration.
+ *
+ * @returns "(50%)" for example
+ */
+export const getEventProgress = (event: Event | undefined) => {
   if (
     event === undefined ||
     event.percent_complete === null ||
@@ -79,13 +88,15 @@ const getEventProgress = (event: Event | undefined) => {
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
-  const { data: regions } = useRegionsQuery();
   const { handlers, isDetailsPageRow, volume } = props;
 
-  const isVolumesLanding = !isDetailsPageRow;
+  const history = useHistory();
 
+  const { data: regions } = useRegionsQuery();
   const { data: notifications } = useNotificationsQuery();
   const { data: inProgressEvents } = useInProgressEvents();
+
+  const isVolumesLanding = !isDetailsPageRow;
 
   /**
    * Once a migration is scheduled by Linode and eligible for an upgrade,
@@ -122,10 +133,11 @@ export const VolumeTableRow = React.memo((props: Props) => {
   const isVolumeMigrating = volumeStatus === 'migrating';
 
   const handleUpgrade = () => {
-    if (isDetailsPageRow) {
-      // If we try to upgrade a volume from the Linode details page, we
-      // open a dialog that makes the user upgrade all of the attached volumes at once.
-      // @todo add this
+    if (volume.linode_id !== null) {
+      // If the volume is attached to a Linode, we force the user
+      // to upgrade all of the Linode's volumes at once.
+      // I don't like this, but this is how UX wanted it when this was first built.
+      history.push(`/linodes/${volume.linode_id}/storage?upgrade=true`);
     } else {
       handlers.handleUpgrade();
     }

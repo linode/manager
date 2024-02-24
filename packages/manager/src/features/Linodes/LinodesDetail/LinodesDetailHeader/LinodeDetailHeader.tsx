@@ -35,9 +35,11 @@ import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
+import { VolumesUpgradeBanner } from '../VolumesUpgradeBanner';
 import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
+import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 interface TagDrawerProps {
   open: boolean;
@@ -93,6 +95,7 @@ const LinodeDetailHeader = () => {
   const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
     false
   );
+  const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -225,6 +228,7 @@ const LinodeDetailHeader = () => {
       <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
       <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
+      <VolumesUpgradeBanner linodeId={linode.id} />
       <ProductInformationBanner bannerLocation="Linodes" />
       <LandingHeader
         breadcrumbProps={{
@@ -282,6 +286,11 @@ const LinodeDetailHeader = () => {
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
         open={migrateDialogOpen}
+      />
+      <UpgradeVolumesDialog
+        linode={linode}
+        onClose={closeDialogs}
+        open={isUpgradeVolumesDialogOpen}
       />
       <TagDrawer
         entityID={linode?.id}

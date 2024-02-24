@@ -1,13 +1,21 @@
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { notificationFactory, volumeFactory } from 'src/factories';
+import {
+  eventFactory,
+  notificationFactory,
+  volumeFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { ActionHandlers } from './VolumesActionMenu';
-import { VolumeTableRow } from './VolumeTableRow';
+import {
+  VolumeTableRow,
+  getDerivedVolumeStatusFromStatusAndEvent,
+  getEventProgress,
+} from './VolumeTableRow';
 
 const attachedVolume = volumeFactory.build({
   linode_id: 0,
@@ -138,5 +146,52 @@ describe('Volume table row - for linodes detail page', () => {
 
     // Make sure there is a detach button
     expect(getByText('Detach'));
+  });
+});
+
+describe('getDerivedVolumeStatusFromStatusAndEvent', () => {
+  it('should return the volume staus if no event exists', () => {
+    const volume = volumeFactory.build();
+    expect(
+      getDerivedVolumeStatusFromStatusAndEvent(volume.status, undefined)
+    ).toBe(volume.status);
+  });
+
+  it('should migrating if a migration event is in progress regardless of what the volume status actually is', () => {
+    const volume = volumeFactory.build({ status: 'active' });
+    const event = eventFactory.build({
+      action: 'volume_migrate',
+      status: 'started',
+    });
+
+    expect(getDerivedVolumeStatusFromStatusAndEvent(volume.status, event)).toBe(
+      'migrating'
+    );
+  });
+});
+
+describe('getEventProgress', () => {
+  it('should return null if the status is not "started"', () => {
+    const event = eventFactory.build({
+      percent_complete: 20,
+      status: 'finished',
+    });
+    expect(getEventProgress(event)).toBe(null);
+  });
+
+  it('should return null if the API does not return a percentage', () => {
+    const event = eventFactory.build({
+      percent_complete: null,
+      status: 'started',
+    });
+    expect(getEventProgress(event)).toBe(null);
+  });
+
+  it('should return a formatted percenatge if the API returns a percentage and the event is "started"', () => {
+    const event = eventFactory.build({
+      percent_complete: 25,
+      status: 'started',
+    });
+    expect(getEventProgress(event)).toBe('(25%)');
   });
 });
