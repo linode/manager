@@ -23,7 +23,7 @@ import { useAccountLoginsQuery } from 'src/queries/accountLogins';
 import { useProfile } from 'src/queries/profile';
 
 import AccountLoginsTableRow from './AccountLoginsTableRow';
-import { getAccessRestrictedText } from './utils';
+import { getRestrictedResourceText } from './utils';
 
 const preferenceKey = 'account-logins';
 
@@ -67,9 +67,10 @@ const AccountLogins = () => {
     filter
   );
   const { data: profile } = useProfile();
+  const isChildUser = profile?.user_type === 'child';
 
   const isRestrictedChildUser = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type === 'child'
+    flags.parentChildAccountAccess && isChildUser
   );
   const isAccountAccessRestricted =
     isRestrictedChildUser || profile?.restricted;
@@ -165,12 +166,14 @@ const AccountLogins = () => {
       />
     </>
   ) : (
-    <Notice important variant="warning">
-      {getAccessRestrictedText(
-        profile?.user_type,
-        flags.parentChildAccountAccess
-      )}
-    </Notice>
+    <Notice
+      text={getRestrictedResourceText({
+        isChildUser,
+        resourceType: 'Account',
+      })}
+      important
+      variant="warning"
+    />
   );
 };
 

@@ -5,10 +5,9 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
-import { getDisabledTooltipText } from 'src/features/Billing/billingUtils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
-import { useFlags } from 'src/hooks/useFlags';
-import { useGrants } from 'src/queries/profile';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import {
   BillingActionButton,
@@ -77,14 +76,13 @@ const ContactInformation = (props: Props) => {
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
-  const flags = useFlags();
-  const { data: grants } = useGrants();
+  const isChildUser = Boolean(profile?.user_type === 'child');
 
-  const isChildUser =
-    flags.parentChildAccountAccess && profile?.user_type === 'child';
-
-  const isRestrictedUser =
-    isChildUser || grants?.global.account_access === 'read_only';
+  const isReadOnly =
+    useRestrictedGlobalGrantCheck({
+      globalGrantType: 'account_access',
+      permittedGrantLevel: 'read_write',
+    }) || isChildUser;
 
   const handleEditDrawerOpen = React.useCallback(
     () => setEditContactDrawerOpen(true),
@@ -131,11 +129,6 @@ const ContactInformation = (props: Props) => {
       }),
   };
 
-  const conditionalTooltipText = getDisabledTooltipText({
-    isChildUser,
-    isRestrictedUser,
-  });
-
   return (
     <Grid md={6} xs={12}>
       <BillingPaper data-qa-contact-summary variant="outlined">
@@ -146,12 +139,16 @@ const ContactInformation = (props: Props) => {
               history.push('/account/billing/edit');
               handleEditDrawerOpen();
             }}
+            tooltipText={getRestrictedResourceText({
+              includeContactInfo: false,
+              isChildUser,
+              resourceType: 'Account',
+            })}
             data-testid="edit-contact-info"
             disableFocusRipple
             disableRipple
             disableTouchRipple
-            disabled={isRestrictedUser}
-            tooltipText={conditionalTooltipText}
+            disabled={isReadOnly}
           >
             {EDIT_BILLING_CONTACT}
           </BillingActionButton>
