@@ -13,32 +13,34 @@ export interface PlacementGroup {
   region: Region['id'];
   affinity_type: AffinityType;
   is_compliant: boolean;
-  linode_ids: number[];
-  strict: boolean;
+  linodes: {
+    linode: number;
+    is_compliant: boolean;
+  }[];
+  is_strict: boolean;
 }
 
 type PlacementGroupPayload = Pick<
   PlacementGroup,
-  'label' | 'affinity_type' | 'strict'
+  'id' | 'label' | 'affinity_type' | 'is_strict'
 >;
 
-export type LinodePlacementGroup = PlacementGroupPayload & {
-  id: number;
-};
+export type LinodePlacementGroup = PlacementGroupPayload;
 
-export type CreatePlacementGroupPayload = PlacementGroupPayload & {
+export type CreatePlacementGroupPayload = Omit<PlacementGroupPayload, 'id'> & {
   region: Region['id'];
 };
 
-export type RenamePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
+export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 
 /**
  * Since the API expects an array of ONE linode id, we'll use a tuple here.
  */
 export type AssignLinodesToPlacementGroupPayload = {
   linodes: [number];
-  strict: boolean;
+  compliant_only?: boolean;
 };
+
 export type UnassignLinodesFromPlacementGroupPayload = {
   linodes: [number];
 };

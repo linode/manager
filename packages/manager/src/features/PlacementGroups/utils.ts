@@ -12,7 +12,7 @@ import type {
 export const getPlacementGroupLinodeCount = (
   placementGroup: PlacementGroup
 ): number => {
-  return placementGroup.linode_ids.length;
+  return placementGroup.linodes.length;
 };
 
 interface HasPlacementGroupReachedCapacityOptions {
@@ -57,7 +57,7 @@ export const getLinodesFromAllPlacementGroups = (
   }
 
   const linodeIds = allPlacementGroups.reduce((acc, placementGroup) => {
-    return [...acc, ...placementGroup.linode_ids];
+    return [...acc, ...placementGroup.linodes.map((linode) => linode.linode)];
   }, []);
 
   return Array.from(new Set(linodeIds));

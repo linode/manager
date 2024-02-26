@@ -65,8 +65,8 @@ const props: AddonsPanelProps = {
       placement_group: {
         affinity_type: 'anti_affinity',
         id: 1,
+        is_strict: true,
         label: 'test',
-        strict: true,
       },
       region: 'us-central',
       specs: {
@@ -110,8 +110,8 @@ const props: AddonsPanelProps = {
       placement_group: {
         affinity_type: 'anti_affinity',
         id: 1,
+        is_strict: true,
         label: 'test',
-        strict: true,
       },
       region: 'ca-central',
       specs: {
@@ -154,8 +154,8 @@ const props: AddonsPanelProps = {
       placement_group: {
         affinity_type: 'anti_affinity',
         id: 1,
+        is_strict: true,
         label: 'test',
-        strict: true,
       },
       region: 'us-west',
       specs: {

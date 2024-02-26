@@ -27,8 +27,8 @@ export const linode1: Linode = {
   placement_group: {
     affinity_type: 'anti_affinity',
     id: 1,
+    is_strict: true,
     label: 'pg-1',
-    strict: true,
   },
   region: 'us-east',
   specs: {
@@ -72,8 +72,8 @@ export const linode2: Linode = {
   placement_group: {
     affinity_type: 'anti_affinity',
     id: 1,
+    is_strict: true,
     label: 'pg-1',
-    strict: true,
   },
   region: 'us-east',
   specs: {
@@ -117,8 +117,8 @@ export const linode3: Linode = {
   placement_group: {
     affinity_type: 'anti_affinity',
     id: 1,
+    is_strict: true,
     label: 'pg-1',
-    strict: true,
   },
   region: 'us-east',
   specs: {
@@ -162,8 +162,8 @@ export const linode4: Linode = {
   placement_group: {
     affinity_type: 'anti_affinity',
     id: 1,
+    is_strict: true,
     label: 'pg-1',
-    strict: true,
   },
   region: 'eu-west',
   specs: {

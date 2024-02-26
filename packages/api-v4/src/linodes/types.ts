@@ -24,7 +24,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  placement_group: LinodePlacementGroup;
+  placement_group?: LinodePlacementGroup; // If not in a placement group, this will be undefined
   type: string | null;
   status: LinodeStatus;
   updated: string;
@@ -340,7 +340,7 @@ export interface UserData {
 }
 
 export interface CreateLinodePlacementGroupPayload {
-  id?: number | null;
+  id: number;
   compliant_only?: boolean | null;
 }
 
