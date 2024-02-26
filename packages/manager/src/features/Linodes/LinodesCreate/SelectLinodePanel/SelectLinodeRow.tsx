@@ -80,7 +80,7 @@ export const SelectLinodeRow = (props: Props) => {
   if (linodeLoading || !linode) {
     return (
       <TableRow>
-        <TableCell colSpan={6}>
+        <TableCell colSpan={numCols}>
           <CircleProgress mini />
         </TableCell>
       </TableRow>
@@ -90,7 +90,7 @@ export const SelectLinodeRow = (props: Props) => {
   if (linodeError) {
     return (
       <TableRow data-testid="subnet-linode-row-error">
-        <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
+        <TableCell colSpan={numCols} style={{ paddingLeft: 10 }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
               data-qa-error-icon
@@ -148,6 +148,9 @@ export const SelectLinodeRow = (props: Props) => {
   );
 };
 
+// Keep up to date with number of columns
+export const numCols = 7;
+
 export const SelectLinodeTableRowHead = (props: {
   orderBy: Omit<OrderByProps<{}>, 'data'>;
   showPowerActions: boolean;
@@ -165,6 +168,7 @@ export const SelectLinodeTableRowHead = (props: {
       {...props}
     />
   );
+
   return (
     <TableRow>
       <TableCell sx={{ borderRight: 'none !important', width: '2%' }} />

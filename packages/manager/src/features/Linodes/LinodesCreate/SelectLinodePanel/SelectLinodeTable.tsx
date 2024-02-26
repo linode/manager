@@ -6,7 +6,11 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { RenderLinodeProps } from './SelectLinodePanel';
-import { SelectLinodeRow, SelectLinodeTableRowHead } from './SelectLinodeRow';
+import {
+  SelectLinodeRow,
+  SelectLinodeTableRowHead,
+  numCols,
+} from './SelectLinodeRow';
 
 export const SelectLinodeTable = ({
   disabled,
@@ -39,7 +43,7 @@ export const SelectLinodeTable = ({
           />
         ))
       ) : (
-        <TableRowEmpty colSpan={6} message={'No results'} />
+        <TableRowEmpty colSpan={numCols} message={'No results'} />
       )}
     </TableBody>
   </Table>
