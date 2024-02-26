@@ -11,14 +11,14 @@ import {
 } from './utils';
 
 describe('getDerivedVolumeStatusFromStatusAndEvent', () => {
-  it('should return the volume staus if no event exists', () => {
+  it('should return the volume status if no event exists', () => {
     const volume = volumeFactory.build();
     expect(
       getDerivedVolumeStatusFromStatusAndEvent(volume.status, undefined)
     ).toBe(volume.status);
   });
 
-  it('should migrating if a migration event is in progress regardless of what the volume status actually is', () => {
+  it('should return "migrating" if a migration event is in progress regardless of what the volume status actually is', () => {
     const volume = volumeFactory.build({ status: 'active' });
     const event = eventFactory.build({
       action: 'volume_migrate',

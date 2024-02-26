@@ -84,8 +84,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
   const handleUpgrade = () => {
     if (volume.linode_id !== null) {
       // If the volume is attached to a Linode, we force the user
-      // to upgrade all of the Linode's volumes at once.
-      // I don't like this, but this is how UX wanted it when this was first built.
+      // to upgrade all of the Linode's volumes at once from the Linode details page
       history.push(`/linodes/${volume.linode_id}/storage?upgrade=true`);
     } else {
       handlers.handleUpgrade();
