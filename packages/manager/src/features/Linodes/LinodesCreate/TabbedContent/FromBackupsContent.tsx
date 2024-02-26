@@ -9,6 +9,7 @@ import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { isEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { reportException } from 'src/exceptionReporting';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -90,14 +91,10 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       (thisLinode) => thisLinode.backups.enabled
     );
 
-    const linodeIsInEdgeRegion = (linodeRegion: string) =>
-      regionsData?.find((region) => region.id === linodeRegion)?.site_type ===
-      'edge';
-
     const filterLinodesWithBackups = (linodes: Linode[]) =>
       linodes.filter(
         (linode) =>
-          linode.backups.enabled && !linodeIsInEdgeRegion(linode.region) // Hide linodes that are in an edge region
+          linode.backups.enabled && !isEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
       );
 
     return (

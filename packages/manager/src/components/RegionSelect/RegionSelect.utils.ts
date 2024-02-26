@@ -201,7 +201,30 @@ export const useIsGeckoEnabled = (createType: LinodeCreateType) => {
     'StackScripts',
   ];
   return Boolean(
-    flags.gecko &&
-      !supportedEdgeTypes.includes(createType as SupportedEdgeTypes)
+    (flags.gecko &&
+      supportedEdgeTypes.includes(createType as SupportedEdgeTypes)) ||
+      typeof createType === 'undefined' // /linodes/create route
   );
+};
+
+/**
+ * Util to determine whether a selected region is an edge region.
+ *
+ * @returns a boolean indicating whether or not the selected region is an edge region.
+ */
+export const isEdgeRegion = (regionsData: Region[], selectedRegion: string) => {
+  return (
+    regionsData.find(
+      (region) =>
+        region.id === selectedRegion || region.label === selectedRegion
+    )?.site_type === 'edge'
+  );
+};
+
+export const useIsEdgeRegion = (
+  regionsData: Region[],
+  selectedRegion: string
+) => {
+  const flags = useFlags();
+  return Boolean(flags.gecko && isEdgeRegion(regionsData, selectedRegion));
 };

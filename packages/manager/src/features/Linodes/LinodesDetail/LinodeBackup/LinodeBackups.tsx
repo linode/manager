@@ -8,6 +8,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
+import { useIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -15,7 +16,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -37,7 +37,6 @@ export const LinodeBackups = () => {
 
   const history = useHistory();
 
-  const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
@@ -65,6 +64,11 @@ export const LinodeBackups = () => {
   ] = React.useState(false);
 
   const [selectedBackup, setSelectedBackup] = React.useState<LinodeBackup>();
+
+  const linodeIsInEdgeRegion = useIsEdgeRegion(
+    regions ?? [],
+    linode?.region ?? ''
+  );
 
   const handleDeploy = (backup: LinodeBackup) => {
     history.push(
@@ -96,11 +100,6 @@ export const LinodeBackups = () => {
   }
 
   if (!linode?.backups.enabled) {
-    const linodeIsInEdgeRegion =
-      flags.gecko &&
-      regions?.find((region) => region.id === linode?.region)?.site_type ===
-        'edge';
-
     return (
       <BackupsPlaceholder
         backupsMonthlyPrice={backupsMonthlyPrice}

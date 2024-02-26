@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { useIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import {
   ActionType,
   getRestrictedResourceText,
@@ -51,6 +52,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     linodeStatus,
     linodeType,
   } = props;
+
   const typesQuery = useSpecificTypes(linodeType?.id ? [linodeType.id] : []);
   const type = typesQuery[0]?.data;
   const extendedType = type ? extendType(type) : undefined;
@@ -79,10 +81,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     props.onOpenPowerDialog(action);
   };
 
-  const linodeIsInEdgeRegion =
-    regions?.find(
-      (region) => region.id === linodeRegion || region.label === linodeRegion
-    )?.site_type === 'edge';
+  const linodeIsInEdgeRegion = useIsEdgeRegion(regions, linodeRegion);
 
   const edgeRegionTooltipText =
     'Cloning is currently not supported for Edge instances.';

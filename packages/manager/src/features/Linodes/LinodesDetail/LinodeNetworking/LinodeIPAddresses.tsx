@@ -10,13 +10,13 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
+import { useIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useFlags } from 'src/hooks/useFlags';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
@@ -51,16 +51,15 @@ interface LinodeIPAddressesProps {
 export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { linodeID } = props;
 
-  const flags = useFlags();
   const { data: grants } = useGrants();
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
 
-  const linodeIsInEdgeRegion =
-    flags.gecko &&
-    regions?.find((region) => region.id === linode?.region)?.site_type ===
-      'edge';
+  const linodeIsInEdgeRegion = useIsEdgeRegion(
+    regions ?? [],
+    linode?.region ?? ''
+  );
 
   const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
   const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(

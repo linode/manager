@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { isEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
@@ -76,13 +77,9 @@ export const FromLinodeContent = (props: CombinedProps) => {
     }
   };
 
-  const linodeIsInEdgeRegion = (linodeRegion: string) =>
-    regionsData?.find((region) => region.id === linodeRegion)?.site_type ===
-    'edge';
-
   const filterEdgeLinodes = (linodes: Linode[]) =>
     linodes.filter(
-      (linode) => !linodeIsInEdgeRegion(linode.region) // Hide linodes that are in an edge region
+      (linode) => flags.gecko && !isEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
     );
 
   const filteredLinodes = filterEdgeLinodes(linodesData);
