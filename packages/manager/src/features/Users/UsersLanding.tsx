@@ -97,7 +97,7 @@ export const UsersLanding = () => {
             <UsersLandingTableBody
               error={proxyUserError}
               isLoading={isLoadingProxyUser}
-              numCols={numCols}
+              numCols={4}
               onDelete={handleDelete}
               users={proxyUser?.data}
             />
