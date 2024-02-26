@@ -1590,11 +1590,17 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
-    const placementGroupUpdatedEvent = eventFactory.buildList(1, {
-      action: 'placement_group_updated',
-      entity: { id: 999, label: 'PG-2', type: 'placement_group' },
-      message: 'Placement Group successfully updated.',
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
       percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
       status: 'notification',
     });
 
@@ -1604,7 +1610,7 @@ export const handlers = [
           ...events,
           ...dbEvents,
           ...oldEvents,
-          ...placementGroupUpdatedEvent,
+          ...placementGroupAssignedEvent,
           ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
