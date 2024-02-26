@@ -6,7 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
+import { DatabaseResizeCurrentConfiguration } from './DatabaseResizeCurrentConfiguration';
 
 const loadingTestId = 'circle-progress';
 
@@ -16,7 +16,7 @@ describe('database current configuration section', () => {
   const database = databaseFactory.build();
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseScaleUpCurrentConfiguration database={database} />
+      <DatabaseResizeCurrentConfiguration database={database} />
     );
 
     // Should render a loading state
@@ -46,7 +46,7 @@ describe('database current configuration section', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseScaleUpCurrentConfiguration database={database} />
+      <DatabaseResizeCurrentConfiguration database={database} />
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
