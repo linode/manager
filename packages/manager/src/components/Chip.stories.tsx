@@ -33,7 +33,7 @@ export const Custom: StoryObj<ChipProps> = {
     <Chip
       {...args}
       label="NVMe"
-      outlineColor="green"
+      sx={{ borderColor: 'green' }}
       size="small"
       variant="outlined"
     />
