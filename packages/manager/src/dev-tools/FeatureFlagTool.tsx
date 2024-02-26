@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -8,7 +9,6 @@ import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
-
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 const options: { flag: keyof Flags; label: string }[] = [
@@ -28,6 +28,7 @@ const options: { flag: keyof Flags; label: string }[] = [
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
+  const ldFlags = ldUseFlags();
 
   React.useEffect(() => {
     const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY);
@@ -46,6 +47,14 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       [flag]: e.target.checked,
     });
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, updatedFlags);
+  };
+
+  /**
+   * This will reset the flags values to the Launch Darkly defaults (as returned from the LD dev environment)
+   */
+  const resetFlags = () => {
+    dispatch(setMockFeatureFlags(ldFlags));
+    setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, '');
   };
 
   return (
@@ -75,6 +84,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
               </div>
             );
           })}
+          <button onClick={resetFlags} style={{ marginTop: 8 }}>
+            Reset default flags
+          </button>
         </div>
       </Grid>
     </Grid>

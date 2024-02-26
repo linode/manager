@@ -11,9 +11,10 @@ import { DateTime } from 'luxon';
 import { rest } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
+import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
-  abuseTicketNotificationFactory,
+  // abuseTicketNotificationFactory,
   accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
@@ -103,6 +104,7 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
+import { getStorage } from 'src/utilities/storage';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -1146,7 +1148,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(
+      ctx.json({
+        theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
+      })
+    );
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
@@ -1819,18 +1825,18 @@ export const handlers = [
       when: null,
     };
 
-    const emailBounce = notificationFactory.build({
-      body: null,
-      entity: null,
-      label: 'We are unable to send emails to your billing email address!',
-      message: 'We are unable to send emails to your billing email address!',
-      severity: 'major',
-      type: 'billing_email_bounce',
-      until: null,
-      when: null,
-    });
+    // const emailBounce = notificationFactory.build({
+    //   body: null,
+    //   entity: null,
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   type: 'billing_email_bounce',
+    //   until: null,
+    //   when: null,
+    // });
 
-    const abuseTicket = abuseTicketNotificationFactory.build();
+    // const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationNotification = notificationFactory.build({
       entity: { id: 0, label: 'linode-0', type: 'linode' },
@@ -1926,8 +1932,8 @@ export const handlers = [
           outageNotification,
           minorSeverityNotification,
           criticalSeverityNotification,
-          abuseTicket,
-          emailBounce,
+          // abuseTicket,
+          // emailBounce,
           migrationNotification,
           balanceNotification,
           blockStorageMigrationScheduledNotification,
