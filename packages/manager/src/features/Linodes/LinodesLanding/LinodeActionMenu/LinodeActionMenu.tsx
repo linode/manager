@@ -79,6 +79,12 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     props.onOpenPowerDialog(action);
   };
 
+  const linodeIsInEdgeRegion =
+    regions?.find((region) => region.id === linodeRegion)?.site_type === 'edge';
+
+  const edgeRegionTooltipText =
+    'Cloning is currently not supported for Edge instances.';
+
   const actionConfigs: ActionConfig[] = [
     {
       condition: isVisible,
@@ -117,7 +123,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: isLinodeReadOnly || hasHostMaintenance,
+      disabled: isLinodeReadOnly || hasHostMaintenance || linodeIsInEdgeRegion,
       isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
@@ -134,7 +140,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Clone',
       tooltipAction: 'clone',
-      tooltipText: maintenanceTooltipText,
+      tooltipText: linodeIsInEdgeRegion
+        ? edgeRegionTooltipText
+        : maintenanceTooltipText,
     },
     {
       condition: !isBareMetalInstance,
