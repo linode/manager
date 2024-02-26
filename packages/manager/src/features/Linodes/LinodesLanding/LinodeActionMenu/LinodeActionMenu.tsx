@@ -80,7 +80,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   };
 
   const linodeIsInEdgeRegion =
-    regions?.find((region) => region.id === linodeRegion)?.site_type === 'edge';
+    regions?.find(
+      (region) => region.id === linodeRegion || region.label === linodeRegion
+    )?.site_type === 'edge';
 
   const edgeRegionTooltipText =
     'Cloning is currently not supported for Edge instances.';
