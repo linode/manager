@@ -1,13 +1,19 @@
+import { Typography } from '@mui/material';
 import * as React from 'react';
 
+import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
+import { Link } from 'src/components/Link';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
+  StyledEdgeBox,
   StyledFlagContainer,
+  sxEdgeIcon,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
@@ -20,14 +26,17 @@ import type {
  * A specific select for regions.
  *
  * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
- * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. There is no need to
- * prefilter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Edge regions are filtered based on the `hideEdgeServers` prop.
+ * There is no need to pre-filter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ *
+ * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     currentCapability,
     disabled,
     errorText,
+    geckoEnabled,
     handleSelection,
     helperText,
     isClearable,
@@ -35,6 +44,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     regions,
     required,
     selectedId,
+    showGeckoHelperText,
     width,
   } = props;
 
@@ -74,9 +84,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        hideEdgeServers: !geckoEnabled,
         regions,
       }),
-    [accountAvailability, currentCapability, regions]
+    [accountAvailability, currentCapability, regions, geckoEnabled]
   );
 
   return (
@@ -95,18 +106,34 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             handleRegionChange(null);
           }
         }}
-        renderOption={(props, option, { selected }) => {
+        renderOption={(props, option) => {
           return (
             <RegionOption
+              displayEdgeServerIcon={
+                geckoEnabled && option.site_type === 'edge'
+              }
               key={option.value}
               option={option}
               props={props}
-              selected={selected}
             />
           );
         }}
+        sx={(theme) => ({
+          [theme.breakpoints.up('md')]: {
+            width: '416px',
+          },
+        })}
         textFieldProps={{
           InputProps: {
+            endAdornment: geckoEnabled &&
+              selectedRegion?.site_type === 'edge' && (
+                <TooltipIcon
+                  icon={<EdgeServer />}
+                  status="other"
+                  sxTooltipIcon={sxEdgeIcon}
+                  text="This region is an Edge server."
+                />
+              ),
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
@@ -132,6 +159,22 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         placeholder="Select a Region"
         value={selectedRegion}
       />
+      {showGeckoHelperText && ( // @TODO Gecko MVP: Add docs link
+        <StyledEdgeBox>
+          <EdgeServer />
+          <Typography
+            data-testid="region-select-edge-text"
+            sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
+          >
+            {' '}
+            Indicates an Edge server region.{' '}
+            <Link aria-label="Learn more about Akamai Edge servers" to="#">
+              Learn more
+            </Link>
+            .
+          </Typography>
+        </StyledEdgeBox>
+      )}
     </StyledAutocompleteContainer>
   );
 });

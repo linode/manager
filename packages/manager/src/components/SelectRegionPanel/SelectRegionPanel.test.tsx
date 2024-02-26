@@ -11,6 +11,7 @@ const pricingMocks = vi.hoisted(() => ({
 }));
 
 const queryParamMocks = vi.hoisted(() => ({
+  getQueryParamFromQueryString: vi.fn().mockReturnValue({}),
   getQueryParamsFromQueryString: vi.fn().mockReturnValue({}),
 }));
 
@@ -20,6 +21,7 @@ vi.mock('src/utilities/pricing/linodes', () => ({
 }));
 
 vi.mock('src/utilities/queryParams', () => ({
+  getQueryParamFromQueryString: queryParamMocks.getQueryParamFromQueryString,
   getQueryParamsFromQueryString: queryParamMocks.getQueryParamsFromQueryString,
 }));
 

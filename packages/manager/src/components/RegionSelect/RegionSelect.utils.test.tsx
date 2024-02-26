@@ -38,6 +38,17 @@ const regions: Region[] = [
   }),
 ];
 
+const regionsWithEdge = [
+  ...regions,
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-1',
+    label: 'Gecko Edge Test',
+    site_type: 'edge',
+  }),
+];
+
 const expectedRegions: RegionSelectOption[] = [
   {
     data: {
@@ -45,18 +56,21 @@ const expectedRegions: RegionSelectOption[] = [
       region: 'North America',
     },
     label: 'US Location (us-1)',
+    site_type: 'core',
     unavailable: false,
     value: 'us-1',
   },
   {
     data: { country: 'ca', region: 'North America' },
     label: 'CA Location (ca-1)',
+    site_type: 'core',
     unavailable: false,
     value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
     label: 'JP Location (jp-1)',
+    site_type: 'core',
     unavailable: false,
     value: 'jp-1',
   },
@@ -103,6 +117,39 @@ describe('getRegionOptions', () => {
 
     expect(result).toEqual(expectedRegions);
   });
+
+  it('should filter out edge regions if hideEdgeServers is true', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      hideEdgeServers: true,
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedRegions);
+  });
+
+  it('should not filter out edge regions if hideEdgeServers is false', () => {
+    const expectedRegionsWithEdge = [
+      {
+        data: { country: 'us', region: 'North America' },
+        label: 'Gecko Edge Test (us-edge-1)',
+        site_type: 'edge',
+        unavailable: false,
+        value: 'us-edge-1',
+      },
+      ...expectedRegions,
+    ];
+
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      hideEdgeServers: false,
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedRegionsWithEdge);
+  });
 });
 
 describe('getSelectedRegionById', () => {
@@ -123,6 +170,7 @@ describe('getSelectedRegionById', () => {
         region: 'North America',
       },
       label: 'US Location (us-1)',
+      site_type: 'core',
       unavailable: false,
       value: 'us-1',
     };
@@ -188,6 +236,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
+        site_type: 'core',
         unavailable: false,
         value: 'us-1',
       },
@@ -197,6 +246,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'CA Location (ca-1)',
+        site_type: 'core',
         unavailable: false,
         value: 'ca-1',
       },
@@ -222,6 +272,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
+        site_type: 'core',
         unavailable: false,
         value: 'us-1',
       },

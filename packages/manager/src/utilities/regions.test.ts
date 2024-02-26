@@ -13,6 +13,7 @@ describe('getRegionsByRegionId', () => {
         maximum_pgs_per_customer: 5,
         maximum_vms_per_pg: 10,
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
       {
@@ -23,6 +24,7 @@ describe('getRegionsByRegionId', () => {
         maximum_pgs_per_customer: 5,
         maximum_vms_per_pg: 10,
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
     ];
@@ -36,6 +38,7 @@ describe('getRegionsByRegionId', () => {
         maximum_pgs_per_customer: 5,
         maximum_vms_per_pg: 10,
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
       'us-southeast': {
@@ -46,6 +49,7 @@ describe('getRegionsByRegionId', () => {
         maximum_pgs_per_customer: 5,
         maximum_vms_per_pg: 10,
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
     };

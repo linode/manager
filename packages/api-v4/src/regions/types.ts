@@ -24,6 +24,8 @@ export interface DNSResolvers {
 
 export type RegionStatus = 'ok' | 'outage';
 
+export type RegionSite = 'core' | 'edge';
+
 export interface Region {
   id: string;
   label: string;
@@ -33,6 +35,7 @@ export interface Region {
   maximum_vms_per_pg: number;
   status: RegionStatus;
   resolvers: DNSResolvers;
+  site_type: RegionSite;
 }
 
 export interface RegionAvailability {

@@ -114,6 +114,12 @@ export const Autocomplete = <
           InputProps={{
             ...params.InputProps,
             ...textFieldProps?.InputProps,
+            endAdornment: (
+              <React.Fragment>
+                {textFieldProps?.InputProps?.endAdornment}
+                {params.InputProps.endAdornment}
+              </React.Fragment>
+            ),
           }}
         />
       )}

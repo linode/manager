@@ -103,6 +103,7 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export interface LinodeCreateProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -207,7 +208,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getQueryParamsFromQueryString(location.search);
 
-    const _tabs = [
+    const _tabs: LinodeCreateType[] = [
       'Distributions',
       'One-Click',
       'StackScripts',

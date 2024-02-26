@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
@@ -21,6 +22,8 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
+
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface SelectRegionPanelProps {
   currentCapability: Capabilities;
@@ -72,6 +75,18 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
+  const geckoEnabled = useIsGeckoEnabled(params.type as LinodeCreateType);
+
+  const showGeckoHelperText = Boolean(
+    geckoEnabled &&
+      currentCapability &&
+      regions.find(
+        (region) =>
+          region.site_type === 'edge' &&
+          region.capabilities.includes(currentCapability)
+      )
+  );
+
   if (props.regions.length === 0) {
     return null;
   }
@@ -116,10 +131,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         currentCapability={currentCapability}
         disabled={disabled}
         errorText={error}
+        geckoEnabled={geckoEnabled}
         handleSelection={handleSelection}
         helperText={helperText}
         regions={regions}
         selectedId={selectedId || null}
+        showGeckoHelperText={showGeckoHelperText}
       />
       {showClonePriceWarning && (
         <Notice
