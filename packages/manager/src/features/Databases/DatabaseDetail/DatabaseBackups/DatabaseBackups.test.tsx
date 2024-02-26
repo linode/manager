@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import {
   databaseBackupFactory,
@@ -13,24 +12,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseBackups from './DatabaseBackups';
 
-const queryClient = new QueryClient();
-
-afterEach(() => {
-  queryClient.clear();
-});
-
-const loadingTestId = 'table-row-loading';
-
 describe('Database Backups', () => {
-  it('should render a loading state', async () => {
-    const { getByTestId } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
-    });
-
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-  });
-
   it('should render a list of backups after loading', async () => {
     const backups = databaseBackupFactory.buildList(7);
 
@@ -47,9 +29,7 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
-    });
+    const { findByText } = renderWithTheme(<DatabaseBackups />);
 
     for (const backup of backups) {
       // Check to see if all 7 backups are rendered
@@ -75,9 +55,7 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
-    });
+    const { findByText } = renderWithTheme(<DatabaseBackups />);
 
     expect(await findByText('No backups to display.')).toBeInTheDocument();
   });

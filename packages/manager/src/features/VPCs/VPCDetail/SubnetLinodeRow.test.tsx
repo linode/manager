@@ -1,7 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import {
   LinodeConfigInterfaceFactory,
@@ -23,12 +22,7 @@ import {
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from '../constants';
 import { SubnetLinodeRow } from './SubnetLinodeRow';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 const mockFirewall0 = 'mock-firewall-0';
@@ -80,10 +74,7 @@ describe('SubnetLinodeRow', () => {
           linodeId={linodeFactory1.id}
           subnetId={0}
         />
-      ),
-      {
-        queryClient,
-      }
+      )
     );
 
     // Loading state should render
@@ -151,10 +142,7 @@ describe('SubnetLinodeRow', () => {
           linodeId={linodeFactory1.id}
           subnetId={0}
         />
-      ),
-      {
-        queryClient,
-      }
+      )
     );
 
     // Loading state should render
@@ -235,10 +223,7 @@ describe('SubnetLinodeRow', () => {
           subnet={subnet}
           subnetId={subnet.id}
         />
-      ),
-      {
-        queryClient,
-      }
+      )
     );
 
     // Loading state should render

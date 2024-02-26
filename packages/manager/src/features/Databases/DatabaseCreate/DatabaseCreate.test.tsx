@@ -1,7 +1,6 @@
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 import { Router } from 'react-router-dom';
 
 import { databaseTypeFactory } from 'src/factories';
@@ -12,28 +11,19 @@ import { mockMatchMedia } from 'src/utilities/testHelpers';
 
 import DatabaseCreate from './DatabaseCreate';
 
-const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 describe('Database Create', () => {
   it('should render loading state', () => {
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      queryClient,
-    });
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
   });
 
   it('should render inputs', async () => {
     const { getAllByTestId, getAllByText } = renderWithTheme(
-      <DatabaseCreate />,
-      {
-        queryClient,
-      }
+      <DatabaseCreate />
     );
     await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
 
@@ -74,10 +64,7 @@ describe('Database Create', () => {
     const { getAllByText, getByTestId } = renderWithTheme(
       <Router history={history}>
         <DatabaseCreate />
-      </Router>,
-      {
-        queryClient,
-      }
+      </Router>
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

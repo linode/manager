@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+
 import { linodeFactory } from 'src/factories/linodes';
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { Props, RescueDialog } from './RescueDialog';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });
@@ -53,10 +54,7 @@ describe('RescueDialog', () => {
     });
 
     const { getByText, getByTestId } = renderWithTheme(
-      <RescueDialog {...props} />,
-      {
-        queryClient: new QueryClient(),
-      }
+      <RescueDialog {...props} />
     );
 
     expect(getByText(/Rescue Linode/)).toBeInTheDocument();
@@ -73,10 +71,7 @@ describe('RescueDialog', () => {
     });
 
     const { getByText, queryByTestId } = renderWithTheme(
-      <RescueDialog {...props} linodeId={metalLinode.id} />,
-      {
-        queryClient: new QueryClient(),
-      }
+      <RescueDialog {...props} linodeId={metalLinode.id} />
     );
 
     expect(getByText(/Rescue Linode/)).toBeInTheDocument();

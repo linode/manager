@@ -1,14 +1,13 @@
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
+import { linodeTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
-import { linodeTypeFactory } from 'src/factories';
 
 import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
@@ -27,8 +26,6 @@ const propsWithResults: Props = {
   combinedResults: [searchbarResult1],
   searchResultsByEntity: { ...emptyResults, linodes: [searchbarResult1] },
 };
-
-const queryClient = new QueryClient();
 
 describe('Component', () => {
   beforeEach(() => {
@@ -54,8 +51,7 @@ describe('Component', () => {
       propsWithResults
     );
     const { getByTestId, getByText } = renderWithTheme(
-      <SearchLanding {...newProps} />,
-      { queryClient }
+      <SearchLanding {...newProps} />
     );
     await waitForElementToBeRemoved(getByTestId('loading'));
     getByText(/search/i);

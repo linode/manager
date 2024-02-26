@@ -1,6 +1,5 @@
 import { act, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { profileFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
@@ -45,9 +44,7 @@ describe('ObjectDetailsDrawer', () => {
         res(ctx.json(profileFactory.build({ timezone: 'utc' })))
       )
     );
-    const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />);
 
     // The date rendering depends on knowing the profile timezone
     await waitFor(() =>

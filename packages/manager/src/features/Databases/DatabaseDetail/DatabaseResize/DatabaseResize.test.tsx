@@ -5,7 +5,6 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 import { Router } from 'react-router-dom';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
@@ -15,13 +14,9 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
 
-const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 describe('database resize', () => {
   const database = databaseFactory.build();
@@ -31,10 +26,7 @@ describe('database resize', () => {
 
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseResize database={database} />,
-      {
-        queryClient,
-      }
+      <DatabaseResize database={database} />
     );
 
     // Should render a loading state
@@ -61,10 +53,7 @@ describe('database resize', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseResize database={database} />,
-      {
-        queryClient,
-      }
+      <DatabaseResize database={database} />
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -103,10 +92,7 @@ describe('database resize', () => {
 
     it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseResize database={database} />,
-        {
-          queryClient,
-        }
+        <DatabaseResize database={database} />
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       expect(
@@ -121,10 +107,7 @@ describe('database resize', () => {
       const { container, getByTestId, getByText } = renderWithTheme(
         <Router history={history}>
           <DatabaseResize database={database} />
-        </Router>,
-        {
-          queryClient,
-        }
+        </Router>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const getById = queryByAttribute.bind(null, 'id');

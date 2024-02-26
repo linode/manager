@@ -1,6 +1,5 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { accountFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -9,12 +8,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCPanel, VPCPanelProps } from './VPCPanel';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props = {
   additionalIPv4RangesForVPC: [],
@@ -49,9 +43,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(wrapper.getByTestId(vpcPanelTestId)).toBeInTheDocument();
@@ -61,7 +53,6 @@ describe('VPCPanel', () => {
   it('should display the VPC Panel if the VPC feature flag is on', async () => {
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -72,7 +63,6 @@ describe('VPCPanel', () => {
   it('should not display the VPC Panel if the user does not have the VPC account capability and the VPC feature flag is off', async () => {
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: false },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -96,7 +86,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -127,7 +116,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -152,7 +140,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -182,7 +169,6 @@ describe('VPCPanel', () => {
       <VPCPanel {...props} from="linodeConfig" />,
       {
         flags: { vpc: true },
-        queryClient,
       }
     );
 
@@ -207,7 +193,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -229,7 +214,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -259,7 +243,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -294,7 +277,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
