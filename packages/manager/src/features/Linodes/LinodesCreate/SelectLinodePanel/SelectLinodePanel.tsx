@@ -116,20 +116,16 @@ export const SelectLinodePanel = (props: Props) => {
                   )}
                   {notices && !disabled && notices.length > 0 && (
                     <Notice variant="warning">
-                      <Typography>
-                        <strong>Notice:</strong>
-                      </Typography>
                       <List
                         sx={(theme) => ({
                           '& > li': {
                             display: 'list-item',
-                            fontSize: '0.875rem',
-                            pb: 0,
+                            lineHeight: theme.spacing(3),
+                            padding: 0,
                             pl: 0,
                           },
                           listStyle: 'disc',
                           ml: theme.spacing(2),
-                          mt: theme.spacing(),
                         })}
                       >
                         {notices.map((notice, i) => (
