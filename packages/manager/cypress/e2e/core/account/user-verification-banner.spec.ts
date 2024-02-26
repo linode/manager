@@ -14,6 +14,7 @@ import {
 import { ui } from 'support/ui';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { verificationBannerNotice } from 'support/constants/user';
 
 describe('User verification banner', () => {
   /*
@@ -62,35 +63,23 @@ describe('User verification banner', () => {
     cy.visitWithLogin('/account/users');
 
     // A banner is displayed and prompts users to set up phone numbers or security questions.
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('be.visible');
+    cy.findByText(verificationBannerNotice).should('be.visible');
 
     // The banner should be present across all other pages
     cy.visitWithLogin('/account/billings');
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('be.visible');
+    cy.findByText(verificationBannerNotice).should('be.visible');
 
     cy.visitWithLogin('/account/login-history');
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('be.visible');
+    cy.findByText(verificationBannerNotice).should('be.visible');
 
     cy.visitWithLogin('/account/service-transfers');
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('be.visible');
+    cy.findByText(verificationBannerNotice).should('be.visible');
 
     cy.visitWithLogin('/account/maintenance');
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('be.visible');
+    cy.findByText(verificationBannerNotice).should('be.visible');
 
     cy.visitWithLogin('/account/settings');
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('be.visible');
+    cy.findByText(verificationBannerNotice).should('be.visible');
 
     // "Add verification details" button should redirect to url '/profile/auth'
     ui.button
@@ -129,14 +118,14 @@ describe('User verification banner', () => {
       global: { account_access: 'read_write' },
     });
 
-    const securityQuestions = securityQuestionsFactory.build();
-    const securityQuestionAnswers = ['Answer 1', 'Answer 2', 'Answer 3'];
-    securityQuestions.security_questions[0].response =
-      securityQuestionAnswers[0];
-    securityQuestions.security_questions[1].response =
-      securityQuestionAnswers[1];
-    securityQuestions.security_questions[2].response =
-      securityQuestionAnswers[2];
+    const mockSecurityQuestions = securityQuestionsFactory.build();
+    const mockSecurityQuestionAnswers = ['Answer 1', 'Answer 2', 'Answer 3'];
+    mockSecurityQuestions.security_questions[0].response =
+      mockSecurityQuestionAnswers[0];
+    mockSecurityQuestions.security_questions[1].response =
+      mockSecurityQuestionAnswers[1];
+    mockSecurityQuestions.security_questions[2].response =
+      mockSecurityQuestionAnswers[2];
 
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
@@ -150,16 +139,14 @@ describe('User verification banner', () => {
     mockGetProfile(mockChildProfile);
     mockGetUser(mockRestrictedProxyUser);
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
-    mockGetSecurityQuestions(securityQuestions).as('getSecurityQuestions');
+    mockGetSecurityQuestions(mockSecurityQuestions).as('getSecurityQuestions');
 
     // Navigate to Users & Grants page and confirm "Business partner settings" and "User settings" sections are visible.
     cy.visitWithLogin('/account/users');
     cy.wait(['@getUsers', '@getSecurityQuestions']);
 
     // The banner should not show up.
-    cy.findByText(
-      'Add verification details to enhance account security and ensure prompt assistance when needed.'
-    ).should('not.exist');
+    cy.findByText(verificationBannerNotice).should('not.exist');
     cy.get('[data-testid="confirmButton"]').should('not.exist');
   });
 });
