@@ -745,7 +745,7 @@ export const handlers = [
       if (orFilters) {
         const filteredLinodes = linodes.filter((linode) => {
           const filteredById = orFilters.some(
-            (filter: { id: number }) => filter.id === linode.id
+            (filter: { linode: number }) => filter.linode === linode.id
           );
           const filteredByRegion = orFilters.some(
             (filter: { region: string }) => filter.region === linode.region
@@ -1077,7 +1077,6 @@ export const handlers = [
       )
     );
   }),
-
   rest.post('*object-storage/keys', (req, res, ctx) => {
     const { label, regions } = req.body as ObjectStorageKeyRequest;
 
@@ -1962,14 +1961,7 @@ export const handlers = [
   rest.post('*/account/payments', (req, res, ctx) => {
     return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
-  // rest.get('*/databases/mysql/instances', (req, res, ctx) => {
-  //   const online = databaseFactory.build({ status: 'ready' });
-  //   const initializing = databaseFactory.build({ status: 'initializing' });
-  //   const error = databaseFactory.build({ status: 'error' });
-  //   const unknown = databaseFactory.build({ status: 'unknown' });
-  //   const databases = [online, initializing, error, unknown];
-  //   return res(ctx.json(makeResourcePage(databases)));
-  // }),
+
   rest.get('*/profile/tokens', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
   }),
@@ -2112,45 +2104,46 @@ export const handlers = [
       id: Number(req.params.placementGroupId) ?? -1,
       label: 'pg-1',
       linodes: [
-        ...[
-          {
-            is_compliant: true,
-            linode: 0,
-          },
-          {
-            is_compliant: true,
-            linode: 1,
-          },
-          {
-            is_compliant: true,
-            linode: 2,
-          },
-          {
-            is_compliant: true,
-            linode: 3,
-          },
-          {
-            is_compliant: true,
-            linode: 5,
-          },
-          {
-            is_compliant: true,
-            linode: 6,
-          },
-          {
-            is_compliant: true,
-            linode: 7,
-          },
-          {
-            is_compliant: true,
-            linode: 8,
-          },
-          {
-            is_compliant: false,
-            linode: 43,
-          },
-        ],
-        (req.body as any).linodes[0],
+        {
+          is_compliant: true,
+          linode: 1,
+        },
+        {
+          is_compliant: true,
+          linode: 2,
+        },
+        {
+          is_compliant: true,
+          linode: 3,
+        },
+        {
+          is_compliant: true,
+          linode: 4,
+        },
+        {
+          is_compliant: true,
+          linode: 5,
+        },
+        {
+          is_compliant: true,
+          linode: 6,
+        },
+        {
+          is_compliant: true,
+          linode: 7,
+        },
+        {
+          is_compliant: true,
+          linode: 8,
+        },
+        {
+          is_compliant: false,
+          linode: 43,
+        },
+        {
+          is_compliant: true,
+          linode: (req.body as any).linodes[0],
+        },
       ],
     });
 
@@ -2170,12 +2163,9 @@ export const handlers = [
         linodes: [
           {
             is_compliant: true,
-            linode: 0,
-          },
-          {
-            is_compliant: true,
             linode: 1,
           },
+
           {
             is_compliant: true,
             linode: 2,
@@ -2183,6 +2173,10 @@ export const handlers = [
           {
             is_compliant: true,
             linode: 3,
+          },
+          {
+            is_compliant: true,
+            linode: 4,
           },
           {
             is_compliant: true,

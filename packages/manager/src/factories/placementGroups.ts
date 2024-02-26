@@ -16,10 +16,6 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   linodes: [
     {
       is_compliant: true,
-      linode: 0,
-    },
-    {
-      is_compliant: true,
       linode: 1,
     },
     {
@@ -45,6 +41,10 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
     {
       is_compliant: true,
       linode: 8,
+    },
+    {
+      is_compliant: true,
+      linode: 9,
     },
     {
       is_compliant: false,

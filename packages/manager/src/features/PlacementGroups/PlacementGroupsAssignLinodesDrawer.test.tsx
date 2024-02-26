@@ -90,10 +90,6 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
         linodes: [
           {
             is_compliant: true,
-            linode: 0,
-          },
-          {
-            is_compliant: true,
             linode: 1,
           },
           {
@@ -119,6 +115,10 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
           {
             is_compliant: true,
             linode: 8,
+          },
+          {
+            is_compliant: true,
+            linode: 9,
           },
           {
             is_compliant: true,
