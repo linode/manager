@@ -1,10 +1,20 @@
 import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 
 import type {
+  AffinityEnforcement,
   CreatePlacementGroupPayload,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
+
+/**
+ * Helper to get the affinity enforcement readable string.
+ */
+export const getAffinityEnforcement = (
+  affinityType: PlacementGroup['is_strict']
+): AffinityEnforcement => {
+  return affinityType ? 'Strict' : 'Flexible';
+};
 
 /**
  * Helper to get the number of Linodes in a Placement Group.
