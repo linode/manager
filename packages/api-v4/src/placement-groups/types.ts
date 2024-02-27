@@ -21,12 +21,10 @@ export interface PlacementGroup {
   is_strict: boolean;
 }
 
-type PlacementGroupPayload = Pick<
+export type PlacementGroupPayload = Pick<
   PlacementGroup,
   'id' | 'label' | 'affinity_type' | 'is_strict'
 >;
-
-export type LinodePlacementGroup = PlacementGroupPayload;
 
 export type CreatePlacementGroupPayload = Omit<PlacementGroupPayload, 'id'> & {
   region: Region['id'];

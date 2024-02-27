@@ -1,7 +1,7 @@
 import type { Region } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
-import type { LinodePlacementGroup } from '../placement-groups/types';
+import type { PlacementGroupPayload } from '../placement-groups/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -24,7 +24,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  placement_group?: LinodePlacementGroup; // If not in a placement group, this will be undefined
+  placement_group?: PlacementGroupPayload; // If not in a placement group, this will be undefined
   type: string | null;
   status: LinodeStatus;
   updated: string;
