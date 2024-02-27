@@ -34,7 +34,7 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
 
   return (
     <Paper sx={{ padding: 0 }}>
-      <Notice spacingBottom={0} variant="warning">
+      <Notice spacingBottom={0} variant="info">
         <Stack
           alignItems="center"
           direction="row"
