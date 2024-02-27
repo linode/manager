@@ -77,10 +77,12 @@ export const FromLinodeContent = (props: CombinedProps) => {
 
   const filterEdgeLinodes = (linodes: Linode[]) =>
     linodes.filter(
-      (linode) => flags.gecko && !isEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
+      (linode) => !isEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
     );
 
-  const filteredLinodes = filterEdgeLinodes(linodesData);
+  const filteredLinodes = flags.gecko
+    ? filterEdgeLinodes(linodesData)
+    : linodesData;
 
   return (
     // eslint-disable-next-line
