@@ -57,7 +57,7 @@ const assertAuthLocalStorage = (
   expiry: string,
   scopes: string
 ) => {
-  assertLocalStorageValue('authentication/token', token);
+  assertLocalStorageValue('authentication/token', `Bearer ${token}`);
   assertLocalStorageValue('authentication/expire', expiry);
   assertLocalStorageValue('authentication/scopes', scopes);
 };
@@ -126,6 +126,23 @@ describe('Parent/Child account switching', () => {
         .should('be.enabled')
         .click();
 
+      // Prepare up mocks in advance of the account switch. As soon as the child account is clicked,
+      // Cloud will replace its stored token with the token provided by the API and then reload.
+      // From that point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+
+      // Mock the account switch itself -- we have to do this after the mocks above
+      // to ensure that it is applied.
       mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
         'switchAccount'
       );
@@ -146,24 +163,6 @@ describe('Parent/Child account switching', () => {
         mockChildAccountToken.expiry!,
         mockChildAccountToken.scopes
       );
-
-      // From this point forward, we will not have a valid test account token stored in local storage,
-      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
-      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
-      // individual requests as needed.
-      mockAllApiRequests();
-      mockGetLinodes([]);
-      mockGetRegions([]);
-      mockGetEvents([]);
-      mockGetNotifications([]);
-
-      mockGetAccount(mockChildAccount);
-      mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
-
-      // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-      // TODO Add assertions for toast upon account switch. This might involve improving mocks for events/notifications.
-      cy.reload();
 
       // Confirm expected username and company are shown in user menu button.
       assertUserMenuButton(
@@ -205,6 +204,21 @@ describe('Parent/Child account switching', () => {
             .click();
         });
 
+      // Prepare up mocks in advance of the account switch. As soon as the child account is clicked,
+      // Cloud will replace its stored token with the token provided by the API and then reload.
+      // From that point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+
       // Click mock company name in "Switch Account" drawer.
       mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
         'switchAccount'
@@ -226,23 +240,6 @@ describe('Parent/Child account switching', () => {
         mockChildAccountToken.expiry!,
         mockChildAccountToken.scopes
       );
-
-      // From this point forward, we will not have a valid test account token stored in local storage,
-      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
-      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
-      // individual requests as needed.
-      mockAllApiRequests();
-      mockGetLinodes([]);
-      mockGetRegions([]);
-      mockGetEvents([]);
-      mockGetNotifications([]);
-      mockGetAccount(mockChildAccount);
-      mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
-
-      // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-      // TODO Add assertions for toast upon account switch. This might involve improving mocks for events/notifications.
-      cy.reload();
 
       // Confirm expected username and company are shown in user menu button.
       assertUserMenuButton(
