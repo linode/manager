@@ -48,6 +48,7 @@ type CombinedProps = TypeToConfirmDialogProps &
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
     children,
+    disabled: isTypeToConfirmFieldDisabled,
     entity,
     errors,
     inputProps,
@@ -64,7 +65,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const [confirmText, setConfirmText] = React.useState('');
 
   const { data: preferences } = usePreferences();
-  const disabled =
+  const isPrimaryButtonDisabled =
     preferences?.type_to_confirm !== false && confirmText !== entity.name;
 
   React.useEffect(() => {
@@ -82,7 +83,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        disabled,
+        disabled: isPrimaryButtonDisabled,
         label: entity.primaryBtnText,
         loading,
         onClick,
@@ -120,6 +121,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           setConfirmText(input);
         }}
         data-testid={'dialog-confirm-text-input'}
+        disabled={isTypeToConfirmFieldDisabled}
         expand
         hideInstructions={entity.subType === 'CloseAccount'}
         inputProps={inputProps}
