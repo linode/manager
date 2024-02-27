@@ -11,7 +11,7 @@ import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTabInfoContent,
-  replaceOrAppend512GbPlans,
+  replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -61,7 +61,7 @@ export const PlansPanel = (props: Props) => {
   const theme = useTheme();
   const flags = useFlags();
 
-  const _types = replaceOrAppend512GbPlans(types);
+  const _types = replaceOrAppendPlaceholder512GbPlans(types);
   const plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans ? _types : types
   );

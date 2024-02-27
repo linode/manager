@@ -79,11 +79,11 @@ export const getPlanSelectionsByPlanType = <
   }, {} as PlansByType<T>);
 };
 
-export const determineInitialPlanCategoryTab = <T>(
+export const determineInitialPlanCategoryTab = (
   types: (ExtendedType | PlanSelectionType)[],
   selectedId?: string,
   currentPlanHeading?: string
-) => {
+): number => {
   const plans = getPlanSelectionsByPlanType(types);
 
   const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
@@ -203,49 +203,35 @@ export const planTabInfoContent = {
   },
 };
 
-export const replaceOrAppend512GbPlans = (
-  types: ExtendedType[] | PlanSelectionType[]
+/**
+ * If the Dedicated 512 GB plan is present in the response, overwrite it.
+ * If it isn't, insert a placeholder at the end of the array.
+ */
+export const replaceOrAppendPlaceholder512GbPlans = (
+  types: (ExtendedType | PlanSelectionType)[]
 ) => {
   const isInDatabasesFlow = types.some((type) => type.label.includes('DBaaS'));
 
-  // For Linodes and LKE
-  const dedicated512GbIndex = types.findIndex(
-    (type) => type.label === 'Dedicated 512GB'
-  );
+  // Function to replace or append a specific plan
+  const replaceOrAppendPlan = <T extends ExtendedType | PlanSelectionType>(
+    planLabel: string,
+    planData: T
+  ) => {
+    const index = types.findIndex((type) => type.label === planLabel);
 
-  const premium512GbIndex = types.findIndex(
-    (type) => type.label === 'Premium 512GB'
-  );
-
-  // For DBaaS
-  const dbaasDedicated512GbIndex = types.findIndex(
-    (type) => type.label === 'DBaaS - Dedicated 512GB'
-  );
+    if (index !== -1) {
+      types[index] = planData;
+    } else {
+      types.push(planData);
+    }
+  };
 
   if (isInDatabasesFlow) {
-    if (dbaasDedicated512GbIndex !== -1) {
-      types[dbaasDedicated512GbIndex] = DBAAS_DEDICATED_512_GB_PLAN;
-    } else {
-      types.push(DBAAS_DEDICATED_512_GB_PLAN);
-    }
-
-    return types;
-  }
-
-  /*
-    If the Dedicated 512 GB plan is present in the response, overwrite it.
-    If it isn't, insert a placeholder at the end of the array.
-  */
-  if (dedicated512GbIndex !== -1) {
-    types[dedicated512GbIndex] = DEDICATED_512_GB_PLAN;
+    replaceOrAppendPlan('DBaaS - Dedicated 512GB', DBAAS_DEDICATED_512_GB_PLAN);
   } else {
-    types.push(DEDICATED_512_GB_PLAN);
-  }
-
-  if (premium512GbIndex !== -1) {
-    types[premium512GbIndex] = PREMIUM_512_GB_PLAN;
-  } else {
-    types.push(PREMIUM_512_GB_PLAN);
+    // For Linodes and LKE
+    replaceOrAppendPlan('Dedicated 512GB', DEDICATED_512_GB_PLAN);
+    replaceOrAppendPlan('Premium 512GB', PREMIUM_512_GB_PLAN);
   }
 
   return types;

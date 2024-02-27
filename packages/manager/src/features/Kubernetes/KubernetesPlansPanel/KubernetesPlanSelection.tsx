@@ -1,7 +1,7 @@
 import { PriceObject } from '@linode/api-v4';
 import { Region } from '@linode/api-v4/lib/regions';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -12,7 +12,7 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
-import { generateUnavailableMessageFor512GbPlans } from 'src/features/components/PlansPanel/PlanSelection';
+import { UnavailableMessageFor512GbPlans } from 'src/features/components/PlansPanel/PlanSelection';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -114,9 +114,11 @@ export const KubernetesPlanSelection = (
             {(isPlanSoldOut || disabled512GbPlan) && (
               <Tooltip
                 title={
-                  disabled512GbPlan
-                    ? generateUnavailableMessageFor512GbPlans(type)
-                    : PLAN_IS_SOLD_OUT_COPY
+                  disabled512GbPlan ? (
+                    <UnavailableMessageFor512GbPlans type={type} />
+                  ) : (
+                    PLAN_IS_SOLD_OUT_COPY
+                  )
                 }
                 data-testid="sold-out-chip"
                 placement="right-start"
@@ -197,11 +199,11 @@ export const KubernetesPlanSelection = (
             isPlanSoldOut ? <Chip label="Sold Out" /> : '',
           ]}
           tooltip={
-            disabled512GbPlan && !isPlanSoldOut
-              ? generateUnavailableMessageFor512GbPlans(type)
-              : isPlanSoldOut
-              ? PLAN_IS_SOLD_OUT_COPY
-              : undefined
+            disabled512GbPlan && !isPlanSoldOut ? (
+              <UnavailableMessageFor512GbPlans type={type} />
+            ) : isPlanSoldOut ? (
+              PLAN_IS_SOLD_OUT_COPY
+            ) : undefined
           }
           checked={type.id === String(selectedId)}
           disabled={disabled || isPlanSoldOut || disabled512GbPlan}

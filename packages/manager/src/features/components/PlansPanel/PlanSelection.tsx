@@ -178,9 +178,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {(disabled512GbPlan || isPlanSoldOut) && (
               <Tooltip
                 title={
-                  disabled512GbPlan
-                    ? generateUnavailableMessageFor512GbPlans(type)
-                    : PLAN_IS_SOLD_OUT_COPY
+                  disabled512GbPlan ? (
+                    <UnavailableMessageFor512GbPlans type={type} />
+                  ) : (
+                    PLAN_IS_SOLD_OUT_COPY
+                  )
                 }
                 data-testid="sold-out-chip"
                 placement="right-start"
@@ -283,11 +285,13 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             ),
           ]}
           tooltip={
-            disabled512GbPlan
-              ? generateUnavailableMessageFor512GbPlans(type)
-              : isPlanSoldOut
-              ? PLAN_IS_SOLD_OUT_COPY
-              : tooltip
+            disabled512GbPlan ? (
+              <UnavailableMessageFor512GbPlans type={type} />
+            ) : isPlanSoldOut ? (
+              PLAN_IS_SOLD_OUT_COPY
+            ) : (
+              tooltip
+            )
           }
           checked={type.id === String(selectedId)}
           heading={type.heading}
@@ -299,9 +303,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   );
 };
 
-export const generateUnavailableMessageFor512GbPlans = (
-  type: ExtendedType | PlanSelectionType
-) => {
+export const UnavailableMessageFor512GbPlans = ({
+  type,
+}: {
+  type: ExtendedType | PlanSelectionType;
+}) => {
   // Only Dedicated or Premium plans will hit this function
   const planType = type.label.includes('Dedicated') ? 'Dedicated' : 'Premium';
 
