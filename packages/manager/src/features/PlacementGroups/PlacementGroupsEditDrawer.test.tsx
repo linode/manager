@@ -1,9 +1,7 @@
-import { waitFor } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { regionFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { placementGroupFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsEditDrawer } from './PlacementGroupsEditDrawer';
@@ -15,6 +13,7 @@ const queryMocks = vi.hoisted(() => ({
   }),
   useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -22,6 +21,14 @@ vi.mock('react-router-dom', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/queries/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions');
+  return {
+    ...actual,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -36,16 +43,18 @@ vi.mock('src/queries/placementGroups', async () => {
 
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
-    server.use(
-      rest.get('*/regions', (req, res, ctx) => {
-        const regions = regionFactory.buildList(1, {
-          capabilities: ['Linodes'],
-          id: 'us-east',
-          label: 'Fake Region, NC',
-        });
-        return res(ctx.json(makeResourcePage(regions)));
-      })
-    );
+    queryMocks.useParams.mockReturnValue({ id: '1' });
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' }),
+    });
+    queryMocks.usePlacementGroupQuery.mockReturnValue({
+      data: placementGroupFactory.build({
+        affinity_type: 'anti_affinity',
+        id: 1,
+        label: 'PG-to-edit',
+        region: 'us-east',
+      }),
+    });
 
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
@@ -64,13 +73,10 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(getByLabelText('Label')).toBeEnabled();
     expect(getByLabelText('Label')).toHaveValue('PG-to-edit');
     expect(getByRole('button', { name: 'Cancel' })).toBeEnabled();
-    // const editButton = getByRole('button', { name: 'Edit' });
 
-    expect(getByLabelText('Region')).toBeDisabled();
-
-    await waitFor(() => {
-      expect(getByLabelText('Region')).toHaveValue('Fake Region, NC (us-east)');
-    });
+    const editButton = getByRole('button', { name: 'Edit' });
+    expect(editButton).toBeEnabled();
+    fireEvent.click(editButton);
 
     expect(queryMocks.useMutatePlacementGroup).toHaveBeenCalled();
   });
