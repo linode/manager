@@ -30,7 +30,10 @@ export const useVolumesMigrateMutation = () => {
       // If a customer "force" migrates they will then see a
       // `volume_migration_imminent` notification instead of
       // the `volume_migration_scheduled` notification.
-      queryClient.invalidateQueries(notificationsQueryKey);
+      setTimeout(() => {
+        // Refetch notifications after 1.5 seconds. The API needs some time to process.
+        queryClient.invalidateQueries(notificationsQueryKey);
+      }, 1500);
     },
   });
 };
