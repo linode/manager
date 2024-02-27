@@ -138,6 +138,10 @@ const toasts: Toasts = {
     failure: (e) => `Error detaching Volume ${getLabel(e)}.`,
     success: (e) => `Volume ${getLabel(e)} successfully detached.`,
   },
+  volume_migrate: {
+    failure: (e) => `Error upgrading Volume ${getLabel(e)}.`,
+    success: (e) => `Volume ${getLabel(e)} successfully upgraded.`,
+  },
 };
 
 export const useToastNotifications = () => {

@@ -113,3 +113,12 @@ export const interceptDeleteVolume = (
 ): Cypress.Chainable<null> => {
   return cy.intercept('DELETE', apiMatcher(`volumes/${volumeId}`));
 };
+
+/**
+ * Intercepts POST request to migrate volumes and mocks response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockMigrateVolumes = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`volumes/migrate`), {});
+};

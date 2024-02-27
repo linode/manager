@@ -23,9 +23,10 @@ import { DeleteVolumeDialog } from './DeleteVolumeDialog';
 import { DetachVolumeDialog } from './DetachVolumeDialog';
 import { EditVolumeDrawer } from './EditVolumeDrawer';
 import { ResizeVolumeDrawer } from './ResizeVolumeDrawer';
+import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
 import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
-import { VolumeTableRow } from './VolumeTableRow';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
+import { VolumeTableRow } from './VolumeTableRow';
 
 import type { Volume } from '@linode/api-v4';
 
@@ -69,6 +70,7 @@ export const VolumesLanding = () => {
   const [isAttachDrawerOpen, setIsAttachDrawerOpen] = React.useState(false);
   const [isDetachDialogOpen, setIsDetachDialogOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = React.useState(false);
 
   const selectedVolume = volumes?.data.find((v) => v.id === selectedVolumeId);
 
@@ -105,6 +107,11 @@ export const VolumesLanding = () => {
   const handleAttach = (volume: Volume) => {
     setSelectedVolumeId(volume.id);
     setIsAttachDrawerOpen(true);
+  };
+
+  const handleUpgrade = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsUpgradeDialogOpen(true);
   };
 
   if (isLoading) {
@@ -177,6 +184,7 @@ export const VolumesLanding = () => {
                 handleDetails: () => handleDetails(volume),
                 handleEdit: () => handleEdit(volume),
                 handleResize: () => handleResize(volume),
+                handleUpgrade: () => handleUpgrade(volume),
               }}
               key={volume.id}
               volume={volume}
@@ -225,6 +233,11 @@ export const VolumesLanding = () => {
       <DetachVolumeDialog
         onClose={() => setIsDetachDialogOpen(false)}
         open={isDetachDialogOpen}
+        volume={selectedVolume}
+      />
+      <UpgradeVolumeDialog
+        onClose={() => setIsUpgradeDialogOpen(false)}
+        open={isUpgradeDialogOpen}
         volume={selectedVolume}
       />
       <DeleteVolumeDialog
