@@ -1,5 +1,6 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -47,6 +48,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     data: allPlacementGroups,
     error: allPlacementGroupsError,
   } = useUnpaginatedPlacementGroupsQuery();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const { hasReachedCapacity, region } = usePlacementGroupData({
     placementGroup: selectedPlacementGroup,
@@ -147,12 +150,17 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
     try {
       await assignLinodes(payload);
+      const toastMessage = `Linode successfully assigned`;
+      enqueueSnackbar(toastMessage, {
+        variant: 'success',
+      });
     } catch (error) {
       setGeneralError(
         error?.[0]?.reason
           ? error[0].reason
           : 'An error occurred while adding the Linode to the group'
       );
+      enqueueSnackbar(error[0].reason, { variant: 'error' });
     }
   };
 
@@ -173,6 +181,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
           ? error?.[0]?.reason
           : 'An error occurred while removing the Linode from the group'
       );
+      enqueueSnackbar(error[0].reason, { variant: 'error' });
     }
   };
 

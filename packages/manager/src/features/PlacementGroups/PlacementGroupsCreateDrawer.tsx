@@ -15,8 +15,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
+import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 
 import type {
   PlacementGroupDrawerFormikProps,
