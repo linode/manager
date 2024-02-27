@@ -24,7 +24,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  placement_group?: PlacementGroupPayload; // If not in a placement group, this will be undefined
+  placement_group?: PlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
   type: string | null;
   status: LinodeStatus;
   updated: string;
@@ -343,6 +343,8 @@ export interface CreateLinodePlacementGroupPayload {
   id: number;
   /**
    * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
+   *
+   * @default false
    */
   compliant_only?: boolean;
 }

@@ -39,6 +39,8 @@ export type AssignLinodesToPlacementGroupPayload = {
   linodes: [number];
   /**
    * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
+   *
+   * @default false
    */
   compliant_only?: boolean;
 };
