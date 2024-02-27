@@ -68,19 +68,17 @@ export const getUpgradeableVolumeIds = (
   volumes: Volume[],
   notifications: Notification[]
 ) => {
-  const upgradeableVolumeIds: number[] = [];
-
-  for (const volume of volumes) {
-    if (
-      notifications?.some(
-        (notification) =>
-          notification.entity?.id === volume.id &&
-          notification.type === 'volume_migration_scheduled'
-      )
-    ) {
-      upgradeableVolumeIds.push(volume.id);
-    }
-  }
-
-  return upgradeableVolumeIds;
+  return notifications
+    .filter(
+      (notification) => notification.type === 'volume_migration_scheduled'
+    )
+    .reduce((volumeIds: number[], notification: Notification) => {
+      const upgradeableVolume = volumes.find(
+        (volume) => volume.id === notification.entity?.id
+      );
+      if (upgradeableVolume) {
+        volumeIds.push(upgradeableVolume.id);
+      }
+      return volumeIds;
+    }, []);
 };
