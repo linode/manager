@@ -191,7 +191,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       </Typography>
       <ChildAccountList
         currentTokenWithBearer={
-          isProxyUser ? currentParentToken : currentTokenWithBearer
+          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
         isProxyUser={isProxyUser}
         onClose={handleClose}
