@@ -38,7 +38,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const currentTokenWithBearer = useCurrentToken() ?? '';
-  const currentParentToken =
+  const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
 
   const handleClose = React.useCallback(() => {
