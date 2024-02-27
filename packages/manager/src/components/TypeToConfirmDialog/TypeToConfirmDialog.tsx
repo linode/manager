@@ -120,7 +120,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           setConfirmText(input);
         }}
         data-testid={'dialog-confirm-text-input'}
-        disabled={disabled}
         expand
         hideInstructions={entity.subType === 'CloseAccount'}
         inputProps={inputProps}
