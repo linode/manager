@@ -15,6 +15,8 @@ export const StyledTagButton = styled(Button, {
 })(({ theme, ...props }) => ({
   border: 'none',
   fontSize: '0.875rem',
+  minHeight: 30,
+  whiteSpace: 'nowrap',
   ...(!props.disabled && {
     '&:hover, &:focus': {
       backgroundColor: theme.color.tagButton,

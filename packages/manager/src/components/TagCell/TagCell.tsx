@@ -1,10 +1,9 @@
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
 import { useMutationObserver } from 'src/hooks/useMutationObserver';
@@ -36,11 +35,13 @@ const checkOverflow = (el: HTMLElement) => {
   return isOverflowing;
 };
 
-const TagCell = (props: TagCellProps) => {
+export const TagCell = (props: TagCellProps) => {
   const { sx, tags, updateTags } = props;
 
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [deletingTags, setDeletingTags] = React.useState(
+    () => new Set<string>()
+  );
   const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
 
   // In production, a parent element sometimes is briefly
@@ -57,25 +58,21 @@ const TagCell = (props: TagCellProps) => {
   const windowDimensions = useWindowDimensions();
   const lastMutations = useMutationObserver(renderParent, { attributes: true });
 
-  // Dependencies are not used explicitly for overflow detection but
-  // changes in these values may indicate the overflow state has changed.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const hasOverflow = React.useMemo(() => !!elRef && checkOverflow(elRef), [
-    windowDimensions,
-    lastMutations,
-    tags,
-    elRef,
-  ]);
+  const [hasOverflow, setHasOverflow] = React.useState(false);
+  React.useLayoutEffect(() => {
+    setHasOverflow(!!elRef && checkOverflow(elRef));
+  }, [windowDimensions, lastMutations, tags, elRef]);
 
   const handleAddTag = async (tag: string) => {
     await updateTags([...tags, tag]);
   };
 
   const handleDeleteTag = (tagToDelete: string) => {
-    setLoading(true);
-    updateTags(tags.filter((tag) => tag !== tagToDelete)).finally(() =>
-      setLoading(false)
-    );
+    setDeletingTags(new Set(deletingTags.add(tagToDelete)));
+    updateTags(tags.filter((tag) => tag !== tagToDelete)).finally(() => {
+      deletingTags.delete(tagToDelete);
+      setDeletingTags(new Set(deletingTags));
+    });
   };
 
   return (
@@ -86,17 +83,11 @@ const TagCell = (props: TagCellProps) => {
       sx={sx}
       wrap="nowrap"
     >
-      {loading ? (
-        <StyledCircleDiv>
-          <CircleProgress mini />
-        </StyledCircleDiv>
-      ) : null}
       {addingTag ? (
         <AddTag
           addTag={handleAddTag}
-          inDetailsContext
+          existingTags={tags}
           onClose={() => setAddingTag(false)}
-          tags={tags}
         />
       ) : (
         <>
@@ -106,7 +97,7 @@ const TagCell = (props: TagCellProps) => {
                 colorVariant="lightBlue"
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
-                loading={loading}
+                loading={deletingTags.has(thisTag)}
                 onDelete={() => handleDeleteTag(thisTag)}
               />
             ))}
@@ -136,22 +127,10 @@ const TagCell = (props: TagCellProps) => {
   );
 };
 
-export { TagCell };
-
 const StyledGrid = styled(Grid)({
   justifyContent: 'flex-end',
   minHeight: 40,
   position: 'relative',
-});
-
-const StyledCircleDiv = styled('div')({
-  alignItems: 'center',
-  display: 'flex',
-  height: '100%',
-  justifyContent: 'center',
-  position: 'absolute',
-  width: '100%',
-  zIndex: 2,
 });
 
 const StyledTagListDiv = styled('div', {
