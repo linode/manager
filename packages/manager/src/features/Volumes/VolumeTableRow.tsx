@@ -101,6 +101,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
           sx={{
             alignItems: 'center',
             display: 'flex',
+            gap: 2,
             justifyContent: 'space-between',
             wrap: 'nowrap',
           }}
