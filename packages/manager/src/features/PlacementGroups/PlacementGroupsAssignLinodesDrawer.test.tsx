@@ -87,7 +87,48 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
       placementGroupFactory.build({
-        linode_ids: [1, 2, 0, 1, 2, 3, 5, 6, 7, 8, 43, 11],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+          {
+            is_compliant: true,
+            linode: 2,
+          },
+          {
+            is_compliant: true,
+            linode: 3,
+          },
+          {
+            is_compliant: true,
+            linode: 5,
+          },
+          {
+            is_compliant: true,
+            linode: 6,
+          },
+          {
+            is_compliant: true,
+            linode: 7,
+          },
+          {
+            is_compliant: true,
+            linode: 8,
+          },
+          {
+            is_compliant: true,
+            linode: 9,
+          },
+          {
+            is_compliant: true,
+            linode: 43,
+          },
+          {
+            is_compliant: true,
+            linode: 11,
+          },
+        ],
       })
     );
 

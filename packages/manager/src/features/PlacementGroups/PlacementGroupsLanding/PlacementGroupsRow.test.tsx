@@ -72,7 +72,12 @@ describe('PlacementGroupsLanding', () => {
             affinity_type: 'anti_affinity',
             is_compliant: false,
             label: 'group 1',
-            linode_ids: [1],
+            linodes: [
+              {
+                is_compliant: true,
+                linode: 1,
+              },
+            ],
             region: 'us-east',
           })}
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}

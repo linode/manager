@@ -262,16 +262,11 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
-  placement_groups: [
-    placementGroupFactory.build({
-      affinity_type: 'anti_affinity',
-      id: 1,
-      is_compliant: true,
-      label: 'test',
-      linode_ids: [1],
-      region: 'us-east',
-    }),
-  ],
+  placement_group: placementGroupFactory.build({
+    affinity_type: 'anti_affinity',
+    id: 1,
+    label: 'pg-1',
+  }),
   region: 'us-east',
   specs: linodeSpecsFactory.build(),
   status: 'running',
