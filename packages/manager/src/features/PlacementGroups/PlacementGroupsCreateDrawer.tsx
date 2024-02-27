@@ -165,11 +165,6 @@ export const PlacementGroupsCreateDrawer = (
             <FormLabel htmlFor="affinity-enforcement-radio-group">
               Affinity Enforcement
             </FormLabel>
-            {errors.is_strict !== undefined && (
-              <Notice variant="error">
-                <Typography>{errors.is_strict}</Typography>
-              </Notice>
-            )}
             <RadioGroup
               onChange={(event) => {
                 handleChange(event);

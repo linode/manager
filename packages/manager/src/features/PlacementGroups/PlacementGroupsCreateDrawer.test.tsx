@@ -27,13 +27,18 @@ vi.mock('src/queries/placementGroups', async () => {
 
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render and have its fields enabled', () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getAllByRole, getByLabelText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     expect(getByLabelText('Label')).toBeEnabled();
     expect(getByLabelText('Region')).toBeEnabled();
     expect(getByLabelText('Affinity Type')).toBeEnabled();
+    expect(getByText('Affinity Enforcement')).toBeInTheDocument();
+
+    const radioInputs = getAllByRole('radio');
+    expect(radioInputs).toHaveLength(2);
+    expect(radioInputs[0]).toBeChecked();
   });
 
   it('Affinity Type select should have the correct options', async () => {
