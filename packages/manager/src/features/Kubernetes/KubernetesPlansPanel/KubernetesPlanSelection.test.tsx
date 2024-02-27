@@ -106,54 +106,54 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       hourlyTableCell?.querySelector('[data-qa-help-button]')
     ).not.toBeInTheDocument();
   });
+});
 
-  describe('KubernetesPlanSelection (cards, mobile view)', () => {
-    beforeAll(() => {
-      resizeScreenSize(breakpoints.values.sm);
-    });
+describe('KubernetesPlanSelection (cards, mobile view)', () => {
+  beforeAll(() => {
+    resizeScreenSize(breakpoints.values.sm);
+  });
 
-    it('displays the plan header label, monthly and hourly price, RAM, CPUs, and storage', async () => {
-      const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} />
-      );
+  it('displays the plan header label, monthly and hourly price, RAM, CPUs, and storage', async () => {
+    const { getByText } = renderWithTheme(
+      <KubernetesPlanSelection {...props} />
+    );
 
-      expect(getByText(planHeader)).toBeInTheDocument();
-      expect(
-        getByText(`${baseMonthlyPrice}/mo`, { exact: false })
-      ).toBeInTheDocument();
-      expect(
-        getByText(`${baseHourlyPrice}/hr`, { exact: false })
-      ).toBeInTheDocument();
-      expect(getByText(`${cpu} CPU`, { exact: false })).toBeInTheDocument();
-      expect(
-        getByText(`${storage} Storage`, { exact: false })
-      ).toBeInTheDocument();
-      expect(getByText(`${ram} RAM`, { exact: false })).toBeInTheDocument();
-    });
+    expect(getByText(planHeader)).toBeInTheDocument();
+    expect(
+      getByText(`${baseMonthlyPrice}/mo`, { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      getByText(`${baseHourlyPrice}/hr`, { exact: false })
+    ).toBeInTheDocument();
+    expect(getByText(`${cpu} CPU`, { exact: false })).toBeInTheDocument();
+    expect(
+      getByText(`${storage} Storage`, { exact: false })
+    ).toBeInTheDocument();
+    expect(getByText(`${ram} RAM`, { exact: false })).toBeInTheDocument();
+  });
 
-    it('displays DC-specific prices in a region with a price increase', async () => {
-      const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} selectedRegionId="id-cgk" />
-      );
+  it('displays DC-specific prices in a region with a price increase', async () => {
+    const { getByText } = renderWithTheme(
+      <KubernetesPlanSelection {...props} selectedRegionId="id-cgk" />
+    );
 
-      expect(
-        getByText(`${regionMonthlyPrice}/mo`, { exact: false })
-      ).toBeInTheDocument();
-      expect(
-        getByText(`${regionHourlyPrice}/hr`, { exact: false })
-      ).toBeInTheDocument();
-    });
+    expect(
+      getByText(`${regionMonthlyPrice}/mo`, { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      getByText(`${regionHourlyPrice}/hr`, { exact: false })
+    ).toBeInTheDocument();
+  });
 
-    it('shows a chip if plan is sold out', () => {
-      const { getByLabelText } = renderWithTheme(
-        <KubernetesPlanSelection
-          {...props}
-          isPlanSoldOut={true}
-          selectedRegionId={'us-east'}
-        />
-      );
+  it('shows a chip if plan is sold out', () => {
+    const { getByLabelText } = renderWithTheme(
+      <KubernetesPlanSelection
+        {...props}
+        isPlanSoldOut={true}
+        selectedRegionId={'us-east'}
+      />
+    );
 
-      expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
-    });
+    expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
   });
 });
