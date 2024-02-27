@@ -89,7 +89,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
+  // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
   const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(type, selectedRegionId)
@@ -182,7 +182,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={!price?.monthly}
+            errorCell={typeof price?.monthly !== 'number'}
             errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             {' '}
@@ -190,7 +190,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           <TableCell
             data-qa-hourly
-            errorCell={!price?.hourly}
+            errorCell={typeof price?.hourly !== 'number'}
             errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             {isGPU ? (

@@ -70,9 +70,14 @@ describe('PlacementGroupsLanding', () => {
         <PlacementGroupsRow
           placementGroup={placementGroupFactory.build({
             affinity_type: 'anti_affinity',
-            compliant: false,
+            is_compliant: false,
             label: 'group 1',
-            linode_ids: [1],
+            linodes: [
+              {
+                is_compliant: true,
+                linode: 1,
+              },
+            ],
             region: 'us-east',
           })}
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}

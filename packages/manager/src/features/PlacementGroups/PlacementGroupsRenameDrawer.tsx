@@ -57,6 +57,7 @@ export const PlacementGroupsRenameDrawer = (
     enableReinitialize: true,
     initialValues: {
       affinity_type: selectedPlacementGroup?.affinity_type as PlacementGroupDrawerFormikProps['affinity_type'],
+      is_strict: true,
       label: selectedPlacementGroup?.label ?? '',
       region: selectedPlacementGroup?.region ?? '',
     },

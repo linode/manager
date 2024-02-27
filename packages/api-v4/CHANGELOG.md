@@ -1,5 +1,22 @@
-## [2024-01-22] - v0.108.0
+## [2024-02-20] - v0.110.0
 
+### Upcoming Features:
+
+- Update /account and /profile UserType from `null` to `"default"` ([#10176](https://github.com/linode/manager/pull/10176))
+
+## [2024-02-05] - v0.109.0
+
+### Fixed:
+
+- Accept `InterfacePayload` type when creating a Linode with interfaces specified ([#10086](https://github.com/linode/manager/pull/10086))
+- Remove incorrect `_initial` property on `Event` type ([#9949](https://github.com/linode/manager/pull/9949))
+
+### Upcoming Features:
+
+- Add `user_type` to /profile endpoint for Parent/Child user roles ([#10080](https://github.com/linode/manager/pull/10080))
+- Add `Akamai Cloud Load Balancer` to `AccountCapability` type ([#10098](https://github.com/linode/manager/pull/10098))
+
+## [2024-01-22] - v0.108.0
 
 ### Added:
 
@@ -12,17 +29,15 @@
 
 ## [2024-01-08] - v0.107.0
 
-
 ### Added:
 
--  Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
+- Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
 
 ### Tech Stories:
 
 - Add Lint GitHub Action ([#9973](https://github.com/linode/manager/pull/9973))
 
 ## [2023-12-11] - v0.106.0
-
 
 ### Added:
 
@@ -41,7 +56,6 @@
 - Add new endpoints for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
 
 ## [2023-11-13] - v0.105.0
-
 
 ### Upcoming Features:
 

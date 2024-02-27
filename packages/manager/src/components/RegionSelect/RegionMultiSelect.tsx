@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { StyledListItem } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
 
 import { RegionOption } from './RegionOption';
@@ -36,11 +35,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     width,
   } = props;
 
-  const flags = useFlags();
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
+  } = useAccountAvailabilitiesQueryUnpaginated();
 
   const [selectedRegions, setSelectedRegions] = useState<RegionSelectOption[]>(
     getSelectedRegionsByIds({
@@ -93,9 +91,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     <>
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
-          getOptionDisabled={(option: RegionSelectOption) =>
-            Boolean(flags.dcGetWell) && Boolean(option.unavailable)
-          }
           groupBy={(option: RegionSelectOption) => {
             return option?.data?.region;
           }}
@@ -122,6 +117,11 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
               />
             );
           }}
+          sx={(theme) => ({
+            [theme.breakpoints.up('md')]: {
+              width: '416px',
+            },
+          })}
           textFieldProps={{
             InputProps: {
               required,
@@ -134,6 +134,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           disableClearable={!isClearable}
           disabled={disabled}
           errorText={errorText}
+          getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
           label={label ?? 'Regions'}
           loading={accountAvailabilityLoading}
           multiple

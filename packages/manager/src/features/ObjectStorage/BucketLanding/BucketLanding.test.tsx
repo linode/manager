@@ -1,6 +1,5 @@
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient, setLogger } from 'react-query';
 
 import {
   objectStorageBucketFactory,
@@ -8,22 +7,11 @@ import {
 } from 'src/factories/objectStorage';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-import { queryPresets } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.oneTimeFetch },
-});
-
 describe('ObjectStorageLanding', () => {
-  afterEach(() => {
-    queryClient.clear();
-    // If necessary, reset React Query logger.
-    setLogger(console);
-  });
-
   it('renders a loading state', () => {
     // Mock Buckets
     server.use(
@@ -53,30 +41,12 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByTestId('placeholder-button');
+    await screen.findByTestId('placeholder-button');
   });
 
   it('renders per-cluster errors', async () => {
-    // Suppress logging React Query errors to CLI since this test is expected
-    // to trigger errors.
-    //
-    // Note: Logging options improved in React Query v4 and `setLogger` will
-    // be removed in v5. We will be able to accomplish this more cleanly once
-    // we upgrade.
-    //
-    // See also:
-    // - https://github.com/TanStack/query/issues/125
-    // - https://github.com/TanStack/query/discussions/4252
-    setLogger({
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    });
-
     objectStorageBucketFactory.resetSequenceNumber();
     objectStorageClusterFactory.resetSequenceNumber();
 
@@ -113,30 +83,14 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(/^There was an error loading buckets in Fremont, CA/);
+    await screen.findByText(
+      /^There was an error loading buckets in Fremont, CA/
+    );
   });
 
   it('renders general error state', async () => {
-    // Suppress logging React Query errors to CLI since this test is expected
-    // to trigger errors.
-    //
-    // Note: Logging options improved in React Query v4 and `setLogger` will
-    // be removed in v5. We will be able to accomplish this more cleanly once
-    // we upgrade.
-    //
-    // See also:
-    // - https://github.com/TanStack/query/issues/125
-    // - https://github.com/TanStack/query/discussions/4252
-    setLogger({
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    });
-
     // Mock Clusters
     server.use(
       rest.get('*/object-storage/clusters', (req, res, ctx) => {
@@ -151,11 +105,9 @@ describe('ObjectStorageLanding', () => {
         return res(ctx.status(500), ctx.json([{ reason: 'Cluster offline!' }]));
       })
     );
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(/^There was an error retrieving your buckets/);
+    await screen.findByText(/^There was an error retrieving your buckets/);
   });
 
   it('renders rows for each Bucket', async () => {
@@ -176,12 +128,10 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(buckets[0].label);
-    screen.getByText(buckets[1].label);
+    await screen.findByText(buckets[0].label);
+    await screen.findByText(buckets[1].label);
   });
 
   it('renders a "Total usage" section if there is more than one Bucket', async () => {
@@ -204,10 +154,8 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(/Total storage used: 10 GB/);
+    await screen.findByText(/Total storage used: 10 GB/);
   });
 });

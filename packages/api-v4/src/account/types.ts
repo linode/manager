@@ -1,7 +1,7 @@
 import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
 
-export type UserType = 'child' | 'parent' | 'proxy';
+export type UserType = 'child' | 'parent' | 'proxy' | 'default';
 
 export interface User {
   email: string;
@@ -30,7 +30,7 @@ export interface User {
   ssh_keys: string[];
   tfa_enabled: boolean;
   username: string;
-  user_type: UserType | null;
+  user_type: UserType;
   verified_phone_number: string | null;
 }
 
@@ -71,6 +71,7 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
   | 'Object Storage'
+  | 'Placement Group'
   | 'Vlans'
   | 'VPCs';
 
@@ -286,7 +287,7 @@ export type EventAction =
   | 'community_question_reply'
   | 'credit_card_updated'
   | 'database_low_disk_space'
-  | 'database_scale'
+  | 'database_resize'
   | 'database_backup_restore'
   | 'database_create'
   | 'database_credentials_reset'

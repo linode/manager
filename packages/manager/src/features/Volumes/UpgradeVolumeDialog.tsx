@@ -8,6 +8,8 @@ import { Typography } from 'src/components/Typography';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import type { Volume } from '@linode/api-v4';
+
 interface CopyProps {
   isManyVolumes?: boolean;
   label: string;
@@ -35,14 +37,13 @@ export const VolumeUpgradeCopy = (props: CopyProps) => {
 };
 
 interface Props {
-  id: number;
-  label: string;
   onClose: () => void;
   open: boolean;
+  volume: Volume | undefined;
 }
 
 export const UpgradeVolumeDialog = (props: Props) => {
-  const { id, label, onClose, open } = props;
+  const { onClose, open, volume } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -52,10 +53,16 @@ export const UpgradeVolumeDialog = (props: Props) => {
   } = useVolumesMigrateMutation();
 
   const onSubmit = () => {
-    migrateVolumes([id]).then(() => {
-      enqueueSnackbar(`Successfully added ${label} to the migration queue.`, {
-        variant: 'success',
-      });
+    if (!volume) {
+      return;
+    }
+    migrateVolumes([volume.id]).then(() => {
+      enqueueSnackbar(
+        `Successfully added ${volume.label} to the migration queue.`,
+        {
+          variant: 'success',
+        }
+      );
       onClose();
     });
   };
@@ -81,9 +88,9 @@ export const UpgradeVolumeDialog = (props: Props) => {
       actions={actions}
       onClose={onClose}
       open={open}
-      title={`Upgrade Volume ${label}`}
+      title={`Upgrade Volume ${volume?.label}`}
     >
-      <VolumeUpgradeCopy label={label} type="volume" />
+      <VolumeUpgradeCopy label={volume?.label ?? ''} type="volume" />
     </ConfirmationDialog>
   );
 };

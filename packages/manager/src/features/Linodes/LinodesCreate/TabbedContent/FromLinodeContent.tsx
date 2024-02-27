@@ -4,18 +4,17 @@ import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import SelectLinodePanel from '../SelectLinodePanel';
+import { SelectLinodePanel } from '../SelectLinodePanel/SelectLinodePanel';
 import {
   CloneFormStateHandlers,
   ReduxStateProps,
   WithLinodesTypesRegionsAndImages,
 } from '../types';
-import { extendLinodes } from '../utilities';
 import { StyledGrid } from './CommonTabbedContent.styles';
 
 const errorResources = {
@@ -32,7 +31,6 @@ export type CombinedProps = CloneFormStateHandlers &
 export const FromLinodeContent = (props: CombinedProps) => {
   const {
     errors,
-    imagesData,
     linodesData,
     regionsData,
     selectedLinodeID,
@@ -55,9 +53,9 @@ export const FromLinodeContent = (props: CombinedProps) => {
   };
 
   /** Set the Linode ID and the disk size and reset the plan selection */
-  const handleSelectLinode = (linodeID: number, type: null | string) => {
+  const handleSelectLinode = (linodeId: number) => {
     const linode = props.linodesData.find(
-      (eachLinode) => eachLinode.id === linodeID
+      (eachLinode) => eachLinode.id === linodeId
     );
 
     if (linode) {
@@ -96,25 +94,11 @@ export const FromLinodeContent = (props: CombinedProps) => {
       ) : (
         <StyledGrid>
           <SelectLinodePanel
-            linodes={extendLinodes(
-              linodesData,
-              imagesData,
-              extendedTypes,
-              regionsData
-            )}
             notices={[
-              {
-                level: 'warning',
-                text:
-                  'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
-              },
-              ...(flags.linodeCloneUIChanges
+              'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
+              ...(flags.linodeCloneUiChanges
                 ? [
-                    {
-                      level: 'warning' as const,
-                      text:
-                        'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
-                    },
+                    'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
                   ]
                 : []),
             ]}
@@ -123,8 +107,9 @@ export const FromLinodeContent = (props: CombinedProps) => {
             error={hasErrorFor('linode_id')}
             handleSelection={handleSelectLinode}
             header={'Select Linode to Clone From'}
+            linodes={linodesData}
             selectedLinodeID={selectedLinodeID}
-            updateFor={[selectedLinodeID, errors]}
+            showPowerActions
           />
         </StyledGrid>
       )}

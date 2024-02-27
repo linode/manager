@@ -76,10 +76,11 @@ const StyledIconContainer = styled('div')({
   textAlign: 'center',
 });
 
-const ErrorStateRoot = styled(Grid)<Partial<ErrorStateProps>>(
-  ({ theme, ...props }) => ({
-    marginLeft: 0,
-    padding: props.compact ? theme.spacing(5) : theme.spacing(10),
-    width: '100%',
-  })
-);
+const ErrorStateRoot = styled(Grid, {
+  label: 'ErrorStateRoot',
+  shouldForwardProp: (prop) => prop !== 'compact',
+})<Partial<ErrorStateProps>>(({ theme, ...props }) => ({
+  marginLeft: 0,
+  padding: props.compact ? theme.spacing(5) : theme.spacing(10),
+  width: '100%',
+}));

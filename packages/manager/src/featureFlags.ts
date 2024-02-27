@@ -44,12 +44,12 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
-  databaseScaleUp: boolean;
+  databaseResize: boolean;
   databases: boolean;
-  dcGetWell: boolean;
   firewallNodebalancer: boolean;
+  gecko: boolean;
   ipv6Sharing: boolean;
-  linodeCloneUIChanges: boolean;
+  linodeCloneUiChanges: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
@@ -62,7 +62,6 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   recharts: boolean;
   referralBannerText: ReferralBannerText;
-  regionDropdown: boolean;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   taxBanner: TaxBanner;

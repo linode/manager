@@ -1,4 +1,6 @@
+import { PlacementGroup } from '@linode/api-v4';
 import {
+  CreateLinodePlacementGroupPayload,
   InterfacePayload,
   PriceObject,
   restoreBackup,
@@ -16,9 +18,9 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
@@ -32,10 +34,10 @@ import {
   WithAccountProps,
   withAccount,
 } from 'src/containers/account.container';
-import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { WithFeatureFlagProps } from 'src/containers/flags.container';
+import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
-import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
@@ -44,6 +46,7 @@ import {
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -62,6 +65,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -99,8 +103,10 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export interface LinodeCreateProps {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
@@ -108,6 +114,7 @@ export interface LinodeCreateProps {
   firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
+  handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -117,6 +124,7 @@ export interface LinodeCreateProps {
   imageDisplayInfo: Info;
   ipamAddress: null | string;
   label: string;
+  placementGroupSelection?: PlacementGroup;
   regionDisplayInfo: Info;
   resetCreationState: () => void;
   selectedSubnetId?: number;
@@ -137,6 +145,7 @@ export interface LinodeCreateProps {
   updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
+  updatePlacementGroupSelection: (placementGroup: PlacementGroup) => void;
   updateTags: (tags: Tag[]) => void;
   updateUserData: (userData: string) => void;
   userData: string | undefined;
@@ -157,6 +166,7 @@ const errorMap = [
   'interfaces[1].ipam_address',
   'interfaces[0].subnet_id',
   'ipv4.vpc',
+  'placement_group',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -166,7 +176,7 @@ type InnerProps = WithTypesRegionsAndImages &
 
 type CombinedProps = AllFormStateAndHandlers &
   AppsData &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   ImagesProps &
   InnerProps &
   ReduxStateProps &
@@ -198,7 +208,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getQueryParamsFromQueryString(location.search);
 
-    const _tabs = [
+    const _tabs: LinodeCreateType[] = [
       'Distributions',
       'One-Click',
       'StackScripts',
@@ -274,6 +284,7 @@ export class LinodeCreate extends React.PureComponent<
       linodesData,
       linodesError,
       linodesLoading,
+      placementGroupSelection,
       regionDisplayInfo,
       regionsData,
       regionsError,
@@ -289,6 +300,7 @@ export class LinodeCreate extends React.PureComponent<
       typesError,
       typesLoading,
       updateLabel,
+      updatePlacementGroupSelection,
       updateTags,
       updateUserData,
       userCannotCreateLinode,
@@ -312,12 +324,34 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
+    {
+      /* TODO VM_Placement: Refactor this into a util method */
+    }
+    const regionLabel = regionsData?.find((r) => r.id === selectedRegionID)
+      ?.label;
+    let placementGroupsLabel;
+    if (selectedRegionID && regionLabel) {
+      placementGroupsLabel = `Placement Groups in ${regionLabel} (${selectedRegionID})`;
+    } else {
+      placementGroupsLabel = 'Placement Group';
+    }
+
     const tagsInputProps = {
       disabled: userCannotCreateLinode,
       onChange: updateTags,
       tagError: hasErrorFor.tags,
       value: tags || [],
     };
+
+    let errorText;
+    if (
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupSelection!,
+        region: regionsData.find((r) => r.id === selectedRegionID)!,
+      })
+    ) {
+      errorText = `This Placement Group doesn't have any capacity`;
+    }
 
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
@@ -602,7 +636,7 @@ export class LinodeCreate extends React.PureComponent<
             showTransfer
             types={this.filterTypes()}
           />
-          <LabelAndTagsPanel
+          <DetailsPanel
             labelFieldProps={{
               disabled: userCannotCreateLinode,
               errorText: hasErrorFor.label,
@@ -610,12 +644,22 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
+            placementGroupsSelectProps={{
+              disabled: !selectedRegionID,
+              errorText,
+              handlePlacementGroupSelection: updatePlacementGroupSelection,
+              label: placementGroupsLabel,
+              noOptionsMessage: 'There are no Placement Groups in this region',
+              selectedRegionId: selectedRegionID,
+            }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
                 : undefined
             }
-            data-qa-label-and-tags-panel
+            data-qa-details-panel
+            error={hasErrorFor.placement_group}
+            regions={regionsData!}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
@@ -641,9 +685,11 @@ export class LinodeCreate extends React.PureComponent<
             toggleAutoassignIPv4WithinVPCEnabled={
               this.props.toggleAutoassignIPv4WithinVPCEnabled
             }
+            additionalIPv4RangesForVPC={this.props.additionalIPv4RangesForVPC}
             assignPublicIPv4Address={this.props.assignPublicIPv4Address}
             autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
             from="linodeCreate"
+            handleIPv4RangeChange={this.props.handleIPv4RangesForVPC}
             handleSelectVPC={this.props.setSelectedVPC}
             handleSubnetChange={this.props.handleSubnetChange}
             handleVPCIPv4Change={this.props.handleVPCIPv4Change}
@@ -791,6 +837,10 @@ export class LinodeCreate extends React.PureComponent<
       'VPCs'
     );
 
+    const placement_group_payload: CreateLinodePlacementGroupPayload = {
+      id: this.props.placementGroupSelection?.id ?? -1,
+    };
+
     // eslint-disable-next-line sonarjs/no-unused-collection
     const interfaces: InterfacePayload[] = [];
 
@@ -803,13 +853,16 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
+      placement_group: this.props.flags.vmPlacement
+        ? placement_group_payload
+        : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID,
       root_pass: this.props.password,
       stackscript_data: this.props.selectedUDFs,
+
       // StackScripts
       stackscript_id: this.props.selectedStackScriptID,
-
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
@@ -822,6 +875,9 @@ export class LinodeCreate extends React.PureComponent<
       this.props.selectedVPCId !== -1
     ) {
       const vpcInterfaceData: InterfacePayload = {
+        ip_ranges: this.props.additionalIPv4RangesForVPC
+          .map((ipRange) => ipRange.address)
+          .filter((ipRange) => ipRange !== ''),
         ipam_address: null,
         ipv4: {
           nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,

@@ -1,7 +1,20 @@
-import { PlacementGroup } from '@linode/api-v4';
 import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 
-import type { CreatePlacementGroupPayload } from '@linode/api-v4';
+import type {
+  AffinityEnforcement,
+  CreatePlacementGroupPayload,
+  PlacementGroup,
+  Region,
+} from '@linode/api-v4';
+
+/**
+ * Helper to get the affinity enforcement readable string.
+ */
+export const getAffinityEnforcement = (
+  affinityType: PlacementGroup['is_strict']
+): AffinityEnforcement => {
+  return affinityType ? 'Strict' : 'Flexible';
+};
 
 /**
  * Helper to get the number of Linodes in a Placement Group.
@@ -9,7 +22,27 @@ import type { CreatePlacementGroupPayload } from '@linode/api-v4';
 export const getPlacementGroupLinodeCount = (
   placementGroup: PlacementGroup
 ): number => {
-  return placementGroup.linode_ids.length;
+  return placementGroup.linodes.length;
+};
+
+interface HasPlacementGroupReachedCapacityOptions {
+  placementGroup: PlacementGroup | undefined;
+  region: Region | undefined;
+}
+/**
+ * Helper to determine if a Placement Group has reached capacity.
+ */
+export const hasPlacementGroupReachedCapacity = ({
+  placementGroup,
+  region,
+}: HasPlacementGroupReachedCapacityOptions): boolean => {
+  if (!placementGroup || !region) {
+    return false;
+  }
+
+  return (
+    getPlacementGroupLinodeCount(placementGroup) >= region.maximum_vms_per_pg
+  );
 };
 
 /**
@@ -21,3 +54,21 @@ export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
     value: key as CreatePlacementGroupPayload['affinity_type'],
   })
 );
+
+/**
+ * Helper to get all linodes assigned to any placement group. (and reduce to unique linodes)
+ * This is useful for determining which linodes are available to be assigned.
+ */
+export const getLinodesFromAllPlacementGroups = (
+  allPlacementGroups: PlacementGroup[] | undefined
+) => {
+  if (!allPlacementGroups) {
+    return [];
+  }
+
+  const linodeIds = allPlacementGroups.reduce((acc, placementGroup) => {
+    return [...acc, ...placementGroup.linodes.map((linode) => linode.linode)];
+  }, []);
+
+  return Array.from(new Set(linodeIds));
+};

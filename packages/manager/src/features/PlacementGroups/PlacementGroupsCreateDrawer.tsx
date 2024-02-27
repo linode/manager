@@ -15,8 +15,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
+import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 
 import type {
   PlacementGroupDrawerFormikProps,
@@ -57,6 +57,7 @@ export const PlacementGroupsCreateDrawer = (
     enableReinitialize: true,
     initialValues: {
       affinity_type: '' as PlacementGroupDrawerFormikProps['affinity_type'],
+      is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
     },

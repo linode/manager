@@ -5,7 +5,7 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
-import { FormikBag } from 'formik';
+import { FormikBag, FormikHelpers } from 'formik';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -30,8 +30,8 @@ import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { MODE, OpenAccessDrawer } from './types';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 
 interface Props {
   accessDrawerOpen: boolean;
@@ -96,7 +96,11 @@ export const AccessKeyLanding = (props: Props) => {
 
   const handleCreateKey = (
     values: ObjectStorageKeyRequest,
-    { setErrors, setStatus, setSubmitting }: FormikProps
+    {
+      setErrors,
+      setStatus,
+      setSubmitting,
+    }: FormikHelpers<ObjectStorageKeyRequest>
   ) => {
     // Clear out status (used for general errors)
     setStatus(null);
@@ -152,7 +156,11 @@ export const AccessKeyLanding = (props: Props) => {
 
   const handleEditKey = (
     values: ObjectStorageKeyRequest,
-    { setErrors, setStatus, setSubmitting }: FormikProps
+    {
+      setErrors,
+      setStatus,
+      setSubmitting,
+    }: FormikHelpers<ObjectStorageKeyRequest>
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {
@@ -170,7 +178,7 @@ export const AccessKeyLanding = (props: Props) => {
 
     setSubmitting(true);
 
-    updateObjectStorageKey(keyToEdit.id, { label: values.label })
+    updateObjectStorageKey(keyToEdit.id, values)
       .then((_) => {
         setSubmitting(false);
 

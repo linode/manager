@@ -1,3 +1,4 @@
+import { PlacementGroup } from '@linode/api-v4';
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -25,18 +26,17 @@ import {
   WithEventsPollingActionProps,
   withEventsPollingActions,
 } from 'src/containers/events.container';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
+import { WithImagesProps, withImages } from 'src/containers/images.container';
 import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
 import { RegionsProps, withRegions } from 'src/containers/regions.container';
 import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   WithLinodesProps,
   withLinodes,
@@ -52,6 +52,7 @@ import {
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   accountAgreementsQueryKey,
   reportAgreementSigningError,
@@ -71,6 +72,7 @@ import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -80,7 +82,6 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
-import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
   CreateLinodeRequest,
@@ -93,6 +94,7 @@ import type {
 const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   attachedVLANLabel: null | string;
   authorized_users: string[];
@@ -105,6 +107,7 @@ interface State {
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
+  placementGroupSelection?: PlacementGroup;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
   selectedDiskSize?: number;
@@ -130,11 +133,11 @@ interface State {
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
-  ImagesProps &
+  WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
-  FeatureFlagConsumerProps &
+  WithFeatureFlagProps &
   RouteComponentProps<{}, any, any> &
   WithProfileProps &
   AgreementsProps &
@@ -144,6 +147,7 @@ type CombinedProps = WithSnackbarProps &
   WithEventsPollingActionProps;
 
 const defaultState: State = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   attachedVLANLabel: '',
   authorized_users: [],
@@ -154,6 +158,7 @@ const defaultState: State = {
   errors: undefined,
   formIsSubmitting: false,
   password: '',
+  placementGroupSelection: undefined,
   privateIPEnabled: false,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
@@ -281,6 +286,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
+            handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
@@ -309,6 +315,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
+            updatePlacementGroupSelection={this.setPlacementGroupSelection}
             updateRegionID={this.setRegionID}
             updateStackScript={this.setStackScript}
             updateTags={this.setTags}
@@ -519,6 +526,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ vpcIPv4AddressOfLinode: IPv4 });
   };
 
+  handleVPCIPv4RangesChange = (ranges: ExtendedIP[]) => {
+    this.setState({ additionalIPv4RangesForVPC: ranges });
+  };
+
   params = getQueryParamsFromQueryString(this.props.location.search) as Record<
     string,
     string
@@ -576,25 +587,23 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * since the API does not infer this automatically.
        */
 
-      /**
-       * safe to ignore possibility of "undefined"
-       * null checking happens in CALinodeCreate
-       */
-      const selectedRegionID = getRegionIDFromLinodeID(
-        this.props.linodesData!,
-        id
-      );
       this.setState({
         selectedBackupID: undefined,
         selectedDiskSize: diskSize,
         selectedLinodeID: id,
-        selectedRegionID,
+        selectedRegionID: this.props.linodesData?.find(
+          (linode) => linode.id == id
+        )?.region,
         selectedTypeID: undefined,
       });
     }
   };
 
   setPassword = (password: string) => this.setState({ password });
+
+  setPlacementGroupSelection = (placementGroupSelection: PlacementGroup) => {
+    this.setState({ placementGroupSelection });
+  };
 
   setRegionID = (selectedRegionId: string) => {
     const { showGDPRCheckbox } = getGDPRDetails({
@@ -723,6 +732,36 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               {
                 field: 'root_pass',
                 reason: passwordError,
+              },
+            ],
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+        return;
+      }
+    }
+
+    if (payload.placement_group) {
+      const error = hasPlacementGroupReachedCapacity({
+        placementGroup: this.state.placementGroupSelection!,
+        region: this.props.regionsData.find(
+          (r) => r.id === this.state.selectedRegionID
+        )!,
+      });
+      if (error) {
+        this.setState(
+          {
+            errors: [
+              {
+                field: 'placement_group',
+                reason: `${this.state.placementGroupSelection?.label} (${
+                  this.state.placementGroupSelection?.affinity_type ===
+                  'affinity'
+                    ? 'Affinity'
+                    : 'Anti-affinity'
+                }) doesn't have any capacity for this Linode.`,
               },
             ],
           },
@@ -944,7 +983,7 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   connected,
   withSnackbar,
-  withFlags,
+  withFeatureFlags,
   withProfile,
   withAgreements,
   withQueryClient,
