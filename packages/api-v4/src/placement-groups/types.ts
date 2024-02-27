@@ -39,6 +39,9 @@ export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
  */
 export type AssignLinodesToPlacementGroupPayload = {
   linodes: [number];
+  /**
+   * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
+   */
   compliant_only?: boolean;
 };
 
