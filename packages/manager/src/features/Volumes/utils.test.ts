@@ -48,7 +48,7 @@ describe('getEventProgress', () => {
     expect(getEventProgress(event)).toBe(null);
   });
 
-  it('should return a formatted percenatge if the API returns a percentage and the event is "started"', () => {
+  it('should return a formatted percentage if the API returns a percentage and the event is "started"', () => {
     const event = eventFactory.build({
       percent_complete: 25,
       status: 'started',
@@ -58,7 +58,7 @@ describe('getEventProgress', () => {
 });
 
 describe('getUpgradeableVolumeIds', () => {
-  it('should return the id of volumes that have a corosponding upgrade notification', () => {
+  it('should return the id of volumes that have a corresponding upgrade notification', () => {
     const volumes = [
       volumeFactory.build({ id: 1 }),
       volumeFactory.build({ id: 2 }),

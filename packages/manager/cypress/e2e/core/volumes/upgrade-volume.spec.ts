@@ -10,10 +10,7 @@ import {
   mockGetLinodeDisks,
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
-import {
-  interceptMigrateVolumes,
-  mockGetVolumes,
-} from 'support/intercepts/volumes';
+import { mockMigrateVolumes, mockGetVolumes } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 
 describe('volume upgrade/migration', () => {
@@ -26,7 +23,7 @@ describe('volume upgrade/migration', () => {
     });
 
     mockGetVolumes([volume]).as('getVolumes');
-    interceptMigrateVolumes().as('migrateVolumes');
+    mockMigrateVolumes().as('migrateVolumes');
     mockGetNotifications([migrationScheduledNotification]).as(
       'getNotifications'
     );
@@ -106,7 +103,7 @@ describe('volume upgrade/migration', () => {
     });
 
     mockGetVolumes([volume]).as('getVolumes');
-    interceptMigrateVolumes().as('migrateVolumes');
+    mockMigrateVolumes().as('migrateVolumes');
     mockGetLinodeDetails(linode.id, linode).as('getLinode');
     mockGetLinodeDisks(linode.id, []);
     mockGetNotifications([migrationScheduledNotification]).as(
@@ -196,7 +193,7 @@ describe('volume upgrade/migration', () => {
       entity: { type: 'volume', id: volume.id },
     });
 
-    interceptMigrateVolumes().as('migrateVolumes');
+    mockMigrateVolumes().as('migrateVolumes');
     mockGetLinodeDetails(linode.id, linode).as('getLinode');
     mockGetLinodeDisks(linode.id, []);
     mockGetNotifications([migrationScheduledNotification]).as(

@@ -56,6 +56,14 @@ export const getEventProgress = (event: Event | undefined) => {
   return `(${event.percent_complete}%)`;
 };
 
+/**
+ * Returns an array of IDs of Volumes that are scheduled to be upgraded.
+ *
+ * @param volumes - Array from which to retrieve upgradeable Volumes.
+ * @param notifications - Notifications containing Volume migration statuses.
+ *
+ * @returns Array of upgradeable Volume IDs.
+ */
 export const getUpgradeableVolumeIds = (
   volumes: Volume[],
   notifications: Notification[]
