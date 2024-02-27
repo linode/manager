@@ -33,14 +33,15 @@ export const UsersLanding = () => {
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
 
+  const showProxyUserTable =
+    flags.parentChildAccountAccess &&
+    (profile?.user_type === 'child' || profile?.user_type === 'proxy');
+
   const usersFilter: Filter = {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
+    ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
-
-  if (flags.parentChildAccountAccess) {
-    usersFilter['user_type'] = { '+neq': 'proxy' };
-  }
 
   const { data: users, error, isLoading, refetch } = useAccountUsers({
     filters: usersFilter,
@@ -60,10 +61,6 @@ export const UsersLanding = () => {
   });
 
   const isRestrictedUser = profile?.restricted;
-
-  const showProxyUserTable =
-    flags.parentChildAccountAccess &&
-    (profile?.user_type === 'child' || profile?.user_type === 'proxy');
 
   const showChildAccountAccessCol = Boolean(
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
@@ -100,7 +97,7 @@ export const UsersLanding = () => {
             <UsersLandingTableBody
               error={proxyUserError}
               isLoading={isLoadingProxyUser}
-              numCols={numCols}
+              numCols={4}
               onDelete={handleDelete}
               users={proxyUser?.data}
             />
