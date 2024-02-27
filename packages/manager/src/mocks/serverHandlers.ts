@@ -1961,7 +1961,14 @@ export const handlers = [
   rest.post('*/account/payments', (req, res, ctx) => {
     return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
-
+  // rest.get('*/databases/mysql/instances', (req, res, ctx) => {
+  //   const online = databaseFactory.build({ status: 'ready' });
+  //   const initializing = databaseFactory.build({ status: 'initializing' });
+  //   const error = databaseFactory.build({ status: 'error' });
+  //   const unknown = databaseFactory.build({ status: 'unknown' });
+  //   const databases = [online, initializing, error, unknown];
+  //   return res(ctx.json(makeResourcePage(databases)));
+  // }),
   rest.get('*/profile/tokens', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
   }),

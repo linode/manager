@@ -341,7 +341,7 @@ export interface UserData {
 
 export interface CreateLinodePlacementGroupPayload {
   id: number;
-  compliant_only?: boolean | null;
+  compliant_only?: boolean;
 }
 
 export interface CreateLinodeRequest {
