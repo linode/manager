@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
@@ -106,6 +107,39 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       hourlyTableCell?.querySelector('[data-qa-help-button]')
     ).not.toBeInTheDocument();
   });
+
+  it('shows "Sold Out" chip for 512 GB plans', async () => {
+    const bigPlanType = extendedTypeFactory.build({
+      label: 'Dedicated 512GB',
+      heading: 'Dedicated 512 GB',
+    });
+
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <KubernetesPlanSelection
+          {...props}
+          type={bigPlanType}
+          isPlanSoldOut={false}
+        />,
+        { flags: { disableLargestGbPlans: true } }
+      )
+    );
+
+    const chip = getByText('Sold Out');
+    // {planType} 512GB plans are currently unavailable. If you have questions,
+    //  open a <SupportLink text="support ticket" />.
+
+    expect(chip).toBeVisible();
+    userEvent.click(chip);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Dedicated 512GB plans are currently unavailable.', {
+          exact: false,
+        })
+      ).toBeVisible();
+    });
+  });
 });
 
 describe('KubernetesPlanSelection (cards, mobile view)', () => {
@@ -155,5 +189,24 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
     );
 
     expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+  });
+
+  it('is disabled for 512 GB plans', () => {
+    const bigPlanType = extendedTypeFactory.build({
+      label: 'Dedicated 512GB',
+      heading: 'Dedicated 512 GB',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <KubernetesPlanSelection
+        {...props}
+        type={bigPlanType}
+        isPlanSoldOut={false}
+      />,
+      { flags: { disableLargestGbPlans: true } }
+    );
+
+    const selectionCard = getByTestId('selection-card');
+    expect(selectionCard).toBeDisabled();
   });
 });

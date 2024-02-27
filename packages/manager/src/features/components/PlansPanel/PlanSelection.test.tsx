@@ -1,8 +1,12 @@
-import { fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
-import { planSelectionTypeFactory } from 'src/factories/types';
+import {
+  planSelectionTypeFactory,
+  extendedTypeFactory,
+} from 'src/factories/types';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -161,6 +165,39 @@ describe('PlanSelection (table, desktop)', () => {
       hourlyTableCell?.querySelector('[data-qa-help-button]')
     ).not.toBeInTheDocument();
   });
+
+  it('shows "Sold Out" chip for 512 GB plans', async () => {
+    const bigPlanType = extendedTypeFactory.build({
+      label: 'Dedicated 512GB',
+      heading: 'Dedicated 512 GB',
+    });
+
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...defaultProps}
+          type={bigPlanType}
+          isPlanSoldOut={false}
+        />,
+        { flags: { disableLargestGbPlans: true } }
+      )
+    );
+
+    const chip = getByText('Sold Out');
+    // {planType} 512GB plans are currently unavailable. If you have questions,
+    //  open a <SupportLink text="support ticket" />.
+
+    expect(chip).toBeVisible();
+    userEvent.click(chip);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Dedicated 512GB plans are currently unavailable.', {
+          exact: false,
+        })
+      ).toBeVisible();
+    });
+  });
 });
 
 describe('PlanSelection (card, mobile)', () => {
@@ -254,5 +291,24 @@ describe('PlanSelection (card, mobile)', () => {
     );
 
     expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+  });
+
+  it('is disabled for 512 GB plans', () => {
+    const bigPlanType = extendedTypeFactory.build({
+      label: 'Dedicated 512GB',
+      heading: 'Dedicated 512 GB',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <PlanSelection
+        {...defaultProps}
+        type={bigPlanType}
+        isPlanSoldOut={false}
+      />,
+      { flags: { disableLargestGbPlans: true } }
+    );
+
+    const selectionCard = getByTestId('selection-card');
+    expect(selectionCard).toBeDisabled();
   });
 });
