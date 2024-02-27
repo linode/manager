@@ -220,7 +220,7 @@ export const createActionMenuItems = (
       const defaultTooltipText = isReadOnly
         ? getRestrictedResourceText({
             action: tooltipAction,
-            includeContactMessage: false,
+            includeContactInfo: false,
             resourceType: 'Linodes',
           })
         : undefined;

@@ -14,7 +14,7 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
-  { flag: 'linodeCloneUIChanges', label: 'Linode Clone UI Changes' },
+  { flag: 'linodeCloneUiChanges', label: 'Linode Clone UI Changes' },
   { flag: 'gecko', label: 'Gecko' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },

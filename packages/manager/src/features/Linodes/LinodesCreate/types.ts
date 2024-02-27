@@ -11,11 +11,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import { ExtendedType } from 'src/utilities/extendType';
 
-export interface ExtendedLinode extends Linode {
-  heading: string;
-  subHeadings: string[];
-}
-
 export type TypeInfo =
   | {
       details: string;
