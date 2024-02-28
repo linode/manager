@@ -74,7 +74,7 @@ export const AddTag = (props: AddTagProps) => {
       disableClearable
       disabled={isLoading}
       forcePopupIcon
-      label={'Add a tag'}
+      label={'Create or Select a Tag'}
       loading={loading}
       noOptionsText={<i>{`"${inputValue}" already added`}</i>} // Will display create option unless that tag is already added
       onBlur={onClose}
