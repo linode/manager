@@ -1,8 +1,12 @@
 import * as React from 'react';
 
+import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
+import { useIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -98,6 +102,19 @@ export const ConfigureForm = React.memo((props: Props) => {
     [backupEnabled, currentLinodeType]
   );
 
+  const linodeIsInEdgeRegion = useIsEdgeRegion(regions ?? [], currentRegion);
+
+  const filterRegions = () => {
+    if (linodeIsInEdgeRegion) {
+      // edge regions can only be migrated to other edge regions
+      return regions?.filter(
+        (eachRegion) =>
+          eachRegion.id !== currentRegion && eachRegion.site_type === 'edge'
+      );
+    }
+    return regions?.filter((eachRegion) => eachRegion.id !== currentRegion);
+  };
+
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -109,6 +126,14 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
+            {linodeIsInEdgeRegion && (
+              <TooltipIcon
+                icon={<EdgeServer />}
+                status="other"
+                sxTooltipIcon={sxEdgeIcon}
+                text="This region is an Edge server."
+              />
+            )}
           </StyledDiv>
           {shouldDisplayPriceComparison && (
             <MigrationPricing
@@ -119,18 +144,15 @@ export const ConfigureForm = React.memo((props: Props) => {
 
         <StyledMigrationBox>
           <RegionSelect
-            regions={
-              regions?.filter(
-                (eachRegion) => eachRegion.id !== currentRegion
-              ) ?? []
-            }
             textFieldProps={{
               helperText,
             }}
             currentCapability="Linodes"
             errorText={errorText}
+            geckoEnabled={linodeIsInEdgeRegion}
             handleSelection={handleSelectRegion}
             label="New Region"
+            regions={filterRegions() ?? []}
             selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
