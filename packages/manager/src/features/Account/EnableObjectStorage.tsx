@@ -89,8 +89,8 @@ export const EnableObjectStorage = (props: Props) => {
       .then(() => {
         updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
         handleClose();
-        queryClient.invalidateQueries([queryKey, 'buckets']);
-        queryClient.invalidateQueries([queryKey, 'access-keys']);
+        queryClient.invalidateQueries([`${queryKey}-buckets`]);
+        queryClient.invalidateQueries([`${queryKey}-access-keys`]);
       })
       .catch(handleError);
   };
