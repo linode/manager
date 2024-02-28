@@ -58,7 +58,7 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should populate the region select with the selected region prop', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
@@ -66,7 +66,9 @@ describe('PlacementGroupsCreateDrawer', () => {
     );
 
     await waitFor(() => {
-      expect(getByLabelText('Region')).toHaveValue('Newark, NJ (us-east)');
+      expect(getByTestId('selected-region')).toHaveTextContent(
+        'Newark, NJ (us-east)'
+      );
     });
   });
 
@@ -111,6 +113,27 @@ describe('PlacementGroupsCreateDrawer', () => {
         label: 'my-label',
         region: 'us-east',
       });
+    });
+  });
+
+  it('should display an error message if the region has reached capacity', async () => {
+    const regionWithoutCapacity = 'Fremont, CA (us-west)';
+    const { getByPlaceholderText, getByText } = renderWithTheme(
+      <PlacementGroupsCreateDrawer {...commonProps} />
+    );
+
+    const regionSelect = getByPlaceholderText('Select a Region');
+    fireEvent.focus(regionSelect);
+    fireEvent.change(regionSelect, {
+      target: { value: regionWithoutCapacity },
+    });
+    await waitFor(() => {
+      const selectedRegionOption = getByText(regionWithoutCapacity);
+      fireEvent.click(selectedRegionOption);
+    });
+
+    await waitFor(() => {
+      expect(getByText('This region has reached capacity')).toBeInTheDocument();
     });
   });
 });

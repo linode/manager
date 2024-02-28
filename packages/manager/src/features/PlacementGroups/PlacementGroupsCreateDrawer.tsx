@@ -54,7 +54,11 @@ export const PlacementGroupsCreateDrawer = (
   const [
     hasRegionReachedPGCapacity,
     setHasRegionReachedPGCapacity,
-  ] = React.useState<boolean>(true);
+  ] = React.useState<boolean>(false);
+
+  const selectedRegionFromProps = regions?.find(
+    (r) => r.id === selectedRegionId
+  );
 
   const handleRegionSelect = (region: Region['id']) => {
     const selectedRegion = regions?.find((r) => r.id === region);
@@ -68,7 +72,7 @@ export const PlacementGroupsCreateDrawer = (
     );
   };
 
-  const handleDrawerOpen = () => {
+  const handleResetForm = () => {
     resetForm();
     setHasFormBeenSubmitted(false);
     setHasRegionReachedPGCapacity(false);
@@ -76,7 +80,7 @@ export const PlacementGroupsCreateDrawer = (
 
   const handleDrawerClose = () => {
     onClose();
-    handleDrawerOpen(); // Reset form and state when drawer closes
+    handleResetForm();
   };
 
   const handleFormSubmit = async (
@@ -103,6 +107,7 @@ export const PlacementGroupsCreateDrawer = (
       if (onPlacementGroupCreate) {
         onPlacementGroupCreate(response);
       }
+      handleResetForm();
       onClose();
     } catch {
       const mapErrorToStatus = () =>
@@ -153,6 +158,12 @@ export const PlacementGroupsCreateDrawer = (
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
+          {selectedRegionFromProps && (
+            <Typography data-testid="selected-region">
+              <strong>Region: </strong>
+              {`${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`}
+            </Typography>
+          )}
           <TextField
             inputProps={{
               autoFocus: true,
@@ -166,21 +177,23 @@ export const PlacementGroupsCreateDrawer = (
             onChange={handleChange}
             value={values.label}
           />
-          <RegionSelect
-            errorText={
-              hasRegionReachedPGCapacity
-                ? 'This region has reached capacity'
-                : errors.region
-            }
-            handleSelection={(selection) => {
-              handleRegionSelect(selection);
-            }}
-            currentCapability="Placement Group"
-            disabled={Boolean(selectedRegionId)}
-            helperText="Only regions supporting Placement Groups are listed."
-            regions={regions ?? []}
-            selectedId={selectedRegionId ?? values.region}
-          />
+          {!selectedRegionId && (
+            <RegionSelect
+              errorText={
+                hasRegionReachedPGCapacity
+                  ? 'This region has reached capacity'
+                  : errors.region
+              }
+              handleSelection={(selection) => {
+                handleRegionSelect(selection);
+              }}
+              currentCapability="Placement Group"
+              disabled={Boolean(selectedRegionId)}
+              helperText="Only regions supporting Placement Groups are listed."
+              regions={regions ?? []}
+              selectedId={selectedRegionId ?? values.region}
+            />
+          )}
           <Autocomplete
             onChange={(_, value) => {
               setFieldValue('affinity_type', value?.value ?? '');
@@ -188,11 +201,6 @@ export const PlacementGroupsCreateDrawer = (
             textFieldProps={{
               tooltipText: 'TODO VM_Placement: update copy',
             }}
-            value={
-              affinityTypeOptions.find(
-                (option) => option.value === values.affinity_type
-              ) ?? undefined
-            }
             disableClearable={true}
             errorText={errors.affinity_type}
             label="Affinity Type"
