@@ -32,11 +32,18 @@ import {
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
+import type { FormikHelpers } from 'formik';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
-  const { onClose, onPlacementGroupCreate, open, selectedRegionId } = props;
+  const {
+    allExistingPlacementGroups,
+    onClose,
+    onPlacementGroupCreate,
+    open,
+    selectedRegionId,
+  } = props;
   const { data: regions } = useRegionsQuery();
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
@@ -44,17 +51,71 @@ export const PlacementGroupsCreateDrawer = (
     hasFormBeenSubmitted,
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
-  const [hasRegionCapacity, setHasRegionCapacity] = React.useState<boolean>(
-    true
-  );
+  const [
+    hasRegionReachedPGCapacity,
+    setHasRegionReachedPGCapacity,
+  ] = React.useState<boolean>(true);
 
   const handleRegionSelect = (region: Region['id']) => {
     const selectedRegion = regions?.find((r) => r.id === region);
 
     setFieldValue('region', region);
-    setHasRegionCapacity(
-      hasRegionReachedPlacementGroupCapacity(selectedRegion)
+    setHasRegionReachedPGCapacity(
+      hasRegionReachedPlacementGroupCapacity({
+        allPlacementGroups: allExistingPlacementGroups,
+        region: selectedRegion,
+      })
     );
+  };
+
+  const handleDrawerOpen = () => {
+    resetForm();
+    setHasFormBeenSubmitted(false);
+    setHasRegionReachedPGCapacity(false);
+  };
+
+  const handleDrawerClose = () => {
+    onClose();
+    handleDrawerOpen(); // Reset form and state when drawer closes
+  };
+
+  const handleFormSubmit = async (
+    values: CreatePlacementGroupPayload,
+    {
+      setErrors,
+      setStatus,
+      setSubmitting,
+    }: FormikHelpers<CreatePlacementGroupPayload>
+  ) => {
+    setHasFormBeenSubmitted(false);
+    setStatus(undefined);
+    setErrors({});
+    const payload = { ...values };
+
+    try {
+      const response = await mutateAsync(payload);
+      setSubmitting(false);
+
+      enqueueSnackbar(`Placement Group ${payload.label} successfully created`, {
+        variant: 'success',
+      });
+
+      if (onPlacementGroupCreate) {
+        onPlacementGroupCreate(response);
+      }
+      onClose();
+    } catch {
+      const mapErrorToStatus = () =>
+        setStatus({ generalError: getErrorMap([], error).none });
+
+      setSubmitting(false);
+      handleFieldErrors(setErrors, error ?? []);
+      handleGeneralErrors(
+        mapErrorToStatus,
+        error ?? [],
+        'Error creating Placement Group.'
+      );
+    }
   };
 
   const {
@@ -75,64 +136,20 @@ export const PlacementGroupsCreateDrawer = (
       label: '',
       region: selectedRegionId ?? '',
     },
-    async onSubmit(
-      values: CreatePlacementGroupPayload,
-      { setErrors, setStatus, setSubmitting }
-    ) {
-      setHasFormBeenSubmitted(false);
-      setStatus(undefined);
-      setErrors({});
-      const payload = { ...values };
-
-      try {
-        const response = await mutateAsync(payload);
-        setSubmitting(false);
-
-        enqueueSnackbar(
-          `Placement Group ${payload.label} successfully created`,
-          {
-            variant: 'success',
-          }
-        );
-
-        if (onPlacementGroupCreate) {
-          onPlacementGroupCreate(response);
-        }
-        onClose();
-      } catch {
-        const mapErrorToStatus = () =>
-          setStatus({ generalError: getErrorMap([], error).none });
-
-        setSubmitting(false);
-        handleFieldErrors(setErrors, error ?? []);
-        handleGeneralErrors(
-          mapErrorToStatus,
-          error ?? [],
-          'Error creating Placement Group.'
-        );
-      }
-    },
+    onSubmit: handleFormSubmit,
     validateOnBlur: false,
     validateOnChange: hasFormBeenSubmitted,
     validationSchema: createPlacementGroupSchema,
   });
 
-  React.useEffect(() => {
-    resetForm();
-    setHasFormBeenSubmitted(false);
-    setHasRegionCapacity(true);
-  }, [open, resetForm]);
-
-  React.useEffect(() => {
-    if (isSubmitting) {
-      setHasFormBeenSubmitted(isSubmitting);
-    }
-  }, [isSubmitting]);
-
   const generalError = status?.generalError;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create Placement Group">
+    <Drawer
+      onClose={handleDrawerClose}
+      open={open}
+      title="Create Placement Group"
+    >
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
@@ -151,7 +168,7 @@ export const PlacementGroupsCreateDrawer = (
           />
           <RegionSelect
             errorText={
-              !hasRegionCapacity
+              hasRegionReachedPGCapacity
                 ? 'This region has reached capacity'
                 : errors.region
             }
@@ -227,9 +244,10 @@ export const PlacementGroupsCreateDrawer = (
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: isSubmitting || !hasRegionCapacity,
+              disabled: isSubmitting || hasRegionReachedPGCapacity,
               label: 'Create Placement Group',
               loading: isSubmitting,
+              onClick: () => setHasFormBeenSubmitted(true),
               type: 'submit',
             }}
             secondaryButtonProps={{

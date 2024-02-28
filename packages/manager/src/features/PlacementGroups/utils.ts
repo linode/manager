@@ -31,7 +31,9 @@ interface HasPlacementGroupReachedCapacityOptions {
 }
 
 /**
- * Helper to determine if a Placement Group has reached capacity.
+ * Helper to determine if a Placement Group has reached its linode capacity.
+ *
+ * based on the region's `maximum_vms_per_pg`.
  */
 export const hasPlacementGroupReachedCapacity = ({
   placementGroup,
@@ -46,17 +48,33 @@ export const hasPlacementGroupReachedCapacity = ({
   );
 };
 
+interface HasRegionReachedPlacementGroupCapacityOptions {
+  allPlacementGroups: PlacementGroup[] | undefined;
+  region: Region | undefined;
+}
+
 /**
- * Helper to determine if a region has reached its placement group capacity for the user.
+ * Helper to determine if a region has reached its placement group capacity.
+ *
+ * based on the region's `maximum_pgs_per_customer`.
  */
-export const hasRegionReachedPlacementGroupCapacity = (
-  region: Region | undefined
-): boolean => {
-  if (!region) {
+export const hasRegionReachedPlacementGroupCapacity = ({
+  allPlacementGroups,
+  region,
+}: HasRegionReachedPlacementGroupCapacityOptions): boolean => {
+  if (!region || !allPlacementGroups) {
     return false;
   }
 
-  return region.maximum_pgs_per_customer > 0;
+  const { maximum_pgs_per_customer } = region;
+  const placementGroupsInRegion = allPlacementGroups.filter(
+    (pg) => pg.region === region.id
+  );
+
+  return (
+    placementGroupsInRegion.length >= maximum_pgs_per_customer ||
+    maximum_pgs_per_customer === 0
+  );
 };
 
 /**
