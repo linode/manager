@@ -221,9 +221,19 @@ export const isEdgeRegion = (regionsData: Region[], selectedRegion: string) => {
 };
 
 export const useIsEdgeRegion = (
-  regionsData: Region[],
-  selectedRegion: string
+  selectedRegion: string,
+  regionsData: Region[]
 ) => {
   const flags = useFlags();
   return Boolean(flags.gecko && isEdgeRegion(regionsData, selectedRegion));
+};
+
+export const filterOutCurrentRegionAndCoreRegions = (
+  currentRegion: string,
+  regions: Region[]
+) => {
+  return regions?.filter(
+    (eachRegion) =>
+      eachRegion.id !== currentRegion && eachRegion.site_type === 'edge'
+  );
 };

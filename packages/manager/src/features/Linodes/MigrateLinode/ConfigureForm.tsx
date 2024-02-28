@@ -5,7 +5,10 @@ import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
-import { useIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  filterOutCurrentRegionAndCoreRegions,
+  useIsEdgeRegion,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -102,15 +105,12 @@ export const ConfigureForm = React.memo((props: Props) => {
     [backupEnabled, currentLinodeType]
   );
 
-  const linodeIsInEdgeRegion = useIsEdgeRegion(regions ?? [], currentRegion);
+  const linodeIsInEdgeRegion = useIsEdgeRegion(currentRegion, regions ?? []);
 
   const filterRegions = () => {
     if (linodeIsInEdgeRegion) {
       // edge regions can only be migrated to other edge regions
-      return regions?.filter(
-        (eachRegion) =>
-          eachRegion.id !== currentRegion && eachRegion.site_type === 'edge'
-      );
+      return filterOutCurrentRegionAndCoreRegions(currentRegion, regions ?? []);
     }
     return regions?.filter((eachRegion) => eachRegion.id !== currentRegion);
   };
