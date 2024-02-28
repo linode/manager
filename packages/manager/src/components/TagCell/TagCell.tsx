@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
-import { useMutationObserver } from 'src/hooks/useMutationObserver';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
 
@@ -44,24 +43,12 @@ export const TagCell = (props: TagCellProps) => {
   );
   const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
 
-  // In production, a parent element sometimes is briefly
-  // set to display: none, breaking overflow detection.
-  // On mount, find the parent and listen for changes.
-  const renderParent = React.useMemo(() => {
-    let parent: HTMLElement | null = elRef;
-    while (parent != null && parent.style.display != 'none') {
-      parent = parent.parentElement;
-    }
-    return parent;
-  }, [elRef]);
-
   const windowDimensions = useWindowDimensions();
-  const lastMutations = useMutationObserver(renderParent, { attributes: true });
 
   const [hasOverflow, setHasOverflow] = React.useState(false);
   React.useLayoutEffect(() => {
     setHasOverflow(!!elRef && checkOverflow(elRef));
-  }, [windowDimensions, lastMutations, tags, elRef]);
+  }, [windowDimensions, tags, elRef]);
 
   const handleAddTag = async (tag: string) => {
     await updateTags([...tags, tag]);
