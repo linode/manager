@@ -36,14 +36,12 @@ export const ConfigSelect = React.memo((props: Props) => {
     return { label: config.label, value: config.id };
   });
 
-  React.useEffect(() => {
-    if (configList?.length === 1) {
-      const newValue = configList[0].value;
-      if (value !== newValue) {
-        onChange(configList[0].value);
-      }
+  if (configList?.length === 1) {
+    const newValue = configList[0].value;
+    if (value !== newValue) {
+      onChange(newValue);
     }
-  }, [configList, onChange, value]);
+  }
 
   if (linodeId === null) {
     return null;

@@ -10,7 +10,6 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
@@ -57,10 +56,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
-  const {
-    hasFormBeenSubmitted,
-    setHasFormBeenSubmitted,
-  } = useFormValidateOnChange();
 
   const { checkForNewEvents } = useEventsPollingActions();
 
@@ -95,7 +90,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           size: maybeCastToNumber(size),
           tags,
         });
-        setHasFormBeenSubmitted(false);
         checkForNewEvents();
         enqueueSnackbar(`Volume scheduled for creation.`, {
           variant: 'success',
@@ -105,7 +99,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         // Analytics Event
         sendCreateVolumeEvent(`Size: ${size}GB`, origin);
       } catch (error) {
-        setHasFormBeenSubmitted(true);
         handleFieldErrors(setErrors, error);
         handleGeneralErrors(
           setStatus,
@@ -114,8 +107,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         );
       }
     },
-    validateOnBlur: false,
-    validateOnChange: hasFormBeenSubmitted,
     validationSchema: CreateVolumeSchema,
   });
 
@@ -176,6 +167,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       <ConfigSelect
         disabled={disabled}
         error={touched.config_id ? errors.config_id : undefined}
+        key={linode.id}
         linodeId={linode.id}
         name="configId"
         onBlur={handleBlur}
@@ -214,7 +206,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           disabled,
           label: 'Create Volume',
           loading: isSubmitting,
-          onClick: () => setHasFormBeenSubmitted(true),
           type: 'submit',
         }}
         secondaryButtonProps={{
