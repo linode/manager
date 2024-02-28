@@ -191,13 +191,18 @@ export const allScopesAreTheSame = (
   const sample = scopes[0];
 
   // Remove any scopes not to be included in the comparison.
+  // const filteredScopes = scopes.filter(
+  //   (scope: Permission) =>
+  //     !excludedScopes?.find(
+  //       (excludedScope) =>
+  //         excludedScope.name === scope[0] &&
+  //         excludedScope.accessLevelToExcludeFrom === sample[1]
+  //     )
+  // );
+
+  // Filter out the VPC scope if it's set to its default.
   const filteredScopes = scopes.filter(
-    (scope: Permission) =>
-      !excludedScopes?.find(
-        (excludedScope) =>
-          excludedScope.name === scope[0] &&
-          excludedScope.accessLevelToExcludeFrom === sample[1]
-      )
+    (scope: Permission) => !('vpc' === scope[0] && scope[1] === 0)
   );
 
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
