@@ -42,7 +42,7 @@ describe('Edit API Token Drawer', () => {
     await act(async () => {
       const labelField = getByTestId('textfield-input');
 
-      userEvent.type(labelField, 'updated-token-label');
+      await userEvent.type(labelField, 'updated-token-label');
 
       const saveButton = getByTestId('save-button');
 
