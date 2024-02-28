@@ -18,8 +18,8 @@ export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
   })
 );
 
-export const StyledScaleUpButton = styled(Button, {
-  label: 'StyledScaleUpButton',
+export const StyledResizeButton = styled(Button, {
+  label: 'StyledResizeButton',
 })(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     marginRight: theme.spacing(),

@@ -35,9 +35,11 @@ import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
+import { VolumesUpgradeBanner } from '../VolumesUpgradeBanner';
 import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
+import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 interface TagDrawerProps {
   open: boolean;
@@ -93,6 +95,7 @@ const LinodeDetailHeader = () => {
   const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
     false
   );
+  const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -222,20 +225,21 @@ const LinodeDetailHeader = () => {
 
   return (
     <>
-      <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
+      <HostMaintenance linodeStatus={linode.status} />
       <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
+      <VolumesUpgradeBanner linodeId={linode.id} />
       <ProductInformationBanner bannerLocation="Linodes" />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            editableTextTitle: linode?.label ?? '',
+            editableTextTitle: linode.label,
             errorText: editableLabelError,
             handleAnalyticsEvent: () => sendEditBreadcrumbEvent(),
             onCancel: resetEditableLabel,
             onEdit: handleLinodeLabelUpdate,
           },
-          pathname: `/linodes/${linode?.label}`,
+          pathname: `/linodes/${linode.label}`,
         }}
         onDocsClick={() => {
           sendLinodeCreateFlowDocsClickEvent('Getting Started');
@@ -251,7 +255,7 @@ const LinodeDetailHeader = () => {
         openTagDrawer={openTagDrawer}
       />
       <PowerActionsDialog
-        action={powerAction ?? 'Reboot'}
+        action={powerAction}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
         manuallyUpdateConfigs={showVPCs}
@@ -283,9 +287,14 @@ const LinodeDetailHeader = () => {
         onClose={closeDialogs}
         open={migrateDialogOpen}
       />
+      <UpgradeVolumesDialog
+        linode={linode}
+        onClose={closeDialogs}
+        open={isUpgradeVolumesDialogOpen}
+      />
       <TagDrawer
-        entityID={linode?.id}
-        entityLabel={linode?.label ?? ''}
+        entityID={linode.id}
+        entityLabel={linode.label}
         onClose={closeTagDrawer}
         open={tagDrawer.open}
         tags={tagDrawer.tags}

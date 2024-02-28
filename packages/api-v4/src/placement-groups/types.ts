@@ -6,6 +6,7 @@ export const AFFINITY_TYPES = {
 } as const;
 
 export type AffinityType = keyof typeof AFFINITY_TYPES;
+export type AffinityEnforcement = 'Strict' | 'Flexible';
 
 export interface PlacementGroup {
   id: number;
@@ -13,25 +14,37 @@ export interface PlacementGroup {
   region: Region['id'];
   affinity_type: AffinityType;
   is_compliant: boolean;
-  linode_ids: number[];
+  linodes: {
+    linode: number;
+    is_compliant: boolean;
+  }[];
+  is_strict: boolean;
 }
 
-// The `strict` parameter specifies whether placement groups should be ignored when looking for a host.
-// TODO VM_Placement: figure out the values for each create flow (create, clone, migrate etc)
-export type CreatePlacementGroupPayload = Pick<
+export type PlacementGroupPayload = Pick<
   PlacementGroup,
-  'label' | 'affinity_type' | 'region'
-> & { strict: boolean };
+  'id' | 'label' | 'affinity_type' | 'is_strict'
+>;
 
-export type RenamePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
+export type CreatePlacementGroupPayload = Omit<PlacementGroupPayload, 'id'> & {
+  region: Region['id'];
+};
+
+export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 
 /**
  * Since the API expects an array of ONE linode id, we'll use a tuple here.
  */
 export type AssignLinodesToPlacementGroupPayload = {
   linodes: [number];
-  strict: boolean;
+  /**
+   * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
+   *
+   * @default false
+   */
+  compliant_only?: boolean;
 };
+
 export type UnassignLinodesFromPlacementGroupPayload = {
   linodes: [number];
 };

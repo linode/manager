@@ -3,10 +3,10 @@ import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Toggle } from 'src/components/Toggle/Toggle';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
@@ -52,10 +52,6 @@ export const LimitedAccessControls = React.memo((props: Props) => {
   return (
     <>
       <FormControlLabel
-        sx={(theme) => ({
-          marginTop: theme.spacing(0.5),
-          marginBottom: theme.spacing(0.5),
-        })}
         control={
           <Toggle
             checked={checked}
@@ -74,6 +70,10 @@ export const LimitedAccessControls = React.memo((props: Props) => {
             'Limited Access'
           )
         }
+        sx={(theme) => ({
+          marginBottom: theme.spacing(0.5),
+          marginTop: theme.spacing(0.5),
+        })}
       />
       <Typography>
         Limited access keys can list all buckets, regardless of access. They can
