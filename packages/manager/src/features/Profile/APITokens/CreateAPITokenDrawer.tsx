@@ -76,6 +76,7 @@ export const genExpiryTups = (): Expiry[] => {
 
 export interface ExcludedScope {
   defaultAccessLevel: number;
+  invalidAccessLevels: number[];
   name: string;
 }
 
@@ -171,9 +172,20 @@ export const CreateAPITokenDrawer = (props: Props) => {
     const value = +e.currentTarget.value;
     const newScopes = form.values.scopes.map(
       (scope): Permission => {
-        // VPC does not support Read Only access; default to None.
-        if (scope[0] === 'vpc' && value === 1) {
-          return [scope[0], 0];
+        // Check the excluded scopes object to see if the current scope will have its own defaults.
+        const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
+          (excludedScope) =>
+            excludedScope.name === scope[0] &&
+            excludedScope.invalidAccessLevels.includes(value)
+        );
+
+        // Set an excluded scope based on its default access level, not the given Select All value.
+        if (indexOfExcludedScope >= 0) {
+          return [
+            scope[0],
+            excludedScopesFromSelectAll[indexOfExcludedScope]
+              .defaultAccessLevel,
+          ];
         }
         return [scope[0], value];
       }
@@ -189,6 +201,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const excludedScopesFromSelectAll: ExcludedScope[] = [
     {
       defaultAccessLevel: 0,
+      invalidAccessLevels: [1],
       name: 'vpc',
     },
   ];
