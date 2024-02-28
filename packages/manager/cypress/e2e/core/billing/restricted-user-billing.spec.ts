@@ -1,11 +1,17 @@
 /**
  * @file Integration tests for restricted user billing flows.
  */
-
+import type { Grants } from '@linode/api-v4';
 import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
-import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
+import {
+  mockGetPaymentMethods,
+  mockGetUser,
+  mockGetUserGrants,
+  mockUpdateUserGrants,
+} from 'support/intercepts/account';
+import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -17,6 +23,11 @@ import {
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
+
+import {
+  globalPermissionsLabels,
+  selectBillingAccess,
+} from '../account/user-permissions.spec';
 
 // Tooltip message that appears on disabled billing action buttons for restricted
 // and child users.
@@ -331,6 +342,83 @@ describe('restricted user billing flows', () => {
       cy.findByText(mockProfileParent.username);
       assertEditBillingInfoEnabled();
       assertAddPaymentMethodEnabled();
+    });
+
+    /*
+     * - Smoke test to confirm that parent users with "child_account_access" grant can see the "Switch Account" button.
+     */
+    it('shows Switch Account button for parent account users that have child_account_access', () => {
+      const mockProfile = profileFactory.build({
+        username: randomLabel(),
+        user_type: 'parent',
+      });
+
+      const mockUser = accountUserFactory.build({
+        username: randomLabel(),
+        restricted: true,
+        user_type: 'parent',
+      });
+
+      const mockUserGrants = { ...userPermissionsGrants };
+
+      // Mock grants after global permissions changes have been applied.
+      const mockUserGrantsUpdatedGlobal: Grants = {
+        ...mockUserGrants,
+        global: {
+          account_access: 'read_only',
+          cancel_account: true,
+          child_account_access: true,
+          add_domains: true,
+          add_firewalls: true,
+          add_images: true,
+          add_linodes: true,
+          add_longview: true,
+          add_nodebalancers: true,
+          add_stackscripts: true,
+          add_volumes: true,
+          add_vpcs: true,
+          longview_subscription: true,
+        },
+      };
+
+      mockGetProfile(mockProfile).as('getProfile');
+      mockGetUser(mockUser).as('getUser');
+      mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
+      cy.visitWithLogin(`/account/users/${mockUser.username}/permissions`);
+      cy.wait(['@getUser', '@getUserGrants']);
+
+      mockUpdateUserGrants(mockUser.username, mockUserGrantsUpdatedGlobal).as(
+        'updateUserGrants'
+      );
+      cy.get('[data-qa-global-section]')
+        .should('be.visible')
+        .within(() => {
+          // TODO: This should cause this test to fail!
+          const globalPermissionsLabelsFiltered = globalPermissionsLabels.filter(
+            (label) => label !== 'Child Account Access'
+          );
+          globalPermissionsLabelsFiltered.forEach((permissionLabel: string) => {
+            cy.findByText(permissionLabel).should('be.visible').click();
+          });
+
+          selectBillingAccess('Read Only');
+
+          ui.button
+            .findByTitle('Save')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          cy.wait('@updateUserGrants');
+        });
+
+      // Confirm that toast notification appears when updating global permissions.
+      ui.toast.assertMessage('General user permissions successfully saved.');
+
+      cy.visitWithLogin('/account/billing');
+      cy.wait(['@getProfile', '@getUser', '@getUserGrants']);
+
+      cy.get('[data-testid="switch-account-button"]').should('be.visible');
     });
   });
 });
