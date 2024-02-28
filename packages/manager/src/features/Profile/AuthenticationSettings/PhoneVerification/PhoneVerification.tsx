@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -98,7 +98,7 @@ export const PhoneVerification = ({
       );
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries([queryKey]);
     }
 
     // reset form states

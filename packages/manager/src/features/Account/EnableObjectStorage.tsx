@@ -3,7 +3,7 @@ import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
@@ -89,8 +89,8 @@ export const EnableObjectStorage = (props: Props) => {
       .then(() => {
         updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
         handleClose();
-        queryClient.invalidateQueries(`${queryKey}-buckets`);
-        queryClient.invalidateQueries(`${queryKey}-access-keys`);
+        queryClient.invalidateQueries([queryKey, 'buckets']);
+        queryClient.invalidateQueries([queryKey, 'access-keys']);
       })
       .catch(handleError);
   };
