@@ -4,8 +4,8 @@
 
 import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantFactory, grantsFactory } from '@src/factories/grants';
-import { mockGetPaymentMethods, mockGetUser, mockGetUserGrants } from 'support/intercepts/account';
+import { grantsFactory } from '@src/factories/grants';
+import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -331,33 +331,6 @@ describe('restricted user billing flows', () => {
       cy.findByText(mockProfileParent.username);
       assertEditBillingInfoEnabled();
       assertAddPaymentMethodEnabled();
-    });
-
-    /*
-     * - Smoke test to confirm that parent users without "child_account_access" grant cannot see "Switch Account" button.
-     */
-    it.only('hides Switch Account button for parent account users lacking child_account_access', () => {
-      const mockProfileParentUser = profileFactory.build({
-        username: randomLabel(),
-        restricted: true,
-        user_type: 'parent',
-      });
-
-      const mockParentUser = accountUserFactory.build({
-        username: randomLabel()
-      });
-
-      const mockGrantParentUser = grantsFactory.build({
-        global: { child_account_access: true }
-      });
-
-      mockGetProfile(mockProfileParentUser);
-      mockGetUserGrants(mockParentUser.username, mockGrantParentUser);
-      cy.visitWithLogin('/account/billing');
-
-
-      cy.get('[data-testid="switch-account-button"]').should('be.visible');
-
     });
   });
 });

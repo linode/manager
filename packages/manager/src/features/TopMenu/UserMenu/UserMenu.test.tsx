@@ -1,4 +1,4 @@
-import { findByTestId, fireEvent, getByTestId, queryByTestId, within } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountFactory, profileFactory } from 'src/factories';
