@@ -5,12 +5,10 @@ import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
-import {
-  filterOutCurrentRegionAndCoreRegions,
-  useIsEdgeRegion,
-} from 'src/components/RegionSelect/RegionSelect.utils';
+import { filterOutCurrentRegionAndCoreRegions } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
@@ -56,6 +54,7 @@ export const ConfigureForm = React.memo((props: Props) => {
     selectedRegion,
   } = props;
 
+  const flags = useFlags();
   const { data: regions } = useRegionsQuery();
   const { data: currentLinodeType } = useTypeQuery(
     linodeType || '',
@@ -105,7 +104,8 @@ export const ConfigureForm = React.memo((props: Props) => {
     [backupEnabled, currentLinodeType]
   );
 
-  const linodeIsInEdgeRegion = useIsEdgeRegion(currentRegion, regions ?? []);
+  const linodeIsInEdgeRegion =
+    flags.gecko && currentActualRegion?.site_type === 'edge';
 
   const filterRegions = () => {
     if (linodeIsInEdgeRegion) {

@@ -206,28 +206,6 @@ export const useIsGeckoEnabled = (createType: LinodeCreateType) => {
   );
 };
 
-/**
- * Util to determine whether a selected region is an edge region.
- *
- * @returns a boolean indicating whether or not the selected region is an edge region.
- */
-export const isEdgeRegion = (regionsData: Region[], selectedRegion: string) => {
-  return (
-    regionsData.find(
-      (region) =>
-        region.id === selectedRegion || region.label === selectedRegion
-    )?.site_type === 'edge'
-  );
-};
-
-export const useIsEdgeRegion = (
-  selectedRegion: string,
-  regionsData: Region[]
-) => {
-  const flags = useFlags();
-  return Boolean(flags.gecko && isEdgeRegion(regionsData, selectedRegion));
-};
-
 export const filterOutCurrentRegionAndCoreRegions = (
   currentRegion: string,
   regions: Region[]
