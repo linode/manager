@@ -174,7 +174,7 @@ export const useDatabaseCredentialsQuery = (
   enabled: boolean = false
 ) =>
   useQuery<DatabaseCredentials, APIError[]>(
-    [[queryKey, 'credentials'], id],
+    [queryKey, 'credentials', id],
     () => getDatabaseCredentials(engine, id),
     { ...queryPresets.oneTimeFetch, enabled }
   );
@@ -185,8 +185,8 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
     () => resetDatabaseCredentials(engine, id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([[queryKey, 'credentials'], id]);
-        queryClient.removeQueries([[queryKey, 'credentials'], id]);
+        queryClient.invalidateQueries([queryKey, 'credentials', id]);
+        queryClient.removeQueries([queryKey, 'credentials', id]);
       },
     }
   );
