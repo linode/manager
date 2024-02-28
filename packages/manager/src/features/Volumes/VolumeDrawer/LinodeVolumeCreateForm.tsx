@@ -167,6 +167,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       <ConfigSelect
         disabled={disabled}
         error={touched.config_id ? errors.config_id : undefined}
+        key={linode.id}
         linodeId={linode.id}
         name="configId"
         onBlur={handleBlur}
