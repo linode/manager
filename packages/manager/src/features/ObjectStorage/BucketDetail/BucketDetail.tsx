@@ -271,7 +271,10 @@ export const BucketDetail = () => {
     const dataCopy = [...copy[copy.length - 1].data];
 
     dataCopy.push(object);
-    copy[copy.length - 1].data = dataCopy;
+    copy[copy.length - 1] = {
+      ...copy[copy.length - 1],
+      data: dataCopy,
+    };
 
     updateStore(copy);
   };
