@@ -4,7 +4,7 @@
 
 import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
+import { grantFactory, grantsFactory } from '@src/factories/grants';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
@@ -331,6 +331,30 @@ describe('restricted user billing flows', () => {
       cy.findByText(mockProfileParent.username);
       assertEditBillingInfoEnabled();
       assertAddPaymentMethodEnabled();
+    });
+
+    /*
+     * - Smoke test to confirm that regular and parent users can edit billing information.
+     * - Confirms that billing action buttons are enabled and open their respective drawers on click.
+     */
+    it('hides Switch Account button for parent account users lacking child_account_access', () => {
+      const mockProfileParentUser = profileFactory.build({
+        username: randomLabel(),
+        restricted: true,
+        user_type: 'parent',
+      });
+
+      const mockGrantParentUser = grantsFactory.build({
+        global: { child_account_access: true }
+      });
+
+      // Confirm button behavior for parent users.
+      // mockGetProfile(mockProfileParent);
+      // mockGetUser(mockUserParent);
+      // cy.visitWithLogin('/account/billing');
+      // cy.findByText(mockProfileParent.username);
+      // assertEditBillingInfoEnabled();
+      // assertAddPaymentMethodEnabled();
     });
   });
 });

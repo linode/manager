@@ -21,6 +21,7 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
@@ -71,8 +72,13 @@ export const UserMenu = React.memo(() => {
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
   const isParentUser = profile?.user_type === 'parent';
   const isProxyUser = profile?.user_type === 'proxy';
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
   const canSwitchBetweenParentOrProxyAccount =
-    hasParentChildAccountAccess && (isParentUser || isProxyUser);
+    hasParentChildAccountAccess &&
+    (isParentUser || isProxyUser) &&
+    !isChildAccountAccessRestricted;
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
   const companyName =
@@ -278,6 +284,7 @@ export const UserMenu = React.memo(() => {
                 handleAccountSwitch();
               }}
               buttonType="outlined"
+              data-testid="switch-account-button"
             />
           )}
           <Box>

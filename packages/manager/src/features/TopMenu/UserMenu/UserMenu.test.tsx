@@ -1,7 +1,8 @@
-import { fireEvent, within } from '@testing-library/react';
+import { findByTestId, fireEvent, getByTestId, queryByTestId, within } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountFactory, profileFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -142,6 +143,34 @@ describe('UserMenu', () => {
 
     expect(within(userMenuPopover).getByText('Parent Company')).toBeVisible();
     expect(within(userMenuPopover).getByText('Switch Account')).toBeVisible();
+  });
+
+  it('hides Switch Account button for parent accounts lacking child_account_access', async () => {
+    server.use(
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({ global: { child_account_access: false } })
+          )
+        );
+      }),
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            profileFactory.build({ restricted: true, user_type: 'parent' })
+          )
+        );
+      })
+    );
+
+    const { findByLabelText, queryByTestId } = renderWithTheme(<UserMenu />, {
+      flags: { parentChildAccountAccess: true },
+    });
+
+    const userMenuButton = await findByLabelText('Profile & Account');
+    fireEvent.click(userMenuButton);
+
+    expect(queryByTestId('switch-account-button')).not.toBeInTheDocument();
   });
 
   it('shows the child company name and Switch Account button in the dropdown menu for a proxy user', async () => {
