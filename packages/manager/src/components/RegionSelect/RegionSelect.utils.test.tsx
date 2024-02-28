@@ -1,6 +1,7 @@
 import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 import {
+  filterOutCurrentRegionAndCoreRegions,
   getRegionOptionAvailability,
   getRegionOptions,
   getSelectedRegionById,
@@ -45,6 +46,13 @@ const regionsWithEdge = [
     country: 'us',
     id: 'us-edge-1',
     label: 'Gecko Edge Test',
+    site_type: 'edge',
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-2',
+    label: 'Gecko Edge Test 2',
     site_type: 'edge',
   }),
 ];
@@ -137,6 +145,13 @@ describe('getRegionOptions', () => {
         site_type: 'edge',
         unavailable: false,
         value: 'us-edge-1',
+      },
+      {
+        data: { country: 'us', region: 'North America' },
+        label: 'Gecko Edge Test 2 (us-edge-2)',
+        site_type: 'edge',
+        unavailable: false,
+        value: 'us-edge-2',
       },
       ...expectedRegions,
     ];
@@ -279,5 +294,29 @@ describe('getSelectedRegionsByIds', () => {
     ];
 
     expect(result).toEqual(expected);
+  });
+});
+
+describe('filterOutCurrentRegionAndCoreRegions', () => {
+  it('should filter out current region and core regions, returning only edge regions', () => {
+    const result = filterOutCurrentRegionAndCoreRegions(
+      'us-edge-1',
+      regionsWithEdge
+    );
+    const expectedEdgeRegions = [
+      {
+        capabilities: ['Linodes'],
+        country: 'us',
+        id: 'us-edge-2',
+        label: 'Gecko Edge Test 2',
+        maximum_pgs_per_customer: 5,
+        maximum_vms_per_pg: 10,
+        resolvers: { ipv4: '1.1.1.1', ipv6: '2600:3c03::' },
+        site_type: 'edge',
+        status: 'ok',
+      },
+    ];
+
+    expect(result).toEqual(expectedEdgeRegions);
   });
 });
