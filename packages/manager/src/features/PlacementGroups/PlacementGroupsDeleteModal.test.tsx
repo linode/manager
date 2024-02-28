@@ -1,10 +1,16 @@
-import { fireEvent } from '@testing-library/react';
+import { act, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { linodeFactory, placementGroupFactory } from 'src/factories';
+import {
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
+
+import type { RenderResult } from '@testing-library/react';
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
@@ -14,6 +20,7 @@ const queryMocks = vi.hoisted(() => ({
   }),
   useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -21,6 +28,14 @@ vi.mock('react-router-dom', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/queries/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions');
+  return {
+    ...actual,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -51,29 +66,46 @@ describe('PlacementGroupsDeleteModal', () => {
     queryMocks.useParams.mockReturnValue({
       id: '1',
     });
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'us-east',
+        }),
+      ],
+    });
     queryMocks.useAllLinodesQuery.mockReturnValue({
       data: [
         linodeFactory.build({
           id: 1,
           label: 'test-linode',
+          region: 'us-east',
         }),
       ],
     });
   });
 
-  it('should render the right form elements', () => {
+  it('should render the right form elements', async () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
         affinity_type: 'anti_affinity',
         id: 1,
         label: 'PG-to-delete',
-        linode_ids: [1],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+        ],
+        region: 'us-east',
       }),
     });
 
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <PlacementGroupsDeleteModal {...props} />
-    );
+    let renderResult: RenderResult;
+    await act(async () => {
+      renderResult = renderWithTheme(<PlacementGroupsDeleteModal {...props} />);
+    });
+
+    const { getByRole, getByTestId, getByText } = renderResult!;
 
     expect(
       getByRole('heading', {
@@ -94,18 +126,22 @@ describe('PlacementGroupsDeleteModal', () => {
     expect(getByRole('button', { name: 'Delete' })).toBeDisabled();
   });
 
-  it("should be enabled when there's no assigned linodes", () => {
+  it("should be enabled when there's no assigned linodes", async () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
         affinity_type: 'anti_affinity',
         id: 1,
         label: 'PG-to-delete',
-        linode_ids: [],
+        linodes: [],
       }),
     });
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <PlacementGroupsDeleteModal {...props} />
-    );
+
+    let renderResult: RenderResult;
+    await act(async () => {
+      renderResult = renderWithTheme(<PlacementGroupsDeleteModal {...props} />);
+    });
+
+    const { getByRole, getByTestId, getByText } = renderResult!;
 
     expect(getByText('No Linodes assigned to this Placement Group.'));
 

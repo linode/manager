@@ -21,11 +21,11 @@ export const useRestrictedGlobalGrantCheck = ({
   const { data: profile } = useProfile();
 
   if (globalGrantType !== 'account_access') {
-    return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+    return Boolean(profile?.restricted) && !grants?.global?.[globalGrantType];
   }
 
   return (
     Boolean(profile?.restricted) &&
-    grants?.global[globalGrantType] !== permittedGrantLevel
+    grants?.global?.[globalGrantType] !== permittedGrantLevel
   );
 };
