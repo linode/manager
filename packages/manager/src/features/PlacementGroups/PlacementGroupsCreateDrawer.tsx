@@ -213,9 +213,9 @@ export const PlacementGroupsCreateDrawer = (
               <FormControlLabel
                 label={
                   <Typography>
-                    <strong>Flexible.</strong> Flexible. You can assign a Linode
-                    to your placement group, even if it violates the policy of
-                    your selected Affinity Type.
+                    <strong>Flexible.</strong> You can assign a Linode to your
+                    placement group, even if it violates the policy of your
+                    selected Affinity Type.
                   </Typography>
                 }
                 control={<Radio />}

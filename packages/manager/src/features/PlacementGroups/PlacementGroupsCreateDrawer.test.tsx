@@ -68,4 +68,48 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(getByLabelText('Region')).toHaveValue('Newark, NJ (us-east)');
     });
   });
+
+  it('should call the mutation when the form is submitted', async () => {
+    const {
+      getByLabelText,
+      getByPlaceholderText,
+      getByRole,
+      getByText,
+    } = renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
+
+    fireEvent.change(getByLabelText('Label'), {
+      target: { value: 'my-label' },
+    });
+
+    const regionSelect = getByPlaceholderText('Select a Region');
+    fireEvent.focus(regionSelect);
+    fireEvent.change(regionSelect, {
+      target: { value: 'Newark, NJ (us-east)' },
+    });
+    await waitFor(() => {
+      const selectedRegionOption = getByText('Newark, NJ (us-east)');
+      fireEvent.click(selectedRegionOption);
+    });
+
+    const affinityTypeSelect = getByPlaceholderText('Select an Affinity Type');
+    fireEvent.focus(affinityTypeSelect);
+    fireEvent.change(affinityTypeSelect, { target: { value: 'Affinity' } });
+    await waitFor(() => {
+      const selectedAffinityTypeOption = getByText('Affinity');
+      fireEvent.click(selectedAffinityTypeOption);
+    });
+
+    fireEvent.click(getByRole('button', { name: 'Create Placement Group' }));
+
+    await waitFor(() => {
+      expect(
+        queryMocks.useCreatePlacementGroup().mutateAsync
+      ).toHaveBeenCalledWith({
+        affinity_type: 'affinity',
+        is_strict: true,
+        label: 'my-label',
+        region: 'us-east',
+      });
+    });
+  });
 });

@@ -6,6 +6,7 @@ import {
   getLinodesFromAllPlacementGroups,
   getPlacementGroupLinodeCount,
   hasPlacementGroupReachedCapacity,
+  hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -113,5 +114,27 @@ describe('getAffinityEnforcement', () => {
 
   it('returns "Flexible" if `is_strict` is false', () => {
     expect(getAffinityEnforcement(false)).toBe('Flexible');
+  });
+});
+
+describe('hasRegionReachedPlacementGroupCapacity', () => {
+  it('returns true if the region has reached its placement group capacity', () => {
+    expect(
+      hasRegionReachedPlacementGroupCapacity(
+        regionFactory.build({
+          maximum_pgs_per_customer: 1,
+        })
+      )
+    ).toBe(true);
+  });
+
+  it('returns false if the region has not reached its placement group capacity', () => {
+    expect(
+      hasRegionReachedPlacementGroupCapacity(
+        regionFactory.build({
+          maximum_pgs_per_customer: 0,
+        })
+      )
+    ).toBe(false);
   });
 });
