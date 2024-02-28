@@ -75,7 +75,7 @@ export const genExpiryTups = (): Expiry[] => {
 };
 
 export interface ExcludedScope {
-  accessLevelToExcludeFrom: number;
+  defaultAccessLevel: number;
   name: string;
 }
 
@@ -188,7 +188,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Permission scopes with a different default when Selecting All for the specified access level.
   const excludedScopesFromSelectAll: ExcludedScope[] = [
     {
-      accessLevelToExcludeFrom: 1,
+      defaultAccessLevel: 0,
       name: 'vpc',
     },
   ];
