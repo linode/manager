@@ -1,9 +1,9 @@
 import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 import {
-  filterOutCurrentRegionAndCoreRegions,
   getRegionOptionAvailability,
   getRegionOptions,
+  getRegionsWithoutCurrentRegionAndCoreSites,
   getSelectedRegionById,
   getSelectedRegionsByIds,
 } from './RegionSelect.utils';
@@ -297,9 +297,9 @@ describe('getSelectedRegionsByIds', () => {
   });
 });
 
-describe('filterOutCurrentRegionAndCoreRegions', () => {
+describe('getRegionsWithoutCurrentRegionAndCoreSites', () => {
   it('should filter out current region and core regions, returning only edge regions', () => {
-    const result = filterOutCurrentRegionAndCoreRegions(
+    const result = getRegionsWithoutCurrentRegionAndCoreSites(
       'us-edge-1',
       regionsWithEdge
     );

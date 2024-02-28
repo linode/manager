@@ -5,7 +5,7 @@ import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
-import { filterOutCurrentRegionAndCoreRegions } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getRegionsWithoutCurrentRegionAndCoreSites } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
@@ -104,16 +104,20 @@ export const ConfigureForm = React.memo((props: Props) => {
     [backupEnabled, currentLinodeType]
   );
 
-  const linodeIsInEdgeRegion =
-    flags.gecko && currentActualRegion?.site_type === 'edge';
+  const linodeIsInEdgeRegion = currentActualRegion?.site_type === 'edge';
 
-  const filterRegions = () => {
-    if (linodeIsInEdgeRegion) {
+  const getRegions = () => {
+    if (flags.gecko && linodeIsInEdgeRegion) {
       // edge regions can only be migrated to other edge regions
-      return filterOutCurrentRegionAndCoreRegions(currentRegion, regions ?? []);
+      return getRegionsWithoutCurrentRegionAndCoreSites(
+        currentRegion,
+        regions ?? []
+      );
     }
     return regions?.filter((eachRegion) => eachRegion.id !== currentRegion);
   };
+
+  const filteredRegions = getRegions();
 
   return (
     <StyledPaper>
@@ -149,11 +153,11 @@ export const ConfigureForm = React.memo((props: Props) => {
             }}
             currentCapability="Linodes"
             errorText={errorText}
-            geckoEnabled={linodeIsInEdgeRegion}
             handleSelection={handleSelectRegion}
             label="New Region"
-            regions={filterRegions() ?? []}
+            regions={filteredRegions ?? []}
             selectedId={selectedRegion}
+            showEdgeIcon={linodeIsInEdgeRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing
