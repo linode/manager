@@ -23,6 +23,7 @@ import {
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
+import type { FormikHelpers } from 'formik';
 
 export const PlacementGroupsEditDrawer = (
   props: PlacementGroupsEditDrawerProps
@@ -42,6 +43,54 @@ export const PlacementGroupsEditDrawer = (
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
 
+  const handleResetForm = () => {
+    resetForm();
+    setHasFormBeenSubmitted(false);
+  };
+
+  const handleDrawerClose = () => {
+    onClose();
+    handleResetForm();
+  };
+
+  const handleFormSubmit = async (
+    values: UpdatePlacementGroupPayload,
+    {
+      setErrors,
+      setStatus,
+      setSubmitting,
+    }: FormikHelpers<UpdatePlacementGroupPayload>
+  ) => {
+    setHasFormBeenSubmitted(false);
+    setStatus(undefined);
+    setErrors({});
+    const payload = { ...values };
+
+    try {
+      const response = await mutateAsync(payload);
+
+      setSubmitting(false);
+      enqueueSnackbar(`Placement Group ${payload.label} successfully updated`, {
+        variant: 'success',
+      });
+
+      if (onPlacementGroupEdit) {
+        onPlacementGroupEdit(response);
+      }
+      onClose();
+    } catch {
+      const mapErrorToStatus = () =>
+        setStatus({ generalError: getErrorMap([], error).none });
+      setSubmitting(false);
+      handleFieldErrors(setErrors, error ?? []);
+      handleGeneralErrors(
+        mapErrorToStatus,
+        error || [],
+        'Error updating Placement Group.'
+      );
+    }
+  };
+
   const {
     errors,
     handleBlur,
@@ -56,54 +105,11 @@ export const PlacementGroupsEditDrawer = (
     initialValues: {
       label: selectedPlacementGroup?.label ?? '',
     },
-    async onSubmit(values, { setErrors, setStatus, setSubmitting }) {
-      setHasFormBeenSubmitted(false);
-      setStatus(undefined);
-      setErrors({});
-      const payload = { ...values };
-
-      try {
-        const response = await mutateAsync(payload);
-
-        setSubmitting(false);
-        enqueueSnackbar(
-          `Placement Group ${payload.label} successfully updated`,
-          {
-            variant: 'success',
-          }
-        );
-
-        if (onPlacementGroupEdit) {
-          onPlacementGroupEdit(response);
-        }
-        onClose();
-      } catch {
-        const mapErrorToStatus = () =>
-          setStatus({ generalError: getErrorMap([], error).none });
-        setSubmitting(false);
-        handleFieldErrors(setErrors, error ?? []);
-        handleGeneralErrors(
-          mapErrorToStatus,
-          error || [],
-          'Error updating Placement Group.'
-        );
-      }
-    },
+    onSubmit: handleFormSubmit,
     validateOnBlur: false,
     validateOnChange: hasFormBeenSubmitted,
     validationSchema: updatePlacementGroupSchema,
   });
-
-  React.useEffect(() => {
-    resetForm();
-    setHasFormBeenSubmitted(false);
-  }, [open, resetForm]);
-
-  React.useEffect(() => {
-    if (isSubmitting) {
-      setHasFormBeenSubmitted(isSubmitting);
-    }
-  }, [isSubmitting]);
 
   const generalError = status?.generalError;
 
@@ -116,7 +122,7 @@ export const PlacementGroupsEditDrawer = (
             })`
           : ''
       }
-      onClose={onClose}
+      onClose={handleDrawerClose}
       open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}
