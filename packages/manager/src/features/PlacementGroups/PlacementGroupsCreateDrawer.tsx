@@ -25,10 +25,13 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { affinityTypeOptions } from './utils';
+import {
+  affinityTypeOptions,
+  hasRegionReachedPlacementGroupCapacity,
+} from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
-import type { CreatePlacementGroupPayload } from '@linode/api-v4';
+import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -41,6 +44,18 @@ export const PlacementGroupsCreateDrawer = (
     hasFormBeenSubmitted,
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
+  const [hasRegionCapacity, setHasRegionCapacity] = React.useState<boolean>(
+    true
+  );
+
+  const handleRegionSelect = (region: Region['id']) => {
+    const selectedRegion = regions?.find((r) => r.id === region);
+
+    setFieldValue('region', region);
+    setHasRegionCapacity(
+      hasRegionReachedPlacementGroupCapacity(selectedRegion)
+    );
+  };
 
   const {
     errors,
@@ -105,6 +120,7 @@ export const PlacementGroupsCreateDrawer = (
   React.useEffect(() => {
     resetForm();
     setHasFormBeenSubmitted(false);
+    setHasRegionCapacity(true);
   }, [open, resetForm]);
 
   React.useEffect(() => {
@@ -134,12 +150,17 @@ export const PlacementGroupsCreateDrawer = (
             value={values.label}
           />
           <RegionSelect
+            errorText={
+              !hasRegionCapacity
+                ? 'This region has reached capacity'
+                : errors.region
+            }
             handleSelection={(selection) => {
-              setFieldValue('region', selection);
+              handleRegionSelect(selection);
             }}
-            currentCapability="Linodes" // TODO VM_Placement: change to Placement Groups when available
+            currentCapability="Placement Group"
             disabled={Boolean(selectedRegionId)}
-            errorText={errors.region}
+            helperText="Only regions supporting Placement Groups are listed."
             regions={regions ?? []}
             selectedId={selectedRegionId ?? values.region}
           />
@@ -147,11 +168,15 @@ export const PlacementGroupsCreateDrawer = (
             onChange={(_, value) => {
               setFieldValue('affinity_type', value?.value ?? '');
             }}
+            textFieldProps={{
+              tooltipText: 'TODO VM_Placement: update copy',
+            }}
             value={
               affinityTypeOptions.find(
                 (option) => option.value === values.affinity_type
-              ) ?? null
+              ) ?? undefined
             }
+            disableClearable={true}
             errorText={errors.affinity_type}
             label="Affinity Type"
             options={affinityTypeOptions}
@@ -202,6 +227,7 @@ export const PlacementGroupsCreateDrawer = (
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
+              disabled: isSubmitting || !hasRegionCapacity,
               label: 'Create Placement Group',
               loading: isSubmitting,
               type: 'submit',

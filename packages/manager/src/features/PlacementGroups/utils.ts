@@ -29,6 +29,7 @@ interface HasPlacementGroupReachedCapacityOptions {
   placementGroup: PlacementGroup | undefined;
   region: Region | undefined;
 }
+
 /**
  * Helper to determine if a Placement Group has reached capacity.
  */
@@ -43,6 +44,19 @@ export const hasPlacementGroupReachedCapacity = ({
   return (
     getPlacementGroupLinodeCount(placementGroup) >= region.maximum_vms_per_pg
   );
+};
+
+/**
+ * Helper to determine if a region has reached its placement group capacity for the user.
+ */
+export const hasRegionReachedPlacementGroupCapacity = (
+  region: Region | undefined
+): boolean => {
+  if (!region) {
+    return false;
+  }
+
+  return region.maximum_pgs_per_customer > 0;
 };
 
 /**
