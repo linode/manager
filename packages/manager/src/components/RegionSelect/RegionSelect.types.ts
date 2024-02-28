@@ -33,7 +33,6 @@ export interface RegionSelectProps
    * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
-  geckoEnabled?: boolean;
   handleSelection: (id: string) => void;
   helperText?: string;
   isClearable?: boolean;
@@ -41,7 +40,8 @@ export interface RegionSelectProps
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
-  showGeckoHelperText?: boolean;
+  showEdgeIcon?: boolean;
+  showEdgeIconHelperText?: boolean;
   width?: number;
 }
 
