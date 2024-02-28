@@ -38,7 +38,7 @@ export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
   const {
-    allExistingPlacementGroups,
+    allPlacementGroups,
     onClose,
     onPlacementGroupCreate,
     open,
@@ -66,7 +66,7 @@ export const PlacementGroupsCreateDrawer = (
     setFieldValue('region', region);
     setHasRegionReachedPGCapacity(
       hasRegionReachedPlacementGroupCapacity({
-        allPlacementGroups: allExistingPlacementGroups,
+        allPlacementGroups,
         region: selectedRegion,
       })
     );

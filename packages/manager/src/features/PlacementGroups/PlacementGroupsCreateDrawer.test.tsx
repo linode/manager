@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
 const commonProps = {
-  allExistingPlacementGroups: [],
+  allPlacementGroups: [],
   onClose: vi.fn(),
   open: true,
 };
