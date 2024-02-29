@@ -141,4 +141,26 @@ describe('Create API Token Drawer', () => {
     await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
+
+  it('Should not select Read Only for VPC scope when Select All > Read Only is clicked', async () => {
+    const { getAllByTestId, getByLabelText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { vpc: true },
+      }
+    );
+    const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
+    const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;
+    const vpcReadOnlyPermRadioButton = vpcPermRadioButtons[1].firstChild;
+
+    const selectAllReadOnlyPermRadioButton = getByLabelText(
+      'Select read-only for all'
+    );
+    await userEvent.click(selectAllReadOnlyPermRadioButton);
+    expect(selectAllReadOnlyPermRadioButton).toBeChecked();
+
+    expect(vpcNonePermRadioButton).toBeChecked();
+    expect(vpcReadOnlyPermRadioButton).not.toBeChecked();
+    expect(vpcReadOnlyPermRadioButton).toBeDisabled();
+  });
 });
