@@ -1,19 +1,22 @@
 import { PriceObject } from '@linode/api-v4';
 import { Region } from '@linode/api-v4/lib/regions';
-import { styled } from '@mui/material/styles';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Hidden } from 'src/components/Hidden';
+import { IconButton } from 'src/components/IconButton';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
-import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
-import { UnavailableMessageFor512GbPlans } from 'src/features/components/PlansPanel/PlanSelection';
+import { LimitedAvailabilityMessage } from 'src/features/components/PlansPanel/PlanSelection';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
+import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -28,7 +31,7 @@ export interface KubernetesPlanSelectionProps {
   disabled?: boolean;
   getTypeCount: (planId: string) => number;
   idx: number;
-  isPlanSoldOut: boolean;
+  isLimitedAvailabilityPlan: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   selectedId?: string;
@@ -44,7 +47,7 @@ export const KubernetesPlanSelection = (
     disabled,
     getTypeCount,
     idx,
-    isPlanSoldOut,
+    isLimitedAvailabilityPlan,
     onAdd,
     onSelect,
     selectedId,
@@ -59,11 +62,9 @@ export const KubernetesPlanSelection = (
   const disabled512GbPlan =
     type.label.includes('512GB') &&
     Boolean(flags.disableLargestGbPlans) &&
-    !isPlanSoldOut &&
     !disabled;
-
+  const isDisabled = disabled || isLimitedAvailabilityPlan || disabled512GbPlan;
   const count = getTypeCount(type.id);
-
   const price: PriceObject | undefined = getLinodeRegionPrice(
     type,
     selectedRegionId
@@ -81,14 +82,17 @@ export const KubernetesPlanSelection = (
     <Grid xs={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
-          disabled={disabled || isPlanSoldOut || disabled512GbPlan}
+          disabled={isDisabled}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           value={count}
         />
         {onAdd && (
           <Button
             disabled={
-              count < 1 || disabled || isPlanSoldOut || disabled512GbPlan
+              count < 1 ||
+              disabled ||
+              isLimitedAvailabilityPlan ||
+              disabled512GbPlan
             }
             buttonType="primary"
             onClick={() => onAdd(type.id, count)}
@@ -106,28 +110,33 @@ export const KubernetesPlanSelection = (
       <Hidden mdDown>
         <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
-          disabled={disabled || isPlanSoldOut || disabled512GbPlan}
+          disabled={isDisabled}
           key={type.id}
         >
           <TableCell data-qa-plan-name>
-            {type.heading} &nbsp;
-            {(isPlanSoldOut || disabled512GbPlan) && (
-              <Tooltip
-                title={
-                  disabled512GbPlan ? (
-                    <UnavailableMessageFor512GbPlans type={type} />
-                  ) : (
-                    PLAN_IS_SOLD_OUT_COPY
-                  )
-                }
-                data-testid="sold-out-chip"
-                placement="right-start"
-              >
-                <span>
-                  <Chip label="Sold Out" />
-                </span>
-              </Tooltip>
-            )}
+            <Box alignItems="center">
+              {type.heading} &nbsp;
+              {(isLimitedAvailabilityPlan || disabled512GbPlan) && (
+                <Tooltip
+                  sx={{
+                    alignItems: 'center',
+                  }}
+                  data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
+                  data-testid="limited-availability"
+                  placement="right-start"
+                  title={<LimitedAvailabilityMessage />}
+                >
+                  <IconButton disableRipple size="small">
+                    <HelpOutline
+                      sx={{
+                        height: 16,
+                        width: 16,
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
           </TableCell>
           <TableCell
             data-qa-monthly
@@ -160,10 +169,8 @@ export const KubernetesPlanSelection = (
                   // unless we've just landed on the form, all the inputs are empty,
                   // or there was a pricing data error.
                   (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
-                  disabled ||
-                  typeof price?.hourly !== 'number' ||
-                  isPlanSoldOut ||
-                  disabled512GbPlan
+                  isDisabled ||
+                  typeof price?.hourly !== 'number'
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(type.id, newCount)
@@ -174,11 +181,7 @@ export const KubernetesPlanSelection = (
               {onAdd && (
                 <Button
                   disabled={
-                    count < 1 ||
-                    disabled ||
-                    typeof price?.hourly !== 'number' ||
-                    isPlanSoldOut ||
-                    disabled512GbPlan
+                    count < 1 || isDisabled || typeof price?.hourly !== 'number'
                   }
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}
@@ -194,23 +197,20 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
+          dataAttrs={{
+            tooltip: LIMITED_AVAILABILITY_TEXT,
+          }}
           subheadings={[
             ...subHeadings,
-            isPlanSoldOut ? <Chip label="Sold Out" /> : '',
+            isDisabled ? <Chip label="Limited Availability" /> : '',
           ]}
-          tooltip={
-            disabled512GbPlan && !isPlanSoldOut ? (
-              <UnavailableMessageFor512GbPlans type={type} />
-            ) : isPlanSoldOut ? (
-              PLAN_IS_SOLD_OUT_COPY
-            ) : undefined
-          }
           checked={type.id === String(selectedId)}
-          disabled={disabled || isPlanSoldOut || disabled512GbPlan}
+          disabled={isDisabled}
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
+          tooltip={isDisabled ? <LimitedAvailabilityMessage /> : undefined}
         />
       </Hidden>
     </React.Fragment>

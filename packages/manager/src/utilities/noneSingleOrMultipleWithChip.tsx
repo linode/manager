@@ -29,7 +29,11 @@ export const determineNoneSingleOrMultipleWithChip = (
   return (
     <StyledItemWithPlusChip>
       {dataArray[0]}{' '}
-      <Tooltip placement="bottom" title={remainingData}>
+      <Tooltip
+        data-qa-tooltip={'other remaining data'}
+        placement="bottom"
+        title={remainingData}
+      >
         <Chip
           clickable
           data-testid={remainingDataLengthChip}

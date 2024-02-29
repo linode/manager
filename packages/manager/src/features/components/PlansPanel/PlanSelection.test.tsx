@@ -25,7 +25,7 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 
 const defaultProps: PlanSelectionProps = {
   idx: 0,
-  isPlanSoldOut: false,
+  isLimitedAvailabilityPlan: false,
   onSelect: () => vi.fn(),
   type: mockPlan,
 };
@@ -244,11 +244,11 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
   });
 
-  it('shows a chip if plan is sold out', () => {
+  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', () => {
     const { getByLabelText } = renderWithTheme(
       <PlanSelection
         {...defaultProps}
-        isPlanSoldOut={true}
+        isLimitedAvailabilityPlan={true}
         selectedRegionId={'us-east'}
       />
     );

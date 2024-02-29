@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { getIsPlanSoldOut } from 'src/features/components/PlansPanel/utils';
+import { getIsLimitedAvailability } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsAvailabilityQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -61,7 +61,7 @@ export const KubernetesPlanContainer = (
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getIsPlanSoldOut({
+      const isLimitedAvailabilityPlan = getIsLimitedAvailability({
         plan,
         regionAvailabilities,
         selectedRegionId,
@@ -69,10 +69,12 @@ export const KubernetesPlanContainer = (
 
       return (
         <KubernetesPlanSelection
+          isLimitedAvailabilityPlan={
+            disabled ? false : isLimitedAvailabilityPlan
+          } // No need for tooltip due to all plans being unavailable in region
           disabled={disabled}
           getTypeCount={getTypeCount}
           idx={id}
-          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add "Sold Out" chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}

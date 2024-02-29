@@ -123,9 +123,9 @@ interface PlanSoldOutStatusOptions {
 }
 
 /**
- * Utility to determine if a plan is sold out based on a region's availability.
+ * Utility to determine if a plan is limited availability based on a region's availability.
  */
-export const getIsPlanSoldOut = ({
+export const getIsLimitedAvailability = ({
   plan,
   regionAvailabilities,
   selectedRegionId,

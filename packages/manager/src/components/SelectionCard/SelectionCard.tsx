@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
@@ -17,6 +17,10 @@ export interface SelectionCardProps {
    * Additional CSS classes to apply to the root element.
    */
   className?: string;
+  /**
+   * Additional data- attributes to apply to the root element.
+   */
+  dataAttrs?: Record<string, string> | undefined;
   /**
    * If true, the card will be disabled and will be displayed in a disabled state.
    * @default false
@@ -78,7 +82,7 @@ export interface SelectionCardProps {
   /**
    * Optional styles to apply to the grid of the card.
    */
-  sxGrid?: SxProps;
+  sxGrid?: SxProps<Theme>;
   /**
    * Optional styles to apply to the tooltip of the card.
    */
@@ -99,6 +103,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
   const {
     checked,
     className,
+    dataAttrs,
     disabled,
     heading,
     headingDecoration,
@@ -112,6 +117,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
     sxCardBaseIcon,
     sxCardBaseSubheading,
     sxGrid,
+    sxTooltip,
     tooltip,
   } = props;
 
@@ -165,7 +171,14 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
 
   if (tooltip) {
     return (
-      <Tooltip placement="top" title={tooltip}>
+      <Tooltip
+        componentsProps={{
+          tooltip: { sx: sxTooltip },
+        }}
+        data-qa-tooltip={dataAttrs?.tooltip}
+        placement="top-end"
+        title={tooltip}
+      >
         {cardGrid}
       </Tooltip>
     );

@@ -16,7 +16,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
-import { getIsPlanSoldOut } from './utils';
+import { getIsLimitedAvailability } from './utils';
 
 import type { PlanSelectionType } from './types';
 import type { Region } from '@linode/api-v4';
@@ -92,7 +92,7 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getIsPlanSoldOut({
+      const isLimitedAvailabilityPlan = getIsLimitedAvailability({
         plan,
         regionAvailabilities,
         selectedRegionId,
@@ -100,12 +100,14 @@ export const PlanContainer = (props: Props) => {
 
       return (
         <PlanSelection
+          isLimitedAvailabilityPlan={
+            disabled ? false : isLimitedAvailabilityPlan
+          } // No need for tooltip due to all plans being unavailable in region
           currentPlanHeading={currentPlanHeading}
           disabled={disabled}
           disabledClasses={disabledClasses}
           idx={id}
           isCreate={isCreate}
-          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add "Sold Out" chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}

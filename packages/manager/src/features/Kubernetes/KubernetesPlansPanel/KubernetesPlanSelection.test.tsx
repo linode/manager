@@ -29,7 +29,7 @@ const extendedType = extendedTypeFactory.build();
 const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
   idx: 0,
-  isPlanSoldOut: false,
+  isLimitedAvailabilityPlan: false,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
   selectedRegionId: 'us-east',
@@ -144,11 +144,11 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       ).toBeInTheDocument();
     });
 
-    it('shows a chip if plan is sold out', () => {
+    it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', () => {
       const { getByLabelText } = renderWithTheme(
         <KubernetesPlanSelection
           {...props}
-          isPlanSoldOut={true}
+          isLimitedAvailabilityPlan={true}
           selectedRegionId={'us-east'}
         />
       );
