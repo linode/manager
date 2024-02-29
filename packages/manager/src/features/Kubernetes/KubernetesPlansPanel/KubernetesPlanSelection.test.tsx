@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
@@ -107,53 +108,105 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
     ).not.toBeInTheDocument();
   });
 
-  describe('KubernetesPlanSelection (cards, mobile view)', () => {
-    beforeAll(() => {
-      resizeScreenSize(breakpoints.values.sm);
+  it('shows limited availability messaging for 512 GB plans', async () => {
+    const bigPlanType = extendedTypeFactory.build({
+      heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
     });
 
-    it('displays the plan header label, monthly and hourly price, RAM, CPUs, and storage', async () => {
-      const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} />
-      );
-
-      expect(getByText(planHeader)).toBeInTheDocument();
-      expect(
-        getByText(`${baseMonthlyPrice}/mo`, { exact: false })
-      ).toBeInTheDocument();
-      expect(
-        getByText(`${baseHourlyPrice}/hr`, { exact: false })
-      ).toBeInTheDocument();
-      expect(getByText(`${cpu} CPU`, { exact: false })).toBeInTheDocument();
-      expect(
-        getByText(`${storage} Storage`, { exact: false })
-      ).toBeInTheDocument();
-      expect(getByText(`${ram} RAM`, { exact: false })).toBeInTheDocument();
-    });
-
-    it('displays DC-specific prices in a region with a price increase', async () => {
-      const { getByText } = renderWithTheme(
-        <KubernetesPlanSelection {...props} selectedRegionId="id-cgk" />
-      );
-
-      expect(
-        getByText(`${regionMonthlyPrice}/mo`, { exact: false })
-      ).toBeInTheDocument();
-      expect(
-        getByText(`${regionHourlyPrice}/hr`, { exact: false })
-      ).toBeInTheDocument();
-    });
-
-    it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', () => {
-      const { getByLabelText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(
         <KubernetesPlanSelection
           {...props}
-          isLimitedAvailabilityPlan={true}
-          selectedRegionId={'us-east'}
-        />
-      );
+          isLimitedAvailabilityPlan={false}
+          type={bigPlanType}
+        />,
+        { flags: { disableLargestGbPlans: true } }
+      )
+    );
 
-      expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+    const chip = getByText('Sold Out');
+    // {planType} 512GB plans are currently unavailable. If you have questions,
+    //  open a <SupportLink text="support ticket" />.
+
+    expect(chip).toBeVisible();
+    userEvent.click(chip);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Dedicated 512GB plans are currently unavailable.', {
+          exact: false,
+        })
+      ).toBeVisible();
     });
+  });
+});
+
+describe('KubernetesPlanSelection (cards, mobile view)', () => {
+  beforeAll(() => {
+    resizeScreenSize(breakpoints.values.sm);
+  });
+
+  it('displays the plan header label, monthly and hourly price, RAM, CPUs, and storage', async () => {
+    const { getByText } = renderWithTheme(
+      <KubernetesPlanSelection {...props} />
+    );
+
+    expect(getByText(planHeader)).toBeInTheDocument();
+    expect(
+      getByText(`${baseMonthlyPrice}/mo`, { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      getByText(`${baseHourlyPrice}/hr`, { exact: false })
+    ).toBeInTheDocument();
+    expect(getByText(`${cpu} CPU`, { exact: false })).toBeInTheDocument();
+    expect(
+      getByText(`${storage} Storage`, { exact: false })
+    ).toBeInTheDocument();
+    expect(getByText(`${ram} RAM`, { exact: false })).toBeInTheDocument();
+  });
+
+  it('displays DC-specific prices in a region with a price increase', async () => {
+    const { getByText } = renderWithTheme(
+      <KubernetesPlanSelection {...props} selectedRegionId="id-cgk" />
+    );
+
+    expect(
+      getByText(`${regionMonthlyPrice}/mo`, { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      getByText(`${regionHourlyPrice}/hr`, { exact: false })
+    ).toBeInTheDocument();
+  });
+
+  it('shows limited availability messaging', () => {
+    const { getByLabelText } = renderWithTheme(
+      <KubernetesPlanSelection
+        {...props}
+        isLimitedAvailabilityPlan={true}
+        selectedRegionId={'us-east'}
+      />
+    );
+
+    expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+  });
+
+  it('is disabled for 512 GB plans', () => {
+    const bigPlanType = extendedTypeFactory.build({
+      heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <KubernetesPlanSelection
+        {...props}
+        isLimitedAvailabilityPlan={false}
+        type={bigPlanType}
+      />,
+      { flags: { disableLargestGbPlans: true } }
+    );
+
+    const selectionCard = getByTestId('selection-card');
+    expect(selectionCard).toBeDisabled();
   });
 });
