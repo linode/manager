@@ -1,6 +1,5 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
@@ -10,12 +9,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 
@@ -30,9 +24,7 @@ describe('VPC Landing Table', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<VPCLanding />, {
-      queryClient,
-    });
+    const { getAllByText, getByTestId } = renderWithTheme(<VPCLanding />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -54,9 +46,7 @@ describe('VPC Landing Table', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<VPCLanding />, {
-      queryClient,
-    });
+    const { getByTestId, getByText } = renderWithTheme(<VPCLanding />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

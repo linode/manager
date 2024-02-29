@@ -2,6 +2,7 @@ import { placementGroupFactory, regionFactory } from 'src/factories';
 
 import {
   affinityTypeOptions,
+  getAffinityEnforcement,
   getLinodesFromAllPlacementGroups,
   getPlacementGroupLinodeCount,
   hasPlacementGroupReachedCapacity,
@@ -9,11 +10,26 @@ import {
 
 import type { PlacementGroup } from '@linode/api-v4';
 
+const initialLinodeData = [
+  {
+    is_compliant: true,
+    linode: 1,
+  },
+  {
+    is_compliant: true,
+    linode: 2,
+  },
+  {
+    is_compliant: true,
+    linode: 3,
+  },
+];
+
 describe('getPlacementGroupLinodeCount', () => {
   it('returns the length of the linode_ids array', () => {
     expect(
       getPlacementGroupLinodeCount({
-        linode_ids: [1, 2, 3],
+        linodes: initialLinodeData,
       } as PlacementGroup)
     ).toBe(3);
   });
@@ -37,7 +53,7 @@ describe('hasPlacementGroupReachedCapacity', () => {
     expect(
       hasPlacementGroupReachedCapacity({
         placementGroup: placementGroupFactory.build({
-          linode_ids: [1, 2, 3],
+          linodes: initialLinodeData,
         }),
         region: regionFactory.build({
           maximum_vms_per_pg: 3,
@@ -50,7 +66,7 @@ describe('hasPlacementGroupReachedCapacity', () => {
     expect(
       hasPlacementGroupReachedCapacity({
         placementGroup: placementGroupFactory.build({
-          linode_ids: [1, 2, 3],
+          linodes: initialLinodeData,
         }),
         region: regionFactory.build({
           maximum_vms_per_pg: 4,
@@ -64,13 +80,38 @@ describe('getLinodesFromAllPlacementGroups', () => {
   it('returns an array of unique linode ids from all placement groups', () => {
     expect(
       getLinodesFromAllPlacementGroups([
-        { linode_ids: [1, 2, 3] },
-        { linode_ids: [3, 4, 5] },
+        { linodes: initialLinodeData },
+        {
+          linodes: [
+            {
+              is_compliant: true,
+              linode: 3,
+            },
+            {
+              is_compliant: true,
+              linode: 4,
+            },
+            {
+              is_compliant: true,
+              linode: 5,
+            },
+          ],
+        },
       ] as PlacementGroup[])
     ).toEqual([1, 2, 3, 4, 5]);
   });
 
   it('returns an empty array if no placement groups are provided', () => {
     expect(getLinodesFromAllPlacementGroups(undefined)).toEqual([]);
+  });
+});
+
+describe('getAffinityEnforcement', () => {
+  it('returns "Strict" if `is_strict` is true', () => {
+    expect(getAffinityEnforcement(true)).toBe('Strict');
+  });
+
+  it('returns "Flexible" if `is_strict` is false', () => {
+    expect(getAffinityEnforcement(false)).toBe('Flexible');
   });
 });

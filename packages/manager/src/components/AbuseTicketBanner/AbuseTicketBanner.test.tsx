@@ -1,6 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import {
   abuseTicketNotificationFactory,
@@ -43,9 +42,7 @@ describe('Abuse ticket banner', () => {
         );
       })
     );
-    const { queryAllByText } = render(
-      wrapWithTheme(<AbuseTicketBanner />, { queryClient: new QueryClient() })
-    );
+    const { queryAllByText } = render(wrapWithTheme(<AbuseTicketBanner />));
 
     await waitFor(() => {
       expect(queryAllByText(/2 open abuse tickets/)).toHaveLength(1);
@@ -59,9 +56,7 @@ describe('Abuse ticket banner', () => {
         return res(ctx.json(makeResourcePage([mockAbuseTicket])));
       })
     );
-    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />);
 
     await waitFor(() => {
       const link = getByTestId(TICKET_TESTID);
@@ -76,9 +71,7 @@ describe('Abuse ticket banner', () => {
         return res(ctx.json(makeResourcePage(mockAbuseTickets)));
       })
     );
-    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />);
 
     await waitFor(() => {
       const link = getByTestId(TICKET_TESTID);
@@ -92,9 +85,7 @@ describe('Abuse ticket banner', () => {
         return res(ctx.json(makeResourcePage([])));
       })
     );
-    const { queryByTestId } = renderWithTheme(<AbuseTicketBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { queryByTestId } = renderWithTheme(<AbuseTicketBanner />);
 
     expect(queryByTestId(TICKET_TESTID)).toBeNull();
   });

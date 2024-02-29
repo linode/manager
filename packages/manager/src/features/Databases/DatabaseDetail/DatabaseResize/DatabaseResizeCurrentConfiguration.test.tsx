@@ -1,30 +1,22 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DatabaseScaleUpCurrentConfiguration } from './DatabaseScaleUpCurrentConfiguration';
+import { DatabaseResizeCurrentConfiguration } from './DatabaseResizeCurrentConfiguration';
 
-const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 describe('database current configuration section', () => {
   const database = databaseFactory.build();
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseScaleUpCurrentConfiguration database={database} />,
-      {
-        queryClient,
-      }
+      <DatabaseResizeCurrentConfiguration database={database} />
     );
 
     // Should render a loading state
@@ -54,10 +46,7 @@ describe('database current configuration section', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseScaleUpCurrentConfiguration database={database} />,
-      {
-        queryClient,
-      }
+      <DatabaseResizeCurrentConfiguration database={database} />
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 

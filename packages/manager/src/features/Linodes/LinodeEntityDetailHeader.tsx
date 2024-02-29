@@ -1,5 +1,6 @@
 import { Config } from '@linode/api-v4/lib';
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -8,6 +9,8 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
+import { Stack } from 'src/components/Stack';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
@@ -18,8 +21,9 @@ import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
-import { StyledChip, StyledLink } from './LinodeEntityDetail.styles';
+import { StyledLink } from './LinodeEntityDetail.styles';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+import { getLinodeIconStatus } from './LinodesLanding/utils';
 
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 
@@ -87,7 +91,6 @@ export const LinodeEntityDetailHeader = (
 
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
-  const isOther = !['offline', 'running', 'stopped'].includes(linodeStatus);
 
   const handleConsoleButtonClick = (id: number) => {
     sendLinodeActionMenuItemEvent('Launch Console');
@@ -153,18 +156,19 @@ export const LinodeEntityDetailHeader = (
       variant={variant}
     >
       <Box sx={sxBoxFlex}>
-        <StyledChip
+        <Stack
+          alignItems="center"
           aria-label={`Linode status ${linodeStatus}`}
-          component="span"
           data-qa-linode-status
-          hasSecondaryStatus={hasSecondaryStatus}
-          isOffline={isOffline}
-          isOther={isOther}
-          isRunning={isRunning}
-          isSummaryView={isSummaryView}
-          label={formattedStatus}
-          pill={true}
-        />
+          direction="row"
+          spacing={1.5}
+          sx={{ paddingX: 2 }}
+        >
+          <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
+          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+            {formattedStatus}
+          </Typography>
+        </Stack>
         {isRebootNeeded && (
           <TooltipIcon
             status="help"
@@ -172,7 +176,7 @@ export const LinodeEntityDetailHeader = (
             text={VPC_REBOOT_MESSAGE}
           />
         )}
-        {hasSecondaryStatus ? (
+        {hasSecondaryStatus && (
           <Button
             buttonType="secondary"
             onClick={openNotificationMenu}
@@ -184,7 +188,7 @@ export const LinodeEntityDetailHeader = (
               text={formattedTransitionText}
             />
           </Button>
-        ) : null}
+        )}
       </Box>
       <Box sx={sxBoxFlex}>
         <Hidden mdDown>

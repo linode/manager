@@ -170,8 +170,8 @@ export const KubeSummaryPanel = (props: Props) => {
               {cluster.control_plane.high_availability && (
                 <Chip
                   label="HA CLUSTER"
-                  outlineColor="green"
                   size="small"
+                  sx={(theme) => ({ borderColor: theme.color.green })}
                   variant="outlined"
                 />
               )}

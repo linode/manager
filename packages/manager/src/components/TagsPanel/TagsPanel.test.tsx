@@ -1,21 +1,10 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TagsPanel } from './TagsPanel';
-
-import type { TagsPanelProps } from './TagsPanel';
-
-const queryClient = new QueryClient();
-
-const renderWithQueryClient = (ui: React.ReactElement<TagsPanelProps>) => {
-  return renderWithTheme(
-    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
-  );
-};
 
 const tagsPanelProps = {
   entityId: 123,
@@ -26,7 +15,7 @@ describe('TagsPanel', () => {
   it('renders TagsPanel component with existing tags', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
-    const { getByLabelText, getByText } = renderWithQueryClient(
+    const { getByLabelText, getByText } = renderWithTheme(
       <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
@@ -45,7 +34,7 @@ describe('TagsPanel', () => {
   it('creates a new tag successfully', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
-    const { getByLabelText, getByText } = renderWithQueryClient(
+    const { getByLabelText, getByText } = renderWithTheme(
       <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
@@ -66,18 +55,19 @@ describe('TagsPanel', () => {
   it('displays an error message for invalid tag creation', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
-    const { getByLabelText, getByText } = renderWithQueryClient(
+    const { getByLabelText, getByText } = renderWithTheme(
       <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
-    fireEvent.click(getByText('Add a tag'));
+    await userEvent.click(getByText('Add a tag'));
 
     fireEvent.change(getByLabelText('Create or Select a Tag'), {
       target: { value: 'yz' },
     });
 
     const newTagItem = getByText('Create "yz"');
-    fireEvent.click(newTagItem);
+
+    await userEvent.click(newTagItem);
 
     await waitFor(() =>
       expect(
@@ -89,11 +79,7 @@ describe('TagsPanel', () => {
   it('deletes a tag successfully', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
-    const {
-      getByLabelText,
-      getByText,
-      queryByLabelText,
-    } = renderWithQueryClient(
+    const { getByLabelText, getByText, queryByLabelText } = renderWithTheme(
       <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
@@ -111,8 +97,8 @@ describe('TagsPanel', () => {
   it('prevents creation or deletion of tags when disabled', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
-    const { getByText, queryByLabelText, queryByText } = renderWithQueryClient(
-      <TagsPanel {...tagsPanelProps} disabled updateTags={updateTagsMock} />
+    const { getByText, queryByLabelText, queryByText } = renderWithTheme(
+      <TagsPanel disabled {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();

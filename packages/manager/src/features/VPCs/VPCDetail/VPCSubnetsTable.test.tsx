@@ -1,7 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import {
   subnetAssignedLinodeDataFactory,
@@ -13,12 +12,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 
@@ -43,9 +37,7 @@ describe('VPC Subnets table', () => {
       getByPlaceholderText,
       getByTestId,
       getByText,
-    } = renderWithTheme(<VPCSubnetsTable vpcId={1} vpcRegion="" />, {
-      queryClient,
-    });
+    } = renderWithTheme(<VPCSubnetsTable vpcId={1} vpcRegion="" />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
