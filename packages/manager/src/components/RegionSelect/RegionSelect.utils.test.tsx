@@ -3,7 +3,6 @@ import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 import {
   getRegionOptionAvailability,
   getRegionOptions,
-  getRegionsWithoutCurrentRegionAndCoreSites,
   getSelectedRegionById,
   getSelectedRegionsByIds,
 } from './RegionSelect.utils';
@@ -84,6 +83,23 @@ const expectedRegions: RegionSelectOption[] = [
   },
 ];
 
+const expectedEdgeRegions = [
+  {
+    data: { country: 'us', region: 'North America' },
+    label: 'Gecko Edge Test (us-edge-1)',
+    site_type: 'edge',
+    unavailable: false,
+    value: 'us-edge-1',
+  },
+  {
+    data: { country: 'us', region: 'North America' },
+    label: 'Gecko Edge Test 2 (us-edge-2)',
+    site_type: 'edge',
+    unavailable: false,
+    value: 'us-edge-2',
+  },
+];
+
 describe('getRegionOptions', () => {
   it('should return an empty array if no regions are provided', () => {
     const regions: Region[] = [];
@@ -139,20 +155,7 @@ describe('getRegionOptions', () => {
 
   it('should not filter out edge regions if hideEdgeRegions is false', () => {
     const expectedRegionsWithEdge = [
-      {
-        data: { country: 'us', region: 'North America' },
-        label: 'Gecko Edge Test (us-edge-1)',
-        site_type: 'edge',
-        unavailable: false,
-        value: 'us-edge-1',
-      },
-      {
-        data: { country: 'us', region: 'North America' },
-        label: 'Gecko Edge Test 2 (us-edge-2)',
-        site_type: 'edge',
-        unavailable: false,
-        value: 'us-edge-2',
-      },
+      ...expectedEdgeRegions,
       ...expectedRegions,
     ];
 
@@ -164,6 +167,28 @@ describe('getRegionOptions', () => {
     });
 
     expect(result).toEqual(expectedRegionsWithEdge);
+  });
+
+  it('should filter out core regions if hideCoreRegions is true', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      hideCoreRegions: true,
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedEdgeRegions);
+  });
+
+  it('should not filter out core regions if hideCoreRegions is false', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      hideCoreRegions: false,
+      regions,
+    });
+
+    expect(result).toEqual(expectedRegions);
   });
 });
 
@@ -294,29 +319,5 @@ describe('getSelectedRegionsByIds', () => {
     ];
 
     expect(result).toEqual(expected);
-  });
-});
-
-describe('getRegionsWithoutCurrentRegionAndCoreSites', () => {
-  it('should filter out current region and core regions, returning only edge regions', () => {
-    const result = getRegionsWithoutCurrentRegionAndCoreSites(
-      'us-edge-1',
-      regionsWithEdge
-    );
-    const expectedEdgeRegions = [
-      {
-        capabilities: ['Linodes'],
-        country: 'us',
-        id: 'us-edge-2',
-        label: 'Gecko Edge Test 2',
-        maximum_pgs_per_customer: 5,
-        maximum_vms_per_pg: 10,
-        resolvers: { ipv4: '1.1.1.1', ipv6: '2600:3c03::' },
-        site_type: 'edge',
-        status: 'ok',
-      },
-    ];
-
-    expect(result).toEqual(expectedEdgeRegions);
   });
 });

@@ -38,6 +38,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     errorText,
     handleSelection,
     helperText,
+    hideCoreRegions,
     hideEdgeRegions,
     isClearable,
     label,
@@ -84,10 +85,17 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        hideCoreRegions,
         hideEdgeRegions,
         regions,
       }),
-    [accountAvailability, currentCapability, regions, hideEdgeRegions]
+    [
+      accountAvailability,
+      currentCapability,
+      regions,
+      hideCoreRegions,
+      hideEdgeRegions,
+    ]
   );
 
   return (

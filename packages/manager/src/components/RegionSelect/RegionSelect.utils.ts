@@ -27,6 +27,7 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
+  hideCoreRegions = false,
   hideEdgeRegions = false,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
@@ -39,6 +40,10 @@ export const getRegionOptions = ({
   const filteredRegionsByCapabilityAndSiteType = hideEdgeRegions
     ? filteredRegionsByCapability.filter(
         (region) => region.site_type !== 'edge'
+      )
+    : hideCoreRegions
+    ? filteredRegionsByCapability.filter(
+        (region) => region.site_type === 'edge'
       )
     : filteredRegionsByCapability;
 
@@ -202,15 +207,5 @@ export const getIsLinodeCreateTypeEdgeSupported = (
   return (
     supportedEdgeTypes.includes(createType as SupportedEdgeTypes) ||
     typeof createType === 'undefined' // /linodes/create route
-  );
-};
-
-export const getRegionsWithoutCurrentRegionAndCoreSites = (
-  currentRegion: string,
-  regions: Region[]
-) => {
-  return regions?.filter(
-    (eachRegion) =>
-      eachRegion.id !== currentRegion && eachRegion.site_type === 'edge'
   );
 };
