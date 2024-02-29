@@ -94,21 +94,13 @@ describe('PlacementGroupsCreateDrawer', () => {
       fireEvent.click(selectedRegionOption);
     });
 
-    const affinityTypeSelect = getByPlaceholderText('Select an Affinity Type');
-    fireEvent.focus(affinityTypeSelect);
-    fireEvent.change(affinityTypeSelect, { target: { value: 'Affinity' } });
-    await waitFor(() => {
-      const selectedAffinityTypeOption = getByText('Affinity');
-      fireEvent.click(selectedAffinityTypeOption);
-    });
-
     fireEvent.click(getByRole('button', { name: 'Create Placement Group' }));
 
     await waitFor(() => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        affinity_type: 'affinity',
+        affinity_type: 'anti_affinity',
         is_strict: true,
         label: 'my-label',
         region: 'us-east',
