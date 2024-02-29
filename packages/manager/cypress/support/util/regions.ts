@@ -245,9 +245,9 @@ export const chooseRegions = (
   }
 
   const searchRegions = [
-    // If an override region is specified, insert it into the array first.
-    ...(getOverrideRegion() ? resolveSearchRegions(options, true) : []),
     ...shuffleArray(resolveSearchRegions(options, false)),
+    // If an override region is specified, insert it into the array last so it pops first.
+    ...(getOverrideRegion() ? resolveSearchRegions(options, true) : []),
   ];
 
   if (searchRegions.length < count) {
