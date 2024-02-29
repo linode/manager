@@ -4,14 +4,12 @@ import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
-  mockAddUser,
   mockGetUser,
   mockGetUserGrants,
   mockGetUserGrantsUnrestrictedAccess,
   mockGetUsers,
   mockUpdateUser,
   mockUpdateUserGrants,
-  mockDeleteUser,
 } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
