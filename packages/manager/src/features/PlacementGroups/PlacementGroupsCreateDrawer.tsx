@@ -2,7 +2,7 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Drawer } from 'src/components/Drawer';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';

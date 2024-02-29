@@ -2,7 +2,7 @@ import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
@@ -63,7 +63,7 @@ const PaymentInformation = (props: Props) => {
       .then(() => {
         setDeleteLoading(false);
         closeDeleteDialog();
-        queryClient.invalidateQueries(`${queryKey}-all`);
+        queryClient.invalidateQueries([`${queryKey}-all`]);
       })
       .catch((e: APIError[]) => {
         setDeleteLoading(false);
