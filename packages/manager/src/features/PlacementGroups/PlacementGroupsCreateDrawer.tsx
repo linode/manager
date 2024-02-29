@@ -4,7 +4,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -25,10 +24,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import {
-  affinityTypeOptions,
-  hasRegionReachedPlacementGroupCapacity,
-} from './utils';
+import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
+import { hasRegionReachedPlacementGroupCapacity } from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
@@ -136,7 +133,7 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: '' as CreatePlacementGroupPayload['affinity_type'],
+      affinity_type: 'anti_affinity',
       is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
@@ -194,18 +191,9 @@ export const PlacementGroupsCreateDrawer = (
               selectedId={selectedRegionId ?? values.region}
             />
           )}
-          <Autocomplete
-            onChange={(_, value) => {
-              setFieldValue('affinity_type', value?.value ?? '');
-            }}
-            textFieldProps={{
-              tooltipText: 'TODO VM_Placement: update copy',
-            }}
-            disableClearable={true}
-            errorText={errors.affinity_type}
-            label="Affinity Type"
-            options={affinityTypeOptions}
-            placeholder="Select an Affinity Type"
+          <PlacementGroupsAffinityTypeSelect
+            error={errors.affinity_type}
+            setFieldValue={setFieldValue}
           />
           <Box sx={{ pt: 2 }}>
             <Notice

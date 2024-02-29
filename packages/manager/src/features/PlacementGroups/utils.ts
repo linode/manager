@@ -82,6 +82,7 @@ export const hasRegionReachedPlacementGroupCapacity = ({
  */
 export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
   ([key, value]) => ({
+    disabled: false,
     label: value,
     value: key as CreatePlacementGroupPayload['affinity_type'],
   })
