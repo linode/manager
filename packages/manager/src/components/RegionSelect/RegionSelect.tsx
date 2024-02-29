@@ -38,12 +38,12 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     errorText,
     handleSelection,
     helperText,
+    hideEdgeRegions,
     isClearable,
     label,
     regions,
     required,
     selectedId,
-    showEdgeIcon,
     showEdgeIconHelperText,
     width,
   } = props;
@@ -84,10 +84,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
-        hideEdgeServers: !showEdgeIcon,
+        hideEdgeRegions,
         regions,
       }),
-    [accountAvailability, currentCapability, regions, showEdgeIcon]
+    [accountAvailability, currentCapability, regions, hideEdgeRegions]
   );
 
   return (
@@ -110,7 +110,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           return (
             <RegionOption
               displayEdgeServerIcon={
-                showEdgeIcon && option.site_type === 'edge'
+                !hideEdgeRegions && option.site_type === 'edge'
               }
               key={option.value}
               option={option}
@@ -125,7 +125,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         })}
         textFieldProps={{
           InputProps: {
-            endAdornment: showEdgeIcon &&
+            endAdornment: !hideEdgeRegions &&
               selectedRegion?.site_type === 'edge' && (
                 <TooltipIcon
                   icon={<EdgeServer />}

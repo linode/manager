@@ -126,18 +126,18 @@ describe('getRegionOptions', () => {
     expect(result).toEqual(expectedRegions);
   });
 
-  it('should filter out edge regions if hideEdgeServers is true', () => {
+  it('should filter out edge regions if hideEdgeRegions is true', () => {
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
-      hideEdgeServers: true,
+      hideEdgeRegions: true,
       regions: regionsWithEdge,
     });
 
     expect(result).toEqual(expectedRegions);
   });
 
-  it('should not filter out edge regions if hideEdgeServers is false', () => {
+  it('should not filter out edge regions if hideEdgeRegions is false', () => {
     const expectedRegionsWithEdge = [
       {
         data: { country: 'us', region: 'North America' },
@@ -159,7 +159,7 @@ describe('getRegionOptions', () => {
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
-      hideEdgeServers: false,
+      hideEdgeRegions: false,
       regions: regionsWithEdge,
     });
 
