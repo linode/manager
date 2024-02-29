@@ -31,7 +31,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -62,7 +62,7 @@ export const useKubernetesClusterMutation = (id: number) => {
     {
       onSuccess(data) {
         updateInPaginatedStore<KubernetesCluster>(
-          `${queryKey}-list`,
+          [`${queryKey}-list`],
           id,
           data,
           queryClient

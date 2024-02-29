@@ -5,7 +5,7 @@ import {
   QueryKey,
   UseMutationOptions,
   UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 // =============================================================================
 // Config
@@ -70,7 +70,7 @@ export const listToItemsByID = <E extends {}[]>(
 };
 
 export const mutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -86,7 +86,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const simpleMutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
@@ -100,7 +100,7 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const creationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -116,7 +116,7 @@ export const creationHandlers = <T, V, E = APIError[]>(
 };
 
 export const deletionHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {

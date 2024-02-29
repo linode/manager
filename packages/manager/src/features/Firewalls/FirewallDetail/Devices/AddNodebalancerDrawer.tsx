@@ -2,7 +2,7 @@ import { NodeBalancer } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import sanitize from 'sanitize-html';
 

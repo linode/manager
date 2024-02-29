@@ -2,7 +2,7 @@ import { Interface } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
@@ -46,7 +46,7 @@ export const AttachVLAN = React.memo((props: Props) => {
 
   React.useEffect(() => {
     // Ensure VLANs are fresh.
-    queryClient.invalidateQueries(vlansQueryKey);
+    queryClient.invalidateQueries([vlansQueryKey]);
   }, []);
 
   const regions = useRegionsQuery().data ?? [];

@@ -1,5 +1,5 @@
 import { enableBackups } from '@linode/api-v4';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { queryKey } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';

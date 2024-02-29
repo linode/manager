@@ -10,7 +10,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 
@@ -30,7 +30,7 @@ export const queryKey = 'account';
 export const useAccount = () => {
   const { data: profile } = useProfile();
 
-  return useQuery<Account, APIError[]>(queryKey, getAccountInfo, {
+  return useQuery<Account, APIError[]>([queryKey], getAccountInfo, {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
     enabled: !profile?.restricted,
@@ -42,7 +42,7 @@ export const useMutateAccount = () => {
 
   return useMutation<Account, APIError[], Partial<Account>>(updateAccountInfo, {
     onSuccess(account) {
-      queryClient.setQueryData(queryKey, account);
+      queryClient.setQueryData([queryKey], account);
     },
   });
 };

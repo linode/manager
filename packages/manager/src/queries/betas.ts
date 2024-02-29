@@ -1,5 +1,5 @@
 import { Beta, getBetas, getBeta } from '@linode/api-v4/lib/betas';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   APIError,
   Filter,

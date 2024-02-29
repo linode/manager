@@ -1,7 +1,7 @@
 import { Account } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 
 import { useAccount } from 'src/queries/account';
 

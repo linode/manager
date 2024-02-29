@@ -5,7 +5,7 @@ import {
 import { APIWarning } from '@linode/api-v4/lib/types';
 import braintree, { GooglePayment } from 'braintree-web';
 import { VariantType } from 'notistack';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -116,7 +116,7 @@ export const gPay = async (
       nonce,
       usd: transactionInfo.totalPrice as string,
     });
-    queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+    queryClient.invalidateQueries([`${accountBillingKey}-payments`]);
     const message = {
       text: `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
       variant: 'success' as VariantType,
@@ -130,7 +130,7 @@ export const gPay = async (
       is_default: true,
       type: 'payment_method_nonce',
     });
-    queryClient.invalidateQueries(`${accountPaymentKey}-all`);
+    queryClient.invalidateQueries([`${accountPaymentKey}-all`]);
     setMessage({
       text: 'Successfully added Google Pay',
       variant: 'success',

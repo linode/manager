@@ -6,7 +6,7 @@ import {
   getRegions,
 } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -15,7 +15,7 @@ import { queryPresets } from './base';
 const queryKey = 'region-availability';
 
 export const useRegionsQuery = () =>
-  useQuery<Region[], APIError[]>('regions', getAllRegionsRequest, {
+  useQuery<Region[], APIError[]>(['regions'], getAllRegionsRequest, {
     ...queryPresets.longLived,
   });
 
@@ -26,7 +26,7 @@ const getAllRegionsRequest = () =>
 
 export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
   useQuery<RegionAvailability[], APIError[]>(
-    queryKey,
+    [queryKey],
     getAllRegionAvailabilitiesRequest,
     {
       enabled,

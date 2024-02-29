@@ -1,6 +1,6 @@
 import { deleteLinodeConfigInterface } from '@linode/api-v4';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey } from 'src/queries/linodes/linodes';

@@ -90,13 +90,13 @@ const isValidRFC1918IPv4 = (address: string) => {
   // 192.168.x.x (192.168/16 prefix)
   return (
     // check for valid 10.x IPs
+    // check for valid 192.x IPs
     (firstOctet === '10' && parsedMask >= 8) ||
     // check for valid 172.x IPs
     (firstOctet === '172' &&
       parsedSecondOctet >= 16 &&
       parsedSecondOctet <= 31 &&
       parsedMask >= 12) ||
-    // check for valid 192.x IPs
     (firstOctet === '192' && secondOctet === '168' && parsedMask >= 16)
   );
 };
