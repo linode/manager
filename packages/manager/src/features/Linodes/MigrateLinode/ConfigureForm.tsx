@@ -154,10 +154,10 @@ export const ConfigureForm = React.memo((props: Props) => {
             currentCapability="Linodes"
             errorText={errorText}
             handleSelection={handleSelectRegion}
+            hideEdgeRegions={!linodeIsInEdgeRegion}
             label="New Region"
             regions={filteredRegions ?? []}
             selectedId={selectedRegion}
-            showEdgeIcon={linodeIsInEdgeRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

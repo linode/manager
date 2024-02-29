@@ -77,12 +77,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  const showEdgeIcon =
-    flags.gecko &&
-    getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+  const hideEdgeRegions =
+    !flags.gecko ||
+    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgeIconHelperText = Boolean(
-    showEdgeIcon &&
+    !hideEdgeRegions &&
       currentCapability &&
       regions.find(
         (region) =>
@@ -137,9 +137,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         errorText={error}
         handleSelection={handleSelection}
         helperText={helperText}
+        hideEdgeRegions={hideEdgeRegions}
         regions={regions}
         selectedId={selectedId || null}
-        showEdgeIcon={showEdgeIcon}
         showEdgeIconHelperText={showEdgeIconHelperText}
       />
       {showClonePriceWarning && (
