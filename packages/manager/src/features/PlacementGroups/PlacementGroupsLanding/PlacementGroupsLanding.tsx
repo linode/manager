@@ -196,7 +196,6 @@ export const PlacementGroupsLanding = React.memo(() => {
         allPlacementGroups={placementGroups?.data ?? []}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
-        selectedRegionId="us-west"
       />
       <PlacementGroupsEditDrawer
         onClose={onClosePlacementGroupDrawer}
