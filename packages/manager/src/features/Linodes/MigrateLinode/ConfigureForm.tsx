@@ -5,7 +5,6 @@ import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
-import { getRegionsWithoutCurrentRegionAndCoreSites } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
@@ -106,19 +105,6 @@ export const ConfigureForm = React.memo((props: Props) => {
 
   const linodeIsInEdgeRegion = currentActualRegion?.site_type === 'edge';
 
-  const getRegions = () => {
-    if (flags.gecko && linodeIsInEdgeRegion) {
-      // edge regions can only be migrated to other edge regions
-      return getRegionsWithoutCurrentRegionAndCoreSites(
-        currentRegion,
-        regions ?? []
-      );
-    }
-    return regions?.filter((eachRegion) => eachRegion.id !== currentRegion);
-  };
-
-  const filteredRegions = getRegions();
-
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -148,15 +134,20 @@ export const ConfigureForm = React.memo((props: Props) => {
 
         <StyledMigrationBox>
           <RegionSelect
+            regions={
+              regions?.filter(
+                (eachRegion) => eachRegion.id !== currentRegion
+              ) ?? []
+            }
             textFieldProps={{
               helperText,
             }}
             currentCapability="Linodes"
             errorText={errorText}
             handleSelection={handleSelectRegion}
-            hideEdgeRegions={!linodeIsInEdgeRegion}
+            hideCoreRegions={flags.gecko && linodeIsInEdgeRegion}
+            hideEdgeRegions={flags.gecko && !linodeIsInEdgeRegion}
             label="New Region"
-            regions={filteredRegions ?? []}
             selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
