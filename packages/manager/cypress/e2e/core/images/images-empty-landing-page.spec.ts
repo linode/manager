@@ -1,8 +1,6 @@
 import { ui } from 'support/ui';
 import { mockGetAllImages } from 'support/intercepts/images';
-import { authenticate } from 'support/api/authentication';
 
-authenticate();
 describe('Images empty landing page', () => {
   /**
    * - Confirms Images landing page empty state is shown when no Images are present:
