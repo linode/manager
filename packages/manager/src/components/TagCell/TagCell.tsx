@@ -1,6 +1,6 @@
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
@@ -91,6 +91,7 @@ const TagCell = (props: TagCellProps) => {
             {tags.map((thisTag) => (
               <StyledTag
                 colorVariant="lightBlue"
+                disabled={disabled}
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
                 loading={loading}

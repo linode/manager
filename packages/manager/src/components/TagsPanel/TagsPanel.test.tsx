@@ -1,4 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
@@ -7,7 +8,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { TagsPanel } from './TagsPanel';
 
 import type { TagsPanelProps } from './TagsPanel';
-import userEvent from '@testing-library/user-event';
 
 const queryClient = new QueryClient();
 
@@ -17,12 +17,17 @@ const renderWithQueryClient = (ui: React.ReactElement<TagsPanelProps>) => {
   );
 };
 
+const tagsPanelProps = {
+  entityId: 123,
+  tags: ['Tag1', 'Tag2'],
+};
+
 describe('TagsPanel', () => {
   it('renders TagsPanel component with existing tags', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText } = renderWithQueryClient(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();
@@ -41,7 +46,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText } = renderWithQueryClient(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     await userEvent.click(getByText('Add a tag'));
@@ -62,7 +67,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText } = renderWithQueryClient(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     fireEvent.click(getByText('Add a tag'));
@@ -89,7 +94,7 @@ describe('TagsPanel', () => {
       getByText,
       queryByLabelText,
     } = renderWithQueryClient(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();
@@ -107,7 +112,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByText, queryByLabelText, queryByText } = renderWithQueryClient(
-      <TagsPanel disabled tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} disabled updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();

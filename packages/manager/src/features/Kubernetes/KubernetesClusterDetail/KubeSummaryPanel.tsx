@@ -197,7 +197,11 @@ export const KubeSummaryPanel = (props: Props) => {
               </Button>
             </Grid>
             <Grid className={classes.tags}>
-              <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
+              <TagsPanel
+                entityId={cluster.id}
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Grid>
           </Grid>
         </Grid>
