@@ -230,11 +230,11 @@ export const getAllBucketsFromRegions = async (
 
   const data = await Promise.all(promises);
 
-  const bucketsPerCluster = data.filter((item) =>
+  const bucketsPerRegion = data.filter((item) =>
     Array.isArray(item)
   ) as ObjectStorageBucket[][];
 
-  const buckets = bucketsPerCluster.reduce((acc, val) => acc.concat(val), []);
+  const buckets = bucketsPerRegion.reduce((acc, val) => acc.concat(val), []);
 
   const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
 
