@@ -137,7 +137,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         errorText={error}
         handleSelection={handleSelection}
         helperText={helperText}
-        hideEdgeRegions={hideEdgeRegions}
+        regionFilter={hideEdgeRegions ? 'core' : undefined}
         regions={regions}
         selectedId={selectedId || null}
         showEdgeIconHelperText={showEdgeIconHelperText}

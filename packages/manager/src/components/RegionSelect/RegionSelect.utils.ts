@@ -27,8 +27,7 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
-  hideCoreRegions = false,
-  hideEdgeRegions = false,
+  regionFilter,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
   const filteredRegionsByCapability = currentCapability
@@ -37,13 +36,9 @@ export const getRegionOptions = ({
       )
     : regions;
 
-  const filteredRegionsByCapabilityAndSiteType = hideEdgeRegions
+  const filteredRegionsByCapabilityAndSiteType = regionFilter
     ? filteredRegionsByCapability.filter(
-        (region) => region.site_type !== 'edge'
-      )
-    : hideCoreRegions
-    ? filteredRegionsByCapability.filter(
-        (region) => region.site_type === 'edge'
+        (region) => region.site_type === regionFilter
       )
     : filteredRegionsByCapability;
 

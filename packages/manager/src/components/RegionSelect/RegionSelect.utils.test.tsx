@@ -142,18 +142,29 @@ describe('getRegionOptions', () => {
     expect(result).toEqual(expectedRegions);
   });
 
-  it('should filter out edge regions if hideEdgeRegions is true', () => {
+  it('should filter out edge regions if regionFilter is core', () => {
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
-      hideEdgeRegions: true,
+      regionFilter: 'core',
       regions: regionsWithEdge,
     });
 
     expect(result).toEqual(expectedRegions);
   });
 
-  it('should not filter out edge regions if hideEdgeRegions is false', () => {
+  it('should filter out core regions if regionFilter is edge', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'edge',
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedEdgeRegions);
+  });
+
+  it('should not filter out any regions if regionFilter is undefined', () => {
     const expectedRegionsWithEdge = [
       ...expectedEdgeRegions,
       ...expectedRegions,
@@ -162,33 +173,11 @@ describe('getRegionOptions', () => {
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
-      hideEdgeRegions: false,
+      regionFilter: undefined,
       regions: regionsWithEdge,
     });
 
     expect(result).toEqual(expectedRegionsWithEdge);
-  });
-
-  it('should filter out core regions if hideCoreRegions is true', () => {
-    const result: RegionSelectOption[] = getRegionOptions({
-      accountAvailabilityData,
-      currentCapability: 'Linodes',
-      hideCoreRegions: true,
-      regions: regionsWithEdge,
-    });
-
-    expect(result).toEqual(expectedEdgeRegions);
-  });
-
-  it('should not filter out core regions if hideCoreRegions is false', () => {
-    const result: RegionSelectOption[] = getRegionOptions({
-      accountAvailabilityData,
-      currentCapability: 'Linodes',
-      hideCoreRegions: false,
-      regions,
-    });
-
-    expect(result).toEqual(expectedRegions);
   });
 });
 
