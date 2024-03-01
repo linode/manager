@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
@@ -13,13 +14,15 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
-import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { usePlacementGroupQuery } from 'src/queries/placementGroups';
+import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
+import { getAffinityEnforcement } from './utils';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
@@ -113,23 +116,28 @@ export const PlacementGroupsEditDrawer = (
 
   const generalError = status?.generalError;
 
+  if (!selectedPlacementGroup) {
+    return null;
+  }
+
   return (
     <Drawer
-      title={
-        selectedPlacementGroup
-          ? `Edit Placement Group ${selectedPlacementGroup.label} (${
-              AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
-            })`
-          : ''
-      }
+      title={`Edit Placement Group ${selectedPlacementGroup.label} (${
+        AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
+      })`}
       onClose={handleDrawerClose}
       open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}
-      <Typography>
+      <Typography mb={1} mt={4}>
         <strong>Region: </strong>
         {region ? `${region.label} (${region.id})` : 'Unknown'}
       </Typography>
+      <Typography mb={4}>
+        <strong>Affinity Enforcement: </strong>
+        {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
+      </Typography>
+      <Divider />
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           <TextField

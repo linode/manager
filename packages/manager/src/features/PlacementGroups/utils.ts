@@ -11,9 +11,9 @@ import type {
  * Helper to get the affinity enforcement readable string.
  */
 export const getAffinityEnforcement = (
-  affinityType: PlacementGroup['is_strict']
+  is_strict: boolean
 ): AffinityEnforcement => {
-  return affinityType ? 'Strict' : 'Flexible';
+  return is_strict ? 'Strict' : 'Flexible';
 };
 
 /**

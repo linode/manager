@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -152,11 +153,12 @@ export const PlacementGroupsCreateDrawer = (
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
           {selectedRegionFromProps && (
-            <Typography data-testid="selected-region">
+            <Typography data-testid="selected-region" py={2}>
               <strong>Region: </strong>
               {`${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`}
             </Typography>
           )}
+          <Divider />
           <TextField
             inputProps={{
               autoFocus: true,
