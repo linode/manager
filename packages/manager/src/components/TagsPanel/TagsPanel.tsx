@@ -7,6 +7,7 @@ import {
 import { Tag } from 'src/components/Tag/Tag';
 import { Typography } from 'src/components/Typography';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useAtomic } from 'src/utilities/useAtomic';
 
 import { AddTag } from '../TagCell/AddTag';
 import { useStyles } from './TagsPanel.styles';
@@ -28,13 +29,15 @@ export interface TagsPanelProps {
 
 export const TagsPanel = (props: TagsPanelProps) => {
   const { classes, cx } = useStyles();
-  const { disabled, tags, updateTags } = props;
+  const { disabled, tags } = props;
 
   const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [deletingTags, setDeletingTags] = React.useState(
     () => new Set<string>()
   );
+
+  const updateTagsAtomic = useAtomic(tags, props.updateTags);
 
   React.useEffect(() => {
     if (isCreatingTag) {
@@ -49,11 +52,8 @@ export const TagsPanel = (props: TagsPanelProps) => {
   };
 
   const handleDeleteTag = (label: string) => {
-    const tagsWithoutDeletedTag = tags.filter(
-      (thisTag: string) => thisTag !== label
-    );
-    setDeletingTags(new Set(deletingTags.add(label)));
-    updateTags(tagsWithoutDeletedTag)
+    setDeletingTags((prev) => new Set(prev.add(label)));
+    updateTagsAtomic((tags) => tags.filter((tag) => tag != label))
       .then(() => {
         setTagError('');
       })
@@ -62,8 +62,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
         setTagError(tagError);
       })
       .finally(() => {
-        deletingTags.delete(label);
-        setDeletingTags(new Set(deletingTags));
+        setDeletingTags((prev) => (prev.delete(label), new Set(prev)));
       });
   };
 
@@ -81,7 +80,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
     } else {
       setTagError('');
       try {
-        await updateTags([...tags, tag].sort());
+        await updateTagsAtomic((tags) => [...tags, tag].sort());
       } catch (e) {
         const tagError = getErrorStringOrDefault(e, 'Error while creating tag');
         setTagError(tagError);

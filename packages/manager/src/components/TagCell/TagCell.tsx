@@ -8,6 +8,7 @@ import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
+import { useAtomic } from 'src/utilities/useAtomic';
 
 import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { AddTag } from './AddTag';
@@ -35,7 +36,7 @@ const checkOverflow = (el: HTMLElement) => {
 };
 
 export const TagCell = (props: TagCellProps) => {
-  const { sx, tags, updateTags } = props;
+  const { sx, tags } = props;
 
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [deletingTags, setDeletingTags] = React.useState(
@@ -50,15 +51,17 @@ export const TagCell = (props: TagCellProps) => {
     setHasOverflow(!!elRef && checkOverflow(elRef));
   }, [windowDimensions, tags, elRef]);
 
-  const handleAddTag = async (tag: string) => {
-    await updateTags([...tags, tag]);
-  };
+  const updateTagsAtomic = useAtomic(tags, props.updateTags);
+
+  const handleAddTag = (tag: string) =>
+    updateTagsAtomic((tags) => [...tags, tag]);
 
   const handleDeleteTag = (tagToDelete: string) => {
-    setDeletingTags(new Set(deletingTags.add(tagToDelete)));
-    updateTags(tags.filter((tag) => tag !== tagToDelete)).finally(() => {
-      deletingTags.delete(tagToDelete);
-      setDeletingTags(new Set(deletingTags));
+    setDeletingTags((prev) => new Set(prev.add(tagToDelete)));
+    updateTagsAtomic((tags) =>
+      tags.filter((tag) => tag != tagToDelete)
+    ).finally(() => {
+      setDeletingTags((prev) => (prev.delete(tagToDelete), new Set(prev)));
     });
   };
 
