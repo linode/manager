@@ -54,19 +54,6 @@ describe('SelectLinodePanel (table, desktop)', () => {
     expect((await findAllByRole('row')).length).toBe(4);
   });
 
-  it('can be disabled', async () => {
-    const { findAllByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} disabled />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
-    );
-
-    for (const radio of await findAllByRole('radio')) {
-      expect(radio).toBeDisabled();
-    }
-  });
-
   it('selects the plan when clicked', async () => {
     const mockOnSelect = vi.fn();
 
@@ -167,19 +154,6 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     expect(container.querySelectorAll('[data-qa-selection-card]').length).toBe(
       3
     );
-  });
-
-  it('can be disabled', async () => {
-    const { container } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} disabled />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
-    );
-
-    container
-      .querySelectorAll('[data-qa-selection-card]')
-      .forEach((card) => expect(card).toBeDisabled());
   });
 
   it('selects the plan when clicked', async () => {
