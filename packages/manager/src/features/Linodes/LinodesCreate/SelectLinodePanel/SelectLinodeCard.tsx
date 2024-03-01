@@ -10,12 +10,14 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 interface Props {
+  disabled?: boolean;
   handleSelection: () => void;
   linode: Linode;
   selected?: boolean;
 }
 
 export const SelectLinodeCard = ({
+  disabled,
   handleSelection,
   linode,
   selected,
@@ -50,7 +52,7 @@ export const SelectLinodeCard = ({
         [type, image, region].filter(isNotNullOrUndefined).join(', '),
       ]}
       checked={selected}
-      disabled={isLinodesGrantReadOnly}
+      disabled={isLinodesGrantReadOnly || disabled}
       heading={linode.label}
       key={`selection-card-${linode.id}`}
       onClick={handleSelection}

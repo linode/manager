@@ -5,6 +5,7 @@ import { SelectLinodeCard } from './SelectLinodeCard';
 import { RenderLinodeProps } from './SelectLinodePanel';
 
 export const SelectLinodeCards = ({
+  disabled,
   handleSelection,
   orderBy: { data: linodes },
   selectedLinodeId,
@@ -15,6 +16,7 @@ export const SelectLinodeCards = ({
         handleSelection={() =>
           handleSelection(linode.id, linode.type, linode.specs.disk)
         }
+        disabled={disabled}
         key={linode.id}
         linode={linode}
         selected={linode.id == selectedLinodeId}

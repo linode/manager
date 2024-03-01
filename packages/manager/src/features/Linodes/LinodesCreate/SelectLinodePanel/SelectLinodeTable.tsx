@@ -13,6 +13,7 @@ import {
   numCols,
 } from './SelectLinodeRow';
 export const SelectLinodeTable = ({
+  disabled,
   handlePowerOff,
   handleSelection,
   orderBy,
@@ -41,8 +42,10 @@ export const SelectLinodeTable = ({
               }
               selected={
                 !isLinodesGrantReadOnly &&
+                !disabled &&
                 Number(selectedLinodeId) === linode.id
               }
+              disabled={disabled}
               handlePowerOff={() => handlePowerOff(linode.id)}
               key={linode.id}
               linodeId={linode.id}

@@ -24,18 +24,12 @@ const errorResources = {
   type: 'A plan selection',
 };
 
-interface Props {
-  disabled?: boolean;
-}
-
-export type CombinedProps = Props &
-  CloneFormStateHandlers &
+export type CombinedProps = CloneFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
 export const FromLinodeContent = (props: CombinedProps) => {
   const {
-    disabled,
     errors,
     linodesData,
     regionsData,
@@ -43,6 +37,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
     typesData,
     updateLinodeID,
     updateTypeID,
+    userCannotCreateLinode,
   } = props;
 
   const extendedTypes = typesData?.map(extendType);
@@ -108,7 +103,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
                 : []),
             ]}
             data-qa-linode-panel
-            disabled={disabled}
+            disabled={userCannotCreateLinode}
             error={hasErrorFor('linode_id')}
             handleSelection={handleSelectLinode}
             header={'Select Linode to Clone From'}

@@ -39,6 +39,7 @@ interface Props {
 export const SelectLinodeRow = (props: Props) => {
   const queryClient = useQueryClient();
   const {
+    disabled,
     handlePowerOff,
     handleSelection,
     linodeId,
@@ -69,6 +70,8 @@ export const SelectLinodeRow = (props: Props) => {
     grantType: 'linode',
     id: linode?.id,
   });
+
+  const isDisabled = disabled || isLinodesGrantReadOnly;
 
   // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
@@ -117,18 +120,15 @@ export const SelectLinodeRow = (props: Props) => {
 
   return (
     <TableRow
-      disabled={isLinodesGrantReadOnly}
-      onClick={isLinodesGrantReadOnly ? undefined : handleSelection}
+      disabled={isDisabled}
+      onClick={isDisabled ? undefined : handleSelection}
     >
       <TableCell
         component="th"
         scope="row"
         sx={{ height: theme.spacing(6), padding: '0 !important', width: '3%' }}
       >
-        <Radio
-          checked={!isLinodesGrantReadOnly && selected}
-          disabled={isLinodesGrantReadOnly}
-        />
+        <Radio checked={!isDisabled && selected} disabled={isDisabled} />
       </TableCell>
       <TableCell>{linode.label}</TableCell>
       <TableCell statusCell>
@@ -151,7 +151,7 @@ export const SelectLinodeRow = (props: Props) => {
             <InlineMenuAction
               actionText="Power Off"
               buttonHeight={47}
-              disabled={isLinodesGrantReadOnly}
+              disabled={isDisabled}
               onClick={handlePowerOff}
             />
           )}

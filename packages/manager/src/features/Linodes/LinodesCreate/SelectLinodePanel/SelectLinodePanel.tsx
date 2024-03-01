@@ -174,6 +174,7 @@ export const SelectLinodePanel = (props: Props) => {
                       order,
                       orderBy,
                     }}
+                    disabled={disabled}
                     handleSelection={handleSelection}
                     selectedLinodeId={selectedLinodeID}
                     showPowerActions={showPowerActions ?? false}
@@ -206,6 +207,7 @@ export const SelectLinodePanel = (props: Props) => {
 };
 
 export interface RenderLinodeProps {
+  disabled?: boolean;
   handlePowerOff: (linodeId: number) => void;
   handleSelection: Props['handleSelection'];
   orderBy: OrderByProps<Linode>;
