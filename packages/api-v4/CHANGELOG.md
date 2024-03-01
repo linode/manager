@@ -1,3 +1,13 @@
+## [2024-03-04] - v0.111.0
+
+### Changed:
+
+- Rename `database_scale` type to `database_resize` ([#10193](https://github.com/linode/manager/pull/10193))
+
+### Upcoming Features:
+
+- Accept placement group in Linode create payload ([#10195](https://github.com/linode/manager/pull/10195))
+
 ## [2024-02-20] - v0.110.0
 
 ### Upcoming Features:
