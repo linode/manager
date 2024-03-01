@@ -6,6 +6,7 @@ import 'cypress-file-upload';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageBucketFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
+import { interceptGetNetworkUtilization } from 'support/intercepts/account';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
@@ -120,6 +121,7 @@ describe('object storage end-to-end tests', () => {
     interceptGetBuckets().as('getBuckets');
     interceptCreateBucket().as('createBucket');
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
+    interceptGetNetworkUtilization().as('getNetworkUtilization');
 
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
@@ -127,7 +129,13 @@ describe('object storage end-to-end tests', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/object-storage');
-    cy.wait(['@getFeatureFlags', '@getBuckets']);
+    cy.wait(['@getFeatureFlags', '@getBuckets', '@getNetworkUtilization']);
+
+    // Wait for loader to disappear, indicating that all buckets have been loaded.
+    // Mitigates test failures stemming from M3-7833.
+    cy.findByLabelText('Buckets').within(() => {
+      cy.findByLabelText('Content is loading').should('not.exist');
+    });
 
     ui.button.findByTitle('Create Bucket').should('be.visible').click();
 
@@ -145,6 +153,7 @@ describe('object storage end-to-end tests', () => {
       });
 
     cy.wait(['@createBucket', '@getBuckets']);
+    ui.drawer.find().should('not.exist');
 
     // Confirm that bucket is created, initiate deletion.
     cy.findByText(bucketLabel)
