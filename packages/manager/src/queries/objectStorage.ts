@@ -11,6 +11,7 @@ import {
   Region,
   createBucket,
   deleteBucket,
+  deleteBucketWithRegion,
   deleteSSLCert,
   getBucket,
   getBuckets,
@@ -149,6 +150,39 @@ export const useDeleteBucketMutation = () => {
                   (bucket: ObjectStorageBucket) =>
                     !(
                       bucket.cluster === variables.cluster &&
+                      bucket.label === variables.label
+                    )
+                ) || [],
+              errors: oldData?.errors || [],
+            };
+          }
+        );
+      },
+    }
+  );
+};
+
+/*
+   @TODO OBJ Multicluster: useDeleteBucketWithRegionMutation is a temporary hook,
+   once feature is rolled out we replace it with existing useDeleteBucketMutation
+   by updating it with region instead of cluster.
+  */
+
+export const useDeleteBucketWithRegionMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { label: string; region: string }>(
+    (data) => deleteBucketWithRegion(data),
+    {
+      onSuccess: (_, variables) => {
+        queryClient.setQueryData<BucketsResponce>(
+          `${queryKey}-buckets`,
+          (oldData) => {
+            return {
+              buckets:
+                oldData?.buckets.filter(
+                  (bucket: ObjectStorageBucket) =>
+                    !(
+                      bucket.region === variables.region &&
                       bucket.label === variables.label
                     )
                 ) || [],

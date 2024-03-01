@@ -18,7 +18,7 @@ import { Typography } from 'src/components/Typography';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   BucketError,
-  useDeleteBucketMutation,
+  useDeleteBucketWithRegionMutation,
   useObjectStorageBucketsFromRegions,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
@@ -64,7 +64,7 @@ export const OMC_BucketLanding = () => {
     isLoading: areBucketsLoading,
   } = useObjectStorageBucketsFromRegions(regionsSupportObjectStorage);
 
-  const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
+  const { mutateAsync: deleteBucket } = useDeleteBucketWithRegionMutation();
 
   const { classes } = useStyles();
 
@@ -97,7 +97,7 @@ export const OMC_BucketLanding = () => {
     removeBucketConfirmationDialog.open();
   };
 
-  const removeBucket = () => {
+  const removeBucket = async () => {
     // This shouldn't happen, but just in case (and to get TS to quit complaining...)
     if (!bucketToRemove) {
       return;
@@ -106,23 +106,23 @@ export const OMC_BucketLanding = () => {
     setError(undefined);
     setIsLoading(true);
 
-    const { cluster, label } = bucketToRemove;
-
-    deleteBucket({ cluster, label })
-      .then(() => {
+    const { label, region } = bucketToRemove;
+    if (region) {
+      try {
+        await deleteBucket({ label, region });
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
 
         // @analytics
-        sendDeleteBucketEvent(cluster);
-      })
-      .catch((e) => {
+        sendDeleteBucketEvent(region);
+      } catch (e) {
         // @analytics
-        sendDeleteBucketFailedEvent(cluster);
+        sendDeleteBucketFailedEvent(region);
 
         setIsLoading(false);
         setError(e);
-      });
+      }
+    }
   };
 
   const closeRemoveBucketConfirmationDialog = React.useCallback(() => {

@@ -944,6 +944,10 @@ export const handlers = [
     await sleep(2000);
     return res(ctx.json({}));
   }),
+  rest.delete('*object-storage/buckets/*/*', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
   rest.get('*/object-storage/buckets/*/*/object-list', (req, res, ctx) => {
     const pageSize = Number(req.url.searchParams.get('page_size') || 100);
     const marker = req.url.searchParams.get('marker');
