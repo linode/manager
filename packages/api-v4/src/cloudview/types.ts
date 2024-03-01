@@ -12,6 +12,12 @@ export interface Namespace {
   updated: string;
 }
 
+export interface NamespaceApiKey {
+  active_keys: {
+    api_key: string;
+    expiry: string;
+  }[];
+}
 export interface CreateNameSpacePayload {
   label: string | null;
   region: string | null;

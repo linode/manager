@@ -1,8 +1,10 @@
 import {
   CreateNameSpacePayload,
   Namespace,
+  NamespaceApiKey,
   createCloudViewNamespace,
   getCloudViewNamespaces,
+  getNamespaceApiKey,
 } from '@linode/api-v4/lib/cloudview';
 import {
   APIError,
@@ -15,6 +17,16 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { queryPresets } from '../base';
 
 export const queryKey = 'cloudview-namespaces';
+
+export const useNamespaceApiKey = (id: number, enabled: boolean = true) => {
+  return useQuery<NamespaceApiKey, APIError[]>(
+    [queryKey, 'api-key', id],
+    () => getNamespaceApiKey(id),
+    {
+      enabled,
+    }
+  );
+};
 
 export const useCloudViewNameSpacesQuery = (
   params: Params = {},

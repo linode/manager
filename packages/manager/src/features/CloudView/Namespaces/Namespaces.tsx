@@ -11,6 +11,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CreateNamespaceDrawer } from './CreateNamespace/CreateNamespaceDrawer';
 import { NamespaceLandingEmptyState } from './NamespaceLandingEmptyState';
+import { NamespaceList } from './NamespaceList/NamespaceList';
 
 export const Namespaces = React.memo(() => {
   const location = useLocation();
@@ -77,6 +78,7 @@ export const Namespaces = React.memo(() => {
           entity="Namespace"
           onButtonClick={onOpenCreateDrawer}
         />
+        <NamespaceList></NamespaceList>
       </Paper>
       <CreateNamespaceDrawer
         onClose={onCloseCreateDrawer}
