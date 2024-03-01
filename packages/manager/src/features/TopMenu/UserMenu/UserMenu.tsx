@@ -82,11 +82,11 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
   const companyName =
-    (hasParentChildAccountAccess &&
-      profile?.user_type !== 'default' &&
-      account?.company) ??
-    '';
-  const showCompanyName = hasParentChildAccountAccess && companyName;
+    hasParentChildAccountAccess &&
+    profile?.user_type !== 'default' &&
+    account?.company
+      ? account.company
+      : undefined;
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
@@ -99,9 +99,12 @@ export const UserMenu = React.memo(() => {
 
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
+  // For a proxy user, if there is no company name to identify a child account, fall back on the proxy username.
   const userName =
-    (hasParentChildAccountAccess && isProxyUser ? parentProfile : profile)
-      ?.username ?? '';
+    (hasParentChildAccountAccess && isProxyUser && companyName
+      ? parentProfile
+      : profile
+    )?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -118,7 +121,7 @@ export const UserMenu = React.memo(() => {
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
     if (isProxyUser) {
-      enqueueSnackbar(`Account switched to ${companyName}.`, {
+      enqueueSnackbar(`Account switched to ${companyName ?? userName}.`, {
         variant: 'success',
       });
     }
@@ -224,12 +227,12 @@ export const UserMenu = React.memo(() => {
             <Stack alignItems={'flex-start'}>
               <Typography
                 sx={{
-                  fontSize: showCompanyName ? '0.775rem' : '0.875rem',
+                  fontSize: companyName ? '0.775rem' : '0.875rem',
                 }}
               >
                 {userName}
               </Typography>
-              {showCompanyName && (
+              {companyName && (
                 <Typography
                   sx={(theme) => ({
                     fontFamily: theme.font.bold,
@@ -274,7 +277,9 @@ export const UserMenu = React.memo(() => {
             fontSize="1.1rem"
           >
             <strong>
-              {canSwitchBetweenParentOrProxyAccount ? companyName : userName}
+              {canSwitchBetweenParentOrProxyAccount && companyName
+                ? companyName
+                : userName}
             </strong>
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (
@@ -290,7 +295,10 @@ export const UserMenu = React.memo(() => {
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
-            <Grid container>
+            <Grid
+              columnGap={isProxyUser && !companyName ? 1 : undefined}
+              container
+            >
               <Grid
                 container
                 direction="column"
