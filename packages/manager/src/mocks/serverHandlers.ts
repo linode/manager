@@ -980,6 +980,8 @@ export const handlers = [
 
     const buckets = objectStorageBucketFactory.buildList(1, {
       cluster: `${region}-1`,
+      hostname: `obj-bucket-1.${region}.linodeobjects.com`,
+      label: `obj-bucket-1`,
       region,
     });
 

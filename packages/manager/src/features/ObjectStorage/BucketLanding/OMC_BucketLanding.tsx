@@ -27,7 +27,7 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics';
-// import { getRegionsByRegionId } from 'src/utilities/regions';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
@@ -41,7 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const OMCBucketLanding = () => {
+export const OMC_BucketLanding = () => {
   const { data: profile } = useProfile();
 
   const isRestrictedUser = profile?.restricted;
@@ -52,7 +52,7 @@ export const OMCBucketLanding = () => {
     isLoading: areRegionsLoading,
   } = useRegionsQuery();
 
-  //   const regionsLookup = regions && getRegionsByRegionId(regions);
+  const regionsLookup = regions && getRegionsByRegionId(regions);
 
   const regionsSupportObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
@@ -248,6 +248,7 @@ export const OMCBucketLanding = () => {
       </TypeToConfirmDialog>
       <BucketDetailsDrawer
         bucketLabel={bucketForDetails?.label}
+        bucketRegion={regionsLookup?.[bucketForDetails?.region ?? '']}
         cluster={bucketForDetails?.cluster}
         created={bucketForDetails?.created}
         hostname={bucketForDetails?.hostname}

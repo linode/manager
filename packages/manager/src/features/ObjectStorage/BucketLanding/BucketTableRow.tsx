@@ -86,7 +86,9 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       <Hidden smDown>
         <StyledBucketRegionCell>
           <Typography data-qa-region variant="body1">
-            {clusterRegion?.label ?? cluster}
+            {isObjMultiClusterEnabled
+              ? region
+              : clusterRegion?.label ?? cluster}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
