@@ -14,7 +14,8 @@ import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { AddTag } from './AddTag';
 
 interface TagCellProps {
-  listAllTags: (tags: string[]) => void;
+  disabled?: boolean;
+  listAllTags?: (tags: string[]) => void;
   sx?: SxProps;
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
@@ -36,7 +37,7 @@ const checkOverflow = (el: HTMLElement) => {
 };
 
 export const TagCell = (props: TagCellProps) => {
-  const { sx, tags } = props;
+  const { disabled, listAllTags, sx, tags } = props;
 
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [deletingTags, setDeletingTags] = React.useState(
@@ -65,74 +66,95 @@ export const TagCell = (props: TagCellProps) => {
     });
   };
 
-  return (
-    <StyledGrid
-      alignItems="center"
-      container
-      direction="row"
-      sx={sx}
-      wrap="nowrap"
+  const panelView = listAllTags == undefined;
+
+  const AddButton = (props: { panel?: boolean }) => (
+    <StyledTagButton
+      buttonType="outlined"
+      disabled={disabled}
+      endIcon={<StyledPlusIcon disabled={disabled} />}
+      onClick={() => setAddingTag(true)}
+      panel={props.panel}
+      title="Add a tag"
     >
-      {addingTag ? (
-        <AddTag
-          addTag={handleAddTag}
-          existingTags={tags}
-          onClose={() => setAddingTag(false)}
-        />
-      ) : (
-        <>
-          <StyledTagListDiv hasOverflow={hasOverflow} ref={setElRef}>
-            {tags.map((thisTag) => (
-              <StyledTag
-                colorVariant="lightBlue"
-                key={`tag-item-${thisTag}`}
-                label={thisTag}
-                loading={deletingTags.has(thisTag)}
-                onDelete={() => handleDeleteTag(thisTag)}
-              />
-            ))}
-          </StyledTagListDiv>
-          {hasOverflow ? (
-            <StyledIconButton
-              aria-label="Display all tags"
-              disableRipple
-              onClick={() => props.listAllTags(tags)}
-              onKeyPress={() => props.listAllTags(tags)}
-              size="large"
+      Add a tag
+    </StyledTagButton>
+  );
+
+  return (
+    <>
+      <div style={{ marginBottom: 4 }}>
+        {panelView && !addingTag && <AddButton panel />}
+        {addingTag && (
+          <AddTag
+            addTag={handleAddTag}
+            existingTags={tags}
+            onClose={() => setAddingTag(false)}
+          />
+        )}
+      </div>
+      <StyledGrid
+        alignItems="center"
+        container
+        direction="row"
+        sx={sx}
+        wrap={listAllTags ? 'nowrap' : 'wrap'}
+      >
+        {(!addingTag || panelView) && (
+          <>
+            <StyledTagListDiv
+              hasOverflow={hasOverflow && listAllTags != undefined}
+              ref={setElRef}
+              wrap={listAllTags == undefined}
             >
-              <MoreHoriz />
-            </StyledIconButton>
-          ) : null}
-          <StyledTagButton
-            buttonType="outlined"
-            endIcon={<StyledPlusIcon />}
-            onClick={() => setAddingTag(true)}
-            title="Add a tag"
-          >
-            Add a tag
-          </StyledTagButton>
-        </>
-      )}
-    </StyledGrid>
+              {tags.map((thisTag) => (
+                <StyledTag
+                  onDelete={
+                    disabled ? undefined : () => handleDeleteTag(thisTag)
+                  }
+                  colorVariant="lightBlue"
+                  key={`tag-item-${thisTag}`}
+                  label={thisTag}
+                  loading={deletingTags.has(thisTag)}
+                />
+              ))}
+            </StyledTagListDiv>
+            {hasOverflow && !panelView ? (
+              <StyledIconButton
+                aria-label="Display all tags"
+                disableRipple
+                onClick={() => listAllTags(tags)}
+                onKeyPress={() => listAllTags(tags)}
+                size="large"
+              >
+                <MoreHoriz />
+              </StyledIconButton>
+            ) : null}
+            {!panelView && <AddButton />}
+          </>
+        )}
+      </StyledGrid>
+    </>
   );
 };
 
-const StyledGrid = styled(Grid)({
-  justifyContent: 'flex-end',
+const StyledGrid = styled(Grid)((props) => ({
+  justifyContent: props.wrap == 'wrap' ? 'flex-start' : 'flex-end',
   minHeight: 40,
   position: 'relative',
-});
+}));
 
 const StyledTagListDiv = styled('div', {
-  shouldForwardProp: omittedProps(['hasOverflow']),
+  shouldForwardProp: omittedProps(['hasOverflow', 'wrap']),
 })<{
   hasOverflow: boolean;
+  wrap: boolean;
 }>(({ ...props }) => ({
   '& .MuiChip-root:last-child': {
     marginRight: 4,
   },
   display: 'flex',
-  flexWrap: 'nowrap',
+  flexWrap: props.wrap ? 'wrap' : 'nowrap',
   overflow: 'hidden',
   position: 'relative',
   whiteSpace: 'nowrap',

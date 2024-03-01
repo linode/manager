@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+
+import { TagCell } from './TagCell';
 
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
 
@@ -19,7 +20,7 @@ const TagDrawer = (props: TagDrawerProps) => {
 
   return (
     <Drawer onClose={onClose} open={open} title={`Tags (${entityLabel})`}>
-      <TagsPanel tags={tags} updateTags={updateTags} />
+      <TagCell tags={tags} updateTags={updateTags} />
     </Drawer>
   );
 };

@@ -12,11 +12,14 @@ import { Button } from './Button';
  */
 export const StyledTagButton = styled(Button, {
   label: 'StyledTagButton',
-})(({ theme, ...props }) => ({
+})<{ panel?: boolean }>(({ theme, ...props }) => ({
   border: 'none',
   fontSize: '0.875rem',
   minHeight: 30,
   whiteSpace: 'nowrap',
+  ...(props.panel && {
+    height: 34,
+  }),
   ...(!props.disabled && {
     '&:hover, &:focus': {
       backgroundColor: theme.color.tagButton,

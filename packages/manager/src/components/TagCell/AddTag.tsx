@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
@@ -63,6 +63,11 @@ export const AddTag = (props: AddTagProps) => {
 
   return (
     <Autocomplete
+      onBlur={() => {
+        if (!isLoading && onClose) {
+          onClose();
+        }
+      }}
       onChange={(_, value) => {
         if (value) {
           handleAddTag(typeof value == 'string' ? value : value.label);
@@ -77,7 +82,6 @@ export const AddTag = (props: AddTagProps) => {
       label={'Create or Select a Tag'}
       loading={loading}
       noOptionsText={<i>{`"${inputValue}" already added`}</i>} // Will display create option unless that tag is already added
-      onBlur={onClose}
       onInputChange={(_, value) => setInputValue(value)}
       openOnFocus
       options={tagOptions ?? []}
