@@ -295,10 +295,7 @@ export const UserMenu = React.memo(() => {
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
-            <Grid
-              columnGap={isProxyUser && !companyName ? 1 : undefined}
-              container
-            >
+            <Grid columnGap={userName.length >= 29 ? 1 : undefined} container>
               <Grid
                 container
                 direction="column"
