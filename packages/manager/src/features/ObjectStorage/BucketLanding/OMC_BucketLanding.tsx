@@ -1,7 +1,5 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
+import { Region } from '@linode/api-v4';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
@@ -29,7 +27,7 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics';
-import { getRegionsByRegionId } from 'src/utilities/regions';
+// import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
@@ -54,7 +52,7 @@ export const OMCBucketLanding = () => {
     isLoading: areRegionsLoading,
   } = useRegionsQuery();
 
-  const regionsLookup = regions && getRegionsByRegionId(regions);
+  //   const regionsLookup = regions && getRegionsByRegionId(regions);
 
   const regionsSupportObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
@@ -131,10 +129,10 @@ export const OMCBucketLanding = () => {
     removeBucketConfirmationDialog.close();
   }, [removeBucketConfirmationDialog]);
 
-  const unavailableRegions =
-    objectStorageBucketsResponse?.errors
-      ?.map((error: BucketError) => error.region)
-      .filter((region) => region !== undefined) || [];
+  // @TODO OBJ Multicluster - region is defined as an optional field in BucketError. Once the feature is rolled out to production, we could clean this up and remove the filter.
+  const unavailableRegions = objectStorageBucketsResponse?.errors
+    ?.map((error: BucketError) => error.region)
+    .filter((region): region is Region => region !== undefined);
 
   if (isRestrictedUser) {
     return <RenderEmpty />;
@@ -160,10 +158,8 @@ export const OMCBucketLanding = () => {
   if (objectStorageBucketsResponse?.buckets.length === 0) {
     return (
       <>
-        {unavailableRegions.length > 0 && (
-          <UnavailableClustersDisplay
-            unavailableClusters={unavailableRegions}
-          />
+        {unavailableRegions && unavailableRegions.length > 0 && (
+          <UnavailableRegionsDisplay unavailableRegions={unavailableRegions} />
         )}
         <RenderEmpty />
       </>
@@ -176,8 +172,8 @@ export const OMCBucketLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      {unavailableRegions.length > 0 && (
-        <UnavailableClustersDisplay unavailableClusters={unavailableRegions} />
+      {unavailableRegions && unavailableRegions.length > 0 && (
+        <UnavailableRegionsDisplay unavailableRegions={unavailableRegions} />
       )}
       <Grid xs={12}>
         <OrderBy
@@ -268,18 +264,14 @@ const RenderEmpty = () => {
   return <BucketLandingEmptyState />;
 };
 
-interface UnavailableClustersDisplayProps {
-  unavailableClusters: ObjectStorageCluster[];
+interface UnavailableRegionsDisplayProps {
+  unavailableRegions: Region[];
 }
 
-const UnavailableClustersDisplay = React.memo(
-  ({ unavailableClusters }: UnavailableClustersDisplayProps) => {
-    const { data: regions } = useRegionsQuery();
-
-    const regionsAffected = unavailableClusters.map(
-      (cluster) =>
-        regions?.find((region) => region.id === cluster.region)?.label ??
-        cluster.region
+const UnavailableRegionsDisplay = React.memo(
+  ({ unavailableRegions }: UnavailableRegionsDisplayProps) => {
+    const regionsAffected = unavailableRegions.map(
+      (unavailableRegion) => unavailableRegion.label
     );
 
     return <Banner regionsAffected={regionsAffected} />;
