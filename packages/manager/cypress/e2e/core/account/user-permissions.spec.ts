@@ -28,7 +28,7 @@ const unrestrictedAccessMessage =
   'This user has unrestricted access to the account.';
 
 // Toggle button labels for Global Permissions section.
-export const globalPermissionsLabels = [
+const globalPermissionsLabels = [
   'Can add Linodes to this account ($)',
   'Can add Longview clients to this account',
   'Can add Domains using the DNS Manager',
@@ -150,7 +150,7 @@ const assertAllGlobalPermissions = (enabled: boolean) => {
  *
  * @param billingAccess - Billing access to select.
  */
-export const selectBillingAccess = (
+const selectBillingAccess = (
   billingAccess: 'None' | 'Read Only' | 'Read-Write'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
