@@ -40,7 +40,7 @@ export const LinodeVolumes = () => {
 
   const { data: linode } = useLinodeQuery(id);
 
-  const isLinodesReadOnly = useIsResourceRestricted({
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
     id,
@@ -177,7 +177,7 @@ export const LinodeVolumes = () => {
         <StyledNewWrapperGrid>
           <Button
             buttonType="primary"
-            disabled={isLinodesReadOnly}
+            disabled={isLinodesGrantReadOnly}
             onClick={handleCreateVolume}
           >
             Create Volume

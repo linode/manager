@@ -100,7 +100,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       profile,
     } = this.props;
 
-    const isLinodesReadOnly =
+    const isLinodesGrantReadOnly =
       Boolean(profile.data?.restricted) &&
       !grants.data?.global?.['add_linodes'];
 
@@ -231,7 +231,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               onButtonClick={() =>
                                 this.props.history.push('/linodes/create')
                               }
-                              disabledCreateButton={isLinodesReadOnly}
+                              disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                               entity="Linode"
                               title="Linodes"

@@ -25,7 +25,7 @@ const APPS_MORE_LINKS_TEXT = 'See all Marketplace apps';
 export const LinodesLandingEmptyState = () => {
   const { push } = useHistory();
 
-  const isLinodesReadOnly = useRestrictedGlobalGrantCheck({
+  const isLinodesGrantReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
 
@@ -54,7 +54,7 @@ export const LinodesLandingEmptyState = () => {
       buttonProps={[
         {
           children: 'Create Linode',
-          disabled: isLinodesReadOnly,
+          disabled: isLinodesGrantReadOnly,
           onClick: () => {
             push('/linodes/create');
             sendEvent({

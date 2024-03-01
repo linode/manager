@@ -66,7 +66,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
     isLoading: userTagsLoading,
   } = useTagSuggestions(!profile?.restricted);
 
-  const isLinodesReadOnly = useIsResourceRestricted({
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
     id: entityId,
@@ -176,7 +176,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
           className={classes.selectTag}
           creatable
           createOptionPosition="first"
-          disabled={disabled || isLinodesReadOnly}
+          disabled={disabled || isLinodesGrantReadOnly}
           escapeClearsValue
           hideLabel
           isLoading={userTagsLoading}
@@ -195,7 +195,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
         >
           <StyledTagButton
             buttonType="outlined"
-            disabled={disabled || isLinodesReadOnly}
+            disabled={disabled || isLinodesGrantReadOnly}
             endIcon={<StyledPlusIcon disabled={disabled} />}
             onClick={toggleTagInput}
           >
@@ -217,7 +217,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
                 [classes.tag]: true,
               })}
               colorVariant="lightBlue"
-              disabled={disabled || isLinodesReadOnly}
+              disabled={disabled || isLinodesGrantReadOnly}
               key={`tag-item-${thisTag}`}
               label={thisTag}
               maxLength={30}

@@ -90,7 +90,7 @@ export const LinodeResize = (props: Props) => {
   const hostMaintenance = linode?.status === 'stopped';
   const isLinodeOffline = linode?.status === 'offline';
 
-  const isLinodesReadOnly = useIsResourceRestricted({
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
     id: linodeId,
@@ -159,7 +159,7 @@ export const LinodeResize = (props: Props) => {
     }
   }, [resizeError]);
 
-  const tableDisabled = hostMaintenance || isLinodesReadOnly;
+  const tableDisabled = hostMaintenance || isLinodesGrantReadOnly;
 
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false &&
@@ -193,7 +193,7 @@ export const LinodeResize = (props: Props) => {
       title={`Resize Linode ${linode?.label}`}
     >
       <form onSubmit={formik.handleSubmit}>
-        {isLinodesReadOnly && <LinodePermissionsError />}
+        {isLinodesGrantReadOnly && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
         {disksError && (
           <Notice

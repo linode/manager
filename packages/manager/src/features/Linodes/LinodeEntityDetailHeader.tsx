@@ -83,7 +83,7 @@ export const LinodeEntityDetailHeader = (
     variant,
   } = props;
 
-  const isLinodesReadOnly = useIsResourceRestricted({
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
     id: linodeId,
@@ -197,14 +197,14 @@ export const LinodeEntityDetailHeader = (
               handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
             buttonType="secondary"
-            disabled={!(isRunning || isOffline) || isLinodesReadOnly}
+            disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             {isRunning ? 'Power Off' : 'Power On'}
           </Button>
           <Button
             buttonType="secondary"
-            disabled={isOffline || isLinodesReadOnly}
+            disabled={isOffline || isLinodesGrantReadOnly}
             onClick={() => handlers.onOpenPowerDialog('Reboot')}
             sx={sxActionItem}
           >
@@ -215,7 +215,7 @@ export const LinodeEntityDetailHeader = (
               handleConsoleButtonClick(linodeId);
             }}
             buttonType="secondary"
-            disabled={isLinodesReadOnly}
+            disabled={isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             Launch LISH Console

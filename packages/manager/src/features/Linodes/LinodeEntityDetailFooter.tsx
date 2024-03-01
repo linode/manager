@@ -34,7 +34,7 @@ export type Props = LinodeEntityDetailProps & {
 };
 
 interface FooterProps {
-  isLinodesReadOnly: boolean;
+  isLinodesGrantReadOnly: boolean;
   linodeCreated: string;
   linodeId: number;
   linodeLabel: string;
@@ -50,7 +50,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
 
   const {
-    isLinodesReadOnly,
+    isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
     linodePlan,
@@ -162,7 +162,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
               flexDirection: 'row-reverse',
             },
           }}
-          disabled={isLinodesReadOnly}
+          disabled={isLinodesGrantReadOnly}
           listAllTags={openTagDrawer}
           tags={linodeTags}
           updateTags={updateTags}

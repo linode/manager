@@ -37,7 +37,6 @@ export const FromLinodeContent = (props: CombinedProps) => {
     typesData,
     updateLinodeID,
     updateTypeID,
-    userCannotCreateLinode,
   } = props;
 
   const extendedTypes = typesData?.map(extendType);
@@ -103,7 +102,6 @@ export const FromLinodeContent = (props: CombinedProps) => {
                 : []),
             ]}
             data-qa-linode-panel
-            disabled={userCannotCreateLinode}
             error={hasErrorFor('linode_id')}
             handleSelection={handleSelectLinode}
             header={'Select Linode to Clone From'}

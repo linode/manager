@@ -27,16 +27,16 @@ import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
 import { IPTransfer } from './IPTransfer';
+import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
 import {
   StyledRootGrid,
   StyledTypography,
   StyledWrapperGrid,
 } from './LinodeIPAddresses.styles';
-import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
-import { IPTypes } from './types';
 import { ViewIPDrawer } from './ViewIPDrawer';
-import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { ViewRDNSDrawer } from './ViewRDNSDrawer';
+import { ViewRangeDrawer } from './ViewRangeDrawer';
+import { IPTypes } from './types';
 
 export const ipv4TableID = 'ips';
 
@@ -49,7 +49,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
 
-  const isLinodesReadOnly = useIsResourceRestricted({
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
     id: linodeID,
@@ -141,14 +141,14 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             <Hidden smDown>
               <Button
                 buttonType="secondary"
-                disabled={isLinodesReadOnly}
+                disabled={isLinodesGrantReadOnly}
                 onClick={() => setIsTransferDialogOpen(true)}
               >
                 IP Transfer
               </Button>
               <Button
                 buttonType="secondary"
-                disabled={isLinodesReadOnly}
+                disabled={isLinodesGrantReadOnly}
                 onClick={() => setIsShareDialogOpen(true)}
                 style={{ marginRight: 16 }}
               >
@@ -156,7 +156,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               </Button>
             </Hidden>
             <AddNewLink
-              disabled={isLinodesReadOnly}
+              disabled={isLinodesGrantReadOnly}
               label="Add an IP Address"
               onClick={() => setIsAddDrawerOpen(true)}
             />
@@ -202,7 +202,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                         }
                         key={`${ipDisplay.address}-${ipDisplay.type}`}
                         linodeId={linodeID}
-                        readOnly={isLinodesReadOnly}
+                        readOnly={isLinodesGrantReadOnly}
                       />
                     ))}
                   </TableBody>
@@ -249,19 +249,19 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         linodeId={linodeID}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
-        readOnly={isLinodesReadOnly}
+        readOnly={isLinodesGrantReadOnly}
       />
       <IPTransfer
         linodeId={linodeID}
         onClose={() => setIsTransferDialogOpen(false)}
         open={isTransferDialogOpen}
-        readOnly={isLinodesReadOnly}
+        readOnly={isLinodesGrantReadOnly}
       />
       <IPSharing
         linodeId={linodeID}
         onClose={() => setIsShareDialogOpen(false)}
         open={isShareDialogOpen}
-        readOnly={isLinodesReadOnly}
+        readOnly={isLinodesGrantReadOnly}
       />
       {selectedIP && (
         <DeleteIPDialog

@@ -15,6 +15,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
 import {
   queryKey as linodesQueryKey,
@@ -38,7 +39,6 @@ interface Props {
 export const SelectLinodeRow = (props: Props) => {
   const queryClient = useQueryClient();
   const {
-    disabled,
     handlePowerOff,
     handleSelection,
     linodeId,
@@ -63,6 +63,12 @@ export const SelectLinodeRow = (props: Props) => {
     linode?.image ?? '',
     Boolean(linode?.image)
   );
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linode?.id,
+  });
 
   // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
@@ -110,13 +116,19 @@ export const SelectLinodeRow = (props: Props) => {
   const isRunning = linode.status == 'running';
 
   return (
-    <TableRow onClick={handleSelection}>
+    <TableRow
+      disabled={isLinodesGrantReadOnly}
+      onClick={isLinodesGrantReadOnly ? undefined : handleSelection}
+    >
       <TableCell
         component="th"
         scope="row"
         sx={{ height: theme.spacing(6), padding: '0 !important', width: '3%' }}
       >
-        <Radio checked={selected} disabled={disabled} />
+        <Radio
+          checked={!isLinodesGrantReadOnly && selected}
+          disabled={isLinodesGrantReadOnly}
+        />
       </TableCell>
       <TableCell>{linode.label}</TableCell>
       <TableCell statusCell>
@@ -139,6 +151,7 @@ export const SelectLinodeRow = (props: Props) => {
             <InlineMenuAction
               actionText="Power Off"
               buttonHeight={47}
+              disabled={isLinodesGrantReadOnly}
               onClick={handlePowerOff}
             />
           )}

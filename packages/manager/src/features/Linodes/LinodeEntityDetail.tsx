@@ -67,7 +67,7 @@ export const LinodeEntityDetail = (props: Props) => {
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
-  const isLinodesReadOnly = useIsResourceRestricted({
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
     id: linode.id,
@@ -93,7 +93,7 @@ export const LinodeEntityDetail = (props: Props) => {
 
   return (
     <>
-      {isLinodesReadOnly && (
+      {isLinodesGrantReadOnly && (
         <Notice
           text={getRestrictedResourceText({
             resourceType: 'Linodes',
@@ -122,7 +122,7 @@ export const LinodeEntityDetail = (props: Props) => {
         }
         footer={
           <LinodeEntityDetailFooter
-            isLinodesReadOnly
+            isLinodesGrantReadOnly
             linodeCreated={linode.created}
             linodeId={linode.id}
             linodeLabel={linode.label}
