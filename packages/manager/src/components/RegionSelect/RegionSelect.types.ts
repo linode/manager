@@ -35,10 +35,9 @@ export interface RegionSelectProps
   currentCapability: Capabilities | undefined;
   handleSelection: (id: string) => void;
   helperText?: string;
-  hideCoreRegions?: boolean;
-  hideEdgeRegions?: boolean;
   isClearable?: boolean;
   label?: string;
+  regionFilter?: RegionSite;
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
@@ -73,8 +72,7 @@ export interface RegionOptionAvailability {
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
-  hideCoreRegions?: boolean;
-  hideEdgeRegions?: boolean;
+  regionFilter?: RegionSite;
   regions: Region[];
 }
 

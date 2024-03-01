@@ -145,9 +145,8 @@ export const ConfigureForm = React.memo((props: Props) => {
             currentCapability="Linodes"
             errorText={errorText}
             handleSelection={handleSelectRegion}
-            hideCoreRegions={flags.gecko && linodeIsInEdgeRegion}
-            hideEdgeRegions={flags.gecko && !linodeIsInEdgeRegion}
             label="New Region"
+            regionFilter={flags.gecko && linodeIsInEdgeRegion ? 'edge' : 'core'}
             selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
