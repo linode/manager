@@ -6,7 +6,25 @@ type UpdateQueue<T> = {
   status: 'PENDING' | 'RUNNING';
   updater: (resource: T) => T;
 }[];
-
+/**
+ * A hook that allows atomic, asynchronous updates to a resource.
+ * This can be used to avoid race conditions resulting in
+ * conflicting updates.
+ *
+ * @example
+ * ```
+ * const updateTagsAtomic = useAtomic(tags, updateTags);
+ * setTimeout(updateTagsAtomic, 100, tags => [...tags, 'tag1']);
+ * setTimeout(updateTagsAtomic, 110, tags => [...tags, 'tag2']); // This update will be queued
+ * // The resulting tags will be [..., 'tag1', 'tag2']
+ * // Without `useAtomic`, the updates would override each other and the result would be [..., 'tag2']
+ * ```
+ *
+ * @param initial An initial value for the resource upon which updates are applied.
+ * @param updater The asynchronous updater function. `useAtomic` will call this
+ *                function after applying all queued atomic updates.
+ * @returns A function that can be used to enqueue atomic updates.
+ */
 export const useAtomic = <T>(
   initial: T,
   updater: (value: T) => Promise<void>

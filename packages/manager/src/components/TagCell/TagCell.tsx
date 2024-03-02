@@ -6,9 +6,9 @@ import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
+import { useAtomic } from 'src/hooks/useAtomic';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
-import { useAtomic } from 'src/utilities/useAtomic';
 
 import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { AddTag } from './AddTag';
