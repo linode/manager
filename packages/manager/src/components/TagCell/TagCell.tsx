@@ -83,57 +83,55 @@ export const TagCell = (props: TagCellProps) => {
 
   return (
     <>
-      <div style={{ marginBottom: 4 }}>
-        {panelView && !addingTag && <AddButton panel />}
-        {addingTag && (
-          <AddTag
-            addTag={handleAddTag}
-            existingTags={tags}
-            onClose={() => setAddingTag(false)}
-          />
-        )}
-      </div>
-      <StyledGrid
-        alignItems="center"
-        container
-        direction="row"
-        sx={sx}
-        wrap={listAllTags ? 'nowrap' : 'wrap'}
-      >
-        {(!addingTag || panelView) && (
-          <>
-            <StyledTagListDiv
-              hasOverflow={hasOverflow && listAllTags != undefined}
-              ref={setElRef}
-              wrap={listAllTags == undefined}
+      {(addingTag || panelView) && (
+        <div style={{ height: 40, marginBottom: panelView ? 4 : 0 }}>
+          {panelView && !addingTag && <AddButton panel />}
+          {addingTag && (
+            <AddTag
+              addTag={handleAddTag}
+              existingTags={tags}
+              onClose={() => setAddingTag(false)}
+            />
+          )}
+        </div>
+      )}
+      {(!addingTag || panelView) && (
+        <StyledGrid
+          alignItems="center"
+          container
+          direction="row"
+          sx={sx}
+          wrap={listAllTags ? 'nowrap' : 'wrap'}
+        >
+          <StyledTagListDiv
+            hasOverflow={hasOverflow && listAllTags != undefined}
+            ref={setElRef}
+            wrap={listAllTags == undefined}
+          >
+            {tags.map((thisTag) => (
+              <StyledTag
+                colorVariant="lightBlue"
+                key={`tag-item-${thisTag}`}
+                label={thisTag}
+                loading={deletingTags.has(thisTag)}
+                onDelete={disabled ? undefined : () => handleDeleteTag(thisTag)}
+              />
+            ))}
+          </StyledTagListDiv>
+          {hasOverflow && !panelView ? (
+            <StyledIconButton
+              aria-label="Display all tags"
+              disableRipple
+              onClick={() => listAllTags(tags)}
+              onKeyPress={() => listAllTags(tags)}
+              size="large"
             >
-              {tags.map((thisTag) => (
-                <StyledTag
-                  onDelete={
-                    disabled ? undefined : () => handleDeleteTag(thisTag)
-                  }
-                  colorVariant="lightBlue"
-                  key={`tag-item-${thisTag}`}
-                  label={thisTag}
-                  loading={deletingTags.has(thisTag)}
-                />
-              ))}
-            </StyledTagListDiv>
-            {hasOverflow && !panelView ? (
-              <StyledIconButton
-                aria-label="Display all tags"
-                disableRipple
-                onClick={() => listAllTags(tags)}
-                onKeyPress={() => listAllTags(tags)}
-                size="large"
-              >
-                <MoreHoriz />
-              </StyledIconButton>
-            ) : null}
-            {!panelView && <AddButton />}
-          </>
-        )}
-      </StyledGrid>
+              <MoreHoriz />
+            </StyledIconButton>
+          ) : null}
+          {!panelView && <AddButton />}
+        </StyledGrid>
+      )}
     </>
   );
 };
