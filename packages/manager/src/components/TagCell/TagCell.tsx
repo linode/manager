@@ -84,7 +84,16 @@ export const TagCell = (props: TagCellProps) => {
   return (
     <>
       {(addingTag || panelView) && (
-        <div style={{ height: 40, marginBottom: panelView ? 4 : 0 }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: panelView ? 'flex-start' : 'flex-end',
+            marginBottom: panelView ? 4 : 0,
+            width: '100%',
+          }}
+        >
           {panelView && !addingTag && <AddButton panel />}
           {addingTag && (
             <AddTag
@@ -101,7 +110,7 @@ export const TagCell = (props: TagCellProps) => {
           container
           direction="row"
           sx={sx}
-          wrap={listAllTags ? 'nowrap' : 'wrap'}
+          wrap={panelView ? 'wrap' : 'nowrap'}
         >
           <StyledTagListDiv
             hasOverflow={hasOverflow && listAllTags != undefined}
