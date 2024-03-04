@@ -1,5 +1,6 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
+import { useFlags } from 'src/hooks/useFlags';
 import {
   getRegionCountryGroup,
   getSelectedRegion,
@@ -11,8 +12,10 @@ import type {
   GetSelectedRegionById,
   GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
+  SupportedEdgeTypes,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -25,15 +28,22 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
+  hideEdgeServers = false,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
-  const filteredRegions = currentCapability
+  const filteredRegionsByCapability = currentCapability
     ? regions.filter((region) =>
         region.capabilities.includes(currentCapability)
       )
     : regions;
 
-  return filteredRegions
+  const filteredRegionsByCapabilityAndSiteType = hideEdgeServers
+    ? filteredRegionsByCapability.filter(
+        (region) => region.site_type !== 'edge'
+      )
+    : filteredRegionsByCapability;
+
+  return filteredRegionsByCapabilityAndSiteType
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 
@@ -43,6 +53,7 @@ export const getRegionOptions = ({
           region: group,
         },
         label: `${region.label} (${region.id})`,
+        site_type: region.site_type,
         unavailable: getRegionOptionAvailability({
           accountAvailabilityData,
           currentCapability,
@@ -116,6 +127,7 @@ export const getSelectedRegionById = ({
       region: group,
     },
     label: `${selectedRegion.label} (${selectedRegion.id})`,
+    site_type: selectedRegion.site_type,
     unavailable: getRegionOptionAvailability({
       accountAvailabilityData,
       currentCapability,
@@ -174,4 +186,22 @@ export const getSelectedRegionsByIds = ({
       })
     )
     .filter((region): region is RegionSelectOption => !!region);
+};
+
+/**
+ * Util to determine whether a create type has support for edge regions.
+ *
+ * @returns a boolean indicating whether or not to enable gecko.
+ */
+export const useIsGeckoEnabled = (createType: LinodeCreateType) => {
+  const flags = useFlags();
+
+  const supportedEdgeTypes: SupportedEdgeTypes[] = [
+    'Distributions',
+    'StackScripts',
+  ];
+  return Boolean(
+    flags.gecko &&
+      !supportedEdgeTypes.includes(createType as SupportedEdgeTypes)
+  );
 };
