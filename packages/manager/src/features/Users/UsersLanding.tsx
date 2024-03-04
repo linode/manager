@@ -56,16 +56,16 @@ export const UsersLanding = () => {
     },
   });
 
+  const isRestrictedUser = profile?.restricted;
+
   const {
     data: proxyUser,
     error: proxyUserError,
     isLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled: flags.parentChildAccountAccess && !profile?.restricted,
+    enabled: flags.parentChildAccountAccess && !isRestrictedUser,
     filters: { user_type: 'proxy' },
   });
-
-  const isRestrictedUser = profile?.restricted;
 
   const showChildAccountAccessCol = Boolean(
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
