@@ -137,7 +137,9 @@ describe('object storage end-to-end tests', () => {
       cy.findByLabelText('Content is loading').should('not.exist');
     });
 
-    ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    ui.entityHeader.find().within(() => {
+      ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
