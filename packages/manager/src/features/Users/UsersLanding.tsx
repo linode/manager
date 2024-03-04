@@ -72,6 +72,7 @@ export const UsersLanding = () => {
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
   );
 
+  // Parent/Child accounts include additional "child account access" column.
   const numCols = matchesLgUp
     ? showChildAccountAccessCol
       ? 6
@@ -80,6 +81,7 @@ export const UsersLanding = () => {
     ? 3
     : 4;
 
+  // "last login" column omitted for proxy table.
   const proxyNumCols = matchesLgUp ? 4 : numCols;
 
   const handleDelete = (username: string) => {
