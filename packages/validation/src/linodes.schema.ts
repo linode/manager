@@ -261,7 +261,7 @@ const MetadataSchema = object({
 });
 
 const PlacementGroupPayloadSchema = object({
-  id: number().notRequired().nullable(true),
+  id: number().required().nullable(true),
 });
 
 export const CreateLinodeSchema = object({
