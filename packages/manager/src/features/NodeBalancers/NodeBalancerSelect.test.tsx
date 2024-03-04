@@ -42,7 +42,7 @@ describe('NodeBalancerSelect', () => {
     const input = screen.getByTestId(TEXTFIELD_ID);
 
     // Open the dropdown
-    userEvent.click(input);
+    await userEvent.click(input);
 
     // Wait for the options to load (use some unique identifier for the options)
     await waitFor(() => {
@@ -71,7 +71,7 @@ describe('NodeBalancerSelect', () => {
     const input = screen.getByTestId(TEXTFIELD_ID);
 
     // Open the dropdown
-    userEvent.click(input);
+    await userEvent.click(input);
 
     await waitFor(() => {
       // The custom no options message should be displayed when there are no options available
@@ -95,7 +95,7 @@ describe('NodeBalancerSelect', () => {
 
     // Open the dropdown
     const input = screen.getByTestId(TEXTFIELD_ID);
-    userEvent.click(input);
+    await userEvent.click(input);
 
     await waitFor(() => {
       // The default no options message should be displayed when noOptionsMessage prop is not provided
@@ -124,7 +124,7 @@ describe('NodeBalancerSelect', () => {
     const input = screen.getByTestId(TEXTFIELD_ID);
 
     // Open the dropdown
-    userEvent.click(input);
+    await userEvent.click(input);
 
     await waitFor(() => {
       expect(screen.getByText(customNoOptionsMessage)).toBeInTheDocument();
@@ -151,7 +151,7 @@ describe('NodeBalancerSelect', () => {
 
     const input = screen.getByTestId(TEXTFIELD_ID);
 
-    userEvent.type(input, 'NodeBalancer 2');
+    await userEvent.type(input, 'NodeBalancer 2');
 
     await waitFor(() => {
       expect(screen.getByText(customNoOptionsMessage)).toBeInTheDocument();
@@ -179,7 +179,7 @@ describe('NodeBalancerSelect', () => {
     const input = screen.getByTestId(TEXTFIELD_ID);
 
     // The custom no options message should not be displayed when user input matches an option
-    userEvent.type(input, 'NodeBalancer 1');
+    await userEvent.type(input, 'NodeBalancer 1');
 
     await waitFor(() => {
       expect(

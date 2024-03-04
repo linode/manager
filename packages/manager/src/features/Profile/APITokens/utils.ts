@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 
 import { isPast } from 'src/utilities/isPast';
 
+import { ExcludedScope } from './CreateAPITokenDrawer';
+
 export type Permission = [string, number];
 
 export const basePerms = [
@@ -177,13 +179,28 @@ export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
  * returned. Otherwise, `null` is returned.
  *
  * @param scopes - Permission scopes for which to check access levels.
+ * @param excludedScopes - Permission scopes for which to exclude from the access level check. (e.g. they have a different default)
+ * Example: { name: 'vpc', defaultAccessLevel: 0 } would ignore the VPC scope when it's set to None.
  *
  * @returns Access level for the given scopes if they are all the same; `null` otherwise.
  */
-export const allScopesAreTheSame = (scopes: Permission[]) => {
+export const allScopesAreTheSame = (
+  scopes: Permission[],
+  excludedScopes?: ExcludedScope[]
+) => {
   const sample = scopes[0];
+
+  // Filter out any scopes that are set to their own defaults.
+  const filteredScopes = scopes.filter(
+    (scope: Permission) =>
+      !excludedScopes?.find(
+        (excludedScope) =>
+          excludedScope.name === scope[0] &&
+          excludedScope.defaultAccessLevel === scope[1]
+      )
+  );
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
-  return scopes.slice(1).every(scopeMatches) ? sample[1] : null;
+  return filteredScopes.slice(1).every(scopeMatches) ? sample[1] : null;
 };
 
 /**

@@ -7,21 +7,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const NodeBalancerLandingEmptyState = () => {
   const history = useHistory();
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
 
-  const isRestricted = isRestrictedGlobalGrantType({
+  const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
-    grants,
-    profile,
   });
 
   return (

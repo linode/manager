@@ -466,6 +466,9 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     };
 
     handleSearch = (value: string) => {
+      if (!this.mounted) {
+        return;
+      }
       const { currentFilter } = this.state;
       const { category, history, request } = this.props;
 

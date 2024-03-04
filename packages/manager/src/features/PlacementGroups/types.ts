@@ -1,7 +1,7 @@
 import {
   CreatePlacementGroupPayload,
   PlacementGroup,
-  RenamePlacementGroupPayload,
+  UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
 export type PlacementGroupsDrawerPropsBase = {
@@ -20,7 +20,7 @@ export type PlacementGroupsRenameDrawerProps = PlacementGroupsDrawerPropsBase & 
   selectedPlacementGroup: PlacementGroup | undefined;
 };
 
-export type PlacementGroupDrawerFormikProps = RenamePlacementGroupPayload &
+export type PlacementGroupDrawerFormikProps = UpdatePlacementGroupPayload &
   CreatePlacementGroupPayload;
 
 export type PlacementGroupsAssignLinodesDrawerProps = PlacementGroupsDrawerPropsBase & {

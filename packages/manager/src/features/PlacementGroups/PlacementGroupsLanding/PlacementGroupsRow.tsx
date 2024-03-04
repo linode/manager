@@ -1,9 +1,9 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { TableCell } from 'src/components/TableCell';

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
-export interface DefaultProps {
+export interface WithImagesProps {
   imagesData: Record<string, Image>;
   imagesError?: APIError[];
   imagesLastUpdated: number;
@@ -26,12 +26,9 @@ export interface DefaultProps {
  * best practice is to include an FC container above it (the routing level often works well)
  * and pass the data through there.
  */
-type Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => React.FC<unknown>;
-const imagesContainer: Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => (props) => {
+export const withImages = <Props,>(
+  Component: React.ComponentType<Props & WithImagesProps>
+) => (props: Props) => {
   const { data, dataUpdatedAt, error, isLoading } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);
@@ -45,5 +42,3 @@ const imagesContainer: Wrapper = (
     />
   );
 };
-
-export default imagesContainer;

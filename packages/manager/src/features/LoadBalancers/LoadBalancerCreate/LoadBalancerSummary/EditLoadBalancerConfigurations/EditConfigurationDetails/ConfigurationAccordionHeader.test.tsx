@@ -35,7 +35,7 @@ describe('ConfigurationAccordionHeader', () => {
     expect(screen.getByText('1 Route')).toBeInTheDocument(); // Adjust based on pluralize function
   });
 
-  test('calls editClickHandler when edit button is clicked', () => {
+  test('calls editClickHandler when edit button is clicked', async () => {
     const mockEditClickHandler = vi.fn();
     renderWithTheme(
       <ConfigurationAccordionHeader
@@ -44,7 +44,7 @@ describe('ConfigurationAccordionHeader', () => {
       />
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Edit' }));
     expect(mockEditClickHandler).toHaveBeenCalled();
   });
 });

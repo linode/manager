@@ -1,15 +1,16 @@
-import React from 'react';
 import {
   ObjectStorageKey,
   RegionS3EndpointAndID,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
+import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { AccessKeyTableRows } from './AccessKeyTableRows';
+
 import { OpenAccessDrawer } from '../types';
+import { AccessKeyTableRow } from './AccessKeyTableRow';
 
 type Props = {
   data: ObjectStorageKey[] | undefined;
@@ -52,13 +53,18 @@ export const AccessKeyTableBody = ({
   return (
     <>
       {data && data.length > 0 ? (
-        <AccessKeyTableRows
-          objectStorageKeys={data}
-          openDrawer={openDrawer}
-          openRevokeDialog={openRevokeDialog}
-          setHostNames={setHostNames}
-          setShowHostNamesDrawers={setShowHostNamesDrawers}
-        />
+        <>
+          {data.map((eachKey: ObjectStorageKey, index) => (
+            <AccessKeyTableRow
+              key={index}
+              openDrawer={openDrawer}
+              openRevokeDialog={openRevokeDialog}
+              setHostNames={setHostNames}
+              setShowHostNamesDrawers={setShowHostNamesDrawers}
+              storageKeyData={eachKey}
+            />
+          ))}
+        </>
       ) : (
         <TableRowEmpty colSpan={12} />
       )}

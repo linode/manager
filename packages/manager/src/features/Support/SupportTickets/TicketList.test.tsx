@@ -1,6 +1,5 @@
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -9,12 +8,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Props, TicketList } from './TicketList';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props: Props = {
   filterStatus: 'open',
@@ -39,11 +33,9 @@ describe('TicketList', () => {
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      queryAllByText,
-    } = renderWithTheme(<TicketList filterStatus="open" />, { queryClient });
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <TicketList filterStatus="open" />
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -70,10 +62,7 @@ describe('TicketList', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <TicketList filterStatus="open" />,
-      {
-        queryClient,
-      }
+      <TicketList filterStatus="open" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

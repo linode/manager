@@ -65,7 +65,7 @@ describe('TPAProviders component', () => {
       <TPAProviders authType={authType} />
     );
     const button = getByTestId('Button-Google');
-    userEvent.click(button);
+    await userEvent.click(button);
     const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
   });

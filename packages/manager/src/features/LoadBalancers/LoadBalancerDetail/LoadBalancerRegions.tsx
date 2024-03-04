@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import type { Country } from '@linode/api-v4';
 
 export const regions = [
-  { country: 'us', id: 'us-iad', label: 'Washington, DC' },
+  { country: 'us', id: 'us-mia', label: 'Miami, FL' },
   { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
   { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
   { country: 'jp', id: 'jp-osa', label: 'Osaka, JP' },

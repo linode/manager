@@ -66,15 +66,15 @@ describe('Edit API Token Drawer', () => {
         expect(saveButton).toHaveAttribute('aria-disabled', 'false')
       );
 
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
 
       await waitFor(() => expect(props.onClose).toBeCalled());
     });
   });
-  it('Should close when Cancel is pressed', () => {
+  it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(<EditAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
 });

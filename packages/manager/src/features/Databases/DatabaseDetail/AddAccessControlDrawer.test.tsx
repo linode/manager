@@ -1,6 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { databaseFactory } from 'src/factories';
 import { IPv4List } from 'src/factories/databases';
@@ -10,12 +9,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 import AccessControls from './AccessControls';
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 describe('Add Access Controls drawer', () => {
   const database = databaseFactory.build();

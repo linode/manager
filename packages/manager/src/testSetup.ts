@@ -1,16 +1,18 @@
-import matchers from '@testing-library/jest-dom/matchers';
+import * as matchers from '@testing-library/jest-dom/matchers';
+import { cleanup } from '@testing-library/react';
 import { expect } from 'vitest';
 
-// JSDom matchers.
+import { server } from './mocks/testServer';
+
 expect.extend(matchers);
 
-import { server } from './mocks/testServer';
+afterEach(() => {
+  cleanup();
+});
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
-
-require('@testing-library/jest-dom/extend-expect');
 
 // @ts-expect-error this prevents some console errors
 HTMLCanvasElement.prototype.getContext = () => {

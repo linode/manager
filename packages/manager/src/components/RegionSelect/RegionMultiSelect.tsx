@@ -117,6 +117,11 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
               />
             );
           }}
+          sx={(theme) => ({
+            [theme.breakpoints.up('md')]: {
+              width: '416px',
+            },
+          })}
           textFieldProps={{
             InputProps: {
               required,

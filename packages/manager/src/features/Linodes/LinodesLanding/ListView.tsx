@@ -46,7 +46,7 @@ export const ListView = (props: RenderLinodesProps) => {
           ipv6={linode.ipv6 || ''}
           key={`linode-row-${idx}`}
           label={linode.label}
-          placement_groups={linode.placement_groups}
+          placement_group={linode.placement_group}
           region={linode.region}
           specs={linode.specs}
           status={linode.status}

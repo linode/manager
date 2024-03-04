@@ -14,7 +14,29 @@ describe('PlacementGroups Summary', () => {
           id: 3,
           is_compliant: true,
           label: 'pg-3',
-          linode_ids: [2, 4, 6, 8, 10],
+          linodes: [
+            {
+              is_compliant: true,
+              linode: 2,
+            },
+            {
+              is_compliant: true,
+              linode: 4,
+            },
+            {
+              is_compliant: true,
+              linode: 6,
+            },
+            {
+              is_compliant: true,
+              linode: 8,
+            },
+            {
+              is_compliant: true,
+              linode: 10,
+            },
+          ],
+
           region: 'us-east',
         })}
       />

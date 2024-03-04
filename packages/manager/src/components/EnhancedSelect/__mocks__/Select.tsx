@@ -50,7 +50,6 @@ export default ({
         name={_label}
         onBlur={handleChange}
         onChange={handleChange}
-        placeholder={placeholder}
         value={value ?? ''}
       >
         {_options.map((thisOption: any) => (

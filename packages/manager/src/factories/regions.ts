@@ -20,6 +20,7 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   maximum_pgs_per_customer: 5,
   maximum_vms_per_pg: 10,
   resolvers: resolverFactory.build(),
+  site_type: 'core',
   status: 'ok',
 });
 
@@ -42,6 +43,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
     maximum_pgs_per_customer: 5,
     maximum_vms_per_pg: 10,
     resolvers: resolverFactory.build(),
+    site_type: 'core',
     status: 'ok',
   }
 );

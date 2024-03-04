@@ -1,10 +1,20 @@
 import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 
 import type {
+  AffinityEnforcement,
   CreatePlacementGroupPayload,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
+
+/**
+ * Helper to get the affinity enforcement readable string.
+ */
+export const getAffinityEnforcement = (
+  affinityType: PlacementGroup['is_strict']
+): AffinityEnforcement => {
+  return affinityType ? 'Strict' : 'Flexible';
+};
 
 /**
  * Helper to get the number of Linodes in a Placement Group.
@@ -12,7 +22,7 @@ import type {
 export const getPlacementGroupLinodeCount = (
   placementGroup: PlacementGroup
 ): number => {
-  return placementGroup.linode_ids.length;
+  return placementGroup.linodes.length;
 };
 
 interface HasPlacementGroupReachedCapacityOptions {
@@ -57,7 +67,7 @@ export const getLinodesFromAllPlacementGroups = (
   }
 
   const linodeIds = allPlacementGroups.reduce((acc, placementGroup) => {
-    return [...acc, ...placementGroup.linode_ids];
+    return [...acc, ...placementGroup.linodes.map((linode) => linode.linode)];
   }, []);
 
   return Array.from(new Set(linodeIds));

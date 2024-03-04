@@ -17,7 +17,7 @@ import type {
   CreatePlacementGroupPayload,
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
-  RenamePlacementGroupPayload,
+  UpdatePlacementGroupPayload,
 } from './types';
 
 /**
@@ -72,7 +72,7 @@ export const createPlacementGroup = (data: CreatePlacementGroupPayload) =>
  */
 export const renamePlacementGroup = (
   placementGroupId: number,
-  data: RenamePlacementGroupPayload
+  data: UpdatePlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
