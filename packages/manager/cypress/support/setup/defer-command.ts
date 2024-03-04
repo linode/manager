@@ -1,5 +1,6 @@
 import type { APIError } from '@linode/api-v4';
 import type { AxiosError } from 'axios';
+import { timeout } from 'support/util/backoff';
 
 type LinodeApiV4Error = {
   errors: APIError[];
@@ -185,7 +186,7 @@ Cypress.Commands.add(
       return { log: false };
     })();
 
-    const timeout = (() => {
+    const timeoutLength = (() => {
       if (typeof labelOrOptions !== 'string') {
         return labelOrOptions?.timeout;
       }
@@ -197,7 +198,7 @@ Cypress.Commands.add(
       end: false,
       message: commandLabel,
       name: 'defer',
-      timeout,
+      timeout: timeoutLength,
     });
 
     // Wraps the given promise in order to update Cypress's log on completion.
@@ -207,6 +208,11 @@ Cypress.Commands.add(
         result = await promise;
       } catch (e: any) {
         commandLog.error(e);
+        // If we're getting rate limited, timeout for 15 seconds so that
+        // test reattempts do not immediately trigger more 429 responses.
+        if (isAxiosError(e) && e.response?.status === 429) {
+          await timeout(15000);
+        }
         throw enhanceError(e);
       }
       commandLog.end();
