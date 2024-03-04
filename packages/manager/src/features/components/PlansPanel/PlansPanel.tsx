@@ -77,8 +77,11 @@ export const PlansPanel = (props: Props) => {
 
   const planTypes = getPlanSelectionsByPlanType(types);
 
+  // @TODO Gecko GA: Get plan data from API instead of hardcoding
   const plans = showEdgePlanTable
-    ? { dedicated: planTypes.dedicated }
+    ? {
+        dedicated: planTypes.dedicated.slice(0, planTypes.dedicated.length - 2), // 256gb and 516gb plans will not be supported for Edge
+      }
     : planTypes;
 
   const {
