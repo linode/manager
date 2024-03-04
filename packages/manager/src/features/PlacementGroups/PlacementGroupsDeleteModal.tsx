@@ -93,10 +93,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           ? [{ reason: 'Placement Group not found.' }]
           : undefined
       }
-      inputProps={{
-        disabled: isDisabled,
-      }}
-      disableTypeToConfirmInput
+      disableTypeToConfirmInput={isDisabled}
       disabled={isDisabled}
       label="Placement Group"
       loading={placementGroupDataLoading || deletePlacementLoading}
