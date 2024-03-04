@@ -1,3 +1,4 @@
+import { Namespace } from '@linode/api-v4/lib/cloudview/types';
 import Grid from '@mui/material/Grid/Grid';
 import * as React from 'react';
 
@@ -26,7 +27,16 @@ import {
   useNamespaceApiKey,
 } from 'src/queries/cloudview/namespaces';
 
+import { NamespaceDeleteDialog } from '../NamespaceDeleteDialogue';
+
 export const NamespaceList = React.memo(() => {
+  const [selectedNamespace, setSelectedNamespace] = React.useState<
+    Namespace | undefined
+  >();
+  const [
+    deleteNamespaceDialogOpen,
+    setDeleteNamespaceDialogOpen,
+  ] = React.useState(false);
   const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
     orderBy: 'date',
@@ -55,6 +65,11 @@ export const NamespaceList = React.memo(() => {
     }
 
     return active_keys?.active_keys[0].api_key;
+  };
+
+  const handleDeleteNamespace = (namespace: Namespace) => {
+    setSelectedNamespace(namespace);
+    setDeleteNamespaceDialogOpen(true);
   };
 
   const NamespaceTableRowHead = (
@@ -117,8 +132,7 @@ export const NamespaceList = React.memo(() => {
               actionsList={[
                 {
                   onClick: () => {
-                    // eslint-disable-next-line no-console
-                    console.log('Clicked on Delete');
+                    handleDeleteNamespace(namespace);
                   },
                   title: 'Delete',
                 },
@@ -196,10 +210,18 @@ export const NamespaceList = React.memo(() => {
   };
 
   return (
-    <CollapsibleTable
-      TableItems={getTableItems()}
-      TableRowEmpty={<TableCell></TableCell>}
-      TableRowHead={NamespaceTableRowHead}
-    ></CollapsibleTable>
+    <>
+      <CollapsibleTable
+        TableItems={getTableItems()}
+        TableRowEmpty={<TableCell></TableCell>}
+        TableRowHead={NamespaceTableRowHead}
+      ></CollapsibleTable>
+      <NamespaceDeleteDialog
+        id={selectedNamespace?.id}
+        label={selectedNamespace?.label}
+        onClose={() => setDeleteNamespaceDialogOpen(false)}
+        open={deleteNamespaceDialogOpen}
+      />
+    </>
   );
 });

@@ -539,6 +539,18 @@ const cloudView = [
       })
     );
   }),
+  rest.delete('*/cloudview/namespaces/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+    // for errors
+    // return res(
+    //   ctx.status(400),
+    //   ctx.json({
+    //     errors: [
+    //       { field: 'label', reason: 'Error occured while deleting namespace' },
+    //     ],
+    //   })
+    // );
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });

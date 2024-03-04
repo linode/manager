@@ -51,3 +51,17 @@ export const createCloudViewNamespace = (data: CreateNameSpacePayload) =>
     setMethod('POST'),
     setData(data, createCloudViewNamespaceSchema)
   );
+
+/**
+ * deleteCloudViewNamespace
+ *
+ * Delete a single specified Namespace.
+ *
+ */
+export const deleteCloudViewNamespace = (nameSpaceID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/cloudview/namespaces/${encodeURIComponent(nameSpaceID)}`
+    ),
+    setMethod('DELETE')
+  );

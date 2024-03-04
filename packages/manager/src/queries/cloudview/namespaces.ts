@@ -3,6 +3,7 @@ import {
   Namespace,
   NamespaceApiKey,
   createCloudViewNamespace,
+  deleteCloudViewNamespace,
   getCloudViewNamespaces,
   getNamespaceApiKey,
 } from '@linode/api-v4/lib/cloudview';
@@ -50,4 +51,13 @@ export const useCreateCloudViewNamespace = () => {
       },
     }
   );
+};
+
+export const useDeleteCloudViewNamespace = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteCloudViewNamespace(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+    },
+  });
 };

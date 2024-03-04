@@ -24,6 +24,7 @@ interface EntityInfo {
     | 'Kubernetes'
     | 'Linode'
     | 'Load Balancer'
+    | 'Namespace'
     | 'NodeBalancer'
     | 'Subnet'
     | 'VPC'

@@ -12,20 +12,7 @@ export const headers: ResourcesHeaders = {
 };
 
 export const gettingStartedGuides: ResourcesLinkSection = {
-  links: [
-    {
-      text: '',
-      to: '',
-    },
-    {
-      text: '',
-      to: '',
-    },
-    {
-      text: '',
-      to: '',
-    },
-  ],
+  links: [],
   moreInfo: {
     text: '',
     to: '',
