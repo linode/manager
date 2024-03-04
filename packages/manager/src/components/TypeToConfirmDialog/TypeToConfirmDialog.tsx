@@ -33,6 +33,7 @@ interface EntityInfo {
 
 interface TypeToConfirmDialogProps {
   children?: React.ReactNode;
+  disableTypeToConfirmInput?: boolean;
   entity: EntityInfo;
   errors?: APIError[] | null | undefined;
   label: string;
@@ -48,6 +49,7 @@ type CombinedProps = TypeToConfirmDialogProps &
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
     children,
+    disableTypeToConfirmInput,
     entity,
     errors,
     inputProps,
@@ -64,8 +66,9 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const [confirmText, setConfirmText] = React.useState('');
 
   const { data: preferences } = usePreferences();
-  const disabled =
+  const isPrimaryButtonDisabled =
     preferences?.type_to_confirm !== false && confirmText !== entity.name;
+  const isTypeToConfirmInputDisabled = disableTypeToConfirmInput;
 
   React.useEffect(() => {
     if (open) {
@@ -82,7 +85,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        disabled,
+        disabled: isPrimaryButtonDisabled,
         label: entity.primaryBtnText,
         loading,
         onClick,
@@ -120,6 +123,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           setConfirmText(input);
         }}
         data-testid={'dialog-confirm-text-input'}
+        disabled={isTypeToConfirmInputDisabled}
         expand
         hideInstructions={entity.subType === 'CloseAccount'}
         inputProps={inputProps}

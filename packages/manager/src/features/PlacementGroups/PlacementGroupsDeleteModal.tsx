@@ -96,6 +96,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       inputProps={{
         disabled: isDisabled,
       }}
+      disableTypeToConfirmInput
       disabled={isDisabled}
       label="Placement Group"
       loading={placementGroupDataLoading || deletePlacementLoading}
