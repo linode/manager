@@ -28,17 +28,17 @@ describe('Revoke API Token Dialog', () => {
 
     const revokeButton = getByTestId('revoke-button');
 
-    userEvent.click(revokeButton);
+    await userEvent.click(revokeButton);
 
     // We must wait because an API call (to the MSW) is made
     await waitFor(() => expect(props.onClose).toBeCalled());
   });
-  it('Should close when Cancel is pressed', () => {
+  it('Should close when Cancel is pressed', async () => {
     const { getByTestId } = renderWithTheme(<RevokeTokenDialog {...props} />);
 
     const cancelButton = getByTestId('cancel-button');
 
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
 
     expect(props.onClose).toBeCalled();
   });

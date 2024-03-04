@@ -64,4 +64,22 @@ describe('RegionSelect', () => {
     );
     expect(getByTestId('textfield-input')).toBeDisabled();
   });
+
+  it('should render a Select component with edge region text', () => {
+    const newProps = {
+      ...props,
+      showGeckoHelperText: true,
+    };
+    const { getByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
+    expect(getByTestId('region-select-edge-text')).toBeInTheDocument();
+  });
+
+  it('should render a Select component with no edge region text', () => {
+    const newProps = {
+      ...props,
+      showGeckoHelperText: false,
+    };
+    const { queryByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
+    expect(queryByTestId('region-select-edge-text')).not.toBeInTheDocument();
+  });
 });

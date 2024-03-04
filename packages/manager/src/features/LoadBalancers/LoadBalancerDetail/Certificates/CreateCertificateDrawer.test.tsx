@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -23,13 +23,11 @@ describe('CreateCertificateDrawer', () => {
     const certInput = getByLabelText('TLS Certificate');
     const keyInput = getByLabelText('Private Key');
 
-    act(() => {
-      userEvent.type(labelInput, 'my-cert-0');
-      userEvent.type(certInput, 'massive cert');
-      userEvent.type(keyInput, 'massive key');
+    await userEvent.type(labelInput, 'my-cert-0');
+    await userEvent.type(certInput, 'massive cert');
+    await userEvent.type(keyInput, 'massive key');
 
-      userEvent.click(getByTestId('submit'));
-    });
+    await userEvent.click(getByTestId('submit'));
 
     await waitFor(() => expect(onClose).toBeCalled());
   });

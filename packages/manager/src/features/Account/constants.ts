@@ -1,7 +1,8 @@
 export const BUSINESS_PARTNER = 'business partner';
-export const ADMINISTRATOR = 'administrator';
+export const ADMINISTRATOR = 'account administrator';
 
 export const grantTypeMap = {
+  account: 'Account',
   database: 'Databases',
   domain: 'Domains',
   firewall: 'Firewalls',
@@ -22,3 +23,6 @@ export const CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT =
 // TODO: Parent/Child: Requires updated copy...
 export const PARENT_SESSION_EXPIRED =
   'Session expired. Please log in again to your business partner account.';
+
+export const RESTRICTED_FIELD_TOOLTIP =
+  'This account type cannot update this field.';
