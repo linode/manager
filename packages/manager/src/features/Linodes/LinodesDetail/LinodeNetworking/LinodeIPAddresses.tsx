@@ -10,7 +10,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
-import { useIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -56,7 +56,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
 
-  const linodeIsInEdgeRegion = useIsEdgeRegion(
+  const linodeIsInEdgeRegion = isEdgeRegion(
     regions ?? [],
     linode?.region ?? ''
   );

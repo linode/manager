@@ -1,6 +1,5 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
-import { useFlags } from 'src/hooks/useFlags';
 import {
   getRegionCountryGroup,
   getSelectedRegion,
@@ -218,12 +217,4 @@ export const isEdgeRegion = (regionsData: Region[], selectedRegion: string) => {
         region.id === selectedRegion || region.label === selectedRegion
     )?.site_type === 'edge'
   );
-};
-
-export const useIsEdgeRegion = (
-  regionsData: Region[],
-  selectedRegion: string
-) => {
-  const flags = useFlags();
-  return Boolean(flags.gecko && isEdgeRegion(regionsData, selectedRegion));
 };
