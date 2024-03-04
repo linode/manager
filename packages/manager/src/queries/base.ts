@@ -244,12 +244,17 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
         return oldData;
       }
 
-      oldData.data[toUpdateIndex] = {
+      const updatedPaginatedData = [...oldData.data];
+
+      updatedPaginatedData[toUpdateIndex] = {
         ...oldData.data[toUpdateIndex],
         ...newData,
       };
 
-      return oldData;
+      return {
+        ...oldData,
+        data: updatedPaginatedData,
+      };
     }
   );
 };
