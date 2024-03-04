@@ -6,10 +6,11 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import {
@@ -51,6 +52,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     selectedLinodeTypeId,
   } = props;
 
+  const flags = useFlags();
   const location = useLocation();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
@@ -75,10 +77,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  const geckoEnabled = useIsGeckoEnabled(params.type as LinodeCreateType);
+  const hideEdgeRegions =
+    !flags.gecko ||
+    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
-  const showGeckoHelperText = Boolean(
-    geckoEnabled &&
+  const showEdgeIconHelperText = Boolean(
+    !hideEdgeRegions &&
       currentCapability &&
       regions.find(
         (region) =>
@@ -131,12 +135,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         currentCapability={currentCapability}
         disabled={disabled}
         errorText={error}
-        geckoEnabled={geckoEnabled}
         handleSelection={handleSelection}
         helperText={helperText}
+        regionFilter={hideEdgeRegions ? 'core' : undefined}
         regions={regions}
         selectedId={selectedId || null}
-        showGeckoHelperText={showGeckoHelperText}
+        showEdgeIconHelperText={showEdgeIconHelperText}
       />
       {showClonePriceWarning && (
         <Notice
