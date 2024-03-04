@@ -204,3 +204,17 @@ export const getIsLinodeCreateTypeEdgeSupported = (
     typeof createType === 'undefined' // /linodes/create route
   );
 };
+
+/**
+ * Util to determine whether a selected region is an edge region.
+ *
+ * @returns a boolean indicating whether or not the selected region is an edge region.
+ */
+export const isEdgeRegion = (selectedRegion: string, regionsData: Region[]) => {
+  return (
+    regionsData.find(
+      (region) =>
+        region.id === selectedRegion || region.label === selectedRegion
+    )?.site_type === 'edge'
+  );
+};

@@ -1,8 +1,13 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
+import { isEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { useFlags } from 'src/hooks/useFlags';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
@@ -14,6 +19,8 @@ import {
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+
 interface Props {
   className?: string;
   copy?: string;
@@ -56,9 +63,24 @@ export const PlansPanel = (props: Props) => {
     types,
   } = props;
 
+  const flags = useFlags();
   const theme = useTheme();
+  const location = useLocation();
+  const params = getQueryParamsFromQueryString(location.search);
 
-  const plans = getPlanSelectionsByPlanType(types);
+  const hideEdgeRegions =
+    !flags.gecko ||
+    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+
+  const showEdgePlanTable =
+    !hideEdgeRegions && isEdgeRegion(selectedRegionID ?? '', regionsData ?? []);
+
+  const planTypes = getPlanSelectionsByPlanType(types);
+
+  const plans = showEdgePlanTable
+    ? { dedicated: planTypes.dedicated }
+    : planTypes;
+
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
@@ -116,7 +138,7 @@ export const PlansPanel = (props: Props) => {
       docsLink={docsLink}
       error={error}
       header={header || 'Linode Plan'}
-      initTab={initialTab >= 0 ? initialTab : 0}
+      initTab={showEdgePlanTable ? 0 : initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
       sx={{ marginTop: theme.spacing(3), width: '100%' }}
