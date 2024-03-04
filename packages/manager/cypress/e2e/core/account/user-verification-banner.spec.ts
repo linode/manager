@@ -18,7 +18,7 @@ import { verificationBannerNotice } from 'support/constants/user';
 
 describe('User verification banner', () => {
   /*
-   * - Confirms that a banner is present the child users do not have a phone number or security questions.
+   * - Confirms that a banner is present when child users do not have a phone number or security questions.
    * - Confirms that the "Add Verification Details" button redirects the user to /profile/auth.
    */
   it('can show up when a child user has not associated a phone number or set up security questions for their account', () => {
@@ -50,9 +50,9 @@ describe('User verification banner', () => {
     mockAppendFeatureFlags({
       parentChildAccountAccess: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetFeatureFlagClientstream();
 
-    mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
+    mockGetUsers([mockRestrictedProxyUser]);
     mockGetUser(mockChildUser);
     mockGetUserGrants(mockChildUser.username, mockUserGrants);
     mockGetProfile(mockChildProfile);
@@ -91,7 +91,7 @@ describe('User verification banner', () => {
   });
 
   /*
-   * - Confirms that a banner is present the child users set up security questions but not have a phone number.
+   * - Confirms that a banner is present when child users set up security questions but not a phone number.
    * - Confirms that the "Add Verification Details" button redirects the user to /profile/auth.
    */
   it('can show up when a child user has set up security questions but not a phone number for their account', () => {
@@ -175,9 +175,9 @@ describe('User verification banner', () => {
   });
 
   /*
-   * - Confirms that a banner is not shown when the child user sets up security questions.
+   * - Confirms that a banner is not shown when the child user sets up both phone number and security questions.
    */
-  it('does not show up when a child user adds a phone number or set up security questions', () => {
+  it('does not show up when a child user adds a phone number and sets up security questions', () => {
     const mockChildProfile = profileFactory.build({
       username: 'child-user',
       user_type: 'child',
