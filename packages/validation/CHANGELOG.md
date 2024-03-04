@@ -5,6 +5,8 @@
 - Add Placement Group data in Create Linode payload ([#10195](https://github.com/linode/manager/pull/10195))
 - Placement Group types update ([#10200](https://github.com/linode/manager/pull/10200))
 
+## [2024-02-13] - v0.40.0
+
 ### Changed:
 
 - ip_ranges field in LinodeInterfaceSchema no longer limited to 1 element ([#10089](https://github.com/linode/manager/pull/10089))
