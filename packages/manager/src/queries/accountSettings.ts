@@ -9,22 +9,24 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
 
 import { queryPresets } from './base';
 
-export const queryKey = 'account-settings';
-
 export const useAccountSettings = () => {
   const { data: profile } = useProfile();
 
-  return useQuery<AccountSettings, APIError[]>(queryKey, getAccountSettings, {
-    ...queryPresets.oneTimeFetch,
-    ...queryPresets.noRetry,
-    enabled: !profile?.restricted,
-  });
+  return useQuery<AccountSettings, APIError[]>(
+    ['account', 'settings'],
+    getAccountSettings,
+    {
+      ...queryPresets.oneTimeFetch,
+      ...queryPresets.noRetry,
+      enabled: !profile?.restricted,
+    }
+  );
 };
 
 export const useMutateAccountSettings = () => {
@@ -48,8 +50,11 @@ export const updateAccountSettingsData = (
   newData: Partial<AccountSettings>,
   queryClient: QueryClient
 ): void => {
-  queryClient.setQueryData(queryKey, (oldData: AccountSettings) => ({
-    ...oldData,
-    ...newData,
-  }));
+  queryClient.setQueryData(
+    ['account', 'settings'],
+    (oldData: AccountSettings) => ({
+      ...oldData,
+      ...newData,
+    })
+  );
 };

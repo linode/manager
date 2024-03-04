@@ -1,7 +1,7 @@
 import { Grants, Profile } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 

@@ -2,7 +2,7 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Drawer } from 'src/components/Drawer';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
@@ -15,8 +15,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
+import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 
 import type {
   PlacementGroupDrawerFormikProps,
@@ -57,9 +57,9 @@ export const PlacementGroupsCreateDrawer = (
     enableReinitialize: true,
     initialValues: {
       affinity_type: '' as PlacementGroupDrawerFormikProps['affinity_type'],
+      is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
-      strict: true,
     },
     onSubmit(
       values: PlacementGroupDrawerFormikProps,

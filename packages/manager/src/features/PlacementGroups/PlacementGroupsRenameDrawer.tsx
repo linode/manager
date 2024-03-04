@@ -2,7 +2,7 @@ import { renamePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Drawer } from 'src/components/Drawer';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
@@ -57,9 +57,9 @@ export const PlacementGroupsRenameDrawer = (
     enableReinitialize: true,
     initialValues: {
       affinity_type: selectedPlacementGroup?.affinity_type as PlacementGroupDrawerFormikProps['affinity_type'],
+      is_strict: true,
       label: selectedPlacementGroup?.label ?? '',
       region: selectedPlacementGroup?.region ?? '',
-      strict: true,
     },
     onSubmit(values, { setErrors, setStatus, setSubmitting }) {
       setHasFormBeenSubmitted(false);

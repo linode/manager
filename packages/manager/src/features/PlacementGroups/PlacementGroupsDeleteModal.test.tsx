@@ -90,7 +90,12 @@ describe('PlacementGroupsDeleteModal', () => {
         affinity_type: 'anti_affinity',
         id: 1,
         label: 'PG-to-delete',
-        linode_ids: [1],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+        ],
         region: 'us-east',
       }),
     });
@@ -127,7 +132,7 @@ describe('PlacementGroupsDeleteModal', () => {
         affinity_type: 'anti_affinity',
         id: 1,
         label: 'PG-to-delete',
-        linode_ids: [],
+        linodes: [],
       }),
     });
 

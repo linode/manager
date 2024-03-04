@@ -617,4 +617,20 @@ export const regions: Region[] = [
     site_type: 'edge',
     status: 'ok',
   },
+  {
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-2',
+    label: 'Gecko Edge Test 2',
+    maximum_pgs_per_customer: 5,
+    maximum_vms_per_pg: 10,
+    resolvers: {
+      ipv4:
+        '139.162.130.5, 139.162.131.5, 139.162.132.5, 139.162.133.5, 139.162.134.5, 139.162.135.5, 139.162.136.5, 139.162.137.5, 139.162.138.5, 139.162.139.5',
+      ipv6:
+        '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
+    },
+    site_type: 'edge',
+    status: 'ok',
+  },
 ];

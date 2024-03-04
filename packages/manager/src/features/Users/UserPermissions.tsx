@@ -14,7 +14,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -301,7 +301,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
-          this.props.queryClient.invalidateQueries('account-users');
+          this.props.queryClient.invalidateQueries(['account', 'users']);
           this.props.enqueueSnackbar('User permissions successfully saved.', {
             variant: 'success',
           });

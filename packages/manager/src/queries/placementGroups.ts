@@ -13,7 +13,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -23,8 +23,8 @@ import type {
   AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
-  RenamePlacementGroupPayload,
   UnassignLinodesFromPlacementGroupPayload,
+  UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
 export const queryKey = 'placement-groups';
@@ -84,7 +84,7 @@ export const useCreatePlacementGroup = () => {
 export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], RenamePlacementGroupPayload>({
+  return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
     mutationFn: (data) => renamePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);

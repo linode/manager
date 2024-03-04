@@ -29,7 +29,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { Grants } from '../../../api-v4/lib';
 import { queryKey as accountQueryKey } from './account';

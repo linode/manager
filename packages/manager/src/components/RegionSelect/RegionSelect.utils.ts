@@ -28,7 +28,7 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
-  hideEdgeServers = false,
+  regionFilter,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
   const filteredRegionsByCapability = currentCapability
@@ -37,9 +37,9 @@ export const getRegionOptions = ({
       )
     : regions;
 
-  const filteredRegionsByCapabilityAndSiteType = hideEdgeServers
+  const filteredRegionsByCapabilityAndSiteType = regionFilter
     ? filteredRegionsByCapability.filter(
-        (region) => region.site_type !== 'edge'
+        (region) => region.site_type === regionFilter
       )
     : filteredRegionsByCapability;
 
@@ -191,19 +191,18 @@ export const getSelectedRegionsByIds = ({
 /**
  * Util to determine whether a create type has support for edge regions.
  *
- * @returns a boolean indicating whether or not to enable gecko.
+ * @returns a boolean indicating whether or not the create type is edge supported.
  */
-export const useIsGeckoEnabled = (createType: LinodeCreateType) => {
-  const flags = useFlags();
-
+export const getIsLinodeCreateTypeEdgeSupported = (
+  createType: LinodeCreateType
+) => {
   const supportedEdgeTypes: SupportedEdgeTypes[] = [
     'Distributions',
     'StackScripts',
   ];
-  return Boolean(
-    (flags.gecko &&
-      supportedEdgeTypes.includes(createType as SupportedEdgeTypes)) ||
-      typeof createType === 'undefined' // /linodes/create route
+  return (
+    supportedEdgeTypes.includes(createType as SupportedEdgeTypes) ||
+    typeof createType === 'undefined' // /linodes/create route
   );
 };
 

@@ -82,22 +82,12 @@ export const LinodeBackups = () => {
     setSelectedBackup(backup);
   };
 
-  if (error) {
-    return (
-      <ErrorState errorText="There was an issue retrieving your backups." />
-    );
-  }
-
   const backupsMonthlyPrice:
     | PriceObject['monthly']
     | undefined = getMonthlyBackupsPrice({
     region: linode?.region,
     type,
   });
-
-  if (isLoading) {
-    return <CircleProgress />;
-  }
 
   if (!linode?.backups.enabled) {
     return (
@@ -108,6 +98,16 @@ export const LinodeBackups = () => {
         linodeIsInEdgeRegion={linodeIsInEdgeRegion}
       />
     );
+  }
+
+  if (error) {
+    return (
+      <ErrorState errorText="There was an issue retrieving your backups." />
+    );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
   }
 
   const hasBackups =
