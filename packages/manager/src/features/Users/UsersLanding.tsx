@@ -1,3 +1,5 @@
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -22,6 +24,7 @@ import { UsersLandingTableHead } from './UsersLandingTableHead';
 import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
+  const theme = useTheme();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -29,6 +32,8 @@ export const UsersLanding = () => {
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const flags = useFlags();
   const { data: profile } = useProfile();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
@@ -56,7 +61,7 @@ export const UsersLanding = () => {
     error: proxyUserError,
     isLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled: flags.parentChildAccountAccess,
+    enabled: flags.parentChildAccountAccess && !profile?.restricted,
     filters: { user_type: 'proxy' },
   });
 
@@ -66,7 +71,15 @@ export const UsersLanding = () => {
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
   );
 
-  const numCols = showChildAccountAccessCol ? 6 : 5;
+  const numCols = matchesLgUp
+    ? showChildAccountAccessCol
+      ? 6
+      : 5
+    : matchesSmDown
+    ? 3
+    : 4;
+
+  const proxyNumCols = matchesLgUp ? 4 : numCols;
 
   const handleDelete = (username: string) => {
     setIsDeleteDialogOpen(true);
@@ -97,7 +110,7 @@ export const UsersLanding = () => {
             <UsersLandingTableBody
               error={proxyUserError}
               isLoading={isLoadingProxyUser}
-              numCols={4}
+              numCols={proxyNumCols}
               onDelete={handleDelete}
               users={proxyUser?.data}
             />
