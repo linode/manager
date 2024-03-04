@@ -14,16 +14,23 @@ interface Props {
 }
 
 export const DeleteCertificateDialog = (props: Props) => {
-  const { certificate, loadbalancerId, onClose, open } = props;
+  const { certificate, loadbalancerId, onClose: _onClose, open } = props;
 
   const {
     error,
     isLoading,
     mutateAsync,
+    reset,
   } = useLoadBalancerCertificateDeleteMutation(
     loadbalancerId,
     certificate?.id ?? -1
   );
+
+  const onClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    _onClose();
+  };
 
   const onDelete = async () => {
     await mutateAsync();

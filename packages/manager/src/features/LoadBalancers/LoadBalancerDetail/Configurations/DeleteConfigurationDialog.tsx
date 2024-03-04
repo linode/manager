@@ -14,16 +14,23 @@ interface Props {
 }
 
 export const DeleteConfigurationDialog = (props: Props) => {
-  const { configuration, loadbalancerId, onClose, open } = props;
+  const { configuration, loadbalancerId, onClose: _onClose, open } = props;
 
   const {
     error,
     isLoading,
     mutateAsync,
+    reset,
   } = useLoadBalancerConfigurationDeleteMutation(
     loadbalancerId,
     configuration.id
   );
+
+  const onClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    _onClose();
+  };
 
   const onDelete = async () => {
     await mutateAsync();

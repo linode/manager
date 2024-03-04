@@ -17,12 +17,20 @@ interface Props {
 }
 
 export const DeleteRuleDialog = (props: Props) => {
-  const { loadbalancerId, onClose, open, route, ruleIndex } = props;
+  const { loadbalancerId, onClose: _onClose, open, route, ruleIndex } = props;
 
-  const { error, isLoading, mutateAsync } = useLoadBalancerRouteUpdateMutation(
-    loadbalancerId,
-    route?.id ?? -1
-  );
+  const {
+    error,
+    isLoading,
+    mutateAsync,
+    reset,
+  } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
+
+  const onClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    _onClose();
+  };
 
   const onDelete = async () => {
     if (!route || ruleIndex === undefined) {
@@ -40,6 +48,7 @@ export const DeleteRuleDialog = (props: Props) => {
       protocol: route.protocol,
       rules: normalizedRules,
     });
+
     onClose();
   };
 

@@ -14,12 +14,20 @@ interface Props {
 }
 
 export const DeleteRouteDialog = (props: Props) => {
-  const { loadbalancerId, onClose, open, route } = props;
+  const { loadbalancerId, onClose: _onClose, open, route } = props;
 
-  const { error, isLoading, mutateAsync } = useLoadBalancerRouteDeleteMutation(
-    loadbalancerId,
-    route?.id ?? -1
-  );
+  const {
+    error,
+    isLoading,
+    mutateAsync,
+    reset,
+  } = useLoadBalancerRouteDeleteMutation(loadbalancerId, route?.id ?? -1);
+
+  const onClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    _onClose();
+  };
 
   const onDelete = async () => {
     await mutateAsync();

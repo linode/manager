@@ -13,16 +13,23 @@ interface Props {
 }
 
 export const DeleteServiceTargetDialog = (props: Props) => {
-  const { loadbalancerId, onClose, open, serviceTarget } = props;
+  const { loadbalancerId, onClose: _onClose, open, serviceTarget } = props;
 
   const {
     error,
     isLoading,
     mutateAsync,
+    reset,
   } = useLoadBalancerServiceTargetDeleteMutation(
     loadbalancerId,
     serviceTarget?.id ?? -1
   );
+
+  const onClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    _onClose();
+  };
 
   const onDelete = async () => {
     await mutateAsync();
