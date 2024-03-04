@@ -63,7 +63,8 @@ export const UsersLanding = () => {
     error: proxyUserError,
     isLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled: flags.parentChildAccountAccess && !isRestrictedUser,
+    enabled:
+      flags.parentChildAccountAccess && showProxyUserTable && !isRestrictedUser,
     filters: { user_type: 'proxy' },
   });
 
