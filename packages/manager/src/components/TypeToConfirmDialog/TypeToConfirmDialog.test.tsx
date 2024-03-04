@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
@@ -32,5 +33,62 @@ describe('TypeToConfirmDialog Component', () => {
       </TypeToConfirmDialog>
     );
     getByText(warningText);
+  });
+
+  it('should have its button disabled by default', () => {
+    const { getByTestId } = renderWithTheme(
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          name: 'test',
+          primaryBtnText: 'Delete',
+          type: 'Linode',
+        }}
+        label={'Linode Label'}
+        loading={false}
+        open={true}
+        title="Delete Linode test?"
+        {...props}
+      >
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> {warningText}
+        </Typography>
+      </TypeToConfirmDialog>
+    );
+
+    const submitButton = getByTestId('confirm');
+    expect(submitButton).toBeDisabled();
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: 'test' } });
+
+    expect(submitButton).toBeEnabled();
+  });
+
+  it('should disabled the Type To Confirm input field given the prop', () => {
+    const { getByTestId } = renderWithTheme(
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          name: 'test',
+          primaryBtnText: 'Delete',
+          type: 'Linode',
+        }}
+        disableTypeToConfirmInput
+        label={'Linode Label'}
+        loading={false}
+        open={true}
+        title="Delete Linode test?"
+        {...props}
+        disabled
+      >
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> {warningText}
+        </Typography>
+      </TypeToConfirmDialog>
+    );
+
+    const input = getByTestId('textfield-input');
+    expect(input).toBeDisabled();
   });
 });

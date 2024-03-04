@@ -32,13 +32,37 @@ interface EntityInfo {
 }
 
 interface TypeToConfirmDialogProps {
+  /**
+   * Chidlren are rendered above the TypeToConfirm input
+   */
   children?: React.ReactNode;
+  /**
+   * Props to be allow disabling the input
+   */
   disableTypeToConfirmInput?: boolean;
+  /**
+   * The entity being confirmed
+   */
   entity: EntityInfo;
+  /**
+   * Error to be displayed in the dialog
+   */
   errors?: APIError[] | null | undefined;
+  /*
+   * The label for the dialog
+   */
   label: string;
+  /**
+   * The loading state of dialog
+   */
   loading: boolean;
+  /**
+   * The click handler for the primary button
+   */
   onClick: () => void;
+  /**
+   * The open/closed state of the dialog
+   */
   open: boolean;
 }
 
