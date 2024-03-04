@@ -23,13 +23,13 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
@@ -38,7 +38,7 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
 
 export const queryKey = 'nodebalancers';
 
@@ -114,7 +114,7 @@ export const useNodebalancerCreateMutation = () => {
         queryClient.invalidateQueries([queryKey]);
         queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
         // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+        queryClient.invalidateQueries(profileQueries.grants.queryKey);
       },
     }
   );
