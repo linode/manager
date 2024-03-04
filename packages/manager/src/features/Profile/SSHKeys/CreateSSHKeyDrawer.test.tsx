@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -32,15 +32,11 @@ describe('SSHKeyCreationDrawer', () => {
 
     const inputs = getAllByRole('textbox');
 
-    const labelInput = inputs[0];
     const sskKeyInput = inputs[1];
     const submitButton = getByTestId('submit');
 
-    act(() => {
-      userEvent.type(labelInput, '');
-      userEvent.type(sskKeyInput, 'invalid ssh key');
-      userEvent.click(submitButton);
-    });
+    await userEvent.type(sskKeyInput, 'invalid ssh key');
+    await userEvent.click(submitButton);
 
     await waitFor(() => {
       getByText('Label is required.');
@@ -64,11 +60,9 @@ describe('SSHKeyCreationDrawer', () => {
     const sskKeyInput = inputs[1];
     const submitButton = getByTestId('submit');
 
-    act(() => {
-      userEvent.type(labelInput, 'my-ssh-key');
-      userEvent.type(sskKeyInput, 'pretend this is a valid ssh key');
-      userEvent.click(submitButton);
-    });
+    await userEvent.type(labelInput, 'my-ssh-key');
+    await userEvent.type(sskKeyInput, 'pretend this is a valid ssh key');
+    await userEvent.click(submitButton);
 
     await waitFor(() => {
       expect(props.onClose).toBeCalled();

@@ -743,9 +743,13 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
             fontSize: 18,
           },
-          '&$disabled': {
+          '&.Mui-disabled': {
+            backgroundColor: '#f4f4f4',
             borderColor: '#ccc',
             color: 'rgba(0, 0, 0, 0.75)',
+            input: {
+              cursor: 'not-allowed',
+            },
             opacity: 0.5,
           },
           '&.Mui-error': {

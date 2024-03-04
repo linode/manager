@@ -8,6 +8,8 @@ import { StyledActionButton } from 'src/components/Button/StyledActionButton';
 interface InlineMenuActionProps {
   /** Required action text */
   actionText: string;
+  /** Optional height when displayed as a button */
+  buttonHeight?: number;
   /** Optional class names */
   className?: string;
   /** Optional disabled */
@@ -27,6 +29,7 @@ interface InlineMenuActionProps {
 export const InlineMenuAction = (props: InlineMenuActionProps) => {
   const {
     actionText,
+    buttonHeight,
     className,
     disabled,
     href,
@@ -53,6 +56,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
       disabled={disabled}
       loading={loading}
       onClick={onClick}
+      sx={buttonHeight !== undefined ? { height: buttonHeight } : {}}
       tooltipAnalyticsEvent={tooltipAnalyticsEvent}
       tooltipText={tooltip}
       {...rest}

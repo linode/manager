@@ -30,6 +30,7 @@ vi.mock('src/queries/profile', async () => {
   return {
     ...actual,
     useGrants: queryMocks.useGrants,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -156,7 +157,14 @@ describe('Payment Info Panel', () => {
       );
     });
 
-    it('should be disabled for non-parent/child restricted users', () => {
+    it('should be disabled for restricted users', () => {
+      queryMocks.useProfile.mockReturnValue({
+        data: profileFactory.build({
+          restricted: true,
+          user_type: 'default',
+        }),
+      });
+
       queryMocks.useGrants.mockReturnValue({
         data: grantsFactory.build({
           global: {

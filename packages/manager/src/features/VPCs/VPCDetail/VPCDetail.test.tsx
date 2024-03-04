@@ -1,7 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { vpcFactory } from 'src/factories/vpcs';
 import { rest, server } from 'src/mocks/testServer';
@@ -9,12 +8,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 
@@ -27,9 +21,7 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<VPCDetail />, {
-      queryClient,
-    });
+    const { getAllByText, getByTestId } = renderWithTheme(<VPCDetail />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -63,9 +55,7 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<VPCDetail />, {
-      queryClient,
-    });
+    const { getByTestId, getByText } = renderWithTheme(<VPCDetail />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -80,9 +70,7 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getByTestId, queryByText } = renderWithTheme(<VPCDetail />, {
-      queryClient,
-    });
+    const { getByTestId, queryByText } = renderWithTheme(<VPCDetail />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -99,9 +87,7 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getAllByRole, getByTestId } = renderWithTheme(<VPCDetail />, {
-      queryClient,
-    });
+    const { getAllByRole, getByTestId } = renderWithTheme(<VPCDetail />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

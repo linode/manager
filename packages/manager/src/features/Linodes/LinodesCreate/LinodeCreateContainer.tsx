@@ -30,9 +30,7 @@ import {
   WithFeatureFlagProps,
   withFeatureFlags,
 } from 'src/containers/flags.container';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
+import { WithImagesProps, withImages } from 'src/containers/images.container';
 import {
   WithProfileProps,
   withProfile,
@@ -54,6 +52,7 @@ import {
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   accountAgreementsQueryKey,
   reportAgreementSigningError,
@@ -68,11 +67,11 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -83,7 +82,6 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
-import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
   CreateLinodeRequest,
@@ -135,7 +133,7 @@ interface State {
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
-  ImagesProps &
+  WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
@@ -589,19 +587,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * since the API does not infer this automatically.
        */
 
-      /**
-       * safe to ignore possibility of "undefined"
-       * null checking happens in CALinodeCreate
-       */
-      const selectedRegionID = getRegionIDFromLinodeID(
-        this.props.linodesData!,
-        id
-      );
       this.setState({
         selectedBackupID: undefined,
         selectedDiskSize: diskSize,
         selectedLinodeID: id,
-        selectedRegionID,
+        selectedRegionID: this.props.linodesData?.find(
+          (linode) => linode.id == id
+        )?.region,
         selectedTypeID: undefined,
       });
     }
@@ -740,6 +732,36 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               {
                 field: 'root_pass',
                 reason: passwordError,
+              },
+            ],
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+        return;
+      }
+    }
+
+    if (payload.placement_group) {
+      const error = hasPlacementGroupReachedCapacity({
+        placementGroup: this.state.placementGroupSelection!,
+        region: this.props.regionsData.find(
+          (r) => r.id === this.state.selectedRegionID
+        )!,
+      });
+      if (error) {
+        this.setState(
+          {
+            errors: [
+              {
+                field: 'placement_group',
+                reason: `${this.state.placementGroupSelection?.label} (${
+                  this.state.placementGroupSelection?.affinity_type ===
+                  'affinity'
+                    ? 'Affinity'
+                    : 'Anti-affinity'
+                }) doesn't have any capacity for this Linode.`,
               },
             ],
           },

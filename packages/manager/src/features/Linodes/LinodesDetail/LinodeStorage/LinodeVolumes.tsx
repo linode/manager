@@ -144,6 +144,7 @@ export const LinodeVolumes = () => {
               handleDetails: () => handleDetails(volume),
               handleEdit: () => handleEdit(volume),
               handleResize: () => handleResize(volume),
+              handleUpgrade: () => null,
             }}
             isDetailsPageRow
             key={volume.id}

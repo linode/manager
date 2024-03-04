@@ -44,11 +44,12 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
-  databaseScaleUp: boolean;
+  databaseResize: boolean;
   databases: boolean;
   firewallNodebalancer: boolean;
+  gecko: boolean;
   ipv6Sharing: boolean;
-  linodeCloneUIChanges: boolean;
+  linodeCloneUiChanges: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;

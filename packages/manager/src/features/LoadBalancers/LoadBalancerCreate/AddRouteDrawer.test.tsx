@@ -54,9 +54,9 @@ describe('AddRouteDrawer (ACLB full create flow)', () => {
       'button'
     );
 
-    userEvent.type(labelTextField, 'my-route');
+    await userEvent.type(labelTextField, 'my-route');
 
-    userEvent.click(addButton!);
+    await userEvent.click(addButton!);
 
     await waitFor(() => expect(onClose).toBeCalled());
   });

@@ -24,7 +24,7 @@ export const handlers: Handlers = {
 };
 
 describe('LoadBalancerConfiguration', () => {
-  test('Should render Details content', () => {
+  test('Should render Details content', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <LoadBalancerConfiguration handlers={handlers} index={0} />,
       { initialValues, onSubmit: vi.fn() }
@@ -35,10 +35,10 @@ describe('LoadBalancerConfiguration', () => {
     );
     const ConfigurationPort = screen.getByPlaceholderText('Enter Port');
 
-    userEvent.type(ConfigurationInputLabel, 'Test Label');
+    await userEvent.type(ConfigurationInputLabel, 'Test Label');
     // Clear the input field before typing
-    userEvent.clear(ConfigurationPort);
-    userEvent.type(ConfigurationPort, '90');
+    await userEvent.clear(ConfigurationPort);
+    await userEvent.type(ConfigurationPort, '90');
 
     expect(ConfigurationInputLabel).toHaveValue('Test Label');
     expect(ConfigurationPort).toHaveValue(90);
@@ -47,34 +47,34 @@ describe('LoadBalancerConfiguration', () => {
     expect(screen.getByText('Next: Service Targets')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Details')).toBeNull();
   });
-  test('Should navigate to Service Targets content', () => {
+  test('Should navigate to Service Targets content', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <LoadBalancerConfiguration handlers={handlers} index={0} />,
       { initialValues, onSubmit: vi.fn() }
     );
-    userEvent.click(screen.getByTestId('service-targets'));
+    await userEvent.click(screen.getByTestId('service-targets'));
     expect(screen.getByText('Add Service Target')).toBeInTheDocument();
     expect(screen.getByText('Next: Routes')).toBeInTheDocument();
     expect(screen.getByText('Previous: Details')).toBeInTheDocument();
     expect(screen.queryByText('Previous: Service Targets')).toBeNull();
   });
-  test('Should navigate to Routes content', () => {
+  test('Should navigate to Routes content', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <LoadBalancerConfiguration index={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
-    userEvent.click(screen.getByTestId('service-targets'));
-    userEvent.click(screen.getByTestId('routes'));
+    await userEvent.click(screen.getByTestId('service-targets'));
+    await userEvent.click(screen.getByTestId('routes'));
     expect(screen.getByText('Routes', { selector: 'h2' })).toBeVisible();
     expect(screen.getByText('Previous: Service Targets')).toBeInTheDocument();
   });
-  test('Should be able to go previous step', () => {
+  test('Should be able to go previous step', async () => {
     renderWithThemeAndFormik<LoadBalancerCreateFormData>(
       <LoadBalancerConfiguration index={0} handlers={handlers} />,
       { initialValues, onSubmit: vi.fn() }
     );
-    userEvent.click(screen.getByTestId('service-targets'));
-    userEvent.click(screen.getByText('Previous: Details'));
+    await userEvent.click(screen.getByTestId('service-targets'));
+    await userEvent.click(screen.getByText('Previous: Details'));
     expect(screen.getByText('Protocol')).toBeInTheDocument();
   });
 });

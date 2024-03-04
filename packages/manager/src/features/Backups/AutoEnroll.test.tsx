@@ -18,12 +18,12 @@ describe('AutoEnroll display component', () => {
     );
     expect(getByRole('checkbox')).toBeChecked();
   });
-  it('the toggle props works', () => {
+  it('the toggle props works', async () => {
     const toggle = vi.fn();
     const { getByRole } = renderWithTheme(
       <AutoEnroll enabled={true} toggle={toggle} />
     );
-    userEvent.click(getByRole('checkbox'));
+    await userEvent.click(getByRole('checkbox'));
     expect(toggle).toBeCalled();
   });
   it('should render its error prop', () => {

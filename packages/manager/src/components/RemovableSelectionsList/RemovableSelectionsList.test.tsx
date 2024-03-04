@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { Button } from '../Button/Button';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 const defaultList = Array.from({ length: 5 }, (_, index) => {
@@ -88,5 +89,16 @@ describe('Removable Selections List', () => {
     );
     const removeButton = screen.queryByLabelText(`remove my-linode-1`);
     expect(removeButton).not.toBeInTheDocument();
+  });
+
+  it('should render the remove button as text when removeButtonText is declared', () => {
+    const { queryAllByText } = renderWithTheme(
+      <RemovableSelectionsList
+        {...props}
+        RemoveButton={() => <Button>Remove Linode</Button>}
+        isRemovable
+      />
+    );
+    expect(queryAllByText('Remove Linode')).toHaveLength(5);
   });
 });

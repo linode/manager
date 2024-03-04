@@ -130,7 +130,7 @@ describe('Account login history', () => {
     cy.findByLabelText('Account Logins').should('not.exist');
 
     cy.findByText(
-      'Access restricted. Please contact your business partner to request the necessary permission.'
+      "You don't have permissions to edit this Account. Please contact your business partner to request the necessary permissions."
     );
   });
 
@@ -165,7 +165,7 @@ describe('Account login history', () => {
     cy.findByLabelText('Account Logins').should('not.exist');
 
     cy.findByText(
-      'Access restricted. Please contact your account administrator to request the necessary permission.'
+      "You don't have permissions to edit this Account. Please contact your account administrator to request the necessary permissions."
     );
   });
 });

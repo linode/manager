@@ -33,6 +33,7 @@ export interface EnhancedAutocompleteProps<
   noMarginTop?: boolean;
   /** Text to show when the Autocomplete search yields no results. */
   noOptionsText?: string;
+  placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
   textFieldProps?: Partial<TextFieldProps>;
@@ -107,11 +108,18 @@ export const Autocomplete = <
           noMarginTop={noMarginTop}
           placeholder={placeholder || 'Select an option'}
           required={textFieldProps?.InputProps?.required}
+          tooltipText={textFieldProps?.tooltipText}
           {...params}
           {...textFieldProps}
           InputProps={{
             ...params.InputProps,
             ...textFieldProps?.InputProps,
+            endAdornment: (
+              <React.Fragment>
+                {textFieldProps?.InputProps?.endAdornment}
+                {params.InputProps.endAdornment}
+              </React.Fragment>
+            ),
           }}
         />
       )}

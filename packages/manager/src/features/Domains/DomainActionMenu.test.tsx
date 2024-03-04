@@ -1,7 +1,8 @@
+import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { domainFactory } from 'src/factories/domain';
-import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DomainActionMenu } from './DomainActionMenu';
 
@@ -13,10 +14,17 @@ const props = {
 };
 
 describe('Domain action menu', () => {
-  it('should include basic Domain actions', () => {
-    const { queryByText } = renderWithTheme(
+  it('should include basic Domain actions', async () => {
+    const { getByText, queryByLabelText } = renderWithTheme(
       <DomainActionMenu domain={domainFactory.build()} {...props} />
     );
-    includesActions(['Edit', 'Clone', 'Delete'], queryByText);
+
+    const actionMenuButton = queryByLabelText(/^Action menu for/)!;
+
+    await userEvent.click(actionMenuButton);
+
+    for (const action of ['Edit', 'Clone', 'Delete']) {
+      expect(getByText(action)).toBeVisible();
+    }
   });
 });

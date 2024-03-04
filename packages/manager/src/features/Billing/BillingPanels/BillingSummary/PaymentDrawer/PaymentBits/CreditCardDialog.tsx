@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -18,14 +17,26 @@ interface Props extends Actions {
   usd: string;
 }
 
-type CombinedProps = Props;
-
-const CreditCardDialog: React.SFC<CombinedProps> = (props) => {
-  const { cancel, error, open, usd, ...actionsProps } = props;
+export const CreditCardDialog = (props: Props) => {
+  const { cancel, error, open, usd, isMakingPayment, executePayment } = props;
 
   return (
     <ConfirmationDialog
-      actions={<DialogActions {...actionsProps} cancel={cancel} />}
+      actions={
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Confirm Payment',
+            loading: isMakingPayment,
+            onClick: executePayment,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: cancel,
+          }}
+        />
+      }
       onClose={cancel}
       open={open}
       title="Confirm Payment"
@@ -35,25 +46,3 @@ const CreditCardDialog: React.SFC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(CreditCardDialog);
-
-class DialogActions extends React.PureComponent<Actions> {
-  render() {
-    return (
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'submit',
-          label: 'Confirm Payment',
-          loading: this.props.isMakingPayment,
-          onClick: this.props.executePayment,
-        }}
-        secondaryButtonProps={{
-          'data-testid': 'cancel',
-          label: 'Cancel',
-          onClick: this.props.cancel,
-        }}
-      />
-    );
-  }
-}

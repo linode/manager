@@ -46,19 +46,16 @@ const LinodeDetail = () => {
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
         <Route component={CloneLanding} path={`${path}/clone`} />
-
+        <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
+        <Redirect from={`${url}/rebuild`} to={`${url}?rebuild=true`} />
+        <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
+        <Redirect from={`${url}/migrate`} to={`${url}?migrate=true`} />
+        <Redirect from={`${url}/upgrade`} to={`${url}?upgrade=true`} />
         <Route
           render={() => (
             <React.Fragment>
               <LinodesDetailHeader />
               <LinodesDetailNavigation />
-              <Switch>
-                <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
-                <Redirect from={`${url}/rebuild`} to={`${url}?rebuild=true`} />
-                <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
-                <Redirect from={`${url}/migrate`} to={`${url}?migrate=true`} />
-                <Redirect from={`${url}/upgrade`} to={`${url}?upgrade=true`} />
-              </Switch>
             </React.Fragment>
           )}
         />

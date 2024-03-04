@@ -86,13 +86,15 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
   return (
     <StyledTableRoot
       aria-label="Object Storage Access Key Permissions"
-      spacingTop={24}
+      spacingTop={16}
     >
       <TableHead>
         <TableRow>
           <TableCell data-qa-perm-region>Region</TableCell>
           <TableCell data-qa-perm-bucket>Bucket</TableCell>
-          <TableCell data-qa-perm-none>None</TableCell>
+          <TableCell data-qa-perm-none sx={{ minWidth: '100px' }}>
+            No Access
+          </TableCell>
           <TableCell data-qa-perm-read sx={{ minWidth: '100px' }}>
             Read Only
           </TableCell>
@@ -170,7 +172,10 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 key={scopeName}
                 mode={mode}
               >
-                <StyledClusterCell padding="checkbox">
+                <StyledClusterCell
+                  padding="checkbox"
+                  sx={{ minWidth: '150px' }}
+                >
                   {regionsLookup[thisScope.region ?? '']?.label}
                 </StyledClusterCell>
                 <StyledBucketCell padding="checkbox">

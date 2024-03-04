@@ -1,7 +1,6 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { databaseInstanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -17,12 +16,7 @@ import {
 import DatabaseLanding from './DatabaseLanding';
 import DatabaseRow from './DatabaseRow';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 
@@ -31,8 +25,7 @@ describe('Database Table Row', () => {
     const database = databaseInstanceFactory.build();
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<DatabaseRow database={database} />),
-      { queryClient }
+      wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
     // Check to see if the row rendered some data
@@ -47,8 +40,7 @@ describe('Database Table Row', () => {
     });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<DatabaseRow database={database} />),
-      { queryClient }
+      wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
     // Check to see if the row rendered the relative date
@@ -67,11 +59,9 @@ describe('Database Table', () => {
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      queryAllByText,
-    } = renderWithTheme(<DatabaseLanding />, { queryClient });
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <DatabaseLanding />
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -97,9 +87,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
-      queryClient,
-    });
+    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

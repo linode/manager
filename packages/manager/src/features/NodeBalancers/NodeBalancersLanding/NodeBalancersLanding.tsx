@@ -14,14 +14,11 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import {
-  getRestrictedResourceText,
-  isRestrictedGlobalGrantType,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { useGrants, useProfile } from 'src/queries/profile';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
@@ -39,13 +36,8 @@ export const NodeBalancersLanding = () => {
 
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
-
-  const isRestricted = isRestrictedGlobalGrantType({
+  const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
-    grants,
-    profile,
   });
 
   const { handleOrderChange, order, orderBy } = useOrder(

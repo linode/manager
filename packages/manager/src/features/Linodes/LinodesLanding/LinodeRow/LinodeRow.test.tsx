@@ -19,7 +19,7 @@ describe('LinodeRow', () => {
     });
   });
 
-  it('should render a linode row', () => {
+  it('should render a linode row', async () => {
     const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
@@ -42,7 +42,7 @@ describe('LinodeRow', () => {
         ipv6={linode.ipv6 || ''}
         key={`linode-row-${1}`}
         label={linode.label}
-        placement_groups={linode.placement_groups}
+        placement_group={linode.placement_group}
         region={linode.region}
         specs={linode.specs}
         status={linode.status}
@@ -61,7 +61,7 @@ describe('LinodeRow', () => {
 
     // Open action menu
     const actionMenu = getByLabelText(`Action menu for Linode ${linode.label}`);
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     getByText('Power Off');
     getByText('Reboot');

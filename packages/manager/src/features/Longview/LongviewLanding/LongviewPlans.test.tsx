@@ -1,5 +1,6 @@
 import {
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -67,11 +68,7 @@ describe('LongviewPlans', () => {
 
     renderWithTheme(<WrappedComponent {...props} />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('loading'), {
-      timeout: 5000,
-    });
-
-    expect(document.title).toMatch(/^Plan Details/);
+    await waitFor(() => expect(document.title).toMatch(/^Plan Details/));
   });
 
   it('renders all columns for all plan types', async () => {

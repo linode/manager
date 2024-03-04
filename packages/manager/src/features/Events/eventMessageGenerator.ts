@@ -122,12 +122,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Low disk space alert for database ${e.entity!.label} has cleared.`,
     notification: (e) => `Database ${e.entity!.label} has low disk space.`,
   },
-  database_scale: {
-    failed: (e) => `Database ${e.entity!.label} could not be scaled up.`,
-    finished: (e) => `Database ${e.entity!.label} has been scaled up.`,
-    scheduled: (e) =>
-      `Database ${e.entity!.label} is scheduled for scaling up.`,
-    started: (e) => `Database ${e.entity!.label} is scaling up.`,
+  database_resize: {
+    failed: (e) => `Database ${e.entity!.label} could not be resized.`,
+    finished: (e) => `Database ${e.entity!.label} has been resized.`,
+    scheduled: (e) => `Database ${e.entity!.label} is scheduled for resizing.`,
+    started: (e) => `Database ${e.entity!.label} is resizing.`,
   },
   database_update: {
     finished: (e) => `Database ${e.entity!.label} has been updated.`,
