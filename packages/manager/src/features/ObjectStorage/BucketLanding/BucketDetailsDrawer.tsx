@@ -59,7 +59,7 @@ export const BucketDetailsDrawer = React.memo(
       account?.capabilities ?? []
     );
 
-    // TODO OBJ Multicluster - Once the feature is rolled out to production, we can clean this up by removing the useObjectStorageClusters and useRegionsQuery, which will not be required at that time.
+    // @TODO OBJ Multicluster: Once the feature is rolled out to production, we can clean this up by removing the useObjectStorageClusters and useRegionsQuery, which will not be required at that time.
     const { data: clusters } = useObjectStorageClusters();
     const { data: regions } = useRegionsQuery();
     const { data: profile } = useProfile();
@@ -111,7 +111,7 @@ export const BucketDetailsDrawer = React.memo(
             {readableBytes(size).formatted}
           </Typography>
         ) : null}
-        {/* TODO OBJ Multicluster - use region instead of cluster if isObjMultiClusterEnabled. */}
+        {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}
         {typeof objectsNumber === 'number' ? (
           <Link
             to={`/object-storage/buckets/${
@@ -126,7 +126,7 @@ export const BucketDetailsDrawer = React.memo(
         {typeof size === 'number' || typeof objectsNumber === 'number' ? (
           <Divider spacingBottom={16} spacingTop={16} />
         ) : null}
-        {/* TODO OBJ Multicluster - use region instead of cluster if isObjMultiClusterEnabled
+        {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
         {cluster && bucketLabel ? (
           <AccessSelect
