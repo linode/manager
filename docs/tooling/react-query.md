@@ -6,7 +6,7 @@
 
 React Query's cache is a simple key-value store. Query Keys are serializable strings that uniquely identify a query's data in the cache. You can read more about the concept [here](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys) in the TanStack Query docs.
 
-Because of Cloud Manager's complexity, we use [`@lukemorales/query-key-factory`](https://github.com/lukemorales/query-key-factory) to manage our query keys. This package allows us to define query key _factories_ that enable typesafe standardized query keys that can be reused an refrenced throughout the application.
+Because of Cloud Manager's complexity, we use [`@lukemorales/query-key-factory`](https://github.com/lukemorales/query-key-factory) to manage our query keys. This package allows us to define query key _factories_ that enable typesafe standardized query keys that can be reused and referenced throughout the application.
 
 ### Examples
 
@@ -28,10 +28,10 @@ export const useProfile = () =>
   useQuery<Profile, APIError[]>(profileQueries.profile);
 ```
 
-#### Query with paramaters
+#### Query with parameters
 
 > [!important]
-> Queries that have paramaters should always include the paramaters in the `queryKey`
+> Queries that have parameters should always include the parameters in the `queryKey`
 
 ```ts
 import { useQuery } from "@tanstack/react-query";
@@ -51,7 +51,7 @@ export const useLinodeQuery = (id: number) =>
 
 ## Maintaining the Cache
 
-A significant challage of React Query is keeping the client state in sync with the server. 
+> A significant challenge of React Query is keeping the client state in sync with the server. 
 
 The two easiest ways of updating the cache using React Query are
 - Using `invalidateQueries` to mark data as stale (which will trigger a refetch the next time the query is mounted) 
@@ -59,7 +59,7 @@ The two easiest ways of updating the cache using React Query are
 
 ### `invalidateQueries`
 
-This will mark data as stale in the React Query cache, which will cause Cloud Manager to refetch the data if the corosponding query is mounted.
+This will mark data as stale in the React Query cache, which will cause Cloud Manager to refetch the data if the corresponding query is mounted.
 
 Use `invalidateQueries` when:
 - You are dealing with any *paginated data* (because order may have changed)
