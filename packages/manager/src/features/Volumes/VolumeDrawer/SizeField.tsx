@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { FormHelperText } from 'src/components/FormHelperText';
@@ -12,6 +12,7 @@ import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
+import { useVolumeTypesQuery } from 'src/queries/types';
 
 interface Props {
   disabled?: boolean;
@@ -61,6 +62,8 @@ export const SizeField = (props: Props) => {
     ...rest
   } = props;
 
+  const { data: types } = useVolumeTypesQuery();
+
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
@@ -68,6 +71,7 @@ export const SizeField = (props: Props) => {
   const price = getDynamicVolumePrice({
     regionId,
     size: value,
+    type: types?.[0],
   });
 
   const priceDisplayText = (

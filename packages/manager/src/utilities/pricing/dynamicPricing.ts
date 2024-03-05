@@ -27,6 +27,11 @@ export interface DataCenterPricingByTypeOptions {
    */
   regionId: Region['id'] | undefined;
   /**
+   * The size of an entity, when pricing is a factor of size.
+   * @example 20 (GB) for a volume
+   */
+  size?: number;
+  /**
    * The type data from a product's /types endpoint.
    */
   type: PriceType | undefined;
@@ -89,6 +94,7 @@ export const getDCSpecificPrice = ({
  */
 export const getDCSpecificPriceByType = ({
   regionId,
+  size,
   type,
 }: DataCenterPricingByTypeOptions): string | undefined => {
   if (!regionId || !type) {
@@ -100,6 +106,10 @@ export const getDCSpecificPriceByType = ({
     type.region_prices.find((region_price: RegionPrice) => {
       return region_price.id === regionId;
     })?.monthly ?? type.price.monthly;
+
+  if (size && price) {
+    return (size * price).toFixed(2);
+  }
 
   return price?.toFixed(2) ?? undefined;
 };

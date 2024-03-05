@@ -19,6 +19,7 @@ import {
   ResizeVolumePayload,
   Volume,
   VolumeRequestPayload,
+  VolumeType,
 } from './types';
 
 /**
@@ -46,6 +47,19 @@ export const getVolumes = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
+  );
+
+/**
+ * getVolumeTypes
+ *
+ * Return a paginated list of available Volume types, which contains pricing information.
+ * This endpoint does not require authentication.
+ */
+export const getVolumeTypes = (params?: Params) =>
+  Request<Page<VolumeType>>(
+    setURL(`${API_ROOT}/volumes/types`),
+    setMethod('GET'),
+    setParams(params)
   );
 
 /**

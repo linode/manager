@@ -1,8 +1,11 @@
-import { getDCSpecificPrice } from './dynamicPricing';
+import { VolumeType } from '@linode/api-v4';
+
+import { getDCSpecificPriceByType } from './dynamicPricing';
 
 interface Options {
   regionId: string;
   size: number;
+  type: VolumeType | undefined;
 }
 
 /**
@@ -11,11 +14,10 @@ interface Options {
  * @param size The size of a Volume in GBs
  * @returns the base price of a volume based on its size
  */
-export const getDynamicVolumePrice = ({ regionId, size }: Options) => {
-  const pricePerSize = size ? (size >= 10 ? size / 10 : 0) : 0;
-
-  return getDCSpecificPrice({
-    basePrice: pricePerSize,
+export const getDynamicVolumePrice = ({ regionId, size, type }: Options) => {
+  return getDCSpecificPriceByType({
     regionId,
+    size,
+    type,
   });
 };

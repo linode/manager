@@ -1,11 +1,11 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';

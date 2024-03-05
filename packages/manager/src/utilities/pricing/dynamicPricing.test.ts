@@ -1,4 +1,7 @@
-import { nodeBalancerTypeFactory } from 'src/factories';
+import {
+  nodeBalancerTypeFactory,
+  volumeTypeFactory,
+} from 'src/factories/types';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import {
@@ -7,6 +10,8 @@ import {
   renderMonthlyPriceToCorrectDecimalPlace,
 } from './dynamicPricing';
 import { getDynamicVolumePrice } from './dynamicVolumePrice';
+
+const mockVolumeType = volumeTypeFactory.build();
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an increase', () => {
@@ -39,6 +44,7 @@ describe('getDCSpecificPricingDisplay', () => {
       getDynamicVolumePrice({
         regionId: 'id-cgk',
         size: 20,
+        type: mockVolumeType,
       })
     ).toBe('2.40');
   });
