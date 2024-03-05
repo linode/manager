@@ -4,8 +4,8 @@ import {
   deletePlacementGroup,
   getPlacementGroup,
   getPlacementGroups,
-  renamePlacementGroup,
   unassignLinodesFromPlacementGroup,
+  updatePlacementGroup,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -85,7 +85,7 @@ export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
-    mutationFn: (data) => renamePlacementGroup(id, data),
+    mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(

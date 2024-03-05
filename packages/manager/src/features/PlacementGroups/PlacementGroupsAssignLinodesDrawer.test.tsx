@@ -59,7 +59,6 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
 
     const { getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
-        numberOfPlacementGroupsCreated={9}
         onClose={vi.fn()}
         open={true}
         selectedPlacementGroup={placementGroupFactory.build()}
