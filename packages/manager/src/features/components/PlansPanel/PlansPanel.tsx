@@ -77,10 +77,30 @@ export const PlansPanel = (props: Props) => {
 
   const planTypes = getPlanSelectionsByPlanType(types);
 
+  const getDedicatedEdgePlanType = () => {
+    // 256gb and 516gb plans will not be supported for Edge
+    const plansUpTo128GB = planTypes.dedicated.slice(
+      0,
+      planTypes.dedicated.length - 2
+    );
+
+    return plansUpTo128GB.map((plan) => {
+      delete plan.transfer;
+      return {
+        ...plan,
+        disk: 0,
+        price: {
+          hourly: 0,
+          monthly: 0,
+        },
+      };
+    });
+  };
+
   // @TODO Gecko GA: Get plan data from API instead of hardcoding
   const plans = showEdgePlanTable
     ? {
-        dedicated: planTypes.dedicated.slice(0, planTypes.dedicated.length - 2), // 256gb and 516gb plans will not be supported for Edge
+        dedicated: getDedicatedEdgePlanType(),
       }
     : planTypes;
 
