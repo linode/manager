@@ -97,7 +97,7 @@ export const PlansPanel = (props: Props) => {
     });
   };
 
-  // @TODO Gecko GA: Get plan data from API instead of hardcoding
+  // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showEdgePlanTable
     ? {
         dedicated: getDedicatedEdgePlanType(),
