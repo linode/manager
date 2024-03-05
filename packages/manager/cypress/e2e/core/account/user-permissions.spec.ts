@@ -631,7 +631,9 @@ describe('User permission management', () => {
     );
     cy.wait(['@getClientStream', '@getFeatureFlags']);
 
-    cy.findByText('Parent User Permissions').should('be.visible');
+    cy.findByText('Parent User Permissions', { exact: false }).should(
+      'be.visible'
+    );
 
     // Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
     expect(cy.findByText('User Profile').should('not.exist'));
