@@ -16,7 +16,7 @@ import {
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useScript } from 'src/hooks/useScript';
 import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/accountPayment';
+import { useClientToken } from 'src/queries/account/payment';
 
 import { SetSuccess } from './types';
 

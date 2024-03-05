@@ -7,7 +7,7 @@ import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { accountQueries } from 'src/queries/account/account';
-import { useMutateAccountAgreements } from 'src/queries/account/accountAgreements';
+import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';

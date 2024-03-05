@@ -11,7 +11,7 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/account/accountAgreements';
+} from 'src/queries/account/agreements';
 import { useAccountSettings } from 'src/queries/account/settings';
 import {
   useCreateBucketMutation,

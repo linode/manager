@@ -3,15 +3,15 @@ import {
   makePayment,
 } from '@linode/api-v4/lib/account/payments';
 import { APIWarning } from '@linode/api-v4/lib/types';
+import { QueryClient } from '@tanstack/react-query';
 import braintree, { GooglePayment } from 'braintree-web';
 import { VariantType } from 'notistack';
-import { QueryClient } from '@tanstack/react-query';
 
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { accountQueries } from 'src/queries/account/account';
 import { queryKey as accountBillingKey } from 'src/queries/account/accountBilling';
-import { queryKey as accountPaymentKey } from 'src/queries/account/accountPayment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
@@ -130,7 +130,7 @@ export const gPay = async (
       is_default: true,
       type: 'payment_method_nonce',
     });
-    queryClient.invalidateQueries([`${accountPaymentKey}-all`]);
+    queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
     setMessage({
       text: 'Successfully added Google Pay',
       variant: 'success',

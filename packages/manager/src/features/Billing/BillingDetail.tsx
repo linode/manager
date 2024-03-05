@@ -10,7 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { useAccount } from 'src/queries/account/account';
-import { useAllPaymentMethodsQuery } from 'src/queries/account/accountPayment';
+import { useAllPaymentMethodsQuery } from 'src/queries/account/payment';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

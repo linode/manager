@@ -1,10 +1,13 @@
 import {
   createChildAccountPersonalAccessToken,
+  getAccountAgreements,
   getAccountInfo,
   getAccountLogins,
   getAccountSettings,
   getChildAccounts,
+  getClientToken,
   getGrants,
+  getNetworkUtilization,
   getOAuthClients,
   getUser,
   getUsers,
@@ -33,10 +36,15 @@ import type {
   ResourcePage,
   Token,
 } from '@linode/api-v4';
+import { getAllPaymentMethodsRequest } from './payment';
 
 export const accountQueries = createQueryKeys('account', {
   account: {
     queryFn: getAccountInfo,
+    queryKey: null,
+  },
+  agreements: {
+    queryFn: getAccountAgreements,
     queryKey: null,
   },
   childAccounts: (options: RequestOptions) => ({
@@ -51,6 +59,10 @@ export const accountQueries = createQueryKeys('account', {
       }),
     queryKey: [options],
   }),
+  clientToken: {
+    queryFn: getClientToken,
+    queryKey: null,
+  },
   logins: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getAccountLogins(params, filter),
     queryKey: [params, filter],
@@ -63,8 +75,16 @@ export const accountQueries = createQueryKeys('account', {
     queryFn: () => getOAuthClients(params, filter),
     queryKey: [params, filter],
   }),
+  paymentMethods: {
+    queryFn: getAllPaymentMethodsRequest,
+    queryKey: null,
+  },
   settings: {
     queryFn: getAccountSettings,
+    queryKey: null,
+  },
+  transfer: {
+    queryFn: getNetworkUtilization,
     queryKey: null,
   },
   users: {

@@ -19,7 +19,7 @@ import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useAccount } from 'src/queries/account/account';
 import { queryKey as accountBillingKey } from 'src/queries/account/accountBilling';
-import { useClientToken } from 'src/queries/account/accountPayment';
+import { useClientToken } from 'src/queries/account/payment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SetSuccess } from './types';

@@ -31,7 +31,7 @@ import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
-} from 'src/queries/account/accountAgreements';
+} from 'src/queries/account/agreements';
 import {
   useCreateKubernetesClusterMutation,
   useKubernetesVersionQuery,
