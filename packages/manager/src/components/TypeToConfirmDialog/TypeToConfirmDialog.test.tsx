@@ -80,7 +80,6 @@ describe('TypeToConfirmDialog Component', () => {
         open={true}
         title="Delete Linode test?"
         {...props}
-        disabled
       >
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> {warningText}

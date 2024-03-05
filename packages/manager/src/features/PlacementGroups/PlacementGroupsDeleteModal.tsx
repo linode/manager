@@ -94,7 +94,6 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           : undefined
       }
       disableTypeToConfirmInput={isDisabled}
-      disabled={isDisabled}
       label="Placement Group"
       loading={placementGroupDataLoading || deletePlacementLoading}
       onClick={onDelete}

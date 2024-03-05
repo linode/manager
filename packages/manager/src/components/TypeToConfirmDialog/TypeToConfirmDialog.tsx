@@ -41,6 +41,10 @@ interface TypeToConfirmDialogProps {
    */
   disableTypeToConfirmInput?: boolean;
   /**
+   * Props to be allow disabling the submit button
+   */
+  disableTypeToConfirmSubmit?: boolean;
+  /**
    * The entity being confirmed
    */
   entity: EntityInfo;
@@ -68,12 +72,13 @@ interface TypeToConfirmDialogProps {
 
 type CombinedProps = TypeToConfirmDialogProps &
   ConfirmationDialogProps &
-  Partial<TypeToConfirmProps>;
+  Partial<Omit<TypeToConfirmProps, 'disabled'>>;
 
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
     children,
     disableTypeToConfirmInput,
+    disableTypeToConfirmSubmit,
     entity,
     errors,
     inputProps,
@@ -91,7 +96,8 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
 
   const { data: preferences } = usePreferences();
   const isPrimaryButtonDisabled =
-    preferences?.type_to_confirm !== false && confirmText !== entity.name;
+    (preferences?.type_to_confirm !== false && confirmText !== entity.name) ||
+    disableTypeToConfirmSubmit;
   const isTypeToConfirmInputDisabled = disableTypeToConfirmInput;
 
   React.useEffect(() => {
