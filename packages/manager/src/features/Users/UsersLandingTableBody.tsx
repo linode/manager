@@ -19,13 +19,7 @@ export const UsersLandingTableBody = (props: Props) => {
   const { error, isLoading, numCols, onDelete, users } = props;
 
   if (isLoading) {
-    return (
-      <TableRowLoading
-        columns={numCols}
-        responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
-        rows={1}
-      />
-    );
+    return <TableRowLoading columns={numCols} rows={1} />;
   }
 
   if (error) {
