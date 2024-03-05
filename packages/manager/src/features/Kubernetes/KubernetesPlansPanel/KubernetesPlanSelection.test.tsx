@@ -1,9 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import { extendedTypeFactory } from 'src/factories/types';
+import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
 import {
   renderWithTheme,
@@ -114,31 +113,25 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       label: 'Dedicated 512GB',
     });
 
-    const { getByText } = renderWithTheme(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
         <KubernetesPlanSelection
           {...props}
-          isLimitedAvailabilityPlan={false}
+          isLimitedAvailabilityPlan={true}
           type={bigPlanType}
         />,
         { flags: { disableLargestGbPlans: true } }
       )
     );
 
-    const chip = getByText('Sold Out');
-    // {planType} 512GB plans are currently unavailable. If you have questions,
-    //  open a <SupportLink text="support ticket" />.
-
-    expect(chip).toBeVisible();
-    userEvent.click(chip);
+    const button = getByTestId('limited-availability');
+    fireEvent.mouseOver(button);
 
     await waitFor(() => {
-      expect(
-        screen.getByText('Dedicated 512GB plans are currently unavailable.', {
-          exact: false,
-        })
-      ).toBeVisible();
+      expect(getByRole('tooltip')).toBeInTheDocument();
     });
+
+    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
   });
 });
 
@@ -179,8 +172,8 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows limited availability messaging', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('shows limited availability messaging', async () => {
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <KubernetesPlanSelection
         {...props}
         isLimitedAvailabilityPlan={true}
@@ -188,7 +181,14 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
       />
     );
 
-    expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+    const selectionCard = getByTestId('selection-card');
+    fireEvent.mouseOver(selectionCard);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
   });
 
   it('is disabled for 512 GB plans', () => {

@@ -14,7 +14,6 @@ import { IconButton } from 'src/components/IconButton';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
-import { LimitedAvailabilityMessage } from 'src/features/components/PlansPanel/PlanSelection';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -124,7 +123,7 @@ export const KubernetesPlanSelection = (
                   data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
                   data-testid="limited-availability"
                   placement="right-start"
-                  title={<LimitedAvailabilityMessage />}
+                  title={LIMITED_AVAILABILITY_TEXT}
                 >
                   <IconButton disableRipple size="small">
                     <HelpOutline
@@ -210,7 +209,7 @@ export const KubernetesPlanSelection = (
           key={type.id}
           onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
-          tooltip={isDisabled ? <LimitedAvailabilityMessage /> : undefined}
+          tooltip={isDisabled ? LIMITED_AVAILABILITY_TEXT : undefined}
         />
       </Hidden>
     </React.Fragment>

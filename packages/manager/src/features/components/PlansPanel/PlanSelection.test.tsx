@@ -1,16 +1,15 @@
-import { screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
 import {
-  planSelectionTypeFactory,
   extendedTypeFactory,
+  planSelectionTypeFactory,
 } from 'src/factories/types';
+import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
+import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
@@ -65,7 +64,7 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
-    expect(queryByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeNull();
+    expect(queryByLabelText(LIMITED_AVAILABILITY_TEXT)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
@@ -168,35 +167,29 @@ describe('PlanSelection (table, desktop)', () => {
 
   it('shows limited availability messaging for 512 GB plans', async () => {
     const bigPlanType = extendedTypeFactory.build({
-      label: 'Dedicated 512GB',
       heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
     });
 
-    const { getByText } = renderWithTheme(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
         <PlanSelection
           {...defaultProps}
+          isLimitedAvailabilityPlan={true}
           type={bigPlanType}
-          isLimitedAvailabilityPlan={false}
         />,
         { flags: { disableLargestGbPlans: true } }
       )
     );
 
-    const chip = getByText('Sold Out');
-    // {planType} 512GB plans are currently unavailable. If you have questions,
-    //  open a <SupportLink text="support ticket" />.
-
-    expect(chip).toBeVisible();
-    userEvent.click(chip);
+    const button = getByTestId('limited-availability');
+    fireEvent.mouseOver(button);
 
     await waitFor(() => {
-      expect(
-        screen.getByText('Dedicated 512GB plans are currently unavailable.', {
-          exact: false,
-        })
-      ).toBeVisible();
+      expect(getByRole('tooltip')).toBeInTheDocument();
     });
+
+    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
   });
 });
 
@@ -281,8 +274,8 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
   });
 
-  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', async () => {
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <PlanSelection
         {...defaultProps}
         isLimitedAvailabilityPlan={true}
@@ -290,20 +283,27 @@ describe('PlanSelection (card, mobile)', () => {
       />
     );
 
-    expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+    const selectionCard = getByTestId('selection-card');
+    fireEvent.mouseOver(selectionCard);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
   });
 
   it('is disabled for 512 GB plans', () => {
     const bigPlanType = extendedTypeFactory.build({
-      label: 'Dedicated 512GB',
       heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
     });
 
     const { getByTestId } = renderWithTheme(
       <PlanSelection
         {...defaultProps}
-        type={bigPlanType}
         isLimitedAvailabilityPlan={false}
+        type={bigPlanType}
       />,
       { flags: { disableLargestGbPlans: true } }
     );
