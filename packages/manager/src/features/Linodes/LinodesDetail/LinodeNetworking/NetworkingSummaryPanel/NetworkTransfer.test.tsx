@@ -20,7 +20,7 @@ vi.mock('src/hooks/useAPIRequest', () => ({
   }),
 }));
 
-vi.mock('src/queries/accountTransfer', () => ({
+vi.mock('src/queries/account/accountTransfer', () => ({
   useAccountTransfer: vi.fn().mockReturnValue({
     data: accountTransferFactory.build(),
     error: undefined,
