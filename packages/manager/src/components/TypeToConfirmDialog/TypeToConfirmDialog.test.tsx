@@ -65,7 +65,7 @@ describe('TypeToConfirmDialog Component', () => {
     expect(submitButton).toBeEnabled();
   });
 
-  it('should disabled the Type To Confirm input field given the prop', () => {
+  it('should disabled the Type To Confirm input field given the `disableTypeToConfirmInput` prop', () => {
     const { getByTestId } = renderWithTheme(
       <TypeToConfirmDialog
         entity={{
@@ -89,5 +89,36 @@ describe('TypeToConfirmDialog Component', () => {
 
     const input = getByTestId('textfield-input');
     expect(input).toBeDisabled();
+  });
+
+  it('should disabled the Type To Confirm input field given the prop', () => {
+    const { getByTestId } = renderWithTheme(
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          name: 'test',
+          primaryBtnText: 'Delete',
+          type: 'Linode',
+        }}
+        disableTypeToConfirmSubmit
+        label={'Linode Label'}
+        loading={false}
+        open={true}
+        title="Delete Linode test?"
+        {...props}
+      >
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> {warningText}
+        </Typography>
+      </TypeToConfirmDialog>
+    );
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: 'test' } });
+
+    const submitButton = getByTestId('confirm');
+    // Should still be disabled cause we overrode the disabled state with the prop
+
+    expect(submitButton).toBeDisabled();
   });
 });
