@@ -437,7 +437,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           >
             <StyledHeaderGrid>
               <Typography data-qa-restrict-access={restricted} variant="h2">
-                {isProxyUser ? 'Business Partner' : 'General'} Permissions
+                {isProxyUser ? 'Parent User' : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledSubHeaderGrid>
