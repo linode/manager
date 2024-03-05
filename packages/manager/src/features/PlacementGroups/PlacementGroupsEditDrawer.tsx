@@ -16,11 +16,8 @@ import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { usePlacementGroupQuery } from 'src/queries/placementGroups';
 import { useMutatePlacementGroup } from 'src/queries/placementGroups';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { getAffinityEnforcement } from './utils';
 
@@ -58,22 +55,16 @@ export const PlacementGroupsEditDrawer = (
 
   const handleFormSubmit = async (
     values: UpdatePlacementGroupPayload,
-    {
-      setErrors,
-      setStatus,
-      setSubmitting,
-    }: FormikHelpers<UpdatePlacementGroupPayload>
+    { setErrors, setStatus }: FormikHelpers<UpdatePlacementGroupPayload>
   ) => {
     setHasFormBeenSubmitted(false);
     setStatus(undefined);
     setErrors({});
-    const payload = { ...values };
 
     try {
-      const response = await mutateAsync(payload);
+      const response = await mutateAsync(values);
 
-      setSubmitting(false);
-      enqueueSnackbar(`Placement Group ${payload.label} successfully updated`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully updated`, {
         variant: 'success',
       });
 
@@ -81,16 +72,9 @@ export const PlacementGroupsEditDrawer = (
         onPlacementGroupEdit(response);
       }
       onClose();
-    } catch {
-      const mapErrorToStatus = () =>
-        setStatus({ generalError: getErrorMap([], error).none });
-      setSubmitting(false);
-      handleFieldErrors(setErrors, error ?? []);
-      handleGeneralErrors(
-        mapErrorToStatus,
-        error || [],
-        'Error updating Placement Group.'
-      );
+    } catch (errors) {
+      setErrors(getFormikErrorsFromAPIErrors(errors));
+      scrollErrorIntoView();
     }
   };
 
@@ -101,7 +85,6 @@ export const PlacementGroupsEditDrawer = (
     handleSubmit,
     isSubmitting,
     resetForm,
-    status,
     values,
   } = useFormik<UpdatePlacementGroupPayload>({
     enableReinitialize: true,
@@ -114,7 +97,7 @@ export const PlacementGroupsEditDrawer = (
     validationSchema: updatePlacementGroupSchema,
   });
 
-  const generalError = status?.generalError;
+  const generalError = error?.find((e) => !e.field)?.reason;
 
   if (!selectedPlacementGroup) {
     return null;

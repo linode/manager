@@ -14,11 +14,8 @@ import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
+import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { PlacementGroupsAffinityEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
 import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
@@ -79,22 +76,16 @@ export const PlacementGroupsCreateDrawer = (
 
   const handleFormSubmit = async (
     values: CreatePlacementGroupPayload,
-    {
-      setErrors,
-      setStatus,
-      setSubmitting,
-    }: FormikHelpers<CreatePlacementGroupPayload>
+    { setErrors, setStatus }: FormikHelpers<CreatePlacementGroupPayload>
   ) => {
     setHasFormBeenSubmitted(false);
     setStatus(undefined);
     setErrors({});
-    const payload = { ...values };
 
     try {
-      const response = await mutateAsync(payload);
-      setSubmitting(false);
+      const response = await mutateAsync(values);
 
-      enqueueSnackbar(`Placement Group ${payload.label} successfully created`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully created`, {
         variant: 'success',
       });
 
@@ -103,17 +94,9 @@ export const PlacementGroupsCreateDrawer = (
       }
       handleResetForm();
       onClose();
-    } catch {
-      const mapErrorToStatus = () =>
-        setStatus({ generalError: getErrorMap([], error).none });
-
-      setSubmitting(false);
-      handleFieldErrors(setErrors, error ?? []);
-      handleGeneralErrors(
-        mapErrorToStatus,
-        error ?? [],
-        'Error creating Placement Group.'
-      );
+    } catch (errors) {
+      setErrors(getFormikErrorsFromAPIErrors(errors));
+      scrollErrorIntoView();
     }
   };
 
@@ -125,7 +108,6 @@ export const PlacementGroupsCreateDrawer = (
     isSubmitting,
     resetForm,
     setFieldValue,
-    status,
     values,
   } = useFormik({
     enableReinitialize: true,
@@ -141,7 +123,7 @@ export const PlacementGroupsCreateDrawer = (
     validationSchema: createPlacementGroupSchema,
   });
 
-  const generalError = status?.generalError;
+  const generalError = error?.find((e) => !e.field)?.reason;
 
   return (
     <Drawer
@@ -158,7 +140,7 @@ export const PlacementGroupsCreateDrawer = (
               {`${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`}
             </Typography>
           )}
-          <Divider />
+          <Divider hidden={!selectedRegionId} />
           <TextField
             inputProps={{
               autoFocus: true,
