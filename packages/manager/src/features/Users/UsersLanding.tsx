@@ -7,6 +7,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { Typography } from 'src/components/Typography';
+import { PARENT_USER } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -81,13 +82,14 @@ export const UsersLanding = () => {
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
             marginTop: theme.spacing(3),
+            textTransform: 'capitalize',
             [theme.breakpoints.down('md')]: {
               marginLeft: theme.spacing(1),
             },
           })}
           variant="h3"
         >
-          Parent user settings
+          {PARENT_USER} Settings
         </Typography>
       )}
       {showProxyUserTable && (
@@ -122,7 +124,7 @@ export const UsersLanding = () => {
             })}
             variant="h3"
           >
-            User settings
+            User Settings
           </Typography>
         )}
         <AddNewLink

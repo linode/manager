@@ -22,6 +22,7 @@ import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
+import { PARENT_USER } from 'src/features/Account/constants';
 
 // Message shown when user has unrestricted account acess.
 const unrestrictedAccessMessage =
@@ -561,8 +562,8 @@ describe('User permission management', () => {
 
   /**
    * Confirm the Users & Grants and User Permissions pages flow for a child account viewing a proxy user.
-   * Confirm that "Parent user settings" and "User settings" sections are present on the Users & Grants page.
-   * Confirm that proxy accounts are listed under "Parent user settings".
+   * Confirm that "Parent User Settings" and "User Settings" sections are present on the Users & Grants page.
+   * Confirm that proxy accounts are listed under "Parent User Settings".
    * Confirm that clicking the "Manage Access" button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
    * Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
    * Confirm that proxy accounts default to "Read Write" Billing Access and have disabled "Read Only" and "None" options.
@@ -601,13 +602,13 @@ describe('User permission management', () => {
     mockGetUser(mockRestrictedProxyUser);
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
-    // Navigate to Users & Grants page and confirm "Parent user settings" and "User settings" sections are visible.
+    // Navigate to Users & Grants page and confirm "Parent User Settings" and "User Settings" sections are visible.
     cy.visitWithLogin('/account/users');
     cy.wait('@getUsers');
-    cy.findByText('Parent user settings').should('be.visible');
-    cy.findByText('User settings').should('be.visible');
+    cy.findByText(`${PARENT_USER} Settings`).should('be.visible');
+    cy.findByText('User Settings').should('be.visible');
 
-    // Find mock restricted proxy user under "Parent user settings", click its "Manage Access" button.
+    // Find mock restricted proxy user under "Parent User Settings", click its "Manage Access" button.
     cy.findByLabelText('List of Parent Users')
       .should('be.visible')
       .within(() => {
