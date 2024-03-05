@@ -56,7 +56,7 @@ export const accountQueries = createQueryKeys('account', {
     queryKey: [params, filter],
   }),
   notifications: {
-    queryFn: getAllNotifications,
+    queryFn: () => getAllNotifications(),
     queryKey: null,
   },
   oauthClients: (params: Params = {}, filter: Filter = {}) => ({
