@@ -87,11 +87,11 @@ export const UsersLanding = () => {
           })}
           variant="h3"
         >
-          Business partner settings
+          Parent user settings
         </Typography>
       )}
       {showProxyUserTable && (
-        <Table aria-label="List of Business Partners">
+        <Table aria-label="List of Parent Users">
           <UsersLandingProxyTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody

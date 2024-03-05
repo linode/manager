@@ -199,7 +199,7 @@ export const UserProfile = (props: UserProfileProps) => {
             profile?.username === originalUsername
               ? 'You can\u{2019}t delete the currently active user.'
               : isProxyUserProfile
-              ? 'You can\u{2019}t delete a business partner user.'
+              ? 'You can\u{2019}t delete a parent user.'
               : undefined
           }
           buttonType="outlined"

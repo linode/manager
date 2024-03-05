@@ -130,7 +130,7 @@ describe('Account login history', () => {
     cy.findByLabelText('Account Logins').should('not.exist');
 
     cy.findByText(
-      "You don't have permissions to edit this Account. Please contact your business partner to request the necessary permissions."
+      "You don't have permissions to edit this Account. Please contact your parent user to request the necessary permissions."
     );
   });
 
