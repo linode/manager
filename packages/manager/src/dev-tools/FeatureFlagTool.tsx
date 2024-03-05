@@ -101,7 +101,7 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
             );
           })}
           <button onClick={resetFlags} style={{ marginTop: 8 }}>
-            Reset default flags
+            Reset to LD default flags
           </button>
         </div>
       </Grid>
