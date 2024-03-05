@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-03-04] - v1.114.0
+
+### Added:
+
+- Reintroduce NVMe Volume Upgrades ([#10229](https://github.com/linode/manager/pull/10229))
+
+### Changed:
+
+- Improve dev tools UI ([#10220](https://github.com/linode/manager/pull/10220))
+- ACLB beta region from `Washington, DC` to `Miami, FL` ([#10232](https://github.com/linode/manager/pull/10232))
+
+### Fixed:
+
+- Incorrect units in Linode Network Graph Tooltip ([#10197](https://github.com/linode/manager/pull/10197))
+- Disabled `Add` button once a node pool is added to kubernetes cluster in Create flow ([#10215](https://github.com/linode/manager/pull/10215))
+- Invalid VPC scope with a Select All > Read Only selection in Create PAT drawer ([#10226](https://github.com/linode/manager/pull/10226))
+- Disabled styles for Textfield input ([#10231](https://github.com/linode/manager/pull/10231))
+- LinodeVolumeCreateForm crash ([#10235](https://github.com/linode/manager/pull/10235))
+
+### Tech Stories:
+
+- Update to React 18 ([#10169](https://github.com/linode/manager/pull/10169))
+- Improve LinodeActionMenu restricted user experience ([#10199](https://github.com/linode/manager/pull/10199))
+- Convert isRestrictedGlobalGrantType to Hook ([#10203](https://github.com/linode/manager/pull/10203))
+- Update Storybook to latest to resolve CVE-2023-42282 ([#10212](https://github.com/linode/manager/pull/10212))
+- Generate docs site sidebar based on folder structure ([#10214](https://github.com/linode/manager/pull/10214))
+- Clean up `new QueryClient()` pattern in unit tests ([#10217](https://github.com/linode/manager/pull/10217))
+- Remove build time API caching ([#10219](https://github.com/linode/manager/pull/10219))
+- Clean up `Chip` component ([#10223](https://github.com/linode/manager/pull/10223))
+
+### Tests:
+
+- Add Cypress tests for account switching from Parent to Child ([#10110](https://github.com/linode/manager/pull/10110))
+- Improve User Profile integration test coverage and separate from Display Settings coverage ([#10202](https://github.com/linode/manager/pull/10202))
+- Add test for OBJ Multicluster bucket create flow ([#10211](https://github.com/linode/manager/pull/10211))
+- Suppress Rollup warnings during Cypress tests ([#10239](https://github.com/linode/manager/pull/10239))
+
+### Upcoming Features:
+
+- Add list view for Linode Clone and Create from Backup ([#10182](https://github.com/linode/manager/pull/10182))
+- Add ‘Delete Placement Group’ Modal (#10162)
+- Update Placement Groups types, methods and factories (#10200)
+- Add placement group details to Create Linode payload ([#10195](https://github.com/linode/manager/pull/10195))
+- Update OBJ Multi-Cluster copy ([#10188](https://github.com/linode/manager/pull/10188))
+- Handle errors gracefully when OBJ Multi-Cluster feature flag is enabled without MSW (#10189)
+- Ensure correct ARIA labels for permissions are displayed in Access Key "Permissions" drawer when OBJ Multicluster is enabled ([#10213](https://github.com/linode/manager/pull/10213))
+- Update Region Select for edge sites (#10194)
+- Tag custom analytics events for account switching ([#10190](https://github.com/linode/manager/pull/10190))
+- Improve Billing & Account restricted user experience ([#10201](https://github.com/linode/manager/pull/10201))
+- Disable ability to edit or delete a proxy user via User Profile page ([#10202](https://github.com/linode/manager/pull/10202))
+- Fix Users & Grants filtering error based on `user_type` ([#10230](https://github.com/linode/manager/pull/10230))
+- Fix Account Switching ([#10234](https://github.com/linode/manager/pull/10234))
+- Fix to ensure ChildAccountList receives proper account token (#10234)
+- Rename database scale up to database resize ([#10193](https://github.com/linode/manager/pull/10193))
+
 ## [2024-02-20] - v1.113.0
 
 ### Added:
