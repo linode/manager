@@ -3,12 +3,8 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { regions } from 'src/__data__/regionsData';
 import { linodeBackupsFactory } from 'src/factories/linodes';
 import { regionFactory } from 'src/factories/regions';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeActionMenu, LinodeActionMenuProps } from './LinodeActionMenu';
@@ -29,8 +25,6 @@ const props: LinodeActionMenuProps = {
   onOpenRescueDialog: vi.fn(),
   onOpenResizeDialog: vi.fn(),
 };
-
-const queryClient = queryClientFactory();
 
 describe('LinodeActionMenu', () => {
   describe('Action menu', () => {
@@ -133,23 +127,13 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should disable the clone action if the Linode is in an edge region', async () => {
-      const propsWithEdge = {
+      const propsWithEdgeRegion = {
         ...props,
         linodeRegion: 'us-edge-1',
       };
 
-      server.use(
-        rest.get('*/regions', (req, res, ctx) => {
-          return res(ctx.json(makeResourcePage(regions)));
-        })
-      );
-
       const { getByLabelText, getByTestId } = renderWithTheme(
-        <LinodeActionMenu {...propsWithEdge} />,
-        {
-          flags: { gecko: true },
-          queryClient,
-        }
+        <LinodeActionMenu {...propsWithEdgeRegion} />
       );
 
       await userEvent.click(getByLabelText(/^Action menu for/));

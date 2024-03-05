@@ -23,7 +23,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { isEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -470,7 +470,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const isEdgeRegionSelected = Boolean(
       flags.gecko &&
-        isEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
+        getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
     return (
