@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { queryPresets } from './base';
+import { queryPresets } from '../base';
 
 export const queryKey = 'account-billing';
 

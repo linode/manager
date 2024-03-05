@@ -10,8 +10,8 @@ import { QueryClient } from '@tanstack/react-query';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
+import { queryKey as accountBillingKey } from 'src/queries/account/accountBilling';
+import { queryKey as accountPaymentKey } from 'src/queries/account/accountPayment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {

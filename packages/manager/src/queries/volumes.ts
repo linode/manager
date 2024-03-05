@@ -26,8 +26,8 @@ import {
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
+import { accountQueries } from './account/account';
 
-import { queryKey as notificationsQueryKey } from './accountNotifications';
 import { updateInPaginatedStore } from './base';
 import { profileQueries } from './profile';
 
@@ -192,7 +192,7 @@ export const volumeEventsHandler = ({
   ) {
     // if a migration finishes, we want to re-request notifications so that the `volume_migration_imminent`
     // notification goes away.
-    queryClient.invalidateQueries(notificationsQueryKey);
+    queryClient.invalidateQueries(accountQueries.notifications.queryKey);
   }
 
   if (event.action === 'volume_clone') {

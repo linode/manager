@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { useAccountTransfer } from 'src/queries/account/accountTransfer';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';

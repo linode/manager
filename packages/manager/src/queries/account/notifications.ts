@@ -3,15 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as accountQueryKey } from './account';
-
-export const queryKey = [accountQueryKey, 'notifications'];
+import { accountQueries } from './account';
 
 export const useNotificationsQuery = () =>
-  useQuery<Notification[], APIError[]>({
-    queryFn: getAllNotifications,
-    queryKey,
-  });
+  useQuery<Notification[], APIError[]>(accountQueries.notifications);
 
 export const getAllNotifications = () =>
   getAll<Notification>(getNotifications)().then((data) => data.data);

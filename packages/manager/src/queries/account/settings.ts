@@ -1,6 +1,5 @@
 import {
   AccountSettings,
-  getAccountSettings,
   updateAccountSettings,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -13,30 +12,26 @@ import {
 
 import { useProfile } from 'src/queries/profile';
 
-import { queryPresets } from './base';
+import { queryPresets } from '../base';
+import { accountQueries } from './account';
 
 export const useAccountSettings = () => {
   const { data: profile } = useProfile();
 
-  return useQuery<AccountSettings, APIError[]>(
-    ['account', 'settings'],
-    getAccountSettings,
-    {
-      ...queryPresets.oneTimeFetch,
-      ...queryPresets.noRetry,
-      enabled: !profile?.restricted,
-    }
-  );
+  return useQuery<AccountSettings, APIError[]>({
+    ...accountQueries.settings,
+    ...queryPresets.oneTimeFetch,
+    ...queryPresets.noRetry,
+    enabled: !profile?.restricted,
+  });
 };
 
 export const useMutateAccountSettings = () => {
   const queryClient = useQueryClient();
-  return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>(
-    (data) => updateAccountSettings(data),
-    {
-      onSuccess: (newData) => updateAccountSettingsData(newData, queryClient),
-    }
-  );
+  return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>({
+    mutationFn: updateAccountSettings,
+    onSuccess: (newData) => updateAccountSettingsData(newData, queryClient),
+  });
 };
 
 /**
@@ -50,8 +45,8 @@ export const updateAccountSettingsData = (
   newData: Partial<AccountSettings>,
   queryClient: QueryClient
 ): void => {
-  queryClient.setQueryData(
-    ['account', 'settings'],
+  queryClient.setQueryData<AccountSettings>(
+    accountQueries.settings.queryKey,
     (oldData: AccountSettings) => ({
       ...oldData,
       ...newData,

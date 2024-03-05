@@ -11,7 +11,7 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { queryKey } from 'src/queries/accountPayment';
+import { queryKey } from 'src/queries/account/accountPayment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 

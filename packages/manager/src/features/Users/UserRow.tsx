@@ -11,7 +11,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountUserGrants } from 'src/queries/accountUsers';
+import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
 

@@ -14,7 +14,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';

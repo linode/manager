@@ -37,7 +37,7 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/accountAgreements';
 import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';

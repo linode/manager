@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useGrants } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
 
-import { queryPresets } from './base';
+import { queryPresets } from '../base';
 
 export const queryKey = 'account-payment-methods';
 

@@ -11,7 +11,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { queryKey } from 'src/queries/accountPayment';
+import { queryKey } from 'src/queries/account/accountPayment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {

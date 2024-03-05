@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { useAccountTransfer } from 'src/queries/account/accountTransfer';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {

@@ -18,7 +18,7 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';

@@ -16,7 +16,7 @@ import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/us
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 

@@ -1,4 +1,4 @@
-import { getUser, updateUser } from '@linode/api-v4/lib/account';
+import { getUser, updateUser, User } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
@@ -18,13 +18,13 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { queryKey } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
+import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile';
+import { accountQueries } from 'src/queries/account/account';
 
 export const UserDetail = () => {
   const { username: currentUsername } = useParams<{ username: string }>();
@@ -143,7 +143,15 @@ export const UserDetail = () => {
         if (profile?.username === originalUsername) {
           refreshProfile();
         } else {
-          queryClient.invalidateQueries([queryKey, 'users']);
+          // Invalidate the paginated store
+          queryClient.invalidateQueries(
+            accountQueries.users._ctx.paginated._def
+          );
+          // set the user in the store
+          queryClient.setQueryData<User>(
+            accountQueries.users._ctx.user(user.username).queryKey,
+            user
+          );
         }
 
         history.replace(`/account/users/${user.username}`, {

@@ -24,7 +24,7 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/accountAgreements';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';

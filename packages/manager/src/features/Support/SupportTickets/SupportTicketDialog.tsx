@@ -19,7 +19,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';

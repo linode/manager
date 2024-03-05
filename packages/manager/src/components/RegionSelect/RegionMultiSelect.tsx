@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { StyledListItem } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/account/accountAvailability';
 
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';

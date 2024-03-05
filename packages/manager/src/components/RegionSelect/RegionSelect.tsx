@@ -6,7 +6,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/account/accountAvailability';
 
 import { RegionOption } from './RegionOption';
 import {

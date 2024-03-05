@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { reportException } from 'src/exceptionReporting';
 import { useProfile } from 'src/queries/profile';
 
-import { queryPresets, simpleMutationHandlers } from './base';
+import { queryPresets, simpleMutationHandlers } from '../base';
 
 export const useAccountAgreements = (enabled?: boolean) => {
   const { data: profile } = useProfile();

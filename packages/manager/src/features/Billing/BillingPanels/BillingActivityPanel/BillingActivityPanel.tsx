@@ -34,11 +34,11 @@ import {
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import {
   useAllAccountInvoices,
   useAllAccountPayments,
-} from 'src/queries/accountBilling';
+} from 'src/queries/account/accountBilling';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { parseAPIDate } from 'src/utilities/date';
