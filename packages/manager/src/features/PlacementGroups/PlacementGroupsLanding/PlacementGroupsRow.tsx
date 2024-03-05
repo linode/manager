@@ -18,6 +18,7 @@ import type { PlacementGroup } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface PlacementGroupsRowProps {
+  disabled: boolean;
   handleDeletePlacementGroup: () => void;
   handleRenamePlacementGroup: () => void;
   placementGroup: PlacementGroup;
@@ -25,6 +26,7 @@ interface PlacementGroupsRowProps {
 
 export const PlacementGroupsRow = React.memo(
   ({
+    disabled,
     handleDeletePlacementGroup,
     handleRenamePlacementGroup,
     placementGroup,
@@ -87,6 +89,7 @@ export const PlacementGroupsRow = React.memo(
               actionText={action.title}
               key={action.title}
               onClick={action.onClick}
+              disabled={disabled}
             />
           ))}
         </TableCell>

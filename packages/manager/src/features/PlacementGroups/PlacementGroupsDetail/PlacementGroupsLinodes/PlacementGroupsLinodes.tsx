@@ -12,22 +12,23 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
-import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
-import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
 } from '../../constants';
+import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
+import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Linode, PlacementGroup } from '@linode/api-v4';
 
 interface Props {
+  isLinodeReadOnly: boolean;
   placementGroup: PlacementGroup | undefined;
 }
 
 export const PlacementGroupsLinodes = (props: Props) => {
-  const { placementGroup } = props;
+  const { isLinodeReadOnly, placementGroup } = props;
   const history = useHistory();
   const {
     assignedLinodes,
@@ -103,7 +104,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
           <Button
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
-            disabled={hasReachedCapacity}
+            disabled={hasReachedCapacity || isLinodeReadOnly}
             onClick={handleOpenAssignLinodesDrawer}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
           >

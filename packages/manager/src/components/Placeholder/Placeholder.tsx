@@ -158,6 +158,7 @@ export const Placeholder = (props: PlaceholderProps) => {
                 {...thisButton}
                 data-qa-placeholder-button
                 data-testid="placeholder-button"
+                // disabled={}
                 key={index}
               />
             ))}

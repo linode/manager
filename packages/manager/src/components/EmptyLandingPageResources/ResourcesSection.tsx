@@ -24,6 +24,7 @@ import type {
 
 interface ButtonProps {
   children: string;
+  disabled?: boolean;
   onClick: () => void;
 }
 
@@ -45,6 +46,10 @@ interface ResourcesSectionProps {
    * Allow to set a custom max width for the description (better word wrapping)
    * */
   descriptionMaxWidth?: number;
+  /**
+   * Allows for the button to be disabled
+   */
+  // disabled: boolean;
   /**
    * The data for the docs links section
    */

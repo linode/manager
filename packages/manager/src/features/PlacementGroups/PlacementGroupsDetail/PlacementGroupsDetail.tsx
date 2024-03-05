@@ -17,6 +17,7 @@ import {
   usePlacementGroupQuery,
 } from 'src/queries/placementGroups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { getPlacementGroupLinodeCount } from '../utils';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
@@ -33,6 +34,10 @@ export const PlacementGroupsDetail = () => {
     error: placementGroupError,
     isLoading,
   } = usePlacementGroupQuery(placementGroupId, Boolean(flags.vmPlacement));
+
+  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   const {
     error: updatePlacementGroupError,
@@ -116,7 +121,10 @@ export const PlacementGroupsDetail = () => {
             <PlacementGroupsSummary placementGroup={placementGroup} />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <PlacementGroupsLinodes placementGroup={placementGroup} />
+            <PlacementGroupsLinodes
+              placementGroup={placementGroup}
+              isLinodeReadOnly={isLinodeReadOnly}
+            />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

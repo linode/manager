@@ -16,8 +16,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TextField } from 'src/components/TextField';
+// import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -65,6 +67,16 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
+  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
+
+  // const isAllowedToEditPlacementGroup = useIsResourceRestricted({
+  //   grantLevel: 'read_write',
+  //   grantType: 'linode',
+  //   id: linodeId,
+  // });
+
   const handleCreatePlacementGroup = () => {
     history.replace('/placement-groups/create');
   };
@@ -91,10 +103,12 @@ export const PlacementGroupsLanding = React.memo(() => {
     return <CircleProgress />;
   }
 
+  // if (placementGroups?.results === 0 || placementGroups?.results === undefined) {
   if (placementGroups?.results === 0) {
     return (
       <>
         <PlacementGroupsLandingEmptyState
+          disabledCreateButton={!isLinodeReadOnly}
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
@@ -121,6 +135,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     <>
       <LandingHeader
         breadcrumbProps={{ pathname: '/placement-groups' }}
+        disabledCreateButton={!isLinodeReadOnly}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
@@ -183,6 +198,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               handleRenamePlacementGroup={() =>
                 handleRenamePlacementGroup(placementGroup)
               }
+              disabled={!isLinodeReadOnly}
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
             />

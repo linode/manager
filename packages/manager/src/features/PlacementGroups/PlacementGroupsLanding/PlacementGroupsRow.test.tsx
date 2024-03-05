@@ -75,6 +75,7 @@ describe('PlacementGroupsLanding', () => {
             linode_ids: [1],
             region: 'us-east',
           })}
+          disabled
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}
           handleRenamePlacementGroup={handleRenamePlacementGroupMock}
         />
