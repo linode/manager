@@ -1,3 +1,5 @@
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -7,6 +9,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { Typography } from 'src/components/Typography';
+import { PARENT_USER } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -22,6 +25,7 @@ import { UsersLandingTableHead } from './UsersLandingTableHead';
 import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
+  const theme = useTheme();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -29,6 +33,8 @@ export const UsersLanding = () => {
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const flags = useFlags();
   const { data: profile } = useProfile();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
@@ -51,22 +57,33 @@ export const UsersLanding = () => {
     },
   });
 
+  const isRestrictedUser = profile?.restricted;
+
   const {
     data: proxyUser,
     error: proxyUserError,
     isLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled: flags.parentChildAccountAccess,
+    enabled:
+      flags.parentChildAccountAccess && showProxyUserTable && !isRestrictedUser,
     filters: { user_type: 'proxy' },
   });
-
-  const isRestrictedUser = profile?.restricted;
 
   const showChildAccountAccessCol = Boolean(
     flags.parentChildAccountAccess && profile?.user_type === 'parent'
   );
 
-  const numCols = showChildAccountAccessCol ? 6 : 5;
+  // Parent/Child accounts include additional "child account access" column.
+  const numCols = matchesLgUp
+    ? showChildAccountAccessCol
+      ? 6
+      : 5
+    : matchesSmDown
+    ? 3
+    : 4;
+
+  // "last login" column omitted for proxy table.
+  const proxyNumCols = matchesLgUp ? 4 : numCols;
 
   const handleDelete = (username: string) => {
     setIsDeleteDialogOpen(true);
@@ -81,23 +98,24 @@ export const UsersLanding = () => {
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
             marginTop: theme.spacing(3),
+            textTransform: 'capitalize',
             [theme.breakpoints.down('md')]: {
               marginLeft: theme.spacing(1),
             },
           })}
           variant="h3"
         >
-          Business partner settings
+          {PARENT_USER} Settings
         </Typography>
       )}
       {showProxyUserTable && (
-        <Table aria-label="List of Business Partners">
+        <Table aria-label="List of Parent Users">
           <UsersLandingProxyTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody
               error={proxyUserError}
               isLoading={isLoadingProxyUser}
-              numCols={4}
+              numCols={proxyNumCols}
               onDelete={handleDelete}
               users={proxyUser?.data}
             />
@@ -122,7 +140,7 @@ export const UsersLanding = () => {
             })}
             variant="h3"
           >
-            User settings
+            User Settings
           </Typography>
         )}
         <AddNewLink

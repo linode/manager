@@ -14,9 +14,9 @@ import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import { PARENT_USER, RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
-import { RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';
 
 interface UserProfileProps {
   accountErrors?: APIError[];
@@ -199,7 +199,7 @@ export const UserProfile = (props: UserProfileProps) => {
             profile?.username === originalUsername
               ? 'You can\u{2019}t delete the currently active user.'
               : isProxyUserProfile
-              ? 'You can\u{2019}t delete a business partner user.'
+              ? `You can\u{2019}t delete a ${PARENT_USER}.`
               : undefined
           }
           buttonType="outlined"
