@@ -1,5 +1,10 @@
-import { LinodeType, getLinodeTypes, getType } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
+import {
+  LinodeType,
+  getLinodeTypes,
+  getNodeBalancerTypes,
+  getType,
+} from '@linode/api-v4';
+import { APIError, PriceType } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   UseQueryOptions,
@@ -56,3 +61,17 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
 export const useTypeQuery = (type: string, enabled = true) => {
   return useSpecificTypes([type], enabled)[0];
 };
+
+const getAllNodeBalancerTypes = () =>
+  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
+    (results) => results.data
+  );
+
+export const useNodeBalancerTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>(
+    [`${queryKey}-nodebalancers`],
+    getAllNodeBalancerTypes,
+    {
+      ...queryPresets.oneTimeFetch,
+    }
+  );

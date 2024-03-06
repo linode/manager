@@ -41,13 +41,14 @@ import {
 import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useNodeBalancerTypesQuery } from 'src/queries/types';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import {
-  getDCSpecificPrice,
+  getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -99,6 +100,7 @@ const NodeBalancerCreate = () => {
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
+  const { data: types } = useNodeBalancerTypesQuery();
 
   const {
     error,
@@ -418,9 +420,9 @@ const NodeBalancerCreate = () => {
   const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
     ?.label;
 
-  const price = getDCSpecificPrice({
-    basePrice: NODEBALANCER_PRICE,
+  const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
+    type: types?.[0],
   });
 
   const summaryItems = [];
@@ -448,7 +450,11 @@ const NodeBalancerCreate = () => {
 
   if (nodeBalancerFields.region) {
     summaryItems.unshift({
-      title: `$${renderMonthlyPriceToCorrectDecimalPlace(Number(price))}/month`,
+      title: `$${
+        price
+          ? renderMonthlyPriceToCorrectDecimalPlace(Number(price))
+          : UNKNOWN_PRICE
+      }/month`,
     });
   }
 
