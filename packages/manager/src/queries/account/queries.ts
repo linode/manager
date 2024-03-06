@@ -1,5 +1,4 @@
 import {
-  PaymentMethod,
   getAccountAgreements,
   getAccountInfo,
   getAccountLogins,
@@ -8,31 +7,15 @@ import {
   getClientToken,
   getGrants,
   getNetworkUtilization,
-  getNotifications,
   getOAuthClients,
-  getPaymentMethods,
   getUser,
   getUsers,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAllNotifications, getAllPaymentMethodsRequest } from './requests';
 
-import type {
-  Filter,
-  Notification,
-  Params,
-  RequestOptions,
-} from '@linode/api-v4';
-
-export const getAllNotifications = () =>
-  getAll<Notification>(getNotifications)().then((data) => data.data);
-
-/**
- * This getAll is probably overkill because customers can only have 6 payment methods
- */
-export const getAllPaymentMethodsRequest = () =>
-  getAll<PaymentMethod>(getPaymentMethods)().then((data) => data.data);
+import type { Filter, Params, RequestOptions } from '@linode/api-v4';
 
 export const accountQueries = createQueryKeys('account', {
   account: {
