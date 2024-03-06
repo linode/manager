@@ -6,7 +6,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
@@ -80,22 +79,23 @@ export const PlacementGroupsAssignLinodesDrawer = (
     allPlacementGroups
   );
 
+  const getLinodeSelectOptions = (): Linode[] => {
+    // We filter out Linodes that are already assigned to a Placement Group
+    return (
+      allLinodesInRegion?.filter((linode) => {
+        return !linodesFromAllPlacementGroups.includes(linode.id);
+      }) ?? []
+    );
+  };
+
   if (
     !allLinodesInRegion ||
     !selectedPlacementGroup ||
     linodesError ||
     allPlacementGroupsError
   ) {
-    return (
-      <ErrorState errorText="There was a problem retrieving your placement group. Please try again" />
-    );
+    return null;
   }
-
-  const getLinodeSelectOptions = (): Linode[] => {
-    return allLinodesInRegion.filter((linode) => {
-      return !linodesFromAllPlacementGroups.includes(linode.id);
-    });
-  };
 
   const { affinity_type, label } = selectedPlacementGroup;
   const linodeSelectLabel = region
@@ -115,6 +115,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
       return;
     }
 
+    // Since we allow only one Linode to be assigned to a Placement Group,
+    // We're using a tuple with the selected Linode ID
     const payload: AssignLinodesToPlacementGroupPayload = {
       linodes: [selectedLinode.id],
     };
