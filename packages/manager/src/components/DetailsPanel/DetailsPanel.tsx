@@ -33,7 +33,7 @@ interface DetailsPanelProps {
 export const DetailsPanel = (props: DetailsPanelProps) => {
   const theme = useTheme();
   const flags = useFlags();
-  const showPlacementGroups = Boolean(flags.vmPlacement);
+  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
   const {
     error,
     labelFieldProps,

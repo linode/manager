@@ -32,7 +32,10 @@ export const PlacementGroupsDetail = () => {
     data: placementGroup,
     error: placementGroupError,
     isLoading,
-  } = usePlacementGroupQuery(placementGroupId, Boolean(flags.vmPlacement));
+  } = usePlacementGroupQuery(
+    placementGroupId,
+    Boolean(flags.placementGroups?.enabled)
+  );
 
   const {
     error: updatePlacementGroupError,
