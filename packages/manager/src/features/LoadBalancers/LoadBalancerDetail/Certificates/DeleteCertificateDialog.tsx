@@ -35,8 +35,9 @@ export const DeleteCertificateDialog = (props: Props) => {
   const onDelete = async () => {
     try {
       await mutateAsync();
-    } finally {
       onClose();
+    } catch (error) {
+      // Swallow error
     }
   };
 

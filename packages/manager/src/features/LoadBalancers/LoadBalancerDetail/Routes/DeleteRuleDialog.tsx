@@ -49,8 +49,9 @@ export const DeleteRuleDialog = (props: Props) => {
         protocol: route.protocol,
         rules: normalizedRules,
       });
-    } finally {
       onClose();
+    } catch (error) {
+      // Swallow error
     }
   };
 
