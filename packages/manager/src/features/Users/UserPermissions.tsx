@@ -11,10 +11,10 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import { QueryClient } from '@tanstack/react-query';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from '@tanstack/react-query';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -41,7 +41,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { grantTypeMap } from 'src/features/Account/constants';
+import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -436,8 +436,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             sx={{ margin: 0, width: 'auto' }}
           >
             <StyledHeaderGrid>
-              <Typography data-qa-restrict-access={restricted} variant="h2">
-                {isProxyUser ? 'Business Partner' : 'General'} Permissions
+              <Typography
+                sx={{
+                  textTransform: 'capitalize',
+                }}
+                data-qa-restrict-access={restricted}
+                variant="h2"
+              >
+                {isProxyUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledSubHeaderGrid>
