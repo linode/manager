@@ -1,6 +1,7 @@
 import { mergeQueryKeys } from '@lukemorales/query-key-factory';
 
 import { accountQueries } from './account/queries';
+import { betaQueries } from './betas';
 import { profileQueries } from './profile';
 
 /**
@@ -11,4 +12,8 @@ import { profileQueries } from './profile';
  *
  * queryClient.invalidateQueries(queries.account.settings.queryKey);
  */
-export const queries = mergeQueryKeys(profileQueries, accountQueries);
+export const queries = mergeQueryKeys(
+  profileQueries,
+  accountQueries,
+  betaQueries
+);
