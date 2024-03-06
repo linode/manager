@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
-import { useAllAccountMaintenanceQuery } from 'src/queries/account/accountMaintenance';
+import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 

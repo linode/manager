@@ -1,5 +1,7 @@
 import {
   getAccountAgreements,
+  getAccountBeta,
+  getAccountBetas,
   getAccountInfo,
   getAccountLogins,
   getAccountMaintenance,
@@ -15,7 +17,10 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import {
+  getAllAccountAvailabilitiesRequest,
+  getAllAccountInvoices,
   getAllAccountMaintenance,
+  getAllAccountPayments,
   getAllNotifications,
   getAllPaymentMethodsRequest,
 } from './requests';
@@ -29,6 +34,23 @@ export const accountQueries = createQueryKeys('account', {
   },
   agreements: {
     queryFn: getAccountAgreements,
+    queryKey: null,
+  },
+  availability: {
+    queryFn: getAllAccountAvailabilitiesRequest,
+    queryKey: null,
+  },
+  betas: {
+    contextQueries: {
+      beta: (id: string) => ({
+        queryFn: () => getAccountBeta(id),
+        queryKey: [id],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAccountBetas(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
     queryKey: null,
   },
   childAccounts: (options: RequestOptions) => ({
@@ -47,6 +69,10 @@ export const accountQueries = createQueryKeys('account', {
     queryFn: getClientToken,
     queryKey: null,
   },
+  invoices: (params: Params = {}, filter: Filter = {}) => ({
+    queryFn: () => getAllAccountInvoices(params, filter),
+    queryKey: [params, filter],
+  }),
   logins: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getAccountLogins(params, filter),
     queryKey: [params, filter],
@@ -76,6 +102,10 @@ export const accountQueries = createQueryKeys('account', {
     queryFn: getAllPaymentMethodsRequest,
     queryKey: null,
   },
+  payments: (params: Params = {}, filter: Filter = {}) => ({
+    queryFn: () => getAllAccountPayments(params, filter),
+    queryKey: [params, filter],
+  }),
   settings: {
     queryFn: getAccountSettings,
     queryKey: null,
