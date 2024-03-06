@@ -20,6 +20,13 @@ We often need to control more than one setting for a given feature. For instance
 }
 ```
 
+Feature flags variations should also be labelled as clearly as possible to avoid confusion for a potential third party managing the flag you created.
+For instance, for the example above, the variations could be labelled:
+
+- Variation 1: Feature ON, Beta ON
+- Variation 2: Feature ON, Beta OFF
+- Variation 3: Everything OFF
+
 ## Creating a feature flag
 
 Feature flags are created in the LaunchDarkly dashboard. Give your flag a name (like "Images Pricing Banner") and key (like "imagesPricingBanner") and select the flag type (boolean, etc). Configure the desired variations and targeting options.

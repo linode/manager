@@ -12,10 +12,10 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 /**
- * Our flags can be either a boolean or an JSON object
+ * Our flags can be either a boolean or a JSON object
  * In the case of JSON Objects, the `enabled` key will be used to control flag.
- * It is required to have the `enabled` key if using a JSON object for on/off Featured flags.
- * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects. .
+ * It is required to have the `enabled` key if using a JSON object for on/off featured flags.
+ * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
