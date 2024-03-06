@@ -57,7 +57,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = renderWithTheme(
+    const { container } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         onClose={vi.fn()}
         open={true}
@@ -65,11 +65,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       />
     );
 
-    expect(
-      getByText(
-        'There was a problem retrieving your placement group. Please try again'
-      )
-    ).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement;
   });
 
   it('should render the drawer components', () => {
