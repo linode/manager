@@ -43,13 +43,15 @@ export const DeleteRuleDialog = (props: Props) => {
 
     const normalizedRules = newRules.map(getNormalizedRulePayload);
 
-    await mutateAsync({
-      label: route.label,
-      protocol: route.protocol,
-      rules: normalizedRules,
-    });
-
-    onClose();
+    try {
+      await mutateAsync({
+        label: route.label,
+        protocol: route.protocol,
+        rules: normalizedRules,
+      });
+    } finally {
+      onClose();
+    }
   };
 
   return (

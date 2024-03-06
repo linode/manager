@@ -33,8 +33,11 @@ export const DeleteCertificateDialog = (props: Props) => {
   };
 
   const onDelete = async () => {
-    await mutateAsync();
-    onClose();
+    try {
+      await mutateAsync();
+    } finally {
+      onClose();
+    }
   };
 
   return (

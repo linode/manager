@@ -32,8 +32,11 @@ export const DeleteServiceTargetDialog = (props: Props) => {
   };
 
   const onDelete = async () => {
-    await mutateAsync();
-    onClose();
+    try {
+      await mutateAsync();
+    } finally {
+      onClose();
+    }
   };
 
   return (

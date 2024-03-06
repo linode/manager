@@ -30,8 +30,11 @@ export const DeleteRouteDialog = (props: Props) => {
   };
 
   const onDelete = async () => {
-    await mutateAsync();
-    onClose();
+    try {
+      await mutateAsync();
+    } finally {
+      onClose();
+    }
   };
 
   return (
