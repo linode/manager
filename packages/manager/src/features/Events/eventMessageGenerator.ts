@@ -128,6 +128,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: (e) => `Database ${e.entity!.label} is scheduled for resizing.`,
     started: (e) => `Database ${e.entity!.label} is resizing.`,
   },
+  database_resize_create: {
+    notification: (e) => `Database ${e.entity!.label} scheduled to be resized.`,
+  },
   database_update: {
     finished: (e) => `Database ${e.entity!.label} has been updated.`,
   },

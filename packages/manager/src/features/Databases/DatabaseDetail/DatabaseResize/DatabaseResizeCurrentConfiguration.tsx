@@ -8,6 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
@@ -45,6 +46,18 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
 
   const type = types?.find((type) => type.id === database?.type);
 
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (event) =>
+      event.entity?.id === database.id && event.entity.type === 'database'
+  );
+  let progress;
+  if (recentEvent?.action === 'database_resize') {
+    progress = recentEvent?.percent_complete ?? 0;
+    database.status = 'resizing';
+  }
+
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -68,7 +81,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   };
 
   const STORAGE_COPY =
-    'The total disk size is smaller than the selected plan capacity due to the OS overhead.';
+    'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
 
   return (
     <>
@@ -88,7 +101,8 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
                 status={databaseStatusMap[database.status]}
                 sx={{ verticalAlign: 'sub' }}
               />
-              {database.status}
+              {database.status +
+                (progress != undefined ? ' (' + progress + '%)' : '')}
             </StyledStatusSpan>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>

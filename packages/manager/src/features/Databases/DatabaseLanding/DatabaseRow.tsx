@@ -5,7 +5,6 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -16,6 +15,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+import { Event } from '@linode/api-v4';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   active: 'active',
@@ -26,6 +26,7 @@ export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   resuming: 'other',
   suspended: 'error',
   suspending: 'other',
+  resizing: 'other',
 };
 
 export const databaseEngineMap: Record<Engine, string> = {
@@ -37,9 +38,10 @@ export const databaseEngineMap: Record<Engine, string> = {
 
 interface Props {
   database: DatabaseInstance;
+  events?: Event[];
 }
 
-export const DatabaseRow = ({ database }: Props) => {
+export const DatabaseRow = ({ database, events }: Props) => {
   const {
     cluster_size,
     created,
@@ -47,7 +49,6 @@ export const DatabaseRow = ({ database }: Props) => {
     id,
     label,
     region,
-    status,
     version,
   } = database;
 
@@ -55,6 +56,18 @@ export const DatabaseRow = ({ database }: Props) => {
   const { data: profile } = useProfile();
 
   const actualRegion = regions?.find((r) => r.id === region);
+
+  const recentEvent = events?.find(
+    (event) =>
+      event.entity?.id === database.id && event.entity.type === 'database'
+  );
+  let progress;
+  if (recentEvent?.action === 'database_resize') {
+    progress = recentEvent?.percent_complete ?? 0;
+    database.status = 'resizing';
+  }
+
+  const status = database.status;
 
   const configuration =
     cluster_size === 1 ? (
@@ -82,7 +95,8 @@ export const DatabaseRow = ({ database }: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={databaseStatusMap[status]} />
-        {capitalize(status)}
+        {capitalize(database.status) +
+          (progress != undefined ? ' (' + progress + '%)' : '')}
       </TableCell>
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>

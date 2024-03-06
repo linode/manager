@@ -12,6 +12,8 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
+import { useInProgressEvents } from 'src/queries/events/events';
+
 import {
   databaseEngineMap,
   databaseStatusMap,
@@ -57,6 +59,18 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
 
   const type = types?.find((type) => type.id === database?.type);
 
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (event) =>
+      event.entity?.id === database.id && event.entity.type === 'database'
+  );
+  let progress;
+  if (recentEvent?.action === 'database_resize') {
+    progress = recentEvent?.percent_complete ?? 0;
+    database.status = 'resizing';
+  }
+
   if (!database || !type) {
     return null;
   }
@@ -72,7 +86,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   };
 
   const STORAGE_COPY =
-    'The total disk size is smaller than the selected plan capacity due to the OS overhead.';
+    'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
 
   return (
     <>
@@ -84,7 +98,8 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           <Typography className={classes.label}>Status</Typography>
           <span className={classes.status}>
             <StatusIcon status={databaseStatusMap[database.status]} />
-            {database.status}
+            {database.status +
+              (progress != undefined ? ' (' + progress + '%)' : '')}
           </span>
         </Box>
         <Box display="flex">

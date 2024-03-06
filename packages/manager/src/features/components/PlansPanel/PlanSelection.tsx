@@ -45,6 +45,8 @@ export interface PlanSelectionProps {
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
   type: PlanSelectionType;
+  planIsDisabled?: boolean;
+  disabledToolTip?: string;
 }
 
 const getDisabledClass = (
@@ -52,6 +54,19 @@ const getDisabledClass = (
   disabledClasses: LinodeTypeClass[]
 ) => {
   return disabledClasses.includes(typeClass);
+};
+
+const getToolTip = (
+  sizeTooSmall: boolean,
+  planIsDisabled?: boolean,
+  disabledToolTip?: string
+) => {
+  if (planIsDisabled) {
+    return disabledToolTip;
+  } else if (sizeTooSmall) {
+    return 'This plan is too small for the selected image.';
+  }
+  return undefined;
 };
 
 export const PlanSelection = (props: PlanSelectionProps) => {
@@ -70,6 +85,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     selectedRegionId,
     showTransfer,
     type,
+    planIsDisabled,
+    disabledToolTip,
   } = props;
 
   const flags = useFlags();
@@ -84,9 +101,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
-  const tooltip = planTooSmall
-    ? 'This plan is too small for the selected image.'
-    : undefined;
+  const tooltip = getToolTip(planTooSmall, planIsDisabled, disabledToolTip);
   const isSamePlan = type.heading === currentPlanHeading;
   const isGPU = type.class === 'gpu';
   const isDisabledClass = getDisabledClass(type.class, disabledClasses ?? []);
