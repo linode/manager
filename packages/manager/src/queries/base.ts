@@ -4,15 +4,12 @@ import {
   QueryClient,
   QueryKey,
   UseMutationOptions,
-  UseQueryOptions,
 } from '@tanstack/react-query';
 
 // =============================================================================
 // Config
 // =============================================================================
-type QueryConfigTypes = 'longLived' | 'noRetry' | 'oneTimeFetch' | 'shortLived';
-
-export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
+export const queryPresets = {
   longLived: {
     cacheTime: 10 * 60 * 1000,
     refetchOnMount: true,
@@ -244,12 +241,17 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
         return oldData;
       }
 
-      oldData.data[toUpdateIndex] = {
+      const updatedPaginatedData = [...oldData.data];
+
+      updatedPaginatedData[toUpdateIndex] = {
         ...oldData.data[toUpdateIndex],
         ...newData,
       };
 
-      return oldData;
+      return {
+        ...oldData,
+        data: updatedPaginatedData,
+      };
     }
   );
 };
