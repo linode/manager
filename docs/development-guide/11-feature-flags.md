@@ -11,6 +11,22 @@ Feature flags are served by [LaunchDarkly](https://launchdarkly.com/). On app lo
 
 Feature flag values themselves can be booleans (most common), strings, numbers, or JSON (also common).
 
+We often need to control more than one setting for a given feature. For instance, a feature might have a boolean flag to enable/disable it, and a secondary flag to control its "beta" status. In LaunchDarkly, if using a JSON object and still wanting to control the on/off status of a feature, **all variations must contain an `enabled` key**. ex:
+
+```json
+{
+  "enabled": true,
+  "beta": true
+}
+```
+
+Feature flags variations should also be labelled as clearly as possible to avoid confusion for a potential third party managing the flag you created.
+For instance, for the example above, the variations could be labelled:
+
+- Variation 1: Feature ON, Beta ON
+- Variation 2: Feature ON, Beta OFF
+- Variation 3: Everything OFF
+
 ## Creating a feature flag
 
 Feature flags are created in the LaunchDarkly dashboard. Give your flag a name (like "Images Pricing Banner") and key (like "imagesPricingBanner") and select the flag type (boolean, etc). Configure the desired variations and targeting options.
