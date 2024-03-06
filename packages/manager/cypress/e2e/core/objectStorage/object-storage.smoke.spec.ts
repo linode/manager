@@ -26,11 +26,6 @@ import { ui } from 'support/ui';
 import { regionFactory } from 'src/factories';
 
 describe('object storage smoke tests', () => {
-
-  it('will fail', () => {
-    throw new Error('This is a forced failure!');
-  })
-
   /*
    * - Tests Object Storage bucket creation flow when OBJ Multicluster is enabled.
    * - Confirms that expected regions are displayed in drop-down.
