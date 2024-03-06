@@ -13,7 +13,7 @@ import {
 import { useProfile } from 'src/queries/profile';
 
 import { queryPresets } from '../base';
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 export const useAccountSettings = () => {
   const { data: profile } = useProfile();

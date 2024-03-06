@@ -13,7 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
   useQuery({

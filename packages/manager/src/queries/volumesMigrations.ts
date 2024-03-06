@@ -6,7 +6,7 @@ import {
 import { VolumesMigrationQueue } from '@linode/api-v4/lib/volumes/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { accountQueries } from './account/account';
+import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
 const queryKey = 'volumes-migrations';

@@ -17,8 +17,8 @@ import { makeStyles } from 'tss-react/mui';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { accountQueries } from 'src/queries/account/account';
 import { useClientToken } from 'src/queries/account/payment';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles()(() => ({

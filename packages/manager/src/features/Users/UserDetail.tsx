@@ -1,9 +1,9 @@
-import { getUser, updateUser, User } from '@linode/api-v4/lib/account';
+import { User, getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { clone } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   matchPath,
   useHistory,
@@ -18,13 +18,13 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { accountQueries } from 'src/queries/account/queries';
 import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile';
-import { accountQueries } from 'src/queries/account/account';
 
 export const UserDetail = () => {
   const { username: currentUsername } = useParams<{ username: string }>();

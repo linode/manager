@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 export const useNotificationsQuery = () =>
   useQuery<Notification[], APIError[]>(accountQueries.notifications);

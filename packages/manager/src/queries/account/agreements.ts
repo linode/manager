@@ -5,7 +5,7 @@ import { reportException } from 'src/exceptionReporting';
 import { useProfile } from 'src/queries/profile';
 
 import { queryPresets } from '../base';
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 import type { APIError, Agreements } from '@linode/api-v4';
 

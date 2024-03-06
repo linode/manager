@@ -2,7 +2,7 @@ import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
-import { accountQueries } from '../account/account';
+import { accountQueries } from '../account/queries';
 import { queryKey } from './linodes';
 
 import type { Event } from '@linode/api-v4';

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
 
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 import type {
   APIError,

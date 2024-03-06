@@ -10,7 +10,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { accountQueries } from 'src/queries/account/account';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles()(() => ({

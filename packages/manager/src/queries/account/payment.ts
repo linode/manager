@@ -11,7 +11,7 @@ import { useGrants } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from '../base';
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 export const useAllPaymentMethodsQuery = () => {
   const { data: grants } = useGrants();

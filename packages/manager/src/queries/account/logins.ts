@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { accountQueries } from './account';
+import { accountQueries } from './queries';
 
 import type {
   APIError,

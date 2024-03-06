@@ -38,7 +38,7 @@ import {
 
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
-import { accountQueries } from '../account/account';
+import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';

@@ -37,7 +37,7 @@ import {
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import { Grants } from '../../../api-v4/lib';
-import { accountQueries } from './account/account';
+import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
 import type { RequestOptions } from '@linode/api-v4';

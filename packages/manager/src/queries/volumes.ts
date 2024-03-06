@@ -26,8 +26,8 @@ import {
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
-import { accountQueries } from './account/account';
 
+import { accountQueries } from './account/queries';
 import { updateInPaginatedStore } from './base';
 import { profileQueries } from './profile';
 
