@@ -1,14 +1,12 @@
 import {
   ClientToken,
   PaymentMethod,
-  getPaymentMethods,
   makeDefaultPaymentMethod,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useGrants } from 'src/queries/profile';
-import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
@@ -22,15 +20,6 @@ export const useAllPaymentMethodsQuery = () => {
     enabled: grants?.global?.account_access !== null,
   });
 };
-
-/**
- * This getAll is probably overkill for getting all paginated payment
- * methods, but for now, use it to be safe.
- */
-export const getAllPaymentMethodsRequest = () =>
-  getAll<PaymentMethod>((params) => getPaymentMethods(params))().then(
-    (data) => data.data
-  );
 
 export const useClientToken = () =>
   useQuery<ClientToken, APIError[]>({
