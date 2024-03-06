@@ -1,4 +1,11 @@
-import { getNotifications, getPaymentMethods } from '@linode/api-v4';
+import {
+  AccountMaintenance,
+  Filter,
+  Params,
+  getAccountMaintenance,
+  getNotifications,
+  getPaymentMethods,
+} from '@linode/api-v4';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -9,3 +16,14 @@ export const getAllNotifications = () =>
 
 export const getAllPaymentMethodsRequest = () =>
   getAll<PaymentMethod>(getPaymentMethods)().then((data) => data.data);
+
+export const getAllAccountMaintenance = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
+  getAll<AccountMaintenance>((params, filter) =>
+    getAccountMaintenance(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter }
+    )
+  )().then((res) => res.data);

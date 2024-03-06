@@ -2,6 +2,7 @@ import {
   getAccountAgreements,
   getAccountInfo,
   getAccountLogins,
+  getAccountMaintenance,
   getAccountSettings,
   getChildAccounts,
   getClientToken,
@@ -13,7 +14,11 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import { getAllNotifications, getAllPaymentMethodsRequest } from './requests';
+import {
+  getAllAccountMaintenance,
+  getAllNotifications,
+  getAllPaymentMethodsRequest,
+} from './requests';
 
 import type { Filter, Params, RequestOptions } from '@linode/api-v4';
 
@@ -46,6 +51,19 @@ export const accountQueries = createQueryKeys('account', {
     queryFn: () => getAccountLogins(params, filter),
     queryKey: [params, filter],
   }),
+  maintenance: {
+    contextQueries: {
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllAccountMaintenance(params, filter),
+        queryKey: [params, filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAccountMaintenance(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
   notifications: {
     queryFn: getAllNotifications,
     queryKey: null,
