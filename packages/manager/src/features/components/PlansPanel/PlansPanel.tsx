@@ -2,6 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { Notice } from 'src/components/Notice/Notice';
 import { isEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
@@ -128,6 +129,12 @@ export const PlansPanel = (props: Props) => {
               planType={plan}
               regionsData={regionsData || []}
             />
+            {showEdgePlanTable && (
+              <Notice
+                text="Edge region pricing is temporarily $0 during the beta period, after which standard pricing will begin."
+                variant="warning"
+              ></Notice>
+            )}
             <PlanContainer
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
@@ -164,6 +171,7 @@ export const PlansPanel = (props: Props) => {
       initTab={showEdgePlanTable ? 0 : initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
+      showEdgePlanTable={showEdgePlanTable}
       sx={{ marginTop: theme.spacing(3), width: '100%' }}
       tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}

@@ -49,6 +49,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     initTab,
     innerClass,
     rootClass,
+    showEdgePlanTable,
     sx,
     tabs,
     ...rest
@@ -97,32 +98,35 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </Notice>
         )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
-        <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
-          <StyledTabList>
-            {tabs.map((tab, idx) => (
-              <StyledTab
-                disabled={tab.disabled}
-                key={`tabs-${tab.title}-${idx}`}
-              >
-                {tab.title}
-                {tab.disabled && props.tabDisabledMessage && (
-                  <Tooltip title={props.tabDisabledMessage}>
-                    <span>
-                      <HelpOutline fontSize="small" sx={sxHelpIcon} />
-                    </span>
-                  </Tooltip>
-                )}
-              </StyledTab>
-            ))}
-          </StyledTabList>
-          <TabPanels>
-            {tabs.map((tab, idx) => (
-              <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
-                {tab.render(rest.children)}
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </StyledTabs>
+        {showEdgePlanTable && tabs[0].render(rest.children)}
+        {!showEdgePlanTable && (
+          <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
+            <StyledTabList>
+              {tabs.map((tab, idx) => (
+                <StyledTab
+                  disabled={tab.disabled}
+                  key={`tabs-${tab.title}-${idx}`}
+                >
+                  {tab.title}
+                  {tab.disabled && props.tabDisabledMessage && (
+                    <Tooltip title={props.tabDisabledMessage}>
+                      <span>
+                        <HelpOutline fontSize="small" sx={sxHelpIcon} />
+                      </span>
+                    </Tooltip>
+                  )}
+                </StyledTab>
+              ))}
+            </StyledTabList>
+            <TabPanels>
+              {tabs.map((tab, idx) => (
+                <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
+                  {tab.render(rest.children)}
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </StyledTabs>
+        )}
       </div>
     </Paper>
   );
