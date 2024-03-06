@@ -69,7 +69,7 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sanitize-html": "^2.11.0",
+    "sanitize-html": "^2.12.1",
     "search-string": "^3.1.0",
     "throttle-debounce": "^2.0.0",
     "tss-react": "^4.8.2",
