@@ -20,8 +20,8 @@ vi.mock('src/hooks/useAPIRequest', () => ({
   }),
 }));
 
-vi.mock('src/queries/account/accountTransfer', () => ({
-  useAccountTransfer: vi.fn().mockReturnValue({
+vi.mock('src/queries/account/transfer', () => ({
+  useAccountNetworkTransfer: vi.fn().mockReturnValue({
     data: accountTransferFactory.build(),
     error: undefined,
     isLoading: false,
