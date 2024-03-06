@@ -135,7 +135,7 @@ const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
   })
 );
 
-const BaseRuleSchema = object({
+export const TCPRuleSchema = object({
   service_targets: array(RouteServiceTargetSchema)
     .test(
       'sum-of-percentage',
@@ -155,15 +155,9 @@ const BaseRuleSchema = object({
     .required(),
 });
 
-export const HTTPRuleSchema = BaseRuleSchema.concat(
+export const HTTPRuleSchema = TCPRuleSchema.concat(
   object({
     match_condition: HTTPMatchConditionSchema,
-  })
-);
-
-export const TCPRuleSchema = BaseRuleSchema.concat(
-  object({
-    match_condition: TCPMatchConditionSchema,
   })
 );
 
