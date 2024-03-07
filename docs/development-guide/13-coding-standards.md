@@ -15,9 +15,9 @@ If you are using VSCode it is highly recommended to use the ESlint extension. Th
 
 ## React
 
-- When conditionally rendering JSX, use ternaries instead of `&&`.
-  - Example: `condition ? <Component /> : null` instead of `condition && <Component />`
-  - This is to avoid hard-to-catch bugs ([read more](https://kentcdodds.com/blog/use-ternaries-rather-than-and-and-in-jsx)).
+[Several new hooks were introduced with the release of React 18](https://react.dev/blog/2022/03/29/react-v18#new-hooks).
+
+It should be noted that the `useId()` hook is particularly useful for generating unique IDs for accessibility attributes. Per the [docs](https://react.dev/reference/react/useId#usage), the hook should not be used for generating keys in a list.
 
 ## Event Handler Naming Convention
 
