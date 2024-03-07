@@ -267,7 +267,7 @@ describe('Parent/Child account switching', () => {
      * - Confirms that the "Switch Account" button is rendered.
      */
     describe('Enabled', () => {
-      it('renders "Switch Account" button for restricted users on billing page', () => {
+      it('renders "Switch Account" button for restricted users on Billing page', () => {
         mockGetProfile({ ...mockParentProfile, restricted: true });
         mockGetUser(mockParentUser);
         mockGetProfileGrants(childAccountAccessGrantEnabled);
@@ -303,7 +303,7 @@ describe('Parent/Child account switching', () => {
      * - Confirms that the "Switch Account" button is not rendered.
      */
     describe('Disabled', () => {
-      it('does not render "Switch Account" button for restricted users on billing page', () => {
+      it('does not render "Switch Account" button for restricted users on Billing page', () => {
         mockGetProfile({ ...mockParentProfile, restricted: true });
         mockGetUser(mockParentUser);
         mockGetProfileGrants(childAccountAccessGrantDisabled);
