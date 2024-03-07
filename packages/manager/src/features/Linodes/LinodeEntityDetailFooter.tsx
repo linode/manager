@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -34,6 +34,7 @@ export type Props = LinodeEntityDetailProps & {
 };
 
 interface FooterProps {
+  isLinodesGrantReadOnly: boolean;
   linodeCreated: string;
   linodeId: number;
   linodeLabel: string;
@@ -49,6 +50,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
 
   const {
+    isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
     linodePlan,
@@ -160,6 +162,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
               flexDirection: 'row-reverse',
             },
           }}
+          disabled={isLinodesGrantReadOnly}
           listAllTags={openTagDrawer}
           tags={linodeTags}
           updateTags={updateTags}

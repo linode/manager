@@ -107,7 +107,7 @@ export const DomainDetail = () => {
         title="Domain Details"
       />
       {location.state && location.state.recordError && (
-        <StyledNotice variant="error" text={location.state.recordError} />
+        <StyledNotice text={location.state.recordError} variant="error" />
       )}
       <StyledRootGrid container>
         <StyledMainGrid xs={12}>
@@ -123,7 +123,11 @@ export const DomainDetail = () => {
             <StyledTypography data-qa-title variant="h3">
               Tags
             </StyledTypography>
-            <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+            <TagsPanel
+              entityId={domain.id}
+              tags={domain.tags}
+              updateTags={handleUpdateTags}
+            />
           </StyledPaper>
           <StyledDiv>
             <DeleteDomain
