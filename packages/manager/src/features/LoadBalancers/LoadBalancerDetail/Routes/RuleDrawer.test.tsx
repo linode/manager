@@ -54,7 +54,7 @@ describe('RuleDrawer', () => {
 
     const hostnameField = getByLabelText('Hostname Match (optional)');
     expect(hostnameField).toHaveDisplayValue(
-      props.route.rules[0].match_condition.hostname!
+      props.route.rules[0].match_condition!.hostname!
     );
 
     const matchTypeField = getByLabelText('Match Type');
@@ -62,17 +62,17 @@ describe('RuleDrawer', () => {
 
     const matchValueField = getByLabelText('Match Value');
     expect(matchValueField).toHaveDisplayValue(
-      props.route.rules[0].match_condition.match_value
+      props.route.rules[0].match_condition!.match_value
     );
 
     const cookieField = getByLabelText('Cookie Key');
     expect(cookieField).toHaveDisplayValue(
-      props.route.rules[0].match_condition.session_stickiness_cookie!
+      props.route.rules[0].match_condition!.session_stickiness_cookie!
     );
 
     const ttlField = getByLabelText('Stickiness TTL');
     expect(ttlField).toHaveDisplayValue(
-      String(props.route.rules[0].match_condition.session_stickiness_ttl)
+      String(props.route.rules[0].match_condition!.session_stickiness_ttl)
     );
   });
 });
