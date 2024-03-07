@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import {
@@ -12,8 +13,10 @@ import {
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
+import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-
+import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 {
   /* TODO VM_Placement: 'Learn more' Link */
 }
@@ -31,15 +34,27 @@ interface DetailsPanelProps {
 }
 
 export const DetailsPanel = (props: DetailsPanelProps) => {
-  const theme = useTheme();
-  const flags = useFlags();
-  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
   const {
     error,
     labelFieldProps,
     placementGroupsSelectProps,
+    regions,
     tagsInputProps,
   } = props;
+  const theme = useTheme();
+  const flags = useFlags();
+  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
+  const { data: allPlacementGroups } = useUnpaginatedPlacementGroupsQuery(
+    showPlacementGroups
+  );
+  const [
+    isCreatePlacementGroupDrawerOpen,
+    setIsCreatePlacementGroupDrawerOpen,
+  ] = React.useState(false);
+  const selectedRegion = regions?.find(
+    (thisRegion) =>
+      thisRegion.id === placementGroupsSelectProps?.selectedRegionId
+  );
 
   return (
     <Paper
@@ -72,7 +87,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
 
       {showPlacementGroups && (
         <>
-          {!placementGroupsSelectProps?.selectedRegionId && (
+          {!selectedRegion && (
             <Notice
               dataTestId="placement-groups-no-region-notice"
               spacingBottom={0}
@@ -85,19 +100,33 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
             </Notice>
           )}
           {placementGroupsSelectProps && (
-            <Box alignItems="flex-end" display="flex">
+            <Box>
               <PlacementGroupsSelect
                 {...placementGroupsSelectProps}
                 sx={{
-                  [theme.breakpoints.down('sm')]: {
-                    width: 320,
-                  },
-                  width: '400px',
+                  mb: 1,
+                  width: '100%',
                 }}
                 textFieldProps={{ tooltipText }}
               />
+              {selectedRegion && (
+                <LinkButton
+                  isDisabled={hasRegionReachedPlacementGroupCapacity({
+                    allPlacementGroups,
+                    region: selectedRegion,
+                  })}
+                  onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
+                >
+                  Create Placement Group
+                </LinkButton>
+              )}
             </Box>
           )}
+          <PlacementGroupsCreateDrawer
+            allPlacementGroups={allPlacementGroups || []}
+            onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
+            open={isCreatePlacementGroupDrawerOpen}
+          />
         </>
       )}
     </Paper>
