@@ -22,9 +22,9 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
+import { LIMITED_AVAILABILITY_TEXT } from './constants';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
-import { LIMITED_AVAILABILITY_TEXT } from './constants';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
