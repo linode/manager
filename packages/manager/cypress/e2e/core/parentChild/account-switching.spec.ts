@@ -84,6 +84,14 @@ const mockChildAccount = accountFactory.build({
   company: 'Child Company',
 });
 
+const childAccountAccessGrantEnabled = grantsFactory.build({
+  global: { account_access: 'read_only', child_account_access: true },
+});
+
+const childAccountAccessGrantDisabled = grantsFactory.build({
+  global: { account_access: 'read_only', child_account_access: false },
+});
+
 const mockChildAccountToken = appTokenFactory.build({
   id: randomNumber(),
   created: DateTime.now().toISO(),
@@ -255,58 +263,76 @@ describe('Parent/Child account switching', () => {
 
   describe('Child Account Access', () => {
     /*
-     * - Smoke test to confirm that restricted parent users without the child_account_access grant cannot switch accounts.
-     * - Confirms that the "Switch Account" button is not rendered.
-     */
-    it('does not display the "Switch Account" button for restricted parent account users without child_account_access grant', () => {
-      const mockProfile = profileFactory.build({
-        restricted: true,
-        user_type: 'parent',
-        username: 'restricted-parent-user',
-      });
-
-      const mockUser = accountUserFactory.build({
-        username: 'restricted-parent-user',
-      });
-
-      const mockUserGrants = grantsFactory.build({
-        global: { account_access: 'read_only', child_account_access: false },
-      });
-
-      mockGetProfile(mockProfile);
-      mockGetUser(mockUser);
-      mockGetProfileGrants(mockUserGrants);
-
-      cy.visitWithLogin('/account/billing');
-
-      cy.findByTestId('switch-account-button').should('not.exist');
-    });
-    /*
      * - Smoke test to confirm that restricted parent users with the child_account_access grant can switch accounts.
      * - Confirms that the "Switch Account" button is rendered.
      */
-    it('displays the "Switch Account" button for restricted parent account users with child_account_access grant', () => {
-      const mockProfile = profileFactory.build({
-        restricted: true,
-        user_type: 'parent',
-        username: 'restricted-parent-user',
+    describe('Enabled', () => {
+      it('renders "Switch Account" button for restricted users on billing page', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantEnabled);
+
+        cy.visitWithLogin('/account/billing');
+
+        cy.findByTestId('switch-account-button').should('be.visible');
       });
 
-      const mockUser = accountUserFactory.build({
-        username: 'restricted-parent-user',
+      it('renders "Switch Account" button for restricted users in user menu', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetAccount(mockParentAccount);
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantEnabled);
+
+        cy.visitWithLogin('/');
+
+        assertUserMenuButton(
+          mockParentProfile.username,
+          mockParentAccount.company
+        ).click();
+
+        ui.userMenu
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByTestId('switch-account-button').should('be.visible');
+          });
+      });
+    });
+    /*
+     * - Smoke test to confirm that restricted parent users without the child_account_access grant cannot switch accounts.
+     * - Confirms that the "Switch Account" button is not rendered.
+     */
+    describe('Disabled', () => {
+      it('does not render "Switch Account" button for restricted users on billing page', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantDisabled);
+
+        cy.visitWithLogin('/account/billing');
+
+        cy.findByTestId('switch-account-button').should('not.exist');
       });
 
-      const mockUserGrants = grantsFactory.build({
-        global: { account_access: 'read_only', child_account_access: true },
+      it('does not render "Switch Account" button for restricted users in user menu', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetAccount(mockParentAccount);
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantDisabled);
+
+        cy.visitWithLogin('/');
+
+        assertUserMenuButton(
+          mockParentProfile.username,
+          mockParentAccount.company
+        ).click();
+
+        ui.userMenu
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByTestId('switch-account-button').should('not.exist');
+          });
       });
-
-      mockGetProfile(mockProfile);
-      mockGetUser(mockUser);
-      mockGetProfileGrants(mockUserGrants);
-
-      cy.visitWithLogin('/account/billing');
-
-      cy.findByTestId('switch-account-button').should('be.visible');
     });
   });
 
