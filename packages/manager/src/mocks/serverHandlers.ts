@@ -671,8 +671,8 @@ export const handlers = [
     });
     const linodeInEdgeRegion = linodeFactory.build({
       image: 'edge-test-image',
-      label: 'edge-test-region',
-      region: 'us-southeast',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
