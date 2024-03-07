@@ -37,13 +37,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const { data: allLinodesInRegion, error: linodesError } = useAllLinodesQuery(
     {},
     {
-      '+or': [
-        {
-          region: selectedPlacementGroup?.region,
-        },
-      ],
-    },
-    open
+      region: selectedPlacementGroup?.region,
+    }
   );
   const {
     data: allPlacementGroups,

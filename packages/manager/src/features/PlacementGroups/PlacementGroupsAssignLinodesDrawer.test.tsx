@@ -65,7 +65,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       />
     );
 
-    expect(container).toBeEmptyDOMElement;
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('should render the drawer components', () => {

@@ -31,7 +31,9 @@ export const usePlacementGroupData = ({
   const { data: linodes, error, isLoading } = useAllLinodesQuery(
     {},
     {
-      '+or': placementGroup?.linodes.filter(({ linode }) => linode),
+      '+or': placementGroup?.linodes.map((linodeItem) => ({
+        id: linodeItem.linode,
+      })),
     }
   );
   const { data: regions } = useRegionsQuery();
