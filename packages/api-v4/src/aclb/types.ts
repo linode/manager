@@ -61,7 +61,7 @@ export interface Route {
   label: string;
   protocol: RouteProtocol;
   rules: {
-    match_condition: MatchCondition;
+    match_condition?: MatchCondition;
     service_targets: {
       id: number;
       label: string;
@@ -83,7 +83,7 @@ export interface CreateRoutePayload {
 }
 
 export interface Rule {
-  match_condition: MatchCondition;
+  match_condition?: MatchCondition;
   service_targets: {
     id: number;
     label: string;
@@ -92,7 +92,7 @@ export interface Rule {
 }
 
 export interface RulePayload {
-  match_condition: MatchCondition;
+  match_condition?: MatchCondition;
   service_targets: {
     id: number;
     label: string;
