@@ -13,10 +13,16 @@ interface Props {
   backupsMonthlyPrice?: PriceObject['monthly'];
   disabled: boolean;
   linodeId: number;
+  linodeIsInEdgeRegion?: boolean;
 }
 
 export const BackupsPlaceholder = React.memo((props: Props) => {
-  const { backupsMonthlyPrice, disabled, linodeId } = props;
+  const {
+    backupsMonthlyPrice,
+    disabled,
+    linodeId,
+    linodeIsInEdgeRegion,
+  } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -44,10 +50,14 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
         buttonProps={[
           {
             children: 'Enable Backups',
-            disabled,
+            disabled: disabled || linodeIsInEdgeRegion,
             onClick: () => setDialogOpen(true),
+            tooltipText: linodeIsInEdgeRegion
+              ? 'Backups are currently not available for Edge regions.'
+              : undefined,
           },
         ]}
+        data-testid="backups"
         icon={VolumeIcon}
         isEntity
         renderAsSecondary

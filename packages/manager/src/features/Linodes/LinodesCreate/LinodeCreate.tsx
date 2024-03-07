@@ -23,6 +23,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -467,6 +468,11 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
+    const isEdgeRegionSelected = Boolean(
+      flags.gecko &&
+        getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
+    );
+
     return (
       <StyledForm>
         <Grid className="py0">
@@ -732,6 +738,7 @@ export class LinodeCreate extends React.PureComponent<
             handleVLANChange={this.props.handleVLANChange}
             ipamAddress={this.props.ipamAddress || ''}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
+            isEdgeRegionSelected={isEdgeRegionSelected}
             isPrivateIPChecked={this.props.privateIPEnabled}
             labelError={hasErrorFor['interfaces[1].label']}
             linodesData={this.props.linodesData}
