@@ -258,7 +258,7 @@ describe('Parent/Child account switching', () => {
      * - Smoke test to confirm that restricted parent users without the child_account_access grant cannot switch accounts.
      * - Confirms that the "Switch Account" button is not rendered.
      */
-    it('does not display the "Switch Account" button for parent account users without child_account_access grant', () => {
+    it('does not display the "Switch Account" button for restricted parent account users without child_account_access grant', () => {
       const mockProfile = profileFactory.build({
         restricted: true,
         user_type: 'parent',
@@ -285,7 +285,7 @@ describe('Parent/Child account switching', () => {
      * - Smoke test to confirm that restricted parent users with the child_account_access grant can switch accounts.
      * - Confirms that the "Switch Account" button is rendered.
      */
-    it('displays the "Switch Account" button for parent account users with child_account_access grant', () => {
+    it('displays the "Switch Account" button for restricted parent account users with child_account_access grant', () => {
       const mockProfile = profileFactory.build({
         restricted: true,
         user_type: 'parent',
