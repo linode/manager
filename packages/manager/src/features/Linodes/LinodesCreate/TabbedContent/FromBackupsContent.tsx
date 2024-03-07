@@ -26,10 +26,6 @@ export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
 
-interface Props {
-  disabled?: boolean;
-}
-
 interface State {
   backupInfo: Info;
   backupsError?: string;
@@ -37,8 +33,7 @@ interface State {
   selectedLinodeWithBackups?: LinodeWithBackups;
 }
 
-export type CombinedProps = Props &
-  BackupFormStateHandlers &
+export type CombinedProps = BackupFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
@@ -69,13 +64,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   render() {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
-      disabled,
       errors,
       linodesData,
       regionsData,
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
+      userCannotCreateLinode,
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(errorResources, errors);
@@ -112,7 +107,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                           the same password and SSH Keys (if any) as the original Linode.`,
                 'This Linode will need to be manually booted after it finishes provisioning.',
               ]}
-              disabled={disabled}
+              disabled={userCannotCreateLinode}
               error={hasErrorFor('linode_id')}
               handleSelection={this.handleLinodeSelect}
               linodes={filterLinodesWithBackups(linodesData)}

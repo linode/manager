@@ -79,33 +79,47 @@ This works, but has a few disadvantages:
 
 A better way to fetch data is to use React Query. It address the issues listed above and has many additional features.
 
-To fetch data with React Query, check to see if the API method you want to use has a query written for it in `packages/manager/src/queries`. If not, feel free to write one. It should look something like this:
+To fetch data with React Query:
+
+- Create an `@linode/api-v4` function that calls the intended Linode API endpoint.
+- Create a query key factory that uses the newly created `@linode/api-v4` function.
+- Create a hook that wraps `useQuery` and uses the query key factory.
 
 ```ts
-import { getProfile, Profile } from "@linode/api-v4/lib/profile";
-import { APIError } from "@linode/api-v4/lib/types";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
+import { getProfile } from "@linode/api-v4";
+import type { APIError, Profile } from "@linode/api-v4";
 
-const queryKey = "profile";
+const profileQueries = createQueryKeys('profile', {
+  profile: {
+    queryFn: getProfile,
+    queryKey: null,
+  },
+});
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>(queryKey, getProfile);
+  useQuery<Profile, APIError[]>(profileQueries.profile);
 ```
 
 The first time `useProfile()` is called, the data is fetched from the API. On subsequent calls, the data is retrieved from the in-memory cache.
 
-`useQuery` accepts a third "options" parameter, which can be used to specify cache time (among others things). For example, to specify that the cache should never expire for this query:
+`useQuery` accepts options which can be used to specify cache time (among others things). For example, to specify that the cache should never expire for this query:
 
 ```ts
 import { queryPresets } from "src/queries/base";
-// ...other imports
+
+const profileQueries = createQueryKeys('profile', {
+  profile: {
+    queryFn: getProfile,
+    queryKey: null,
+  },
+})
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>(
-    queryKey,
-    getProfile,
-    queryPresets.oneTimeFetch
-  );
+  useQuery<Profile, APIError[]>({
+    ...profileQueries.profile,
+    ...queryPresets.oneTimeFetch,
+  });
 ```
 
 Loading and error states are managed by React Query. The earlier username display example becomes greatly simplified:

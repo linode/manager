@@ -7,6 +7,8 @@ import PointerIcon from 'src/assets/icons/pointer.svg';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
@@ -22,6 +24,10 @@ const APPS_MORE_LINKS_TEXT = 'See all Marketplace apps';
 
 export const LinodesLandingEmptyState = () => {
   const { push } = useHistory();
+
+  const isLinodesGrantReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   return (
     <ResourcesSection
@@ -48,6 +54,7 @@ export const LinodesLandingEmptyState = () => {
       buttonProps={[
         {
           children: 'Create Linode',
+          disabled: isLinodesGrantReadOnly,
           onClick: () => {
             push('/linodes/create');
             sendEvent({
@@ -56,6 +63,11 @@ export const LinodesLandingEmptyState = () => {
               label: 'Create Linode',
             });
           },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Linodes',
+          }),
         },
       ]}
       descriptionMaxWidth={500}

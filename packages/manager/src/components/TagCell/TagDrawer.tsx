@@ -15,11 +15,11 @@ export interface TagDrawerProps {
 }
 
 const TagDrawer = (props: TagDrawerProps) => {
-  const { entityLabel, onClose, open, tags, updateTags } = props;
+  const { entityID, entityLabel, onClose, open, tags, updateTags } = props;
 
   return (
     <Drawer onClose={onClose} open={open} title={`Tags (${entityLabel})`}>
-      <TagsPanel tags={tags} updateTags={updateTags} />
+      <TagsPanel entityId={entityID} tags={tags} updateTags={updateTags} />
     </Drawer>
   );
 };

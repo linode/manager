@@ -23,7 +23,6 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { BackupTableRow } from './BackupTableRow';
 import { BackupsPlaceholder } from './BackupsPlaceholder';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
@@ -118,7 +117,6 @@ export const LinodeBackups = () => {
 
   return (
     <Stack spacing={2}>
-      {doesNotHavePermission && <LinodePermissionsError />}
       <Paper style={{ padding: 0 }}>
         <Table aria-label="List of Backups">
           <TableHead>

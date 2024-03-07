@@ -7,7 +7,6 @@ import { Currency } from 'src/components/Currency';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
 interface Props {
@@ -47,7 +46,6 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
 
   return (
     <>
-      {disabled && <LinodePermissionsError />}
       <StyledPlaceholder
         buttonProps={[
           {
