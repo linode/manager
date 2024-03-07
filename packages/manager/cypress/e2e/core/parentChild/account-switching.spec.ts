@@ -306,7 +306,7 @@ describe('Parent/Child account switching', () => {
 
       cy.visitWithLogin('/account/billing');
 
-      cy.get('[data-testid="switch-account-button"]').should('be.visible');
+      cy.findByTestId('switch-account-button').should('be.visible');
     });
   });
 
