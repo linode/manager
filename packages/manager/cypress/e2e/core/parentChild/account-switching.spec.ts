@@ -1,16 +1,23 @@
 import {
   accountFactory,
   appTokenFactory,
+  paymentMethodFactory,
   profileFactory,
 } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { DateTime } from 'luxon';
 import {
+  interceptGetInvoices,
+  interceptGetPayments,
+  interceptGetPaymentMethods,
   mockCreateChildAccountToken,
   mockCreateChildAccountTokenError,
   mockGetAccount,
   mockGetChildAccounts,
   mockGetChildAccountsError,
+  mockGetInvoices,
+  mockGetPaymentMethods,
+  mockGetPayments,
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
@@ -80,6 +87,16 @@ const mockChildAccount = accountFactory.build({
   company: 'Child Company',
 });
 
+const mockChildAccountProxyUser = accountUserFactory.build({
+  username: 'Partner User',
+  user_type: 'proxy',
+});
+
+const mockChildAccountProfile = profileFactory.build({
+  username: mockChildAccountProxyUser.username,
+  user_type: 'proxy',
+});
+
 const mockChildAccountToken = appTokenFactory.build({
   id: randomNumber(),
   created: DateTime.now().toISO(),
@@ -94,6 +111,77 @@ const mockChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
+  /**
+   * Tests to confirm that Parent account users can switch back from Child accounts as expected.
+   */
+  describe('From Proxy to Parent', () => {
+    beforeEach(() => {
+      mockAppendFeatureFlags({
+        parentChildAccountAccess: makeFeatureFlagData(true),
+      });
+      mockGetFeatureFlagClientstream();
+    });
+
+    it.only('can switch from Child account to Parent account from Billing page', () => {
+      const mockParentToken = randomString(32);
+
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockChildAccountProfile);
+      mockGetChildAccounts([mockParentAccount]);
+      mockGetUser(mockChildAccountProxyUser);
+      interceptGetPayments().as('getPayments');
+      interceptGetPaymentMethods().as('getPaymentMethods');
+      interceptGetInvoices().as('getInvoices');
+
+      // Visit billing page with `authentication/parent_token/*` local storage
+      // data set to mock values.
+      cy.visitWithLogin('/account/billing', {
+        localStorageOverrides: {
+          'authentication/parent_token/token': `Bearer ${mockParentToken}`,
+          'authentication/parent_token/expire':
+            'Thu Mar 07 2024 16:59:36 GMT-0500 (Eastern Standard Time)',
+          'authentication/parent_token/scopes': '*',
+        },
+      });
+
+      // Wait for page to finish loading before proceeding with account switch.
+      cy.wait(['@getPayments', '@getPaymentMethods', '@getInvoices']);
+
+      ui.button
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // Prepare mocks in advance of the account switch. As soon as the child account is clicked,
+      // Cloud will replace its stored token with the token provided by the API and then reload.
+      // From that point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+      mockGetAccount(mockParentAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+      mockGetPaymentMethods(paymentMethodFactory.buildList(1));
+      mockGetInvoices([]);
+      mockGetPayments([]);
+
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(mockParentAccount.company).should('be.visible').click();
+        });
+
+      cy.wait(1000000);
+    });
+  });
+
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
@@ -138,8 +226,11 @@ describe('Parent/Child account switching', () => {
       mockGetEvents([]);
       mockGetNotifications([]);
       mockGetAccount(mockChildAccount);
-      mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
+      mockGetProfile(mockChildAccountProfile);
+      mockGetUser(mockChildAccountProxyUser);
+      mockGetPaymentMethods(paymentMethodFactory.buildList(1));
+      mockGetInvoices([]);
+      mockGetPayments([]);
 
       // Mock the account switch itself -- we have to do this after the mocks above
       // to ensure that it is applied.
@@ -166,8 +257,12 @@ describe('Parent/Child account switching', () => {
 
       // Confirm expected username and company are shown in user menu button.
       assertUserMenuButton(
-        mockParentProfile.username,
+        mockChildAccountProxyUser.username,
         mockChildAccount.company
+      );
+
+      ui.toast.assertMessage(
+        `Account switched to ${mockChildAccount.company}.`
       );
     });
 
