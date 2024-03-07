@@ -709,6 +709,7 @@ export class LinodeCreate extends React.PureComponent<
                   <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
                 </Typography>
               }
+              disabled={userCannotCreateLinode}
               entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
               selectedFirewallId={this.props.firewallId || -1}
