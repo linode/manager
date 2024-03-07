@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -72,6 +73,8 @@ export const LinodeEntityDetail = (props: Props) => {
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
 
+  const linodeIsInEdgeRegion = getIsEdgeRegion(regions ?? [], linode.region);
+
   let progress;
   let transitionText;
 
@@ -94,6 +97,7 @@ export const LinodeEntityDetail = (props: Props) => {
           ipv6={trimmedIPv6}
           isVPCOnlyLinode={isVPCOnlyLinode}
           linodeId={linode.id}
+          linodeIsInEdgeRegion={linodeIsInEdgeRegion}
           linodeLabel={linode.label}
           numCPUs={linode.specs.vcpus}
           numVolumes={numberOfVolumes}
