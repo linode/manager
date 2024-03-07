@@ -44,6 +44,6 @@ describe('Images empty landing page', () => {
       .should('be.enabled')
       .click();
 
-    cy.url().should('endWith', '/images/create');
+    cy.url().should('endWith', '/images/create/disk');
   });
 });
