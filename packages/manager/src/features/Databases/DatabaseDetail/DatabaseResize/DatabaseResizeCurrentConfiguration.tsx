@@ -8,11 +8,11 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-
+import { getResizeProgress } from '../../utilities';
 import {
   databaseEngineMap,
   databaseStatusMap,
@@ -47,16 +47,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   const type = types?.find((type) => type.id === database?.type);
 
   const { data: events } = useInProgressEvents();
-
-  const recentEvent = events?.find(
-    (event) =>
-      event.entity?.id === database.id && event.entity.type === 'database'
-  );
-  let progress;
-  if (recentEvent?.action === 'database_resize') {
-    progress = recentEvent?.percent_complete ?? 0;
-    database.status = 'resizing';
-  }
+  const progress = getResizeProgress(database, events);
 
   if (typesLoading) {
     return <CircleProgress />;
@@ -102,7 +93,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
                 sx={{ verticalAlign: 'sub' }}
               />
               {database.status +
-                (progress != undefined ? ' (' + progress + '%)' : '')}
+                (progress !== undefined ? ' (' + progress + '%)' : '')}
             </StyledStatusSpan>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>

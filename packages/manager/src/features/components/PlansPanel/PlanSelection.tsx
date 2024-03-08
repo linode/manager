@@ -60,7 +60,7 @@ const getToolTip = (
   sizeTooSmall: boolean,
   planIsDisabled?: boolean,
   disabledToolTip?: string
-) => {
+): string | undefined => {
   if (planIsDisabled) {
     return disabledToolTip;
   } else if (sizeTooSmall) {

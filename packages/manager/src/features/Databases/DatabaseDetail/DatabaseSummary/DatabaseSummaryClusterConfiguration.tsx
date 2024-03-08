@@ -9,10 +9,10 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-
-import { useInProgressEvents } from 'src/queries/events/events';
+import { getResizeProgress } from '../../utilities';
 
 import {
   databaseEngineMap,
@@ -60,16 +60,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   const type = types?.find((type) => type.id === database?.type);
 
   const { data: events } = useInProgressEvents();
-
-  const recentEvent = events?.find(
-    (event) =>
-      event.entity?.id === database.id && event.entity.type === 'database'
-  );
-  let progress;
-  if (recentEvent?.action === 'database_resize') {
-    progress = recentEvent?.percent_complete ?? 0;
-    database.status = 'resizing';
-  }
+  const progress = getResizeProgress(database, events);
 
   if (!database || !type) {
     return null;
@@ -99,7 +90,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           <span className={classes.status}>
             <StatusIcon status={databaseStatusMap[database.status]} />
             {database.status +
-              (progress != undefined ? ' (' + progress + '%)' : '')}
+              (progress !== undefined ? ' (' + progress + '%)' : '')}
           </span>
         </Box>
         <Box display="flex">

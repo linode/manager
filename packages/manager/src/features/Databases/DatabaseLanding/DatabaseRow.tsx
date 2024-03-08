@@ -1,4 +1,5 @@
 import {
+  Database,
   DatabaseInstance,
   DatabaseStatus,
   Engine,
@@ -15,6 +16,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+import { getResizeProgress } from '../utilities';
 import { Event } from '@linode/api-v4';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
@@ -37,7 +39,7 @@ export const databaseEngineMap: Record<Engine, string> = {
 };
 
 interface Props {
-  database: DatabaseInstance;
+  database: DatabaseInstance | Database;
   events?: Event[];
 }
 
@@ -57,15 +59,7 @@ export const DatabaseRow = ({ database, events }: Props) => {
 
   const actualRegion = regions?.find((r) => r.id === region);
 
-  const recentEvent = events?.find(
-    (event) =>
-      event.entity?.id === database.id && event.entity.type === 'database'
-  );
-  let progress;
-  if (recentEvent?.action === 'database_resize') {
-    progress = recentEvent?.percent_complete ?? 0;
-    database.status = 'resizing';
-  }
+  const progress = getResizeProgress(database, events);
 
   const status = database.status;
 
@@ -96,7 +90,7 @@ export const DatabaseRow = ({ database, events }: Props) => {
       <TableCell statusCell>
         <StatusIcon status={databaseStatusMap[status]} />
         {capitalize(database.status) +
-          (progress != undefined ? ' (' + progress + '%)' : '')}
+          (progress !== undefined ? ' (' + progress + '%)' : '')}
       </TableCell>
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>

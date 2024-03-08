@@ -118,7 +118,7 @@ describe('database resize', () => {
         'false'
       );
       fireEvent.click(resizeButton);
-      getByText(`Resize ${database.label}?`);
+      getByText(`Resize Database Cluster ${database.label}?`);
     });
   });
 });

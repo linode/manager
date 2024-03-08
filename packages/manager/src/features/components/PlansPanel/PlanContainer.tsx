@@ -47,8 +47,8 @@ export interface Props {
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
-  disabledTypes?: PlanSelectionType[];
-  disabledTypesToolTip?: string;
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTip?: string;
 }
 
 export const PlanContainer = (props: Props) => {
@@ -65,8 +65,8 @@ export const PlanContainer = (props: Props) => {
     selectedId,
     selectedRegionId,
     showTransfer,
-    disabledTypes,
-    disabledTypesToolTip,
+    disabledPlanTypes,
+    disabledPlanTypesToolTip,
   } = props;
   const location = useLocation();
 
@@ -90,7 +90,7 @@ export const PlanContainer = (props: Props) => {
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
       const planIsDisabled =
-        disabledTypes?.find((element) => element === plan) != undefined;
+        disabledPlanTypes?.find((element) => element === plan) !== undefined;
       const isPlanSoldOut = getIsPlanSoldOut({
         plan,
         regionAvailabilities,
@@ -117,7 +117,7 @@ export const PlanContainer = (props: Props) => {
           showTransfer={showTransfer}
           type={plan}
           planIsDisabled={planIsDisabled}
-          disabledToolTip={disabledTypesToolTip}
+          disabledToolTip={disabledPlanTypesToolTip}
         />
       );
     });

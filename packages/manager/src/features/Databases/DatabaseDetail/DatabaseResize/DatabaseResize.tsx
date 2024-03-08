@@ -72,12 +72,9 @@ export const DatabaseResize = ({ database }: Props) => {
     updateDatabase({
       type: planSelected,
     }).then(() => {
-      enqueueSnackbar(
-        `Your database cluster ${database.label} is being resized.`,
-        {
-          variant: 'info',
-        }
-      );
+      enqueueSnackbar(`Database cluster ${database.label} is being resized.`, {
+        variant: 'info',
+      });
       history.push(`/databases/${database.engine}/${database.id}`);
     });
   };
@@ -205,7 +202,7 @@ export const DatabaseResize = ({ database }: Props) => {
   const disabledPlans = displayTypes?.filter(
     (type) =>
       type.disk < (currentPlan ? currentPlan.disk : 0) ||
-      (currentPlan?.class == 'dedicated' && type.disk == currentPlan?.disk)
+      (currentPlan?.class === 'dedicated' && type.disk === currentPlan?.disk)
   );
   if (typesLoading) {
     return <CircleProgress />;
@@ -226,8 +223,8 @@ export const DatabaseResize = ({ database }: Props) => {
         <StyledPlansPanel
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
-          disabledTypes={disabledPlans}
-          disabledTypesToolTip="Resizing to smaller plans is not supported."
+          disabledPlanTypes={disabledPlans}
+          disabledPlanTypesToolTip="Resizing to smaller plans is not supported."
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}
