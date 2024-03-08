@@ -607,7 +607,6 @@ export class LinodeCreate extends React.PureComponent<
               error={hasErrorFor.region}
               handleSelection={this.props.updateRegionID}
               helperText={this.props.regionHelperText}
-              regions={regionsData!}
               selectedId={this.props.selectedRegionID}
               selectedLinodeTypeId={this.props.selectedTypeID}
             />
@@ -857,7 +856,7 @@ export class LinodeCreate extends React.PureComponent<
         ? placement_group_payload
         : undefined,
       private_ip: this.props.privateIPEnabled,
-      region: this.props.selectedRegionID,
+      region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,
       stackscript_data: this.props.selectedUDFs,
 
@@ -866,7 +865,7 @@ export class LinodeCreate extends React.PureComponent<
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
-      type: this.props.selectedTypeID,
+      type: this.props.selectedTypeID ?? '',
     };
 
     if (
@@ -957,7 +956,7 @@ export class LinodeCreate extends React.PureComponent<
       image: this.props.selectedImageID,
       label: this.props.label,
       private_ip: this.props.privateIPEnabled,
-      region: this.props.selectedRegionID,
+      region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,
       stackscript_data: this.props.selectedUDFs,
       // StackScripts
@@ -966,7 +965,7 @@ export class LinodeCreate extends React.PureComponent<
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
-      type: this.props.selectedTypeID,
+      type: this.props.selectedTypeID ?? '',
     };
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     this.props.checkValidation(payload);

@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
@@ -55,8 +54,6 @@ export const PlansPanel = (props: Props) => {
     showTransfer,
     types,
   } = props;
-
-  const theme = useTheme();
 
   const plans = getPlanSelectionsByPlanType(types);
   const {
@@ -119,7 +116,7 @@ export const PlansPanel = (props: Props) => {
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
-      sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      sx={{ width: '100%' }}
       tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
