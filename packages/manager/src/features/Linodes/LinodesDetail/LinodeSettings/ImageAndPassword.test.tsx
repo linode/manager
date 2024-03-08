@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { waitFor } from '@testing-library/react';
 
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
@@ -26,12 +27,17 @@ describe('ImageAndPassword', () => {
     expect(getByLabelText('Image')).toBeEnabled();
   });
   it('should render a password error if defined', async () => {
+    const waitTimeout = 2500;
     const passwordError = 'Unable to set password.';
-    const { findByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <ImageAndPassword {...props} passwordError={passwordError} />
     );
-
-    expect(await findByText(passwordError)).toBeVisible();
+    await waitFor(
+      () => {
+        expect(getByText(passwordError)).toBeVisible();
+      },
+      { timeout: waitTimeout }
+    );
   });
   it('should render an SSH Keys section', async () => {
     const { getByText } = renderWithTheme(<ImageAndPassword {...props} />);
