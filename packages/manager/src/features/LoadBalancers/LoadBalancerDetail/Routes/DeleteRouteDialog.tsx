@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const DeleteRouteDialog = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open, route } = props;
+  const { loadbalancerId, onClose, open, route } = props;
 
   const {
     error,
@@ -23,16 +23,16 @@ export const DeleteRouteDialog = (props: Props) => {
     reset,
   } = useLoadBalancerRouteDeleteMutation(loadbalancerId, route?.id ?? -1);
 
-  const onClose = () => {
+  const handleClose = () => {
     // Clear the error when the dialog closes so that is does not persist
     reset();
-    _onClose();
+    onClose();
   };
 
   const onDelete = async () => {
     try {
       await mutateAsync();
-      onClose();
+      handleClose();
     } catch (error) {
       // Swallow error
     }
@@ -49,12 +49,12 @@ export const DeleteRouteDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Route ${route?.label}?`}
     >

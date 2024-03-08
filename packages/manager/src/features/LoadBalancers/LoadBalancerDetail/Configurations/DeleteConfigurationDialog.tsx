@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const DeleteConfigurationDialog = (props: Props) => {
-  const { configuration, loadbalancerId, onClose: _onClose, open } = props;
+  const { configuration, loadbalancerId, onClose, open } = props;
 
   const {
     error,
@@ -26,16 +26,16 @@ export const DeleteConfigurationDialog = (props: Props) => {
     configuration.id
   );
 
-  const onClose = () => {
+  const handleClose = () => {
     // Clear the error when the dialog closes so that is does not persist
     reset();
-    _onClose();
+    onClose();
   };
 
   const onDelete = async () => {
     try {
       await mutateAsync();
-      onClose();
+      handleClose();
     } catch (error) {
       // Swallow error
     }
@@ -52,12 +52,12 @@ export const DeleteConfigurationDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Configuration ${configuration.label}?`}
     >

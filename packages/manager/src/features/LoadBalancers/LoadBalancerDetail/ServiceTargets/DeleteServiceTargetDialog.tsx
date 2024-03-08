@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const DeleteServiceTargetDialog = (props: Props) => {
-  const { loadbalancerId, onClose: _onClose, open, serviceTarget } = props;
+  const { loadbalancerId, onClose, open, serviceTarget } = props;
 
   const {
     error,
@@ -25,16 +25,16 @@ export const DeleteServiceTargetDialog = (props: Props) => {
     serviceTarget?.id ?? -1
   );
 
-  const onClose = () => {
+  const handleClose = () => {
     // Clear the error when the dialog closes so that is does not persist
     reset();
-    _onClose();
+    onClose();
   };
 
   const onDelete = async () => {
     try {
       await mutateAsync();
-      onClose();
+      handleClose();
     } catch (error) {
       // Swallow error
     }
@@ -51,12 +51,12 @@ export const DeleteServiceTargetDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Service Target ${serviceTarget?.label}?`}
     >
