@@ -58,7 +58,7 @@ const newAccountData = accountFactory.build({
 
 const checkAccountContactDisplay = (accountInfo: Account) => {
   cy.findByText('Billing Contact').should('be.visible');
-  cy.findByText(accountInfo['company'] as string).should('be.visible');
+  cy.findByText(accountInfo['company']).should('be.visible');
   cy.get('[data-qa-contact-name]').should('be.visible');
   cy.findByText(accountInfo['first_name'], { exact: false });
   cy.findByText(accountInfo['last_name'], { exact: false });
@@ -103,7 +103,7 @@ describe('Billing Contact', () => {
           .should('be.visible')
           .click()
           .clear()
-          .type(newAccountData['company'] as string);
+          .type(newAccountData['company']);
         cy.findByLabelText('Address')
           .should('be.visible')
           .click()

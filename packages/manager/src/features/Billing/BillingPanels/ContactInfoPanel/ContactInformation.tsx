@@ -22,7 +22,7 @@ interface Props {
   address1: string;
   address2: string;
   city: string;
-  company: null | string;
+  company: string;
   country: string;
   email: string;
   firstName: string;

@@ -66,11 +66,8 @@ const assertAuthLocalStorage = (
   assertLocalStorageValue('authentication/scopes', scopes);
 };
 
-const PARENT_COMPANY_NAME = 'Parent Company';
-const CHILD_COMPANY_NAME = 'Child Company';
-
 const mockParentAccount = accountFactory.build({
-  company: PARENT_COMPANY_NAME,
+  company: 'Parent Company',
 });
 
 const mockParentProfile = profileFactory.build({
@@ -84,7 +81,7 @@ const mockParentUser = accountUserFactory.build({
 });
 
 const mockChildAccount = accountFactory.build({
-  company: CHILD_COMPANY_NAME,
+  company: 'Child Company',
 });
 
 const childAccountAccessGrantEnabled = grantsFactory.build({
@@ -166,7 +163,7 @@ describe('Parent/Child account switching', () => {
         .findByTitle('Switch Account')
         .should('be.visible')
         .within(() => {
-          cy.findByText(CHILD_COMPANY_NAME).should('be.visible').click();
+          cy.findByText(mockChildAccount.company).should('be.visible').click();
         });
 
       cy.wait('@switchAccount');
@@ -180,7 +177,10 @@ describe('Parent/Child account switching', () => {
       );
 
       // Confirm expected username and company are shown in user menu button.
-      assertUserMenuButton(mockParentProfile.username, CHILD_COMPANY_NAME);
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockChildAccount.company
+      );
     });
 
     /*
@@ -201,7 +201,7 @@ describe('Parent/Child account switching', () => {
       // menu button, then click the button.
       assertUserMenuButton(
         mockParentProfile.username,
-        PARENT_COMPANY_NAME
+        mockParentAccount.company
       ).click();
 
       // Click "Switch Account" button in user menu.
@@ -240,7 +240,7 @@ describe('Parent/Child account switching', () => {
         .findByTitle('Switch Account')
         .should('be.visible')
         .within(() => {
-          cy.findByText(CHILD_COMPANY_NAME).should('be.visible').click();
+          cy.findByText(mockChildAccount.company).should('be.visible').click();
         });
 
       cy.wait('@switchAccount');
@@ -254,7 +254,10 @@ describe('Parent/Child account switching', () => {
       );
 
       // Confirm expected username and company are shown in user menu button.
-      assertUserMenuButton(mockParentProfile.username, CHILD_COMPANY_NAME);
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockChildAccount.company
+      );
     });
   });
 
@@ -376,7 +379,7 @@ describe('Parent/Child account switching', () => {
           // Click child company and mock an error.
           // Confirm that Cloud Manager displays the error message in the drawer.
           mockCreateChildAccountTokenError(mockChildAccount, mockErrorMessage);
-          cy.findByText(CHILD_COMPANY_NAME).click();
+          cy.findByText(mockChildAccount.company).click();
           cy.findByText(mockErrorMessage).should('be.visible');
         });
     });
