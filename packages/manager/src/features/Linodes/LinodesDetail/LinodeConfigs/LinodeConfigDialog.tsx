@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -391,7 +391,7 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries(vlansQueryKey);
+        queryClient.invalidateQueries([vlansQueryKey]);
       }
 
       // Ensure VPC query data is up-to-date
@@ -400,7 +400,7 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vpc'
         )
       ) {
-        queryClient.invalidateQueries(vpcQueryKey);
+        queryClient.invalidateQueries([vpcQueryKey]);
       }
 
       enqueueSnackbar(
@@ -451,7 +451,7 @@ export const LinodeConfigDialog = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       // Ensure VLANs are fresh.
-      queryClient.invalidateQueries(vlansQueryKey);
+      queryClient.invalidateQueries([vlansQueryKey]);
 
       /**
        * If config is defined, we're editing. Set the state

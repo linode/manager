@@ -42,13 +42,13 @@ describe('Kubernetes deletion dialog', () => {
     );
     const button = getByTestId('confirm');
 
-    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(button).toBeDisabled;
 
     await findByTestId('textfield-input');
 
     const input = getByTestId('textfield-input');
     fireEvent.change(input, { target: { value: 'this-cluster' } });
 
-    expect(button).toHaveAttribute('aria-disabled', 'false');
+    expect(button).toBeEnabled();
   });
 });
