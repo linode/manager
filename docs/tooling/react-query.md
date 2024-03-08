@@ -57,6 +57,11 @@ export const useLinodeQuery = (id: number) =>
   useQuery<Linode, APIError[]>(linodeQueries.linode(1));
 ```
 
+### Additional Reading on Query Keys
+
+- https://tkdodo.eu/blog/effective-react-query-keys#effective-react-query-keys
+- https://tanstack.com/query/latest/docs/framework/react/guides/query-keys
+
 ## Maintaining the Cache
 
 A significant challenge of React Query is keeping the client state in sync with the server. 
@@ -147,3 +152,17 @@ export const useCreateLinodeMutation = () => {
   });
 }
 ```
+
+## Frequently Asked Questions
+
+### Are we storing dupdate data in the cache? Why?
+
+Yes, there is potential for the same data to exist many times in the cache.
+
+For example, we have a query `useVolumesQuery` with the query key `["volumes", "paginated", { page: 1 }]` that contains the first 100 volumes on your account.
+One of those same volumes could also be stored in the cache by using `useVolumeQuery` with query key `["linodes", "linode", 5]`.
+This creates a senerio where the same volume is cached by React Query under multiple query keys.
+
+This is a legitimate disadvantage of React Query's caching strategy. **We must be aware of this when we perform cache updates (using invalidations or manually updating the cache) so that the entity is update everywhere in the cache.**
+
+Some data fetching tools like Apollo Client are able to intelligently detect duplicate entities and merge them. React Query does not do this. See [this tweet](https://twitter.com/tannerlinsley/status/1557395389531074560) from the creator of React Query.
