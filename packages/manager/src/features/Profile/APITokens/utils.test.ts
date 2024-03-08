@@ -345,8 +345,59 @@ describe('APIToken utils', () => {
         ['vpc', 0],
       ];
       const excludedScopeNames: ExcludedScope[] = [
-        { defaultAccessLevel: 0, invalidAccessLevels: [1], name: 'vpc' },
-        { defaultAccessLevel: 2, invalidAccessLevels: [1], name: 'longview' },
+        {
+          defaultAccessLevel: 0,
+          invalidAccessLevels: [1],
+          name: 'vpc',
+          optionallyInclude: false,
+        },
+        {
+          defaultAccessLevel: 2,
+          invalidAccessLevels: [1],
+          name: 'longview',
+          optionallyInclude: false,
+        },
+      ];
+      expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
+    });
+    it('should return 1 if all scopes are 1, even for exclusions if optionallyInclude is true', () => {
+      const scopes: Permission[] = [
+        ['account', 1],
+        ['child_account', 0],
+        ['databases', 1],
+        ['domains', 1],
+        ['events', 1],
+        ['firewall', 1],
+        ['images', 1],
+        ['ips', 1],
+        ['linodes', 1],
+        ['lke', 1],
+        ['longview', 2],
+        ['nodebalancers', 1],
+        ['object_storage', 1],
+        ['stackscripts', 1],
+        ['volumes', 1],
+        ['vpc', 0],
+      ];
+      const excludedScopeNames: ExcludedScope[] = [
+        {
+          defaultAccessLevel: 0,
+          invalidAccessLevels: [1],
+          name: 'vpc',
+          optionallyInclude: false,
+        },
+        {
+          defaultAccessLevel: 2,
+          invalidAccessLevels: [1],
+          name: 'longview',
+          optionallyInclude: false,
+        },
+        {
+          defaultAccessLevel: 0,
+          invalidAccessLevels: [1, 2],
+          name: 'child_account',
+          optionallyInclude: true,
+        },
       ];
       expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
     });

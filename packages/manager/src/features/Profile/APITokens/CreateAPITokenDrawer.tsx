@@ -18,6 +18,7 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
@@ -78,6 +79,7 @@ export interface ExcludedScope {
   defaultAccessLevel: number;
   invalidAccessLevels: number[];
   name: string;
+  optionallyInclude: boolean;
 }
 
 interface RadioButton extends HTMLInputElement {
@@ -105,11 +107,17 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
 
+  const isParentUser = profile?.user_type === 'parent';
+
   const {
     error,
     isLoading,
     mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
@@ -128,7 +136,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
     },
     {
       name: 'child_account',
-      shouldBeIncluded: hasParentChildAccountAccess,
+      shouldBeIncluded: hasParentChildAccountAccess && isParentUser,
     },
   ]);
 
@@ -176,7 +184,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
         const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
           (excludedScope) =>
             excludedScope.name === scope[0] &&
-            excludedScope.invalidAccessLevels.includes(value)
+            excludedScope.invalidAccessLevels.includes(value) &&
+            !excludedScope.optionallyInclude
         );
 
         // Set an excluded scope based on its default access level, not the given Select All value.
@@ -203,6 +212,13 @@ export const CreateAPITokenDrawer = (props: Props) => {
       defaultAccessLevel: 0,
       invalidAccessLevels: [1],
       name: 'vpc',
+      optionallyInclude: false,
+    },
+    {
+      defaultAccessLevel: 0,
+      invalidAccessLevels: [1, 2],
+      name: 'child_account',
+      optionallyInclude: isParentUser && !isChildAccountAccessRestricted,
     },
   ];
 
@@ -221,8 +237,9 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const allPermissions = form.values.scopes;
 
   const showFilteredPermissions =
-    (flags.parentChildAccountAccess && profile?.user_type !== 'parent') ||
-    Boolean(!flags.parentChildAccountAccess);
+    !flags.parentChildAccountAccess ||
+    (flags.parentChildAccountAccess &&
+      (!isParentUser || isChildAccountAccessRestricted));
 
   const filteredPermissions = allPermissions.filter(
     (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
