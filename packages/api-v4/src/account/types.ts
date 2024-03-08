@@ -51,7 +51,7 @@ export interface Account {
   billing_source: BillingSource;
   city: string;
   phone: string;
-  company: string | null;
+  company: string;
   active_promotions: ActivePromotion[];
   capabilities: AccountCapability[];
   euuid: string;
