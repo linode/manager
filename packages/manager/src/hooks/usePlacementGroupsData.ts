@@ -31,8 +31,8 @@ export const usePlacementGroupData = ({
   const { data: linodes, error, isLoading } = useAllLinodesQuery(
     {},
     {
-      '+or': placementGroup?.linode_ids.map((id) => ({
-        id,
+      '+or': placementGroup?.linodes.map((linodeItem) => ({
+        id: linodeItem.linode,
       })),
     }
   );
@@ -55,7 +55,7 @@ export const usePlacementGroupData = ({
 
   const linodesCount = getPlacementGroupLinodeCount(placementGroup);
   const assignedLinodes = linodes?.filter((linode) =>
-    placementGroup.linode_ids.includes(linode.id)
+    placementGroup.linodes.some((pgLinode) => pgLinode.linode === linode.id)
   );
   const hasReachedCapacity = hasPlacementGroupReachedCapacity({
     placementGroup,

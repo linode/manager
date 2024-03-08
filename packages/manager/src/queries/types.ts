@@ -6,7 +6,7 @@ import {
   useQueries,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -38,24 +38,21 @@ const specificTypesQueryKey = (type: string) => [queryKey, 'detail', type];
 /**
  * Some Linodes may have types that aren't returned by the /types and /types-legacy endpoints. This
  * hook may be useful in fetching these "shadow plans".
+ *
+ * Always returns an array of the same length of the `types` argument.
  */
 export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
-  return useQueries(
-    types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
-      enabled,
+  return useQueries({
+    queries: types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
+      enabled: Boolean(type) && enabled,
       queryFn: () => getSingleType(type, queryClient),
       queryKey: specificTypesQueryKey(type),
       ...queryPresets.oneTimeFetch,
-    }))
-  );
+    })),
+  });
 };
 
 export const useTypeQuery = (type: string, enabled = true) => {
-  return useQuery<LinodeType, APIError[]>({
-    queryFn: () => getType(type),
-    queryKey: specificTypesQueryKey(type),
-    ...queryPresets.oneTimeFetch,
-    enabled: enabled && Boolean(type),
-  });
+  return useSpecificTypes([type], enabled)[0];
 };

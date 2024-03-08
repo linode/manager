@@ -12,6 +12,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'in',
     id: 'ap-west',
@@ -24,6 +25,7 @@ export const regions: Region[] = [
       ipv6:
         '2400:8904::f03c:91ff:fea5:659, 2400:8904::f03c:91ff:fea5:9282, 2400:8904::f03c:91ff:fea5:b9b3, 2400:8904::f03c:91ff:fea5:925a, 2400:8904::f03c:91ff:fea5:22cb, 2400:8904::f03c:91ff:fea5:227a, 2400:8904::f03c:91ff:fea5:924c, 2400:8904::f03c:91ff:fea5:f7e2, 2400:8904::f03c:91ff:fea5:2205, 2400:8904::f03c:91ff:fea5:9207',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -36,6 +38,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'ca',
     id: 'ca-central',
@@ -48,6 +51,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c04::f03c:91ff:fea9:f63, 2600:3c04::f03c:91ff:fea9:f6d, 2600:3c04::f03c:91ff:fea9:f80, 2600:3c04::f03c:91ff:fea9:f0f, 2600:3c04::f03c:91ff:fea9:f99, 2600:3c04::f03c:91ff:fea9:fbd, 2600:3c04::f03c:91ff:fea9:fdd, 2600:3c04::f03c:91ff:fea9:fe2, 2600:3c04::f03c:91ff:fea9:f68, 2600:3c04::f03c:91ff:fea9:f4a',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -60,6 +64,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'au',
     id: 'ap-southeast',
@@ -72,6 +77,7 @@ export const regions: Region[] = [
       ipv6:
         '2400:8907::f03c:92ff:fe6e:ec8, 2400:8907::f03c:92ff:fe6e:98e4, 2400:8907::f03c:92ff:fe6e:1c58, 2400:8907::f03c:92ff:fe6e:c299, 2400:8907::f03c:92ff:fe6e:c210, 2400:8907::f03c:92ff:fe6e:c219, 2400:8907::f03c:92ff:fe6e:1c5c, 2400:8907::f03c:92ff:fe6e:c24e, 2400:8907::f03c:92ff:fe6e:e6b, 2400:8907::f03c:92ff:fe6e:e3d',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -86,6 +92,7 @@ export const regions: Region[] = [
       'Managed Databases',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-iad',
@@ -98,6 +105,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c05::f03c:93ff:feb6:43b6,   2600:3c05::f03c:93ff:feb6:4365,   2600:3c05::f03c:93ff:feb6:43c2,   2600:3c05::f03c:93ff:feb6:e441,   2600:3c05::f03c:93ff:feb6:94ef,   2600:3c05::f03c:93ff:feb6:94ba,   2600:3c05::f03c:93ff:feb6:94a8,   2600:3c05::f03c:93ff:feb6:9413,   2600:3c05::f03c:93ff:feb6:9443,   2600:3c05::f03c:93ff:feb6:94e0',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -124,6 +132,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c06::f03c:93ff:fed0:e5fc,   2600:3c06::f03c:93ff:fed0:e54b,   2600:3c06::f03c:93ff:fed0:e572,   2600:3c06::f03c:93ff:fed0:e530,   2600:3c06::f03c:93ff:fed0:e597,   2600:3c06::f03c:93ff:fed0:e511,   2600:3c06::f03c:93ff:fed0:e5f2,   2600:3c06::f03c:93ff:fed0:e5bf,   2600:3c06::f03c:93ff:fed0:e529,   2600:3c06::f03c:93ff:fed0:e5a3',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -138,6 +147,7 @@ export const regions: Region[] = [
       'Managed Databases',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'fr',
     id: 'fr-par',
@@ -150,6 +160,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c07::f03c:93ff:fef2:2e63,  2600:3c07::f03c:93ff:fef2:2ec7,  2600:3c07::f03c:93ff:fef2:0dee,  2600:3c07::f03c:93ff:fef2:0d25,  2600:3c07::f03c:93ff:fef2:0de0,  2600:3c07::f03c:93ff:fef2:2e29,  2600:3c07::f03c:93ff:fef2:0dda,  2600:3c07::f03c:93ff:fef2:0d82,  2600:3c07::f03c:93ff:fef2:b3ac,  2600:3c07::f03c:93ff:fef2:b3a8',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -163,6 +174,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-sea',
@@ -175,6 +187,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c0a::f03c:93ff:fe54:c6da, 2600:3c0a::f03c:93ff:fe54:c691, 2600:3c0a::f03c:93ff:fe54:c68d, 2600:3c0a::f03c:93ff:fe54:c61e, 2600:3c0a::f03c:93ff:fe54:c653, 2600:3c0a::f03c:93ff:fe54:c64c, 2600:3c0a::f03c:93ff:fe54:c68a, 2600:3c0a::f03c:93ff:fe54:c697, 2600:3c0a::f03c:93ff:fe54:c60f, 2600:3c0a::f03c:93ff:fe54:c6a0',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -188,6 +201,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'br',
     id: 'br-gru',
@@ -200,6 +214,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c0d::f03c:93ff:fe3d:51cb, 2600:3c0d::f03c:93ff:fe3d:51a7, 2600:3c0d::f03c:93ff:fe3d:51a9, 2600:3c0d::f03c:93ff:fe3d:5119, 2600:3c0d::f03c:93ff:fe3d:51fe, 2600:3c0d::f03c:93ff:fe3d:517c, 2600:3c0d::f03c:93ff:fe3d:5144, 2600:3c0d::f03c:93ff:fe3d:5170, 2600:3c0d::f03c:93ff:fe3d:51cc, 2600:3c0d::f03c:93ff:fe3d:516c',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -213,6 +228,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'nl',
     id: 'nl-ams',
@@ -225,6 +241,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c0e::f03c:93ff:fe9d:2d10, 2600:3c0e::f03c:93ff:fe9d:2d89, 2600:3c0e::f03c:93ff:fe9d:2d79, 2600:3c0e::f03c:93ff:fe9d:2d96, 2600:3c0e::f03c:93ff:fe9d:2da5, 2600:3c0e::f03c:93ff:fe9d:2d34, 2600:3c0e::f03c:93ff:fe9d:2d68, 2600:3c0e::f03c:93ff:fe9d:2d17, 2600:3c0e::f03c:93ff:fe9d:2d45, 2600:3c0e::f03c:93ff:fe9d:2d5c',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -238,6 +255,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'se',
     id: 'se-sto',
@@ -250,6 +268,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c09::f03c:93ff:fea9:4dbe, 2600:3c09::f03c:93ff:fea9:4d63, 2600:3c09::f03c:93ff:fea9:4dce, 2600:3c09::f03c:93ff:fea9:4dbb, 2600:3c09::f03c:93ff:fea9:4d99, 2600:3c09::f03c:93ff:fea9:4d26, 2600:3c09::f03c:93ff:fea9:4de0, 2600:3c09::f03c:93ff:fea9:4d69, 2600:3c09::f03c:93ff:fea9:4dbf, 2600:3c09::f03c:93ff:fea9:4da6',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -263,6 +282,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'in',
     id: 'in-maa',
@@ -275,6 +295,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c08::f03c:93ff:fe7c:1135, 2600:3c08::f03c:93ff:fe7c:11f8, 2600:3c08::f03c:93ff:fe7c:11d2, 2600:3c08::f03c:93ff:fe7c:11a7, 2600:3c08::f03c:93ff:fe7c:11ad, 2600:3c08::f03c:93ff:fe7c:110a, 2600:3c08::f03c:93ff:fe7c:11f9, 2600:3c08::f03c:93ff:fe7c:1137, 2600:3c08::f03c:93ff:fe7c:11db, 2600:3c08::f03c:93ff:fe7c:1164',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -288,6 +309,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'jp',
     id: 'jp-osa',
@@ -300,6 +322,7 @@ export const regions: Region[] = [
       ipv6:
         '2400:8905::f03c:93ff:fe9d:b085, 2400:8905::f03c:93ff:fe9d:b012, 2400:8905::f03c:93ff:fe9d:b09b, 2400:8905::f03c:93ff:fe9d:b0d8, 2400:8905::f03c:93ff:fe9d:259f, 2400:8905::f03c:93ff:fe9d:b006, 2400:8905::f03c:93ff:fe9d:b084, 2400:8905::f03c:93ff:fe9d:b0ce, 2400:8905::f03c:93ff:fe9d:25ea, 2400:8905::f03c:93ff:fe9d:b086',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -313,6 +336,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'it',
     id: 'it-mil',
@@ -325,6 +349,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c0b::f03c:93ff:feba:d513, 2600:3c0b::f03c:93ff:feba:d5c3, 2600:3c0b::f03c:93ff:feba:d597, 2600:3c0b::f03c:93ff:feba:d5fb, 2600:3c0b::f03c:93ff:feba:d51f, 2600:3c0b::f03c:93ff:feba:d58e, 2600:3c0b::f03c:93ff:feba:d5d5, 2600:3c0b::f03c:93ff:feba:d534, 2600:3c0b::f03c:93ff:feba:d57c, 2600:3c0b::f03c:93ff:feba:d529',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -338,6 +363,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-mia',
@@ -350,6 +376,7 @@ export const regions: Region[] = [
       ipv6:
         '2a01:7e04::f03c:93ff:fead:d31f, 2a01:7e04::f03c:93ff:fead:d37f, 2a01:7e04::f03c:93ff:fead:d30c, 2a01:7e04::f03c:93ff:fead:d318, 2a01:7e04::f03c:93ff:fead:d316, 2a01:7e04::f03c:93ff:fead:d339, 2a01:7e04::f03c:93ff:fead:d367, 2a01:7e04::f03c:93ff:fead:d395, 2a01:7e04::f03c:93ff:fead:d3d0, 2a01:7e04::f03c:93ff:fead:d38e',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -363,6 +390,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'id',
     id: 'id-cgk',
@@ -375,6 +403,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c0c::f03c:93ff:feed:a90b, 2600:3c0c::f03c:93ff:feed:a9a5, 2600:3c0c::f03c:93ff:feed:a935, 2600:3c0c::f03c:93ff:feed:a930, 2600:3c0c::f03c:93ff:feed:a95c, 2600:3c0c::f03c:93ff:feed:a9ad, 2600:3c0c::f03c:93ff:feed:a9f2, 2600:3c0c::f03c:93ff:feed:a9ff, 2600:3c0c::f03c:93ff:feed:a9c8, 2600:3c0c::f03c:93ff:feed:a96b',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -388,6 +417,7 @@ export const regions: Region[] = [
       'Vlans',
       'Metadata',
       'Premium Plans',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-lax',
@@ -400,6 +430,7 @@ export const regions: Region[] = [
       ipv6:
         '2a01:7e03::f03c:93ff:feb1:b789, 2a01:7e03::f03c:93ff:feb1:b717, 2a01:7e03::f03c:93ff:feb1:b707, 2a01:7e03::f03c:93ff:feb1:b7ab, 2a01:7e03::f03c:93ff:feb1:b7e2, 2a01:7e03::f03c:93ff:feb1:b709, 2a01:7e03::f03c:93ff:feb1:b7a6, 2a01:7e03::f03c:93ff:feb1:b750, 2a01:7e03::f03c:93ff:feb1:b76e, 2a01:7e03::f03c:93ff:feb1:b7a2',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -412,6 +443,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-central',
@@ -424,6 +456,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c00::2, 2600:3c00::9, 2600:3c00::7, 2600:3c00::5, 2600:3c00::3, 2600:3c00::8, 2600:3c00::6, 2600:3c00::4, 2600:3c00::c, 2600:3c00::b',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -435,11 +468,12 @@ export const regions: Region[] = [
       'Cloud Firewall',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-west',
     label: 'Fremont, CA',
-    maximum_pgs_per_customer: 5,
+    maximum_pgs_per_customer: 0,
     maximum_vms_per_pg: 10,
     resolvers: {
       ipv4:
@@ -447,6 +481,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c01::2, 2600:3c01::9, 2600:3c01::5, 2600:3c01::7, 2600:3c01::3, 2600:3c01::8, 2600:3c01::4, 2600:3c01::b, 2600:3c01::c, 2600:3c01::6',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -461,6 +496,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-southeast',
@@ -473,6 +509,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c02::3, 2600:3c02::5, 2600:3c02::4, 2600:3c02::6, 2600:3c02::c, 2600:3c02::7, 2600:3c02::2, 2600:3c02::9, 2600:3c02::8, 2600:3c02::b',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -488,6 +525,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'us',
     id: 'us-east',
@@ -500,6 +538,7 @@ export const regions: Region[] = [
       ipv6:
         '2600:3c03::7, 2600:3c03::4, 2600:3c03::9, 2600:3c03::6, 2600:3c03::3, 2600:3c03::c, 2600:3c03::5, 2600:3c03::b, 2600:3c03::2, 2600:3c03::8',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -512,6 +551,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'gb',
     id: 'eu-west',
@@ -524,6 +564,7 @@ export const regions: Region[] = [
       ipv6:
         '2a01:7e00::9,  2a01:7e00::3,  2a01:7e00::c,  2a01:7e00::5,  2a01:7e00::6,  2a01:7e00::8,  2a01:7e00::b,  2a01:7e00::4,  2a01:7e00::7,  2a01:7e00::2',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -538,6 +579,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'sg',
     id: 'ap-south',
@@ -550,6 +592,7 @@ export const regions: Region[] = [
       ipv6:
         '2400:8901::5, 2400:8901::4, 2400:8901::b, 2400:8901::3, 2400:8901::9, 2400:8901::2, 2400:8901::8, 2400:8901::7, 2400:8901::c, 2400:8901::6',
     },
+    site_type: 'core',
     status: 'ok',
   },
   {
@@ -564,6 +607,7 @@ export const regions: Region[] = [
       'Vlans',
       'Block Storage Migrations',
       'Managed Databases',
+      'Placement Group',
     ],
     country: 'de',
     id: 'eu-central',
@@ -576,6 +620,39 @@ export const regions: Region[] = [
       ipv6:
         '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
     },
+    site_type: 'core',
+    status: 'ok',
+  },
+  {
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-1',
+    label: 'Gecko Edge Test',
+    maximum_pgs_per_customer: 5,
+    maximum_vms_per_pg: 10,
+    resolvers: {
+      ipv4:
+        '139.162.130.5, 139.162.131.5, 139.162.132.5, 139.162.133.5, 139.162.134.5, 139.162.135.5, 139.162.136.5, 139.162.137.5, 139.162.138.5, 139.162.139.5',
+      ipv6:
+        '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
+    },
+    site_type: 'edge',
+    status: 'ok',
+  },
+  {
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-2',
+    label: 'Gecko Edge Test 2',
+    maximum_pgs_per_customer: 5,
+    maximum_vms_per_pg: 10,
+    resolvers: {
+      ipv4:
+        '139.162.130.5, 139.162.131.5, 139.162.132.5, 139.162.133.5, 139.162.134.5, 139.162.135.5, 139.162.136.5, 139.162.137.5, 139.162.138.5, 139.162.139.5',
+      ipv6:
+        '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
+    },
+    site_type: 'edge',
     status: 'ok',
   },
 ];

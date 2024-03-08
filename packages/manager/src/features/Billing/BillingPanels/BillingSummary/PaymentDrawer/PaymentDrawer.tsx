@@ -4,7 +4,7 @@ import { APIWarning } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
@@ -20,8 +20,11 @@ import { SupportLink } from 'src/components/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
+import { useProfile } from 'src/queries/profile';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -85,7 +88,7 @@ export const PaymentDrawer = (props: Props) => {
     isLoading: accountLoading,
     refetch: accountRefetch,
   } = useAccount();
-
+  const { data: profile } = useProfile();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -110,6 +113,13 @@ export const PaymentDrawer = (props: Props) => {
 
   const minimumPayment = getMinimumPayment(account?.balance || 0);
   const paymentTooLow = +usd < +minimumPayment;
+
+  const isChildUser = profile?.user_type === 'child';
+  const isReadOnly =
+    useRestrictedGlobalGrantCheck({
+      globalGrantType: 'account_access',
+      permittedGrantLevel: 'read_write',
+    }) || isChildUser;
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(account?.balance || 0));
@@ -179,7 +189,7 @@ export const PaymentDrawer = (props: Props) => {
           true,
           response.warnings
         );
-        queryClient.invalidateQueries(`${queryKey}-payments`);
+        queryClient.invalidateQueries([`${queryKey}-payments`]);
       })
       .catch((errorResponse) => {
         setSubmitting(false);
@@ -226,6 +236,15 @@ export const PaymentDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Make a Payment">
       <Stack spacing={2}>
+        {isReadOnly && (
+          <Notice
+            text={getRestrictedResourceText({
+              isChildUser,
+              resourceType: 'Account',
+            })}
+            variant="error"
+          />
+        )}
         {errorMessage && <Notice text={errorMessage ?? ''} variant="error" />}
         {warning ? <Warning warning={warning} /> : null}
         {isProcessing ? <LinearProgress className={classes.progress} /> : null}
@@ -250,7 +269,7 @@ export const PaymentDrawer = (props: Props) => {
           InputProps={{
             startAdornment: <InputAdornment position="end">$</InputAdornment>,
           }}
-          disabled={isProcessing}
+          disabled={isProcessing || isReadOnly}
           label="Payment Amount"
           noMarginTop
           onBlur={handleOnBlur}
@@ -268,6 +287,7 @@ export const PaymentDrawer = (props: Props) => {
           {hasPaymentMethods ? (
             paymentMethods?.map((paymentMethod: PaymentMethod) => (
               <PaymentMethodCard
+                disabled={isReadOnly}
                 handlePaymentMethodChange={handlePaymentMethodChange}
                 key={paymentMethod.id}
                 paymentMethod={paymentMethod}
@@ -295,8 +315,13 @@ export const PaymentDrawer = (props: Props) => {
                 />
               ) : null}
               <Button
+                disabled={
+                  paymentTooLow ||
+                  selectedCardExpired ||
+                  isProcessing ||
+                  isReadOnly
+                }
                 buttonType="primary"
-                disabled={paymentTooLow || selectedCardExpired || isProcessing}
                 onClick={handleOpenDialog}
               >
                 Pay Now
@@ -304,41 +329,45 @@ export const PaymentDrawer = (props: Props) => {
             </Grid>
           </Grid>
         ) : null}
-        <Divider spacingBottom={16} spacingTop={28} />
-        <Grid>
-          <Typography className={classes.header} variant="h3">
-            <strong>Or pay via:</strong>
-          </Typography>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid sm={6} xs={9}>
-            <PayPalErrorBoundary renderError={renderError}>
-              <PayPalButton
-                disabled={isProcessing}
-                renderError={renderError}
-                setError={setErrorMessage}
-                setProcessing={setIsProcessing}
-                setSuccess={setSuccess}
-                usd={usd}
-              />
-            </PayPalErrorBoundary>
-          </Grid>
-          <Grid sm={6} xs={9}>
-            <GooglePayButton
-              transactionInfo={{
-                countryCode: 'US',
-                currencyCode: 'USD',
-                totalPrice: usd,
-                totalPriceStatus: 'FINAL',
-              }}
-              disabled={isProcessing}
-              renderError={renderError}
-              setError={setErrorMessage}
-              setProcessing={setIsProcessing}
-              setSuccess={setSuccess}
-            />
-          </Grid>
-        </Grid>
+        {!isReadOnly && (
+          <>
+            <Divider spacingBottom={16} spacingTop={28} />
+            <Grid>
+              <Typography className={classes.header} variant="h3">
+                <strong>Or pay via:</strong>
+              </Typography>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid sm={6} xs={9}>
+                <PayPalErrorBoundary renderError={renderError}>
+                  <PayPalButton
+                    disabled={isProcessing}
+                    renderError={renderError}
+                    setError={setErrorMessage}
+                    setProcessing={setIsProcessing}
+                    setSuccess={setSuccess}
+                    usd={usd}
+                  />
+                </PayPalErrorBoundary>
+              </Grid>
+              <Grid sm={6} xs={9}>
+                <GooglePayButton
+                  transactionInfo={{
+                    countryCode: 'US',
+                    currencyCode: 'USD',
+                    totalPrice: usd,
+                    totalPriceStatus: 'FINAL',
+                  }}
+                  disabled={isProcessing}
+                  renderError={renderError}
+                  setError={setErrorMessage}
+                  setProcessing={setIsProcessing}
+                  setSuccess={setSuccess}
+                />
+              </Grid>
+            </Grid>
+          </>
+        )}
       </Stack>
       <CreditCardDialog
         cancel={handleClose}

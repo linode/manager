@@ -179,6 +179,8 @@ describe('Personal access tokens', () => {
           .click();
       });
 
+    mockGetPersonalAccessTokens([newToken]).as('getTokens');
+
     ui.drawer
       .findByTitle('Edit Personal Access Token')
       .should('be.visible')
@@ -197,7 +199,8 @@ describe('Personal access tokens', () => {
       });
 
     // Confirm that token has been renamed, initiate revocation.
-    cy.wait('@updateToken');
+    cy.wait(['@updateToken', '@getTokens']);
+
     cy.findByText(newToken.label)
       .should('be.visible')
       .closest('tr')

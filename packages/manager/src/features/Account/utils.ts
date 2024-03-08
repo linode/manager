@@ -1,11 +1,8 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type {
-  GlobalGrantTypes,
-  GrantLevel,
-  Token,
-  UserType,
-} from '@linode/api-v4';
+import { ADMINISTRATOR, PARENT_USER } from './constants';
+
+import type { GlobalGrantTypes, GrantLevel, Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
 export type ActionType =
@@ -23,7 +20,8 @@ export type ActionType =
 
 interface GetRestrictedResourceText {
   action?: ActionType;
-  includeContactMessage?: boolean;
+  includeContactInfo?: boolean;
+  isChildUser?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
 }
@@ -48,7 +46,8 @@ export type RestrictedGlobalGrantType =
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
-  includeContactMessage = true,
+  includeContactInfo = true,
+  isChildUser = false,
   isSingular = true,
   resourceType,
 }: GetRestrictedResourceText): string => {
@@ -56,28 +55,15 @@ export const getRestrictedResourceText = ({
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
+  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
+
   let message = `You don't have permissions to ${action} ${resource}.`;
 
-  if (includeContactMessage) {
-    message +=
-      ' Please contact your account administrator to request the necessary permissions.';
+  if (includeContactInfo) {
+    message += ` Please contact your ${contactPerson} to request the necessary permissions.`;
   }
 
   return message;
-};
-
-/**
- * Get an 'access restricted' message based on user type.
- */
-export const getAccessRestrictedText = (
-  userType: UserType | undefined,
-  isParentChildFeatureEnabled?: boolean
-) => {
-  return `Access restricted. Please contact your ${
-    isParentChildFeatureEnabled && userType === 'child'
-      ? 'business partner'
-      : 'account administrator'
-  } to request the necessary permission.`;
 };
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY

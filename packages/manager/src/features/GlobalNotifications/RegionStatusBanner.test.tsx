@@ -1,6 +1,5 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { regionFactory } from 'src/factories/regions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -33,10 +32,7 @@ describe('Region status banner', () => {
       })
     );
     const { queryAllByTestId, queryAllByText } = renderWithTheme(
-      <RegionStatusBanner />,
-      {
-        queryClient: new QueryClient(),
-      }
+      <RegionStatusBanner />
     );
     await waitFor(() => {
       expect(queryAllByText(/Newark, NJ/i)).toHaveLength(1);
@@ -53,9 +49,7 @@ describe('Region status banner', () => {
         return res(ctx.json(makeResourcePage(regions)));
       })
     );
-    const { queryAllByTestId } = renderWithTheme(<RegionStatusBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { queryAllByTestId } = renderWithTheme(<RegionStatusBanner />);
 
     await waitFor(() => {
       expect(queryAllByTestId(/facility-outage/)).toHaveLength(5);
@@ -71,9 +65,7 @@ describe('Region status banner', () => {
         return res(ctx.json(makeResourcePage(regions)));
       })
     );
-    const { queryAllByTestId } = renderWithTheme(<RegionStatusBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { queryAllByTestId } = renderWithTheme(<RegionStatusBanner />);
 
     await waitFor(() => {
       expect(queryAllByTestId(/facility-outage/)).toHaveLength(3);

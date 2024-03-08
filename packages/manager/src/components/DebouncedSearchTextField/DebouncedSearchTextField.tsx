@@ -85,7 +85,8 @@ export const DebouncedSearchTextField = React.memo(
               <CircleProgress mini={true} />
             </InputAdornment>
           ) : (
-            clearable && (
+            clearable &&
+            textFieldValue && (
               <IconButton
                 aria-label="Clear"
                 onClick={() => setTextFieldValue('')}

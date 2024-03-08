@@ -1,7 +1,7 @@
 import type { Region } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
-import type { PlacementGroup } from '../placement-groups/types';
+import type { PlacementGroupPayload } from '../placement-groups/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -24,11 +24,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  // While the API returns an array of PlacementGroup objects for future proofing,
-  // we only support one PlacementGroup per Linode at this time, hence the tuple.
-  placement_groups:
-    | [Pick<PlacementGroup, 'id' | 'label' | 'affinity_type'>]
-    | [];
+  placement_group?: PlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
   type: string | null;
   status: LinodeStatus;
   updated: string;
@@ -232,10 +228,13 @@ export interface Kernel {
   label: string;
   version: string;
   kvm: boolean;
-  xen: boolean;
   architecture: KernelArchitecture;
   pvops: boolean;
   deprecated: boolean;
+  /**
+   * @example 2009-10-26T04:00:00
+   */
+  built: string;
 }
 
 export interface NetStats {
@@ -341,8 +340,13 @@ export interface UserData {
 }
 
 export interface CreateLinodePlacementGroupPayload {
-  id?: number | null;
-  compliant_only?: boolean | null;
+  id: number;
+  /**
+   * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
+   *
+   * @default false
+   */
+  compliant_only?: boolean;
 }
 
 export interface CreateLinodeRequest {
