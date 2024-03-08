@@ -671,8 +671,8 @@ export const handlers = [
     });
     const linodeInEdgeRegion = linodeFactory.build({
       image: 'edge-test-image',
-      label: 'edge-test-region',
-      region: 'us-southeast',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -745,7 +745,7 @@ export const handlers = [
       if (orFilters) {
         const filteredLinodes = linodes.filter((linode) => {
           const filteredById = orFilters.some(
-            (filter: { linode: number }) => filter.linode === linode.id
+            (filter: { id: number }) => filter.id === linode.id
           );
           const filteredByRegion = orFilters.some(
             (filter: { region: string }) => filter.region === linode.region
@@ -766,8 +766,8 @@ export const handlers = [
         linodeFactory.build({
           backups: { enabled: false },
           id,
-          label: 'DC-Specific Pricing Linode',
-          region: 'id-cgk',
+          label: 'Gecko Edge Test',
+          region: 'us-edge-1',
         })
       )
     );

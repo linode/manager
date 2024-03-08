@@ -76,9 +76,8 @@ export const UserMenu = React.memo(() => {
     globalGrantType: 'child_account_access',
   });
   const canSwitchBetweenParentOrProxyAccount =
-    hasParentChildAccountAccess &&
-    (isParentUser || isProxyUser) &&
-    !isChildAccountAccessRestricted;
+    flags.parentChildAccountAccess &&
+    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 

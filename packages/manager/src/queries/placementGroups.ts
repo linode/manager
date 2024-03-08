@@ -4,8 +4,8 @@ import {
   deletePlacementGroup,
   getPlacementGroup,
   getPlacementGroups,
-  renamePlacementGroup,
   unassignLinodesFromPlacementGroup,
+  updatePlacementGroup,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -17,7 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
 
 import type {
   AssignLinodesToPlacementGroupPayload,
@@ -76,7 +76,7 @@ export const useCreatePlacementGroup = () => {
         placementGroup
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };
@@ -85,7 +85,7 @@ export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
-    mutationFn: (data) => renamePlacementGroup(id, data),
+    mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(

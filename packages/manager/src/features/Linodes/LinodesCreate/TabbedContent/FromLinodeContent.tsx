@@ -1,9 +1,11 @@
+import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
@@ -73,6 +75,15 @@ export const FromLinodeContent = (props: CombinedProps) => {
     }
   };
 
+  const filterEdgeLinodes = (linodes: Linode[]) =>
+    linodes.filter(
+      (linode) => !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
+    );
+
+  const filteredLinodes = flags.gecko
+    ? filterEdgeLinodes(linodesData)
+    : linodesData;
+
   return (
     // eslint-disable-next-line
     <React.Fragment>
@@ -107,7 +118,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
             error={hasErrorFor('linode_id')}
             handleSelection={handleSelectLinode}
             header={'Select Linode to Clone From'}
-            linodes={linodesData}
+            linodes={filteredLinodes}
             selectedLinodeID={selectedLinodeID}
             showPowerActions
           />

@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 
 import { useGrants } from 'src/queries/profile';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
 import { LinodeSettingsDeletePanel } from './LinodeSettingsDeletePanel';
 import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
@@ -23,7 +22,6 @@ const LinodeSettings = () => {
 
   return (
     <>
-      {isReadOnly && <LinodePermissionsError />}
       <LinodeSettingsLabelPanel isReadOnly={isReadOnly} linodeId={id} />
       <LinodeSettingsPasswordPanel isReadOnly={isReadOnly} linodeId={id} />
       <LinodeSettingsAlertsPanel isReadOnly={isReadOnly} linodeId={id} />
