@@ -210,7 +210,10 @@ export const getIsLinodeCreateTypeEdgeSupported = (
  *
  * @returns a boolean indicating whether or not the selected region is an edge region.
  */
-export const isEdgeRegion = (selectedRegion: string, regionsData: Region[]) => {
+export const getIsEdgeRegion = (
+  regionsData: Region[],
+  selectedRegion: string
+) => {
   return (
     regionsData.find(
       (region) =>

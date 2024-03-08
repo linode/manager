@@ -19,10 +19,18 @@ interface Props {
 export const DeleteRuleDialog = (props: Props) => {
   const { loadbalancerId, onClose, open, route, ruleIndex } = props;
 
-  const { error, isLoading, mutateAsync } = useLoadBalancerRouteUpdateMutation(
-    loadbalancerId,
-    route?.id ?? -1
-  );
+  const {
+    error,
+    isLoading,
+    mutateAsync,
+    reset,
+  } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
+
+  const handleClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    onClose();
+  };
 
   const onDelete = async () => {
     if (!route || ruleIndex === undefined) {
@@ -35,12 +43,16 @@ export const DeleteRuleDialog = (props: Props) => {
 
     const normalizedRules = newRules.map(getNormalizedRulePayload);
 
-    await mutateAsync({
-      label: route.label,
-      protocol: route.protocol,
-      rules: normalizedRules,
-    });
-    onClose();
+    try {
+      await mutateAsync({
+        label: route.label,
+        protocol: route.protocol,
+        rules: normalizedRules,
+      });
+      handleClose();
+    } catch (error) {
+      // Swallow error
+    }
   };
 
   return (
@@ -54,12 +66,12 @@ export const DeleteRuleDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title="Delete Rule?"
     >

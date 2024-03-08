@@ -29,7 +29,10 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const { onClose, open } = props;
   const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(+id);
+  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
+    +id,
+    Boolean(id)
+  );
   const {
     assignedLinodes,
     isLoading: placementGroupDataLoading,
@@ -93,10 +96,8 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           ? [{ reason: 'Placement Group not found.' }]
           : undefined
       }
-      inputProps={{
-        disabled: isDisabled,
-      }}
-      disabled={isDisabled}
+      disableTypeToConfirmInput={isDisabled}
+      disableTypeToConfirmSubmit={isDisabled}
       label="Placement Group"
       loading={placementGroupDataLoading || deletePlacementLoading}
       onClick={onDelete}
