@@ -714,6 +714,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               variant: 'success',
             }
           );
+
+          // Refresh the data on /account/users/:currentUser:/grants/ so it is accurate.
+          this.props.queryClient.invalidateQueries([
+            'account',
+            'users',
+            'grants',
+            currentUsername,
+          ]);
         })
         .catch((errResponse) => {
           this.setState({
