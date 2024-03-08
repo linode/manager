@@ -3,6 +3,7 @@ import {
   Database,
   DatabaseClusterSizeObject,
   DatabasePriceObject,
+  DatabaseType,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { useSnackbar } from 'notistack';
@@ -138,7 +139,9 @@ export const DatabaseResize = ({ database }: Props) => {
       return;
     }
 
-    const selectedPlanType = dbTypes.find((type) => type.id === planSelected);
+    const selectedPlanType = dbTypes.find(
+      (type: DatabaseType) => type.id === planSelected
+    );
     if (!selectedPlanType) {
       setPlanSelected(undefined);
       setSummaryText(undefined);
@@ -173,11 +176,12 @@ export const DatabaseResize = ({ database }: Props) => {
     if (!dbTypes) {
       return [];
     }
-    return dbTypes.map((type) => {
+    return dbTypes.map((type: DatabaseType) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
       const nodePricing = type.engines[selectedEngine].find(
-        (cluster) => cluster.quantity === database.cluster_size
+        (cluster: DatabaseClusterSizeObject) =>
+          cluster.quantity === database.cluster_size
       );
       const price = nodePricing?.price ?? {
         hourly: null,

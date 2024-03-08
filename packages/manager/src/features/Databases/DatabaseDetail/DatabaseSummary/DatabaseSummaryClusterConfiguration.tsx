@@ -1,4 +1,8 @@
-import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
+import {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -18,6 +22,7 @@ import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
+import { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   configs: {
@@ -55,9 +60,9 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   const { data: types } = useDatabaseTypesQuery();
   const { data: regions } = useRegionsQuery();
 
-  const region = regions?.find((r) => r.id === database.region);
+  const region = regions?.find((r: Region) => r.id === database.region);
 
-  const type = types?.find((type) => type.id === database?.type);
+  const type = types?.find((type: DatabaseType) => type.id === database?.type);
 
   const { data: events } = useInProgressEvents();
   const progress = getResizeProgress(database, events);
