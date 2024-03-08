@@ -30,7 +30,10 @@ export const PlacementGroupsEditDrawer = (
 ) => {
   const { onClose, onPlacementGroupEdit, open } = props;
   const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(+id);
+  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
+    +id,
+    Boolean(id)
+  );
   const { region } = usePlacementGroupData({
     placementGroup: selectedPlacementGroup,
   });

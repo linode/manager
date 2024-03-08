@@ -745,7 +745,7 @@ export const handlers = [
       if (orFilters) {
         const filteredLinodes = linodes.filter((linode) => {
           const filteredById = orFilters.some(
-            (filter: { linode: number }) => filter.linode === linode.id
+            (filter: { id: number }) => filter.id === linode.id
           );
           const filteredByRegion = orFilters.some(
             (filter: { region: string }) => filter.region === linode.region

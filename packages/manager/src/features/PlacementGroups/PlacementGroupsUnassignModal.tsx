@@ -26,7 +26,10 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     isLoading,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
-  const { data: selectedLinode } = useLinodeQuery(+linodeId ?? -1);
+  const { data: selectedLinode } = useLinodeQuery(
+    +linodeId ?? -1,
+    Boolean(linodeId)
+  );
 
   const payload: UnassignLinodesFromPlacementGroupPayload = {
     linodes: [+linodeId ?? -1],

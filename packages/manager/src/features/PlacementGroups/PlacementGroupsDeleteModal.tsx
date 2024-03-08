@@ -29,7 +29,10 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const { onClose, open } = props;
   const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(+id);
+  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
+    +id,
+    Boolean(id)
+  );
   const {
     assignedLinodes,
     isLoading: placementGroupDataLoading,
