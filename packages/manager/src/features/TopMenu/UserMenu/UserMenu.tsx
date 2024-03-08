@@ -295,23 +295,11 @@ export const UserMenu = React.memo(() => {
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
-            <Grid columnGap={userName.length >= 29 ? 1 : undefined} container>
-              <Grid
-                container
-                direction="column"
-                rowGap={1}
-                wrap="nowrap"
-                xs={6}
-              >
+            <Grid columnSpacing={2} container rowSpacing={1}>
+              <Grid container direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
-              <Grid
-                container
-                direction="column"
-                rowGap={1}
-                wrap="nowrap"
-                xs={6}
-              >
+              <Grid container direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(4).map(renderLink)}
               </Grid>
             </Grid>
