@@ -671,8 +671,8 @@ export const handlers = [
     });
     const linodeInEdgeRegion = linodeFactory.build({
       image: 'edge-test-image',
-      label: 'edge-test-region',
-      region: 'us-southeast',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -745,7 +745,7 @@ export const handlers = [
       if (orFilters) {
         const filteredLinodes = linodes.filter((linode) => {
           const filteredById = orFilters.some(
-            (filter: { linode: number }) => filter.linode === linode.id
+            (filter: { id: number }) => filter.id === linode.id
           );
           const filteredByRegion = orFilters.some(
             (filter: { region: string }) => filter.region === linode.region
@@ -1609,12 +1609,35 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupCreateEvent = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+      percent_complete: 100,
+      status: 'notification',
+    });
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
+      percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
+      status: 'notification',
+    });
+
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
       )
