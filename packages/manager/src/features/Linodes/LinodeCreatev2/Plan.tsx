@@ -39,12 +39,11 @@ export const Plan = () => {
       }
       data-qa-select-plan
       disabled={!hasCreateLinodePermission}
-      disabledClasses={undefined} // what do i do here?
       error={fieldState.error?.message}
       isCreate
-      linodeID={undefined} // @todo figure out cloning
+      linodeID={undefined} // @todo add cloning support
       onSelect={field.onChange}
-      regionsData={regions} // @todo move this query deeper
+      regionsData={regions} // @todo move this query deeper if possible
       selectedId={field.value}
       selectedRegionID={regionId}
       showTransfer
