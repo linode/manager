@@ -1609,12 +1609,35 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupCreateEvent = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+      percent_complete: 100,
+      status: 'notification',
+    });
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
+      percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
+      status: 'notification',
+    });
+
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
       )
