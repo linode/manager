@@ -47,10 +47,6 @@ interface ResourcesSectionProps {
    * */
   descriptionMaxWidth?: number;
   /**
-   * Allows for the button to be disabled
-   */
-  // disabled: boolean;
-  /**
    * The data for the docs links section
    */
   gettingStartedGuidesData: ResourcesLinkSection;

@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { regionFactory } from 'src/factories';
 
+import { regionFactory } from 'src/factories';
 import { placementGroupFactory } from 'src/factories/placementGroups';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
@@ -14,9 +14,9 @@ describe('PlacementGroupsCreateDrawer', () => {
     server.use(
       rest.get('*/regions', (req, res, ctx) => {
         const regions = regionFactory.buildList(1, {
+          capabilities: ['Linodes'],
           id: 'us-east',
           label: 'Fake Region, NC',
-          capabilities: ['Linodes'],
         });
         return res(ctx.json(makeResourcePage(regions)));
       })
@@ -29,6 +29,7 @@ describe('PlacementGroupsCreateDrawer', () => {
           label: 'PG-1',
           region: 'us-east',
         })}
+        disableEditButton={false}
         numberOfPlacementGroupsCreated={0}
         onClose={vi.fn()}
         onPlacementGroupRenamed={vi.fn()}

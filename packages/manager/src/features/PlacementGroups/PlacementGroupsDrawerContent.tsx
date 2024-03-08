@@ -7,6 +7,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE } from './constants';
 import { affinityTypeOptions } from './utils';
@@ -16,6 +17,8 @@ import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { FormikProps } from 'formik';
 
 interface Props {
+  disabledCreateButton?: boolean;
+  disableEditButton?: boolean;
   formik: FormikProps<PlacementGroupDrawerFormikProps>;
   maxNumberOfPlacementGroups?: number;
   mode: 'create' | 'rename';
@@ -30,6 +33,7 @@ interface Props {
 
 export const PlacementGroupsDrawerContent = (props: Props) => {
   const {
+    disabledCreateButton,
     formik,
     maxNumberOfPlacementGroups,
     mode,
@@ -70,6 +74,17 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
   return (
     <Grid>
       {generalError ? <Notice text={generalError} variant="error" /> : null}
+      {disabledCreateButton && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'PlacementGroups',
+          })}
+          important
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           <TextField
@@ -119,11 +134,14 @@ export const PlacementGroupsDrawerContent = (props: Props) => {
                 !isRenameDrawer &&
                 numberOfPlacementGroupsCreated &&
                 maxNumberOfPlacementGroups
-                  ? numberOfPlacementGroupsCreated >= maxNumberOfPlacementGroups
-                  : false,
+                  ? numberOfPlacementGroupsCreated >=
+                      maxNumberOfPlacementGroups || disabledCreateButton
+                  : disabledCreateButton,
               label: `${isRenameDrawer ? 'Rename' : 'Create'} Placement Group`,
               loading: isSubmitting,
-              tooltipText: MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
+              tooltipText: disabledCreateButton
+                ? ''
+                : MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
               type: 'submit',
             }}
             secondaryButtonProps={{

@@ -26,6 +26,7 @@ export const PlacementGroupsRenameDrawer = (
   props: PlacementGroupsRenameDrawerProps
 ) => {
   const {
+    disableEditButton,
     onClose,
     onPlacementGroupRenamed,
     open,
@@ -124,6 +125,7 @@ export const PlacementGroupsRenameDrawer = (
           values,
           ...rest,
         }}
+        disableEditButton={disableEditButton}
         mode="rename"
         onClose={onClose}
         open={open}

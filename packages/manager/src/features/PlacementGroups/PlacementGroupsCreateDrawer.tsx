@@ -15,8 +15,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 import { MAX_NUMBER_OF_PLACEMENT_GROUPS } from './constants';
+import { PlacementGroupsDrawerContent } from './PlacementGroupsDrawerContent';
 
 import type {
   PlacementGroupDrawerFormikProps,
@@ -27,6 +27,7 @@ export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
   const {
+    disabledCreateButton,
     numberOfPlacementGroupsCreated,
     onClose,
     onPlacementGroupCreated,
@@ -120,6 +121,7 @@ export const PlacementGroupsCreateDrawer = (
           values,
           ...rest,
         }}
+        disabledCreateButton={disabledCreateButton}
         maxNumberOfPlacementGroups={MAX_NUMBER_OF_PLACEMENT_GROUPS}
         mode="create"
         numberOfPlacementGroupsCreated={numberOfPlacementGroupsCreated}

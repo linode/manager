@@ -14,6 +14,10 @@ export interface BreadcrumbProps {
    */
   crumbOverrides?: CrumbOverridesProps[];
   /**
+   * A boolean that if true will disable the pencil icon button.
+   */
+  disableEditButton?: boolean;
+  /**
    * A boolean that if true will only show the first and last crumb.
    */
   firstAndLastOnly?: boolean;
@@ -48,6 +52,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
   const {
     breadcrumbDataAttrs,
     crumbOverrides,
+    disableEditButton,
     firstAndLastOnly,
     labelOptions,
     labelTitle,
@@ -75,6 +80,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
       >
         <Crumbs
           crumbOverrides={crumbOverrides}
+          disableEditButton={disableEditButton}
           firstAndLastOnly={firstAndLastOnly}
           labelOptions={labelOptions}
           labelTitle={labelTitle}

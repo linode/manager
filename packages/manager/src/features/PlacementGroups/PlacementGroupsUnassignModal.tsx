@@ -5,6 +5,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useUnassignLinodesFromPlacementGroup } from 'src/queries/placementGroups';
 
@@ -21,11 +22,13 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     id: string;
     linodeId: string;
   }>();
+
   const {
     error,
     isLoading,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
+
   const { data: selectedLinode } = useLinodeQuery(+linodeId ?? -1);
 
   const payload: UnassignLinodesFromPlacementGroupPayload = {
@@ -37,10 +40,16 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     onClose();
   };
 
+  const isAllowedToEditPlacementGroup = useIsResourceRestricted({
+    grantLevel: 'read_write',
+    grantType: 'linode',
+    id: +linodeId,
+  });
+
   const actions = (
     <ActionsPanel
       primaryButtonProps={{
-        disabled: isLoading,
+        disabled: isLoading || isAllowedToEditPlacementGroup,
         label: 'Unassign',
         loading: isLoading,
         onClick: onUnassign,

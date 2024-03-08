@@ -16,7 +16,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TextField } from 'src/components/TextField';
-// import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -71,12 +70,6 @@ export const PlacementGroupsLanding = React.memo(() => {
     globalGrantType: 'add_linodes',
   });
 
-  // const isAllowedToEditPlacementGroup = useIsResourceRestricted({
-  //   grantLevel: 'read_write',
-  //   grantType: 'linode',
-  //   id: linodeId,
-  // });
-
   const handleCreatePlacementGroup = () => {
     history.replace('/placement-groups/create');
   };
@@ -108,10 +101,11 @@ export const PlacementGroupsLanding = React.memo(() => {
     return (
       <>
         <PlacementGroupsLandingEmptyState
-          disabledCreateButton={!isLinodeReadOnly}
+          disabledCreateButton={isLinodeReadOnly}
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
+          disabledCreateButton={isLinodeReadOnly}
           numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
@@ -135,7 +129,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     <>
       <LandingHeader
         breadcrumbProps={{ pathname: '/placement-groups' }}
-        disabledCreateButton={!isLinodeReadOnly}
+        disabledCreateButton={isLinodeReadOnly}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
@@ -198,7 +192,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               handleRenamePlacementGroup={() =>
                 handleRenamePlacementGroup(placementGroup)
               }
-              disabled={!isLinodeReadOnly}
+              disabled={isLinodeReadOnly}
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
             />
@@ -214,11 +208,13 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
+        disabledCreateButton={isLinodeReadOnly}
         numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
       />
       <PlacementGroupsRenameDrawer
+        disableEditButton={isLinodeReadOnly}
         numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupRenameDrawerOpen}

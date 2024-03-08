@@ -10,6 +10,7 @@ export const grantTypeMap = {
   linode: 'Linodes',
   longview: 'Longview Clients',
   nodebalancer: 'NodeBalancers',
+  placementGroups: 'PlacementGroups',
   stackscript: 'StackScripts',
   volume: 'Volumes',
   vpc: 'VPCs',

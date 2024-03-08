@@ -87,9 +87,9 @@ export const PlacementGroupsRow = React.memo(
           {actions.map((action) => (
             <InlineMenuAction
               actionText={action.title}
+              disabled={disabled}
               key={action.title}
               onClick={action.onClick}
-              disabled={disabled}
             />
           ))}
         </TableCell>

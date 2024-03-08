@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme, styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -19,6 +19,7 @@ export interface LandingHeaderProps {
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
+  disableEditButton?: boolean;
   docsLabel?: string;
   docsLink?: string;
   entity?: string;
@@ -44,6 +45,7 @@ export const LandingHeader = ({
   buttonDataAttrs,
   createButtonText,
   disabledCreateButton,
+  disableEditButton,
   docsLabel,
   docsLink,
   entity,
@@ -89,6 +91,7 @@ export const LandingHeader = ({
           removeCrumbX={removeCrumbX}
           {...breadcrumbDataAttrs}
           {...breadcrumbProps}
+          disableEditButton={disableEditButton}
         />
       </Grid>
       {!shouldHideDocsAndCreateButtons && (

@@ -27,8 +27,10 @@ interface Props {
   placementGroup: PlacementGroup | undefined;
 }
 
-export const PlacementGroupsLinodes = (props: Props) => {
-  const { isLinodeReadOnly, placementGroup } = props;
+export const PlacementGroupsLinodes = ({
+  isLinodeReadOnly,
+  placementGroup,
+}: Props) => {
   const history = useHistory();
   const {
     assignedLinodes,
@@ -102,11 +104,15 @@ export const PlacementGroupsLinodes = (props: Props) => {
         </Grid>
         <Grid>
           <Button
+            tooltipText={
+              isLinodeReadOnly
+                ? ''
+                : MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE
+            }
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
             disabled={hasReachedCapacity || isLinodeReadOnly}
             onClick={handleOpenAssignLinodesDrawer}
-            tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
           >
             Add Linode to Placement Group
           </Button>

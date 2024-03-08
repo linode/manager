@@ -1,14 +1,15 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
+
 import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
 const commonProps = {
+  disabledCreateButton: false,
   onClose: vi.fn(),
   onPlacementGroupCreated: vi.fn(),
   open: true,

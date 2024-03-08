@@ -103,6 +103,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 
 interface Props {
   className?: string;
+  disableEditButton?: boolean;
   errorText?: string;
   /**
    * Send event analytics
@@ -139,6 +140,7 @@ export const EditableText = (props: PassThroughProps) => {
   const [text, setText] = React.useState(props.text);
   const {
     className,
+    disableEditButton,
     errorText,
     handleAnalyticsEvent,
     labelLink,
@@ -228,6 +230,7 @@ export const EditableText = (props: PassThroughProps) => {
         aria-label={`Edit ${text}`}
         className={`${classes.button} ${classes.editIcon}`}
         data-qa-edit-button
+        disabled={disableEditButton}
         onClick={openEdit}
       >
         <Edit className={classes.icon} />
