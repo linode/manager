@@ -198,46 +198,28 @@ describe('UserMenu', () => {
     expect(within(userMenuPopover).getByText('Switch Account')).toBeVisible();
   });
 
-  it('shows the proxy username for a proxy user if no child company name is set', async () => {
+  it('shows the parent email for a parent user if their company name is not set', async () => {
+    // Mock a forbidden request to the /account endpoint, which happens if Billing (Account) Access is None.
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(accountFactory.build({ company: null })));
-      }),
-      rest.get('*/profile', (req, res, ctx) => {
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
         return res(
           ctx.json(
-            profileFactory.build({
-              user_type: 'proxy',
-              username: 'ParentCompany_a1b2c3d4e5',
+            grantsFactory.build({
+              global: {
+                account_access: null,
+              },
             })
           )
         );
-      })
-    );
-
-    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
-
-    const userMenuButton = await findByLabelText('Profile & Account');
-    fireEvent.click(userMenuButton);
-
-    const userMenuPopover = await findByTestId('user-menu-popover');
-
-    expect(
-      within(userMenuPopover).getByText('ParentCompany_a1b2c3d4e5')
-    ).toBeVisible();
-  });
-
-  it('shows the parent username for a parent user if their company name is not set', async () => {
-    server.use(
+      }),
       rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(accountFactory.build({ company: null })));
+        return res(ctx.status(403));
       }),
       rest.get('*/profile', (req, res, ctx) => {
         return res(
           ctx.json(
             profileFactory.build({
+              email: 'parent@parent.com',
               user_type: 'parent',
               username: 'parent-username',
             })
@@ -255,6 +237,8 @@ describe('UserMenu', () => {
 
     const userMenuPopover = await findByTestId('user-menu-popover');
 
-    expect(within(userMenuPopover).getByText('parent-username')).toBeVisible();
+    expect(
+      within(userMenuPopover).getByText('parent@parent.com')
+    ).toBeVisible();
   });
 });
