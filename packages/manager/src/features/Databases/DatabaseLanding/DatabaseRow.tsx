@@ -1,35 +1,20 @@
 import {
   Database,
   DatabaseInstance,
-  DatabaseStatus,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
-import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
-import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { getResizeProgress } from '../utilities';
 import { Event } from '@linode/api-v4';
-
-export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  active: 'active',
-  degraded: 'inactive',
-  failed: 'error',
-  provisioning: 'other',
-  restoring: 'other',
-  resuming: 'other',
-  suspended: 'error',
-  suspending: 'other',
-  resizing: 'other',
-};
+import { DatabaseStatusDisplay } from '../DatabaseDetail/DatabaseStatusDisplay';
 
 export const databaseEngineMap: Record<Engine, string> = {
   mongodb: 'MongoDB',
@@ -59,10 +44,6 @@ export const DatabaseRow = ({ database, events }: Props) => {
 
   const actualRegion = regions?.find((r) => r.id === region);
 
-  const progress = getResizeProgress(database, events);
-
-  const status = database.status;
-
   const configuration =
     cluster_size === 1 ? (
       'Primary'
@@ -88,9 +69,7 @@ export const DatabaseRow = ({ database, events }: Props) => {
         <Link to={`/databases/${engine}/${id}`}>{label}</Link>
       </TableCell>
       <TableCell statusCell>
-        <StatusIcon status={databaseStatusMap[status]} />
-        {capitalize(database.status) +
-          (progress !== undefined ? ' (' + progress + '%)' : '')}
+        <DatabaseStatusDisplay events={events} database={database} />
       </TableCell>
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>

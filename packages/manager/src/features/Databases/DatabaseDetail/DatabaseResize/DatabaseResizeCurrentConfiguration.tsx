@@ -5,30 +5,35 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { getResizeProgress } from '../../utilities';
+import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import {
-  databaseEngineMap,
-  databaseStatusMap,
-} from '../../DatabaseLanding/DatabaseRow';
-import {
-  StyledStatusSpan,
   StyledSummaryBox,
   StyledSummaryTextBox,
   StyledSummaryTextTypography,
   StyledTitleTypography,
 } from './DatabaseResizeCurrentConfiguration.style';
 import { Region } from '@linode/api-v4';
+import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  status: {
+    alignItems: 'center',
+    display: 'inline-flex',
+    textTransform: 'capitalize',
+    verticalAlign: 'sub',
+  },
+}));
 
 interface Props {
   database: Database;
@@ -45,6 +50,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
   const theme = useTheme();
+  const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r: Region) => r.id === database.region);
@@ -52,8 +58,6 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   const type = types?.find((type: DatabaseType) => type.id === database?.type);
 
   const { data: events } = useInProgressEvents();
-  const progress = getResizeProgress(database, events);
-
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -92,14 +96,9 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
         <Box key={'status-version'} paddingRight={6}>
           <StyledSummaryTextBox>
             <span style={{ fontFamily: theme.font.bold }}>Status</span>{' '}
-            <StyledStatusSpan>
-              <StatusIcon
-                status={databaseStatusMap[database.status]}
-                sx={{ verticalAlign: 'sub' }}
-              />
-              {database.status +
-                (progress !== undefined ? ' (' + progress + '%)' : '')}
-            </StyledStatusSpan>
+            <div className={classes.status}>
+              <DatabaseStatusDisplay events={events} database={database} />
+            </div>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>
             <span style={{ fontFamily: theme.font.bold }}>Version</span>{' '}

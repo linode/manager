@@ -6,9 +6,7 @@ import {
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
 import { Box } from 'src/components/Box';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
@@ -16,12 +14,8 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { getResizeProgress } from '../../utilities';
-
-import {
-  databaseEngineMap,
-  databaseStatusMap,
-} from '../../DatabaseLanding/DatabaseRow';
+import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
+import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
 import { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -65,7 +59,6 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   const type = types?.find((type: DatabaseType) => type.id === database?.type);
 
   const { data: events } = useInProgressEvents();
-  const progress = getResizeProgress(database, events);
 
   if (!database || !type) {
     return null;
@@ -92,11 +85,9 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <div className={classes.configs} data-qa-cluster-config>
         <Box display="flex">
           <Typography className={classes.label}>Status</Typography>
-          <span className={classes.status}>
-            <StatusIcon status={databaseStatusMap[database.status]} />
-            {database.status +
-              (progress !== undefined ? ' (' + progress + '%)' : '')}
-          </span>
+          <div className={classes.status}>
+            <DatabaseStatusDisplay events={events} database={database} />
+          </div>
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Version</Typography>

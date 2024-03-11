@@ -46,9 +46,3 @@ export const StyledTitleTypography = styled(Typography, {
 })(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
-
-export const StyledStatusSpan = styled('span', { label: 'StyledStatusSpan' })(
-  () => ({
-    textTransform: 'capitalize',
-  })
-);
