@@ -80,7 +80,7 @@ export const PlansPanel = (props: Props) => {
   const planTypes = getPlanSelectionsByPlanType(types);
 
   const getDedicatedEdgePlanType = () => {
-    // 256gb and 516gb plans will not be supported for Edge
+    // 256gb and 512gb plans will not be supported for Edge
     const plansUpTo128GB = planTypes.dedicated.slice(
       0,
       planTypes.dedicated.length - 2
@@ -169,7 +169,7 @@ export const PlansPanel = (props: Props) => {
       docsLink={docsLink}
       error={error}
       header={header || 'Linode Plan'}
-      initTab={showEdgePlanTable ? 0 : initialTab >= 0 ? initialTab : 0}
+      initTab={showEdgePlanTable ? undefined : initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
       showEdgePlanTable={showEdgePlanTable}
