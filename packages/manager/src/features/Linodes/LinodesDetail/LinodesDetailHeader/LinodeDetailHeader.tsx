@@ -16,6 +16,7 @@ import {
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -74,6 +75,12 @@ const LinodeDetailHeader = () => {
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: matchedLinodeId,
+  });
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -293,7 +300,7 @@ const LinodeDetailHeader = () => {
         open={isUpgradeVolumesDialogOpen}
       />
       <TagDrawer
-        entityID={linode.id}
+        disabled={isLinodesGrantReadOnly}
         entityLabel={linode.label}
         onClose={closeTagDrawer}
         open={tagDrawer.open}

@@ -1,10 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { keyframes, styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Typography } from 'src/components/Typography';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 
@@ -14,7 +15,7 @@ export const CardView = (props: RenderLinodesProps) => {
   const { data: profile } = useProfile();
 
   const [tagDrawer, setTagDrawer] = React.useState<
-    Omit<TagDrawerProps, 'onClose' | 'updateTags'>
+    Omit<TagDrawerProps, 'onClose' | 'updateTags'> & { entityID: number }
   >({
     entityID: 0,
     entityLabel: '',
@@ -25,6 +26,12 @@ export const CardView = (props: RenderLinodesProps) => {
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     tagDrawer.entityID
   );
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: tagDrawer.entityID,
+  });
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -68,7 +75,7 @@ export const CardView = (props: RenderLinodesProps) => {
       <Grid className="m0" container style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <StyledSummaryGrid xs={12} data-qa-linode-card={linode.id}>
+            <StyledSummaryGrid data-qa-linode-card={linode.id} xs={12}>
               <LinodeEntityDetail
                 handlers={{
                   onOpenDeleteDialog: () =>
@@ -96,7 +103,7 @@ export const CardView = (props: RenderLinodesProps) => {
         ))}
       </Grid>
       <TagDrawer
-        entityID={tagDrawer.entityID}
+        disabled={isLinodesGrantReadOnly}
         entityLabel={tagDrawer.entityLabel}
         onClose={closeTagDrawer}
         open={tagDrawer.open}
@@ -123,7 +130,7 @@ const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
     },
     backgroundColor: theme.palette.background.paper,
     marginBottom: 20,
-    paddingTop: 0, // from .py0 css class
     paddingBottom: 0,
+    paddingTop: 0, // from .py0 css class
   })
 );
