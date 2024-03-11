@@ -3,8 +3,8 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
+import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
 import {
   PlacementGroupsSelect,
@@ -43,6 +43,13 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
   } = props;
   const theme = useTheme();
   const flags = useFlags();
+  const selectedRegion = regions?.find(
+    (thisRegion) =>
+      thisRegion.id === placementGroupsSelectProps?.selectedRegionId
+  );
+  const hasRegionPlacementGroupCapability = Boolean(
+    selectedRegion?.capabilities.includes('Placement Group')
+  );
   const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
   const { data: allPlacementGroups } = useUnpaginatedPlacementGroupsQuery(
     showPlacementGroups
@@ -51,10 +58,10 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
-  const selectedRegion = regions?.find(
-    (thisRegion) =>
-      thisRegion.id === placementGroupsSelectProps?.selectedRegionId
-  );
+  const isPlacementGroupSelectDisabled =
+    !selectedRegion ||
+    !hasRegionPlacementGroupCapability ||
+    props.placementGroupsSelectProps?.disabled;
 
   return (
     <Paper
@@ -95,7 +102,20 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
               variant="warning"
             >
               <Typography>
-                <b>Select a region above to see available Placement Groups.</b>
+                Select a region above to see available Placement Groups.
+              </Typography>
+            </Notice>
+          )}
+          {selectedRegion && !hasRegionPlacementGroupCapability && (
+            <Notice
+              dataTestId="placement-groups-no-capability-notice"
+              spacingBottom={0}
+              spacingTop={16}
+              variant="warning"
+            >
+              <Typography>
+                The selected region does not currently have Placement Group
+                capabilities.
               </Typography>
             </Notice>
           )}
@@ -103,22 +123,31 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
             <Box>
               <PlacementGroupsSelect
                 {...placementGroupsSelectProps}
+                disabled={isPlacementGroupSelectDisabled}
                 sx={{
                   mb: 1,
                   width: '100%',
                 }}
                 textFieldProps={{ tooltipText }}
               />
-              {selectedRegion && (
-                <LinkButton
-                  isDisabled={hasRegionReachedPlacementGroupCapacity({
+              {selectedRegion && hasRegionPlacementGroupCapability && (
+                <Button
+                  disabled={hasRegionReachedPlacementGroupCapacity({
                     allPlacementGroups,
                     region: selectedRegion,
                   })}
                   onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
+                  sx={(theme) => ({
+                    p: 0,
+                    mt: -0.75,
+                    fontFamily: theme.font.normal,
+                    fontSize: '0.875rem',
+                  })}
+                  tooltipText="This region has reached its Placement Group capacity."
+                  variant="text"
                 >
                   Create Placement Group
-                </LinkButton>
+                </Button>
               )}
             </Box>
           )}
@@ -126,6 +155,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
             allPlacementGroups={allPlacementGroups || []}
             onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
             open={isCreatePlacementGroupDrawerOpen}
+            selectedRegionId={placementGroupsSelectProps?.selectedRegionId}
           />
         </>
       )}
