@@ -2,7 +2,7 @@ import { keyframes, styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import { Typography } from 'src/components/Typography';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -14,27 +14,24 @@ import { RenderLinodesProps } from './DisplayLinodes';
 export const CardView = (props: RenderLinodesProps) => {
   const { data: profile } = useProfile();
 
-  const [tagDrawer, setTagDrawer] = React.useState<
-    Omit<TagDrawerProps, 'onClose' | 'updateTags'> & { entityID: number }
-  >({
-    entityID: 0,
-    entityLabel: '',
-    open: false,
-    tags: [],
-  });
+  const [tagDrawer, setTagDrawer] = React.useState<{
+    entityID: number;
+    entityLabel: string;
+    tags: string[];
+  }>();
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    tagDrawer.entityID
+    tagDrawer?.entityID ?? -1
   );
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
-    id: tagDrawer.entityID,
+    id: tagDrawer?.entityID,
   });
 
   const closeTagDrawer = () => {
-    setTagDrawer({ ...tagDrawer, open: false });
+    setTagDrawer(undefined);
   };
 
   const openTagDrawer = (
@@ -45,14 +42,15 @@ export const CardView = (props: RenderLinodesProps) => {
     setTagDrawer({
       entityID,
       entityLabel,
-      open: true,
       tags,
     });
   };
 
   const updateTags = (tags: string[]) => {
     return updateLinode({ tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags });
+      if (tagDrawer) {
+        setTagDrawer({ ...tagDrawer, tags });
+      }
     });
   };
 
@@ -102,14 +100,16 @@ export const CardView = (props: RenderLinodesProps) => {
           </React.Fragment>
         ))}
       </Grid>
-      <TagDrawer
-        disabled={isLinodesGrantReadOnly}
-        entityLabel={tagDrawer.entityLabel}
-        onClose={closeTagDrawer}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
-        updateTags={updateTags}
-      />
+      {tagDrawer && (
+        <TagDrawer
+          disabled={isLinodesGrantReadOnly}
+          entityLabel={tagDrawer.entityLabel}
+          onClose={closeTagDrawer}
+          open={true}
+          tags={tagDrawer.tags}
+          updateTags={updateTags}
+        />
+      )}
     </React.Fragment>
   );
 };
