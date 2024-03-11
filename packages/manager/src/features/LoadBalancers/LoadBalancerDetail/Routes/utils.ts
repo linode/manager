@@ -51,23 +51,28 @@ export const defaultServiceTarget = {
 
 export const defaultTTLUnit = 'second';
 
-export const initialValues = {
-  match_condition: {
-    hostname: '',
-    match_field: 'path_prefix' as const,
-    match_value: '',
-    session_stickiness_cookie: null,
-    session_stickiness_ttl: null,
-  },
-  service_targets: [defaultServiceTarget],
+export const getInitialValues = (protocol: Route['protocol']) => {
+  if (protocol === 'tcp') {
+    return { service_targets: [defaultServiceTarget] };
+  }
+  return {
+    match_condition: {
+      hostname: '',
+      match_field: 'path_prefix' as const,
+      match_value: '',
+      session_stickiness_cookie: null,
+      session_stickiness_ttl: null,
+    },
+    service_targets: [defaultServiceTarget],
+  };
 };
 
 export const getIsSessionStickinessEnabled = (
   rule: Rule | RulePayload | RuleCreatePayload
 ) => {
   return (
-    rule.match_condition.session_stickiness_cookie !== null ||
-    rule.match_condition.session_stickiness_ttl !== null
+    rule.match_condition?.session_stickiness_cookie !== null ||
+    rule.match_condition?.session_stickiness_ttl !== null
   );
 };
 
@@ -76,12 +81,14 @@ export const getIsSessionStickinessEnabled = (
  * so that the API accepts the payload.
  */
 export const getNormalizedRulePayload = (rule: RulePayload) => ({
-  match_condition: {
-    ...rule.match_condition,
-    hostname: rule.match_condition.hostname
-      ? rule.match_condition.hostname
-      : null,
-  },
+  match_condition: rule.match_condition
+    ? {
+        ...rule.match_condition,
+        hostname: rule.match_condition.hostname
+          ? rule.match_condition.hostname
+          : null,
+      }
+    : undefined,
   service_targets: rule.service_targets,
 });
 

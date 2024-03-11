@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { keyframes, styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
@@ -14,20 +14,15 @@ export const CardView = (props: RenderLinodesProps) => {
   const { data: profile } = useProfile();
 
   const [tagDrawer, setTagDrawer] = React.useState<
-    Omit<TagDrawerProps, 'onClose' | 'updateTags'>
-  >({
-    entityID: 0,
-    entityLabel: '',
-    open: false,
-    tags: [],
-  });
+    Omit<TagDrawerProps, 'onClose' | 'updateTags'> & { entityID: number }
+  >();
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    tagDrawer.entityID
+    tagDrawer?.entityID ?? -1
   );
 
   const closeTagDrawer = () => {
-    setTagDrawer({ ...tagDrawer, open: false });
+    setTagDrawer(undefined);
   };
 
   const openTagDrawer = (
@@ -45,7 +40,9 @@ export const CardView = (props: RenderLinodesProps) => {
 
   const updateTags = (tags: string[]) => {
     return updateLinode({ tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags });
+      if (tagDrawer) {
+        setTagDrawer({ ...tagDrawer, tags });
+      }
     });
   };
 
@@ -68,7 +65,7 @@ export const CardView = (props: RenderLinodesProps) => {
       <Grid className="m0" container style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <StyledSummaryGrid xs={12} data-qa-linode-card={linode.id}>
+            <StyledSummaryGrid data-qa-linode-card={linode.id} xs={12}>
               <LinodeEntityDetail
                 handlers={{
                   onOpenDeleteDialog: () =>
@@ -95,14 +92,15 @@ export const CardView = (props: RenderLinodesProps) => {
           </React.Fragment>
         ))}
       </Grid>
-      <TagDrawer
-        entityID={tagDrawer.entityID}
-        entityLabel={tagDrawer.entityLabel}
-        onClose={closeTagDrawer}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
-        updateTags={updateTags}
-      />
+      {tagDrawer && (
+        <TagDrawer
+          entityLabel={tagDrawer.entityLabel}
+          onClose={closeTagDrawer}
+          open={tagDrawer.open}
+          tags={tagDrawer.tags}
+          updateTags={updateTags}
+        />
+      )}
     </React.Fragment>
   );
 };
@@ -123,7 +121,7 @@ const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
     },
     backgroundColor: theme.palette.background.paper,
     marginBottom: 20,
-    paddingTop: 0, // from .py0 css class
     paddingBottom: 0,
+    paddingTop: 0, // from .py0 css class
   })
 );

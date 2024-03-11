@@ -7,7 +7,6 @@ import { TagCell } from './TagCell';
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
 
 export interface TagDrawerProps {
-  entityID: number;
   entityLabel: string;
   onClose: () => void;
   open: boolean;
@@ -15,7 +14,7 @@ export interface TagDrawerProps {
   updateTags: (tags: string[]) => Promise<any>;
 }
 
-const TagDrawer = (props: TagDrawerProps) => {
+export const TagDrawer = (props: TagDrawerProps) => {
   const { entityLabel, onClose, open, tags, updateTags } = props;
 
   return (
@@ -24,5 +23,3 @@ const TagDrawer = (props: TagDrawerProps) => {
     </Drawer>
   );
 };
-
-export { TagDrawer };

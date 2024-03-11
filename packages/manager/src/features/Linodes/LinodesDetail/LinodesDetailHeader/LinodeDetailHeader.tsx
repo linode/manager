@@ -293,7 +293,6 @@ const LinodeDetailHeader = () => {
         open={isUpgradeVolumesDialogOpen}
       />
       <TagDrawer
-        entityID={linode.id}
         entityLabel={linode.label}
         onClose={closeTagDrawer}
         open={tagDrawer.open}

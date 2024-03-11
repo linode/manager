@@ -120,6 +120,7 @@ export const TagCell = (props: TagCellProps) => {
             {tags.map((thisTag) => (
               <StyledTag
                 colorVariant="lightBlue"
+                disabled={disabled}
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
                 loading={deletingTags.has(thisTag)}
