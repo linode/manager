@@ -20,12 +20,16 @@ import {
 } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { grantsFactory } from '@src/factories/grants';
 
 /**
  * Confirms expected username and company name are shown in user menu button and yields the button.
@@ -57,7 +61,7 @@ const assertAuthLocalStorage = (
   expiry: string,
   scopes: string
 ) => {
-  assertLocalStorageValue('authentication/token', token);
+  assertLocalStorageValue('authentication/token', `Bearer ${token}`);
   assertLocalStorageValue('authentication/expire', expiry);
   assertLocalStorageValue('authentication/scopes', scopes);
 };
@@ -78,6 +82,14 @@ const mockParentUser = accountUserFactory.build({
 
 const mockChildAccount = accountFactory.build({
   company: 'Child Company',
+});
+
+const childAccountAccessGrantEnabled = grantsFactory.build({
+  global: { account_access: 'read_only', child_account_access: true },
+});
+
+const childAccountAccessGrantDisabled = grantsFactory.build({
+  global: { account_access: 'read_only', child_account_access: false },
 });
 
 const mockChildAccountToken = appTokenFactory.build({
@@ -126,6 +138,23 @@ describe('Parent/Child account switching', () => {
         .should('be.enabled')
         .click();
 
+      // Prepare up mocks in advance of the account switch. As soon as the child account is clicked,
+      // Cloud will replace its stored token with the token provided by the API and then reload.
+      // From that point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+
+      // Mock the account switch itself -- we have to do this after the mocks above
+      // to ensure that it is applied.
       mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
         'switchAccount'
       );
@@ -146,24 +175,6 @@ describe('Parent/Child account switching', () => {
         mockChildAccountToken.expiry!,
         mockChildAccountToken.scopes
       );
-
-      // From this point forward, we will not have a valid test account token stored in local storage,
-      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
-      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
-      // individual requests as needed.
-      mockAllApiRequests();
-      mockGetLinodes([]);
-      mockGetRegions([]);
-      mockGetEvents([]);
-      mockGetNotifications([]);
-
-      mockGetAccount(mockChildAccount);
-      mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
-
-      // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-      // TODO Add assertions for toast upon account switch. This might involve improving mocks for events/notifications.
-      cy.reload();
 
       // Confirm expected username and company are shown in user menu button.
       assertUserMenuButton(
@@ -205,6 +216,21 @@ describe('Parent/Child account switching', () => {
             .click();
         });
 
+      // Prepare up mocks in advance of the account switch. As soon as the child account is clicked,
+      // Cloud will replace its stored token with the token provided by the API and then reload.
+      // From that point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockParentProfile);
+      mockGetUser(mockParentUser);
+
       // Click mock company name in "Switch Account" drawer.
       mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
         'switchAccount'
@@ -227,28 +253,86 @@ describe('Parent/Child account switching', () => {
         mockChildAccountToken.scopes
       );
 
-      // From this point forward, we will not have a valid test account token stored in local storage,
-      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
-      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
-      // individual requests as needed.
-      mockAllApiRequests();
-      mockGetLinodes([]);
-      mockGetRegions([]);
-      mockGetEvents([]);
-      mockGetNotifications([]);
-      mockGetAccount(mockChildAccount);
-      mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
-
-      // TODO Remove the call to `cy.reload()` once Cloud Manager automatically updates itself upon account switching.
-      // TODO Add assertions for toast upon account switch. This might involve improving mocks for events/notifications.
-      cy.reload();
-
       // Confirm expected username and company are shown in user menu button.
       assertUserMenuButton(
         mockParentProfile.username,
         mockChildAccount.company
       );
+    });
+  });
+
+  describe('Child Account Access', () => {
+    /*
+     * - Smoke test to confirm that restricted parent users with the child_account_access grant can switch accounts.
+     * - Confirms that the "Switch Account" button is rendered.
+     */
+    describe('Enabled', () => {
+      it('renders "Switch Account" button for restricted users on Billing page', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantEnabled);
+
+        cy.visitWithLogin('/account/billing');
+
+        cy.findByTestId('switch-account-button').should('be.visible');
+      });
+
+      it('renders "Switch Account" button for restricted users in user menu', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetAccount(mockParentAccount);
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantEnabled);
+
+        cy.visitWithLogin('/');
+
+        assertUserMenuButton(
+          mockParentProfile.username,
+          mockParentAccount.company
+        ).click();
+
+        ui.userMenu
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByTestId('switch-account-button').should('be.visible');
+          });
+      });
+    });
+    /*
+     * - Smoke test to confirm that restricted parent users without the child_account_access grant cannot switch accounts.
+     * - Confirms that the "Switch Account" button is not rendered.
+     */
+    describe('Disabled', () => {
+      it('does not render "Switch Account" button for restricted users on Billing page', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantDisabled);
+
+        cy.visitWithLogin('/account/billing');
+
+        cy.findByTestId('switch-account-button').should('not.exist');
+      });
+
+      it('does not render "Switch Account" button for restricted users in user menu', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetAccount(mockParentAccount);
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantDisabled);
+
+        cy.visitWithLogin('/');
+
+        assertUserMenuButton(
+          mockParentProfile.username,
+          mockParentAccount.company
+        ).click();
+
+        ui.userMenu
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByTestId('switch-account-button').should('not.exist');
+          });
+      });
     });
   });
 

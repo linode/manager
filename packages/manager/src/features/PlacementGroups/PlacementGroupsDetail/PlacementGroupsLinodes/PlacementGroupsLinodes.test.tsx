@@ -22,7 +22,12 @@ describe('PlacementGroupsLinodes', () => {
 
   it('features the linodes table, a filter field, a create button and a docs link', () => {
     const placementGroup = placementGroupFactory.build({
-      linode_ids: [1],
+      linodes: [
+        {
+          is_compliant: true,
+          linode: 1,
+        },
+      ],
     });
 
     const { getByPlaceholderText, getByRole } = renderWithTheme(

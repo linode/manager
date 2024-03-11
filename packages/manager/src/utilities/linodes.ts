@@ -1,10 +1,4 @@
-import {
-  AccountMaintenance,
-  Grant,
-  GrantLevel,
-  Grants,
-  Linode,
-} from '@linode/api-v4';
+import { AccountMaintenance, Linode } from '@linode/api-v4';
 
 export interface Maintenance {
   when: null | string;
@@ -35,19 +29,4 @@ export const addMaintenanceToLinodes = (
         }
       : { ...thisLinode, maintenance: null };
   });
-};
-
-export const getPermissionsForLinode = (
-  grants: Grants | null | undefined,
-  linodeId: number
-): GrantLevel => {
-  if (!grants) {
-    return 'read_write';
-  } // Default to write access
-  const linodesGrants = grants.linode;
-  const linodeGrants = linodesGrants.find(
-    (grant: Grant) => grant.id === linodeId
-  );
-
-  return linodeGrants ? linodeGrants.permissions : 'read_write';
 };

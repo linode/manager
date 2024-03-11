@@ -57,20 +57,15 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = renderWithTheme(
+    const { container } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
-        numberOfPlacementGroupsCreated={9}
         onClose={vi.fn()}
         open={true}
         selectedPlacementGroup={placementGroupFactory.build()}
       />
     );
 
-    expect(
-      getByText(
-        'There was a problem retrieving your placement group. Please try again'
-      )
-    ).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('should render the drawer components', () => {
@@ -87,16 +82,52 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
       placementGroupFactory.build({
-        linode_ids: [1, 2, 0, 1, 2, 3, 5, 6, 7, 8, 43, 11],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+          {
+            is_compliant: true,
+            linode: 2,
+          },
+          {
+            is_compliant: true,
+            linode: 3,
+          },
+          {
+            is_compliant: true,
+            linode: 5,
+          },
+          {
+            is_compliant: true,
+            linode: 6,
+          },
+          {
+            is_compliant: true,
+            linode: 7,
+          },
+          {
+            is_compliant: true,
+            linode: 8,
+          },
+          {
+            is_compliant: true,
+            linode: 9,
+          },
+          {
+            is_compliant: true,
+            linode: 43,
+          },
+          {
+            is_compliant: true,
+            linode: 11,
+          },
+        ],
       })
     );
 
-    const {
-      getByPlaceholderText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
+    const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
           affinity_type: 'anti_affinity',
@@ -108,33 +139,23 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       />
     );
 
-    const linodesSelect = getByPlaceholderText('Select a Linode');
-    const addLinodeButton = getByRole('button', { name: 'Add Linode' });
-    const removableLinodesList = getByTestId('pg-linode-removable-list');
+    const linodesSelect = getByPlaceholderText(
+      'Select Linode or type to search'
+    );
+    const assignLinodeButton = getByRole('button', { name: 'Assign Linode' });
 
     expect(linodesSelect).toBeInTheDocument();
-    expect(addLinodeButton).toHaveAttribute('aria-disabled', 'true');
-    expect(removableLinodesList).toHaveTextContent(
-      'No Linodes have been assigned.'
-    );
+    expect(assignLinodeButton).toHaveAttribute('aria-disabled', 'true');
 
     fireEvent.focus(linodesSelect);
     fireEvent.change(linodesSelect, { target: { value: 'Linode-11' } });
     const optionElement = getByText('Linode-11');
     fireEvent.click(optionElement);
 
-    expect(addLinodeButton).not.toHaveAttribute('aria-disabled', 'true');
+    expect(assignLinodeButton).not.toHaveAttribute('aria-disabled', 'true');
 
-    fireEvent.click(getByRole('button', { name: 'Add Linode' }));
+    fireEvent.click(getByRole('button', { name: 'Assign Linode' }));
 
-    expect(addLinodeButton).toHaveAttribute('aria-disabled', 'true');
-    expect(removableLinodesList).toHaveTextContent('Linode-11');
-
-    const removeButton = getByRole('button', { name: 'remove Linode-11' });
-    fireEvent.click(removeButton);
-
-    expect(removableLinodesList).toHaveTextContent(
-      'No Linodes have been assigned.'
-    );
+    expect(assignLinodeButton).toHaveAttribute('aria-disabled', 'true');
   });
 });

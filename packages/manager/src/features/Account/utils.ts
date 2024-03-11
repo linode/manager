@@ -1,6 +1,6 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import { ADMINISTRATOR, BUSINESS_PARTNER } from './constants';
+import { ADMINISTRATOR, PARENT_USER } from './constants';
 
 import type { GlobalGrantTypes, GrantLevel, Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
@@ -55,7 +55,7 @@ export const getRestrictedResourceText = ({
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  const contactPerson = isChildUser ? BUSINESS_PARTNER : ADMINISTRATOR;
+  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
 
   let message = `You don't have permissions to ${action} ${resource}.`;
 

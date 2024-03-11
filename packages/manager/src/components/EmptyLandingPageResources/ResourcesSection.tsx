@@ -26,6 +26,7 @@ interface ButtonProps {
   children: string;
   disabled?: boolean;
   onClick: () => void;
+  tooltipText?: string;
 }
 
 interface ResourcesSectionProps {

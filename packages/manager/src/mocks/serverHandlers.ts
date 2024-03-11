@@ -671,8 +671,8 @@ export const handlers = [
     });
     const linodeInEdgeRegion = linodeFactory.build({
       image: 'edge-test-image',
-      label: 'edge-test-region',
-      region: 'us-southeast',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -766,8 +766,8 @@ export const handlers = [
         linodeFactory.build({
           backups: { enabled: false },
           id,
-          label: 'DC-Specific Pricing Linode',
-          region: 'id-cgk',
+          label: 'Gecko Edge Test',
+          region: 'us-edge-1',
         })
       )
     );
@@ -1077,7 +1077,6 @@ export const handlers = [
       )
     );
   }),
-
   rest.post('*object-storage/keys', (req, res, ctx) => {
     const { label, regions } = req.body as ObjectStorageKeyRequest;
 
@@ -1610,12 +1609,35 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupCreateEvent = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+      percent_complete: 100,
+      status: 'notification',
+    });
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
+      percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
+      status: 'notification',
+    });
+
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
       )
@@ -2111,9 +2133,47 @@ export const handlers = [
       affinity_type: 'anti_affinity',
       id: Number(req.params.placementGroupId) ?? -1,
       label: 'pg-1',
-      linode_ids: [
-        ...[0, 1, 2, 3, 5, 6, 7, 8, 43],
-        (req.body as any).linodes[0],
+      linodes: [
+        {
+          is_compliant: true,
+          linode: 1,
+        },
+        {
+          is_compliant: true,
+          linode: 2,
+        },
+        {
+          is_compliant: true,
+          linode: 3,
+        },
+        {
+          is_compliant: true,
+          linode: 4,
+        },
+        {
+          is_compliant: true,
+          linode: 5,
+        },
+        {
+          is_compliant: true,
+          linode: 6,
+        },
+        {
+          is_compliant: true,
+          linode: 7,
+        },
+        {
+          is_compliant: true,
+          linode: 8,
+        },
+        {
+          is_compliant: false,
+          linode: 43,
+        },
+        {
+          is_compliant: true,
+          linode: (req.body as any).linodes[0],
+        },
       ],
     });
 
@@ -2130,7 +2190,45 @@ export const handlers = [
         affinity_type: 'anti_affinity',
         id: Number(req.params.placementGroupId) ?? -1,
         label: 'pg-1',
-        linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+
+          {
+            is_compliant: true,
+            linode: 2,
+          },
+          {
+            is_compliant: true,
+            linode: 3,
+          },
+          {
+            is_compliant: true,
+            linode: 4,
+          },
+          {
+            is_compliant: true,
+            linode: 5,
+          },
+          {
+            is_compliant: true,
+            linode: 6,
+          },
+          {
+            is_compliant: true,
+            linode: 7,
+          },
+          {
+            is_compliant: true,
+            linode: 8,
+          },
+          {
+            is_compliant: false,
+            linode: 43,
+          },
+        ],
       });
 
       return res(ctx.json(response));

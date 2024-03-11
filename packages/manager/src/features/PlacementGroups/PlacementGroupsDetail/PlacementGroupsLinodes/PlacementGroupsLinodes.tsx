@@ -114,7 +114,7 @@ export const PlacementGroupsLinodes = ({
             disabled={hasReachedCapacity || isLinodeReadOnly}
             onClick={handleOpenAssignLinodesDrawer}
           >
-            Add Linode to Placement Group
+            Assign Linode to Placement Group
           </Button>
         </Grid>
       </Grid>

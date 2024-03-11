@@ -20,7 +20,7 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface PlacementGroupsRowProps {
   disabled: boolean;
   handleDeletePlacementGroup: () => void;
-  handleRenamePlacementGroup: () => void;
+  handleEditPlacementGroup: () => void;
   placementGroup: PlacementGroup;
 }
 
@@ -28,7 +28,7 @@ export const PlacementGroupsRow = React.memo(
   ({
     disabled,
     handleDeletePlacementGroup,
-    handleRenamePlacementGroup,
+    handleEditPlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
     const { affinity_type, id, is_compliant, label } = placementGroup;
@@ -37,8 +37,8 @@ export const PlacementGroupsRow = React.memo(
     });
     const actions: Action[] = [
       {
-        onClick: handleRenamePlacementGroup,
-        title: 'Rename',
+        onClick: handleEditPlacementGroup,
+        title: 'Edit',
       },
       {
         onClick: handleDeletePlacementGroup,
