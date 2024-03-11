@@ -11,6 +11,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -132,6 +133,17 @@ export const PlacementGroupsCreateDrawer = (
       open={open}
       title="Create Placement Group"
     >
+      {disabledCreateButton && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'edit',
+            resourceType: 'PlacementGroups',
+          })}
+          important
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}

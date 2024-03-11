@@ -91,7 +91,6 @@ export const PlacementGroupsLanding = React.memo(() => {
     return <CircleProgress />;
   }
 
-  // if (placementGroups?.results === 0 || placementGroups?.results === undefined) {
   if (placementGroups?.results === 0) {
     return (
       <>
