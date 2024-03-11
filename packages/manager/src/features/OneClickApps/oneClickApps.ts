@@ -1605,6 +1605,27 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description: 'Password Manager',
+    alt_name: 'Passbolt',
+    categories: ['Security'],
+    colors: {
+      end: '3A5EFF',
+      start: '709cff',
+    },
+    description: `Passbolt is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
+    logo_url: 'passbolt.svg',
+    name: 'Passbolt',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
+        title: 'Deploy Passbolt through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open-source password manager for teams and businesses.',
+    website: 'https://www.passbolt.com/',
+  },
+  {
+    alt_description: 'Password Manager',
     alt_name: 'Pass Key',
     categories: ['Security'],
     colors: {
