@@ -1,4 +1,4 @@
-import { act, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import {
@@ -9,8 +9,6 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
-
-import type { RenderResult } from '@testing-library/react';
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
@@ -100,12 +98,9 @@ describe('PlacementGroupsDeleteModal', () => {
       }),
     });
 
-    let renderResult: RenderResult;
-    await act(async () => {
-      renderResult = renderWithTheme(<PlacementGroupsDeleteModal {...props} />);
-    });
-
-    const { getByRole, getByTestId, getByText } = renderResult!;
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <PlacementGroupsDeleteModal {...props} />
+    );
 
     expect(
       getByRole('heading', {
@@ -136,12 +131,9 @@ describe('PlacementGroupsDeleteModal', () => {
       }),
     });
 
-    let renderResult: RenderResult;
-    await act(async () => {
-      renderResult = renderWithTheme(<PlacementGroupsDeleteModal {...props} />);
-    });
-
-    const { getByRole, getByTestId, getByText } = renderResult!;
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <PlacementGroupsDeleteModal {...props} />
+    );
 
     expect(getByText('No Linodes assigned to this Placement Group.'));
 
@@ -151,10 +143,10 @@ describe('PlacementGroupsDeleteModal', () => {
     expect(textField).toBeEnabled();
     expect(deleteButton).toBeDisabled();
 
-    fireEvent.change(textField, { target: { value: 'PG-to-delete' } });
+    await userEvent.type(textField, 'PG-to-delete');
 
     expect(deleteButton).toBeEnabled();
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(queryMocks.useDeletePlacementGroup).toHaveBeenCalled();
   });
