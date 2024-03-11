@@ -1,21 +1,24 @@
 import * as React from 'react';
 
-import { useRegionsQuery } from 'src/queries/regions';
 import { Typography } from 'src/components/Typography';
+import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
-  region: string;
+  regionId: string;
 }
 
-export const RegionsCell = (props: Props) => {
-  const { region } = props;
-  const { data: regions } = useRegionsQuery();
+export const RegionsCell = ({ regionId }: Props) => {
+  const { data: allRegions } = useRegionsQuery();
 
-  const actualRegion = regions?.find((r) => r.id === region);
+  const region = allRegions?.find((r) => r.id === regionId);
+
+  if (!region) {
+    return <Typography noWrap>{regionId}</Typography>;
+  }
 
   return (
     <Typography noWrap>
-      {actualRegion?.label ? `${actualRegion.label} (${region})` : region}
+      {region.label} ({region.id})
     </Typography>
   );
 };

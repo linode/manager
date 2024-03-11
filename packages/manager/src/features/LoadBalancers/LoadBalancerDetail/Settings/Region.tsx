@@ -42,7 +42,7 @@ export const Region = ({ loadbalancerId }: Props) => {
             />{' '}
             Load Balancer regions can not be changed during beta.
           </Typography>
-          <LoadBalancerRegions />
+          <LoadBalancerRegions regionIds={loadbalancer?.regions ?? []} />
         </Stack>
       </form>
     </Paper>
