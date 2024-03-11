@@ -1,10 +1,9 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -12,6 +11,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell, TableCellProps } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
@@ -87,13 +87,7 @@ export const SelectLinodeRow = (props: Props) => {
   }, [linode, linodeId, queryClient]);
 
   if (linodeLoading || !linode) {
-    return (
-      <TableRow>
-        <TableCell colSpan={numCols}>
-          <CircleProgress mini />
-        </TableCell>
-      </TableRow>
-    );
+    return <TableRowLoading columns={6} rows={1} />;
   }
 
   if (linodeError) {
