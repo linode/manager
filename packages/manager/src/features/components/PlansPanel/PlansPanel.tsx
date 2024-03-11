@@ -3,13 +3,14 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { EdgePlanTable } from './EdgePlanTable';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -162,6 +163,22 @@ export const PlansPanel = (props: Props) => {
     currentPlanHeading
   );
 
+  if (showEdgePlanTable) {
+    return (
+      <EdgePlanTable
+        copy={copy}
+        data-qa-select-plan
+        docsLink={docsLink}
+        error={error}
+        header={header || 'Linode Plan'}
+        innerClass={props.tabbedPanelInnerClass}
+        renderTable={tabs[0].render}
+        rootClass={`${className} tabbedPanel`}
+        sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      />
+    );
+  }
+
   return (
     <TabbedPanel
       copy={copy}
@@ -169,10 +186,9 @@ export const PlansPanel = (props: Props) => {
       docsLink={docsLink}
       error={error}
       header={header || 'Linode Plan'}
-      initTab={showEdgePlanTable ? undefined : initialTab >= 0 ? initialTab : 0}
+      initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
-      showEdgePlanTable={showEdgePlanTable}
       sx={{ marginTop: theme.spacing(3), width: '100%' }}
       tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
