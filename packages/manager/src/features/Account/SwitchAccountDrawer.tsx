@@ -13,7 +13,7 @@ import {
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
-import { getStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
@@ -155,6 +155,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     }
 
     updateCurrentTokenBasedOnUserType({ userType: 'parent' });
+    setStorage('proxy_user', 'false');
     handleClose();
     refreshPage();
   }, [handleClose, refreshPage]);
