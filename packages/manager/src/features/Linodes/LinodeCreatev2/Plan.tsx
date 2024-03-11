@@ -3,7 +3,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { useGrants } from 'src/queries/profile';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
@@ -17,14 +17,14 @@ export const Plan = () => {
     name: 'type',
   });
 
-  const { data: grants } = useGrants();
   const { data: regions } = useRegionsQuery();
   const { data: types } = useAllTypes();
 
   const regionId = watch('region');
 
-  const hasCreateLinodePermission =
-    grants === undefined || grants.global.add_linodes;
+  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   return (
     <PlansPanel
@@ -38,7 +38,7 @@ export const Plan = () => {
         />
       }
       data-qa-select-plan
-      disabled={!hasCreateLinodePermission}
+      disabled={isLinodeCreateRestricted}
       error={fieldState.error?.message}
       isCreate
       linodeID={undefined} // @todo add cloning support

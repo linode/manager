@@ -10,7 +10,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 export const Error = () => {
   const { formState } = useFormContext<CreateLinodeRequest>();
 
-  if (!formState.errors.root) {
+  if (!formState.errors.root?.message) {
     return null;
   }
 

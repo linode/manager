@@ -2,7 +2,7 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import { useGrants } from 'src/queries/profile';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -11,15 +11,14 @@ export const Region = () => {
     name: 'region',
   });
 
-  const { data: grants } = useGrants();
-
-  const hasCreateLinodePermission =
-    grants === undefined || grants.global.add_linodes;
+  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   return (
     <SelectRegionPanel
       currentCapability="Linodes"
-      disabled={!hasCreateLinodePermission}
+      disabled={isLinodeCreateRestricted}
       error={formState.errors.region?.message}
       handleSelection={field.onChange}
       selectedId={field.value}

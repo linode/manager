@@ -25,6 +25,8 @@ export const LinodeCreatev2 = () => {
 
       history.push(`/linodes/${linode.id}`);
     } catch (errors) {
+      // @todo this is temporary API error handling. We will develop a more
+      // robust helper that can convert API errors to react-hook-form errors
       for (const error of errors) {
         if (error.field) {
           methods.setError(error.field, { message: error.reason });
