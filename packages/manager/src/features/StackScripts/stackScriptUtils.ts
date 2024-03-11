@@ -134,6 +134,7 @@ export const baseApps = {
   '1308539': 'NATS Single Node',
   '1298017': 'JupyterLab',
   '1329430': 'Passbolt',
+  '1329462': 'LinuxGSM',
 };
 
 const oneClickFilter = [

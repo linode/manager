@@ -1013,6 +1013,28 @@ export const oneClickApps: OCA[] = [
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.`,
   },
   {
+    alt_description:
+      'LinuxGSM is a command line utility that simplifies self-hosting multiplayer game servers.',
+    alt_name: 'Multiplayer Game Servers',
+    categories: ['Games'],
+    colors: {
+      end: 'F6BD0C',
+      start: '000000',
+    },
+    description: `Self hosted multiplayer game servers.`,
+    logo_url: 'linuxgsm.svg',
+    name: 'LinuxGSM',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/linuxgsm/',
+        title: 'Deploy LinuxGSM through the Linode Marketplace',
+      },
+    ],
+    summary: 'Simple command line multiplayer game servers.',
+    website: 'https://docs.linuxgsm.com',
+  },
+  {
     alt_description: 'Optimized control panel server.',
     alt_name: 'Web server control panel',
     categories: ['Website'],
@@ -1608,8 +1630,8 @@ export const oneClickApps: OCA[] = [
     alt_name: 'Passbolt',
     categories: ['Security'],
     colors: {
-      end: '3A5EFF',
-      start: '709cff',
+      end: 'D40101',
+      start: '171717',
     },
     description: `Passbolt is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
     logo_url: 'passbolt.svg',
