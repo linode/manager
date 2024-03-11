@@ -8,9 +8,9 @@ import { TableRow } from 'src/components/TableRow';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
 import { LoadBalancerEndpointHealth } from '../LoadBalancerDetail/LoadBalancerEndpointHealth';
+import { LoadBalancerRegionsList } from '../LoadBalancerDetail/LoadBalancerRegions';
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { Ports } from './Ports';
-import { RegionsCell } from './RegionsCell';
 
 export interface LoadBalancerHandlers {
   onDelete: () => void;
@@ -49,9 +49,12 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
       </Hidden>
       <Hidden mdDown>
         <TableCell>
-          {regions?.map((region) => (
-            <RegionsCell key={region} regionId={region} />
-          ))}
+          <LoadBalancerRegionsList
+            hideFlags
+            py={1}
+            regionIds={regions}
+            spacing={0.5}
+          />
         </TableCell>
       </Hidden>
       <TableCell actionCell>

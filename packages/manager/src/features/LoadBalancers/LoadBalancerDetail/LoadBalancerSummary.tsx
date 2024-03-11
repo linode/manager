@@ -10,7 +10,7 @@ import { useLoadBalancerQuery } from 'src/queries/aclb/loadbalancers';
 
 import { Ports } from '../LoadBalancerLanding/Ports';
 import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
-import { LoadBalancerRegions } from './LoadBalancerRegions';
+import { LoadBalancerRegionsList } from './LoadBalancerRegions';
 
 export const LoadBalancerSummary = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
@@ -42,7 +42,7 @@ export const LoadBalancerSummary = () => {
     },
     {
       title: 'Regions',
-      value: <LoadBalancerRegions regionIds={loadbalancer?.regions ?? []} />,
+      value: <LoadBalancerRegionsList regionIds={loadbalancer?.regions ?? []} />,
     },
   ];
 

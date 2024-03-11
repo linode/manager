@@ -7,10 +7,8 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-import {
-  LoadBalancerRegions as Regions,
-  betaRegions,
-} from '../LoadBalancerDetail/LoadBalancerRegions';
+import { ACLB_BETA_REGION_IDS } from '../constants';
+import { LoadBalancerRegionsList } from '../LoadBalancerDetail/LoadBalancerRegions';
 
 interface Props {
   sx?: SxProps<Theme>;
@@ -31,7 +29,7 @@ export const LoadBalancerRegions = ({ sx }: Props) => {
             No charges will be incurred.
           </Typography>
         </Stack>
-        <Regions regionIds={betaRegions} />
+        <LoadBalancerRegionsList regionIds={ACLB_BETA_REGION_IDS} />
       </Stack>
     </Paper>
   );

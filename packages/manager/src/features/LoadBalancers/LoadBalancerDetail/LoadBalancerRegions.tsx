@@ -1,50 +1,29 @@
 import React from 'react';
 
-import { Flag } from 'src/components/Flag';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { Stack, StackProps } from 'src/components/Stack';
 
-import type { Country } from '@linode/api-v4';
+import { RegionItem } from '../LoadBalancerLanding/RegionItem';
 
-export const betaRegions = ['us-mia', 'us-lax', 'fr-par', 'jp-osa', 'id-cgk'];
-
-interface Props {
+interface Props extends StackProps {
+  /**
+   * Disables the country flag that shows before the region label
+   * @default false
+   */
+  hideFlags?: boolean;
+  /**
+   * The region ids
+   */
   regionIds: string[];
 }
 
-export const LoadBalancerRegions = ({ regionIds }: Props) => {
+export const LoadBalancerRegionsList = (props: Props) => {
+  const { hideFlags, regionIds, ...rest } = props;
+
   return (
-    <Stack spacing={1.25}>
+    <Stack spacing={1.25} {...rest}>
       {regionIds?.map((regionId) => (
-        <RegionItem key={regionId} regionId={regionId} />
+        <RegionItem hideFlag={hideFlags} key={regionId} regionId={regionId} />
       ))}
-    </Stack>
-  );
-};
-
-interface RegionItemProps {
-  regionId: string;
-}
-
-const RegionItem = ({ regionId }: RegionItemProps) => {
-  const { data: regions } = useRegionsQuery();
-
-  const region = regions?.find((r) => r.id === regionId);
-
-  if (!region) {
-    return (
-      <Stack alignItems="center" direction="row" spacing={2}>
-        <Flag country={'' as Country} />
-        <Typography>{regionId}</Typography>
-      </Stack>
-    );
-  }
-
-  return (
-    <Stack alignItems="center" direction="row" spacing={2}>
-      <Flag country={region.country as Country} />
-      <Typography>{`${region.label} (${region.id})`}</Typography>
     </Stack>
   );
 };
