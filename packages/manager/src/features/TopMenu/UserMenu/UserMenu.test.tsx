@@ -197,4 +197,48 @@ describe('UserMenu', () => {
     expect(within(userMenuPopover).getByText('Child Company')).toBeVisible();
     expect(within(userMenuPopover).getByText('Switch Account')).toBeVisible();
   });
+
+  it('shows the parent email for a parent user if their company name is not set', async () => {
+    // Mock a forbidden request to the /account endpoint, which happens if Billing (Account) Access is None.
+    server.use(
+      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            grantsFactory.build({
+              global: {
+                account_access: null,
+              },
+            })
+          )
+        );
+      }),
+      rest.get('*/account', (req, res, ctx) => {
+        return res(ctx.status(403));
+      }),
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            profileFactory.build({
+              email: 'parent@parent.com',
+              user_type: 'parent',
+              username: 'parent-username',
+            })
+          )
+        );
+      })
+    );
+
+    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />, {
+      flags: { parentChildAccountAccess: true },
+    });
+
+    const userMenuButton = await findByLabelText('Profile & Account');
+    fireEvent.click(userMenuButton);
+
+    const userMenuPopover = await findByTestId('user-menu-popover');
+
+    expect(
+      within(userMenuPopover).getByText('parent@parent.com')
+    ).toBeVisible();
+  });
 });
