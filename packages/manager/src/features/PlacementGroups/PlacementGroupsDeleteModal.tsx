@@ -1,4 +1,5 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -53,6 +54,8 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const error = deletePlacementError || unassignLinodeError;
 
   React.useEffect(() => {
@@ -68,10 +71,18 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     };
 
     await unassignLinodes(payload);
+    const toastMessage = `Linode successfully unassigned`;
+    enqueueSnackbar(toastMessage, {
+      variant: 'success',
+    });
   };
 
   const onDelete = async () => {
     await deletePlacementGroup();
+    const toastMessage = `Placement Group successfully deleted.`;
+    enqueueSnackbar(toastMessage, {
+      variant: 'success',
+    });
     onClose();
   };
 
