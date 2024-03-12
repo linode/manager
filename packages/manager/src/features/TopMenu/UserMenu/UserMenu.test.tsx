@@ -121,29 +121,16 @@ describe('UserMenu', () => {
     expect(queryByText('Test Company')).not.toBeInTheDocument();
   });
 
-  it("shows the restricted user's username and no email in the TopMenu for a regular user", async () => {
-    // Mock a forbidden request to the /account endpoint, which happens if Billing (Account) Access is None.
+  it("shows the user's username and no email in the TopMenu for a regular user without a company name", async () => {
     server.use(
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({
-              global: {
-                account_access: null,
-              },
-            })
-          )
-        );
-      }),
       rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.status(403));
+        return res(ctx.json(accountFactory.build({ company: undefined })));
       }),
       rest.get('*/profile', (req, res, ctx) => {
         return res(
           ctx.json(
             profileFactory.build({
               email: 'user@email.com',
-              restricted: true,
               user_type: 'default',
               username: 'regular-user',
             })
