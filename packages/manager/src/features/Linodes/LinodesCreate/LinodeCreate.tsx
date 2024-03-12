@@ -370,6 +370,11 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
+    const linodeIsInEdgeRegion = getIsEdgeRegion(
+      regionsData,
+      selectedRegionID ?? ''
+    );
+
     if (typeDisplayInfo) {
       const typeDisplayInfoCopy = cloneDeep(typeDisplayInfo);
 
@@ -392,7 +397,17 @@ export class LinodeCreate extends React.PureComponent<
         )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
-      displaySections.push(typeDisplayInfoCopy);
+      // @TODO Gecko: Remove $0 hardcoding once plan data is returned from API
+      if (linodeIsInEdgeRegion) {
+        displaySections.push({
+          ...typeDisplayInfoCopy,
+          details: '$0/month',
+          hourly: 0,
+          monthly: 0,
+        });
+      } else {
+        displaySections.push(typeDisplayInfoCopy);
+      }
     }
 
     const type = typesData.find(
@@ -406,7 +421,12 @@ export class LinodeCreate extends React.PureComponent<
       type,
     });
 
-    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+    if (
+      hasBackups &&
+      typeDisplayInfo &&
+      backupsMonthlyPrice &&
+      !linodeIsInEdgeRegion
+    ) {
       displaySections.push(
         renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
