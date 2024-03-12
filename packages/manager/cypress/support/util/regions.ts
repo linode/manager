@@ -1,6 +1,24 @@
 import { randomItem } from 'support/util/random';
+import { buildArray, shuffleArray } from './arrays';
 
 import type { Capabilities, Region } from '@linode/api-v4';
+
+/**
+ * Regions that cannot be selected using `chooseRegion()` and `chooseRegions()`.
+ *
+ * This is useful for regions which have capabilities that are required for tests,
+ * but do not have capacity, resulting in 400 responses from the API.
+ *
+ * In the future we may be able to leverage the API to dynamically exclude regions
+ * that are lacking capacity.
+ */
+const disallowedRegionIds = [
+  // Tokyo, JP
+  'ap-northeast',
+
+  // Washington, DC
+  'us-iad',
+];
 
 /**
  * Returns an object describing a Cloud Manager region if specified by the user.
@@ -46,10 +64,15 @@ export const getTestableRegions = (): Region[] => {
  *
  * If no known region exists with the given ID, an error is thrown.
  *
+ * @param id - ID of the region to find.
+ * @param searchRegions - Optional array of Regions from which to search.
+ *
  * @throws When no region exists in the `regions` array with the given ID.
  */
-export const getRegionById = (id: string) => {
-  const region = regions.find((findRegion: Region) => findRegion.id === id);
+export const getRegionById = (id: string, searchRegions?: Region[]) => {
+  const region = (searchRegions ?? regions).find(
+    (findRegion: Region) => findRegion.id === id
+  );
   if (!region) {
     throw new Error(`Unable to find region by ID. Unknown ID '${id}'.`);
   }
@@ -62,10 +85,13 @@ export const getRegionById = (id: string) => {
  * If no known region exists with the given human-readable label, an error is
  * thrown.
  *
+ * @param label - Label of the region to find.
+ * @param searchRegions - Optional array of Regions from which to search.
+ *
  * @throws When no region exists in the `regions` array with the given label.
  */
-export const getRegionByLabel = (label: string) => {
-  const region = regions.find(
+export const getRegionByLabel = (label: string, searchRegions?: Region[]) => {
+  const region = (searchRegions ?? regions).find(
     (findRegion: Region) => findRegion.label === label
   );
   if (!region) {
@@ -78,38 +104,119 @@ export const getRegionByLabel = (label: string) => {
 
 interface ChooseRegionOptions {
   /**
-   * If specified, the region returned will support the defined capability
+   * If specified, the region returned will support the defined capabilities
    * @example 'Managed Databases'
    */
-  capability?: Capabilities;
+  capabilities?: Capabilities[];
+
+  /**
+   * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
+   */
+  regions?: Region[];
 }
+
+/**
+ * Returns `true` if the given Region has all of the given capabilities.
+ *
+ * @param region - Region to check capabilities.
+ * @param capabilities - Capabilities to check.
+ *
+ * @returns `true` if `region` has all of the given capabilities.
+ */
+const regionHasCapabilities = (
+  region: Region,
+  capabilities: Capabilities[]
+): boolean => {
+  return capabilities.every((capability) =>
+    region.capabilities.includes(capability)
+  );
+};
+
+/**
+ * Returns an array of Region objects that have all of the given capabilities.
+ *
+ * @param regions - Regions from which to search.
+ * @param capabilities - Capabilities to check.
+ *
+ * @returns Array of Region objects containing the required capabilities.
+ */
+const regionsWithCapabilities = (
+  regions: Region[],
+  capabilities: Capabilities[]
+): Region[] => {
+  return regions.filter((region: Region) =>
+    regionHasCapabilities(region, capabilities)
+  );
+};
+
+/**
+ * Returns an array of Region objects that meet the given criteria.
+ *
+ * @param options - Object describing Region selection criteria.
+ * @param detectOverrideRegion - Whether override region should be detected and applied.
+ *
+ * @throws If no regions meet the desired criteria.
+ * @throws If an override region is specified which does not meet the given criteria.
+ *
+ * @returns Array of Region objects that meet criteria specified by `options` param.
+ */
+const resolveSearchRegions = (
+  options?: ChooseRegionOptions,
+  detectOverrideRegion: boolean = true
+): Region[] => {
+  const requiredCapabilities = options?.capabilities ?? [];
+  const overrideRegion = getOverrideRegion();
+
+  // If the user has specified an override region for this run, it takes precedent
+  // over any other specified criteria.
+  if (overrideRegion && detectOverrideRegion) {
+    // TODO Consider skipping instead of failing when test isn't applicable to override region.
+    if (!regionHasCapabilities(overrideRegion, requiredCapabilities)) {
+      throw new Error(
+        `Override region ${overrideRegion.id} (${
+          overrideRegion.label
+        }) does not support one or more capabilities: ${requiredCapabilities.join(
+          ', '
+        )}`
+      );
+    }
+    if (disallowedRegionIds.includes(overrideRegion.id)) {
+      throw new Error(
+        `Override region ${overrideRegion.id} (${overrideRegion.label}) is disallowed for testing due to capacity limitations.`
+      );
+    }
+    return [overrideRegion];
+  }
+
+  const capableRegions = regionsWithCapabilities(
+    options?.regions ?? regions,
+    requiredCapabilities
+  ).filter((region: Region) => !disallowedRegionIds.includes(region.id));
+
+  if (!capableRegions.length) {
+    throw new Error(
+      `No regions are available with the required capabilities: ${requiredCapabilities.join(
+        ', '
+      )}`
+    );
+  }
+
+  return capableRegions;
+};
 
 /**
  * Returns a known Cloud Manager region at random, or returns a user-chosen
  * region if one was specified.
  *
- * Region selection can be configured via the `CY_TEST_REGION` environment
- * variable. If defined, the region returned by this function will be
- * overridden using the chosen region.
+ * Region selection can be overridden via the `CY_TEST_REGION` environment
+ * variable.
+ *
+ * @param options - Region selection options.
  *
  * @returns Object describing a Cloud Manager region to use during tests.
  */
 export const chooseRegion = (options?: ChooseRegionOptions): Region => {
-  const overrideRegion = getOverrideRegion();
-
-  if (overrideRegion) {
-    return overrideRegion;
-  }
-
-  if (options?.capability) {
-    const regionsWithCapability = regions.filter((region) =>
-      region.capabilities.includes(options.capability!)
-    );
-
-    return randomItem(regionsWithCapability);
-  }
-
-  return randomItem(regions);
+  return randomItem(resolveSearchRegions(options));
 };
 
 /**
@@ -120,38 +227,36 @@ export const chooseRegion = (options?: ChooseRegionOptions): Region => {
  * subsequent items will be chosen at random.
  *
  * @param count - Number of Regions to include in the returned array.
+ * @param options - Region selection options.
  *
  * @throws When `count` is less than 0.
  * @throws When there are not enough regions to satisfy the given `count`.
  *
  * @returns Array of Cloud Manager Region objects.
  */
-export const chooseRegions = (count: number): Region[] => {
+export const chooseRegions = (
+  count: number,
+  options?: ChooseRegionOptions
+): Region[] => {
   if (count < 0) {
     throw new Error(
       'Unable to choose regions. The desired number of regions must be 0 or greater'
     );
   }
-  if (regions.length < count) {
+
+  const searchRegions = [
+    ...shuffleArray(resolveSearchRegions(options, false)),
+    // If an override region is specified, insert it into the array last so it pops first.
+    ...(getOverrideRegion() ? resolveSearchRegions(options, true) : []),
+  ];
+
+  if (searchRegions.length < count) {
     throw new Error(
-      `Unable to choose regions. The desired number of regions exceeds the number of known regions (${regions.length})`
+      `Unable to choose regions. The desired number of regions exceeds the number of known regions that meet the required criteria (${regions.length})`
     );
   }
-  const overrideRegion = getOverrideRegion();
-  return new Array(count).fill(null).reduce((acc: Region[], _cur, index) => {
-    const chosenRegion: Region = ((): Region => {
-      if (index === 0 && overrideRegion) {
-        return overrideRegion;
-      }
-      // Get an array of regions that have not already been selected.
-      const unusedRegions = regions.filter(
-        (region: Region) => !acc.includes(region)
-      );
-      return randomItem(unusedRegions);
-    })();
-    acc.push(chosenRegion);
-    return acc;
-  }, []);
+
+  return buildArray(count, (i) => searchRegions.pop()!);
 };
 
 /**

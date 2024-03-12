@@ -6,12 +6,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TagsPanel } from './TagsPanel';
 
+const tagsPanelProps = {
+  entityId: 123,
+  tags: ['Tag1', 'Tag2'],
+};
+
 describe('TagsPanel', () => {
   it('renders TagsPanel component with existing tags', async () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();
@@ -30,7 +35,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     await userEvent.click(getByText('Add a tag'));
@@ -51,7 +56,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     await userEvent.click(getByText('Add a tag'));
@@ -75,7 +80,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByLabelText, getByText, queryByLabelText } = renderWithTheme(
-      <TagsPanel tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();
@@ -93,7 +98,7 @@ describe('TagsPanel', () => {
     const updateTagsMock = vi.fn(() => Promise.resolve());
 
     const { getByText, queryByLabelText, queryByText } = renderWithTheme(
-      <TagsPanel disabled tags={['Tag1', 'Tag2']} updateTags={updateTagsMock} />
+      <TagsPanel disabled {...tagsPanelProps} updateTags={updateTagsMock} />
     );
 
     expect(getByText('Tag1')).toBeInTheDocument();

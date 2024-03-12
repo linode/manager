@@ -4,15 +4,12 @@ import {
   QueryClient,
   QueryKey,
   UseMutationOptions,
-  UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 // =============================================================================
 // Config
 // =============================================================================
-type QueryConfigTypes = 'longLived' | 'noRetry' | 'oneTimeFetch' | 'shortLived';
-
-export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
+export const queryPresets = {
   longLived: {
     cacheTime: 10 * 60 * 1000,
     refetchOnMount: true,
@@ -70,7 +67,7 @@ export const listToItemsByID = <E extends {}[]>(
 };
 
 export const mutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -86,7 +83,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const simpleMutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
@@ -100,7 +97,7 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const creationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -116,7 +113,7 @@ export const creationHandlers = <T, V, E = APIError[]>(
 };
 
 export const deletionHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -244,12 +241,17 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
         return oldData;
       }
 
-      oldData.data[toUpdateIndex] = {
+      const updatedPaginatedData = [...oldData.data];
+
+      updatedPaginatedData[toUpdateIndex] = {
         ...oldData.data[toUpdateIndex],
         ...newData,
       };
 
-      return oldData;
+      return {
+        ...oldData,
+        data: updatedPaginatedData,
+      };
     }
   );
 };

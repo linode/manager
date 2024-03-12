@@ -1,6 +1,6 @@
 import { Tag, getTags } from '@linode/api-v4';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -9,7 +9,7 @@ import { queryPresets } from './base';
 export const queryKey = 'tags';
 
 export const useTagSuggestions = (enabled = true) =>
-  useQuery<Tag[], APIError[]>(queryKey, () => getAllTagSuggestions(), {
+  useQuery<Tag[], APIError[]>([queryKey], () => getAllTagSuggestions(), {
     ...queryPresets.longLived,
     enabled,
   });
@@ -29,5 +29,5 @@ export const updateTagsSuggestionsData = (
   const uniqueTags = Array.from(new Set(newData.map((tag) => tag.label)))
     .sort()
     .map((label) => ({ label }));
-  queryClient.setQueryData(queryKey, uniqueTags);
+  queryClient.setQueryData([queryKey], uniqueTags);
 };
