@@ -79,7 +79,6 @@ export interface ExcludedScope {
   defaultAccessLevel: number;
   invalidAccessLevels: number[];
   name: string;
-  optionallyInclude: boolean;
 }
 
 interface RadioButton extends HTMLInputElement {
@@ -178,14 +177,16 @@ export const CreateAPITokenDrawer = (props: Props) => {
     e: React.SyntheticEvent<RadioButton>
   ): void => {
     const value = +e.currentTarget.value;
-    const newScopes = form.values.scopes.map(
+    const newScopes = (showFilteredPermissions
+      ? filteredPermissions
+      : allPermissions
+    ).map(
       (scope): Permission => {
         // Check the excluded scopes object to see if the current scope will have its own defaults.
         const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
           (excludedScope) =>
             excludedScope.name === scope[0] &&
-            excludedScope.invalidAccessLevels.includes(value) &&
-            !excludedScope.optionallyInclude
+            excludedScope.invalidAccessLevels.includes(value)
         );
 
         // Set an excluded scope based on its default access level, not the given Select All value.
@@ -212,13 +213,11 @@ export const CreateAPITokenDrawer = (props: Props) => {
       defaultAccessLevel: 0,
       invalidAccessLevels: [1],
       name: 'vpc',
-      optionallyInclude: false,
     },
     {
       defaultAccessLevel: 0,
       invalidAccessLevels: [1, 2],
       name: 'child_account',
-      optionallyInclude: isParentUser && !isChildAccountAccessRestricted,
     },
   ];
 
@@ -236,6 +235,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Filter permissions for all users except parent user accounts.
   const allPermissions = form.values.scopes;
 
+  // Filter permissions for all users *except* parent user accounts with access to child accounts enabled.
   const showFilteredPermissions =
     !flags.parentChildAccountAccess ||
     (flags.parentChildAccountAccess &&
