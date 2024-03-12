@@ -55,6 +55,7 @@ export interface Flags {
   gecko: boolean;
   ipv6Sharing: boolean;
   linodeCloneUiChanges: boolean;
+  linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;

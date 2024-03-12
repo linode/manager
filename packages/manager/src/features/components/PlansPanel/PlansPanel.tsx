@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -66,7 +65,6 @@ export const PlansPanel = (props: Props) => {
   } = props;
 
   const flags = useFlags();
-  const theme = useTheme();
   const location = useLocation();
   const params = getQueryParamsFromQueryString(location.search);
 
@@ -176,7 +174,7 @@ export const PlansPanel = (props: Props) => {
         innerClass={props.tabbedPanelInnerClass}
         renderTable={tabs[0].render}
         rootClass={`${className} tabbedPanel`}
-        sx={{ marginTop: theme.spacing(3), width: '100%' }}
+        sx={{ width: '100%' }}
       />
     );
   }
@@ -191,7 +189,7 @@ export const PlansPanel = (props: Props) => {
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
-      sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      sx={{ width: '100%' }}
       tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
