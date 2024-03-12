@@ -109,7 +109,7 @@ interface CreateInvoiceItemsTableOptions {
 export const createInvoiceItemsTable = (
   options: CreateInvoiceItemsTableOptions
 ) => {
-  const { doc, items, regions, timezone, shouldShowRegions, startY } = options;
+  const { doc, items, regions, shouldShowRegions, startY, timezone } = options;
 
   autoTable(doc, {
     body: items.map((item) => {
@@ -232,6 +232,30 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
           top: 5,
         },
       },
+    },
+    didDrawPage: (data) => {
+      let finalY = 0; // Initialize a variable to hold the final Y position after the table is drawn
+
+      if (data?.cursor?.y) {
+        finalY = data.cursor.y;
+      }
+
+      const footerText =
+        'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://www.linode.com/docs/products/platform/billing/guides/stop-billing/) from your account.';
+      const textHeight = doc.getTextDimensions(footerText).h;
+      const bottomMargin = pageMargin;
+      const pageHeight = doc.internal.pageSize.height;
+
+      // Check if adding footerText would exceed page height
+      if (finalY + 20 + textHeight + bottomMargin > pageHeight) {
+        doc.addPage();
+        finalY = pageMargin; // Reset finalY for the new page
+      }
+
+      doc.text(footerText, pageMargin, finalY + 20, {
+        align: 'justify',
+        maxWidth: doc.internal.pageSize.width - pageMargin * 2,
+      });
     },
     headStyles: {
       fillColor: '#444444',

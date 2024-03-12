@@ -23,6 +23,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -40,18 +41,18 @@ import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -88,7 +89,6 @@ import { FromImageContent } from './TabbedContent/FromImageContent';
 import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
 import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import { VPCPanel } from './VPCPanel';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -101,6 +101,7 @@ import {
   WithDisplayData,
   WithTypesRegionsAndImages,
 } from './types';
+import { VPCPanel } from './VPCPanel';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
@@ -467,6 +468,11 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
+    const isEdgeRegionSelected = Boolean(
+      flags.gecko &&
+        getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
+    );
+
     return (
       <StyledForm>
         <Grid className="py0">
@@ -709,6 +715,7 @@ export class LinodeCreate extends React.PureComponent<
                   <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
                 </Typography>
               }
+              disabled={userCannotCreateLinode}
               entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
               selectedFirewallId={this.props.firewallId || -1}
@@ -731,6 +738,7 @@ export class LinodeCreate extends React.PureComponent<
             handleVLANChange={this.props.handleVLANChange}
             ipamAddress={this.props.ipamAddress || ''}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
+            isEdgeRegionSelected={isEdgeRegionSelected}
             isPrivateIPChecked={this.props.privateIPEnabled}
             labelError={hasErrorFor['interfaces[1].label']}
             linodesData={this.props.linodesData}
@@ -853,7 +861,7 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
-      placement_group: this.props.flags.vmPlacement
+      placement_group: this.props.flags.placementGroups?.enabled
         ? placement_group_payload
         : undefined,
       private_ip: this.props.privateIPEnabled,

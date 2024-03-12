@@ -324,4 +324,27 @@ describe('AddonsPanel', () => {
       ).not.toBeInTheDocument();
     });
   });
+
+  it('should render a warning notice if isEdgeRegionSelected is true and disable backups and private ip checkbox', () => {
+    const propsWithEdgeRegionSelected = {
+      ...props,
+      isEdgeRegionSelected: true,
+    };
+    const { getByTestId } = renderWithTheme(
+      <AddonsPanel {...propsWithEdgeRegionSelected} />
+    );
+    expect(getByTestId('notice-warning')).toBeInTheDocument();
+    expect(getByTestId('private_ip')).toHaveAttribute('aria-disabled', 'true');
+    expect(getByTestId('backups')).toHaveAttribute('aria-disabled', 'true');
+  });
+  it('should not render a warning notice if isEdgeRegionSelected is false', () => {
+    const propsWithEdgeRegionNotSelected = {
+      ...props,
+      isEdgeRegionSelected: false,
+    };
+    const { queryByTestId } = renderWithTheme(
+      <AddonsPanel {...propsWithEdgeRegionNotSelected} />
+    );
+    expect(queryByTestId('notice-warning')).not.toBeInTheDocument();
+  });
 });

@@ -9,7 +9,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
@@ -33,11 +33,11 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
-import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+import { profileQueries } from 'src/queries/profile';
 
 interface State {
   apiResponse?: StackScript;
@@ -78,7 +78,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       },
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
-    const account = this.props.queryClient.getQueryData<Account>('account');
+    const account = this.props.queryClient.getQueryData<Account>(['account']);
 
     if (stackScriptID) {
       // If we have a stackScriptID we're in the edit flow and
@@ -284,7 +284,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       },
       mode,
     } = this.props;
-    const account = queryClient.getQueryData<Account>('account');
+    const account = queryClient.getQueryData<Account>(['account']);
 
     if (account) {
       // Use the euuid if we're creating to avoid loading another user's data
@@ -359,7 +359,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         if (profile.data?.restricted) {
-          queryClient.invalidateQueries([queryKey, 'grants']);
+          queryClient.invalidateQueries(profileQueries.grants.queryKey);
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();

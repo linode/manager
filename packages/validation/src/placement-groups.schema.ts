@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { boolean, object, string } from 'yup';
 
 const labelValidation = string()
   .required('Label is required.')
@@ -9,8 +9,9 @@ export const createPlacementGroupSchema = object({
   label: labelValidation,
   affinity_type: string().required('Affinity type is required.'),
   region: string().required('Region is required.'),
+  is_strict: boolean().required('Is strict is required.'),
 });
 
-export const renamePlacementGroupSchema = object({
+export const updatePlacementGroupSchema = object({
   label: labelValidation,
 });
