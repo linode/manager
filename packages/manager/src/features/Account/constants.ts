@@ -16,7 +16,7 @@ export const grantTypeMap = {
   vpc: 'VPCs',
 } as const;
 
-export const RESTRICTED_FIELD_TOOLTIP = `This field can't be modified.`;
+export const RESTRICTED_FIELD_TOOLTIP = 'This field can\u{2019}t be modified.';
 
 // Parent User Messaging
 export const PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT =
@@ -24,7 +24,8 @@ export const PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT =
 export const PARENT_USER_SESSION_EXPIRED = `Session expired. Please log in again to your ${PARENT_USER} account.`;
 
 // Proxy User Messaging
-export const PROXY_USER_RESTRICTED_TOOLTIP_TEXT = `You can't perform this action on child accounts.`;
+export const PROXY_USER_RESTRICTED_TOOLTIP_TEXT =
+  'You can\u{2019}t perform this action on child accounts.';
 export const PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT = `Contact ${CUSTOMER_SUPPORT} to close this account.`;
 
 // Child User Messaging
