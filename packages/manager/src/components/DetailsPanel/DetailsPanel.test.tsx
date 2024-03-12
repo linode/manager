@@ -9,6 +9,11 @@ const onTagsChange = vi.fn();
 const INPUT_LABEL = 'Linode Label';
 const TAG_LABEL = 'Custom Label';
 
+const placementGroupsSelectProps = {
+  handlePlacementGroupChange: vi.fn(),
+  label: 'Placement Groups',
+};
+
 describe('Tags list', () => {
   it('should render tags input if tagsInputProps are specified', () => {
     const { getByLabelText, queryByText } = renderWithTheme(
@@ -23,6 +28,7 @@ describe('Tags list', () => {
           onChange: onTagsChange,
           value: ['tag1', 'tag2'].map((tag) => ({ label: tag, value: tag })),
         }}
+        placementGroupsSelectProps={placementGroupsSelectProps}
       />
     );
 
@@ -49,6 +55,7 @@ describe('Tags list', () => {
             value: tag,
           })),
         }}
+        placementGroupsSelectProps={placementGroupsSelectProps}
       />
     );
 
@@ -64,8 +71,27 @@ describe('Tags list', () => {
           onChange: onLabelChange,
           value: '',
         }}
+        placementGroupsSelectProps={placementGroupsSelectProps}
       />
     );
     expect(queryByLabelText(TAG_LABEL)).not.toBeInTheDocument();
+  });
+
+  it('should render a disabled placement group select', () => {
+    const { getByRole } = renderWithTheme(
+      <DetailsPanel
+        labelFieldProps={{
+          label: INPUT_LABEL,
+          onChange: onLabelChange,
+          value: '',
+        }}
+        placementGroupsSelectProps={placementGroupsSelectProps}
+      />,
+      {
+        flags: { placementGroups: { beta: true, enabled: true } },
+      }
+    );
+
+    expect(getByRole('combobox')).toBeDisabled();
   });
 });

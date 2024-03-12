@@ -1,5 +1,4 @@
 import {
-  CreatePlacementGroupPayload,
   NotificationType,
   ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
@@ -26,7 +25,6 @@ import {
   configurationFactory,
   configurationsEndpointHealthFactory,
   contactFactory,
-  createPlacementGroupPayloadFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -2064,7 +2062,53 @@ export const handlers = [
   // Placement Groups
   http.get('*/placement/groups', () => {
     return HttpResponse.json(
-      makeResourcePage(placementGroupFactory.buildList(3))
+      makeResourcePage([
+        placementGroupFactory.build({
+          affinity_type: 'anti_affinity',
+          id: 1,
+          is_compliant: true,
+          is_strict: true,
+          linodes: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
+            is_compliant: true,
+            linode,
+          })),
+          region: 'us-east',
+        }),
+        placementGroupFactory.build({
+          affinity_type: 'affinity',
+          id: 2,
+          is_compliant: true,
+          is_strict: true,
+          linodes: [
+            {
+              is_compliant: true,
+              linode: 9,
+            },
+            {
+              is_compliant: true,
+              linode: 10,
+            },
+            {
+              is_compliant: true,
+              linode: 11,
+            },
+          ],
+          region: 'us-west',
+        }),
+        placementGroupFactory.build({
+          affinity_type: 'affinity',
+          id: 3,
+          is_compliant: true,
+          is_strict: true,
+          linodes: [
+            {
+              is_compliant: true,
+              linode: 12,
+            },
+          ],
+          region: 'ca-central',
+        }),
+      ])
     );
   }),
   http.get('*/placement/groups/:placementGroupId', ({ params }) => {
@@ -2078,14 +2122,15 @@ export const handlers = [
       })
     );
   }),
-  http.post<any, CreatePlacementGroupPayload>(
-    '*/placement/groups',
-    async ({ request }) => {
-      const body = await request.json();
+  http.post('*/placement/groups', async ({ request }) => {
+    const reqBody = await request.json();
+    const body = reqBody as any;
+    const response = placementGroupFactory.build({
+      ...body,
+    });
 
-      return HttpResponse.json(createPlacementGroupPayloadFactory.build(body));
-    }
-  ),
+    return HttpResponse.json(response);
+  }),
   http.put(
     '*/placement/groups/:placementGroupId',
     async ({ params, request }) => {
