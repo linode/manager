@@ -11,6 +11,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketActionMenu } from './BucketActionMenu';
@@ -56,6 +57,8 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const actualCluster = clusters?.find((c) => c.id === cluster);
   const clusterRegion = regions?.find((r) => r.id === actualCluster?.region);
 
+  const regionsLookup = regions && getRegionsByRegionId(regions);
+
   return (
     <StyledBucketRow ariaLabel={label} data-qa-bucket-cell={label} key={label}>
       <TableCell>
@@ -63,11 +66,13 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           <Grid>
             <StyledBucketNameWrapper>
               <Typography component="h3" data-qa-label variant="body1">
-                  <StyledBucketLabelLink
-                    to={`/object-storage/buckets/${isObjMultiClusterEnabled ? region : cluster }/${label}`}
-                  >
-                    {label}{' '}
-                  </StyledBucketLabelLink>
+                <StyledBucketLabelLink
+                  to={`/object-storage/buckets/${
+                    isObjMultiClusterEnabled ? region : cluster
+                  }/${label}`}
+                >
+                  {label}{' '}
+                </StyledBucketLabelLink>
               </Typography>
             </StyledBucketNameWrapper>
 
@@ -78,8 +83,8 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       <Hidden smDown>
         <StyledBucketRegionCell>
           <Typography data-qa-region variant="body1">
-            {isObjMultiClusterEnabled
-              ? region
+            {isObjMultiClusterEnabled && regionsLookup && region
+              ? regionsLookup[region].label
               : clusterRegion?.label ?? cluster}
           </Typography>
         </StyledBucketRegionCell>

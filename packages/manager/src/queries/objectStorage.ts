@@ -174,7 +174,7 @@ export const useDeleteBucketWithRegionMutation = () => {
     {
       onSuccess: (_, variables) => {
         queryClient.setQueryData<BucketsResponce>(
-          `${queryKey}-buckets`,
+          [`${queryKey}-buckets`],
           (oldData) => {
             return {
               buckets:
