@@ -63,19 +63,11 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           <Grid>
             <StyledBucketNameWrapper>
               <Typography component="h3" data-qa-label variant="body1">
-                {isObjMultiClusterEnabled ? (
                   <StyledBucketLabelLink
-                    to={`/object-storage/buckets/${region}/${label}`}
+                    to={`/object-storage/buckets/${isObjMultiClusterEnabled ? region : cluster }/${label}`}
                   >
                     {label}{' '}
                   </StyledBucketLabelLink>
-                ) : (
-                  <StyledBucketLabelLink
-                    to={`/object-storage/buckets/${cluster}/${label}`}
-                  >
-                    {label}{' '}
-                  </StyledBucketLabelLink>
-                )}
               </Typography>
             </StyledBucketNameWrapper>
 
