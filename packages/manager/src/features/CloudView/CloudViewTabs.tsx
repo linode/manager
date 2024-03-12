@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -26,7 +26,7 @@ export const CloudViewTabs = React.memo((props: Props) => {
   ];
 
   const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
+    return !Boolean(props.location.pathname.indexOf(p));
   };
 
   const navToURL = (index: number) => {
