@@ -17,7 +17,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { PROXY_RESTRICTED_PAT_TOOLTIP_TEXT } from 'src/features/Account/constants';
+import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
@@ -208,7 +208,7 @@ export const APITokenTable = (props: Props) => {
           {type === 'Personal Access Token' && (
             <Button
               tooltipText={
-                isProxyUser ? PROXY_RESTRICTED_PAT_TOOLTIP_TEXT : undefined
+                isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
               }
               buttonType="primary"
               disabled={isProxyUser}
