@@ -24,11 +24,11 @@ export const matchValuePlaceholder: Record<
   CustomerFacingMatchFieldOption,
   string
 > = {
-  header: 'x-my-header:this',
+  header: 'x-my-header=this',
   method: 'POST',
   path_prefix: '/my-path',
   path_regex: '/path/.*[.](jpg)',
-  query: '?my-query-param=this',
+  query: 'my-query-param=this',
 };
 
 export const matchTypeOptions = Object.keys(matchFieldMap).map(
