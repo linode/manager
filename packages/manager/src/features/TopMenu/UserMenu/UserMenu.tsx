@@ -10,10 +10,8 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import {
-  GravatarByEmail,
-  ProxyUserGravatar,
-} from 'src/components/GravatarByEmail';
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarForProxy } from 'src/components/GravatarForProxy';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -218,7 +216,7 @@ export const UserMenu = React.memo(() => {
         <Button
           startIcon={
             isProxyUser ? (
-              <ProxyUserGravatar />
+              <GravatarForProxy />
             ) : (
               <GravatarByEmail email={profile?.email ?? ''} />
             )
