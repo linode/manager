@@ -10,7 +10,10 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import {
+  GravatarByEmail,
+  ProxyUserGravatar,
+} from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -213,6 +216,13 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
+          startIcon={
+            isProxyUser ? (
+              <ProxyUserGravatar />
+            ) : (
+              <GravatarByEmail email={profile?.email ?? ''} />
+            )
+          }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',
@@ -224,7 +234,6 @@ export const UserMenu = React.memo(() => {
           disableRipple
           endIcon={getEndIcon()}
           onClick={handleClick}
-          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>
