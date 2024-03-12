@@ -8,13 +8,12 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
 interface EdgePlanTableProps {
-  [index: string]: any;
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;
   header: string;
   innerClass?: string;
-  renderTable: (props: any) => React.JSX.Element;
+  renderTable: () => React.JSX.Element;
   rootClass?: string;
   sx?: SxProps;
 }
@@ -29,7 +28,6 @@ export const EdgePlanTable = React.memo((props: EdgePlanTableProps) => {
     renderTable,
     rootClass,
     sx,
-    ...rest
   } = props;
 
   return (
@@ -53,7 +51,7 @@ export const EdgePlanTable = React.memo((props: EdgePlanTableProps) => {
           </Notice>
         )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
-        {renderTable(rest.children)}
+        {renderTable()}
       </div>
     </Paper>
   );
