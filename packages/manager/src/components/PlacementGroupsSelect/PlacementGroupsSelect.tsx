@@ -11,7 +11,7 @@ export interface PlacementGroupsSelectProps {
   clearable?: boolean;
   disabled?: boolean;
   errorText?: string;
-  handlePlacementGroupSelection: (selected: PlacementGroup) => void;
+  handlePlacementGroupChange: (selected: PlacementGroup) => void;
   id?: string;
   label: string;
   loading?: boolean;
@@ -32,7 +32,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     clearable = true,
     disabled,
     errorText,
-    handlePlacementGroupSelection,
+    handlePlacementGroupChange,
     id,
     label,
     loading,
@@ -54,10 +54,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const placementGroupsOptions = placementGroups?.filter(
     (placementGroup) => placementGroup.region === selectedRegionId
   );
-
-  const handlePlacementGroupChange = (selection: PlacementGroup) => {
-    handlePlacementGroupSelection(selection);
-  };
 
   return (
     <Autocomplete

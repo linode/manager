@@ -283,6 +283,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
             handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
+            handlePlacementGroupChange={this.setPlacementGroupSelection}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
@@ -311,7 +312,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
-            updatePlacementGroupSelection={this.setPlacementGroupSelection}
             updateRegionID={this.setRegionID}
             updateStackScript={this.setStackScript}
             updateTags={this.setTags}
@@ -615,6 +615,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     );
     this.setState({
       disabledClasses,
+      placementGroupSelection: undefined,
       selectedRegionID: selectedRegionId,
       // When the region gets changed, ensure the VPC-related selections are cleared
       selectedSubnetId: undefined,

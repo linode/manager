@@ -117,6 +117,7 @@ export interface LinodeCreateProps {
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
+  handlePlacementGroupChange: (placementGroup: PlacementGroup) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -147,7 +148,6 @@ export interface LinodeCreateProps {
   updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
-  updatePlacementGroupSelection: (placementGroup: PlacementGroup) => void;
   updateTags: (tags: Tag[]) => void;
   updateUserData: (userData: string) => void;
   userData: string | undefined;
@@ -277,6 +277,7 @@ export class LinodeCreate extends React.PureComponent<
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
       imagesData,
@@ -302,7 +303,6 @@ export class LinodeCreate extends React.PureComponent<
       typesError,
       typesLoading,
       updateLabel,
-      updatePlacementGroupSelection,
       updateTags,
       updateUserData,
       userCannotCreateLinode,
@@ -675,7 +675,7 @@ export class LinodeCreate extends React.PureComponent<
             placementGroupsSelectProps={{
               disabled: !selectedRegionID,
               errorText,
-              handlePlacementGroupSelection: updatePlacementGroupSelection,
+              handlePlacementGroupChange,
               label: placementGroupsLabel,
               noOptionsMessage: 'There are no Placement Groups in this region',
               selectedRegionId: selectedRegionID,
@@ -687,7 +687,6 @@ export class LinodeCreate extends React.PureComponent<
             }
             data-qa-details-panel
             error={hasErrorFor.placement_group}
-            regions={regionsData!}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
