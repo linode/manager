@@ -45,7 +45,7 @@ export const useAccountUser = (username: string) => {
     [queryKey, 'users', 'user', username],
     () => getUser(username),
     // Enable the query if the user is not on the blocklist
-    { enabled: !getIsBlocklistedUser(username) }
+    { enabled: !getIsBlocklistedUser(username), retry: false }
   );
 };
 

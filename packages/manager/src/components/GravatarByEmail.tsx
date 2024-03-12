@@ -1,11 +1,18 @@
 import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
+import { sendHasGravatarEvent } from 'src/utilities/analytics';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
+export const DEFAULT_AVATAR_SIZE = 28;
+
 interface Props {
+  /**
+   * Captures a "has gravatar" event when when the component is mounted
+   * @default false
+   */
+  captureAnalytics?: boolean;
   className?: string;
   email: string;
   height?: number;
@@ -13,24 +20,46 @@ interface Props {
 }
 
 export const GravatarByEmail = (props: Props) => {
-  const { className, email, height, width } = props;
+  const {
+    captureAnalytics,
+    className,
+    email,
+    height = DEFAULT_AVATAR_SIZE,
+    width = DEFAULT_AVATAR_SIZE,
+  } = props;
+
   const url = getGravatarUrl(email);
 
+  React.useEffect(() => {
+    if (captureAnalytics) {
+      checkForGravatarAndSendEvent(url);
+    }
+  }, []);
+
   return (
-    <StyledAvatar
+    <Avatar
       alt={`Avatar for user ${email}`}
       className={className}
       src={url}
       sx={{ height, width }}
     >
       <UserIcon />
-    </StyledAvatar>
+    </Avatar>
   );
 };
 
-const StyledAvatar = styled(Avatar, {
-  label: 'StyledAvatar',
-})<Partial<Props>>(({ height, width }) => ({
-  height: height || 28,
-  width: width || 28,
-}));
+async function checkForGravatarAndSendEvent(url: string) {
+  try {
+    const response = await fetch(url);
+
+    if (response.status === 200) {
+      sendHasGravatarEvent(true);
+    }
+    if (response.status === 404) {
+      sendHasGravatarEvent(false);
+    }
+  } catch (error) {
+    // Unable to make fetch (probably due to a network error)
+    // Don't report any analytics when this happens.
+  }
+}

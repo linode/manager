@@ -210,6 +210,9 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
+          startIcon={
+            <GravatarByEmail captureAnalytics email={profile?.email ?? ''} />
+          }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',
@@ -221,7 +224,6 @@ export const UserMenu = React.memo(() => {
           disableRipple
           endIcon={getEndIcon()}
           onClick={handleClick}
-          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>

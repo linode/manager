@@ -486,3 +486,21 @@ export const sendUpdateLinodeLabelEvent = (
     label: `Update linode label from ${label}`,
   });
 };
+
+// GravatarByEmail.tsx
+export const sendHasGravatarEvent = (hasGravatar: boolean) => {
+  sendEvent({
+    action: 'Load',
+    category: 'Gravatar',
+    label: hasGravatar ? 'Has Gravatar' : 'Does not have Gravatar',
+  });
+};
+
+// GravatarByEmail.tsx
+export const sendManageGravatarEvent = () => {
+  sendEvent({
+    action: 'Click:link',
+    category: 'Gravatar',
+    label: 'Manage photo',
+  });
+};
