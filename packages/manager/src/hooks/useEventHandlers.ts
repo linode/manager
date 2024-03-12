@@ -1,4 +1,4 @@
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { oauthClientsEventHandler } from 'src/queries/accountOAuth';
 import { databaseEventsHandler } from 'src/queries/databases';
@@ -14,7 +14,7 @@ import { tokenEventHandler } from 'src/queries/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes';
 
 import type { Event } from '@linode/api-v4';
-import type { QueryClient } from 'react-query';
+import type { QueryClient } from '@tanstack/react-query';
 
 export interface EventHandlerData {
   event: Event;

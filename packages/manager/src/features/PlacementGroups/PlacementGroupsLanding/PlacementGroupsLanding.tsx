@@ -22,7 +22,8 @@ import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
-import { PlacementGroupsRenameDrawer } from '../PlacementGroupsRenameDrawer';
+import { PlacementGroupsDeleteModal } from '../PlacementGroupsDeleteModal';
+import { PlacementGroupsEditDrawer } from '../PlacementGroupsEditDrawer';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
@@ -33,9 +34,6 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
-  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
-    PlacementGroup | undefined
-  >();
   const [query, setQuery] = React.useState<string>('');
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -68,22 +66,21 @@ export const PlacementGroupsLanding = React.memo(() => {
     history.replace('/placement-groups/create');
   };
 
-  const handleRenamePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-    history.replace(`/placement-groups/rename/${placementGroup.id}`);
+  const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
+    history.replace(`/placement-groups/edit/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
+    history.replace(`/placement-groups/delete/${placementGroup.id}`);
   };
 
   const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
-    setSelectedPlacementGroup(undefined);
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
-  const isPlacementGroupRenameDrawerOpen = location.pathname.includes('rename');
+  const isPlacementGroupDeleteModalOpen = location.pathname.includes('delete');
+  const isPlacementGroupEditDrawerOpen = location.pathname.includes('edit');
 
   if (isLoading) {
     return <CircleProgress />;
@@ -96,7 +93,7 @@ export const PlacementGroupsLanding = React.memo(() => {
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
-          numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+          allPlacementGroups={placementGroups.data}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
         />
@@ -178,8 +175,8 @@ export const PlacementGroupsLanding = React.memo(() => {
               handleDeletePlacementGroup={() =>
                 handleDeletePlacementGroup(placementGroup)
               }
-              handleRenamePlacementGroup={() =>
-                handleRenamePlacementGroup(placementGroup)
+              handleEditPlacementGroup={() =>
+                handleEditPlacementGroup(placementGroup)
               }
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
@@ -196,17 +193,18 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
-        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+        allPlacementGroups={placementGroups?.data ?? []}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
       />
-      <PlacementGroupsRenameDrawer
-        numberOfPlacementGroupsCreated={placementGroups?.results ?? 0}
+      <PlacementGroupsEditDrawer
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupRenameDrawerOpen}
-        selectedPlacementGroup={selectedPlacementGroup}
+        open={isPlacementGroupEditDrawerOpen}
       />
-      {/* TODO VM_Placement: add delete dialog */}
+      <PlacementGroupsDeleteModal
+        onClose={onClosePlacementGroupDrawer}
+        open={isPlacementGroupDeleteModalOpen}
+      />
     </>
   );
 });

@@ -37,8 +37,8 @@ export const determineNoneSingleOrMultipleWithChip = (
         <Chip
           clickable
           data-testid={remainingDataLengthChip}
-          inTable
           label={`+${remainingData.length}`}
+          sx={{ mx: 2 }}
         />
       </Tooltip>
     </StyledItemWithPlusChip>

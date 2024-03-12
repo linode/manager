@@ -31,10 +31,12 @@ export const ConfigActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
+      disabled: readOnly,
       onClick: onBoot,
       title: 'Boot',
     },
     {
+      disabled: readOnly,
       onClick: onEdit,
       title: 'Edit',
     },

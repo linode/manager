@@ -1,9 +1,9 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { TableCell } from 'src/components/TableCell';
@@ -19,14 +19,14 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface PlacementGroupsRowProps {
   handleDeletePlacementGroup: () => void;
-  handleRenamePlacementGroup: () => void;
+  handleEditPlacementGroup: () => void;
   placementGroup: PlacementGroup;
 }
 
 export const PlacementGroupsRow = React.memo(
   ({
     handleDeletePlacementGroup,
-    handleRenamePlacementGroup,
+    handleEditPlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
     const { affinity_type, id, is_compliant, label } = placementGroup;
@@ -35,8 +35,8 @@ export const PlacementGroupsRow = React.memo(
     });
     const actions: Action[] = [
       {
-        onClick: handleRenamePlacementGroup,
-        title: 'Rename',
+        onClick: handleEditPlacementGroup,
+        title: 'Edit',
       },
       {
         onClick: handleDeletePlacementGroup,

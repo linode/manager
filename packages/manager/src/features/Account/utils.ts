@@ -1,34 +1,37 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type {
-  GlobalGrantTypes,
-  GrantLevel,
-  Grants,
-  Profile,
-  Token,
-  UserType,
-} from '@linode/api-v4';
+import { ADMINISTRATOR, PARENT_USER } from './constants';
+
+import type { GlobalGrantTypes, GrantLevel, Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
-type ActionType = 'create' | 'delete' | 'edit' | 'view';
+export type ActionType =
+  | 'clone'
+  | 'create'
+  | 'delete'
+  | 'edit'
+  | 'migrate'
+  | 'modify'
+  | 'reboot'
+  | 'rebuild'
+  | 'rescue'
+  | 'resize'
+  | 'view';
 
 interface GetRestrictedResourceText {
   action?: ActionType;
+  includeContactInfo?: boolean;
+  isChildUser?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
 }
 
-interface GrantsProfileSchema {
-  grants: Grants | undefined;
-  profile: Profile | undefined;
-}
-
-interface AccountAccessGrant extends GrantsProfileSchema {
+interface AccountAccessGrant {
   globalGrantType: 'account_access';
   permittedGrantLevel: GrantLevel;
 }
 
-interface NonAccountAccessGrant extends GrantsProfileSchema {
+interface NonAccountAccessGrant {
   globalGrantType: Exclude<GlobalGrantTypes, 'account_access'>;
   permittedGrantLevel?: GrantLevel;
 }
@@ -43,6 +46,8 @@ export type RestrictedGlobalGrantType =
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
+  includeContactInfo = true,
+  isChildUser = false,
   isSingular = true,
   resourceType,
 }: GetRestrictedResourceText): string => {
@@ -50,50 +55,15 @@ export const getRestrictedResourceText = ({
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  return `You don't have permissions to ${action} ${resource}. Please contact your account administrator to request the necessary permissions.`;
-};
+  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
 
-/**
- * Get an 'access restricted' message based on user type.
- */
-export const getAccessRestrictedText = (
-  userType: UserType | undefined,
-  isParentChildFeatureEnabled?: boolean
-) => {
-  return `Access restricted. Please contact your ${
-    isParentChildFeatureEnabled && userType === 'child'
-      ? 'business partner'
-      : 'account administrator'
-  } to request the necessary permission.`;
-};
+  let message = `You don't have permissions to ${action} ${resource}.`;
 
-/**
- * Determine whether the user has restricted access to a specific resource.
- *
- * @example
- * // If account access does not equal 'read_write', the user has restricted access.
- * isRestrictedGlobalGrantType({
- *   globalGrantType: 'account_access',
- *   permittedGrantLevel: 'read_write',
- *   grants,
- *   profile
- * });
- * // Returns: true
- */
-export const isRestrictedGlobalGrantType = ({
-  globalGrantType,
-  grants,
-  permittedGrantLevel,
-  profile,
-}: RestrictedGlobalGrantType): boolean => {
-  if (globalGrantType !== 'account_access') {
-    return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+  if (includeContactInfo) {
+    message += ` Please contact your ${contactPerson} to request the necessary permissions.`;
   }
 
-  return (
-    Boolean(profile?.restricted) &&
-    grants?.global[globalGrantType] !== permittedGrantLevel
-  );
+  return message;
 };
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY

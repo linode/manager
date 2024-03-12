@@ -2,7 +2,7 @@ import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { Stack, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';

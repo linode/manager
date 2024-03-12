@@ -11,9 +11,10 @@ import { DateTime } from 'luxon';
 import { rest } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
+import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
-  abuseTicketNotificationFactory,
+  // abuseTicketNotificationFactory,
   accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
@@ -103,6 +104,7 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
+import { getStorage } from 'src/utilities/storage';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -667,6 +669,11 @@ export const handlers = [
       label: 'metadata-test-region',
       region: 'eu-west',
     });
+    const linodeInEdgeRegion = linodeFactory.build({
+      image: 'edge-test-image',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
+    });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
@@ -697,6 +704,7 @@ export const handlers = [
     const linodes = [
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
+      linodeInEdgeRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -758,8 +766,8 @@ export const handlers = [
         linodeFactory.build({
           backups: { enabled: false },
           id,
-          label: 'DC-Specific Pricing Linode',
-          region: 'id-cgk',
+          label: 'Gecko Edge Test',
+          region: 'us-edge-1',
         })
       )
     );
@@ -1045,6 +1053,21 @@ export const handlers = [
             ],
           }),
           ...objectStorageKeyFactory.buildList(1, {
+            bucket_access: [
+              {
+                bucket_name: 'test007',
+                cluster: 'us-east-1',
+                permissions: 'read_only',
+                region: 'us-east',
+              },
+              {
+                bucket_name: 'test001',
+                cluster: 'nl-ams-1',
+                permissions: 'read_write',
+                region: 'nl-ams',
+              },
+            ],
+            limited: true,
             regions: [
               { id: 'us-east', s3_endpoint: 'us-east.com' },
               { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
@@ -1054,7 +1077,6 @@ export const handlers = [
       )
     );
   }),
-
   rest.post('*object-storage/keys', (req, res, ctx) => {
     const { label, regions } = req.body as ObjectStorageKeyRequest;
 
@@ -1131,7 +1153,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(
+      ctx.json({
+        theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
+      })
+    );
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
@@ -1583,12 +1609,35 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupCreateEvent = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+      percent_complete: 100,
+      status: 'notification',
+    });
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
+      percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
+      status: 'notification',
+    });
+
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
       )
@@ -1804,18 +1853,18 @@ export const handlers = [
       when: null,
     };
 
-    const emailBounce = notificationFactory.build({
-      body: null,
-      entity: null,
-      label: 'We are unable to send emails to your billing email address!',
-      message: 'We are unable to send emails to your billing email address!',
-      severity: 'major',
-      type: 'billing_email_bounce',
-      until: null,
-      when: null,
-    });
+    // const emailBounce = notificationFactory.build({
+    //   body: null,
+    //   entity: null,
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   type: 'billing_email_bounce',
+    //   until: null,
+    //   when: null,
+    // });
 
-    const abuseTicket = abuseTicketNotificationFactory.build();
+    // const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationNotification = notificationFactory.build({
       entity: { id: 0, label: 'linode-0', type: 'linode' },
@@ -1911,8 +1960,8 @@ export const handlers = [
           outageNotification,
           minorSeverityNotification,
           criticalSeverityNotification,
-          abuseTicket,
-          emailBounce,
+          // abuseTicket,
+          // emailBounce,
           migrationNotification,
           balanceNotification,
           blockStorageMigrationScheduledNotification,
@@ -2069,7 +2118,7 @@ export const handlers = [
     return res(ctx.json(response));
   }),
   rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === 'undefined') {
+    if (req.params.placementGroupId === '-1') {
       return res(ctx.status(404));
     }
 
@@ -2084,9 +2133,47 @@ export const handlers = [
       affinity_type: 'anti_affinity',
       id: Number(req.params.placementGroupId) ?? -1,
       label: 'pg-1',
-      linode_ids: [
-        ...[0, 1, 2, 3, 5, 6, 7, 8, 43],
-        (req.body as any).linodes[0],
+      linodes: [
+        {
+          is_compliant: true,
+          linode: 1,
+        },
+        {
+          is_compliant: true,
+          linode: 2,
+        },
+        {
+          is_compliant: true,
+          linode: 3,
+        },
+        {
+          is_compliant: true,
+          linode: 4,
+        },
+        {
+          is_compliant: true,
+          linode: 5,
+        },
+        {
+          is_compliant: true,
+          linode: 6,
+        },
+        {
+          is_compliant: true,
+          linode: 7,
+        },
+        {
+          is_compliant: true,
+          linode: 8,
+        },
+        {
+          is_compliant: false,
+          linode: 43,
+        },
+        {
+          is_compliant: true,
+          linode: (req.body as any).linodes[0],
+        },
       ],
     });
 
@@ -2103,7 +2190,45 @@ export const handlers = [
         affinity_type: 'anti_affinity',
         id: Number(req.params.placementGroupId) ?? -1,
         label: 'pg-1',
-        linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+
+          {
+            is_compliant: true,
+            linode: 2,
+          },
+          {
+            is_compliant: true,
+            linode: 3,
+          },
+          {
+            is_compliant: true,
+            linode: 4,
+          },
+          {
+            is_compliant: true,
+            linode: 5,
+          },
+          {
+            is_compliant: true,
+            linode: 6,
+          },
+          {
+            is_compliant: true,
+            linode: 7,
+          },
+          {
+            is_compliant: true,
+            linode: 8,
+          },
+          {
+            is_compliant: false,
+            linode: 43,
+          },
+        ],
       });
 
       return res(ctx.json(response));

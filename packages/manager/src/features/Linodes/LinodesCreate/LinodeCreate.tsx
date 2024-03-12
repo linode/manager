@@ -1,5 +1,6 @@
 import { PlacementGroup } from '@linode/api-v4';
 import {
+  CreateLinodePlacementGroupPayload,
   InterfacePayload,
   PriceObject,
   restoreBackup,
@@ -17,11 +18,12 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -34,11 +36,12 @@ import {
   withAccount,
 } from 'src/containers/account.container';
 import { WithFeatureFlagProps } from 'src/containers/flags.container';
-import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
@@ -50,7 +53,6 @@ import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -87,7 +89,6 @@ import { FromImageContent } from './TabbedContent/FromImageContent';
 import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
 import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import { VPCPanel } from './VPCPanel';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -100,8 +101,10 @@ import {
   WithDisplayData,
   WithTypesRegionsAndImages,
 } from './types';
+import { VPCPanel } from './VPCPanel';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export interface LinodeCreateProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -164,6 +167,7 @@ const errorMap = [
   'interfaces[1].ipam_address',
   'interfaces[0].subnet_id',
   'ipv4.vpc',
+  'placement_group',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -205,7 +209,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getQueryParamsFromQueryString(location.search);
 
-    const _tabs = [
+    const _tabs: LinodeCreateType[] = [
       'Distributions',
       'One-Click',
       'StackScripts',
@@ -464,6 +468,11 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
+    const isEdgeRegionSelected = Boolean(
+      flags.gecko &&
+        getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
+    );
+
     return (
       <StyledForm>
         <Grid className="py0">
@@ -633,7 +642,7 @@ export class LinodeCreate extends React.PureComponent<
             showTransfer
             types={this.filterTypes()}
           />
-          <LabelAndTagsPanel
+          <DetailsPanel
             labelFieldProps={{
               disabled: userCannotCreateLinode,
               errorText: hasErrorFor.label,
@@ -654,7 +663,8 @@ export class LinodeCreate extends React.PureComponent<
                 ? tagsInputProps
                 : undefined
             }
-            data-qa-label-and-tags-panel
+            data-qa-details-panel
+            error={hasErrorFor.placement_group}
             regions={regionsData!}
           />
           {/* Hide for backups and clone */}
@@ -705,6 +715,7 @@ export class LinodeCreate extends React.PureComponent<
                   <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
                 </Typography>
               }
+              disabled={userCannotCreateLinode}
               entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
               selectedFirewallId={this.props.firewallId || -1}
@@ -727,6 +738,7 @@ export class LinodeCreate extends React.PureComponent<
             handleVLANChange={this.props.handleVLANChange}
             ipamAddress={this.props.ipamAddress || ''}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
+            isEdgeRegionSelected={isEdgeRegionSelected}
             isPrivateIPChecked={this.props.privateIPEnabled}
             labelError={hasErrorFor['interfaces[1].label']}
             linodesData={this.props.linodesData}
@@ -833,6 +845,10 @@ export class LinodeCreate extends React.PureComponent<
       'VPCs'
     );
 
+    const placement_group_payload: CreateLinodePlacementGroupPayload = {
+      id: this.props.placementGroupSelection?.id ?? -1,
+    };
+
     // eslint-disable-next-line sonarjs/no-unused-collection
     const interfaces: InterfacePayload[] = [];
 
@@ -845,13 +861,16 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
+      placement_group: this.props.flags.placementGroups?.enabled
+        ? placement_group_payload
+        : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID,
       root_pass: this.props.password,
       stackscript_data: this.props.selectedUDFs,
+
       // StackScripts
       stackscript_id: this.props.selectedStackScriptID,
-
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],

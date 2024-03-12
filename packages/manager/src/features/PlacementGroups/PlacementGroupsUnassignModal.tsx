@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -25,15 +26,25 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     error,
     isLoading,
     mutateAsync: unassignLinodes,
-  } = useUnassignLinodesFromPlacementGroup(Number(placementGroupId) ?? -1);
-  const { data: selectedLinode } = useLinodeQuery(Number(linodeId) ?? -1);
+  } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { data: selectedLinode } = useLinodeQuery(
+    +linodeId ?? -1,
+    Boolean(linodeId)
+  );
 
   const payload: UnassignLinodesFromPlacementGroupPayload = {
-    linodes: [Number(linodeId) ?? -1],
+    linodes: [+linodeId ?? -1],
   };
 
   const onUnassign = async () => {
     await unassignLinodes(payload);
+    const toastMessage = 'Linode successfully unassigned';
+    enqueueSnackbar(toastMessage, {
+      variant: 'success',
+    });
     onClose();
   };
 

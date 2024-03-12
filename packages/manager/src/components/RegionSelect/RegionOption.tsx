@@ -1,15 +1,18 @@
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
+import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import {
   SelectedIcon,
   StyledFlagContainer,
   StyledListItem,
+  sxEdgeIcon,
 } from './RegionSelect.styles';
 import { RegionSelectOption } from './RegionSelect.types';
 
@@ -20,12 +23,19 @@ type Props = {
    * Additional data- attributes to pass to the component
    */
   dataAttrs?: Record<string, string>;
+  displayEdgeServerIcon?: boolean;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
-  selected: boolean;
+  selected?: boolean;
 };
 
-export const RegionOption = ({ dataAttrs, option, props, selected }: Props) => {
+export const RegionOption = ({
+  dataAttrs,
+  displayEdgeServerIcon,
+  option,
+  props,
+  selected,
+}: Props) => {
   const isDisabledMenuItem = option.unavailable;
 
   return (
@@ -83,6 +93,11 @@ export const RegionOption = ({ dataAttrs, option, props, selected }: Props) => {
               <Flag country={option.data.country} />
             </StyledFlagContainer>
             {option.label}
+            {displayEdgeServerIcon && (
+              <Box sx={visuallyHidden}>
+                &nbsp;(This region is an Edge site.)
+              </Box>
+            )}
             {isDisabledMenuItem && (
               <Box sx={visuallyHidden}>
                 Disabled option - There may be limited capacity in this region.
@@ -92,6 +107,14 @@ export const RegionOption = ({ dataAttrs, option, props, selected }: Props) => {
             )}
           </Box>
           {selected && <SelectedIcon visible={selected} />}
+          {displayEdgeServerIcon && (
+            <TooltipIcon
+              icon={<EdgeServer />}
+              status="other"
+              sxTooltipIcon={sxEdgeIcon}
+              text="This region is an edge site."
+            />
+          )}
         </>
       </StyledListItem>
     </Tooltip>

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 
+import { ExcludedScope } from './CreateAPITokenDrawer';
 import {
   Permission,
   allScopesAreTheSame,
@@ -323,6 +324,31 @@ describe('APIToken utils', () => {
         ];
         expect(allScopesAreTheSame(scopes)).toBe(null);
       });
+    });
+    it('should return 1 if all scopes, except any exclusions, are 1', () => {
+      const scopes: Permission[] = [
+        ['account', 1],
+        ['child_account', 1],
+        ['databases', 1],
+        ['domains', 1],
+        ['events', 1],
+        ['firewall', 1],
+        ['images', 1],
+        ['ips', 1],
+        ['linodes', 1],
+        ['lke', 1],
+        ['longview', 2],
+        ['nodebalancers', 1],
+        ['object_storage', 1],
+        ['stackscripts', 1],
+        ['volumes', 1],
+        ['vpc', 0],
+      ];
+      const excludedScopeNames: ExcludedScope[] = [
+        { defaultAccessLevel: 0, invalidAccessLevels: [1], name: 'vpc' },
+        { defaultAccessLevel: 2, invalidAccessLevels: [1], name: 'longview' },
+      ];
+      expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
     });
   });
 });

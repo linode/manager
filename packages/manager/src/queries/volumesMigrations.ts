@@ -4,8 +4,9 @@ import {
   migrateVolumes,
 } from '@linode/api-v4/lib/volumes/migrations';
 import { VolumesMigrationQueue } from '@linode/api-v4/lib/volumes/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { queryKey as notificationsQueryKey } from './accountNotifications';
 import { queryPresets } from './base';
 
 const queryKey = 'volumes-migrations';
@@ -20,5 +21,19 @@ export const useVolumesMigrationQueueQuery = (
     { ...queryPresets.shortLived, enabled }
   );
 
-export const useVolumesMigrateMutation = () =>
-  useMutation<{}, APIError[], number[]>(migrateVolumes);
+export const useVolumesMigrateMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[], number[]>({
+    mutationFn: migrateVolumes,
+    onSuccess: () => {
+      // If a customer "force" migrates they will then see a
+      // `volume_migration_imminent` notification instead of
+      // the `volume_migration_scheduled` notification.
+      setTimeout(() => {
+        // Refetch notifications after 1.5 seconds. The API needs some time to process.
+        queryClient.invalidateQueries(notificationsQueryKey);
+      }, 1500);
+    },
+  });
+};
