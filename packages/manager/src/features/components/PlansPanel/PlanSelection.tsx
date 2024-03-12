@@ -25,6 +25,7 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;

@@ -82,9 +82,11 @@ export const PlansPanel = (props: Props) => {
 
   const getDedicatedEdgePlanType = () => {
     // 256gb and 512gb plans will not be supported for Edge
-    const plansUpTo128GB = planTypes.dedicated.slice(
-      0,
-      planTypes.dedicated.length - 2
+    const plansUpTo128GB = planTypes.dedicated.filter(
+      (planType) =>
+        !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
+          planType.formattedLabel
+        )
     );
 
     return plansUpTo128GB.map((plan) => {
@@ -135,7 +137,7 @@ export const PlansPanel = (props: Props) => {
               <Notice
                 text="Edge region pricing is temporarily $0 during the beta period, after which standard pricing will begin."
                 variant="warning"
-              ></Notice>
+              />
             )}
             <PlanContainer
               currentPlanHeading={currentPlanHeading}

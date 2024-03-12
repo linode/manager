@@ -19,7 +19,7 @@ interface EdgePlanTableProps {
   sx?: SxProps;
 }
 
-const EdgePlanTable = React.memo((props: EdgePlanTableProps) => {
+export const EdgePlanTable = React.memo((props: EdgePlanTableProps) => {
   const {
     copy,
     docsLink,
@@ -58,8 +58,6 @@ const EdgePlanTable = React.memo((props: EdgePlanTableProps) => {
     </Paper>
   );
 });
-
-export { EdgePlanTable };
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
   fontSize: '0.875rem',
