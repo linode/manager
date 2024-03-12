@@ -21,6 +21,7 @@ import type { Region } from '@linode/api-v4';
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
   hasSelectedRegion: boolean;
+  hideLimitedAvailabilityBanner?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
   mostClassPlansAreLimitedAvailability?: boolean;
   planType: LinodeTypeClass;
@@ -32,6 +33,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const {
     disabledClasses,
     hasSelectedRegion,
+    hideLimitedAvailabilityBanner,
     isSelectedRegionEligibleForPlan,
     mostClassPlansAreLimitedAvailability,
     planType,
@@ -68,6 +70,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
       ) : null}
       {hasSelectedRegion &&
         isSelectedRegionEligibleForPlan &&
+        !hideLimitedAvailabilityBanner &&
         generateLimitedAvailabilityJsx(
           planType,
           Boolean(mostClassPlansAreLimitedAvailability)
