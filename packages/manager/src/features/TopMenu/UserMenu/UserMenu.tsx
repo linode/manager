@@ -81,14 +81,15 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
-  // If there is no company name to identify an account, fall back on the email.
-  // Covers an edge case in which a restricted parent user without `account_access` cannot access the account company.
+  // For parent users lacking `account_access`: without a company name to identify an account, fall back on the email.
   const companyNameOrEmail =
     hasParentChildAccountAccess &&
     profile?.user_type !== 'default' &&
     account?.company
       ? account.company
-      : profile?.email;
+      : isParentUser && profile?.email
+      ? profile.email
+      : undefined;
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
