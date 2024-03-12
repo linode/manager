@@ -1,137 +1,107 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { Stack } from 'src/components/Stack';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useAssignLinodesToPlacementGroup,
-  useUnassignLinodesFromPlacementGroup,
   useUnpaginatedPlacementGroupsQuery,
 } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
-import { getLinodesFromAllPlacementGroups } from './utils';
-import { hasPlacementGroupReachedCapacity } from './utils';
+import {
+  getAffinityEnforcement,
+  getLinodesFromAllPlacementGroups,
+} from './utils';
 
 import type { PlacementGroupsAssignLinodesDrawerProps } from './types';
 import type {
   AssignLinodesToPlacementGroupPayload,
   Linode,
-  Region,
-  UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
 
 export const PlacementGroupsAssignLinodesDrawer = (
   props: PlacementGroupsAssignLinodesDrawerProps
 ) => {
   const { onClose, open, selectedPlacementGroup } = props;
-  const { data: linodes, error: linodesError } = useAllLinodesQuery(
+  const { data: allLinodesInRegion, error: linodesError } = useAllLinodesQuery(
     {},
     {
-      '+or': [
-        {
-          region: selectedPlacementGroup?.region,
-        },
-      ],
+      region: selectedPlacementGroup?.region,
     }
   );
-  const { data: regions, error: regionsError } = useRegionsQuery();
   const {
     data: allPlacementGroups,
     error: allPlacementGroupsError,
   } = useUnpaginatedPlacementGroupsQuery();
+  const { enqueueSnackbar } = useSnackbar();
+
+  // We display a notice and disable inputs in case the user reaches this drawer somehow
+  // (not supposed to happen as the "Assign Linode to Placement Group" button should be disabled
+  const { hasReachedCapacity, region } = usePlacementGroupData({
+    placementGroup: selectedPlacementGroup,
+  });
   const { mutateAsync: assignLinodes } = useAssignLinodesToPlacementGroup(
-    selectedPlacementGroup?.id ?? -1
-  );
-  const { mutateAsync: unassignLinodes } = useUnassignLinodesFromPlacementGroup(
     selectedPlacementGroup?.id ?? -1
   );
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
-  const [localLinodesSelection, setLocalLinodesSelection] = React.useState<
-    Linode[]
-  >([]);
   const [generalError, setGeneralError] = React.useState<string | undefined>(
     undefined
   );
 
-  React.useEffect(() => {
-    if (open) {
-      setSelectedLinode(null);
-      setLocalLinodesSelection([]);
-      setGeneralError(undefined);
-    }
-  }, [open]);
+  const handleResetForm = () => {
+    setSelectedLinode(null);
+    setGeneralError(undefined);
+  };
+
+  const handleDrawerClose = () => {
+    onClose();
+    handleResetForm();
+  };
 
   const linodesFromAllPlacementGroups = getLinodesFromAllPlacementGroups(
     allPlacementGroups
   );
 
-  if (
-    !linodes ||
-    !selectedPlacementGroup ||
-    linodesError ||
-    regionsError ||
-    allPlacementGroupsError
-  ) {
-    return (
-      <ErrorState errorText="There was a problem retrieving your placement group. Please try again" />
-    );
-  }
-
   const getLinodeSelectOptions = (): Linode[] => {
+    // We filter out Linodes that are already assigned to a Placement Group
     return (
-      linodes.filter((linode) => {
-        const isNotAlreadyAssigned = !linodesFromAllPlacementGroups.includes(
-          linode.id
-        );
-        const isNotAssignedInDrawer = !localLinodesSelection.find(
-          (l) => l.id === linode.id
-        );
-
-        return isNotAlreadyAssigned && isNotAssignedInDrawer;
+      allLinodesInRegion?.filter((linode) => {
+        return !linodesFromAllPlacementGroups.includes(linode.id);
       }) ?? []
     );
   };
 
+  if (
+    !allLinodesInRegion ||
+    !selectedPlacementGroup ||
+    linodesError ||
+    allPlacementGroupsError
+  ) {
+    return null;
+  }
+
   const { affinity_type, label } = selectedPlacementGroup;
-  const placementGroupRegion: Region | undefined = regions?.find(
-    (region) => region.id === selectedPlacementGroup.region
-  );
-  const linodeSelectLabel = placementGroupRegion
-    ? `Linodes in ${placementGroupRegion.label} (${placementGroupRegion.id})`
+  const linodeSelectLabel = region
+    ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
 
   const drawerTitle =
     label && affinity_type
-      ? `Add Linodes to Placement Group ${label} (${AFFINITY_TYPES[affinity_type]})`
-      : 'Add Linodes to Placement Group';
-
-  const removableSelectionsListLabel = (
-    <>
-      <FormLabel htmlFor="pg-linode-removable-list">
-        {label && affinity_type
-          ? `Linodes Assigned to Placement Group ${label}
-        (${AFFINITY_TYPES[affinity_type]})`
-          : 'Linodes Assigned to Placement Group'}
-      </FormLabel>
-      <Typography component="span" display="block" fontSize="0.8rem">
-        Maximum Number of Linodes for this group:{' '}
-        {selectedPlacementGroup.capacity}
-      </Typography>
-    </>
-  );
+      ? `Assign Linodes to Placement Group ${label} (${AFFINITY_TYPES[affinity_type]})`
+      : 'Assign Linodes to Placement Group';
 
   const handleAssignLinode = async (e: React.SyntheticEvent<HTMLElement>) => {
     e.preventDefault();
@@ -141,114 +111,84 @@ export const PlacementGroupsAssignLinodesDrawer = (
       return;
     }
 
-    setLocalLinodesSelection([...localLinodesSelection, selectedLinode]);
-
+    // Since we allow only one Linode to be assigned to a Placement Group,
+    // We're using a tuple with the selected Linode ID
     const payload: AssignLinodesToPlacementGroupPayload = {
       linodes: [selectedLinode.id],
     };
 
     try {
       await assignLinodes(payload);
+      const toastMessage = 'Linode successfully assigned';
+      enqueueSnackbar(toastMessage, {
+        variant: 'success',
+      });
+      handleDrawerClose();
     } catch (error) {
       setGeneralError(
         error?.[0]?.reason
           ? error[0].reason
           : 'An error occurred while adding the Linode to the group'
       );
+      enqueueSnackbar(error[0]?.reason, { variant: 'error' });
     }
   };
-
-  const handleUnassignLinode = async (linode: Linode) => {
-    setLocalLinodesSelection(
-      localLinodesSelection.filter((l) => l.id !== linode.id)
-    );
-
-    const payload: UnassignLinodesFromPlacementGroupPayload = {
-      linodes: [linode.id],
-    };
-
-    try {
-      await unassignLinodes(payload);
-    } catch (error) {
-      setGeneralError(
-        error
-          ? error?.[0]?.reason
-          : 'An error occurred while removing the Linode from the group'
-      );
-    }
-  };
-
-  const isPlacementGroupFull = hasPlacementGroupReachedCapacity(
-    selectedPlacementGroup
-  );
 
   return (
-    <Drawer onClose={onClose} open={open} title={drawerTitle}>
-      <Grid>
-        {generalError ? <Notice text={generalError} variant="error" /> : null}
-        <form onSubmit={handleAssignLinode}>
-          <Stack spacing={1}>
-            <Typography>
-              A Linode can only be assigned to a single Placement Group.
-            </Typography>
+    <Drawer onClose={handleDrawerClose} open={open} title={drawerTitle}>
+      {generalError ? <Notice text={generalError} variant="error" /> : null}
+      <Typography my={4}>
+        <strong>Affinity Enforcement: </strong>
+        {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
+      </Typography>
+      <Divider sx={{ mb: 4 }} />
+      <form onSubmit={handleAssignLinode}>
+        <Stack spacing={1}>
+          {hasReachedCapacity && open && (
+            <Notice
+              text="This Placement Group has the maximum number of Linodes allowed"
+              variant="error"
+            />
+          )}
+          <Typography>
+            A Linode can only be assigned to a single Placement Group.
+          </Typography>
 
-            <Typography>
-              If you need to add a new Linode, go to{' '}
-              <Link to="/linodes/create">Create Linode</Link> and return to this
-              page to assign it to this Placement Group.
-            </Typography>
+          <Typography>
+            If you need to create a new Linode, go to{' '}
+            <Link to="/linodes/create">Create Linode</Link> and return to this
+            page to assign it to this Placement Group.
+          </Typography>
+          <Box sx={{ alignItems: 'flex-end', display: 'flex' }}>
             <LinodeSelect
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
-              disabled={isPlacementGroupFull}
-              helperText="Only displaying Linodes that aren’t assigned to a Placement Group"
+              disabled={hasReachedCapacity}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
+              placeholder="Select Linode or type to search"
+              sx={{ flexGrow: 1 }}
               value={selectedLinode?.id ?? null}
             />
-
-            <ActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'submit',
-                disabled: !selectedLinode || isPlacementGroupFull,
-                label: 'Add Linode',
-                type: 'submit',
-              }}
-              sx={{ pt: 2 }}
+            <TooltipIcon
+              placement="right"
+              status="help"
+              sxTooltipIcon={{ position: 'relative', top: 4 }}
+              text="Only displaying Linodes that aren’t assigned to a Placement Group"
             />
-            {isPlacementGroupFull && (
-              <Notice
-                text="This Placement Group has the maximum number of Linodes allowed"
-                variant="warning"
-              />
-            )}
-            <RemovableSelectionsList
-              LabelComponent={({ selection }) => {
-                return (
-                  <Typography component="span">{selection.label}</Typography>
-                );
-              }}
-              onRemove={(data: Linode) => {
-                handleUnassignLinode(data);
-              }}
-              headerText={removableSelectionsListLabel}
-              id="pg-linode-removable-list"
-              noDataText={'No Linodes have been assigned.'}
-              selectionData={localLinodesSelection}
-              sx={{ pt: 2 }}
-            />
-            <ActionsPanel
-              primaryButtonProps={{
-                buttonType: 'outlined',
-                label: 'Done',
-                onClick: onClose,
-              }}
-              sx={{ pt: 2 }}
-            />
-          </Stack>
-        </form>
-      </Grid>
+          </Box>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: !selectedLinode || hasReachedCapacity,
+              label: 'Assign Linode',
+              type: 'submit',
+            }}
+            sx={{ pt: 2 }}
+          />
+        </Stack>
+      </form>
     </Drawer>
   );
 };

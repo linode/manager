@@ -3,7 +3,7 @@ import { AxiosProgressEvent } from 'axios';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'throttle-debounce';
 
 import { Button } from 'src/components/Button/Button';

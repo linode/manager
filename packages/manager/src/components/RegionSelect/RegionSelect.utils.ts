@@ -11,8 +11,10 @@ import type {
   GetSelectedRegionById,
   GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
+  SupportedEdgeTypes,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -25,15 +27,22 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
+  regionFilter,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
-  const filteredRegions = currentCapability
+  const filteredRegionsByCapability = currentCapability
     ? regions.filter((region) =>
         region.capabilities.includes(currentCapability)
       )
     : regions;
 
-  return filteredRegions
+  const filteredRegionsByCapabilityAndSiteType = regionFilter
+    ? filteredRegionsByCapability.filter(
+        (region) => region.site_type === regionFilter
+      )
+    : filteredRegionsByCapability;
+
+  return filteredRegionsByCapabilityAndSiteType
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 
@@ -43,6 +52,7 @@ export const getRegionOptions = ({
           region: group,
         },
         label: `${region.label} (${region.id})`,
+        site_type: region.site_type,
         unavailable: getRegionOptionAvailability({
           accountAvailabilityData,
           currentCapability,
@@ -116,6 +126,7 @@ export const getSelectedRegionById = ({
       region: group,
     },
     label: `${selectedRegion.label} (${selectedRegion.id})`,
+    site_type: selectedRegion.site_type,
     unavailable: getRegionOptionAvailability({
       accountAvailabilityData,
       currentCapability,
@@ -174,4 +185,39 @@ export const getSelectedRegionsByIds = ({
       })
     )
     .filter((region): region is RegionSelectOption => !!region);
+};
+
+/**
+ * Util to determine whether a create type has support for edge regions.
+ *
+ * @returns a boolean indicating whether or not the create type is edge supported.
+ */
+export const getIsLinodeCreateTypeEdgeSupported = (
+  createType: LinodeCreateType
+) => {
+  const supportedEdgeTypes: SupportedEdgeTypes[] = [
+    'Distributions',
+    'StackScripts',
+  ];
+  return (
+    supportedEdgeTypes.includes(createType as SupportedEdgeTypes) ||
+    typeof createType === 'undefined' // /linodes/create route
+  );
+};
+
+/**
+ * Util to determine whether a selected region is an edge region.
+ *
+ * @returns a boolean indicating whether or not the selected region is an edge region.
+ */
+export const getIsEdgeRegion = (
+  regionsData: Region[],
+  selectedRegion: string
+) => {
+  return (
+    regionsData.find(
+      (region) =>
+        region.id === selectedRegion || region.label === selectedRegion
+    )?.site_type === 'edge'
+  );
 };

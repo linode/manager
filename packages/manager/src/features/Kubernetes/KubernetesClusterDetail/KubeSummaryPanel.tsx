@@ -170,8 +170,8 @@ export const KubeSummaryPanel = (props: Props) => {
               {cluster.control_plane.high_availability && (
                 <Chip
                   label="HA CLUSTER"
-                  outlineColor="green"
                   size="small"
+                  sx={(theme) => ({ borderColor: theme.color.green })}
                   variant="outlined"
                 />
               )}
@@ -197,7 +197,11 @@ export const KubeSummaryPanel = (props: Props) => {
               </Button>
             </Grid>
             <Grid className={classes.tags}>
-              <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
+              <TagsPanel
+                entityId={cluster.id}
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Grid>
           </Grid>
         </Grid>

@@ -30,9 +30,9 @@ describe('ApiAwarenessModal', () => {
     renderComponent({ isOpen: true });
     screen.getByText('Create Linode');
   });
-  it('Should invoke onClose handler upon cliking close button', () => {
+  it('Should invoke onClose handler upon cliking close button', async () => {
     renderComponent({ isOpen: true });
-    userEvent.click(screen.getByTestId('close-button'));
+    await userEvent.click(screen.getByTestId('close-button'));
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 });

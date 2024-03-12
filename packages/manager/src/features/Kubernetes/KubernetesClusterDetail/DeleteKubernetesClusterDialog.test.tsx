@@ -1,6 +1,5 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -16,12 +15,6 @@ const props: Props = {
   onClose: vi.fn(),
   open: true,
 };
-
-const queryClient = new QueryClient();
-
-afterEach(() => {
-  queryClient.clear();
-});
 
 describe('Kubernetes deletion dialog', () => {
   it('should close the drawer on cancel', () => {
@@ -49,13 +42,13 @@ describe('Kubernetes deletion dialog', () => {
     );
     const button = getByTestId('confirm');
 
-    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(button).toBeDisabled;
 
     await findByTestId('textfield-input');
 
     const input = getByTestId('textfield-input');
     fireEvent.change(input, { target: { value: 'this-cluster' } });
 
-    expect(button).toHaveAttribute('aria-disabled', 'false');
+    expect(button).toBeEnabled();
   });
 });

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -17,7 +18,15 @@ interface Props {
 export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { linode } = props;
   const { label, status } = linode;
+  const history = useHistory();
+  const { id: placementGroupId } = useParams<{ id: string }>();
   const iconStatus = getLinodeIconStatus(status);
+
+  const handleOpenUnassignLinodeModal = () => {
+    history.push(
+      `/placement-groups/${placementGroupId}/linodes/unassign/${linode.id}`
+    );
+  };
 
   return (
     <TableRow
@@ -37,7 +46,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
       <TableCell actionCell>
         <InlineMenuAction
           actionText="Unassign"
-          onClick={() => null} // TODO VM_Placement: open unassign drawer
+          onClick={handleOpenUnassignLinodeModal}
         />
       </TableCell>
     </TableRow>

@@ -18,13 +18,10 @@ import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 
-// Tooltip message that appears on disabled billing action buttons for restricted users.
+// Tooltip message that appears on disabled billing action buttons for restricted
+// and child users.
 const restrictedUserTooltip =
-  'To modify this content, please contact your administrator.';
-
-// Tooltip message that appears on disabled billing action buttons for child users.
-const childUserTooltip =
-  'To modify this content, please contact your business partner.';
+  "You don't have permissions to edit this Account.";
 
 // Mock credit card payment method to use in tests.
 const mockPaymentMethods = [
@@ -208,7 +205,7 @@ describe('restricted user billing flows', () => {
 
       const mockUser = accountUserFactory.build({
         username: mockProfile.username,
-        user_type: null,
+        user_type: 'default',
         restricted: false,
       });
 
@@ -248,7 +245,7 @@ describe('restricted user billing flows', () => {
       const mockUser = accountUserFactory.build({
         username: mockProfile.username,
         restricted: true,
-        user_type: null,
+        user_type: 'default',
       });
 
       const mockGrants = grantsFactory.build({
@@ -288,8 +285,8 @@ describe('restricted user billing flows', () => {
       mockGetUser(mockUser);
       cy.visitWithLogin('/account/billing');
 
-      assertEditBillingInfoDisabled(childUserTooltip);
-      assertAddPaymentMethodDisabled(childUserTooltip);
+      assertEditBillingInfoDisabled(restrictedUserTooltip);
+      assertAddPaymentMethodDisabled(restrictedUserTooltip);
     });
 
     /*
@@ -304,7 +301,7 @@ describe('restricted user billing flows', () => {
 
       const mockUserRegular = accountUserFactory.build({
         username: mockProfileRegular.username,
-        user_type: null,
+        user_type: 'default',
         restricted: false,
       });
 

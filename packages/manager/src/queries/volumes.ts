@@ -22,13 +22,14 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
+import { queryKey as notificationsQueryKey } from './accountNotifications';
 import { updateInPaginatedStore } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { profileQueries } from './profile';
 
 export const queryKey = 'volumes';
 
@@ -127,7 +128,7 @@ export const useCreateVolumeMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };
@@ -183,6 +184,15 @@ export const volumeEventsHandler = ({
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
+  }
+
+  if (
+    event.action === 'volume_migrate' &&
+    (event.status === 'finished' || event.status === 'failed')
+  ) {
+    // if a migration finishes, we want to re-request notifications so that the `volume_migration_imminent`
+    // notification goes away.
+    queryClient.invalidateQueries(notificationsQueryKey);
   }
 
   if (event.action === 'volume_clone') {

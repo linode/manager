@@ -61,7 +61,9 @@ export const capitalize = (s: string) => {
 
 #### Composition
 
-When building a large component, it is recommended to break it down and avoid writing several components within the same file. It improves readability and testability. Components should, in most cases, come with their own unit test, although they can be skipped if an e2e suite is covering the functionality.
+When building a large component, it is recommended to break it down and avoid writing several components within the same file. It improves readability and testability. It is also best to avoid same-file render functions (e.g. `renderTableBody`), in favor of extracting the JSX into its own component. In addition to improved readability and testability, this practice makes components less brittle and more extensible.
+
+Components should, in most cases, come with their own unit test, although they can be skipped if an e2e suite is covering the functionality.
 Utilities should almost always feature a unit test.
 
 #### Styles
@@ -85,6 +87,8 @@ export const interface MyComponentProps {
 const MyComponent = (props: MyComponentProps) { ... }
 ```
 - When it comes to components located in the `src/features/` directory, you can use the name `Props` for their types or interfaces, unless exporting is necessary. In such cases, name the type or interface after the component name.
+- Define props as required, rather than optional, as often as possible for data relying on API responses (which can be `undefined`). In the case of `undefined` props, error handling - such as early return statements - can be done in the HOC. This allows all child components to expect data, avoiding extra conditionals or convoluted logic.
+
 #### Function Component Definition
 
 - Prefer function components over class components.

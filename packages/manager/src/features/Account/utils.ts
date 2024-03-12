@@ -1,27 +1,53 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type {
-  GlobalGrantTypes,
-  Grants,
-  Profile,
-  Token,
-  UserType,
-} from '@linode/api-v4';
+import { ADMINISTRATOR, PARENT_USER } from './constants';
+
+import type { GlobalGrantTypes, GrantLevel, Token } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
-type ActionType = 'create' | 'delete' | 'edit' | 'view';
+export type ActionType =
+  | 'clone'
+  | 'create'
+  | 'delete'
+  | 'edit'
+  | 'migrate'
+  | 'modify'
+  | 'reboot'
+  | 'rebuild'
+  | 'rescue'
+  | 'resize'
+  | 'view';
 
 interface GetRestrictedResourceText {
   action?: ActionType;
+  includeContactInfo?: boolean;
+  isChildUser?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
 }
+
+interface AccountAccessGrant {
+  globalGrantType: 'account_access';
+  permittedGrantLevel: GrantLevel;
+}
+
+interface NonAccountAccessGrant {
+  globalGrantType: Exclude<GlobalGrantTypes, 'account_access'>;
+  permittedGrantLevel?: GrantLevel;
+}
+
+// Discriminating union to determine the type of global grant
+export type RestrictedGlobalGrantType =
+  | AccountAccessGrant
+  | NonAccountAccessGrant;
 
 /**
  * Get a resource restricted message based on action and resource type.
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
+  includeContactInfo = true,
+  isChildUser = false,
   isSingular = true,
   resourceType,
 }: GetRestrictedResourceText): string => {
@@ -29,28 +55,15 @@ export const getRestrictedResourceText = ({
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  return `You don't have permissions to ${action} ${resource}. Please contact your account administrator to request the necessary permissions.`;
-};
+  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
 
-/**
- * Get an 'access restricted' message based on user type.
- */
-export const getAccessRestrictedText = (userType: UserType | null) => {
-  return `Access restricted. Please contact your ${
-    userType === 'child' ? 'business partner' : 'account administrator'
-  } to request the necessary permission.`;
-};
+  let message = `You don't have permissions to ${action} ${resource}.`;
 
-export const isRestrictedGlobalGrantType = ({
-  globalGrantType,
-  grants,
-  profile,
-}: {
-  globalGrantType: GlobalGrantTypes;
-  grants: Grants | undefined;
-  profile: Profile | undefined;
-}): boolean => {
-  return Boolean(profile?.restricted) && !grants?.global[globalGrantType];
+  if (includeContactInfo) {
+    message += ` Please contact your ${contactPerson} to request the necessary permissions.`;
+  }
+
+  return message;
 };
 
 // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
@@ -62,18 +75,13 @@ export const isRestrictedGlobalGrantType = ({
 /**
  * Determine whether the tokens used for switchable accounts are still valid.
  */
-export const isParentTokenValid = ({
-  isProxyUser,
-}: {
-  isProxyUser: boolean;
-}) => {
+export const isParentTokenValid = (): boolean => {
   const now = new Date().toISOString();
 
   // From a proxy user, check whether parent token is still valid before switching.
   if (
-    isProxyUser &&
     now >
-      new Date(getStorage('authentication/parent_token/expire')).toISOString()
+    new Date(getStorage('authentication/parent_token/expire')).toISOString()
 
     // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
     // ================================================================

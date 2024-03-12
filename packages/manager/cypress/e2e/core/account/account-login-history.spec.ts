@@ -2,19 +2,17 @@
  * @file Integration tests for Cloud Manager account login history flows.
  */
 
-import { accountFactory, profileFactory } from 'src/factories';
+import { profileFactory } from 'src/factories';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { formatDate } from 'src/utilities/formatDate';
-import {
-  mockGetAccount,
-  mockGetAccountLogins,
-} from 'support/intercepts/account';
+import { mockGetAccountLogins } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { PARENT_USER } from 'src/features/Account/constants';
 
 describe('Account login history', () => {
   /*
@@ -24,11 +22,10 @@ describe('Account login history', () => {
    * - Confirm that the login table displays a mocked successful unrestricted user login.
    */
   it('users can view the login history table', () => {
-    const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-user',
       restricted: false,
-      user_type: null,
+      user_type: 'default',
     });
     const mockFailedLogin = accountLoginFactory.build({
       status: 'failed',
@@ -40,7 +37,6 @@ describe('Account login history', () => {
       restricted: false,
     });
 
-    mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
     mockGetAccountLogins([mockFailedLogin, mockSuccessfulLogin]).as(
       'getAccountLogins'
@@ -54,12 +50,7 @@ describe('Account login history', () => {
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait([
-      '@getAccount',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getProfile',
-    ]);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
 
     // Confirm helper text above table is visible.
     cy.findByText(
@@ -115,14 +106,12 @@ describe('Account login history', () => {
    * - Confirms that a child user sees a notice instead.
    */
   it('child users cannot view login history', () => {
-    const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-child-user',
       restricted: false,
       user_type: 'child',
     });
 
-    mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
 
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
@@ -133,12 +122,7 @@ describe('Account login history', () => {
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait([
-      '@getAccount',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getProfile',
-    ]);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(
@@ -147,7 +131,7 @@ describe('Account login history', () => {
     cy.findByLabelText('Account Logins').should('not.exist');
 
     cy.findByText(
-      'Access restricted. Please contact your business partner to request the necessary permission.'
+      `You don't have permissions to edit this Account. Please contact your ${PARENT_USER} to request the necessary permissions.`
     );
   });
 
@@ -157,15 +141,13 @@ describe('Account login history', () => {
    * - Confirms that a restricted user sees a notice instead.
    */
   it('restricted users cannot view login history', () => {
-    const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-restricted-user',
       restricted: true,
-      user_type: null,
+      user_type: 'default',
     });
 
     mockGetProfile(mockProfile).as('getProfile');
-    mockGetAccount(mockAccount).as('getAccount');
 
     // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
     mockAppendFeatureFlags({
@@ -175,12 +157,7 @@ describe('Account login history', () => {
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait([
-      '@getAccount',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getProfile',
-    ]);
+    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(
@@ -189,7 +166,7 @@ describe('Account login history', () => {
     cy.findByLabelText('Account Logins').should('not.exist');
 
     cy.findByText(
-      'Access restricted. Please contact your account administrator to request the necessary permission.'
+      "You don't have permissions to edit this Account. Please contact your account administrator to request the necessary permissions."
     );
   });
 });

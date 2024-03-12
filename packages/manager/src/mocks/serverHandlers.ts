@@ -10,10 +10,11 @@ import {
 import { DateTime } from 'luxon';
 import { rest } from 'msw';
 
-import cachedRegions from 'src/cachedData/regions.json';
+import { regions } from 'src/__data__/regionsData';
+import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
-  abuseTicketNotificationFactory,
+  // abuseTicketNotificationFactory,
   accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
@@ -103,6 +104,7 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
+import { getStorage } from 'src/utilities/storage';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -589,7 +591,7 @@ export const handlers = [
     return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(cachedRegions));
+    return res(ctx.json(makeResourcePage(regions)));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {
@@ -667,6 +669,11 @@ export const handlers = [
       label: 'metadata-test-region',
       region: 'eu-west',
     });
+    const linodeInEdgeRegion = linodeFactory.build({
+      image: 'edge-test-image',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
+    });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
@@ -697,6 +704,7 @@ export const handlers = [
     const linodes = [
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
+      linodeInEdgeRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -758,8 +766,8 @@ export const handlers = [
         linodeFactory.build({
           backups: { enabled: false },
           id,
-          label: 'DC-Specific Pricing Linode',
-          region: 'id-cgk',
+          label: 'Gecko Edge Test',
+          region: 'us-edge-1',
         })
       )
     );
@@ -1045,6 +1053,21 @@ export const handlers = [
             ],
           }),
           ...objectStorageKeyFactory.buildList(1, {
+            bucket_access: [
+              {
+                bucket_name: 'test007',
+                cluster: 'us-east-1',
+                permissions: 'read_only',
+                region: 'us-east',
+              },
+              {
+                bucket_name: 'test001',
+                cluster: 'nl-ams-1',
+                permissions: 'read_write',
+                region: 'nl-ams',
+              },
+            ],
+            limited: true,
             regions: [
               { id: 'us-east', s3_endpoint: 'us-east.com' },
               { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
@@ -1054,7 +1077,6 @@ export const handlers = [
       )
     );
   }),
-
   rest.post('*object-storage/keys', (req, res, ctx) => {
     const { label, regions } = req.body as ObjectStorageKeyRequest;
 
@@ -1131,7 +1153,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(
+      ctx.json({
+        theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
+      })
+    );
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
@@ -1319,6 +1345,10 @@ export const handlers = [
     return res(ctx.json(proxyToken));
   }),
   rest.get('*/account/users', (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+
     const accountUsers = [
       accountUserFactory.build({
         last_login: { login_datetime: '2023-10-16T17:04', status: 'failed' },
@@ -1336,6 +1366,52 @@ export const handlers = [
       proxyAccountUser,
       parentAccountNonAdminUser,
     ];
+
+    if (req.headers.get('x-filter')) {
+      let filteredAccountUsers = accountUsers;
+
+      if (headers['user_type']) {
+        if (headers['user_type']['+neq']) {
+          filteredAccountUsers = accountUsers.filter(
+            (user) => user.user_type !== headers['user_type']['+neq']
+          );
+        } else {
+          filteredAccountUsers = accountUsers.filter(
+            (user) => user.user_type === headers['user_type']
+          );
+        }
+      }
+
+      filteredAccountUsers.sort((a, b) => {
+        const statusA = a[headers['+order_by']];
+        const statusB = b[headers['+order_by']];
+
+        if (statusA < statusB) {
+          return -1;
+        }
+        if (statusA > statusB) {
+          return 1;
+        }
+        return 0;
+      });
+
+      if (headers['+order'] == 'desc') {
+        filteredAccountUsers.reverse();
+      }
+      return res(
+        ctx.json({
+          data: filteredAccountUsers.slice(
+            (page - 1) * pageSize,
+            (page - 1) * pageSize + pageSize
+          ),
+          page,
+          pages: Math.ceil(filteredAccountUsers.length / pageSize),
+          results: filteredAccountUsers.length,
+        })
+      );
+    }
+
+    // Return default response if 'x-filter' header is not present
     return res(ctx.json(makeResourcePage(accountUsers)));
   }),
   rest.get(`*/account/users/${childAccountUser.username}`, (req, res, ctx) => {
@@ -1533,12 +1609,35 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupCreateEvent = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+      percent_complete: 100,
+      status: 'notification',
+    });
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
+      percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
+      status: 'notification',
+    });
+
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
       )
@@ -1754,18 +1853,18 @@ export const handlers = [
       when: null,
     };
 
-    const emailBounce = notificationFactory.build({
-      body: null,
-      entity: null,
-      label: 'We are unable to send emails to your billing email address!',
-      message: 'We are unable to send emails to your billing email address!',
-      severity: 'major',
-      type: 'billing_email_bounce',
-      until: null,
-      when: null,
-    });
+    // const emailBounce = notificationFactory.build({
+    //   body: null,
+    //   entity: null,
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   type: 'billing_email_bounce',
+    //   until: null,
+    //   when: null,
+    // });
 
-    const abuseTicket = abuseTicketNotificationFactory.build();
+    // const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationNotification = notificationFactory.build({
       entity: { id: 0, label: 'linode-0', type: 'linode' },
@@ -1861,8 +1960,8 @@ export const handlers = [
           outageNotification,
           minorSeverityNotification,
           criticalSeverityNotification,
-          abuseTicket,
-          emailBounce,
+          // abuseTicket,
+          // emailBounce,
           migrationNotification,
           balanceNotification,
           blockStorageMigrationScheduledNotification,
@@ -2019,7 +2118,7 @@ export const handlers = [
     return res(ctx.json(response));
   }),
   rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === 'undefined') {
+    if (req.params.placementGroupId === '-1') {
       return res(ctx.status(404));
     }
 
@@ -2034,9 +2133,47 @@ export const handlers = [
       affinity_type: 'anti_affinity',
       id: Number(req.params.placementGroupId) ?? -1,
       label: 'pg-1',
-      linode_ids: [
-        ...[0, 1, 2, 3, 5, 6, 7, 8, 43],
-        (req.body as any).linodes[0],
+      linodes: [
+        {
+          is_compliant: true,
+          linode: 1,
+        },
+        {
+          is_compliant: true,
+          linode: 2,
+        },
+        {
+          is_compliant: true,
+          linode: 3,
+        },
+        {
+          is_compliant: true,
+          linode: 4,
+        },
+        {
+          is_compliant: true,
+          linode: 5,
+        },
+        {
+          is_compliant: true,
+          linode: 6,
+        },
+        {
+          is_compliant: true,
+          linode: 7,
+        },
+        {
+          is_compliant: true,
+          linode: 8,
+        },
+        {
+          is_compliant: false,
+          linode: 43,
+        },
+        {
+          is_compliant: true,
+          linode: (req.body as any).linodes[0],
+        },
       ],
     });
 
@@ -2053,7 +2190,45 @@ export const handlers = [
         affinity_type: 'anti_affinity',
         id: Number(req.params.placementGroupId) ?? -1,
         label: 'pg-1',
-        linode_ids: [0, 1, 2, 3, 5, 6, 7, 8, 43],
+        linodes: [
+          {
+            is_compliant: true,
+            linode: 1,
+          },
+
+          {
+            is_compliant: true,
+            linode: 2,
+          },
+          {
+            is_compliant: true,
+            linode: 3,
+          },
+          {
+            is_compliant: true,
+            linode: 4,
+          },
+          {
+            is_compliant: true,
+            linode: 5,
+          },
+          {
+            is_compliant: true,
+            linode: 6,
+          },
+          {
+            is_compliant: true,
+            linode: 7,
+          },
+          {
+            is_compliant: true,
+            linode: 8,
+          },
+          {
+            is_compliant: false,
+            linode: 43,
+          },
+        ],
       });
 
       return res(ctx.json(response));

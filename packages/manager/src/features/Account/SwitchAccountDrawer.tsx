@@ -1,21 +1,23 @@
 import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
 import {
   isParentTokenValid,
   setTokenInLocalStorage,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 import { getStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
+import type { Token } from '@linode/api-v4';
 import type { APIError, ChildAccountPayload, UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
 
@@ -36,7 +38,8 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const currentTokenWithBearer = useCurrentToken() ?? '';
-  const history = useHistory();
+  const currentParentTokenWithBearer =
+    getStorage('authentication/parent_token/token') ?? '';
 
   const handleClose = React.useCallback(() => {
     onClose();
@@ -74,11 +77,9 @@ export const SwitchAccountDrawer = (props: Props) => {
     []
   );
 
-  // Navigate to the current location, triggering a re-render without a full page reload.
   const refreshPage = React.useCallback(() => {
-    // TODO: Parent/Child: We need to test this against the real API.
-    history.push(history.location.pathname);
-  }, [history]);
+    location.reload();
+  }, []);
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -95,17 +96,13 @@ export const SwitchAccountDrawer = (props: Props) => {
       isProxyUser: boolean;
     }) => {
       try {
-        // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
-        // ================================================================
-        // throw new Error(
-        //   `Account switching failed. Try again.`
-        // );
-        // ================================================================
-
         // We don't need to worry about this if we're a proxy user.
         if (!isProxyUser) {
-          const parentToken = {
+          const parentToken: Token = {
+            created: getStorage('authentication/created'),
             expiry: getStorage('authentication/expire'),
+            id: getStorage('authentication/id'),
+            label: getStorage('authentication/label'),
             scopes: getStorage('authentication/scopes'),
             token: currentTokenWithBearer ?? '',
           };
@@ -126,7 +123,10 @@ export const SwitchAccountDrawer = (props: Props) => {
 
         setTokenInLocalStorage({
           prefix: 'authentication/proxy_token',
-          token: proxyToken,
+          token: {
+            ...proxyToken,
+            token: `Bearer ${proxyToken.token}`,
+          },
         });
 
         updateCurrentTokenBasedOnUserType({
@@ -137,27 +137,16 @@ export const SwitchAccountDrawer = (props: Props) => {
         refreshPage();
       } catch (error) {
         setIsProxyTokenError(error as APIError[]);
-
-        // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
-        // ================================================================
-        // setIsProxyTokenError([
-        //   {
-        //     field: 'token',
-        //     reason: error.message,
-        //   },
-        // ]);
-        // ================================================================
       }
     },
     [getProxyToken, refreshPage]
   );
 
   const handleSwitchToParentAccount = React.useCallback(() => {
-    if (!isParentTokenValid({ isProxyUser })) {
+    if (!isParentTokenValid()) {
       const expiredTokenError: APIError = {
         field: 'token',
-        reason:
-          'The reseller account token has expired. You must log back into the account manually.',
+        reason: PARENT_SESSION_EXPIRED,
       };
 
       setIsParentTokenError([expiredTokenError]);
@@ -167,7 +156,8 @@ export const SwitchAccountDrawer = (props: Props) => {
 
     updateCurrentTokenBasedOnUserType({ userType: 'parent' });
     handleClose();
-  }, [handleClose, isProxyUser]);
+    refreshPage();
+  }, [handleClose, refreshPage]);
 
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
@@ -187,8 +177,11 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              onClick={() => {
+                sendSwitchToParentAccountEvent();
+                handleSwitchToParentAccount();
+              }}
               aria-label="parent-account-link"
-              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>
@@ -197,7 +190,9 @@ export const SwitchAccountDrawer = (props: Props) => {
         .
       </Typography>
       <ChildAccountList
-        currentTokenWithBearer={currentTokenWithBearer}
+        currentTokenWithBearer={
+          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
+        }
         isProxyUser={isProxyUser}
         onClose={handleClose}
         onSwitchAccount={handleSwitchToChildAccount}

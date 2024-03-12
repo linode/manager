@@ -38,6 +38,24 @@ const regions: Region[] = [
   }),
 ];
 
+const regionsWithEdge = [
+  ...regions,
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-1',
+    label: 'Gecko Edge Test',
+    site_type: 'edge',
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-2',
+    label: 'Gecko Edge Test 2',
+    site_type: 'edge',
+  }),
+];
+
 const expectedRegions: RegionSelectOption[] = [
   {
     data: {
@@ -45,20 +63,40 @@ const expectedRegions: RegionSelectOption[] = [
       region: 'North America',
     },
     label: 'US Location (us-1)',
+    site_type: 'core',
     unavailable: false,
     value: 'us-1',
   },
   {
     data: { country: 'ca', region: 'North America' },
     label: 'CA Location (ca-1)',
+    site_type: 'core',
     unavailable: false,
     value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
     label: 'JP Location (jp-1)',
+    site_type: 'core',
     unavailable: false,
     value: 'jp-1',
+  },
+];
+
+const expectedEdgeRegions = [
+  {
+    data: { country: 'us', region: 'North America' },
+    label: 'Gecko Edge Test (us-edge-1)',
+    site_type: 'edge',
+    unavailable: false,
+    value: 'us-edge-1',
+  },
+  {
+    data: { country: 'us', region: 'North America' },
+    label: 'Gecko Edge Test 2 (us-edge-2)',
+    site_type: 'edge',
+    unavailable: false,
+    value: 'us-edge-2',
   },
 ];
 
@@ -103,6 +141,44 @@ describe('getRegionOptions', () => {
 
     expect(result).toEqual(expectedRegions);
   });
+
+  it('should filter out edge regions if regionFilter is core', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'core',
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedRegions);
+  });
+
+  it('should filter out core regions if regionFilter is edge', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'edge',
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedEdgeRegions);
+  });
+
+  it('should not filter out any regions if regionFilter is undefined', () => {
+    const expectedRegionsWithEdge = [
+      ...expectedEdgeRegions,
+      ...expectedRegions,
+    ];
+
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: undefined,
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedRegionsWithEdge);
+  });
 });
 
 describe('getSelectedRegionById', () => {
@@ -123,6 +199,7 @@ describe('getSelectedRegionById', () => {
         region: 'North America',
       },
       label: 'US Location (us-1)',
+      site_type: 'core',
       unavailable: false,
       value: 'us-1',
     };
@@ -188,6 +265,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
+        site_type: 'core',
         unavailable: false,
         value: 'us-1',
       },
@@ -197,6 +275,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'CA Location (ca-1)',
+        site_type: 'core',
         unavailable: false,
         value: 'ca-1',
       },
@@ -222,6 +301,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
+        site_type: 'core',
         unavailable: false,
         value: 'us-1',
       },
