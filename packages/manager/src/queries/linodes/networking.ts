@@ -26,7 +26,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { queryKey } from './linodes';
 import { getAllIPv6Ranges, getAllIps } from './requests';

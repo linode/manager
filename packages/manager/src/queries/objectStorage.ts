@@ -30,12 +30,11 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as accountSettingsQueryKey } from './accountSettings';
 import { queryPresets } from './base';
 
 export interface BucketError {
@@ -69,7 +68,7 @@ export const getAllObjectStorageBuckets = () =>
 
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>(
-    `${queryKey}-clusters`,
+    [`${queryKey}-clusters`],
     getAllObjectStorageClusters,
     { ...queryPresets.oneTimeFetch, enabled }
   );
@@ -79,7 +78,7 @@ export const useObjectStorageBuckets = (
   enabled: boolean = true
 ) =>
   useQuery<BucketsResponce, APIError[]>(
-    `${queryKey}-buckets`,
+    [`${queryKey}-buckets`],
     // Ideally we would use the line below, but if a cluster is down, the buckets on that
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
     // we can tell the user which clusters are having issues.
@@ -97,7 +96,7 @@ export const useObjectStorageBucketsFromRegions = (
   enabled: boolean = true
 ) =>
   useQuery<BucketsResponce, APIError[]>(
-    `${queryKey}-buckets-from-regions`,
+    [`${queryKey}-buckets-from-regions`],
     () => getAllBucketsFromRegions(regions),
     {
       ...queryPresets.longLived,
@@ -122,9 +121,9 @@ export const useCreateBucketMutation = () => {
   >(createBucket, {
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
-      queryClient.invalidateQueries(accountSettingsQueryKey);
+      queryClient.invalidateQueries(['account', 'settings']);
       queryClient.setQueryData<BucketsResponce>(
-        `${queryKey}-buckets`,
+        [`${queryKey}-buckets`],
         (oldData) => ({
           buckets: [...(oldData?.buckets || []), newEntity],
           errors: oldData?.errors || [],
@@ -141,7 +140,7 @@ export const useDeleteBucketMutation = () => {
     {
       onSuccess: (_, variables) => {
         queryClient.setQueryData<BucketsResponce>(
-          `${queryKey}-buckets`,
+          [`${queryKey}-buckets`],
           (oldData) => {
             return {
               buckets:
@@ -271,7 +270,7 @@ export const updateBucket = async (
 ) => {
   const bucket = await getBucket(cluster, bucketName);
   queryClient.setQueryData<BucketsResponce | undefined>(
-    `${queryKey}-buckets`,
+    [`${queryKey}-buckets`],
     (oldData) => {
       if (oldData === undefined) {
         return undefined;

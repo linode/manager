@@ -34,14 +34,18 @@ export const PlacementGroups = () => {
           <Route
             component={PlacementGroupsLanding}
             exact
-            path={`${path}/rename/:id`}
+            path={`${path}/edit/:id`}
           />
-          <Route component={PlacementGroupsDetail} path={`${path}/:id/:tab?`} />
+          <Route
+            component={PlacementGroupsLanding}
+            exact
+            path={`${path}/delete/:id`}
+          />
           <Route
             component={PlacementGroupsDetail}
-            exact
-            path={`${path}/:id/linodes/assign`}
+            path={`${path}/:id/:tab?/unassign/:linodeId?`}
           />
+          <Route component={PlacementGroupsDetail} path={`${path}/:id/:tab?`} />
           <Route component={PlacementGroupsLanding} />
         </Switch>
       </React.Fragment>

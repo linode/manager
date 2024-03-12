@@ -35,13 +35,13 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets, updateInPaginatedStore } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
 
 export const queryKey = 'databases';
 
@@ -66,7 +66,7 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
   useQuery<DatabaseInstance[], APIError[]>(
-    `${queryKey}-all-list`,
+    [`${queryKey}-all-list`],
     getAllDatabases,
     { enabled }
   );
@@ -86,7 +86,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
 
             if (oldEntity.label !== data.label) {
               updateInPaginatedStore<Database>(
-                `${queryKey}-list`,
+                [`${queryKey}-list`],
                 id,
                 {
                   label: data.label,
@@ -112,11 +112,11 @@ export const useCreateDatabaseMutation = () => {
         // Invalidate useDatabasesQuery to show include the new database.
         // We choose to refetch insted of manually mutate the cache because it
         // is API paginated.
-        queryClient.invalidateQueries(`${queryKey}-list`);
+        queryClient.invalidateQueries([`${queryKey}-list`]);
         // Add database to the cache
         queryClient.setQueryData([queryKey, data.id], data);
         // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+        queryClient.invalidateQueries(profileQueries.grants.queryKey);
       },
     }
   );
@@ -129,7 +129,7 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
       // Invalidate useDatabasesQuery to remove the deleted database.
       // We choose to refetch insted of manually mutate the cache because it
       // is API paginated.
-      queryClient.invalidateQueries(`${queryKey}-list`);
+      queryClient.invalidateQueries([`${queryKey}-list`]);
     },
   });
 };
@@ -152,7 +152,7 @@ export const getAllDatabaseEngines = () =>
 
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>(
-    `${queryKey}-versions`,
+    [`${queryKey}-versions`],
     getAllDatabaseEngines,
     { enabled }
   );
@@ -164,7 +164,7 @@ export const getAllDatabaseTypes = () =>
 
 export const useDatabaseTypesQuery = () =>
   useQuery<DatabaseType[], APIError[]>(
-    `${queryKey}-types`,
+    [`${queryKey}-types`],
     getAllDatabaseTypes
   );
 
@@ -174,7 +174,7 @@ export const useDatabaseCredentialsQuery = (
   enabled: boolean = false
 ) =>
   useQuery<DatabaseCredentials, APIError[]>(
-    [`${queryKey}-credentials`, id],
+    [queryKey, 'credentials', id],
     () => getDatabaseCredentials(engine, id),
     { ...queryPresets.oneTimeFetch, enabled }
   );
@@ -185,8 +185,8 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
     () => resetDatabaseCredentials(engine, id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([`${queryKey}-credentials`, id]);
-        queryClient.removeQueries([`${queryKey}-credentials`, id]);
+        queryClient.invalidateQueries([queryKey, 'credentials', id]);
+        queryClient.removeQueries([queryKey, 'credentials', id]);
       },
     }
   );
@@ -225,7 +225,7 @@ export const databaseEventsHandler = (event: EventHandlerData) => {
           // Database status will change from `provisioning` to `active` (or `failed`) and
           // the host fields will populate. We need to refetch to get the hostnames.
           queryClient.invalidateQueries([queryKey, entity!.id]);
-          queryClient.invalidateQueries(`${queryKey}-list`);
+          queryClient.invalidateQueries([`${queryKey}-list`]);
         case 'notification':
           // In this case, the API let us know the user initialized a Database create event.
           // We use this logic for the case a user created a Database from outside Cloud Manager,
@@ -235,7 +235,7 @@ export const databaseEventsHandler = (event: EventHandlerData) => {
             entity!.id,
           ]);
           if (!storedDatabase) {
-            queryClient.invalidateQueries(`${queryKey}-list`);
+            queryClient.invalidateQueries([`${queryKey}-list`]);
           }
         case 'scheduled':
         case 'started':
@@ -250,7 +250,7 @@ const updateStoreForDatabase = (
   queryClient: QueryClient
 ) => {
   updateDatabaseStore(id, data, queryClient);
-  updateInPaginatedStore<Database>(`${queryKey}-list`, id, data, queryClient);
+  updateInPaginatedStore<Database>([`${queryKey}-list`], id, data, queryClient);
 };
 
 const updateDatabaseStore = (

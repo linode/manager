@@ -65,9 +65,9 @@ describe('Create API Token Drawer', () => {
     );
 
     const labelField = getByTestId('textfield-input');
-    userEvent.type(labelField, 'my-test-token');
+    await userEvent.type(labelField, 'my-test-token');
     const submit = getByText('Create Token');
-    userEvent.click(submit);
+    await userEvent.click(submit);
 
     await waitFor(() =>
       expect(props.showSecret).toBeCalledWith('secret-value')
@@ -101,7 +101,7 @@ describe('Create API Token Drawer', () => {
 
   it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ user_type: null }),
+      data: profileFactory.build({ user_type: 'default' }),
     });
 
     const { queryByText } = renderWithTheme(
@@ -135,10 +135,32 @@ describe('Create API Token Drawer', () => {
     expect(vpcScope).not.toBeInTheDocument();
   });
 
-  it('Should close when Cancel is pressed', () => {
+  it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
+  });
+
+  it('Should not select Read Only for VPC scope when Select All > Read Only is clicked', async () => {
+    const { getAllByTestId, getByLabelText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { vpc: true },
+      }
+    );
+    const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
+    const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;
+    const vpcReadOnlyPermRadioButton = vpcPermRadioButtons[1].firstChild;
+
+    const selectAllReadOnlyPermRadioButton = getByLabelText(
+      'Select read-only for all'
+    );
+    await userEvent.click(selectAllReadOnlyPermRadioButton);
+    expect(selectAllReadOnlyPermRadioButton).toBeChecked();
+
+    expect(vpcNonePermRadioButton).toBeChecked();
+    expect(vpcReadOnlyPermRadioButton).not.toBeChecked();
+    expect(vpcReadOnlyPermRadioButton).toBeDisabled();
   });
 });

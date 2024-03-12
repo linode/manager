@@ -10,7 +10,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useGrants } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
@@ -36,7 +36,7 @@ export const useAllPaymentMethodsQuery = () => {
   const { data: grants } = useGrants();
 
   return useQuery<PaymentMethod[], APIError[]>(
-    queryKey + '-all',
+    [queryKey + '-all'],
     getAllPaymentMethodsRequest,
     {
       ...queryPresets.oneTimeFetch,
@@ -56,7 +56,7 @@ export const getAllPaymentMethodsRequest = () =>
 
 export const useClientToken = () =>
   useQuery<ClientToken, APIError[]>(
-    queryKey + '-client-token',
+    [queryKey + '-client-token'],
     getClientToken,
     queryPresets.longLived
   );

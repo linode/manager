@@ -42,7 +42,7 @@ describe('Edit API Token Drawer', () => {
     await act(async () => {
       const labelField = getByTestId('textfield-input');
 
-      userEvent.type(labelField, 'updated-token-label');
+      await userEvent.type(labelField, 'updated-token-label');
 
       const saveButton = getByTestId('save-button');
 
@@ -58,7 +58,7 @@ describe('Edit API Token Drawer', () => {
     await act(async () => {
       const labelField = getByTestId('textfield-input');
 
-      userEvent.type(labelField, 'my-token-updated');
+      await userEvent.type(labelField, 'my-token-updated');
 
       const saveButton = getByTestId('save-button');
 
@@ -66,15 +66,15 @@ describe('Edit API Token Drawer', () => {
         expect(saveButton).toHaveAttribute('aria-disabled', 'false')
       );
 
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
 
       await waitFor(() => expect(props.onClose).toBeCalled());
     });
   });
-  it('Should close when Cancel is pressed', () => {
+  it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(<EditAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
 });

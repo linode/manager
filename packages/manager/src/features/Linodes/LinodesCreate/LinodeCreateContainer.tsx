@@ -30,9 +30,7 @@ import {
   WithFeatureFlagProps,
   withFeatureFlags,
 } from 'src/containers/flags.container';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
+import { WithImagesProps, withImages } from 'src/containers/images.container';
 import {
   WithProfileProps,
   withProfile,
@@ -54,11 +52,8 @@ import {
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
-import {
-  accountAgreementsQueryKey,
-  reportAgreementSigningError,
-} from 'src/queries/accountAgreements';
-import { simpleMutationHandlers } from 'src/queries/base';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
+import { reportAgreementSigningError } from 'src/queries/accountAgreements';
 import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
@@ -68,21 +63,21 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { isEURegion } from 'src/utilities/formatRegion';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 
-import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
+import LinodeCreate from './LinodeCreate';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
-import { getRegionIDFromLinodeID } from './utilities';
 
 import type {
   CreateLinodeRequest,
@@ -95,6 +90,7 @@ import type {
 const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   attachedVLANLabel: null | string;
   authorized_users: string[];
@@ -133,7 +129,7 @@ interface State {
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
-  ImagesProps &
+  WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
@@ -147,6 +143,7 @@ type CombinedProps = WithSnackbarProps &
   WithEventsPollingActionProps;
 
 const defaultState: State = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   attachedVLANLabel: '',
   authorized_users: [],
@@ -285,6 +282,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
+            handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
@@ -524,6 +522,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ vpcIPv4AddressOfLinode: IPv4 });
   };
 
+  handleVPCIPv4RangesChange = (ranges: ExtendedIP[]) => {
+    this.setState({ additionalIPv4RangesForVPC: ranges });
+  };
+
   params = getQueryParamsFromQueryString(this.props.location.search) as Record<
     string,
     string
@@ -581,19 +583,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * since the API does not infer this automatically.
        */
 
-      /**
-       * safe to ignore possibility of "undefined"
-       * null checking happens in CALinodeCreate
-       */
-      const selectedRegionID = getRegionIDFromLinodeID(
-        this.props.linodesData!,
-        id
-      );
       this.setState({
         selectedBackupID: undefined,
         selectedDiskSize: diskSize,
         selectedLinodeID: id,
-        selectedRegionID,
+        selectedRegionID: this.props.linodesData?.find(
+          (linode) => linode.id == id
+        )?.region,
         selectedTypeID: undefined,
       });
     }
@@ -743,6 +739,36 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       }
     }
 
+    if (payload.placement_group) {
+      const error = hasPlacementGroupReachedCapacity({
+        placementGroup: this.state.placementGroupSelection!,
+        region: this.props.regionsData.find(
+          (r) => r.id === this.state.selectedRegionID
+        )!,
+      });
+      if (error) {
+        this.setState(
+          {
+            errors: [
+              {
+                field: 'placement_group',
+                reason: `${this.state.placementGroupSelection?.label} (${
+                  this.state.placementGroupSelection?.affinity_type ===
+                  'affinity'
+                    ? 'Affinity'
+                    : 'Anti-affinity'
+                }) doesn't have any capacity for this Linode.`,
+              },
+            ],
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+        return;
+      }
+    }
+
     // Validation for VPC fields
     if (
       this.state.selectedVPCId !== undefined &&
@@ -847,20 +873,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          this.props.queryClient.executeMutation<
-            {},
-            APIError[],
-            Partial<Agreements>
-          >({
-            mutationFn: signAgreement,
-            mutationKey: accountAgreementsQueryKey,
-            onError: reportAgreementSigningError,
-            variables: { eu_model: true, privacy_policy: true },
-            ...simpleMutationHandlers(
-              accountAgreementsQueryKey,
-              this.props.queryClient
-            ),
-          });
+          const agreeData = { eu_model: true, privacy_policy: true };
+          signAgreement(agreeData)
+            .then(() => {
+              this.props.queryClient.setQueryData<Agreements>(
+                ['account', 'agreements'],
+                (prev) => ({
+                  ...(prev ?? {}),
+                  ...agreeData,
+                })
+              );
+            })
+            .catch(reportAgreementSigningError);
         }
 
         /** Analytics creation event */

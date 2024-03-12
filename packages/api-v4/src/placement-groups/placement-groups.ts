@@ -1,6 +1,6 @@
 import {
   createPlacementGroupSchema,
-  renamePlacementGroupSchema,
+  updatePlacementGroupSchema,
 } from '@linode/validation';
 import { API_ROOT } from '../constants';
 
@@ -17,7 +17,7 @@ import type {
   CreatePlacementGroupPayload,
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
-  RenamePlacementGroupPayload,
+  UpdatePlacementGroupPayload,
 } from './types';
 
 /**
@@ -63,23 +63,23 @@ export const createPlacementGroup = (data: CreatePlacementGroupPayload) =>
   );
 
 /**
- * renamePlacementGroup
+ * updatePlacementGroup
  *
- * Renames a Placement Group (updates label).
+ * Updates a Placement Group (updates label).
  *
  * @param placementGroupId { number } The id of the Placement Group to be updated.
  * @param data { PlacementGroup } The data for the Placement Group.
  */
-export const renamePlacementGroup = (
+export const updatePlacementGroup = (
   placementGroupId: number,
-  data: RenamePlacementGroupPayload
+  data: UpdatePlacementGroupPayload
 ) =>
   Request<PlacementGroup>(
     setURL(
       `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`
     ),
     setMethod('PUT'),
-    setData(data, renamePlacementGroupSchema)
+    setData(data, updatePlacementGroupSchema)
   );
 
 /**

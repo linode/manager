@@ -1,7 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { profileFactory, sshKeyFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
@@ -51,8 +50,7 @@ describe('UserSSHKeyPanel', () => {
         })
       );
       const { getByText } = renderWithTheme(
-        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />,
-        { queryClient: new QueryClient() }
+        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />
       );
       await waitFor(() => {
         expect(getByText('my-ssh-key', { exact: false })).toBeInTheDocument();
@@ -75,8 +73,7 @@ describe('UserSSHKeyPanel', () => {
         })
       );
       const { getByText } = renderWithTheme(
-        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />,
-        { queryClient: new QueryClient() }
+        <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />
       );
       await waitFor(() => {
         expect(getByText('test-user', { exact: false })).toBeInTheDocument();
@@ -104,14 +101,13 @@ describe('UserSSHKeyPanel', () => {
       };
 
       const { getByRole, getByText } = renderWithTheme(
-        <UserSSHKeyPanel {...props} />,
-        { queryClient: new QueryClient() }
+        <UserSSHKeyPanel {...props} />
       );
       await waitFor(() => {
         expect(getByText('test-user')).toBeInTheDocument();
         expect(getByText('ssh-key')).toBeInTheDocument();
       });
-      userEvent.click(getByRole('checkbox'));
+      await userEvent.click(getByRole('checkbox'));
       expect(props.setAuthorizedUsers).toBeCalledWith(['test-user']);
     });
   });

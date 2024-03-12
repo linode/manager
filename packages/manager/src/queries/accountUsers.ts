@@ -4,7 +4,7 @@ import {
   getUser,
   getUsers,
 } from '@linode/api-v4/lib/account';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
 
@@ -19,14 +19,22 @@ import type {
   User,
 } from '@linode/api-v4';
 
-export const useAccountUsers = (params?: Params, filters?: Filter) => {
+export const useAccountUsers = ({
+  enabled = true,
+  filters,
+  params,
+}: {
+  enabled?: boolean;
+  filters?: Filter;
+  params?: Params;
+}) => {
   const { data: profile } = useProfile();
 
   return useQuery<ResourcePage<User>, APIError[]>(
     [queryKey, 'users', 'paginated', params, filters],
     () => getUsers(params, filters),
     {
-      enabled: !profile?.restricted,
+      enabled: enabled && !profile?.restricted,
       keepPreviousData: true,
     }
   );

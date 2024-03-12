@@ -1,9 +1,9 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { Theme, useTheme } from '@mui/material/styles';
 import {
   default as _TextField,
   StandardTextFieldProps,
 } from '@mui/material/TextField';
-import { Theme, useTheme } from '@mui/material/styles';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';

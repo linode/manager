@@ -7,6 +7,8 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'label', label: 'Linode Label' },
   { key: 'id', label: 'Linode ID' },
   { key: 'ipv4', label: 'IPv4' },
+  { key: 'interfaceData.ipv4.vpc', label: 'IPv4 VPC' },
+  { key: 'interfaceData.ip_ranges', label: 'IPv4 VPC Ranges' },
 ];
 
 // @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
@@ -88,13 +90,13 @@ const isValidRFC1918IPv4 = (address: string) => {
   // 192.168.x.x (192.168/16 prefix)
   return (
     // check for valid 10.x IPs
+    // check for valid 192.x IPs
     (firstOctet === '10' && parsedMask >= 8) ||
     // check for valid 172.x IPs
     (firstOctet === '172' &&
       parsedSecondOctet >= 16 &&
       parsedSecondOctet <= 31 &&
       parsedMask >= 12) ||
-    // check for valid 192.x IPs
     (firstOctet === '192' && secondOctet === '168' && parsedMask >= 16)
   );
 };

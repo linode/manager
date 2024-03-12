@@ -53,17 +53,17 @@ describe('HostNamesDrawer', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', {
-        name: 'Copy S3 Endpoint: Atlanta, GA: endpoint2 to clipboard',
+        name: 'Copy Atlanta, GA: endpoint2 to clipboard',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', {
-        name: 'Copy S3 Endpoint: Newark, NJ: endpoint1 to clipboard',
+        name: 'Copy Newark, NJ: endpoint1 to clipboard',
       })
     ).toBeInTheDocument();
   });
 
-  it('calls onClose when the drawer is closed', () => {
+  it('calls onClose when the drawer is closed', async () => {
     renderWithTheme(
       <HostNamesDrawer
         onClose={mockOnClose}
@@ -73,7 +73,7 @@ describe('HostNamesDrawer', () => {
     );
 
     const closeButton = screen.getByRole('button', { name: 'Close drawer' });
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
 
     expect(mockOnClose).toHaveBeenCalled();
   });

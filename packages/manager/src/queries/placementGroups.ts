@@ -4,8 +4,8 @@ import {
   deletePlacementGroup,
   getPlacementGroup,
   getPlacementGroups,
-  renamePlacementGroup,
   unassignLinodesFromPlacementGroup,
+  updatePlacementGroup,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -13,19 +13,18 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as LINODES_QUERY_KEY } from './linodes/linodes';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
 
 import type {
   AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
-  RenamePlacementGroupPayload,
   UnassignLinodesFromPlacementGroupPayload,
+  UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
 export const queryKey = 'placement-groups';
@@ -77,7 +76,7 @@ export const useCreatePlacementGroup = () => {
         placementGroup
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };
@@ -85,8 +84,8 @@ export const useCreatePlacementGroup = () => {
 export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], RenamePlacementGroupPayload>({
-    mutationFn: (data) => renamePlacementGroup(id, data),
+  return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
+    mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
@@ -119,23 +118,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   >({
     mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
-      // Invalidate placement group linodes
-      queryClient.invalidateQueries([
-        queryKey,
-        'placement-group',
-        placementGroupId,
-        'linodes',
-      ]);
-
-      // Invalidate linode placement group data
-      queryClient.invalidateQueries([
-        LINODES_QUERY_KEY,
-        'linode',
-        updatedPlacementGroup.linode_ids[0],
-        'placement_groups',
-      ]);
-
-      // Set the updated placement group
+      queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
         [queryKey, 'placement-group', placementGroupId],
         updatedPlacementGroup

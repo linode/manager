@@ -9,7 +9,7 @@ import {
   resizeLinodeDisk,
   updateLinodeDisk,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
