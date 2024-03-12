@@ -496,7 +496,7 @@ export const sendHasGravatarEvent = (hasGravatar: boolean) => {
   });
 };
 
-// GravatarByEmail.tsx
+// DisplaySettings.tsx
 export const sendManageGravatarEvent = () => {
   sendEvent({
     action: 'Click:link',
