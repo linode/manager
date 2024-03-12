@@ -155,6 +155,9 @@ export const PlansPanel = (props: Props) => {
         return (
           <>
             <PlanInformation
+              hideLimitedAvailabilityBanner={
+                showEdgePlanTable || !flags.disableLargestGbPlans
+              }
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
@@ -163,7 +166,6 @@ export const PlansPanel = (props: Props) => {
               }
               disabledClasses={props.disabledClasses}
               hasSelectedRegion={hasSelectedRegion}
-              hideLimitedAvailabilityBanner={showEdgePlanTable}
               planType={plan}
               regionsData={regionsData || []}
             />
@@ -174,10 +176,13 @@ export const PlansPanel = (props: Props) => {
               />
             )}
             <PlanContainer
+              hideDisabledHelpIcons={
+                mostClassPlansAreLimitedAvailability &&
+                flags.disableLargestGbPlans
+              } // Making it conditional on the flag avoids scenario w/ flag off where all plans on a tab could be disabled with no explanation
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
-              hideDisabledHelpIcons={mostClassPlansAreLimitedAvailability}
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
