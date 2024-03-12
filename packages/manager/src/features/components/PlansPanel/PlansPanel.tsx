@@ -3,18 +3,21 @@ import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsAvailabilityQuery } from 'src/queries/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
+  getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
+  isMajorityLimitedAvailabilityPlans,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
 
-import type { PlanSelectionType } from './types';
+import type { PlanSelectionType, TypeWithAvailability } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 interface Props {
   className?: string;
@@ -61,6 +64,11 @@ export const PlansPanel = (props: Props) => {
   const theme = useTheme();
   const flags = useFlags();
 
+  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
+    selectedRegionID || '',
+    Boolean(flags.soldOutChips) && selectedRegionID !== undefined
+  );
+
   const _types = replaceOrAppendPlaceholder512GbPlans(types);
   const plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans ? _types : types
@@ -76,6 +84,24 @@ export const PlansPanel = (props: Props) => {
   });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
+    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
+    const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
+      (plan) => {
+        return {
+          ...plan,
+          isLimitedAvailabilityPlan: getIsLimitedAvailability({
+            plan,
+            regionAvailabilities,
+            selectedRegionId: selectedRegionID,
+          }),
+        };
+      }
+    );
+
+    const mostClassPlansAreLimitedAvailability = isMajorityLimitedAvailabilityPlans(
+      plansForThisLinodeTypeClass
+    );
+
     return {
       disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
       render: () => {
@@ -85,6 +111,9 @@ export const PlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
+              mostClassPlansAreLimitedAvailability={
+                mostClassPlansAreLimitedAvailability
+              }
               disabledClasses={props.disabledClasses}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
@@ -94,10 +123,11 @@ export const PlansPanel = (props: Props) => {
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
+              hideDisabledHelpIcons={mostClassPlansAreLimitedAvailability}
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
-              plans={plans[plan]}
+              plans={plansForThisLinodeTypeClass}
               selectedDiskSize={props.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}

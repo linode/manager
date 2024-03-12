@@ -34,6 +34,7 @@ export interface PlanSelectionProps {
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   header?: string;
+  hideDisabledHelpIcons?: boolean;
   idx: number;
   isCreate?: boolean;
   isLimitedAvailabilityPlan: boolean;
@@ -58,6 +59,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
+    hideDisabledHelpIcons,
     idx,
     isCreate,
     isLimitedAvailabilityPlan,
@@ -155,7 +157,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </StyledRadioCell>
           <TableCell data-qa-plan-name>
             {type.heading} &nbsp;
-            {isDisabled && (
+            {isDisabled && !hideDisabledHelpIcons && (
               <Tooltip
                 data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
                 data-testid="limited-availability"

@@ -6,7 +6,7 @@ import {
   DEDICATED_512_GB_PLAN,
   PREMIUM_512_GB_PLAN,
 } from './constants';
-import { PlanSelectionType } from './types';
+import { PlanSelectionType, TypeWithAvailability } from './types';
 
 import type {
   Capabilities,
@@ -235,4 +235,31 @@ export const replaceOrAppendPlaceholder512GbPlans = (
   }
 
   return types;
+};
+
+/**
+ * Used to determine the contents of certain notices about availability and whether tooltips regarding
+ * limited availability for plans are displayed within plan tables.
+ *
+ * @param plans An array of plans in a LinodeTypeClass, e.g. Dedicated or Shared plans
+ *
+ * @returns boolean
+ */
+export const isMajorityLimitedAvailabilityPlans = (
+  plans: TypeWithAvailability[]
+): boolean => {
+  const plansTotal = plans.length;
+
+  const countOfLimitedAvailabilityPlans = plans.filter(
+    (plan) => plan.isLimitedAvailabilityPlan
+  ).length;
+
+  const limitedAvailabilityToTotalRatio =
+    countOfLimitedAvailabilityPlans / plansTotal;
+
+  if (limitedAvailabilityToTotalRatio > 0.5) {
+    return true;
+  }
+
+  return false;
 };

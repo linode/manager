@@ -15,6 +15,8 @@ import {
   KubernetesPlanSelectionProps,
 } from './KubernetesPlanSelection';
 
+import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+
 const planHeader = 'Dedicated 20 GB';
 const baseHourlyPrice = '$0.015';
 const baseMonthlyPrice = '$10';
@@ -24,7 +26,10 @@ const ram = '16 GB';
 const cpu = '8';
 const storage = '1024 GB';
 
-const extendedType = extendedTypeFactory.build();
+const typeWithAvailability: TypeWithAvailability = {
+  ...extendedTypeFactory.build(),
+  isLimitedAvailabilityPlan: false,
+};
 
 const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
@@ -33,7 +38,7 @@ const props: KubernetesPlanSelectionProps = {
   onAdd: vi.fn(),
   onSelect: vi.fn(),
   selectedRegionId: 'us-east',
-  type: extendedType,
+  type: typeWithAvailability,
   updatePlanCount: vi.fn(),
 };
 
@@ -75,15 +80,18 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...props,
-      type: extendedTypeFactory.build({
-        region_prices: [
-          {
-            hourly: 0,
-            id: 'id-cgk',
-            monthly: 0,
-          },
-        ],
-      }),
+      type: {
+        ...extendedTypeFactory.build({
+          region_prices: [
+            {
+              hourly: 0,
+              id: 'id-cgk',
+              monthly: 0,
+            },
+          ],
+        }),
+        isLimitedAvailabilityPlan: false,
+      },
     };
     const { container } = renderWithTheme(
       wrapWithTableBody(
@@ -108,10 +116,13 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   });
 
   it('shows limited availability messaging for 512 GB plans', async () => {
-    const bigPlanType = extendedTypeFactory.build({
-      heading: 'Dedicated 512 GB',
-      label: 'Dedicated 512GB',
-    });
+    const bigPlanType: TypeWithAvailability = {
+      ...extendedTypeFactory.build({
+        heading: 'Dedicated 512 GB',
+        label: 'Dedicated 512GB',
+      }),
+      isLimitedAvailabilityPlan: false,
+    };
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
@@ -192,10 +203,13 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
   });
 
   it('is disabled for 512 GB plans', () => {
-    const bigPlanType = extendedTypeFactory.build({
-      heading: 'Dedicated 512 GB',
-      label: 'Dedicated 512GB',
-    });
+    const bigPlanType: TypeWithAvailability = {
+      ...extendedTypeFactory.build({
+        heading: 'Dedicated 512 GB',
+        label: 'Dedicated 512GB',
+      }),
+      isLimitedAvailabilityPlan: false,
+    };
 
     const { getByTestId } = renderWithTheme(
       <KubernetesPlanSelection

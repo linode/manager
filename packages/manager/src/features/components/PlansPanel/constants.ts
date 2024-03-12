@@ -4,6 +4,15 @@ import type { ExtendedType } from 'src/utilities/extendType';
 export const LIMITED_AVAILABILITY_TEXT = 'This plan has limited availability.';
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
+export const LIMITED_AVAILABILITY_DISMISSIBLEBANNER_KEY =
+  'plan-limited-availability-notice';
+
+export const DEDICATED_COMPUTE_INSTANCES_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';
+export const PREMIUM_COMPUTE_INSTANCES_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/plans/premium/';
+export const GPU_COMPUTE_INSTANCES_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/plans/gpu/';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   addons: {

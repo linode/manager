@@ -1,8 +1,8 @@
 import { PriceObject } from '@linode/api-v4';
 import { Region } from '@linode/api-v4/lib/regions';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -14,10 +14,9 @@ import { IconButton } from 'src/components/IconButton';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { Tooltip } from 'src/components/Tooltip';
-import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { useFlags } from 'src/hooks/useFlags';
-import { ExtendedType } from 'src/utilities/extendType';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
@@ -25,6 +24,8 @@ import {
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+
+import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
   disabled?: boolean;
@@ -35,7 +36,7 @@ export interface KubernetesPlanSelectionProps {
   onSelect: (key: string) => void;
   selectedId?: string;
   selectedRegionId?: Region['id'];
-  type: ExtendedType;
+  type: TypeWithAvailability;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 

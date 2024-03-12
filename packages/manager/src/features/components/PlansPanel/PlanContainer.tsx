@@ -9,16 +9,12 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
-import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
-import { getIsLimitedAvailability } from './utils';
 
-import type { PlanSelectionType } from './types';
+import type { TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
@@ -42,10 +38,11 @@ export interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  hideDisabledHelpIcons?: boolean;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  plans: PlanSelectionType[];
+  plans: TypeWithAvailability[];
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -57,6 +54,7 @@ export const PlanContainer = (props: Props) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
+    hideDisabledHelpIcons,
     isCreate,
     linodeID,
     onSelect,
@@ -67,20 +65,15 @@ export const PlanContainer = (props: Props) => {
     showTransfer,
   } = props;
   const location = useLocation();
-  const flags = useFlags();
-
-  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
-    selectedRegionId || '',
-    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
-  );
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
-    showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
+    showTransfer && plans.some((plan: TypeWithAvailability) => plan.transfer);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const shouldShowNetwork =
-    showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
+    showTransfer &&
+    plans.some((plan: TypeWithAvailability) => plan.network_out);
 
   // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
@@ -92,20 +85,15 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isLimitedAvailabilityPlan = getIsLimitedAvailability({
-        plan,
-        regionAvailabilities,
-        selectedRegionId,
-      });
-
       return (
         <PlanSelection
           isLimitedAvailabilityPlan={
-            disabled ? false : isLimitedAvailabilityPlan
+            disabled ? false : plan.isLimitedAvailabilityPlan
           } // No need for tooltip due to all plans being unavailable in region
           currentPlanHeading={currentPlanHeading}
           disabled={disabled}
           disabledClasses={disabledClasses}
+          hideDisabledHelpIcons={hideDisabledHelpIcons}
           idx={id}
           isCreate={isCreate}
           key={id}
@@ -120,18 +108,18 @@ export const PlanContainer = (props: Props) => {
       );
     });
   }, [
-    currentPlanHeading,
+    plans,
+    selectedRegionId,
     disabled,
+    currentPlanHeading,
     disabledClasses,
+    hideDisabledHelpIcons,
     isCreate,
     linodeID,
     onSelect,
-    plans,
     selectedDiskSize,
     selectedId,
-    selectedRegionId,
     showTransfer,
-    regionAvailabilities,
   ]);
 
   return (
