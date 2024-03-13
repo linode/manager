@@ -121,33 +121,6 @@ describe('UserMenu', () => {
     expect(queryByText('Test Company')).not.toBeInTheDocument();
   });
 
-  it("shows the user's username and no email in the TopMenu for a regular user without a company name", async () => {
-    server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(accountFactory.build({ company: undefined })));
-      }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              email: 'user@email.com',
-              user_type: 'default',
-              username: 'regular-user',
-            })
-          )
-        );
-      })
-    );
-
-    const { findByText, queryByText } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
-
-    expect(await findByText('regular-user')).toBeInTheDocument();
-    // Should not be displayed for regular restricted users, only restricted parents.
-    expect(queryByText('user@email.com')).not.toBeInTheDocument();
-  });
-
   it('shows the parent company name and Switch Account button in the dropdown menu for a parent user', async () => {
     server.use(
       rest.get('*/account', (req, res, ctx) => {
