@@ -52,10 +52,10 @@ To enable the MSW, open the Local Dev Tools and check the "Mock Service Worker" 
 import { rest } from "msw";
 
 const handlers = [
-  rest.get("*/profile", (req, res, ctx) => {
+  http.get("*/profile", () => {
     //
     const profile = profileFactory.build({ restricted: true });
-    return res(ctx.json(profile));
+    return HttpResponse.json((profile));
   }),
   // ... other handlers
 ];

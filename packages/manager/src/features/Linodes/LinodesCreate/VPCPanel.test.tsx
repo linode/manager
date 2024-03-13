@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { accountFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCPanel, VPCPanelProps } from './VPCPanel';
@@ -38,8 +38,8 @@ describe('VPCPanel', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json((account));
       })
     );
 
@@ -74,13 +74,13 @@ describe('VPCPanel', () => {
     const _props = { ...props, region: 'us-east', selectedVPCId: 5 };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
       })
     );
 
@@ -104,13 +104,13 @@ describe('VPCPanel', () => {
     };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
       })
     );
 
@@ -126,15 +126,15 @@ describe('VPCPanel', () => {
 
   it('should display helper text if there are no vpcs in the selected region and "from" is "linodeCreate"', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json((makeResourcePage([usEast])));
       }),
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/vpcs', () => {
+        return HttpResponse.json((makeResourcePage([])));
       })
     );
 
@@ -153,15 +153,15 @@ describe('VPCPanel', () => {
 
   it('should not display helper text if there are no vpcs in the selected region and "from" is "linodeConfig"', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json((makeResourcePage([usEast])));
       }),
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/vpcs', () => {
+        return HttpResponse.json((makeResourcePage([])));
       })
     );
 
@@ -182,12 +182,12 @@ describe('VPCPanel', () => {
   });
   it('shows helper text for when "from" = "linodeCreate" if the selected region does not support VPCs', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: [],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json((makeResourcePage([usEast])));
       })
     );
 
@@ -203,12 +203,12 @@ describe('VPCPanel', () => {
   });
   it('should show the "Create VPC" drawer link when from = "linodeCreate" and a region that supports VPCs is selected', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json((makeResourcePage([usEast])));
       })
     );
 
@@ -231,13 +231,13 @@ describe('VPCPanel', () => {
     };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
       })
     );
 
@@ -265,13 +265,13 @@ describe('VPCPanel', () => {
     };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
       })
     );
 

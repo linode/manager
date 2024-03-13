@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories/profile';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
@@ -32,8 +32,8 @@ describe('SwitchAccountDrawer', () => {
 
   it('should include a link to switch back to the parent account if the active user is a proxy user', async () => {
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'proxy' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ user_type: 'proxy' })));
       })
     );
 

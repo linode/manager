@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
 import { linodeFactory } from 'src/factories/linodes';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ScheduleSettings } from './ScheduleSettings';
@@ -11,7 +11,7 @@ import { ScheduleSettings } from './ScheduleSettings';
 describe('ScheduleSettings', () => {
   it('renders heading and copy', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
@@ -30,7 +30,7 @@ describe('ScheduleSettings', () => {
 
   it('renders with the linode schedule taking into account the user timezone (UTC)', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(
             linodeFactory.build({
@@ -46,8 +46,8 @@ describe('ScheduleSettings', () => {
           )
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ timezone: 'utc' })));
       })
     );
 
@@ -65,7 +65,7 @@ describe('ScheduleSettings', () => {
 
   it('renders with the linode schedule taking into account the user timezone (America/New_York) (EDT)', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(
             linodeFactory.build({
@@ -81,7 +81,7 @@ describe('ScheduleSettings', () => {
           )
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
+      http.get('*/profile', () => {
         return res(
           ctx.json(profileFactory.build({ timezone: 'America/New_York' }))
         );
@@ -106,7 +106,7 @@ describe('ScheduleSettings', () => {
 
   it('renders with the linode schedule taking into account the user timezone (America/New_York) (EST)', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(
             linodeFactory.build({
@@ -122,7 +122,7 @@ describe('ScheduleSettings', () => {
           )
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
+      http.get('*/profile', () => {
         return res(
           ctx.json(profileFactory.build({ timezone: 'America/New_York' }))
         );

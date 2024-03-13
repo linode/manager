@@ -3,7 +3,7 @@ import React from 'react';
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantsFactory } from 'src/factories/grants';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -54,7 +54,7 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the grants of the additional user on the parent account.
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+      http.get('*/account/users/*/grants', () => {
         return res(
           ctx.json(
             grantsFactory.build({ global: { child_account_access: true } })
@@ -62,8 +62,8 @@ describe('UserRow', () => {
         );
       }),
       // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ user_type: 'parent' })));
       })
     );
 
@@ -81,7 +81,7 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the grants of the additional user on the parent account.
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+      http.get('*/account/users/*/grants', () => {
         return res(
           ctx.json(
             grantsFactory.build({ global: { child_account_access: false } })
@@ -89,8 +89,8 @@ describe('UserRow', () => {
         );
       }),
       // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ user_type: 'parent' })));
       })
     );
 
@@ -108,7 +108,7 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the grants of the additional user on the parent account.
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
+      http.get('*/account/users/*/grants', () => {
         return res(
           ctx.json(
             grantsFactory.build({ global: { child_account_access: true } })
@@ -116,8 +116,8 @@ describe('UserRow', () => {
         );
       }),
       // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'default' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ user_type: 'default' })));
       })
     );
 
@@ -143,8 +143,8 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the active profile for the child account.
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'child' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ user_type: 'child' })));
       })
     );
 
@@ -175,8 +175,8 @@ describe('UserRow', () => {
   it('renders a timestamp of the last_login if it was successful', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ timezone: 'utc' })));
       })
     );
 
@@ -198,8 +198,8 @@ describe('UserRow', () => {
   it('renders a timestamp and "Failed" of the last_login if it was failed', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json((profileFactory.build({ timezone: 'utc' })));
       })
     );
 

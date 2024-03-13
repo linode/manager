@@ -137,8 +137,8 @@ export const Autocomplete = <
                   flexGrow: 1,
                 }}
               >
-                {rest.getOptionLabel
-                  ? rest.getOptionLabel(option)
+                {http.getOptionLabel
+                  ? http.getOptionLabel(option)
                   : option.label}
               </Box>
               <SelectedIcon visible={state.selected} />

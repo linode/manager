@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { linodeFactory, linodeTypeFactory } from 'src/factories/linodes';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { BackupLinodeRow } from './BackupLinodeRow';
@@ -9,7 +9,7 @@ import { BackupLinodeRow } from './BackupLinodeRow';
 describe('BackupLinodeRow', () => {
   it('should render linode, plan label, and base backups price', async () => {
     server.use(
-      rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
+      http.get('*/linode/types/linode-type-test', () => {
         return res(
           ctx.json(
             linodeTypeFactory.build({
@@ -37,7 +37,7 @@ describe('BackupLinodeRow', () => {
 
   it('should render linode, plan label, and DC-specific backups price', async () => {
     server.use(
-      rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
+      http.get('*/linode/types/linode-type-test', () => {
         return res(
           ctx.json(
             linodeTypeFactory.build({
@@ -81,7 +81,7 @@ describe('BackupLinodeRow', () => {
 
   it('should render error indicator when price cannot be determined', async () => {
     server.use(
-      rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
+      http.get('*/linode/types/linode-type-test', () => {
         return res.networkError('A hypothetical network error has occurred!');
       })
     );
@@ -104,7 +104,7 @@ describe('BackupLinodeRow', () => {
 
   it('should not render error indicator for $0 price', async () => {
     server.use(
-      rest.get('*/linode/types/linode-type-test', (req, res, ctx) => {
+      http.get('*/linode/types/linode-type-test', () => {
         return res(
           ctx.json(
             linodeTypeFactory.build({

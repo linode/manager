@@ -11,7 +11,7 @@ import { accountSettingsFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
 import { profileFactory } from 'src/factories/profile';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -57,8 +57,8 @@ const testRow = async (
 describe('LongviewPlans', () => {
   beforeEach(() => {
     server.use(
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(ctx.json(accountSettingsFactory.build({ managed: false })));
+      http.get('*/account/settings', () => {
+        return HttpResponse.json((accountSettingsFactory.build({ managed: false })));
       })
     );
   });
@@ -108,7 +108,7 @@ describe('LongviewPlans', () => {
   it('displays a notice if the user does not have permissions to modify', async () => {
     // Build a restricted user's profile so we get a permission error
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
+      http.get('*/profile', () => {
         return res(
           ctx.json(
             profileFactory.build({
@@ -120,7 +120,7 @@ describe('LongviewPlans', () => {
     );
 
     server.use(
-      rest.get('*/grants', (req, res, ctx) => {
+      http.get('*/grants', () => {
         return res(
           ctx.status(200),
           ctx.json(
@@ -146,8 +146,8 @@ describe('LongviewPlans', () => {
 
   it('displays a message id the account is managed', async () => {
     server.use(
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(ctx.json(accountSettingsFactory.build({ managed: true })));
+      http.get('*/account/settings', () => {
+        return HttpResponse.json((accountSettingsFactory.build({ managed: true })));
       })
     );
 
