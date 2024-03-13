@@ -27,7 +27,7 @@ interface Props {
   >;
 }
 
-const tooltipText = `
+const PG_SELECT_TOOLTIP_COPY = `
 Add your virtual machine (VM) to a group to best meet your needs.
 You may want to group VMs closer together to help improve performance, or further apart to enable high-availability configurations.
 Learn more.`;
@@ -141,7 +141,7 @@ export const PlacementGroupsDetailPanel = ({
             key={selectedRegion?.id}
             label={placementGroupSelectLabel}
             noOptionsMessage="There are no Placement Groups in this region"
-            textFieldProps={{ tooltipText }}
+            textFieldProps={{ tooltipText: PG_SELECT_TOOLTIP_COPY }}
           />
           {selectedRegion && hasRegionPlacementGroupCapability && (
             <Button
