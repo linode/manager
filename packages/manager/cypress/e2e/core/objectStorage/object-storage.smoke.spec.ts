@@ -62,7 +62,7 @@ describe('object storage smoke tests', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetRegions(mockRegions).as('getRegions');
-    mockGetBuckets([]).as('getBuckets');
+    mockGetBuckets([mockBucket]).as('getBuckets');
     mockCreateBucketError(mockErrorMessage).as('createBucket');
 
     cy.visitWithLogin('/object-storage');
