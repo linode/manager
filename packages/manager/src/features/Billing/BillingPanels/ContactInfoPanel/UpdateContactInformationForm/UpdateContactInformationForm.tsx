@@ -57,7 +57,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       zip: account?.zip,
     },
     async onSubmit(values) {
-      await mutateAsync(values);
+      const clonedValues = { ...values };
+
+      if (isParentUser) {
+        // This is a disabled field that we want to omit from payload.
+        delete clonedValues.company;
+      }
+
+      await mutateAsync(clonedValues);
 
       // If there's a "billing_email_bounce" notification on the account, and
       // the user has just updated their email, re-request notifications to

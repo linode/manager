@@ -25,7 +25,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
-import { getStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 interface MenuLink {
   display: string;
@@ -120,7 +120,10 @@ export const UserMenu = React.memo(() => {
 
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
-    if (isProxyUser) {
+    if (isProxyUser && !getStorage('proxy_user')) {
+      // Flag for proxy user to display success toast once.
+      setStorage('proxy_user', 'true');
+
       enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
         variant: 'success',
       });
@@ -270,7 +273,7 @@ export const UserMenu = React.memo(() => {
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
           {canSwitchBetweenParentOrProxyAccount && (
-            <Typography>You are currently logged in as:</Typography>
+            <Typography>Current account:</Typography>
           )}
           <Typography
             color={(theme) => theme.textColors.headlineStatic}

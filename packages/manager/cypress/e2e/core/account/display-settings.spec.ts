@@ -11,6 +11,7 @@ import { interceptGetProfile } from 'support/intercepts/profile';
 import { mockUpdateUsername } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
+import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 
 const verifyUsernameAndEmail = (
   mockRestrictedProxyProfile: Profile,
@@ -50,9 +51,7 @@ const verifyUsernameAndEmail = (
       .should('be.disabled')
       .trigger('mouseover');
     // Click the button first, then confirm the tooltip is shown
-    ui.tooltip
-      .findByText('This account type cannot update this field.')
-      .should('be.visible');
+    ui.tooltip.findByText(RESTRICTED_FIELD_TOOLTIP).should('be.visible');
   }
 };
 
@@ -108,7 +107,7 @@ describe('Display Settings', () => {
 
     verifyUsernameAndEmail(
       mockRestrictedProxyProfile,
-      'This account type cannot update this field.',
+      RESTRICTED_FIELD_TOOLTIP,
       true
     );
   });
@@ -121,7 +120,7 @@ describe('Display Settings', () => {
 
     verifyUsernameAndEmail(
       mockUnrestrictedProxyProfile,
-      'This account type cannot update this field.',
+      RESTRICTED_FIELD_TOOLTIP,
       true
     );
   });
