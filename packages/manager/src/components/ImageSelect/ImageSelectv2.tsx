@@ -1,4 +1,3 @@
-import { Image } from '@linode/api-v4';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -10,6 +9,7 @@ import {
   getFilteredImagesForImageSelect,
 } from './utilities';
 
+import type { Image } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';

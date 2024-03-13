@@ -1,3 +1,8 @@
+/**
+ * Maps an Image's `vendor` field to a font-logos className
+ *
+ * @see https://github.com/Lukas-W/font-logos
+ */
 export const distroIcons = {
   AlmaLinux: 'almalinux',
   Alpine: 'alpine',

@@ -44,6 +44,7 @@ export const getTabIndex = (tabType: LinodeCreateType | undefined) => {
 
   const currentTabIndex = tabs.indexOf(tabType);
 
+  // Users might type an invalid tab name into query params. Fallback to the first tab.
   if (currentTabIndex === -1) {
     return 0;
   }
