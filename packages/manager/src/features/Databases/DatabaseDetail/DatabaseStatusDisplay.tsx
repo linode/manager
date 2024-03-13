@@ -20,15 +20,16 @@ export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   suspending: 'other',
   resizing: 'other',
 };
-
-export const DatabaseStatusDisplay: React.FC<{
+interface Props {
   events: Event[] | undefined;
   database: Database | DatabaseInstance;
-}> = (props) => {
+}
+export const DatabaseStatusDisplay = (props: Props) => {
+  const { events, database } = props;
   // recent event
-  const recentEvent = props.events?.find(
-    (event) =>
-      event.entity?.id === props.database.id && event.entity.type === 'database'
+  const recentEvent = events?.find(
+    (event: Event) =>
+      event.entity?.id === database.id && event.entity?.type === 'database'
   );
 
   // progress
@@ -54,8 +55,8 @@ export const DatabaseStatusDisplay: React.FC<{
   } else {
     displayedStatus = (
       <>
-        <StatusIcon status={databaseStatusMap[props.database.status]} />
-        {capitalize(props.database.status)}
+        <StatusIcon status={databaseStatusMap[database.status]} />
+        {capitalize(database.status)}
       </>
     );
   }

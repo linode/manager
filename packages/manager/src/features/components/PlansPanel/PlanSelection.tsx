@@ -33,6 +33,7 @@ export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledToolTip?: string;
   header?: string;
   hideDisabledHelpIcons?: boolean;
   idx: number;
@@ -40,13 +41,12 @@ export interface PlanSelectionProps {
   isLimitedAvailabilityPlan: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
+  planIsDisabled?: boolean;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
   type: PlanSelectionType;
-  planIsDisabled?: boolean;
-  disabledToolTip?: string;
 }
 
 const getDisabledClass = (
@@ -75,18 +75,18 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     disabled,
     disabledClasses,
     hideDisabledHelpIcons,
+    disabledToolTip,
     idx,
     isCreate,
     isLimitedAvailabilityPlan,
     linodeID,
     onSelect,
+    planIsDisabled,
     selectedDiskSize,
     selectedId,
     selectedRegionId,
     showTransfer,
     type,
-    planIsDisabled,
-    disabledToolTip,
   } = props;
 
   const flags = useFlags();
@@ -130,11 +130,20 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     price?.monthly
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
+  const rowAriaDisabled =
+    isSamePlan ||
+    planTooSmall ||
+    isPlanSoldOut ||
+    isDisabledClass ||
+    planIsDisabled;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
+          aria-disabled={rowAriaDisabled}
+          disabled={rowAriaDisabled}
           onClick={() =>
             !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
               ? onSelect(type.id)

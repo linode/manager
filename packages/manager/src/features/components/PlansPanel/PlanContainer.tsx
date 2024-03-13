@@ -39,6 +39,8 @@ export interface Props {
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   hideDisabledHelpIcons?: boolean;
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTip?: string;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -47,8 +49,6 @@ export interface Props {
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
-  disabledPlanTypes?: PlanSelectionType[];
-  disabledPlanTypesToolTip?: string;
 }
 
 export const PlanContainer = (props: Props) => {
@@ -57,6 +57,8 @@ export const PlanContainer = (props: Props) => {
     disabled,
     disabledClasses,
     hideDisabledHelpIcons,
+    disabledPlanTypes,
+    disabledPlanTypesToolTip,
     isCreate,
     linodeID,
     onSelect,
@@ -65,8 +67,6 @@ export const PlanContainer = (props: Props) => {
     selectedId,
     selectedRegionId,
     showTransfer,
-    disabledPlanTypes,
-    disabledPlanTypesToolTip,
   } = props;
   const location = useLocation();
 
@@ -106,18 +106,18 @@ export const PlanContainer = (props: Props) => {
           disabled={disabled || planIsDisabled}
           disabledClasses={disabledClasses}
           hideDisabledHelpIcons={hideDisabledHelpIcons}
+          disabledToolTip={disabledPlanTypesToolTip}
           idx={id}
           isCreate={isCreate}
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
+          planIsDisabled={planIsDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           showTransfer={showTransfer}
           type={plan}
-          planIsDisabled={planIsDisabled}
-          disabledToolTip={disabledPlanTypesToolTip}
         />
       );
     });
