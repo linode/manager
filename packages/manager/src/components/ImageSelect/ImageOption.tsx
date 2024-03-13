@@ -91,7 +91,7 @@ export const ImageOption = (props: ImageOptionProps) => {
   );
 };
 
-export const sxCloudInitTooltipIcon = {
+const sxCloudInitTooltipIcon = {
   '& svg': {
     height: 20,
     width: 20,

@@ -137,6 +137,9 @@ const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
   );
 };
 
+/**
+ * @deprecated Start using ImageSelectv2 when possible
+ */
 export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const {
     classNames,
