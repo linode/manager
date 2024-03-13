@@ -77,7 +77,7 @@ describe('Tags list', () => {
     expect(queryByLabelText(TAG_LABEL)).not.toBeInTheDocument();
   });
 
-  it('should render a disabled placement group select', () => {
+  it('should render a disabled placement group select by default', () => {
     const { getByRole } = renderWithTheme(
       <DetailsPanel
         labelFieldProps={{

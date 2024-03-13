@@ -9,6 +9,7 @@ import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups'
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
+  defaultValue?: PlacementGroup;
   disabled?: boolean;
   errorText?: string;
   handlePlacementGroupChange: (selected: PlacementGroup) => void;
@@ -30,6 +31,7 @@ export interface PlacementGroupsSelectProps {
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     clearable = true,
+    defaultValue,
     disabled,
     errorText,
     handlePlacementGroupChange,
@@ -83,8 +85,9 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       }
       clearOnBlur={false}
       data-testid="placement-groups-select"
+      defaultValue={defaultValue}
       disableClearable={!clearable}
-      disabled={disabled}
+      disabled={!selectedRegionId || disabled}
       errorText={errorText}
       id={id}
       key={selectedRegionId}

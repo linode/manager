@@ -673,7 +673,6 @@ export class LinodeCreate extends React.PureComponent<
               value: label || '',
             }}
             placementGroupsSelectProps={{
-              disabled: !selectedRegionID,
               errorText,
               handlePlacementGroupChange,
               label: placementGroupsLabel,

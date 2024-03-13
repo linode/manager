@@ -2,10 +2,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  PlacementGroupsSelect,
-  PlacementGroupsSelectProps,
-} from './PlacementGroupsSelect';
+import { PlacementGroupsSelect } from './PlacementGroupsSelect';
+
+import type { PlacementGroupsSelectProps } from './PlacementGroupsSelect';
 
 const props: PlacementGroupsSelectProps = {
   errorText: '',
