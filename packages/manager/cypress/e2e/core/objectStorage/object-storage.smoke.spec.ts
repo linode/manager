@@ -62,17 +62,15 @@ describe('object storage smoke tests', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetRegions(mockRegions).as('getRegions');
-    mockGetBuckets([mockBucket]).as('getBuckets');
+    mockGetBuckets([]).as('getBuckets');
     mockCreateBucketError(mockErrorMessage).as('createBucket');
 
     cy.visitWithLogin('/object-storage');
     cy.wait(['@getRegions', '@getBuckets']);
 
-    ui.button
-      .findByTitle('Create Bucket')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    ui.entityHeader.find().within(() => {
+      ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
