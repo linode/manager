@@ -61,7 +61,9 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
 
       {showPlacementGroups && (
         <PlacementGroupsDetailPanel
-          placementGroupsSelectProps={placementGroupsSelectProps}
+          placementGroupsSelectProps={{
+            ...placementGroupsSelectProps,
+          }}
         />
       )}
     </Paper>

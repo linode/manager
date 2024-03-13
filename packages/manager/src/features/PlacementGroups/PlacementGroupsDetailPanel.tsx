@@ -17,7 +17,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import type { PlacementGroup } from '@linode/api-v4';
 import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 
-interface PlacementGroupDetailPanelProps {
+interface Props {
   placementGroupsSelectProps: PlacementGroupsSelectProps;
 }
 
@@ -26,24 +26,26 @@ Add your virtual machine (VM) to a group to best meet your needs.
 You may want to group VMs closer together to help improve performance, or further apart to enable high-availability configurations.
 Learn more.`;
 
-export const PlacementGroupsDetailPanel = (
-  props: PlacementGroupDetailPanelProps
-) => {
-  const { placementGroupsSelectProps } = props;
+export const PlacementGroupsDetailPanel = ({
+  placementGroupsSelectProps,
+}: Props) => {
   const theme = useTheme();
+  const { selectedRegionId } = placementGroupsSelectProps;
   const { data: allPlacementGroups } = useUnpaginatedPlacementGroupsQuery();
   const { data: regions } = useRegionsQuery();
   const [
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
+
   const selectedRegion = regions?.find(
-    (thisRegion) =>
-      thisRegion.id === placementGroupsSelectProps?.selectedRegionId
+    (thisRegion) => thisRegion.id === selectedRegionId
   );
+
   const hasRegionPlacementGroupCapability = Boolean(
     selectedRegion?.capabilities.includes('Placement Group')
   );
+
   const handlePlacementGroupChange =
     placementGroupsSelectProps.handlePlacementGroupChange;
 
@@ -54,11 +56,8 @@ export const PlacementGroupsDetailPanel = (
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
     region.capabilities.includes('Placement Group')
   );
-
   const isPlacementGroupSelectDisabled =
-    !selectedRegion ||
-    !hasRegionPlacementGroupCapability ||
-    props.placementGroupsSelectProps?.disabled;
+    !selectedRegionId || !hasRegionPlacementGroupCapability;
 
   return (
     <>
@@ -142,7 +141,7 @@ export const PlacementGroupsDetailPanel = (
         onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
         onPlacementGroupCreate={handlePlacementGroupCreated}
         open={isCreatePlacementGroupDrawerOpen}
-        selectedRegionId={placementGroupsSelectProps?.selectedRegionId}
+        selectedRegionId={selectedRegionId}
       />
     </>
   );
