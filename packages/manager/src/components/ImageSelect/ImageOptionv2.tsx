@@ -21,14 +21,8 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
   const flags = useFlags();
 
   return (
-    <li {...listItemProps}>
-      <Stack
-        alignItems="center"
-        direction="row"
-        flexGrow={1}
-        gap={2}
-        maxHeight="20px"
-      >
+    <li {...listItemProps} style={{ maxHeight: 35 }}>
+      <Stack alignItems="center" direction="row" flexGrow={1} gap={2}>
         <DistributionIcon distribution={image.vendor} />
         <Typography color="inherit">{image.label}</Typography>
         <Stack flexGrow={1} />
