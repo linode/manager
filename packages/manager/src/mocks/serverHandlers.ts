@@ -8,7 +8,7 @@ import {
   VolumeStatus,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-import { rest } from 'msw';
+import { http } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
@@ -120,13 +120,13 @@ export const makeResourcePage = <T>(
 });
 
 const statusPage = [
-  rest.get('*/api/v2/incidents*', (req, res, ctx) => {
+  http.get('*/api/v2/incidents*', () => {
     const response = incidentResponseFactory.build();
-    return res(ctx.json(response));
+    return new Response(JSON.stringify(response));
   }),
-  rest.get('*/api/v2/scheduled-maintenances*', (req, res, ctx) => {
+  http.get('*/api/v2/scheduled-maintenances*', () => {
     const response = maintenanceResponseFactory.build();
-    return res(ctx.json(response));
+    return new Response(JSON.stringify(response));
   }),
 ];
 
@@ -135,7 +135,7 @@ function sleep(ms: number) {
 }
 
 const entityTransfers = [
-  rest.get('*/account/entity-transfers', (req, res, ctx) => {
+  http.get('*/account/entity-transfers', () => {
     const transfers1 = entityTransferFactory.buildList(10);
     const transfers2 = entityTransferFactory.buildList(10, {
       token: 'TEST123',
@@ -158,40 +158,39 @@ const entityTransfers = [
       transfer4,
       transfer5
     );
-    return res(ctx.json(makeResourcePage(combinedTransfers)));
+    return new Response(JSON.stringify(makeResourcePage(combinedTransfers)));
   }),
-  rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+  http.get('*/account/entity-transfers/:transferId', () => {
     const transfer = entityTransferFactory.build();
-    return res(ctx.json(transfer));
+    return new Response(JSON.stringify(transfer));
   }),
-  rest.get('*/account/agreements', (req, res, ctx) =>
-    res(ctx.json(accountAgreementsFactory.build()))
+  http.get(
+    '*/account/agreements',
+    () => new Response(JSON.stringify(accountAgreementsFactory.build()))
   ),
-  rest.post('*/account/entity-transfers', (req, res, ctx) => {
-    const payload = req.body as any;
+  http.post('*/account/entity-transfers', async ({ request }) => {
+    const body = await request.json();
+    const payload = body as any;
     const newTransfer = entityTransferFactory.build({
       entities: payload.entities,
     });
-    return res(ctx.json(newTransfer));
+    return new Response(JSON.stringify(newTransfer));
   }),
-  rest.post(
-    '*/account/entity-transfers/:transferId/accept',
-    (req, res, ctx) => {
-      return res(ctx.json({}));
-    }
-  ),
-  rest.delete('*/account/entity-transfers/:transferId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*/account/entity-transfers/:transferId/accept', () => {
+    return new Response(JSON.stringify({}));
+  }),
+  http.delete('*/account/entity-transfers/:transferId', () => {
+    return new Response(JSON.stringify({}));
   }),
 ];
 
 const databases = [
-  rest.get('*/databases/instances', (req, res, ctx) => {
+  http.get('*/databases/instances', () => {
     const databases = databaseInstanceFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(databases)));
+    return new Response(JSON.stringify(makeResourcePage(databases)));
   }),
 
-  rest.get('*/databases/types', (req, res, ctx) => {
+  http.get('*/databases/types', () => {
     const standardTypes = [
       databaseTypeFactory.build({
         class: 'nanode',
@@ -207,14 +206,14 @@ const databases = [
     const premiumTypes = databaseTypeFactory.buildList(7, {
       class: 'premium',
     });
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
       )
     );
   }),
 
-  rest.get('*/databases/engines', (req, res, ctx) => {
+  http.get('*/databases/engines', () => {
     const engine1 = databaseEngineFactory.buildList(3);
     const engine2 = databaseEngineFactory.buildList(3, {
       engine: 'postgresql',
@@ -225,245 +224,273 @@ const databases = [
 
     const combinedList = [...engine1, ...engine2, ...engine3];
 
-    return res(ctx.json(makeResourcePage(combinedList)));
+    return new Response(JSON.stringify(makeResourcePage(combinedList)));
   }),
 
-  rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
+  http.get('*/databases/:engine/instances/:id', ({ params }) => {
     const database = databaseFactory.build({
-      compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
-      engine: req.params.engine as 'mysql',
-      id: Number(req.params.id),
-      label: `database-${req.params.id}`,
+      compression_type: params.engine === 'mongodb' ? 'none' : undefined,
+      engine: params.engine as 'mysql',
+      id: Number(params.id),
+      label: `database-${params.id}`,
       replication_commit_type:
-        req.params.engine === 'postgresql' ? 'local' : undefined,
+        params.engine === 'postgresql' ? 'local' : undefined,
       replication_type:
-        req.params.engine === 'mysql'
+        params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
-          : req.params.engine === 'postgresql'
+          : params.engine === 'postgresql'
           ? pickRandom(possiblePostgresReplicationTypes)
           : (undefined as any),
       ssl_connection: true,
-      storage_engine:
-        req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
+      storage_engine: params.engine === 'mongodb' ? 'wiredtiger' : undefined,
     });
-    return res(ctx.json(database));
+    return new Response(JSON.stringify(database));
   }),
 
-  rest.get(
-    '*/databases/:engine/instances/:databaseId/backups',
-    (req, res, ctx) => {
-      const backups = databaseBackupFactory.buildList(7);
-      return res(ctx.json(makeResourcePage(backups)));
-    }
-  ),
+  http.get('*/databases/:engine/instances/:databaseId/backups', () => {
+    const backups = databaseBackupFactory.buildList(7);
+    return new Response(JSON.stringify(makeResourcePage(backups)));
+  }),
 
-  rest.get(
-    '*/databases/:engine/instances/:databaseId/credentials',
-    (req, res, ctx) => {
-      return res(
-        // ctx.status(400)
-        ctx.json({
-          password: 'password123',
-          username: 'lnroot',
-        })
-      );
-    }
-  ),
+  http.get('*/databases/:engine/instances/:databaseId/credentials', () => {
+    return new Response(
+      JSON.stringify({
+        password: 'password123',
+        username: 'lnroot',
+      })
+    );
+  }),
 
-  rest.get('*/databases/:engine/instances/:databaseId/ssl', (req, res, ctx) => {
-    return res(
-      ctx.json({
+  http.get('*/databases/:engine/instances/:databaseId/ssl', () => {
+    return new Response(
+      JSON.stringify({
         certificate: 'testcertificate',
         public_key: 'testkey',
       })
     );
   }),
 
-  rest.post('*/databases/:engine/instances', (req, res, ctx) => {
-    const payload: any = req.body;
-    return res(
-      ctx.json({
+  http.post('*/databases/:engine/instances', async ({ params, request }) => {
+    const body = await request.json();
+    const payload: any = body;
+    return new Response(
+      JSON.stringify({
         ...databaseFactory.build({
-          engine: req.params.engine as 'mysql',
+          engine: params.engine as 'mysql',
           label: payload?.label ?? 'Database',
         }),
       })
     );
   }),
 
-  rest.post(
+  http.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
-    (req, res, ctx) => {
-      return res(ctx.json({}));
+    () => {
+      return new Response(JSON.stringify({}));
     }
   ),
 
-  rest.post(
+  http.post(
     '*/databases/:engine/instances/:databaseId/credentials/reset',
-    (req, res, ctx) => {
-      return res(ctx.json({}));
+    () => {
+      return new Response(JSON.stringify({}));
     }
   ),
 
-  rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
-    const id = Number(req.params.databaseId);
-    const body = req.body as any;
-    return res(ctx.json({ ...databaseFactory.build({ id }), ...body }));
-  }),
+  http.put(
+    '*/databases/mysql/instances/:databaseId',
+    async ({ params, request }) => {
+      const reqBody = await request.json();
+      const id = Number(params.databaseId);
+      const body = reqBody as any;
+      return new Response(
+        JSON.stringify({ ...databaseFactory.build({ id }), ...body })
+      );
+    }
+  ),
 
-  rest.delete('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/databases/mysql/instances/:databaseId', () => {
+    return new Response(JSON.stringify({}));
   }),
 ];
 
 const aclb = [
   // Configurations
-  rest.get('*/v4beta/aclb/:id/configurations', (req, res, ctx) => {
+  http.get('*/v4beta/aclb/:id/configurations', () => {
     const configurations = configurationFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(configurations)));
+    return new Response(JSON.stringify(makeResourcePage(configurations)));
   }),
-  rest.get('*/v4beta/aclb/:id/endpoints-health', (req, res, ctx) => {
+  http.get('*/v4beta/aclb/:id/endpoints-health', ({ params }) => {
     const health = loadbalancerEndpointHealthFactory.build({
-      id: Number(req.params.id),
+      id: Number(params.id),
     });
-    return res(ctx.json(health));
+    return new Response(JSON.stringify(health));
   }),
-  rest.get(
+  http.get(
     '*/v4beta/aclb/:id/configurations/endpoints-health',
-    (req, res, ctx) => {
+    ({ params }) => {
       const health = configurationsEndpointHealthFactory.build({
-        id: Number(req.params.id),
+        id: Number(params.id),
       });
-      return res(ctx.json(health));
+      return new Response(JSON.stringify(health));
     }
   ),
-  rest.get(
+  http.get(
     '*/v4beta/aclb/:id/service-targets/endpoints-health',
-    (req, res, ctx) => {
+    ({ params }) => {
       const health = serviceTargetsEndpointHealthFactory.build({
-        id: Number(req.params.id),
+        id: Number(params.id),
       });
-      return res(ctx.json(health));
+      return new Response(JSON.stringify(health));
     }
   ),
-  rest.get('*/v4beta/aclb/:id/configurations/:configId', (req, res, ctx) => {
-    return res(ctx.json(configurationFactory.build()));
+  http.get('*/v4beta/aclb/:id/configurations/:configId', () => {
+    return new Response(JSON.stringify(configurationFactory.build()));
   }),
-  rest.post('*/v4beta/aclb/:id/configurations', (req, res, ctx) => {
-    return res(ctx.json(configurationFactory.build()));
+  http.post('*/v4beta/aclb/:id/configurations', () => {
+    return new Response(JSON.stringify(configurationFactory.build()));
   }),
-  rest.put('*/v4beta/aclb/:id/configurations/:configId', (req, res, ctx) => {
-    const id = Number(req.params.configId);
-    const body = req.body as any;
-    return res(ctx.json(configurationFactory.build({ id, ...body })));
-  }),
-  rest.delete('*/v4beta/aclb/:id/configurations/:configId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.put(
+    '*/v4beta/aclb/:id/configurations/:configId',
+    async ({ params, request }) => {
+      const reqBody = await request.json();
+      const id = Number(params.configId);
+      const body = reqBody as any;
+      return new Response(
+        JSON.stringify(configurationFactory.build({ id, ...body }))
+      );
+    }
+  ),
+  http.delete('*/v4beta/aclb/:id/configurations/:configId', () => {
+    return new Response(JSON.stringify({}));
   }),
   // Load Balancers
-  rest.get('*/v4beta/aclb', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(loadbalancerFactory.buildList(3))));
+  http.get('*/v4beta/aclb', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(loadbalancerFactory.buildList(3)))
+    );
   }),
-  rest.get('*/v4beta/aclb/:loadbalancerId', (req, res, ctx) => {
-    return res(
-      ctx.json(
+  http.get('*/v4beta/aclb/:loadbalancerId', ({ params }) => {
+    return new Response(
+      JSON.stringify(
         loadbalancerFactory.build({
-          id: Number(req.params.loadbalancerId),
-          label: `aclb-${req.params.loadbalancerId}`,
+          id: Number(params.loadbalancerId),
+          label: `aclb-${params.loadbalancerId}`,
         })
       )
     );
   }),
-  rest.post('*/v4beta/aclb', (req, res, ctx) => {
-    return res(ctx.json(loadbalancerFactory.build()));
+  http.post('*/v4beta/aclb', () => {
+    return new Response(JSON.stringify(loadbalancerFactory.build()));
   }),
-  rest.put('*/v4beta/aclb/:id', (req, res, ctx) => {
-    const id = Number(req.params.id);
-    const body = req.body as any;
+  http.put('*/v4beta/aclb/:id', async ({ params, request }) => {
+    const reqBody = await request.json();
+    const id = Number(params.id);
+    const body = reqBody as any;
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
     // TODO: ACLB - figure out if this is still accurate
-    return res(ctx.json(loadbalancerFactory.build({ id, ...body })));
+    return new Response(
+      JSON.stringify(loadbalancerFactory.build({ id, ...body }))
+    );
   }),
-  rest.delete('*/v4beta/aclb/:id', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/v4beta/aclb/:id', () => {
+    return new Response(JSON.stringify({}));
   }),
   // Routes
-  rest.get('*/v4beta/aclb/:id/routes', (req, res, ctx) => {
-    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+  http.get('*/v4beta/aclb/:id/routes', ({ request }) => {
+    const headers = JSON.parse(request.headers.get('x-filter') || '{}');
     if (headers['+or']) {
-      return res(
-        ctx.json(
+      return new Response(
+        JSON.stringify(
           makeResourcePage(routeFactory.buildList(headers['+or'].length))
         )
       );
     }
-    return res(ctx.json(makeResourcePage(routeFactory.buildList(5))));
-  }),
-  rest.post('*/v4beta/aclb/:id/routes', (req, res, ctx) => {
-    return res(ctx.json(createRouteFactory.buildList(4)));
-  }),
-  rest.put('*/v4beta/aclb/:id/routes/:routeId', (req, res, ctx) => {
-    const id = Number(req.params.routeId);
-    const body = req.body as any;
-    return res(
-      ctx.delay(1000),
-      ctx.json(createRouteFactory.build({ id, ...body }))
+    return new Response(
+      JSON.stringify(makeResourcePage(routeFactory.buildList(5)))
     );
   }),
-  rest.delete('*/v4beta/aclb/:id/routes/:routeId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*/v4beta/aclb/:id/routes', () => {
+    return new Response(JSON.stringify(createRouteFactory.buildList(4)));
+  }),
+  http.put('*/v4beta/aclb/:id/routes/:routeId', async ({ params, request }) => {
+    const reqBody = await request.json();
+    const id = Number(params.routeId);
+    const body = reqBody as any;
+    return new Response(
+      JSON.stringify(createRouteFactory.build({ id, ...body }))
+    );
+  }),
+  http.delete('*/v4beta/aclb/:id/routes/:routeId', () => {
+    return new Response(JSON.stringify({}));
   }),
   // Service Targets
-  rest.get('*/v4beta/aclb/:id/service-targets', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(serviceTargetFactory.buildList(5))));
+  http.get('*/v4beta/aclb/:id/service-targets', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(serviceTargetFactory.buildList(5)))
+    );
   }),
-  rest.post('*/v4beta/aclb/:id/service-targets', (req, res, ctx) => {
-    return res(ctx.json(createServiceTargetFactory.build()));
+  http.post('*/v4beta/aclb/:id/service-targets', () => {
+    return new Response(JSON.stringify(createServiceTargetFactory.build()));
   }),
-  rest.put(
+  http.put(
     '*/v4beta/aclb/:id/service-targets/:serviceTargetId',
-    (req, res, ctx) => {
-      const id = Number(req.params.serviceTargetId);
-      const body = req.body as any;
-      return res(ctx.json(createServiceTargetFactory.build({ id, ...body })));
+    async ({ params, request }) => {
+      const reqBody = await request.json();
+      const id = Number(params.serviceTargetId);
+      const body = reqBody as any;
+      return new Response(
+        JSON.stringify(createServiceTargetFactory.build({ id, ...body }))
+      );
     }
   ),
-  rest.delete(
-    '*/v4beta/aclb/:id/service-targets/:serviceTargetId',
-    (req, res, ctx) => {
-      return res(ctx.json({}));
-    }
-  ),
+  http.delete('*/v4beta/aclb/:id/service-targets/:serviceTargetId', () => {
+    return new Response(JSON.stringify({}));
+  }),
   // Certificates
-  rest.get('*/v4beta/aclb/:id/certificates', (req, res, ctx) => {
+  http.get('*/v4beta/aclb/:id/certificates', () => {
     const tlsCertificate = certificateFactory.build({
       label: 'tls-certificate',
       type: 'downstream',
     });
     const certificates = certificateFactory.buildList(3);
-    return res(ctx.json(makeResourcePage([tlsCertificate, ...certificates])));
+    return new Response(
+      JSON.stringify(makeResourcePage([tlsCertificate, ...certificates]))
+    );
   }),
-  rest.get('*/v4beta/aclb/:id/certificates/:certId', (req, res, ctx) => {
-    const id = Number(req.params.certId);
-    const body = req.body as any;
-    return res(ctx.json(certificateFactory.build({ id, ...body })));
+  http.get(
+    '*/v4beta/aclb/:id/certificates/:certId',
+    async ({ params, request }) => {
+      const reqBody = await request.json();
+      const id = Number(params.certId);
+      const body = reqBody as any;
+      return new Response(
+        JSON.stringify(certificateFactory.build({ id, ...body }))
+      );
+    }
+  ),
+  http.post('*/v4beta/aclb/:id/certificates', () => {
+    return new Response(JSON.stringify(certificateFactory.build()));
   }),
-  rest.post('*/v4beta/aclb/:id/certificates', (req, res, ctx) => {
-    return res(ctx.json(certificateFactory.build()));
-  }),
-  rest.put('*/v4beta/aclb/:id/certificates/:certId', (req, res, ctx) => {
-    const id = Number(req.params.certId);
-    const body = req.body as any;
-    return res(ctx.json(certificateFactory.build({ id, ...body })));
-  }),
-  rest.delete('*/v4beta/aclb/:id/certificates/:certId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.put(
+    '*/v4beta/aclb/:id/certificates/:certId',
+    async ({ params, request }) => {
+      const reqBody = await request.json();
+      const id = Number(params.certId);
+      const body = reqBody as any;
+      return new Response(
+        JSON.stringify(certificateFactory.build({ id, ...body }))
+      );
+    }
+  ),
+  http.delete('*/v4beta/aclb/:id/certificates/:certId', () => {
+    return new Response(JSON.stringify({}));
   }),
 ];
 
 const vpc = [
-  rest.get('*/v4beta/vpcs', (req, res, ctx) => {
+  http.get('*/v4beta/vpcs', () => {
     const vpcsWithSubnet1 = vpcFactory.buildList(5, {
       subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
     });
@@ -472,8 +499,8 @@ const vpc = [
       subnets: subnetFactory.buildList(Math.floor(Math.random() * 20) + 1),
     });
     const vpcsWithoutSubnet = vpcFactory.buildList(20);
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           ...vpcsWithSubnet1,
           ...vpcsWithSubnet2,
@@ -482,9 +509,9 @@ const vpc = [
       )
     );
   }),
-  rest.get('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
-    return res(
-      ctx.json(
+  http.get('*/v4beta/vpcs/:vpcId', () => {
+    return new Response(
+      JSON.stringify(
         vpcFactory.build({
           description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver VPC for webserver VPC for webserver VPC for webserver VPC for webserver.VPC for webserver and database!!! VPC`,
           subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
@@ -492,29 +519,35 @@ const vpc = [
       )
     );
   }),
-  rest.get('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
+  http.get('*/v4beta/vpcs/:vpcId/subnets', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(subnetFactory.buildList(30)))
+    );
   }),
-  rest.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.delete('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/v4beta/vpcs/:vpcId', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.put('*/v4beta/vpcs/:vpcId', (req, res, ctx) => {
-    return res(ctx.json(vpcFactory.build({ description: 'testing' })));
+  http.put('*/v4beta/vpcs/:vpcId', () => {
+    return new Response(
+      JSON.stringify(vpcFactory.build({ description: 'testing' }))
+    );
   }),
-  rest.get('*/v4beta/vpcs/:vpcID', (req, res, ctx) => {
-    const id = Number(req.params.id);
-    return res(ctx.json(vpcFactory.build({ id })));
+  http.get('*/v4beta/vpcs/:vpcID', ({ params }) => {
+    const id = Number(params.id);
+    return new Response(JSON.stringify(vpcFactory.build({ id })));
   }),
-  rest.post('*/v4beta/vpcs', (req, res, ctx) => {
-    const vpc = vpcFactory.build({ ...(req.body as any) });
-    return res(ctx.json(vpc));
+  http.post('*/v4beta/vpcs', async ({ request }) => {
+    const body = await request.json();
+    const vpc = vpcFactory.build({ ...(body as any) });
+    return new Response(JSON.stringify(vpc));
   }),
-  rest.post('*/v4beta/vpcs/:vpcId/subnets', (req, res, ctx) => {
-    const subnet = subnetFactory.build({ ...(req.body as any) });
-    return res(ctx.json(subnet));
+  http.post('*/v4beta/vpcs/:vpcId/subnets', async ({ request }) => {
+    const body = await request.json();
+    const subnet = subnetFactory.build({ ...(body as any) });
+    return new Response(JSON.stringify(subnet));
   }),
 ];
 
@@ -551,49 +584,55 @@ const parentAccountNonAdminUser = accountUserFactory.build({
 });
 
 export const handlers = [
-  rest.get('*/profile', (req, res, ctx) => {
+  http.get('*/profile', () => {
     const profile = profileFactory.build({
       restricted: false,
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
       user_type: 'parent',
     });
-    return res(ctx.json(profile));
+    return new Response(JSON.stringify(profile));
   }),
-  rest.put('*/profile', (req, res, ctx) => {
-    return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
-  }),
-  rest.get('*/profile/grants', (req, res, ctx) => {
-    return res(
-      // Parent/Child: switch out the return statement if you want to mock a restricted parent user with access to child accounts.
-      // ctx.json(grantsFactory.build({ global: { child_account_access: true } }))
-      ctx.json(grantsFactory.build())
+
+  http.put('*/profile', async ({ request }) => {
+    const body = await request.json();
+
+    return new Response(
+      JSON.stringify({ ...profileFactory.build(), ...(body as any) })
     );
   }),
-  rest.get('*/profile/apps', (req, res, ctx) => {
+  http.get('*/profile/grants', () => {
+    return new Response(JSON.stringify(grantsFactory.build()));
+  }),
+  http.get('*/profile/apps', () => {
     const tokens = appTokenFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(tokens)));
+    return new Response(JSON.stringify(makeResourcePage(tokens)));
   }),
-  rest.post('*/profile/phone-number', async (req, res, ctx) => {
+  http.post('*/profile/phone-number', async () => {
     await sleep(2000);
-    return res(ctx.json({}));
+    return new Response(JSON.stringify({}));
   }),
-  rest.post('*/profile/phone-number/verify', async (req, res, ctx) => {
+  http.post('*/profile/phone-number/verify', async () => {
     await sleep(2000);
-    return res(ctx.json({}));
+    return new Response(JSON.stringify({}));
   }),
-  rest.delete('*/profile/phone-number', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/profile/phone-number', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/profile/security-questions', (req, res, ctx) => {
-    return res(ctx.json(securityQuestionsFactory.build()));
+  http.get('*/profile/security-questions', () => {
+    return new Response(JSON.stringify(securityQuestionsFactory.build()));
   }),
-  rest.post('*/profile/security-questions', (req, res, ctx) => {
-    return res(ctx.json(req.body as SecurityQuestionsPayload));
+  http.post<any, SecurityQuestionsPayload>(
+    '*/profile/security-questions',
+    async ({ request }) => {
+      const body = await request.json();
+
+      return new Response(JSON.stringify(body));
+    }
+  ),
+  http.get('*/regions', async () => {
+    return new Response(JSON.stringify(makeResourcePage(regions)));
   }),
-  rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(regions)));
-  }),
-  rest.get('*/images', async (req, res, ctx) => {
+  http.get('*/images', async () => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
       type: 'manual',
@@ -635,11 +674,12 @@ export const handlers = [
       ...pendingImages,
       ...creatingImages,
     ];
-    return res(ctx.json(makeResourcePage(images)));
+    return new Response(JSON.stringify(makeResourcePage(images)));
   }),
-  rest.get('*/linode/types', (req, res, ctx) => {
-    return res(
-      ctx.json(
+
+  http.get('*/linode/types', () => {
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           nanodeType,
           ...standardTypes,
@@ -649,16 +689,18 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/linode/types-legacy', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(linodeTypeFactory.buildList(0))));
+  http.get('*/linode/types-legacy', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(linodeTypeFactory.buildList(0)))
+    );
   }),
   ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
     (type) =>
-      rest.get(`*/linode/types/${type.id}`, (req, res, ctx) => {
-        return res(ctx.json(type));
+      http.get(`*/linode/types/${type.id}`, () => {
+        return new Response(JSON.stringify(type));
       })
   ),
-  rest.get('*/linode/instances', async (req, res, ctx) => {
+  http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
@@ -738,8 +780,8 @@ export const handlers = [
       multipleIPLinode,
     ];
 
-    if (req.headers.get('x-filter')) {
-      const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+    if (request.headers.get('x-filter')) {
+      const headers = JSON.parse(request.headers.get('x-filter') || '{}');
       const orFilters = headers['+or'];
 
       if (orFilters) {
@@ -754,15 +796,16 @@ export const handlers = [
           return (filteredById || filteredByRegion) ?? linodes;
         });
 
-        return res(ctx.json(makeResourcePage(filteredLinodes)));
+        return new Response(JSON.stringify(makeResourcePage(filteredLinodes)));
       }
     }
-    return res(ctx.json(makeResourcePage(linodes)));
+    return new Response(JSON.stringify(makeResourcePage(linodes)));
   }),
-  rest.get('*/linode/instances/:id', async (req, res, ctx) => {
-    const id = Number(req.params.id);
-    return res(
-      ctx.json(
+
+  http.get('*/linode/instances/:id', async ({ params }) => {
+    const id = Number(params.id);
+    return new Response(
+      JSON.stringify(
         linodeFactory.build({
           backups: { enabled: false },
           id,
@@ -772,153 +815,151 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/linode/instances/:id/firewalls', async (req, res, ctx) => {
+  http.get('*/linode/instances/:id/firewalls', async () => {
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
-    return res(ctx.json(makeResourcePage(firewalls)));
+    return new Response(JSON.stringify(makeResourcePage(firewalls)));
   }),
-  rest.delete('*/instances/*', async (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/instances/*', async () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/instances/*/configs', async (req, res, ctx) => {
+  http.get('*/instances/*/configs', async () => {
     const configs = linodeConfigFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(configs)));
+    return new Response(JSON.stringify(makeResourcePage(configs)));
   }),
-  rest.get('*/instances/*/disks', async (req, res, ctx) => {
+  http.get('*/instances/*/disks', async () => {
     const disks = linodeDiskFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(disks)));
+    return new Response(JSON.stringify(makeResourcePage(disks)));
   }),
-  rest.put('*/instances/*/disks/:id', async (req, res, ctx) => {
-    const id = Number(req.params.id);
+  http.put('*/instances/*/disks/:id', async ({ params }) => {
+    const id = Number(params.id);
     const disk = linodeDiskFactory.build({ id });
     // If you want to mock an error
-    // return res(ctx.status(400), ctx.json({ errors: [{ field: 'label', reason: 'OMG!' }] }));
-    return res(ctx.json(disk));
+    // return new Response(JSON.stringify({ errors: [{ field: 'label', reason: 'OMG!' }] }));
+    return new Response(JSON.stringify(disk));
   }),
-  rest.get('*/instances/*/transfer', async (req, res, ctx) => {
+  http.get('*/instances/*/transfer', async () => {
     const transfer = linodeTransferFactory.build();
-    return res(ctx.json(transfer));
+    return new Response(JSON.stringify(transfer));
   }),
-  rest.get('*/instances/*/stats*', async (req, res, ctx) => {
+  http.get('*/instances/*/stats*', async () => {
     const stats = linodeStatsFactory.build();
-    return res(ctx.json(stats));
+    return new Response(JSON.stringify(stats));
   }),
-  rest.get('*/instances/*/stats', async (req, res, ctx) => {
+  http.get('*/instances/*/stats', async () => {
     const stats = linodeStatsFactory.build();
-    return res(ctx.json(stats));
+    return new Response(JSON.stringify(stats));
   }),
-  rest.get('*/instances/*/ips', async (req, res, ctx) => {
+  http.get('*/instances/*/ips', async () => {
     const ips = linodeIPFactory.build();
-    return res(ctx.json(ips));
+    return new Response(JSON.stringify(ips));
   }),
-  rest.post('*/linode/instances', async (req, res, ctx) => {
-    const payload = req.body as any;
+  http.post('*/linode/instances', async ({ request }) => {
+    const body = await request.json();
+    const payload = body as any;
     const linode = linodeFactory.build({
       image: payload?.image ?? 'linode/debian-10',
       label: payload?.label ?? 'new-linode',
       region: payload?.region ?? 'us-east',
       type: payload?.type ?? 'g6-standard-1',
     });
-    return res(ctx.json(linode));
-    // return res(
-    //   ctx.status(400),
-    //   ctx.json({ errors: [{ reason: 'Invalid label', field: 'data.label' }] })
-    // );
+    return new Response(JSON.stringify(linode));
+    // return new Response(JSON.stringify({ errors: [{ reason: 'Invalid label', field: 'data.label' }] }));
   }),
-  rest.get('*/lke/clusters', async (req, res, ctx) => {
+
+  http.get('*/lke/clusters', async () => {
     const clusters = kubernetesAPIResponse.buildList(10);
-    return res(ctx.json(makeResourcePage(clusters)));
+    return new Response(JSON.stringify(makeResourcePage(clusters)));
   }),
-  rest.get('*/lke/versions', async (req, res, ctx) => {
+  http.get('*/lke/versions', async () => {
     const versions = kubernetesVersionFactory.buildList(1);
-    return res(ctx.json(makeResourcePage(versions)));
+    return new Response(JSON.stringify(makeResourcePage(versions)));
   }),
-  rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
-    const id = Number(req.params.clusterId);
+  http.get('*/lke/clusters/:clusterId', async ({ params }) => {
+    const id = Number(params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
-    return res(ctx.json(cluster));
+    return new Response(JSON.stringify(cluster));
   }),
-  rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
-    const id = Number(req.params.clusterId);
-    const k8s_version = req.params.k8s_version as string;
+  http.put('*/lke/clusters/:clusterId', async ({ params }) => {
+    const id = Number(params.clusterId);
+    const k8s_version = params.k8s_version as string;
     const cluster = kubernetesAPIResponse.build({
       id,
       k8s_version,
     });
-    return res(ctx.json(cluster));
+    return new Response(JSON.stringify(cluster));
   }),
-  rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
+  http.get('*/lke/clusters/:clusterId/pools', async () => {
     const pools = nodePoolFactory.buildList(10);
     nodePoolFactory.resetSequenceNumber();
-    return res(ctx.json(makeResourcePage(pools)));
+    return new Response(JSON.stringify(makeResourcePage(pools)));
   }),
-  rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {
+  http.get('*/lke/clusters/*/api-endpoints', async () => {
     const endpoints = kubeEndpointFactory.buildList(2);
-    return res(ctx.json(makeResourcePage(endpoints)));
+    return new Response(JSON.stringify(makeResourcePage(endpoints)));
   }),
-  rest.get('*/lke/clusters/*/recycle', async (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.get('*/lke/clusters/*/recycle', async () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/v4beta/networking/firewalls', (req, res, ctx) => {
+  http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
-    return res(ctx.json(makeResourcePage(firewalls)));
+    return new Response(JSON.stringify(makeResourcePage(firewalls)));
   }),
-  rest.get('*/v4beta/networking/firewalls/*/devices', (req, res, ctx) => {
+  http.get('*/v4beta/networking/firewalls/*/devices', () => {
     const devices = firewallDeviceFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(devices)));
+    return new Response(JSON.stringify(makeResourcePage(devices)));
   }),
-  rest.get('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
+  http.get('*/v4beta/networking/firewalls/:firewallId', () => {
     const firewall = firewallFactory.build();
-    return res(ctx.json(firewall));
+    return new Response(JSON.stringify(firewall));
   }),
-  rest.put('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
+  http.put('*/v4beta/networking/firewalls/:firewallId', async ({ request }) => {
+    const body = await request.json();
     const firewall = firewallFactory.build({
-      status: req.body?.['status'] ?? 'disabled',
+      status: body?.['status'] ?? 'disabled',
     });
-    return res(ctx.json(firewall));
+    return new Response(JSON.stringify(firewall));
   }),
-  // rest.post('*/account/agreements', (req, res, ctx) => {
+  // http.post('*/account/agreements', (req, res, ctx) => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
-  rest.post('*/v4beta/networking/firewalls', (req, res, ctx) => {
-    const payload = req.body as any;
+  http.post('*/v4beta/networking/firewalls', async ({ request }) => {
+    const body = await request.json();
+    const payload = body as any;
     const newFirewall = firewallFactory.build({
       label: payload.label ?? 'mock-firewall',
     });
-    return res(ctx.json(newFirewall));
+    return new Response(JSON.stringify(newFirewall));
   }),
-  rest.get('*/v4/nodebalancers', (req, res, ctx) => {
+  http.get('*/v4/nodebalancers', () => {
     const nodeBalancers = nodeBalancerFactory.buildList(1);
-    return res(ctx.json(makeResourcePage(nodeBalancers)));
+    return new Response(JSON.stringify(makeResourcePage(nodeBalancers)));
   }),
-  rest.get('*/v4/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
+  http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
-      id: Number(req.params.nodeBalancerID),
+      id: Number(params.nodeBalancerID),
     });
-    return res(ctx.json(nodeBalancer));
+    return new Response(JSON.stringify(nodeBalancer));
   }),
-  rest.get('*/nodebalancers/:nodeBalancerID/configs', (req, res, ctx) => {
+  http.get('*/nodebalancers/:nodeBalancerID/configs', ({ params }) => {
     const configs = nodeBalancerConfigFactory.buildList(2, {
-      nodebalancer_id: Number(req.params.nodeBalancerID),
+      nodebalancer_id: Number(params.nodeBalancerID),
     });
-    return res(ctx.json(makeResourcePage(configs)));
+    return new Response(JSON.stringify(makeResourcePage(configs)));
   }),
-  rest.get(
-    '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
-    (req, res, ctx) => {
-      const configs = [
-        nodeBalancerConfigNodeFactory.build({ status: 'UP' }),
-        nodeBalancerConfigNodeFactory.build({ status: 'DOWN' }),
-        nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
-      ];
-      return res(ctx.json(makeResourcePage(configs)));
-    }
-  ),
-  rest.get('*object-storage/buckets/*/*/access', async (req, res, ctx) => {
+  http.get('*/nodebalancers/:nodeBalancerID/configs/:configID/nodes', () => {
+    const configs = [
+      nodeBalancerConfigNodeFactory.build({ status: 'UP' }),
+      nodeBalancerConfigNodeFactory.build({ status: 'DOWN' }),
+      nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
+    ];
+    return new Response(JSON.stringify(makeResourcePage(configs)));
+  }),
+  http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
-    return res(
-      ctx.json({
+    return new Response(
+      JSON.stringify({
         acl: 'private',
         acl_xml:
           '<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>',
@@ -928,29 +969,31 @@ export const handlers = [
       })
     );
   }),
-  rest.put('*object-storage/buckets/*/*/access', async (req, res, ctx) => {
+
+  http.put('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
-    return res(ctx.json({}));
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+  http.get('*object-storage/buckets/*/*/ssl', async () => {
     await sleep(2000);
-    return res(ctx.json({ ssl: false }));
+    return new Response(JSON.stringify({ ssl: false }));
   }),
-  rest.post('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+  http.post('*object-storage/buckets/*/*/ssl', async () => {
     await sleep(2000);
-    return res(ctx.json({ ssl: true }));
+    return new Response(JSON.stringify({ ssl: true }));
   }),
-  rest.delete('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+  http.delete('*object-storage/buckets/*/*/ssl', async () => {
     await sleep(2000);
-    return res(ctx.json({}));
+    return new Response(JSON.stringify({}));
   }),
-  rest.delete('*object-storage/buckets/*/*', async (req, res, ctx) => {
+  http.delete('*object-storage/buckets/*/*', async () => {
     await sleep(2000);
-    return res(ctx.json({}));
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/object-storage/buckets/*/*/object-list', (req, res, ctx) => {
-    const pageSize = Number(req.url.searchParams.get('page_size') || 100);
-    const marker = req.url.searchParams.get('marker');
+  http.get('*/object-storage/buckets/*/*/object-list', ({ request }) => {
+    const url = new URL(request.url);
+    const pageSize = Number(url.searchParams.get('page_size') || 100);
+    const marker = url.searchParams.get('marker');
 
     if (!marker) {
       const end =
@@ -958,8 +1001,8 @@ export const handlers = [
       const is_truncated = staticObjects.length > pageSize;
 
       const page = staticObjects.slice(0, end);
-      return res(
-        ctx.json(
+      return new Response(
+        JSON.stringify(
           makeObjectsPage(page, {
             is_truncated,
             next_marker: is_truncated ? staticObjects[pageSize].name : null,
@@ -980,8 +1023,8 @@ export const handlers = [
       page[page.length - 1].name !=
       staticObjects[staticObjects.length - 1].name;
 
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeObjectsPage(page, {
           is_truncated,
           next_marker: is_truncated ? staticObjects[end].name : null,
@@ -989,15 +1032,14 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/object-storage/buckets/:region', (req, res, ctx) => {
-    // Temporarily added pagination logic to make sure my use of
-    // getAll worked for fetching all buckets.
+  http.get('*/object-storage/buckets/:region', ({ params, request }) => {
+    const url = new URL(request.url);
 
-    const region = req.params.region as string;
+    const region = params.region as string;
 
     objectStorageBucketFactory.resetSequenceNumber();
-    const page = Number(req.url.searchParams.get('page') || 1);
-    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+    const page = Number(url.searchParams.get('page') || 1);
+    const pageSize = Number(url.searchParams.get('page_size') || 25);
 
     const buckets = objectStorageBucketFactory.buildList(1, {
       cluster: `${region}-1`,
@@ -1006,8 +1048,8 @@ export const handlers = [
       region,
     });
 
-    return res(
-      ctx.json({
+    return new Response(
+      JSON.stringify({
         data: buckets.slice(
           (page - 1) * pageSize,
           (page - 1) * pageSize + pageSize
@@ -1018,14 +1060,14 @@ export const handlers = [
       })
     );
   }),
-  rest.get('*/object-storage/buckets', (req, res, ctx) => {
+  http.get('*/object-storage/buckets', () => {
     const buckets = objectStorageBucketFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(buckets)));
+    return new Response(JSON.stringify(makeResourcePage(buckets)));
   }),
-  rest.post('*/object-storage/buckets', (req, res, ctx) => {
-    return res(ctx.json(objectStorageBucketFactory.build()));
+  http.post('*/object-storage/buckets', () => {
+    return new Response(JSON.stringify(objectStorageBucketFactory.build()));
   }),
-  rest.get('*object-storage/clusters', (req, res, ctx) => {
+  http.get('*object-storage/clusters', () => {
     const jakartaCluster = objectStorageClusterFactory.build({
       id: `id-cgk-0` as any,
       region: 'id-cgk',
@@ -1039,8 +1081,8 @@ export const handlers = [
       region: 'us-east',
     });
     const clusters = objectStorageClusterFactory.buildList(3);
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           jakartaCluster,
           saoPauloCluster,
@@ -1050,9 +1092,10 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*object-storage/keys', (req, res, ctx) => {
-    return res(
-      ctx.json(
+
+  http.get('*object-storage/keys', () => {
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           ...objectStorageKeyFactory.buildList(1),
           ...objectStorageKeyFactory.buildList(1, {
@@ -1100,63 +1143,71 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*object-storage/keys', (req, res, ctx) => {
-    const { label, regions } = req.body as ObjectStorageKeyRequest;
+  http.post<any, ObjectStorageKeyRequest>(
+    '*object-storage/keys',
+    async ({ request }) => {
+      const body = await request.json();
+      const { label, regions } = body;
 
-    const regionsData = regions?.map((region: string) => ({
-      id: region,
-      s3_endpoint: `${region}.com`,
-    }));
+      const regionsData = regions?.map((region: string) => ({
+        id: region,
+        s3_endpoint: `${region}.com`,
+      }));
 
-    return res(
-      ctx.json(
-        objectStorageKeyFactory.build({
-          label,
-          regions: regionsData,
-        })
-      )
-    );
+      return new Response(
+        JSON.stringify(
+          objectStorageKeyFactory.build({
+            label,
+            regions: regionsData,
+          })
+        )
+      );
+    }
+  ),
+  http.put<any, ObjectStorageKeyRequest>(
+    '*object-storage/keys/:id',
+    async ({ request }) => {
+      const body = await request.json();
+      const { label, regions } = body;
+
+      const regionsData = regions?.map((region: string) => ({
+        id: region,
+        s3_endpoint: `${region}.com`,
+      }));
+
+      return new Response(
+        JSON.stringify(
+          objectStorageKeyFactory.build({
+            label,
+            regions: regionsData,
+          })
+        )
+      );
+    }
+  ),
+  http.delete('*object-storage/keys/:id', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.put('*object-storage/keys/:id', (req, res, ctx) => {
-    const { label, regions } = req.body as ObjectStorageKeyRequest;
-
-    const regionsData = regions?.map((region: string) => ({
-      id: region,
-      s3_endpoint: `${region}.com`,
-    }));
-
-    return res(
-      ctx.json(
-        objectStorageKeyFactory.build({
-          label,
-          regions: regionsData,
-        })
-      )
-    );
-  }),
-  rest.delete('*object-storage/keys/:id', (req, res, ctx) => {
-    return res(ctx.json({}));
-  }),
-  rest.get('*/domains', (req, res, ctx) => {
+  http.get('*/domains', () => {
     const domains = domainFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(domains)));
+    return new Response(JSON.stringify(makeResourcePage(domains)));
   }),
-  rest.post('*/domains/*/records', (req, res, ctx) => {
+  http.post('*/domains/*/records', () => {
     const record = domainRecordFactory.build();
-    return res(ctx.json(record));
+    return new Response(JSON.stringify(record));
   }),
-  rest.post('*/volumes/migrate', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*/volumes/migrate', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/regions/*/migration-queue', (req, res, ctx) => {
-    return res(
-      ctx.json({
+  http.get('*/regions/*/migration-queue', () => {
+    return new Response(
+      JSON.stringify({
         linodes: 8,
         volumes: 953,
       })
     );
   }),
-  rest.get('*/volumes', (req, res, ctx) => {
+  http.get('*/volumes', () => {
     const statuses: VolumeStatus[] = [
       'active',
       'creating',
@@ -1165,36 +1216,37 @@ export const handlers = [
       'resizing',
     ];
     const volumes = statuses.map((status) => volumeFactory.build({ status }));
-    return res(ctx.json(makeResourcePage(volumes)));
+    return new Response(JSON.stringify(makeResourcePage(volumes)));
   }),
-  rest.post('*/volumes', (req, res, ctx) => {
+  http.post('*/volumes', () => {
     const volume = volumeFactory.build();
-    return res(ctx.json(volume));
+    return new Response(JSON.stringify(volume));
   }),
-  rest.get('*/vlans', (req, res, ctx) => {
+  http.get('*/vlans', () => {
     const vlans = VLANFactory.buildList(2);
-    return res(ctx.json(makeResourcePage(vlans)));
+    return new Response(JSON.stringify(makeResourcePage(vlans)));
   }),
-  rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(
-      ctx.json({
+  http.get('*/profile/preferences', () => {
+    return new Response(
+      JSON.stringify({
         theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
       })
     );
   }),
-  rest.get('*/profile/devices', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([])));
+  http.get('*/profile/devices', () => {
+    return new Response(JSON.stringify(makeResourcePage([])));
   }),
-  rest.put('*/profile/preferences', (req, res, ctx) => {
-    const body = req.body as any;
-    return res(ctx.json({ ...body }));
+  http.put('*/profile/preferences', async ({ request }) => {
+    const reqBody = await request.json();
+    const body = reqBody as any;
+    return new Response(JSON.stringify({ ...body }));
   }),
-  rest.get('*/kubeconfig', (req, res, ctx) => {
-    return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
+  http.get('*/kubeconfig', () => {
+    return new Response(JSON.stringify({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
   }),
-  rest.get('*invoices/555/items', (req, res, ctx) => {
-    return res(
-      ctx.json(
+  http.get('*invoices/555/items', () => {
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           invoiceItemFactory.build({
             label: 'Linode',
@@ -1212,20 +1264,23 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
+
+  http.get('*invoices/:invoiceId/items', () => {
     const items = invoiceItemFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
+    return new Response(
+      JSON.stringify(makeResourcePage(items, { page: 1, pages: 4 }))
+    );
   }),
-  rest.get('*/account', (req, res, ctx) => {
+  http.get('*/account', () => {
     const account = accountFactory.build({
       active_promotions: promoFactory.buildList(1),
       active_since: '2022-11-30',
       balance: 50,
       company: 'Mock Company',
     });
-    return res(ctx.json(account));
+    return new Response(JSON.stringify(account));
   }),
-  rest.get('*/account/availability', (req, res, ctx) => {
+  http.get('*/account/availability', () => {
     const newarkStorage = accountAvailabilityFactory.build({
       region: 'us-east-0',
       unavailable: ['Object Storage'],
@@ -1242,28 +1297,35 @@ export const handlers = [
       region: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
-    return res(
-      ctx.json(makeResourcePage([atlanta, newarkStorage, singapore, tokyo]))
+    return new Response(
+      JSON.stringify(
+        makeResourcePage([atlanta, newarkStorage, singapore, tokyo])
+      )
     );
   }),
-  rest.get('*/account/availability/:regionId', (req, res, ctx) => {
-    return res(ctx.json(accountAvailabilityFactory.build()));
+  http.get('*/account/availability/:regionId', () => {
+    return new Response(JSON.stringify(accountAvailabilityFactory.build()));
   }),
-  rest.put('*/account', (req, res, ctx) => {
-    return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
+  http.put('*/account', async ({ request }) => {
+    const body = await request.json();
+    return new Response(
+      JSON.stringify({ ...accountFactory.build(), ...(body as any) })
+    );
   }),
-  rest.get('*/account/transfer', (req, res, ctx) => {
+  http.get('*/account/transfer', () => {
     const transfer = accountTransferFactory.build();
-    return res(ctx.delay(5000), ctx.json(transfer));
+    return new Response(JSON.stringify(transfer));
   }),
-  rest.get('*/account/payments', (req, res, ctx) => {
+  http.get('*/account/payments', () => {
     const paymentWithLargeId = paymentFactory.build({
       id: 123_456_789_123_456,
     });
     const payments = paymentFactory.buildList(5);
-    return res(ctx.json(makeResourcePage([paymentWithLargeId, ...payments])));
+    return new Response(
+      JSON.stringify(makeResourcePage([paymentWithLargeId, ...payments]))
+    );
   }),
-  rest.get('*/account/invoices', (req, res, ctx) => {
+  http.get('*/account/invoices', () => {
     const linodeInvoice = invoiceFactory.build({
       date: '2022-12-01T18:04:01',
       label: 'LinodeInvoice',
@@ -1276,25 +1338,27 @@ export const handlers = [
       id: 123_456_789_123_456,
       label: 'Invoice with Large ID',
     });
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([linodeInvoice, akamaiInvoice, invoiceWithLargerId])
       )
     );
   }),
-  rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
+  http.get('*/account/invoices/:invoiceId', () => {
     const linodeInvoice = invoiceFactory.build({
       date: '2022-12-01T18:04:01',
       id: 1234,
       label: 'LinodeInvoice',
     });
-    return res(ctx.json(linodeInvoice));
+    return new Response(JSON.stringify(linodeInvoice));
   }),
-  rest.get('*/account/maintenance', (req, res, ctx) => {
+  http.get('*/account/maintenance', ({ request }) => {
+    const url = new URL(request.url);
+
     accountMaintenanceFactory.resetSequenceNumber();
-    const page = Number(req.url.searchParams.get('page') || 1);
-    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
-    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+    const page = Number(url.searchParams.get('page') || 1);
+    const pageSize = Number(url.searchParams.get('page_size') || 25);
+    const headers = JSON.parse(request.headers.get('x-filter') || '{}');
 
     const accountMaintenance =
       headers.status === 'completed'
@@ -1304,7 +1368,7 @@ export const handlers = [
             ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
           ];
 
-    if (req.headers.get('x-filter')) {
+    if (request.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
         const statusA = a[headers['+order_by']];
         const statusB = b[headers['+order_by']];
@@ -1321,8 +1385,8 @@ export const handlers = [
       if (headers['+order'] == 'desc') {
         accountMaintenance.reverse();
       }
-      return res(
-        ctx.json({
+      return new Response(
+        JSON.stringify({
           data: accountMaintenance.slice(
             (page - 1) * pageSize,
             (page - 1) * pageSize + pageSize
@@ -1334,14 +1398,16 @@ export const handlers = [
       );
     }
 
-    return res(ctx.json(makeResourcePage(accountMaintenance)));
+    return new Response(JSON.stringify(makeResourcePage(accountMaintenance)));
   }),
-  rest.get('*/account/child-accounts', (req, res, ctx) => {
-    const page = Number(req.url.searchParams.get('page') || 1);
-    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+
+  http.get('*/account/child-accounts', ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') || 1);
+    const pageSize = Number(url.searchParams.get('page_size') || 25);
     const childAccounts = accountFactory.buildList(100);
-    return res(
-      ctx.json({
+    return new Response(
+      JSON.stringify({
         data: childAccounts.slice(
           (page - 1) * pageSize,
           (page - 1) * pageSize + pageSize
@@ -1352,11 +1418,11 @@ export const handlers = [
       })
     );
   }),
-  rest.get('*/account/child-accounts/:euuid', (req, res, ctx) => {
+  http.get('*/account/child-accounts/:euuid', () => {
     const childAccount = accountFactory.buildList(1);
-    return res(ctx.json(childAccount));
+    return new Response(JSON.stringify(childAccount));
   }),
-  rest.post('*/account/child-accounts/:euuid/token', (req, res, ctx) => {
+  http.post('*/account/child-accounts/:euuid/token', () => {
     // Proxy tokens expire in 15 minutes.
     const now = new Date();
     const expiry = new Date(now.setMinutes(now.getMinutes() + 15));
@@ -1365,12 +1431,13 @@ export const handlers = [
       expiry: expiry.toISOString(),
       token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
     });
-    return res(ctx.json(proxyToken));
+    return new Response(JSON.stringify(proxyToken));
   }),
-  rest.get('*/account/users', (req, res, ctx) => {
-    const page = Number(req.url.searchParams.get('page') || 1);
-    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
-    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+  http.get('*/account/users', ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') || 1);
+    const pageSize = Number(url.searchParams.get('page_size') || 25);
+    const headers = JSON.parse(request.headers.get('x-filter') || '{}');
 
     const accountUsers = [
       accountUserFactory.build({
@@ -1390,7 +1457,7 @@ export const handlers = [
       parentAccountNonAdminUser,
     ];
 
-    if (req.headers.get('x-filter')) {
+    if (request.headers.get('x-filter')) {
       let filteredAccountUsers = accountUsers;
 
       if (headers['user_type']) {
@@ -1421,8 +1488,8 @@ export const handlers = [
       if (headers['+order'] == 'desc') {
         filteredAccountUsers.reverse();
       }
-      return res(
-        ctx.json({
+      return new Response(
+        JSON.stringify({
           data: filteredAccountUsers.slice(
             (page - 1) * pageSize,
             (page - 1) * pageSize + pageSize
@@ -1435,97 +1502,86 @@ export const handlers = [
     }
 
     // Return default response if 'x-filter' header is not present
-    return res(ctx.json(makeResourcePage(accountUsers)));
+    return new Response(JSON.stringify(makeResourcePage(accountUsers)));
   }),
-  rest.get(`*/account/users/${childAccountUser.username}`, (req, res, ctx) => {
-    return res(ctx.json(childAccountUser));
+
+  http.get(`*/account/users/${childAccountUser.username}`, () => {
+    return new Response(JSON.stringify(childAccountUser));
   }),
-  rest.get(`*/account/users/${proxyAccountUser.username}`, (req, res, ctx) => {
-    return res(ctx.json(proxyAccountUser));
+  http.get(`*/account/users/${proxyAccountUser.username}`, () => {
+    return new Response(JSON.stringify(proxyAccountUser));
   }),
-  rest.get(`*/account/users/${parentAccountUser.username}`, (req, res, ctx) => {
-    return res(ctx.json(parentAccountUser));
+  http.get(`*/account/users/${parentAccountUser.username}`, () => {
+    return new Response(JSON.stringify(parentAccountUser));
   }),
-  rest.get(
+  http.get(`*/account/users/${parentAccountNonAdminUser.username}`, () => {
+    return new Response(JSON.stringify(parentAccountNonAdminUser));
+  }),
+  http.get('*/account/users/:user', () => {
+    return new Response(
+      JSON.stringify(accountUserFactory.build({ user_type: 'parent' }))
+    );
+  }),
+  http.put<any, Partial<User>>(
     `*/account/users/${parentAccountNonAdminUser.username}`,
-    (req, res, ctx) => {
-      return res(ctx.json(parentAccountNonAdminUser));
-    }
-  ),
-  rest.get('*/account/users/:user', (req, res, ctx) => {
-    // Parent/Child: switch the `user_type` depending on what account view you need to mock.
-    return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
-  }),
-  rest.put(
-    `*/account/users/${parentAccountNonAdminUser.username}`,
-    (req, res, ctx) => {
-      const { restricted } = req.body as Partial<User>;
+    async ({ request }) => {
+      const body = await request.json();
+      const { restricted } = body;
       if (restricted !== undefined) {
         parentAccountNonAdminUser.restricted = restricted;
       }
-      return res(ctx.json(parentAccountNonAdminUser));
+      return new Response(JSON.stringify(parentAccountNonAdminUser));
     }
   ),
-  rest.get(
-    `*/account/users/${childAccountUser.username}/grants`,
-    (req, res, ctx) => {
-      return res(
-        ctx.json(
-          grantsFactory.build({
-            global: {
-              // The API returns 'read_write' for child account users' account access,
-              // On the frontend, we display 'read_only' and restrict child users from billing actions.
-              account_access: 'read_write',
-              cancel_account: false,
-            },
-          })
-        )
-      );
-    }
-  ),
-  rest.get(
-    `*/account/users/${proxyAccountUser.username}/grants`,
-    (req, res, ctx) => {
-      return res(
-        ctx.json(
-          grantsFactory.build({
-            global: {
-              account_access: 'read_write', // This is immutable for proxy users
-              add_domains: false,
-              add_firewalls: false,
-              add_images: false,
-              add_linodes: false,
-              add_longview: false,
-              add_nodebalancers: false,
-              add_stackscripts: false,
-              add_volumes: false,
-              add_vpcs: false,
-              cancel_account: false,
-              longview_subscription: false,
-            },
-          })
-        )
-      );
-    }
-  ),
-  rest.get(
-    `*/account/users/${parentAccountUser.username}/grants`,
-    (req, res, ctx) => {
-      return res(
-        ctx.json(
-          grantsFactory.build({
-            global: {
-              cancel_account: false,
-              child_account_access: true,
-            },
-          })
-        )
-      );
-    }
-  ),
-  rest.get(
+  http.get(`*/account/users/${childAccountUser.username}/grants`, () => {
+    return new Response(
+      JSON.stringify(
+        grantsFactory.build({
+          global: {
+            account_access: 'read_write',
+            cancel_account: false,
+          },
+        })
+      )
+    );
+  }),
+  http.get(`*/account/users/${proxyAccountUser.username}/grants`, () => {
+    return new Response(
+      JSON.stringify(
+        grantsFactory.build({
+          global: {
+            account_access: 'read_write',
+            add_domains: false,
+            add_firewalls: false,
+            add_images: false,
+            add_linodes: false,
+            add_longview: false,
+            add_nodebalancers: false,
+            add_stackscripts: false,
+            add_volumes: false,
+            add_vpcs: false,
+            cancel_account: false,
+            longview_subscription: false,
+          },
+        })
+      )
+    );
+  }),
+  http.get(`*/account/users/${parentAccountUser.username}/grants`, () => {
+    return new Response(
+      JSON.stringify(
+        grantsFactory.build({
+          global: {
+            cancel_account: false,
+            child_account_access: true,
+          },
+        })
+      )
+    );
+  }),
+  http.get(
     `*/account/users/${parentAccountNonAdminUser.username}/grants`,
-    (req, res, ctx) => {
+    () => {
       const grantsResponse = grantsFactory.build({
         global: parentAccountNonAdminUser.restricted
           ? {
@@ -1534,12 +1590,12 @@ export const handlers = [
             }
           : undefined,
       });
-      return res(ctx.json(grantsResponse));
+      return new Response(JSON.stringify(grantsResponse));
     }
   ),
-  rest.get('*/account/users/:user/grants', (req, res, ctx) => {
-    return res(
-      ctx.json(
+  http.get('*/account/users/:user/grants', () => {
+    return new Response(
+      JSON.stringify(
         grantsFactory.build({
           domain: [],
           firewall: [],
@@ -1556,15 +1612,15 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/account/logins', (req, res, ctx) => {
+  http.get('*/account/logins', () => {
     const failedRestrictedAccountLogin = accountLoginFactory.build({
       restricted: true,
       status: 'failed',
     });
     const successfulAccountLogins = accountLoginFactory.buildList(25);
 
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           failedRestrictedAccountLogin,
           ...successfulAccountLogins,
@@ -1572,7 +1628,7 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/account/payment-methods', (req, res, ctx) => {
+  http.get('*/account/payment-methods', () => {
     const defaultPaymentMethod = paymentMethodFactory.build({
       data: { card_type: 'MasterCard' },
       is_default: true,
@@ -1592,8 +1648,8 @@ export const handlers = [
 
     const otherPaymentMethod = paymentMethodFactory.build();
 
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           defaultPaymentMethod,
           otherPaymentMethod,
@@ -1603,7 +1659,8 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/events', (req, res, ctx) => {
+
+  http.get('*/events', () => {
     const events = eventFactory.buildList(1, {
       action: 'lke_node_create',
       entity: { id: 999, label: 'linode-1', type: 'linode' },
@@ -1653,8 +1710,8 @@ export const handlers = [
       status: 'notification',
     });
 
-    return res.once(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           ...events,
           ...dbEvents,
@@ -1666,48 +1723,49 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/support/tickets', (req, res, ctx) => {
+  // // HERE
+  http.get('*/support/tickets', () => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
-    return res(ctx.json(makeResourcePage(tickets)));
+    return new Response(JSON.stringify(makeResourcePage(tickets)));
   }),
-  rest.get('*/support/tickets/999', (req, res, ctx) => {
+  http.get('*/support/tickets/999', () => {
     const ticket = supportTicketFactory.build({
       closed: new Date().toISOString(),
       id: 999,
     });
-    return res(ctx.json(ticket));
+    return new Response(JSON.stringify(ticket));
   }),
-  rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+  http.get('*/support/tickets/:ticketId', ({ params }) => {
     const ticket = supportTicketFactory.build({
-      id: Number(req.params.ticketId),
+      id: Number(params.ticketId),
     });
-    return res(ctx.json(ticket));
+    return new Response(JSON.stringify(ticket));
   }),
-  rest.get('*/support/tickets/:ticketId/replies', (req, res, ctx) => {
+  http.get('*/support/tickets/:ticketId/replies', () => {
     const replies = supportReplyFactory.buildList(15);
-    return res(ctx.json(makeResourcePage(replies)));
+    return new Response(JSON.stringify(makeResourcePage(replies)));
   }),
-  rest.put('*/longview/plan', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.put('*/longview/plan', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/longview/plan', (req, res, ctx) => {
+  http.get('*/longview/plan', () => {
     const plan = longviewActivePlanFactory.build();
-    return res(ctx.json(plan));
+    return new Response(JSON.stringify(plan));
   }),
-  rest.get('*/longview/subscriptions', (req, res, ctx) => {
+  http.get('*/longview/subscriptions', () => {
     const subscriptions = longviewSubscriptionFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(subscriptions)));
+    return new Response(JSON.stringify(makeResourcePage(subscriptions)));
   }),
-  rest.get('*/longview/clients', (req, res, ctx) => {
+  http.get('*/longview/clients', () => {
     const clients = longviewClientFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(clients)));
+    return new Response(JSON.stringify(makeResourcePage(clients)));
   }),
-  rest.post('*/backups/enable/*', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*/backups/enable/*', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/account/settings', (req, res, ctx) => {
-    return res(
-      ctx.json({
+  http.get('*/account/settings', () => {
+    return new Response(
+      JSON.stringify({
         backups_enabled: true,
         longview_subscription: 'longview-100',
         managed: true,
@@ -1716,21 +1774,22 @@ export const handlers = [
       })
     );
   }),
-  rest.put('*/account/settings/*', (req, res, ctx) => {
-    return res(ctx.json(req.body as any));
+  http.put('*/account/settings/*', async ({ request }) => {
+    const body = await request.json();
+    return new Response(JSON.stringify(body as any));
   }),
-  rest.get('*/tags', (req, res, ctx) => {
+  http.get('*/tags', () => {
     tagFactory.resetSequenceNumber();
     const tags = tagFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(tags)));
+    return new Response(JSON.stringify(makeResourcePage(tags)));
   }),
-  rest.get('*gravatar*', (req, res, ctx) => {
-    return res(ctx.status(400), ctx.json({}));
+  http.get('*gravatar*', () => {
+    return new Response(JSON.stringify({}), { status: 400 });
   }),
-  rest.get('*linode.com/blog/feed*', (req, res, ctx) => {
-    return res(ctx.status(400));
+  http.get('*linode.com/blog/feed*', () => {
+    return new Response(null, { status: 400 });
   }),
-  rest.get('*managed/services', (req, res, ctx) => {
+  http.get('*managed/services', () => {
     const monitors = monitorFactory.buildList(5);
     const downUnresolvedMonitor = monitorFactory.build({
       id: 998,
@@ -1741,8 +1800,8 @@ export const handlers = [
       label: 'Problem',
       status: 'problem',
     });
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           ...monitors,
           downUnresolvedMonitor,
@@ -1751,30 +1810,33 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/managed/services', (req, res, ctx) => {
-    const monitor = monitorFactory.build(req.body as any);
-    return res(ctx.json(monitor));
-  }),
-  rest.put('*/managed/services/:id', (req, res, ctx) => {
-    const payload = req.body as any;
 
-    return res(
-      ctx.json(
+  http.post('*/managed/services', async ({ request }) => {
+    const body = await request.json();
+    const monitor = monitorFactory.build(body as any);
+    return new Response(JSON.stringify(monitor));
+  }),
+  http.put('*/managed/services/:id', async ({ params, request }) => {
+    const body = await request.json();
+    const payload = body as any;
+
+    return new Response(
+      JSON.stringify(
         monitorFactory.build({
           ...payload,
-          id: Number(req.params.id),
+          id: Number(params.id),
         })
       )
     );
   }),
-  rest.delete('*/managed/services/:id', (_req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*/managed/services/:id', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*managed/stats', (req, res, ctx) => {
+  http.get('*managed/stats', () => {
     const stats = managedStatsFactory.build();
-    return res(ctx.json(stats));
+    return new Response(JSON.stringify(stats));
   }),
-  rest.get('*managed/issues', (req, res, ctx) => {
+  http.get('*managed/issues', () => {
     const openIssue = managedIssueFactory.build({
       created: DateTime.now().minus({ days: 2 }).toISO(),
       entity: { id: 1 },
@@ -1785,53 +1847,65 @@ export const handlers = [
       entity: { id: 999 },
       services: [999],
     });
-    return res(ctx.json(makeResourcePage([openIssue, closedIssue])));
-  }),
-  rest.get('*managed/linode-settings', (req, res, ctx) => {
-    return res(
-      ctx.json(makeResourcePage(managedLinodeSettingFactory.buildList(5)))
+    return new Response(
+      JSON.stringify(makeResourcePage([openIssue, closedIssue]))
     );
   }),
-  rest.get('*managed/credentials/sshkey', (req, res, ctx) => {
-    return res(ctx.json(managedSSHPubKeyFactory.build()));
+  http.get('*managed/linode-settings', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(managedLinodeSettingFactory.buildList(5)))
+    );
   }),
-  rest.get('*managed/credentials', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(credentialFactory.buildList(5))));
+  http.get('*managed/credentials/sshkey', () => {
+    return new Response(JSON.stringify(managedSSHPubKeyFactory.build()));
   }),
-  rest.post('*managed/credentials', (req, res, ctx) => {
+  http.get('*managed/credentials', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(credentialFactory.buildList(5)))
+    );
+  }),
+  http.post('*managed/credentials', async ({ request }) => {
+    const body = await request.json();
     const response = credentialFactory.build({
-      ...(req.body as any),
+      ...(body as any),
     });
 
-    return res(ctx.json(response));
+    return new Response(JSON.stringify(response));
   }),
-  rest.post('*managed/credentials/:id/revoke', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*managed/credentials/:id/revoke', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*managed/contacts', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(contactFactory.buildList(5))));
+  http.get('*managed/contacts', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(contactFactory.buildList(5)))
+    );
   }),
-  rest.delete('*managed/contacts/:id', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.delete('*managed/contacts/:id', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.put('*managed/contacts/:id', (req, res, ctx) => {
+  http.put('*managed/contacts/:id', async ({ params, request }) => {
+    const body = await request.json();
     const payload = {
-      ...(req.body as any),
-      id: Number(req.params.id),
+      ...(body as any),
+      id: Number(params.id),
     };
 
-    return res(ctx.json(payload));
+    return new Response(JSON.stringify(payload));
   }),
-  rest.post('*managed/contacts', (req, res, ctx) => {
+  http.post('*managed/contacts', async ({ request }) => {
+    const body = await request.json();
     const response = contactFactory.build({
-      ...(req.body as any),
+      ...(body as any),
     });
-    return res(ctx.json(response));
+    return new Response(JSON.stringify(response));
   }),
-  rest.get('*stackscripts/', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));
+  http.get('*stackscripts/', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(stackScriptFactory.buildList(1)))
+    );
   }),
-  rest.get('*/notifications', (req, res, ctx) => {
+
+  http.get('*/notifications', () => {
     // pastDueBalance included here merely for ease of testing for Notifications section in the Notifications drawer.
     const pastDueBalance = notificationFactory.build({
       body: null,
@@ -1973,8 +2047,8 @@ export const handlers = [
       }
     );
 
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           pastDueBalance,
           ...notificationFactory.buildList(1),
@@ -1994,46 +2068,51 @@ export const handlers = [
       )
     );
   }),
-  rest.post('*/networking/vlans', (req, res, ctx) => {
-    return res(ctx.json({}));
+
+  http.post('*/networking/vlans', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.post('*/networking/ipv6/ranges', (req, res, ctx) => {
-    const range = req.body?.['prefix_length'];
-    return res(ctx.json({ range, route_target: '2001:DB8::0000' }));
-  }),
-  rest.post('*/networking/ips/assign', (req, res, ctx) => {
-    return res(ctx.json({}));
-  }),
-  rest.post('*/account/payments', (req, res, ctx) => {
-    return res(ctx.json(creditPaymentResponseFactory.build()));
-  }),
-  // rest.get('*/databases/mysql/instances', (req, res, ctx) => {
-  //   const online = databaseFactory.build({ status: 'ready' });
-  //   const initializing = databaseFactory.build({ status: 'initializing' });
-  //   const error = databaseFactory.build({ status: 'error' });
-  //   const unknown = databaseFactory.build({ status: 'unknown' });
-  //   const databases = [online, initializing, error, unknown];
-  //   return res(ctx.json(makeResourcePage(databases)));
-  // }),
-  rest.get('*/profile/tokens', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
-  }),
-  rest.post('*/profile/tokens', (req, res, ctx) => {
-    const data = req.body as TokenRequest;
-    return res(ctx.json(appTokenFactory.build(data)));
-  }),
-  rest.put('*/profile/tokens/:id', (req, res, ctx) => {
-    const data = req.body as Partial<TokenRequest>;
-    return res(
-      ctx.json(appTokenFactory.build({ id: Number(req.params.id), ...data }))
+  http.post('*/networking/ipv6/ranges', async ({ request }) => {
+    const body = await request.json();
+    const range = body?.['prefix_length'];
+    return new Response(
+      JSON.stringify({ range, route_target: '2001:DB8::0000' })
     );
   }),
-  rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*/networking/ips/assign', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/account/betas', (_req, res, ctx) => {
-    return res(
-      ctx.json(
+  http.post('*/account/payments', () => {
+    return new Response(JSON.stringify(creditPaymentResponseFactory.build()));
+  }),
+  http.get('*/profile/tokens', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(appTokenFactory.buildList(30)))
+    );
+  }),
+  http.post<any, TokenRequest>('*/profile/tokens', async ({ request }) => {
+    const body = await request.json();
+    const data = body;
+    return new Response(JSON.stringify(appTokenFactory.build(data)));
+  }),
+  http.put<any, Partial<TokenRequest>>(
+    '*/profile/tokens/:id',
+    async ({ params, request }) => {
+      const body = await request.json();
+      const data = body;
+      return new Response(
+        JSON.stringify(
+          appTokenFactory.build({ id: Number(params.id), ...data })
+        )
+      );
+    }
+  ),
+  http.delete('*/profile/tokens/:id', () => {
+    return new Response(JSON.stringify({}));
+  }),
+  http.get('*/account/betas', () => {
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           ...accountBetaFactory.buildList(5),
           accountBetaFactory.build({
@@ -2045,29 +2124,33 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*/account/betas/:id', (req, res, ctx) => {
-    if (req.params.id !== 'undefined') {
-      return res(
-        ctx.json(accountBetaFactory.build({ id: req.params.id as string }))
+  http.get('*/account/betas/:id', ({ params }) => {
+    if (params.id !== 'undefined') {
+      return new Response(
+        JSON.stringify(accountBetaFactory.build({ id: params.id as string }))
       );
     }
-    return res(ctx.status(404));
+    return new Response(JSON.stringify({}), { status: 404 });
   }),
-  rest.post('*/account/betas', (_req, res, ctx) => {
-    return res(ctx.json({}));
+  http.post('*/account/betas', () => {
+    return new Response(JSON.stringify({}));
   }),
-  rest.get('*/betas/:id', (req, res, ctx) => {
-    if (req.params.id !== 'undefined') {
-      return res(ctx.json(betaFactory.build({ id: req.params.id as string })));
+  http.get('*/betas/:id', ({ params }) => {
+    if (params.id !== 'undefined') {
+      return new Response(
+        JSON.stringify(betaFactory.build({ id: params.id as string }))
+      );
     }
-    return res(ctx.status(404));
+    return new Response(JSON.stringify({}), { status: 404 });
   }),
-  rest.get('*/betas', (_req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
+  http.get('*/betas', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(betaFactory.buildList(5)))
+    );
   }),
-  rest.get('*regions/availability', (_req, res, ctx) => {
-    return res(
-      ctx.json(
+  http.get('*regions/availability', () => {
+    return new Response(
+      JSON.stringify(
         makeResourcePage([
           regionAvailabilityFactory.build({
             plan: 'g6-standard-6',
@@ -2089,9 +2172,9 @@ export const handlers = [
       )
     );
   }),
-  rest.get('*regions/:regionId/availability', (_req, res, ctx) => {
-    return res(
-      ctx.json([
+  http.get('*regions/:regionId/availability', () => {
+    return new Response(
+      JSON.stringify([
         regionAvailabilityFactory.build({
           plan: 'g6-standard-6',
           region: 'us-east',
@@ -2103,122 +2186,77 @@ export const handlers = [
       ])
     );
   }),
+
   // Placement Groups
-  rest.get('*/placement/groups', (_req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(placementGroupFactory.buildList(3))));
+  http.get('*/placement/groups', () => {
+    return new Response(
+      JSON.stringify(makeResourcePage(placementGroupFactory.buildList(3)))
+    );
   }),
-  rest.get('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === 'undefined') {
-      return res(ctx.status(404));
+  http.get('*/placement/groups/:placementGroupId', ({ params }) => {
+    if (params.placementGroupId === 'undefined') {
+      return new Response(JSON.stringify({ status: 404 }));
     }
 
-    return res(
-      ctx.json(
+    return new Response(
+      JSON.stringify(
         placementGroupFactory.build({
           id: 1,
         })
       )
     );
   }),
-  rest.post('*/placement/groups', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        createPlacementGroupPayloadFactory.build(
-          req.body as CreatePlacementGroupPayload
-        )
-      )
-    );
-  }),
-  rest.put('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === '-1') {
-      return res(ctx.status(404));
+  http.post<any, CreatePlacementGroupPayload>(
+    '*/placement/groups',
+    async ({ request }) => {
+      const body = await request.json();
+
+      return new Response(
+        JSON.stringify(createPlacementGroupPayloadFactory.build(body))
+      );
+    }
+  ),
+  http.put(
+    '*/placement/groups/:placementGroupId',
+    async ({ params, request }) => {
+      const body = await request.json();
+
+      if (params.placementGroupId === '-1') {
+        return new Response(JSON.stringify({ status: 404 }));
+      }
+
+      const response = placementGroupFactory.build({
+        ...(body as any),
+      });
+
+      return new Response(JSON.stringify(response));
+    }
+  ),
+  http.delete('*/placement/groups/:placementGroupId', ({ params }) => {
+    if (params.placementGroupId === '-1') {
+      return new Response(JSON.stringify({ status: 404 }));
     }
 
-    const response = placementGroupFactory.build({
-      ...(req.body as any),
-    });
-
-    return res(ctx.json(response));
+    return new Response(JSON.stringify({}));
   }),
-  rest.delete('*/placement/groups/:placementGroupId', (req, res, ctx) => {
-    if (req.params.placementGroupId === '-1') {
-      return res(ctx.status(404));
-    }
+  http.post(
+    '*/placement/groups/:placementGroupId/assign',
+    async ({ params, request }) => {
+      const body = await request.json();
 
-    return res(ctx.json({}));
-  }),
-  rest.post('*/placement/groups/:placementGroupId/assign', (req, res, ctx) => {
-    if (req.params.placementGroupId === '-1') {
-      return res(ctx.status(404));
-    }
-
-    const response = placementGroupFactory.build({
-      affinity_type: 'anti_affinity',
-      id: Number(req.params.placementGroupId) ?? -1,
-      label: 'pg-1',
-      linodes: [
-        {
-          is_compliant: true,
-          linode: 1,
-        },
-        {
-          is_compliant: true,
-          linode: 2,
-        },
-        {
-          is_compliant: true,
-          linode: 3,
-        },
-        {
-          is_compliant: true,
-          linode: 4,
-        },
-        {
-          is_compliant: true,
-          linode: 5,
-        },
-        {
-          is_compliant: true,
-          linode: 6,
-        },
-        {
-          is_compliant: true,
-          linode: 7,
-        },
-        {
-          is_compliant: true,
-          linode: 8,
-        },
-        {
-          is_compliant: false,
-          linode: 43,
-        },
-        {
-          is_compliant: true,
-          linode: (req.body as any).linodes[0],
-        },
-      ],
-    });
-
-    return res(ctx.json(response));
-  }),
-  rest.post(
-    '*/placement/groups/:placementGroupId/unassign',
-    (req, res, ctx) => {
-      if (req.params.placementGroupId === '-1') {
-        return res(ctx.status(404));
+      if (params.placementGroupId === '-1') {
+        return new Response(JSON.stringify({ status: 404 }));
       }
 
       const response = placementGroupFactory.build({
         affinity_type: 'anti_affinity',
-        id: Number(req.params.placementGroupId) ?? -1,
+        id: Number(params.placementGroupId) ?? -1,
         label: 'pg-1',
         linodes: [
           {
             is_compliant: true,
             linode: 1,
           },
-
           {
             is_compliant: true,
             linode: 2,
@@ -2251,12 +2289,68 @@ export const handlers = [
             is_compliant: false,
             linode: 43,
           },
+          {
+            is_compliant: true,
+            linode: (body as any).linodes[0],
+          },
         ],
       });
 
-      return res(ctx.json(response));
+      return new Response(JSON.stringify(response));
     }
   ),
+  http.post('*/placement/groups/:placementGroupId/unassign', ({ params }) => {
+    if (params.placementGroupId === '-1') {
+      return new Response(JSON.stringify({ status: 404 }));
+    }
+
+    const response = placementGroupFactory.build({
+      affinity_type: 'anti_affinity',
+      id: Number(params.placementGroupId) ?? -1,
+      label: 'pg-1',
+      linodes: [
+        {
+          is_compliant: true,
+          linode: 1,
+        },
+
+        {
+          is_compliant: true,
+          linode: 2,
+        },
+        {
+          is_compliant: true,
+          linode: 3,
+        },
+        {
+          is_compliant: true,
+          linode: 4,
+        },
+        {
+          is_compliant: true,
+          linode: 5,
+        },
+        {
+          is_compliant: true,
+          linode: 6,
+        },
+        {
+          is_compliant: true,
+          linode: 7,
+        },
+        {
+          is_compliant: true,
+          linode: 8,
+        },
+        {
+          is_compliant: false,
+          linode: 43,
+        },
+      ],
+    });
+
+    return new Response(JSON.stringify(response));
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,
