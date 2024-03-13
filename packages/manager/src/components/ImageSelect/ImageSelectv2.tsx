@@ -56,7 +56,7 @@ export const ImageSelectv2 = (props: Props) => {
       label="Images"
       loading={isLoading}
       options={options ?? []}
-      placeholder="Choose an Image"
+      placeholder="Choose an image"
       {...rest}
       errorText={rest.errorText ?? error?.[0].reason}
       value={value ?? null}
