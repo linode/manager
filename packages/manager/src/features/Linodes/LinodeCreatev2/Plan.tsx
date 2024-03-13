@@ -47,7 +47,7 @@ export const Plan = () => {
       selectedId={field.value}
       selectedRegionID={regionId}
       showTransfer
-      types={types?.map(extendType) ?? []}
+      types={types?.map(extendType) ?? []} // @todo don't extend type
     />
   );
 };

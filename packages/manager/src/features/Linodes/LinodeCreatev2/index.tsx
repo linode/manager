@@ -15,6 +15,7 @@ import { Error } from './Error';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
+import { Distribution } from './tabs/Distribution';
 import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -69,7 +70,9 @@ export const LinodeCreatev2 = () => {
               <Tab>Clone Linode</Tab>
             </TabList>
             <TabPanels>
-              <SafeTabPanel index={0}>Distribution</SafeTabPanel>
+              <SafeTabPanel index={0}>
+                <Distribution />
+              </SafeTabPanel>
               <SafeTabPanel index={1}>Marketplace</SafeTabPanel>
               <SafeTabPanel index={2}>StackScripts</SafeTabPanel>
               <SafeTabPanel index={3}>Images</SafeTabPanel>

@@ -1,0 +1,26 @@
+import React from 'react';
+import { useController } from 'react-hook-form';
+
+import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
+
+import { DistributionSelect } from '../components/DistributionSelect';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
+export const Distribution = () => {
+  const { field, fieldState } = useController<CreateLinodeRequest>({
+    name: 'image',
+  });
+
+  return (
+    <Paper>
+      <Typography variant="h2">Choose a Distribution</Typography>
+      <DistributionSelect
+        errorText={fieldState.error?.message}
+        onChange={(_, image) => field.onChange(image?.id)}
+        value={field.value}
+      />
+    </Paper>
+  );
+};
