@@ -1,27 +1,28 @@
 import React from 'react';
 
-import { Flag } from 'src/components/Flag';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
+import { Stack, StackProps } from 'src/components/Stack';
 
-import type { Country } from '@linode/api-v4';
+import { RegionItem } from '../LoadBalancerLanding/RegionItem';
 
-export const regions = [
-  { country: 'us', id: 'us-mia', label: 'Miami, FL' },
-  { country: 'us', id: 'us-lax', label: 'Los Angeles, CA' },
-  { country: 'fr', id: 'fr-par', label: 'Paris, FR' },
-  { country: 'jp', id: 'jp-osa', label: 'Osaka, JP' },
-  { country: 'au', id: 'ap-southeast', label: 'Sydney, AU' },
-];
+interface Props extends StackProps {
+  /**
+   * Disables the country flag that shows before the region label
+   * @default false
+   */
+  hideFlags?: boolean;
+  /**
+   * The region ids
+   */
+  regionIds: string[];
+}
 
-export const LoadBalancerRegions = () => {
+export const LoadBalancerRegionsList = (props: Props) => {
+  const { hideFlags, regionIds, ...rest } = props;
+
   return (
-    <Stack spacing={1.25}>
-      {regions.map((region) => (
-        <Stack alignItems="center" direction="row" key={region.id} spacing={2}>
-          <Flag country={region.country as Country} />
-          <Typography>{`${region.label} (${region.id})`}</Typography>
-        </Stack>
+    <Stack spacing={1.25} {...rest}>
+      {regionIds?.map((regionId) => (
+        <RegionItem hideFlag={hideFlags} key={regionId} regionId={regionId} />
       ))}
     </Stack>
   );
