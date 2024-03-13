@@ -6,7 +6,7 @@ import {
   notificationFactory,
 } from 'src/factories/notification';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -19,8 +19,7 @@ describe('Abuse ticket banner', () => {
     server.use(
       http.get('*/account/notifications', () => {
         return HttpResponse.json(
-        makeResourcePage(abuseTicketNotificationFactory.buildList(1))
-          )
+          makeResourcePage(abuseTicketNotificationFactory.buildList(1))
         );
       })
     );
@@ -35,8 +34,7 @@ describe('Abuse ticket banner', () => {
     server.use(
       http.get('*/account/notifications', () => {
         return HttpResponse.json(
-        makeResourcePage(abuseTicketNotificationFactory.buildList(2))
-          )
+          makeResourcePage(abuseTicketNotificationFactory.buildList(2))
         );
       })
     );
@@ -51,7 +49,7 @@ describe('Abuse ticket banner', () => {
     const mockAbuseTicket = abuseTicketNotificationFactory.build();
     server.use(
       http.get('*/account/notifications', () => {
-        return HttpResponse.json((makeResourcePage([mockAbuseTicket])));
+        return HttpResponse.json(makeResourcePage([mockAbuseTicket]));
       })
     );
     const { getByTestId } = renderWithTheme(<AbuseTicketBanner />);
@@ -66,7 +64,7 @@ describe('Abuse ticket banner', () => {
     const mockAbuseTickets = abuseTicketNotificationFactory.buildList(2);
     server.use(
       http.get('*/account/notifications', () => {
-        return HttpResponse.json((makeResourcePage(mockAbuseTickets)));
+        return HttpResponse.json(makeResourcePage(mockAbuseTickets));
       })
     );
     const { getByTestId } = renderWithTheme(<AbuseTicketBanner />);
@@ -80,7 +78,7 @@ describe('Abuse ticket banner', () => {
   it('should return null if there are no abuse tickets', () => {
     server.use(
       http.get('*/account/notifications', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
     const { queryByTestId } = renderWithTheme(<AbuseTicketBanner />);

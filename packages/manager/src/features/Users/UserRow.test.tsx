@@ -3,7 +3,7 @@ import React from 'react';
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantsFactory } from 'src/factories/grants';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -55,15 +55,13 @@ describe('UserRow', () => {
     server.use(
       // Mock the grants of the additional user on the parent account.
       http.get('*/account/users/*/grants', () => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: true } })
-          )
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: true } })
         );
       }),
       // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ user_type: 'parent' })));
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
       })
     );
 
@@ -82,15 +80,13 @@ describe('UserRow', () => {
     server.use(
       // Mock the grants of the additional user on the parent account.
       http.get('*/account/users/*/grants', () => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: false } })
-          )
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: false } })
         );
       }),
       // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ user_type: 'parent' })));
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
       })
     );
 
@@ -109,15 +105,15 @@ describe('UserRow', () => {
     server.use(
       // Mock the grants of the additional user on the parent account.
       http.get('*/account/users/*/grants', () => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: true } })
-          )
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: true } })
         );
       }),
       // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ user_type: 'default' })));
+        return HttpResponse.json(
+          profileFactory.build({ user_type: 'default' })
+        );
       })
     );
 
@@ -144,7 +140,7 @@ describe('UserRow', () => {
     server.use(
       // Mock the active profile for the child account.
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ user_type: 'child' })));
+        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
       })
     );
 
@@ -176,7 +172,7 @@ describe('UserRow', () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ timezone: 'utc' })));
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       })
     );
 
@@ -199,7 +195,7 @@ describe('UserRow', () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ timezone: 'utc' })));
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       })
     );
 
