@@ -7,10 +7,12 @@ import { Typography } from 'src/components/Typography';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-export const Distribution = () => {
+export const Distributions = () => {
   const { field, fieldState } = useController<CreateLinodeRequest>({
     name: 'image',
   });
+
+  console.log("distros re-rendered")
 
   return (
     <Paper>
@@ -19,6 +21,7 @@ export const Distribution = () => {
         errorText={fieldState.error?.message}
         onChange={(_, image) => field.onChange(image?.id)}
         value={field.value}
+        variant="public"
       />
     </Paper>
   );

@@ -15,7 +15,8 @@ import { Error } from './Error';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
-import { Distribution } from './tabs/Distribution';
+import { Distributions } from './tabs/Distributions';
+import { Images } from './tabs/Images';
 import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -55,7 +56,7 @@ export const LinodeCreatev2 = () => {
         title="Create"
       />
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Stack gap={2}>
+        <Stack gap={3}>
           <Error />
           <Tabs
             index={currentTabIndex}
@@ -71,11 +72,13 @@ export const LinodeCreatev2 = () => {
             </TabList>
             <TabPanels>
               <SafeTabPanel index={0}>
-                <Distribution />
+                <Distributions />
               </SafeTabPanel>
               <SafeTabPanel index={1}>Marketplace</SafeTabPanel>
               <SafeTabPanel index={2}>StackScripts</SafeTabPanel>
-              <SafeTabPanel index={3}>Images</SafeTabPanel>
+              <SafeTabPanel index={3}>
+                <Images />
+              </SafeTabPanel>
               <SafeTabPanel index={4}>Bckups</SafeTabPanel>
               <SafeTabPanel index={5}>Clone Linode</SafeTabPanel>
             </TabPanels>
