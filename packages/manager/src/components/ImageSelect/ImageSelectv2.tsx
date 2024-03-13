@@ -33,6 +33,7 @@ export const ImageSelectv2 = (props: Props) => {
         <ImageOptionv2
           image={option}
           isSelected={state.selected}
+          key={option.id}
           listItemProps={props}
         />
       )}
