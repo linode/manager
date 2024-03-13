@@ -915,6 +915,23 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*object-storage/buckets/*/*/access', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(
+      ctx.json({
+        acl: 'private',
+        acl_xml:
+          '<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>',
+        cors_enabled: true,
+        cors_xml:
+          '<CORSConfiguration><CORSRule><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>DELETE</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedMethod>POST</AllowedMethod><AllowedOrigin>*</AllowedOrigin><AllowedHeader>*</AllowedHeader></CORSRule></CORSConfiguration>',
+      })
+    );
+  }),
+  rest.put('*object-storage/buckets/*/*/access', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
   rest.get('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
     await sleep(2000);
     return res(ctx.json({ ssl: false }));
@@ -924,6 +941,10 @@ export const handlers = [
     return res(ctx.json({ ssl: true }));
   }),
   rest.delete('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.delete('*object-storage/buckets/*/*', async (req, res, ctx) => {
     await sleep(2000);
     return res(ctx.json({}));
   }),
@@ -980,6 +1001,8 @@ export const handlers = [
 
     const buckets = objectStorageBucketFactory.buildList(1, {
       cluster: `${region}-1`,
+      hostname: `obj-bucket-1.${region}.linodeobjects.com`,
+      label: `obj-bucket-1`,
       region,
     });
 
