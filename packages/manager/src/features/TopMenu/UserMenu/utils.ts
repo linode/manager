@@ -25,9 +25,11 @@ export const getCompanyNameOrEmail = ({
   }
 
   // For parent users lacking `account_access`: without a company name to identify an account, fall back on the email.
-  // In all other parent/child/proxy cases, company will be available, as it is a required field.
+  // We do not need to do this for child users lacking `account_access` because we do not need to display the email.
   if (isParentUser && !company) {
     return profile.email;
   }
+
+  // In all other parent/child/proxy cases, company will be available, as it is a required field.
   return company;
 };

@@ -36,6 +36,21 @@ describe('getCompanyNameOrEmail', () => {
     expect(actual).toEqual(expected);
   });
 
+  it("returns undefined for a child user who does not have (access to) a company name, since we don't need to display it", async () => {
+    const childEmail = 'child@email.com';
+
+    const actual = getCompanyNameOrEmail({
+      company: undefined,
+      isParentChildFeatureEnabled: true,
+      profile: profileFactory.build({
+        email: childEmail,
+        user_type: 'child',
+      }),
+    });
+    const expected = undefined;
+    expect(actual).toEqual(expected);
+  });
+
   it('returns undefined for the company/email of a regular (default) user', async () => {
     const actual = getCompanyNameOrEmail({
       company: MOCK_COMPANY_NAME,
