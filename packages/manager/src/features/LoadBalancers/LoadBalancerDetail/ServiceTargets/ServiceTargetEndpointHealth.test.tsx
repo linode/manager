@@ -4,7 +4,7 @@ import {
   endpointHealthFactory,
   serviceTargetsEndpointHealthFactory,
 } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ServiceTargetEndpontHeath } from './ServiceTargetEndpointHealth';
@@ -14,9 +14,9 @@ describe('ServiceTargetEndpontHeath', () => {
     const serviceTargetId = 1;
 
     server.use(
-      rest.get(
+      http.get(
         '*/v4beta/aclb/:id/service-targets/endpoints-health',
-        (req, res, ctx) => {
+        () => {
           const health = serviceTargetsEndpointHealthFactory.build({
             service_targets: [
               endpointHealthFactory.build({
@@ -26,7 +26,7 @@ describe('ServiceTargetEndpontHeath', () => {
               }),
             ],
           });
-          return res(ctx.json(health));
+          return HttpResponse.json((health));
         }
       )
     );

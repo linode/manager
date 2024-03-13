@@ -5,7 +5,7 @@ import { Router } from 'react-router-dom';
 
 import { databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { mockMatchMedia } from 'src/utilities/testHelpers';
 
@@ -50,7 +50,7 @@ describe('Database Create', () => {
       class: 'dedicated',
     });
     server.use(
-      rest.get('*/databases/types', (req, res, ctx) => {
+      http.get('*/databases/types', () => {
         return res(
           ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
         );

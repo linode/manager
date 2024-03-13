@@ -2,7 +2,7 @@ import React from 'react';
 
 import { linodeDiskFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateDiskDrawer } from './CreateDiskDrawer';
@@ -10,13 +10,13 @@ import { CreateDiskDrawer } from './CreateDiskDrawer';
 describe('CreateDiskDrawer', () => {
   it('should render', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(linodeFactory.build({ id: 1, specs: { disk: 1024 } }))
         );
       }),
-      rest.get('*/linode/instances/1/disks', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/linode/instances/1/disks', () => {
+        return HttpResponse.json((makeResourcePage([])));
       })
     );
 
@@ -41,15 +41,14 @@ describe('CreateDiskDrawer', () => {
   });
   it('should correctly calculate the max size depending on API data', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(linodeFactory.build({ id: 1, specs: { disk: 1024 } }))
         );
       }),
-      rest.get('*/linode/instances/1/disks', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
+      http.get('*/linode/instances/1/disks', () => {
+        return HttpResponse.json(
+        makeResourcePage(
               linodeDiskFactory.buildList(1, { id: 1, size: 24 })
             )
           )

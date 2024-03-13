@@ -8,7 +8,7 @@ import {
   regionFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
@@ -23,25 +23,23 @@ vi.mock('src/components/EnhancedSelect/Select');
 describe('CreateBucketDrawer', () => {
   it.skip('Should show a general error notice if the API returns one', async () => {
     server.use(
-      rest.post('*/object-storage/buckets', (req, res, ctx) => {
+      rest.post('*/object-storage/buckets', () => {
         return res(
           ctx.status(500),
           ctx.json({ errors: [{ reason: 'Object Storage is offline!' }] })
         );
       }),
-      rest.get('*/regions', async (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
+      http.get('*/regions', async () => {
+        return HttpResponse.json(
+        makeResourcePage(
               regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' })
             )
           )
         );
       }),
-      rest.get('*object-storage/clusters', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
+      http.get('*object-storage/clusters', () => {
+        return HttpResponse.json(
+        makeResourcePage(
               objectStorageClusterFactory.buildList(1, {
                 id: 'us-east-1',
                 region: 'us-east',
@@ -50,7 +48,7 @@ describe('CreateBucketDrawer', () => {
           )
         );
       }),
-      rest.get('*/account/settings', (req, res, ctx) => {
+      http.get('*/account/settings', () => {
         return res(
           ctx.json(accountSettingsFactory.build({ object_storage: 'active' }))
         );

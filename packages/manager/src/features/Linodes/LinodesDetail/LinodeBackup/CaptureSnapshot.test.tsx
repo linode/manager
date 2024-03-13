@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories/linodes';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CaptureSnapshot } from './CaptureSnapshot';
@@ -10,7 +10,7 @@ import { CaptureSnapshot } from './CaptureSnapshot';
 describe('CaptureSnapshot', () => {
   it('renders heading and copy', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
@@ -28,7 +28,7 @@ describe('CaptureSnapshot', () => {
   });
   it('a confirmation dialog should open when you attempt to take a snapshot', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
+      http.get('*/linode/instances/1', () => {
         return res(
           ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );

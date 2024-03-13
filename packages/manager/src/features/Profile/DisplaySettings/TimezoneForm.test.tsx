@@ -2,7 +2,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse,  server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -14,7 +14,7 @@ describe('Timezone change form', () => {
   // Use the MSW to mock a profile with America/New_York as the timezone
   // for this specific suite of tests
   server.use(
-    rest.get('*/profile', (req, res, ctx) => {
+    http.get('*/profile', () => {
       return res(
         ctx.json(profileFactory.build({ timezone: 'America/New_York' }))
       );

@@ -921,7 +921,7 @@ export const handlers = [
     });
     return new Response(JSON.stringify(firewall));
   }),
-  // http.post('*/account/agreements', (req, res, ctx) => {
+  // http.post('*/account/agreements', () => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
   http.post('*/v4beta/networking/firewalls', async ({ request }) => {
