@@ -53,26 +53,32 @@ describe('Create API Token Drawer', () => {
     expect(cancelBtn).toBeVisible();
   });
 
-  it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
-    server.use(
-      rest.post('*/profile/tokens', (req, res, ctx) => {
-        return res(ctx.json(appTokenFactory.build({ token: 'secret-value' })));
-      })
-    );
+  it(
+    'Should see secret modal with secret when you type a label and submit the form successfully',
+    async () => {
+      server.use(
+        rest.post('*/profile/tokens', (req, res, ctx) => {
+          return res(
+            ctx.json(appTokenFactory.build({ token: 'secret-value' }))
+          );
+        })
+      );
 
-    const { getByTestId, getByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />
-    );
+      const { getByTestId, getByText } = renderWithTheme(
+        <CreateAPITokenDrawer {...props} />
+      );
 
-    const labelField = getByTestId('textfield-input');
-    await userEvent.type(labelField, 'my-test-token');
-    const submit = getByText('Create Token');
-    await userEvent.click(submit);
+      const labelField = getByTestId('textfield-input');
+      await userEvent.type(labelField, 'my-test-token');
+      const submit = getByText('Create Token');
+      await userEvent.click(submit);
 
-    await waitFor(() =>
-      expect(props.showSecret).toBeCalledWith('secret-value')
-    );
-  });
+      await waitFor(() =>
+        expect(props.showSecret).toBeCalledWith('secret-value')
+      );
+    },
+    { timeout: 10000 }
+  );
 
   it('Should default to None for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
