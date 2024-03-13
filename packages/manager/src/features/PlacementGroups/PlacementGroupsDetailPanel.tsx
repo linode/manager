@@ -10,7 +10,10 @@ import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/Plac
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
-import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
+import {
+  hasPlacementGroupReachedCapacity,
+  hasRegionReachedPlacementGroupCapacity,
+} from 'src/features/PlacementGroups/utils';
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 
@@ -18,7 +21,10 @@ import type { PlacementGroup } from '@linode/api-v4';
 import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 
 interface Props {
-  placementGroupsSelectProps: PlacementGroupsSelectProps;
+  placementGroupsSelectProps: Pick<
+    PlacementGroupsSelectProps,
+    'handlePlacementGroupChange' | 'selectedRegionId'
+  >;
 }
 
 const tooltipText = `
@@ -37,6 +43,9 @@ export const PlacementGroupsDetailPanel = ({
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+    PlacementGroup | undefined
+  >();
 
   const selectedRegion = regions?.find(
     (thisRegion) => thisRegion.id === selectedRegionId
@@ -49,8 +58,13 @@ export const PlacementGroupsDetailPanel = ({
   const handlePlacementGroupChange =
     placementGroupsSelectProps.handlePlacementGroupChange;
 
-  const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
+  const onPlacementGroupSelectChange = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     handlePlacementGroupChange(placementGroup);
+  };
+
+  const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
+    onPlacementGroupSelectChange(placementGroup);
   };
 
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
@@ -58,6 +72,17 @@ export const PlacementGroupsDetailPanel = ({
   );
   const isPlacementGroupSelectDisabled =
     !selectedRegionId || !hasRegionPlacementGroupCapability;
+
+  const errorText = hasPlacementGroupReachedCapacity({
+    placementGroup: selectedPlacementGroup,
+    region: selectedRegion,
+  })
+    ? "This Placement Group doesn't have any capacity"
+    : undefined;
+
+  const placementGroupSelectLabel = selectedRegion
+    ? `Placement Groups in ${selectedRegion.label} (${selectedRegion.id})`
+    : 'Placement Group';
 
   return (
     <>
@@ -105,14 +130,17 @@ export const PlacementGroupsDetailPanel = ({
           <PlacementGroupsSelect
             {...placementGroupsSelectProps}
             handlePlacementGroupChange={(placementGroup) => {
-              handlePlacementGroupChange(placementGroup);
+              onPlacementGroupSelectChange(placementGroup);
             }}
             sx={{
               mb: 1,
               width: '100%',
             }}
             disabled={isPlacementGroupSelectDisabled}
+            errorText={errorText}
             key={selectedRegion?.id}
+            label={placementGroupSelectLabel}
+            noOptionsMessage="There are no Placement Groups in this region"
             textFieldProps={{ tooltipText }}
           />
           {selectedRegion && hasRegionPlacementGroupCapability && (
