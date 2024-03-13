@@ -106,7 +106,6 @@ export const MultipleIPInput = React.memo((props: Props) => {
     idx: number
   ) => {
     if (!onBlur || e.target.value === '') {
-      // If onBlur is not provided or the input value is an empty string, exit the function early
       return;
     }
 
