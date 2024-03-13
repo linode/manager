@@ -27,6 +27,8 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
+import { getCompanyNameOrEmail } from './utils';
+
 interface MenuLink {
   display: string;
   hide?: boolean;
@@ -81,14 +83,11 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
-  // If there is no company name to identify an account, fall back on the email.
-  // Covers an edge case in which a restricted parent user without `account_access` cannot access the account company.
-  const companyNameOrEmail =
-    hasParentChildAccountAccess &&
-    profile?.user_type !== 'default' &&
-    account?.company
-      ? account.company
-      : profile?.email;
+  const companyNameOrEmail = getCompanyNameOrEmail({
+    company: account?.company,
+    isParentChildFeatureEnabled: hasParentChildAccountAccess,
+    profile,
+  });
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
