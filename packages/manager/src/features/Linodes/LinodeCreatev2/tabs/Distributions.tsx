@@ -12,8 +12,6 @@ export const Distributions = () => {
     name: 'image',
   });
 
-  console.log("distros re-rendered")
-
   return (
     <Paper>
       <Typography variant="h2">Choose a Distribution</Typography>

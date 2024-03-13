@@ -11,8 +11,6 @@ export const Region = () => {
     name: 'region',
   });
 
-  console.log("Regions rerendered")
-
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
@@ -22,7 +20,7 @@ export const Region = () => {
       currentCapability="Linodes"
       disabled={isLinodeCreateRestricted}
       error={formState.errors.region?.message}
-      handleSelection={(id) => field.onChange(id)}
+      handleSelection={field.onChange}
       selectedId={field.value}
     />
   );

@@ -12,8 +12,6 @@ export const Images = () => {
     name: 'image',
   });
 
-  console.log("Images re-rendered")
-
   return (
     <Paper>
       <Typography variant="h2">Choose an Image</Typography>
