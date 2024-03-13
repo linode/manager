@@ -49,7 +49,6 @@ import {
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -326,34 +325,12 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
-    {
-      /* TODO VM_Placement: Refactor this into a util method */
-    }
-    const regionLabel = regionsData?.find((r) => r.id === selectedRegionID)
-      ?.label;
-    let placementGroupsLabel;
-    if (selectedRegionID && regionLabel) {
-      placementGroupsLabel = `Placement Groups in ${regionLabel} (${selectedRegionID})`;
-    } else {
-      placementGroupsLabel = 'Placement Group';
-    }
-
     const tagsInputProps = {
       disabled: userCannotCreateLinode,
       onChange: updateTags,
       tagError: hasErrorFor.tags,
       value: tags || [],
     };
-
-    let errorText;
-    if (
-      hasPlacementGroupReachedCapacity({
-        placementGroup: placementGroupSelection!,
-        region: regionsData.find((r) => r.id === selectedRegionID)!,
-      })
-    ) {
-      errorText = `This Placement Group doesn't have any capacity`;
-    }
 
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
@@ -673,10 +650,7 @@ export class LinodeCreate extends React.PureComponent<
               value: label || '',
             }}
             placementGroupsSelectProps={{
-              errorText,
               handlePlacementGroupChange,
-              label: placementGroupsLabel,
-              noOptionsMessage: 'There are no Placement Groups in this region',
               selectedRegionId: selectedRegionID,
             }}
             tagsInputProps={

@@ -14,7 +14,10 @@ import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsS
 interface DetailsPanelProps {
   error?: string;
   labelFieldProps?: TextFieldProps;
-  placementGroupsSelectProps: PlacementGroupsSelectProps;
+  placementGroupsSelectProps: Pick<
+    PlacementGroupsSelectProps,
+    'handlePlacementGroupChange' | 'selectedRegionId'
+  >;
   tagsInputProps?: TagsInputProps;
 }
 

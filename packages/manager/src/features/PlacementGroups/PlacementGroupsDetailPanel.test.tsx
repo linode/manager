@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { regionFactory } from 'src/factories';
+import { placementGroupFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
@@ -49,19 +49,14 @@ describe('PlacementGroupsDetailPanel', () => {
           id: 'ca-central',
           maximum_vms_per_pg: 1,
         }),
-        regionFactory.build({ id: 'us-west' }),
-      ],
-    });
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
-      data: [
-        {
-          affinity_type: 'affinity',
-          id: 1,
-          is_compliant: true,
-          is_strict: true,
-          label: 'my-placement-group',
-          region: 'ca-central',
-        },
+        regionFactory.build({
+          capabilities: ['Placement Group'],
+          id: 'us-west',
+          maximum_pgs_per_customer: 1,
+        }),
+        regionFactory.build({
+          id: 'us-southeast',
+        }),
       ],
     });
   });
@@ -100,7 +95,7 @@ describe('PlacementGroupsDetailPanel', () => {
       <PlacementGroupsDetailPanel
         placementGroupsSelectProps={{
           ...placementGroupsSelectProps,
-          selectedRegionId: 'us-west',
+          selectedRegionId: 'us-southeast',
         }}
       />
     );
@@ -114,20 +109,61 @@ describe('PlacementGroupsDetailPanel', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should have an error message if the PG has reached capacity', async () => {
+  it('should have its PG select enabled and Create Placement Group button disabled if the region has reached its PG capacity', () => {
     queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
       data: [
-        {
+        placementGroupFactory.build({
           affinity_type: 'affinity',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          region: 'ca-central',
-        },
+          linodes: [
+            {
+              is_compliant: true,
+              linode: 1,
+            },
+          ],
+          region: 'us-west',
+        }),
       ],
     });
 
+    const { getByPlaceholderText, getByRole } = renderWithTheme(
+      <PlacementGroupsDetailPanel
+        placementGroupsSelectProps={{
+          ...placementGroupsSelectProps,
+          selectedRegionId: 'us-west',
+        }}
+      />
+    );
+
+    const select = getByPlaceholderText('Select a Placement Group');
+    expect(select).toBeEnabled();
+    expect(
+      getByRole('button', { name: /create placement group/i })
+    ).toBeDisabled();
+  });
+
+  it('should have an error message if the PG has reached capacity', async () => {
+    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+      data: [
+        placementGroupFactory.build({
+          affinity_type: 'affinity',
+          id: 1,
+          is_compliant: true,
+          is_strict: true,
+          label: 'my-placement-group',
+          linodes: [
+            {
+              is_compliant: true,
+              linode: 1,
+            },
+          ],
+          region: 'ca-central',
+        }),
+      ],
+    });
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsDetailPanel
         placementGroupsSelectProps={{
@@ -141,19 +177,16 @@ describe('PlacementGroupsDetailPanel', () => {
     expect(select).toBeEnabled();
 
     fireEvent.focus(select);
-
     fireEvent.change(select, {
       target: { value: 'my-placement-group (Affinity)' },
     });
 
-    await waitFor(() => {
-      const selectedRegionOption = getByText('my-placement-group (Affinity)');
-      fireEvent.click(selectedRegionOption);
-    });
+    const selectedRegionOption = getByText('my-placement-group (Affinity)');
+    fireEvent.click(selectedRegionOption);
 
     await waitFor(() => {
       expect(
-        getByText("This Placement Group doesn't have any capacity.")
+        getByText("This Placement Group doesn't have any capacity")
       ).toBeInTheDocument();
     });
   });
