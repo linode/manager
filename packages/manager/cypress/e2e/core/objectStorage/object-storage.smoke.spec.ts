@@ -68,11 +68,9 @@ describe('object storage smoke tests', () => {
     cy.visitWithLogin('/object-storage');
     cy.wait(['@getRegions', '@getBuckets']);
 
-    ui.button
-      .findByTitle('Create Bucket')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    ui.entityHeader.find().within(() => {
+      ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
