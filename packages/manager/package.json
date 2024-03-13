@@ -48,6 +48,7 @@
     "luxon": "3.4.4",
     "markdown-it": "^12.3.2",
     "md5": "^2.2.1",
+    "msw": "^2.2.3",
     "notistack": "^2.0.5",
     "patch-package": "^7.0.0",
     "qrcode.react": "^0.8.0",
