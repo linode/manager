@@ -2,7 +2,7 @@ import React from 'react';
 
 import { linodeDiskFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
@@ -13,12 +13,12 @@ describe('ResizeDiskDrawer', () => {
 
     server.use(
       http.get('*/linode/instances/1', () => {
-        return res(
-          ctx.json(linodeFactory.build({ id: 1, specs: { disk: 1024 } }))
+        return HttpResponse.json(
+          linodeFactory.build({ id: 1, specs: { disk: 1024 } })
         );
       }),
       http.get('*/linode/instances/1/disks', () => {
-        return HttpResponse.json((makeResourcePage([disk])));
+        return HttpResponse.json(makeResourcePage([disk]));
       })
     );
 
@@ -48,17 +48,16 @@ describe('ResizeDiskDrawer', () => {
 
     server.use(
       http.get('*/linode/instances/1', () => {
-        return res(
-          ctx.json(linodeFactory.build({ id: 1, specs: { disk: 12 } }))
+        return HttpResponse.json(
+          linodeFactory.build({ id: 1, specs: { disk: 12 } })
         );
       }),
       http.get('*/linode/instances/1/disks', () => {
         return HttpResponse.json(
-        makeResourcePage([
-              diskToResize,
-              ...linodeDiskFactory.buildList(3, { size: 3 }),
-            ])
-          )
+          makeResourcePage([
+            diskToResize,
+            ...linodeDiskFactory.buildList(3, { size: 3 }),
+          ])
         );
       })
     );
