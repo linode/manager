@@ -145,7 +145,9 @@ describe('UserMenu', () => {
         );
       }),
       http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
+        return HttpResponse.json(
+          profileFactory.build({ restricted: true, user_type: 'parent' })
+        );
       })
     );
 
