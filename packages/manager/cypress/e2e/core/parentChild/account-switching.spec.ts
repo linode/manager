@@ -140,7 +140,7 @@ describe('Parent/Child account switching', () => {
 
       mockGetAccount(mockChildAccount);
       mockGetProfile(mockChildAccountProfile);
-      mockGetChildAccounts([mockParentAccount]);
+      mockGetChildAccounts([]);
       mockGetUser(mockChildAccountProxyUser);
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
@@ -182,18 +182,32 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetProfile(mockParentProfile);
       mockGetUser(mockParentUser);
-      mockGetPaymentMethods(paymentMethodFactory.buildList(1));
-      mockGetInvoices([]);
-      mockGetPayments([]);
+      mockGetPaymentMethods(paymentMethodFactory.buildList(1)).as(
+        'getPaymentMethods'
+      );
+      mockGetInvoices([]).as('getInvoices');
+      mockGetPayments([]).as('getPayments');
 
       ui.drawer
         .findByTitle('Switch Account')
         .should('be.visible')
         .within(() => {
-          cy.findByText(mockParentAccount.company).should('be.visible').click();
+          cy.findByText('There are no indirect customer accounts.').should(
+            'be.visible'
+          );
+          cy.findByText('switch back to your account')
+            .should('be.visible')
+            .click();
         });
 
-      cy.wait(1000000);
+      // Allow page to load before asserting user menu, ensuring no app crash, etc.
+      cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
+
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockParentAccount.company
+      );
+      assertAuthLocalStorage(mockParentToken, mockParentExpiration, '*');
     });
   });
 
