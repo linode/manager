@@ -297,8 +297,8 @@ export const RebuildFromImage = (props: Props) => {
                 />
                 <StyledActionsPanel
                   primaryButtonProps={{
-                    'data-testid': 'rebuild-button',
                     'data-qa-form-data-loading': isLoading,
+                    'data-testid': 'rebuild-button',
                     disabled: submitButtonDisabled || disabled,
                     label: 'Rebuild Linode',
                     onClick: handleRebuildButtonClick,
