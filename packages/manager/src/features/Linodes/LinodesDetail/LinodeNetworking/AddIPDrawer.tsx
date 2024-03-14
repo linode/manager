@@ -182,7 +182,7 @@ export const AddIPDrawer = (props: Props) => {
           {linodeIsInEdgeRegion && (
             <Notice
               sx={{ fontSize: 15 }}
-              text="Private IP is currently not available for Edge regions"
+              text="Private IP is currently not available for Edge regions."
               variant="warning"
             />
           )}
