@@ -8,7 +8,7 @@ import {
   VolumeStatus,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
@@ -205,10 +205,8 @@ const databases = [
     const premiumTypes = databaseTypeFactory.buildList(7, {
       class: 'premium',
     });
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
-      )
+    return HttpResponse.json(
+      makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
     );
   }),
 
@@ -252,34 +250,28 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/credentials', () => {
-    return new Response(
-      JSON.stringify({
-        password: 'password123',
-        username: 'lnroot',
-      })
-    );
+    return HttpResponse.json({
+      password: 'password123',
+      username: 'lnroot',
+    });
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/ssl', () => {
-    return new Response(
-      JSON.stringify({
-        certificate: 'testcertificate',
-        public_key: 'testkey',
-      })
-    );
+    return HttpResponse.json({
+      certificate: 'testcertificate',
+      public_key: 'testkey',
+    });
   }),
 
   http.post('*/databases/:engine/instances', async ({ params, request }) => {
     const body = await request.json();
     const payload: any = body;
-    return new Response(
-      JSON.stringify({
-        ...databaseFactory.build({
-          engine: params.engine as 'mysql',
-          label: payload?.label ?? 'Database',
-        }),
-      })
-    );
+    return HttpResponse.json({
+      ...databaseFactory.build({
+        engine: params.engine as 'mysql',
+        label: payload?.label ?? 'Database',
+      }),
+    });
   }),
 
   http.post(
@@ -302,9 +294,7 @@ const databases = [
       const reqBody = await request.json();
       const id = Number(params.databaseId);
       const body = reqBody as any;
-      return new Response(
-        JSON.stringify({ ...databaseFactory.build({ id }), ...body })
-      );
+      return HttpResponse.json({ ...databaseFactory.build({ id }), ...body });
     }
   ),
 
@@ -355,9 +345,7 @@ const aclb = [
       const reqBody = await request.json();
       const id = Number(params.configId);
       const body = reqBody as any;
-      return new Response(
-        JSON.stringify(configurationFactory.build({ id, ...body }))
-      );
+      return HttpResponse.json(configurationFactory.build({ id, ...body }));
     }
   ),
   http.delete('*/v4beta/aclb/:id/configurations/:configId', () => {
@@ -365,18 +353,16 @@ const aclb = [
   }),
   // Load Balancers
   http.get('*/v4beta/aclb', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(loadbalancerFactory.buildList(3)))
+    return HttpResponse.json(
+      makeResourcePage(loadbalancerFactory.buildList(3))
     );
   }),
   http.get('*/v4beta/aclb/:loadbalancerId', ({ params }) => {
-    return new Response(
-      JSON.stringify(
-        loadbalancerFactory.build({
-          id: Number(params.loadbalancerId),
-          label: `aclb-${params.loadbalancerId}`,
-        })
-      )
+    return HttpResponse.json(
+      loadbalancerFactory.build({
+        id: Number(params.loadbalancerId),
+        label: `aclb-${params.loadbalancerId}`,
+      })
     );
   }),
   http.post('*/v4beta/aclb', () => {
@@ -389,9 +375,7 @@ const aclb = [
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
     // TODO: ACLB - figure out if this is still accurate
-    return new Response(
-      JSON.stringify(loadbalancerFactory.build({ id, ...body }))
-    );
+    return HttpResponse.json(loadbalancerFactory.build({ id, ...body }));
   }),
   http.delete('*/v4beta/aclb/:id', () => {
     return HttpResponse.json({});
@@ -400,15 +384,11 @@ const aclb = [
   http.get('*/v4beta/aclb/:id/routes', ({ request }) => {
     const headers = JSON.parse(request.headers.get('x-filter') || '{}');
     if (headers['+or']) {
-      return new Response(
-        JSON.stringify(
-          makeResourcePage(routeFactory.buildList(headers['+or'].length))
-        )
+      return HttpResponse.json(
+        makeResourcePage(routeFactory.buildList(headers['+or'].length))
       );
     }
-    return new Response(
-      JSON.stringify(makeResourcePage(routeFactory.buildList(5)))
-    );
+    return HttpResponse.json(makeResourcePage(routeFactory.buildList(5)));
   }),
   http.post('*/v4beta/aclb/:id/routes', () => {
     return HttpResponse.json(createRouteFactory.buildList(4));
@@ -417,17 +397,15 @@ const aclb = [
     const reqBody = await request.json();
     const id = Number(params.routeId);
     const body = reqBody as any;
-    return new Response(
-      JSON.stringify(createRouteFactory.build({ id, ...body }))
-    );
+    return HttpResponse.json(createRouteFactory.build({ id, ...body }));
   }),
   http.delete('*/v4beta/aclb/:id/routes/:routeId', () => {
     return HttpResponse.json({});
   }),
   // Service Targets
   http.get('*/v4beta/aclb/:id/service-targets', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(serviceTargetFactory.buildList(5)))
+    return HttpResponse.json(
+      makeResourcePage(serviceTargetFactory.buildList(5))
     );
   }),
   http.post('*/v4beta/aclb/:id/service-targets', () => {
@@ -439,8 +417,8 @@ const aclb = [
       const reqBody = await request.json();
       const id = Number(params.serviceTargetId);
       const body = reqBody as any;
-      return new Response(
-        JSON.stringify(createServiceTargetFactory.build({ id, ...body }))
+      return HttpResponse.json(
+        createServiceTargetFactory.build({ id, ...body })
       );
     }
   ),
@@ -454,8 +432,8 @@ const aclb = [
       type: 'downstream',
     });
     const certificates = certificateFactory.buildList(3);
-    return new Response(
-      JSON.stringify(makeResourcePage([tlsCertificate, ...certificates]))
+    return HttpResponse.json(
+      makeResourcePage([tlsCertificate, ...certificates])
     );
   }),
   http.get(
@@ -464,9 +442,7 @@ const aclb = [
       const reqBody = await request.json();
       const id = Number(params.certId);
       const body = reqBody as any;
-      return new Response(
-        JSON.stringify(certificateFactory.build({ id, ...body }))
-      );
+      return HttpResponse.json(certificateFactory.build({ id, ...body }));
     }
   ),
   http.post('*/v4beta/aclb/:id/certificates', () => {
@@ -478,9 +454,7 @@ const aclb = [
       const reqBody = await request.json();
       const id = Number(params.certId);
       const body = reqBody as any;
-      return new Response(
-        JSON.stringify(certificateFactory.build({ id, ...body }))
-      );
+      return HttpResponse.json(certificateFactory.build({ id, ...body }));
     }
   ),
   http.delete('*/v4beta/aclb/:id/certificates/:certId', () => {
@@ -498,30 +472,24 @@ const vpc = [
       subnets: subnetFactory.buildList(Math.floor(Math.random() * 20) + 1),
     });
     const vpcsWithoutSubnet = vpcFactory.buildList(20);
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          ...vpcsWithSubnet1,
-          ...vpcsWithSubnet2,
-          ...vpcsWithoutSubnet,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        ...vpcsWithSubnet1,
+        ...vpcsWithSubnet2,
+        ...vpcsWithoutSubnet,
+      ])
     );
   }),
   http.get('*/v4beta/vpcs/:vpcId', () => {
-    return new Response(
-      JSON.stringify(
-        vpcFactory.build({
-          description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver VPC for webserver VPC for webserver VPC for webserver VPC for webserver.VPC for webserver and database!!! VPC`,
-          subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
-        })
-      )
+    return HttpResponse.json(
+      vpcFactory.build({
+        description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver VPC for webserver VPC for webserver VPC for webserver VPC for webserver.VPC for webserver and database!!! VPC`,
+        subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
+      })
     );
   }),
   http.get('*/v4beta/vpcs/:vpcId/subnets', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(subnetFactory.buildList(30)))
-    );
+    return HttpResponse.json(makeResourcePage(subnetFactory.buildList(30)));
   }),
   http.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', () => {
     return HttpResponse.json({});
@@ -530,9 +498,7 @@ const vpc = [
     return HttpResponse.json({});
   }),
   http.put('*/v4beta/vpcs/:vpcId', () => {
-    return new Response(
-      JSON.stringify(vpcFactory.build({ description: 'testing' }))
-    );
+    return HttpResponse.json(vpcFactory.build({ description: 'testing' }));
   }),
   http.get('*/v4beta/vpcs/:vpcID', ({ params }) => {
     const id = Number(params.id);
@@ -595,9 +561,7 @@ export const handlers = [
   http.put('*/profile', async ({ request }) => {
     const body = await request.json();
 
-    return new Response(
-      JSON.stringify({ ...profileFactory.build(), ...(body as any) })
-    );
+    return HttpResponse.json({ ...profileFactory.build(), ...(body as any) });
   }),
   http.get('*/profile/grants', () => {
     return HttpResponse.json(grantsFactory.build());
@@ -677,21 +641,17 @@ export const handlers = [
   }),
 
   http.get('*/linode/types', () => {
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          nanodeType,
-          ...standardTypes,
-          ...dedicatedTypes,
-          proDedicatedType,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        nanodeType,
+        ...standardTypes,
+        ...dedicatedTypes,
+        proDedicatedType,
+      ])
     );
   }),
   http.get('*/linode/types-legacy', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(linodeTypeFactory.buildList(0)))
-    );
+    return HttpResponse.json(makeResourcePage(linodeTypeFactory.buildList(0)));
   }),
   ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
     (type) =>
@@ -803,15 +763,13 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    return new Response(
-      JSON.stringify(
-        linodeFactory.build({
-          backups: { enabled: false },
-          id,
-          label: 'Gecko Edge Test',
-          region: 'us-edge-1',
-        })
-      )
+    return HttpResponse.json(
+      linodeFactory.build({
+        backups: { enabled: false },
+        id,
+        label: 'Gecko Edge Test',
+        region: 'us-edge-1',
+      })
     );
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
@@ -957,16 +915,14 @@ export const handlers = [
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
-    return new Response(
-      JSON.stringify({
-        acl: 'private',
-        acl_xml:
-          '<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>',
-        cors_enabled: true,
-        cors_xml:
-          '<CORSConfiguration><CORSRule><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>DELETE</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedMethod>POST</AllowedMethod><AllowedOrigin>*</AllowedOrigin><AllowedHeader>*</AllowedHeader></CORSRule></CORSConfiguration>',
-      })
-    );
+    return HttpResponse.json({
+      acl: 'private',
+      acl_xml:
+        '<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>',
+      cors_enabled: true,
+      cors_xml:
+        '<CORSConfiguration><CORSRule><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>DELETE</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedMethod>POST</AllowedMethod><AllowedOrigin>*</AllowedOrigin><AllowedHeader>*</AllowedHeader></CORSRule></CORSConfiguration>',
+    });
   }),
 
   http.put('*object-storage/buckets/*/*/access', async () => {
@@ -1000,13 +956,11 @@ export const handlers = [
       const is_truncated = staticObjects.length > pageSize;
 
       const page = staticObjects.slice(0, end);
-      return new Response(
-        JSON.stringify(
-          makeObjectsPage(page, {
-            is_truncated,
-            next_marker: is_truncated ? staticObjects[pageSize].name : null,
-          })
-        )
+      return HttpResponse.json(
+        makeObjectsPage(page, {
+          is_truncated,
+          next_marker: is_truncated ? staticObjects[pageSize].name : null,
+        })
       );
     }
     const index = staticObjects.findIndex((object) => object.name == marker);
@@ -1022,13 +976,11 @@ export const handlers = [
       page[page.length - 1].name !=
       staticObjects[staticObjects.length - 1].name;
 
-    return new Response(
-      JSON.stringify(
-        makeObjectsPage(page, {
-          is_truncated,
-          next_marker: is_truncated ? staticObjects[end].name : null,
-        })
-      )
+    return HttpResponse.json(
+      makeObjectsPage(page, {
+        is_truncated,
+        next_marker: is_truncated ? staticObjects[end].name : null,
+      })
     );
   }),
   http.get('*/object-storage/buckets/:region', ({ params, request }) => {
@@ -1047,17 +999,15 @@ export const handlers = [
       region,
     });
 
-    return new Response(
-      JSON.stringify({
-        data: buckets.slice(
-          (page - 1) * pageSize,
-          (page - 1) * pageSize + pageSize
-        ),
-        page,
-        pages: Math.ceil(buckets.length / pageSize),
-        results: buckets.length,
-      })
-    );
+    return HttpResponse.json({
+      data: buckets.slice(
+        (page - 1) * pageSize,
+        (page - 1) * pageSize + pageSize
+      ),
+      page,
+      pages: Math.ceil(buckets.length / pageSize),
+      results: buckets.length,
+    });
   }),
   http.get('*/object-storage/buckets', () => {
     const buckets = objectStorageBucketFactory.buildList(10);
@@ -1080,66 +1030,62 @@ export const handlers = [
       region: 'us-east',
     });
     const clusters = objectStorageClusterFactory.buildList(3);
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          jakartaCluster,
-          saoPauloCluster,
-          basePricingCluster,
-          ...clusters,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        jakartaCluster,
+        saoPauloCluster,
+        basePricingCluster,
+        ...clusters,
+      ])
     );
   }),
 
   http.get('*object-storage/keys', () => {
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          ...objectStorageKeyFactory.buildList(1),
-          ...objectStorageKeyFactory.buildList(1, {
-            regions: [
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
-              { id: 'us-southeast', s3_endpoint: 'us-southeast.com' },
-              { id: 'in-maa', s3_endpoint: 'in-maa.com' },
-              { id: 'us-lax', s3_endpoint: 'us-lax.com' },
-              { id: 'us-mia', s3_endpoint: 'us-mia.com' },
-              { id: 'it-mil', s3_endpoint: 'it-mil.com' },
-            ],
-          }),
-          ...objectStorageKeyFactory.buildList(1, {
-            regions: [
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
-              { id: 'us-southeast', s3_endpoint: 'us-southeast.com' },
-              { id: 'in-maa', s3_endpoint: 'in-maa.com' },
-              { id: 'us-lax', s3_endpoint: 'us-lax.com' },
-            ],
-          }),
-          ...objectStorageKeyFactory.buildList(1, {
-            bucket_access: [
-              {
-                bucket_name: 'test007',
-                cluster: 'us-east-1',
-                permissions: 'read_only',
-                region: 'us-east',
-              },
-              {
-                bucket_name: 'test001',
-                cluster: 'nl-ams-1',
-                permissions: 'read_write',
-                region: 'nl-ams',
-              },
-            ],
-            limited: true,
-            regions: [
-              { id: 'us-east', s3_endpoint: 'us-east.com' },
-              { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
-            ],
-          }),
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        ...objectStorageKeyFactory.buildList(1),
+        ...objectStorageKeyFactory.buildList(1, {
+          regions: [
+            { id: 'us-east', s3_endpoint: 'us-east.com' },
+            { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
+            { id: 'us-southeast', s3_endpoint: 'us-southeast.com' },
+            { id: 'in-maa', s3_endpoint: 'in-maa.com' },
+            { id: 'us-lax', s3_endpoint: 'us-lax.com' },
+            { id: 'us-mia', s3_endpoint: 'us-mia.com' },
+            { id: 'it-mil', s3_endpoint: 'it-mil.com' },
+          ],
+        }),
+        ...objectStorageKeyFactory.buildList(1, {
+          regions: [
+            { id: 'us-east', s3_endpoint: 'us-east.com' },
+            { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
+            { id: 'us-southeast', s3_endpoint: 'us-southeast.com' },
+            { id: 'in-maa', s3_endpoint: 'in-maa.com' },
+            { id: 'us-lax', s3_endpoint: 'us-lax.com' },
+          ],
+        }),
+        ...objectStorageKeyFactory.buildList(1, {
+          bucket_access: [
+            {
+              bucket_name: 'test007',
+              cluster: 'us-east-1',
+              permissions: 'read_only',
+              region: 'us-east',
+            },
+            {
+              bucket_name: 'test001',
+              cluster: 'nl-ams-1',
+              permissions: 'read_write',
+              region: 'nl-ams',
+            },
+          ],
+          limited: true,
+          regions: [
+            { id: 'us-east', s3_endpoint: 'us-east.com' },
+            { id: 'nl-ams', s3_endpoint: 'nl-ams.com' },
+          ],
+        }),
+      ])
     );
   }),
   http.post<any, ObjectStorageKeyRequest>(
@@ -1153,13 +1099,11 @@ export const handlers = [
         s3_endpoint: `${region}.com`,
       }));
 
-      return new Response(
-        JSON.stringify(
-          objectStorageKeyFactory.build({
-            label,
-            regions: regionsData,
-          })
-        )
+      return HttpResponse.json(
+        objectStorageKeyFactory.build({
+          label,
+          regions: regionsData,
+        })
       );
     }
   ),
@@ -1174,13 +1118,11 @@ export const handlers = [
         s3_endpoint: `${region}.com`,
       }));
 
-      return new Response(
-        JSON.stringify(
-          objectStorageKeyFactory.build({
-            label,
-            regions: regionsData,
-          })
-        )
+      return HttpResponse.json(
+        objectStorageKeyFactory.build({
+          label,
+          regions: regionsData,
+        })
       );
     }
   ),
@@ -1199,12 +1141,10 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/regions/*/migration-queue', () => {
-    return new Response(
-      JSON.stringify({
-        linodes: 8,
-        volumes: 953,
-      })
-    );
+    return HttpResponse.json({
+      linodes: 8,
+      volumes: 953,
+    });
   }),
   http.get('*/volumes', () => {
     const statuses: VolumeStatus[] = [
@@ -1226,11 +1166,9 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(vlans));
   }),
   http.get('*/profile/preferences', () => {
-    return new Response(
-      JSON.stringify({
-        theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
-      })
-    );
+    return HttpResponse.json({
+      theme: getStorage(MOCK_THEME_STORAGE_KEY) ?? 'system',
+    });
   }),
   http.get('*/profile/devices', () => {
     return HttpResponse.json(makeResourcePage([]));
@@ -1244,31 +1182,27 @@ export const handlers = [
     return HttpResponse.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' });
   }),
   http.get('*invoices/555/items', () => {
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          invoiceItemFactory.build({
-            label: 'Linode',
-            region: 'br-gru',
-          }),
-          invoiceItemFactory.build({
-            label: 'Outbound Transfer Overage',
-            region: null,
-          }),
-          invoiceItemFactory.build({
-            label: 'Outbound Transfer Overage',
-            region: 'id-cgk',
-          }),
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        invoiceItemFactory.build({
+          label: 'Linode',
+          region: 'br-gru',
+        }),
+        invoiceItemFactory.build({
+          label: 'Outbound Transfer Overage',
+          region: null,
+        }),
+        invoiceItemFactory.build({
+          label: 'Outbound Transfer Overage',
+          region: 'id-cgk',
+        }),
+      ])
     );
   }),
 
   http.get('*invoices/:invoiceId/items', () => {
     const items = invoiceItemFactory.buildList(10);
-    return new Response(
-      JSON.stringify(makeResourcePage(items, { page: 1, pages: 4 }))
-    );
+    return HttpResponse.json(makeResourcePage(items, { page: 1, pages: 4 }));
   }),
   http.get('*/account', () => {
     const account = accountFactory.build({
@@ -1296,10 +1230,8 @@ export const handlers = [
       region: 'ap-northeast',
       unavailable: ['Linodes', 'Block Storage', 'Kubernetes', 'NodeBalancers'],
     });
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([atlanta, newarkStorage, singapore, tokyo])
-      )
+    return HttpResponse.json(
+      makeResourcePage([atlanta, newarkStorage, singapore, tokyo])
     );
   }),
   http.get('*/account/availability/:regionId', () => {
@@ -1307,9 +1239,7 @@ export const handlers = [
   }),
   http.put('*/account', async ({ request }) => {
     const body = await request.json();
-    return new Response(
-      JSON.stringify({ ...accountFactory.build(), ...(body as any) })
-    );
+    return HttpResponse.json({ ...accountFactory.build(), ...(body as any) });
   }),
   http.get('*/account/transfer', () => {
     const transfer = accountTransferFactory.build();
@@ -1320,8 +1250,8 @@ export const handlers = [
       id: 123_456_789_123_456,
     });
     const payments = paymentFactory.buildList(5);
-    return new Response(
-      JSON.stringify(makeResourcePage([paymentWithLargeId, ...payments]))
+    return HttpResponse.json(
+      makeResourcePage([paymentWithLargeId, ...payments])
     );
   }),
   http.get('*/account/invoices', () => {
@@ -1337,10 +1267,8 @@ export const handlers = [
       id: 123_456_789_123_456,
       label: 'Invoice with Large ID',
     });
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([linodeInvoice, akamaiInvoice, invoiceWithLargerId])
-      )
+    return HttpResponse.json(
+      makeResourcePage([linodeInvoice, akamaiInvoice, invoiceWithLargerId])
     );
   }),
   http.get('*/account/invoices/:invoiceId', () => {
@@ -1384,17 +1312,15 @@ export const handlers = [
       if (headers['+order'] == 'desc') {
         accountMaintenance.reverse();
       }
-      return new Response(
-        JSON.stringify({
-          data: accountMaintenance.slice(
-            (page - 1) * pageSize,
-            (page - 1) * pageSize + pageSize
-          ),
-          page,
-          pages: Math.ceil(accountMaintenance.length / pageSize),
-          results: accountMaintenance.length,
-        })
-      );
+      return HttpResponse.json({
+        data: accountMaintenance.slice(
+          (page - 1) * pageSize,
+          (page - 1) * pageSize + pageSize
+        ),
+        page,
+        pages: Math.ceil(accountMaintenance.length / pageSize),
+        results: accountMaintenance.length,
+      });
     }
 
     return HttpResponse.json(makeResourcePage(accountMaintenance));
@@ -1405,17 +1331,15 @@ export const handlers = [
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
     const childAccounts = accountFactory.buildList(100);
-    return new Response(
-      JSON.stringify({
-        data: childAccounts.slice(
-          (page - 1) * pageSize,
-          (page - 1) * pageSize + pageSize
-        ),
-        page,
-        pages: Math.ceil(childAccounts.length / pageSize),
-        results: childAccounts.length,
-      })
-    );
+    return HttpResponse.json({
+      data: childAccounts.slice(
+        (page - 1) * pageSize,
+        (page - 1) * pageSize + pageSize
+      ),
+      page,
+      pages: Math.ceil(childAccounts.length / pageSize),
+      results: childAccounts.length,
+    });
   }),
   http.get('*/account/child-accounts/:euuid', () => {
     const childAccount = accountFactory.buildList(1);
@@ -1487,17 +1411,15 @@ export const handlers = [
       if (headers['+order'] == 'desc') {
         filteredAccountUsers.reverse();
       }
-      return new Response(
-        JSON.stringify({
-          data: filteredAccountUsers.slice(
-            (page - 1) * pageSize,
-            (page - 1) * pageSize + pageSize
-          ),
-          page,
-          pages: Math.ceil(filteredAccountUsers.length / pageSize),
-          results: filteredAccountUsers.length,
-        })
-      );
+      return HttpResponse.json({
+        data: filteredAccountUsers.slice(
+          (page - 1) * pageSize,
+          (page - 1) * pageSize + pageSize
+        ),
+        page,
+        pages: Math.ceil(filteredAccountUsers.length / pageSize),
+        results: filteredAccountUsers.length,
+      });
     }
 
     // Return default response if 'x-filter' header is not present
@@ -1517,9 +1439,7 @@ export const handlers = [
     return HttpResponse.json(parentAccountNonAdminUser);
   }),
   http.get('*/account/users/:user', () => {
-    return new Response(
-      JSON.stringify(accountUserFactory.build({ user_type: 'parent' }))
-    );
+    return HttpResponse.json(accountUserFactory.build({ user_type: 'parent' }));
   }),
   http.put<any, Partial<User>>(
     `*/account/users/${parentAccountNonAdminUser.username}`,
@@ -1533,49 +1453,43 @@ export const handlers = [
     }
   ),
   http.get(`*/account/users/${childAccountUser.username}/grants`, () => {
-    return new Response(
-      JSON.stringify(
-        grantsFactory.build({
-          global: {
-            account_access: 'read_write',
-            cancel_account: false,
-          },
-        })
-      )
+    return HttpResponse.json(
+      grantsFactory.build({
+        global: {
+          account_access: 'read_write',
+          cancel_account: false,
+        },
+      })
     );
   }),
   http.get(`*/account/users/${proxyAccountUser.username}/grants`, () => {
-    return new Response(
-      JSON.stringify(
-        grantsFactory.build({
-          global: {
-            account_access: 'read_write',
-            add_domains: false,
-            add_firewalls: false,
-            add_images: false,
-            add_linodes: false,
-            add_longview: false,
-            add_nodebalancers: false,
-            add_stackscripts: false,
-            add_volumes: false,
-            add_vpcs: false,
-            cancel_account: false,
-            longview_subscription: false,
-          },
-        })
-      )
+    return HttpResponse.json(
+      grantsFactory.build({
+        global: {
+          account_access: 'read_write',
+          add_domains: false,
+          add_firewalls: false,
+          add_images: false,
+          add_linodes: false,
+          add_longview: false,
+          add_nodebalancers: false,
+          add_stackscripts: false,
+          add_volumes: false,
+          add_vpcs: false,
+          cancel_account: false,
+          longview_subscription: false,
+        },
+      })
     );
   }),
   http.get(`*/account/users/${parentAccountUser.username}/grants`, () => {
-    return new Response(
-      JSON.stringify(
-        grantsFactory.build({
-          global: {
-            cancel_account: false,
-            child_account_access: true,
-          },
-        })
-      )
+    return HttpResponse.json(
+      grantsFactory.build({
+        global: {
+          cancel_account: false,
+          child_account_access: true,
+        },
+      })
     );
   }),
   http.get(
@@ -1593,22 +1507,20 @@ export const handlers = [
     }
   ),
   http.get('*/account/users/:user/grants', () => {
-    return new Response(
-      JSON.stringify(
-        grantsFactory.build({
-          domain: [],
-          firewall: [],
-          global: {
-            cancel_account: true,
-          },
-          image: [],
-          linode: grantFactory.buildList(6000),
-          longview: [],
-          nodebalancer: [],
-          stackscript: grantFactory.buildList(30),
-          volume: grantFactory.buildList(100),
-        })
-      )
+    return HttpResponse.json(
+      grantsFactory.build({
+        domain: [],
+        firewall: [],
+        global: {
+          cancel_account: true,
+        },
+        image: [],
+        linode: grantFactory.buildList(6000),
+        longview: [],
+        nodebalancer: [],
+        stackscript: grantFactory.buildList(30),
+        volume: grantFactory.buildList(100),
+      })
     );
   }),
   http.get('*/account/logins', () => {
@@ -1618,13 +1530,11 @@ export const handlers = [
     });
     const successfulAccountLogins = accountLoginFactory.buildList(25);
 
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          failedRestrictedAccountLogin,
-          ...successfulAccountLogins,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        failedRestrictedAccountLogin,
+        ...successfulAccountLogins,
+      ])
     );
   }),
   http.get('*/account/payment-methods', () => {
@@ -1647,15 +1557,13 @@ export const handlers = [
 
     const otherPaymentMethod = paymentMethodFactory.build();
 
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          defaultPaymentMethod,
-          otherPaymentMethod,
-          googlePayPaymentMethod,
-          paypalPaymentMethod,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        defaultPaymentMethod,
+        otherPaymentMethod,
+        googlePayPaymentMethod,
+        paypalPaymentMethod,
+      ])
     );
   }),
 
@@ -1709,17 +1617,15 @@ export const handlers = [
       status: 'notification',
     });
 
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          ...events,
-          ...dbEvents,
-          ...oldEvents,
-          ...placementGroupAssignedEvent,
-          ...placementGroupCreateEvent,
-          eventWithSpecialCharacters,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        ...events,
+        ...dbEvents,
+        ...oldEvents,
+        ...placementGroupAssignedEvent,
+        ...placementGroupCreateEvent,
+        eventWithSpecialCharacters,
+      ])
     );
   }),
   // // HERE
@@ -1763,15 +1669,13 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/account/settings', () => {
-    return new Response(
-      JSON.stringify({
-        backups_enabled: true,
-        longview_subscription: 'longview-100',
-        managed: true,
-        network_helper: true,
-        object_storage: 'active',
-      })
-    );
+    return HttpResponse.json({
+      backups_enabled: true,
+      longview_subscription: 'longview-100',
+      managed: true,
+      network_helper: true,
+      object_storage: 'active',
+    });
   }),
   http.put('*/account/settings/*', async ({ request }) => {
     const body = await request.json();
@@ -1786,7 +1690,7 @@ export const handlers = [
     return HttpResponse.json({}, { status: 400 });
   }),
   http.get('*linode.com/blog/feed*', () => {
-    return new Response(null, { status: 400 });
+    return HttpResponse.json(null, { status: 400 });
   }),
   http.get('*managed/services', () => {
     const monitors = monitorFactory.buildList(5);
@@ -1799,14 +1703,12 @@ export const handlers = [
       label: 'Problem',
       status: 'problem',
     });
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          ...monitors,
-          downUnresolvedMonitor,
-          downResolvedMonitor,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        ...monitors,
+        downUnresolvedMonitor,
+        downResolvedMonitor,
+      ])
     );
   }),
 
@@ -1819,13 +1721,11 @@ export const handlers = [
     const body = await request.json();
     const payload = body as any;
 
-    return new Response(
-      JSON.stringify(
-        monitorFactory.build({
-          ...payload,
-          id: Number(params.id),
-        })
-      )
+    return HttpResponse.json(
+      monitorFactory.build({
+        ...payload,
+        id: Number(params.id),
+      })
     );
   }),
   http.delete('*/managed/services/:id', () => {
@@ -1846,22 +1746,18 @@ export const handlers = [
       entity: { id: 999 },
       services: [999],
     });
-    return new Response(
-      JSON.stringify(makeResourcePage([openIssue, closedIssue]))
-    );
+    return HttpResponse.json(makeResourcePage([openIssue, closedIssue]));
   }),
   http.get('*managed/linode-settings', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(managedLinodeSettingFactory.buildList(5)))
+    return HttpResponse.json(
+      makeResourcePage(managedLinodeSettingFactory.buildList(5))
     );
   }),
   http.get('*managed/credentials/sshkey', () => {
     return HttpResponse.json(managedSSHPubKeyFactory.build());
   }),
   http.get('*managed/credentials', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(credentialFactory.buildList(5)))
-    );
+    return HttpResponse.json(makeResourcePage(credentialFactory.buildList(5)));
   }),
   http.post('*managed/credentials', async ({ request }) => {
     const body = await request.json();
@@ -1875,9 +1771,7 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*managed/contacts', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(contactFactory.buildList(5)))
-    );
+    return HttpResponse.json(makeResourcePage(contactFactory.buildList(5)));
   }),
   http.delete('*managed/contacts/:id', () => {
     return HttpResponse.json({});
@@ -1899,9 +1793,7 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*stackscripts/', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(stackScriptFactory.buildList(1)))
-    );
+    return HttpResponse.json(makeResourcePage(stackScriptFactory.buildList(1)));
   }),
 
   http.get('*/notifications', () => {
@@ -2046,25 +1938,23 @@ export const handlers = [
       }
     );
 
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          pastDueBalance,
-          ...notificationFactory.buildList(1),
-          // gdprNotification,
-          generalGlobalNotice,
-          outageNotification,
-          minorSeverityNotification,
-          criticalSeverityNotification,
-          // abuseTicket,
-          // emailBounce,
-          migrationNotification,
-          balanceNotification,
-          blockStorageMigrationScheduledNotification,
-          blockStorageMigrationImminentNotification,
-          blockStorageMigrationScheduledNotificationUnattached,
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        pastDueBalance,
+        ...notificationFactory.buildList(1),
+        // gdprNotification,
+        generalGlobalNotice,
+        outageNotification,
+        minorSeverityNotification,
+        criticalSeverityNotification,
+        // abuseTicket,
+        // emailBounce,
+        migrationNotification,
+        balanceNotification,
+        blockStorageMigrationScheduledNotification,
+        blockStorageMigrationImminentNotification,
+        blockStorageMigrationScheduledNotificationUnattached,
+      ])
     );
   }),
 
@@ -2074,9 +1964,7 @@ export const handlers = [
   http.post('*/networking/ipv6/ranges', async ({ request }) => {
     const body = await request.json();
     const range = body?.['prefix_length'];
-    return new Response(
-      JSON.stringify({ range, route_target: '2001:DB8::0000' })
-    );
+    return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
   }),
   http.post('*/networking/ips/assign', () => {
     return HttpResponse.json({});
@@ -2085,9 +1973,7 @@ export const handlers = [
     return HttpResponse.json(creditPaymentResponseFactory.build());
   }),
   http.get('*/profile/tokens', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(appTokenFactory.buildList(30)))
-    );
+    return HttpResponse.json(makeResourcePage(appTokenFactory.buildList(30)));
   }),
   http.post<any, TokenRequest>('*/profile/tokens', async ({ request }) => {
     const body = await request.json();
@@ -2099,10 +1985,8 @@ export const handlers = [
     async ({ params, request }) => {
       const body = await request.json();
       const data = body;
-      return new Response(
-        JSON.stringify(
-          appTokenFactory.build({ id: Number(params.id), ...data })
-        )
+      return HttpResponse.json(
+        appTokenFactory.build({ id: Number(params.id), ...data })
       );
     }
   ),
@@ -2110,23 +1994,21 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/account/betas', () => {
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          ...accountBetaFactory.buildList(5),
-          accountBetaFactory.build({
-            ended: DateTime.now().minus({ days: 5 }).toISO(),
-            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
-            started: DateTime.now().minus({ days: 30 }).toISO(),
-          }),
-        ])
-      )
+    return HttpResponse.json(
+      makeResourcePage([
+        ...accountBetaFactory.buildList(5),
+        accountBetaFactory.build({
+          ended: DateTime.now().minus({ days: 5 }).toISO(),
+          enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+          started: DateTime.now().minus({ days: 30 }).toISO(),
+        }),
+      ])
     );
   }),
   http.get('*/account/betas/:id', ({ params }) => {
     if (params.id !== 'undefined') {
-      return new Response(
-        JSON.stringify(accountBetaFactory.build({ id: params.id as string }))
+      return HttpResponse.json(
+        accountBetaFactory.build({ id: params.id as string })
       );
     }
     return HttpResponse.json({}, { status: 404 });
@@ -2136,44 +2018,16 @@ export const handlers = [
   }),
   http.get('*/betas/:id', ({ params }) => {
     if (params.id !== 'undefined') {
-      return new Response(
-        JSON.stringify(betaFactory.build({ id: params.id as string }))
-      );
+      return HttpResponse.json(betaFactory.build({ id: params.id as string }));
     }
     return HttpResponse.json({}, { status: 404 });
   }),
   http.get('*/betas', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(betaFactory.buildList(5)))
-    );
+    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
   http.get('*regions/availability', () => {
-    return new Response(
-      JSON.stringify(
-        makeResourcePage([
-          regionAvailabilityFactory.build({
-            plan: 'g6-standard-6',
-            region: 'us-east',
-          }),
-          regionAvailabilityFactory.build({
-            plan: 'g6-standard-7',
-            region: 'us-east',
-          }),
-          regionAvailabilityFactory.build({
-            plan: 'g6-dedicated-5',
-            region: 'us-central',
-          }),
-          regionAvailabilityFactory.build({
-            plan: 'g6-dedicated-6',
-            region: 'us-central',
-          }),
-        ])
-      )
-    );
-  }),
-  http.get('*regions/:regionId/availability', () => {
-    return new Response(
-      JSON.stringify([
+    return HttpResponse.json(
+      makeResourcePage([
         regionAvailabilityFactory.build({
           plan: 'g6-standard-6',
           region: 'us-east',
@@ -2182,14 +2036,34 @@ export const handlers = [
           plan: 'g6-standard-7',
           region: 'us-east',
         }),
+        regionAvailabilityFactory.build({
+          plan: 'g6-dedicated-5',
+          region: 'us-central',
+        }),
+        regionAvailabilityFactory.build({
+          plan: 'g6-dedicated-6',
+          region: 'us-central',
+        }),
       ])
     );
+  }),
+  http.get('*regions/:regionId/availability', () => {
+    return HttpResponse.json([
+      regionAvailabilityFactory.build({
+        plan: 'g6-standard-6',
+        region: 'us-east',
+      }),
+      regionAvailabilityFactory.build({
+        plan: 'g6-standard-7',
+        region: 'us-east',
+      }),
+    ]);
   }),
 
   // Placement Groups
   http.get('*/placement/groups', () => {
-    return new Response(
-      JSON.stringify(makeResourcePage(placementGroupFactory.buildList(3)))
+    return HttpResponse.json(
+      makeResourcePage(placementGroupFactory.buildList(3))
     );
   }),
   http.get('*/placement/groups/:placementGroupId', ({ params }) => {
@@ -2197,12 +2071,10 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
 
-    return new Response(
-      JSON.stringify(
-        placementGroupFactory.build({
-          id: 1,
-        })
-      )
+    return HttpResponse.json(
+      placementGroupFactory.build({
+        id: 1,
+      })
     );
   }),
   http.post<any, CreatePlacementGroupPayload>(
@@ -2210,9 +2082,7 @@ export const handlers = [
     async ({ request }) => {
       const body = await request.json();
 
-      return new Response(
-        JSON.stringify(createPlacementGroupPayloadFactory.build(body))
-      );
+      return HttpResponse.json(createPlacementGroupPayloadFactory.build(body));
     }
   ),
   http.put(
