@@ -31,10 +31,6 @@ export interface ButtonProps extends _ButtonProps {
    */
   compactY?: boolean;
   /**
-   * Additional data- attributes to pass to the component
-   */
-  dataAttrs?: Record<string, string>;
-  /**
    * Show a loading indicator
    * @default false
    */
@@ -104,7 +100,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       compactX,
       compactY,
-      dataAttrs,
       disabled,
       loading,
       sx,
@@ -173,7 +168,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return showTooltip ? (
       <Tooltip
         aria-label={rest['aria-label']}
-        data-qa-tooltip={dataAttrs?.tooltip}
         data-testid="Tooltip"
         id="button-tooltip"
         onClick={handleTooltipAnalytics}

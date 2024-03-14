@@ -18,10 +18,6 @@ export interface SelectionCardProps {
    */
   className?: string;
   /**
-   * Additional data- attributes to apply to the root element.
-   */
-  dataAttrs?: Record<string, string> | undefined;
-  /**
    * If true, the card will be disabled and will be displayed in a disabled state.
    * @default false
    */
@@ -103,7 +99,6 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
   const {
     checked,
     className,
-    dataAttrs,
     disabled,
     heading,
     headingDecoration,
@@ -176,7 +171,6 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
         componentsProps={{
           tooltip: { sx: sxTooltip },
         }}
-        data-qa-tooltip={dataAttrs?.tooltip}
         placement="top-end"
         title={tooltip}
       >

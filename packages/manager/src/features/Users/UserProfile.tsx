@@ -111,9 +111,6 @@ export const UserProfile = (props: UserProfileProps) => {
             />
           )}
           <TextField
-            dataAttrs={{
-              tooltip: tooltipForDisabledUsernameField,
-            }}
             data-qa-username
             disabled={isProxyUserProfile}
             errorText={hasAccountErrorFor('username')}
@@ -148,9 +145,6 @@ export const UserProfile = (props: UserProfileProps) => {
             />
           )}
           <TextField
-            dataAttrs={{
-              tooltip: tooltipForDisabledEmailField,
-            }}
             // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
             disabled={
               profile?.username !== originalUsername || isProxyUserProfile
@@ -196,14 +190,6 @@ export const UserProfile = (props: UserProfileProps) => {
           Delete User
         </Typography>
         <Button
-          dataAttrs={{
-            tooltip:
-              profile?.username === originalUsername
-                ? 'You can\u{2019}t delete the currently active user.'
-                : isProxyUserProfile
-                ? `You can\u{2019}t delete a ${PARENT_USER}.`
-                : '',
-          }}
           disabled={
             profile?.username === originalUsername || isProxyUserProfile
           }

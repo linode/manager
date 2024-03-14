@@ -144,8 +144,10 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
     props.type ?? 'object'
   }. Click to retry.`;
 
+  const TooltipTitle = <div>{errorText}</div>;
+
   return props.error ? (
-    <Tooltip placement="bottom" title={errorText}>
+    <Tooltip placement="bottom" title={TooltipTitle}>
       {Content}
     </Tooltip>
   ) : (

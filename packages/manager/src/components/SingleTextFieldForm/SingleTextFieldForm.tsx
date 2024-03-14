@@ -18,7 +18,6 @@ interface Props extends TextFieldProps {
 
 export const SingleTextFieldForm = React.memo((props: Props) => {
   const {
-    dataAttrs,
     disabled,
     errorMessage,
     fieldName,
@@ -84,7 +83,6 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
               width: '100%',
             },
           }}
-          dataAttrs={dataAttrs}
           disabled={disabled}
           errorText={fieldError}
           label={label}

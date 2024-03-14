@@ -112,9 +112,6 @@ export const DisplaySettings = () => {
       </Box>
       <Divider />
       <SingleTextFieldForm
-        dataAttrs={{
-          tooltip: tooltipForDisabledUsernameField,
-        }}
         disabled={profile?.restricted || isProxyUser}
         initialValue={profile?.username}
         key={usernameResetToken}
@@ -126,9 +123,6 @@ export const DisplaySettings = () => {
       />
       <Divider spacingTop={24} />
       <SingleTextFieldForm
-        dataAttrs={{
-          tooltip: tooltipForDisabledEmailField,
-        }}
         successCallback={() => {
           // If there's a "user_email_bounce" notification for this user, and
           // the user has just updated their email, re-request notifications to

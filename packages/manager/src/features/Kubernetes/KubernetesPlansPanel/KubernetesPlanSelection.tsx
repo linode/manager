@@ -197,9 +197,6 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
-          dataAttrs={{
-            tooltip: LIMITED_AVAILABILITY_TEXT,
-          }}
           subheadings={[
             ...subHeadings,
             isDisabled ? <Chip label="Limited Availability" /> : '',

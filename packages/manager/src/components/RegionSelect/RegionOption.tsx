@@ -19,10 +19,6 @@ import { RegionSelectOption } from './RegionSelect.types';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 type Props = {
-  /**
-   * Additional data- attributes to pass to the component
-   */
-  dataAttrs?: Record<string, string>;
   displayEdgeServerIcon?: boolean;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
@@ -30,7 +26,6 @@ type Props = {
 };
 
 export const RegionOption = ({
-  dataAttrs,
   displayEdgeServerIcon,
   option,
   props,
@@ -56,7 +51,6 @@ export const RegionOption = ({
           ''
         )
       }
-      data-qa-tooltip={dataAttrs?.tooltip}
       disableFocusListener={!isDisabledMenuItem}
       disableHoverListener={!isDisabledMenuItem}
       disableTouchListener={!isDisabledMenuItem}

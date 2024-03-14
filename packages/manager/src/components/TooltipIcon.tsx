@@ -9,12 +9,7 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
-import {
-  EnhancedTooltipProps,
-  Tooltip,
-  TooltipProps,
-  tooltipClasses,
-} from 'src/components/Tooltip';
+import { Tooltip, TooltipProps, tooltipClasses } from 'src/components/Tooltip';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 type TooltipIconStatus =
@@ -25,7 +20,7 @@ type TooltipIconStatus =
   | 'success'
   | 'warning';
 
-type StyledTooltipProps = EnhancedTooltipProps & { width?: number };
+type EnhancedTooltipProps = TooltipProps & { width?: number };
 
 export interface TooltipIconProps
   extends Omit<TooltipProps, 'children' | 'leaveDelay' | 'title'> {
@@ -33,10 +28,6 @@ export interface TooltipIconProps
    * An optional className that does absolutely nothing
    */
   className?: string;
-  /**
-   * Additional data- attributes to pass to the component
-   */
-  dataAttrs?: Record<string, string>;
   /**
    * Use this custom icon when `status` is `other`
    * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
@@ -98,7 +89,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const {
     classes,
-    dataAttrs,
     icon,
     interactive,
     leaveDelay,
@@ -163,7 +153,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       classes={classes}
       componentsProps={props.componentsProps}
       data-qa-help-tooltip
-      data-qa-tooltip={dataAttrs?.tooltip}
       disableInteractive={!interactive}
       enterTouchDelay={0}
       leaveDelay={leaveDelay ? 3000 : undefined}
@@ -182,7 +171,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 };
 
 const StyledTooltip = styled(
-  ({ className, ...props }: StyledTooltipProps) => (
+  ({ className, ...props }: EnhancedTooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ),
   {
