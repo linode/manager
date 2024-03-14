@@ -252,8 +252,8 @@ describe('Parent/Child account switching', () => {
       mockGetEvents([]);
       mockGetNotifications([]);
       mockGetAccount(mockChildAccount);
-      mockGetProfile(mockParentProfile);
-      mockGetUser(mockParentUser);
+      mockGetProfile(mockChildAccountProfile);
+      mockGetUser(mockChildAccountProxyUser);
 
       // Click mock company name in "Switch Account" drawer.
       mockCreateChildAccountToken(mockChildAccount, mockChildAccountToken).as(
