@@ -136,6 +136,7 @@ describe('Parent/Child account switching', () => {
 
     it('can switch from Proxy user back to Parent account user from Billing page', () => {
       const mockParentToken = randomString(32);
+      const mockParentExpiration = DateTime.now().plus({ minutes: 15 }).toISO();
 
       mockGetAccount(mockChildAccount);
       mockGetProfile(mockChildAccountProfile);
@@ -149,9 +150,11 @@ describe('Parent/Child account switching', () => {
       // data set to mock values.
       cy.visitWithLogin('/account/billing', {
         localStorageOverrides: {
+          proxy_user: true,
           'authentication/parent_token/token': `Bearer ${mockParentToken}`,
           'authentication/parent_token/expire':
-            'Thu Mar 07 2024 16:59:36 GMT-0500 (Eastern Standard Time)',
+            //'Thu Mar 19 2024 16:59:36 GMT-0500 (Eastern Standard Time)',
+            mockParentExpiration,
           'authentication/parent_token/scopes': '*',
         },
       });
