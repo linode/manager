@@ -128,6 +128,10 @@ export const AccessSelect = React.memo((props: Props) => {
     ? 'CORS Enabled'
     : 'CORS Disabled';
 
+  const selectedOption =
+    _options.find((thisOption) => thisOption.value === selectedACL) ??
+    _options.find((thisOption) => thisOption.value === 'private');
+
   return (
     <>
       {updateAccessSuccess ? (
@@ -147,9 +151,6 @@ export const AccessSelect = React.memo((props: Props) => {
             setSelectedACL(selected.value as ACLType);
           }
         }}
-        value={_options.find(
-          (thisOption) => thisOption.value === selectedACL ?? 'private'
-        )}
         data-testid="acl-select"
         disableClearable
         disabled={accessLoading}
@@ -157,7 +158,7 @@ export const AccessSelect = React.memo((props: Props) => {
         loading={accessLoading}
         options={_options}
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
-        renderTags={() => null}
+        value={selectedOption}
       />
 
       <div style={{ marginTop: 8, minHeight: 16 }}>
