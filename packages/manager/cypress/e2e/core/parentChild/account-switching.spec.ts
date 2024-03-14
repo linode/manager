@@ -126,7 +126,7 @@ describe('Parent/Child account switching', () => {
   /**
    * Tests to confirm that Parent account users can switch back from Child accounts as expected.
    */
-  describe('From Proxy to Parent', () => {
+  describe('From Child to Parent', () => {
     beforeEach(() => {
       mockAppendFeatureFlags({
         parentChildAccountAccess: makeFeatureFlagData(true),
@@ -134,7 +134,7 @@ describe('Parent/Child account switching', () => {
       mockGetFeatureFlagClientstream();
     });
 
-    it('can switch from Child account to Parent account from Billing page', () => {
+    it('can switch from Proxy user back to Parent account user from Billing page', () => {
       const mockParentToken = randomString(32);
 
       mockGetAccount(mockChildAccount);
@@ -197,7 +197,7 @@ describe('Parent/Child account switching', () => {
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
-  describe('From Parent to Proxy', () => {
+  describe('From Parent to Child', () => {
     beforeEach(() => {
       // @TODO M3-7554, M3-7559: Remove feature flag mocks after feature launch and clean-up.
       mockAppendFeatureFlags({
@@ -211,7 +211,7 @@ describe('Parent/Child account switching', () => {
      * - Confirms that Child account information is displayed in user menu button after switch.
      * - Confirms that Cloud updates local storage auth values upon account switch.
      */
-    it('can switch from Parent account to Child account from Billing page', () => {
+    it('can switch from Parent account user to Proxy account user from Billing page', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
@@ -284,7 +284,7 @@ describe('Parent/Child account switching', () => {
      * - Confirms that Child account information is displayed in user menu button after switch.
      * - Confirms that Cloud updates local storage auth values upon account switch.
      */
-    it('can switch from Parent account to Child account using user menu', () => {
+    it('can switch from Parent account user to Proxy account user using user menu', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
