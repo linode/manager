@@ -5,6 +5,7 @@ import * as React from 'react';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+import { StyledNoticeTypography } from 'src/features/Linodes/LinodesCreate/PlansAvailabilityNotice.styles';
 
 import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvailabilityNotice';
 import {
@@ -96,20 +97,23 @@ export const determineLimitedAvailabilityNoticeCopy = (
     <DismissibleBanner
       sx={(theme: Theme) => ({
         marginBottom: theme.spacing(3),
+        marginLeft: 0,
+        marginTop: 0,
+        padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
       })}
       dataTestId={limitedAvailabilityBannerTestId}
       preferenceKey={LIMITED_AVAILABILITY_DISMISSIBLEBANNER_KEY}
       variant="warning"
     >
       {mostClassPlansAreLimitedAvailability ? (
-        <Typography>
+        <StyledNoticeTypography>
           These plans have limited availability.{' '}
           <Link to={docsLink}>Learn more</Link>.
-        </Typography>
+        </StyledNoticeTypography>
       ) : (
-        <Typography>
+        <StyledNoticeTypography>
           <Link to={docsLink}>Learn more</Link> about plans and availability.
-        </Typography>
+        </StyledNoticeTypography>
       )}
     </DismissibleBanner>
   );
