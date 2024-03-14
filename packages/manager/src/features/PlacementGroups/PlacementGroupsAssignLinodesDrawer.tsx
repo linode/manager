@@ -1,4 +1,5 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -43,6 +44,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     data: allPlacementGroups,
     error: allPlacementGroupsError,
   } = useUnpaginatedPlacementGroupsQuery();
+  const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
   // (not supposed to happen as the "Assign Linode to Placement Group" button should be disabled
@@ -117,13 +119,18 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
     try {
       await assignLinodes(payload);
+      const toastMessage = 'Linode successfully assigned';
+      enqueueSnackbar(toastMessage, {
+        variant: 'success',
+      });
       handleDrawerClose();
     } catch (error) {
       setGeneralError(
         error?.[0]?.reason
           ? error[0].reason
-          : 'An error occurred while assigning the Linode to the group'
+          : 'An error occurred while adding the Linode to the group'
       );
+      enqueueSnackbar(error[0]?.reason, { variant: 'error' });
     }
   };
 
@@ -171,7 +178,6 @@ export const PlacementGroupsAssignLinodesDrawer = (
               text="Only displaying Linodes that aren’t assigned to a Placement Group"
             />
           </Box>
-
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
