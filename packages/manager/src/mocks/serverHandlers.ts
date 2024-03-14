@@ -556,6 +556,10 @@ export const handlers = [
       restricted: false,
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
       user_type: 'parent',
+      // PLACEMENT GROUPS TESTING - Permissions and Grants:
+      // Uncommnet the two lines below: This is important! The grants endpoint is only called for restricted users.
+      // restricted: true,
+      // user_type: 'default',
     });
     return res(ctx.json(profile));
   }),
@@ -567,6 +571,9 @@ export const handlers = [
       // Parent/Child: switch out the return statement if you want to mock a restricted parent user with access to child accounts.
       // ctx.json(grantsFactory.build({ global: { child_account_access: true } }))
       ctx.json(grantsFactory.build())
+      // PLACEMENT GROUPS TESTING - Permissions and Grants:
+      // Uncomment the line below.
+      // ctx.json(grantsFactory.build({ global: { add_linodes: false } }))
     );
   }),
   rest.get('*/profile/apps', (req, res, ctx) => {

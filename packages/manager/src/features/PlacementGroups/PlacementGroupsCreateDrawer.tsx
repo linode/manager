@@ -137,7 +137,7 @@ export const PlacementGroupsCreateDrawer = (
         <Notice
           text={getRestrictedResourceText({
             action: 'edit',
-            resourceType: 'PlacementGroups',
+            resourceType: 'Placement Groups',
           })}
           important
           spacingTop={16}
@@ -159,7 +159,7 @@ export const PlacementGroupsCreateDrawer = (
               autoFocus: true,
             }}
             aria-label="Label for the Placement Group"
-            disabled={false}
+            disabled={disabledCreateButton || false}
             errorText={errors.label}
             label="Label"
             name="label"
@@ -178,17 +178,19 @@ export const PlacementGroupsCreateDrawer = (
                 handleRegionSelect(selection);
               }}
               currentCapability="Placement Group"
-              disabled={Boolean(selectedRegionId)}
+              disabled={Boolean(selectedRegionId) || disabledCreateButton}
               helperText="Only regions supporting Placement Groups are listed."
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
             />
           )}
           <PlacementGroupsAffinityTypeSelect
+            disabledCreateButton={disabledCreateButton}
             error={errors.affinity_type}
             setFieldValue={setFieldValue}
           />
           <PlacementGroupsAffinityEnforcementRadioGroup
+            disabledCreateButton={disabledCreateButton}
             handleChange={handleChange}
             setFieldValue={setFieldValue}
             value={values.is_strict}

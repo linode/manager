@@ -11,12 +11,13 @@ import { affinityTypeOptions } from './utils';
 import type { FormikHelpers } from 'formik';
 
 interface Props {
+  disabledCreateButton: boolean;
   error: string | undefined;
   setFieldValue: FormikHelpers<any>['setFieldValue'];
 }
 
 export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
-  const { error, setFieldValue } = props;
+  const { disabledCreateButton, error, setFieldValue } = props;
   return (
     <Autocomplete
       defaultValue={affinityTypeOptions.find(
@@ -82,6 +83,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
         ),
       }}
       disableClearable={true}
+      disabled={disabledCreateButton}
       errorText={error}
       label="Affinity Type"
       options={affinityTypeOptions}

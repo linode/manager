@@ -11,13 +11,14 @@ import { Typography } from 'src/components/Typography';
 import type { FormikHelpers } from 'formik';
 
 interface Props {
+  disabledCreateButton: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setFieldValue: FormikHelpers<any>['setFieldValue'];
   value: boolean;
 }
 
 export const PlacementGroupsAffinityEnforcementRadioGroup = (props: Props) => {
-  const { handleChange, setFieldValue, value } = props;
+  const { disabledCreateButton, handleChange, setFieldValue, value } = props;
   return (
     <Box sx={{ pt: 2 }}>
       <Notice
@@ -45,6 +46,7 @@ export const PlacementGroupsAffinityEnforcementRadioGroup = (props: Props) => {
             </Typography>
           }
           control={<Radio />}
+          disabled={disabledCreateButton}
           value={true}
         />
         <FormControlLabel
@@ -56,6 +58,7 @@ export const PlacementGroupsAffinityEnforcementRadioGroup = (props: Props) => {
             </Typography>
           }
           control={<Radio />}
+          disabled={disabledCreateButton}
           sx={{ mt: 2 }}
           value={false}
         />

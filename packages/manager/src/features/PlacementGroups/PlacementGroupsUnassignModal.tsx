@@ -59,7 +59,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   const actions = (
     <ActionsPanel
       primaryButtonProps={{
-        disabled: isLoading || isAllowedToEditPlacementGroup,
+        disabled: isLoading || !isAllowedToEditPlacementGroup,
         label: 'Unassign',
         loading: isLoading,
         onClick: onUnassign,

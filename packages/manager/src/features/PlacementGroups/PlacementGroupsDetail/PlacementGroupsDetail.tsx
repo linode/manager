@@ -121,7 +121,7 @@ export const PlacementGroupsDetail = () => {
         <Notice
           text={getRestrictedResourceText({
             action: 'edit',
-            resourceType: 'PlacementGroups',
+            resourceType: 'Placement Groups',
           })}
           important
           spacingTop={16}

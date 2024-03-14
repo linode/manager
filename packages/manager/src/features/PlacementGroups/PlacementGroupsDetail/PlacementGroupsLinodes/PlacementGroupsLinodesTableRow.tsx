@@ -32,7 +32,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const isAllowedToEditPlacementGroup = useIsResourceRestricted({
     grantLevel: 'read_write',
     grantType: 'linode',
-    id: linode.id,
+    id: +linode.id,
   });
 
   return (
@@ -53,7 +53,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
       <TableCell actionCell>
         <InlineMenuAction
           actionText="Unassign"
-          disabled={isAllowedToEditPlacementGroup}
+          disabled={!isAllowedToEditPlacementGroup}
           onClick={handleOpenUnassignLinodeModal}
         />
       </TableCell>
