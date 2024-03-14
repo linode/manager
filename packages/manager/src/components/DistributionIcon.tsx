@@ -1,3 +1,4 @@
+import 'font-logos/assets/font-logos.css';
 import React from 'react';
 
 import type { Image } from '@linode/api-v4';
