@@ -125,7 +125,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   );
 
   /*
-   @TODO OBJ Multicluster: @TODO OBJ Multicluster: 'region' will become required, and the
+   @TODO OBJ Multicluster:'region' will become required, and the
    'cluster' field will be deprecated once the feature is fully rolled out in production.
    As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
    remove 'cluster' and retain 'regions'.
