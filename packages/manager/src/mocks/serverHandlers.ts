@@ -671,8 +671,8 @@ export const handlers = [
     });
     const linodeInEdgeRegion = linodeFactory.build({
       image: 'edge-test-image',
-      label: 'edge-test-region',
-      region: 'us-southeast',
+      label: 'Gecko Edge Test',
+      region: 'us-edge-1',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -745,7 +745,7 @@ export const handlers = [
       if (orFilters) {
         const filteredLinodes = linodes.filter((linode) => {
           const filteredById = orFilters.some(
-            (filter: { linode: number }) => filter.linode === linode.id
+            (filter: { id: number }) => filter.id === linode.id
           );
           const filteredByRegion = orFilters.some(
             (filter: { region: string }) => filter.region === linode.region
@@ -915,6 +915,23 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*object-storage/buckets/*/*/access', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(
+      ctx.json({
+        acl: 'private',
+        acl_xml:
+          '<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>2a2ce653-20dd-43f1-b803-e8a924ee6374</ID><DisplayName>2a2ce653-20dd-43f1-b803-e8a924ee6374</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>',
+        cors_enabled: true,
+        cors_xml:
+          '<CORSConfiguration><CORSRule><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>DELETE</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedMethod>POST</AllowedMethod><AllowedOrigin>*</AllowedOrigin><AllowedHeader>*</AllowedHeader></CORSRule></CORSConfiguration>',
+      })
+    );
+  }),
+  rest.put('*object-storage/buckets/*/*/access', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
   rest.get('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
     await sleep(2000);
     return res(ctx.json({ ssl: false }));
@@ -924,6 +941,10 @@ export const handlers = [
     return res(ctx.json({ ssl: true }));
   }),
   rest.delete('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.delete('*object-storage/buckets/*/*', async (req, res, ctx) => {
     await sleep(2000);
     return res(ctx.json({}));
   }),
@@ -980,6 +1001,8 @@ export const handlers = [
 
     const buckets = objectStorageBucketFactory.buildList(1, {
       cluster: `${region}-1`,
+      hostname: `obj-bucket-1.${region}.linodeobjects.com`,
+      label: `obj-bucket-1`,
       region,
     });
 
@@ -1609,12 +1632,35 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
+    const placementGroupCreateEvent = eventFactory.buildList(1, {
+      action: 'placement_group_created',
+      entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+      message: 'Placement Group successfully created.',
+      percent_complete: 100,
+      status: 'notification',
+    });
+    const placementGroupAssignedEvent = eventFactory.buildList(1, {
+      action: 'placement_group_assigned',
+      entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+      message: 'Placement Group successfully assigned.',
+      percent_complete: 100,
+      secondary_entity: {
+        id: 1,
+        label: 'My Config',
+        type: 'linode',
+        url: '/v4/linode/instances/1/configs/1',
+      },
+      status: 'notification',
+    });
+
     return res.once(
       ctx.json(
         makeResourcePage([
           ...events,
           ...dbEvents,
           ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
         ])
       )

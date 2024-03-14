@@ -27,12 +27,16 @@ import {
 } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { grantsFactory } from '@src/factories/grants';
 
 /**
  * Confirms expected username and company name are shown in user menu button and yields the button.
@@ -97,6 +101,14 @@ const mockChildAccountProfile = profileFactory.build({
   user_type: 'proxy',
 });
 
+const childAccountAccessGrantEnabled = grantsFactory.build({
+  global: { account_access: 'read_only', child_account_access: true },
+});
+
+const childAccountAccessGrantDisabled = grantsFactory.build({
+  global: { account_access: 'read_only', child_account_access: false },
+});
+
 const mockChildAccountToken = appTokenFactory.build({
   id: randomNumber(),
   created: DateTime.now().toISO(),
@@ -122,7 +134,7 @@ describe('Parent/Child account switching', () => {
       mockGetFeatureFlagClientstream();
     });
 
-    it.only('can switch from Child account to Parent account from Billing page', () => {
+    it('can switch from Child account to Parent account from Billing page', () => {
       const mockParentToken = randomString(32);
 
       mockGetAccount(mockChildAccount);
@@ -341,6 +353,81 @@ describe('Parent/Child account switching', () => {
         mockParentProfile.username,
         mockChildAccount.company
       );
+    });
+  });
+
+  describe('Child Account Access', () => {
+    /*
+     * - Smoke test to confirm that restricted parent users with the child_account_access grant can switch accounts.
+     * - Confirms that the "Switch Account" button is rendered.
+     */
+    describe('Enabled', () => {
+      it('renders "Switch Account" button for restricted users on Billing page', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantEnabled);
+
+        cy.visitWithLogin('/account/billing');
+
+        cy.findByTestId('switch-account-button').should('be.visible');
+      });
+
+      it('renders "Switch Account" button for restricted users in user menu', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetAccount(mockParentAccount);
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantEnabled);
+
+        cy.visitWithLogin('/');
+
+        assertUserMenuButton(
+          mockParentProfile.username,
+          mockParentAccount.company
+        ).click();
+
+        ui.userMenu
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByTestId('switch-account-button').should('be.visible');
+          });
+      });
+    });
+    /*
+     * - Smoke test to confirm that restricted parent users without the child_account_access grant cannot switch accounts.
+     * - Confirms that the "Switch Account" button is not rendered.
+     */
+    describe('Disabled', () => {
+      it('does not render "Switch Account" button for restricted users on Billing page', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantDisabled);
+
+        cy.visitWithLogin('/account/billing');
+
+        cy.findByTestId('switch-account-button').should('not.exist');
+      });
+
+      it('does not render "Switch Account" button for restricted users in user menu', () => {
+        mockGetProfile({ ...mockParentProfile, restricted: true });
+        mockGetAccount(mockParentAccount);
+        mockGetUser(mockParentUser);
+        mockGetProfileGrants(childAccountAccessGrantDisabled);
+
+        cy.visitWithLogin('/');
+
+        assertUserMenuButton(
+          mockParentProfile.username,
+          mockParentAccount.company
+        ).click();
+
+        ui.userMenu
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByTestId('switch-account-button').should('not.exist');
+          });
+      });
     });
   });
 
