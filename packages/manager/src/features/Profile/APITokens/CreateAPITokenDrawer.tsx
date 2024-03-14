@@ -237,7 +237,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
       (!isParentUser || isChildAccountAccessRestricted));
 
   const filteredPermissions = allPermissions.filter(
-    (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
+    // @TODO: Parent/Child - Once feature is released and all perms are always returned, use basePermNameMap[scopeTup[0]] !== 'Child Account Access'.
+    (scopeTup) => scopeTup[0] !== 'child_account'
   );
 
   return (
