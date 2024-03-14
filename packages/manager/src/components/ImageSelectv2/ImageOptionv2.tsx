@@ -4,10 +4,10 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { SelectedIcon } from '../Autocomplete/Autocomplete.styles';
+import { DistributionIcon } from '../DistributionIcon';
 import { Stack } from '../Stack';
-import { TooltipIcon } from '../TooltipIcon';
+import { Tooltip } from '../Tooltip';
 import { Typography } from '../Typography';
-import { DistributionIcon } from './DistributionIcon';
 
 import type { Image } from '@linode/api-v4';
 
@@ -27,27 +27,12 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
         <Typography color="inherit">{image.label}</Typography>
         <Stack flexGrow={1} />
         {flags.metadata && image.capabilities.includes('cloud-init') && (
-          <TooltipIcon
-            icon={<DescriptionOutlinedIcon />}
-            status="other"
-            sxTooltipIcon={tooltipIconSx}
-            text="This image is compatible with cloud-init."
-          />
+          <Tooltip title="This image is compatible with cloud-init.">
+            <DescriptionOutlinedIcon />
+          </Tooltip>
         )}
         {isSelected && <SelectedIcon visible />}
       </Stack>
     </li>
   );
-};
-
-const tooltipIconSx = {
-  '& svg': {
-    height: 20,
-    width: 20,
-  },
-  '&:hover': {
-    color: 'inherit',
-  },
-  color: 'inherit',
-  padding: 0,
 };

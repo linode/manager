@@ -1,7 +1,7 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
 
-import { ImageSelectv2 } from 'src/components/ImageSelect/ImageSelectv2';
+import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
