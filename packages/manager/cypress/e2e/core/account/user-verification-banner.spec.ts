@@ -225,7 +225,7 @@ describe('User verification banner', () => {
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
     mockGetSecurityQuestions(mockSecurityQuestions).as('getSecurityQuestions');
 
-    // Navigate to Users & Grants page and confirm "Business partner settings" and "User settings" sections are visible.
+    // Navigate to Users & Grants page and confirm "Partner user settings" and "User settings" sections are visible.
     cy.visitWithLogin('/account/users');
     cy.wait(['@getUsers', '@getSecurityQuestions']);
 

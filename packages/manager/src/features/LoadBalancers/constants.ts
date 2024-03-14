@@ -14,3 +14,11 @@ export const ACLB_DOCS = {
   ServiceTargetCertificates: `${ACLB_DOCS_ROOT}/guides/certificates/#service-target-certificates`,
   TLSCertificates: `${ACLB_DOCS_ROOT}/guides/certificates`,
 };
+
+export const ACLB_BETA_REGION_IDS = [
+  'us-mia',
+  'us-lax',
+  'fr-par',
+  'jp-osa',
+  'id-cgk',
+];

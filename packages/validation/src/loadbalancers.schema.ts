@@ -117,25 +117,20 @@ const RouteServiceTargetSchema = object({
     .required('Percent is required.'),
 });
 
-const TCPMatchConditionSchema = object({
+const MatchConditionSchema = object({
   hostname: string().nullable(),
+  match_field: string()
+    .oneOf(matchFieldOptions)
+    .required('Match field is required.'),
+  match_value: string().required('Match value is required.'),
+  session_stickiness_cookie: string().nullable(),
+  session_stickiness_ttl: number()
+    .min(0, 'TTL must be greater than or equal to 0.')
+    .typeError('TTL must be a number.')
+    .nullable(),
 });
 
-const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
-  object({
-    match_field: string()
-      .oneOf(matchFieldOptions)
-      .required('Match field is required.'),
-    match_value: string().required('Match value is required.'),
-    session_stickiness_cookie: string().nullable(),
-    session_stickiness_ttl: number()
-      .min(0, 'TTL must be greater than or equal to 0.')
-      .typeError('TTL must be a number.')
-      .nullable(),
-  })
-);
-
-const BaseRuleSchema = object({
+export const TCPRuleSchema = object({
   service_targets: array(RouteServiceTargetSchema)
     .test(
       'sum-of-percentage',
@@ -155,15 +150,9 @@ const BaseRuleSchema = object({
     .required(),
 });
 
-export const HTTPRuleSchema = BaseRuleSchema.concat(
+export const HTTPRuleSchema = TCPRuleSchema.concat(
   object({
-    match_condition: HTTPMatchConditionSchema,
-  })
-);
-
-export const TCPRuleSchema = BaseRuleSchema.concat(
-  object({
-    match_condition: TCPMatchConditionSchema,
+    match_condition: MatchConditionSchema,
   })
 );
 

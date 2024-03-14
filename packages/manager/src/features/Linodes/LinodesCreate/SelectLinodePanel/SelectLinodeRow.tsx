@@ -1,36 +1,31 @@
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { Link } from 'src/components/Link';
 import { OrderByProps } from 'src/components/OrderBy';
 import { Radio } from 'src/components/Radio/Radio';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell, TableCellProps } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
-import {
-  queryKey as linodesQueryKey,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { RegionIndicator } from '../../LinodesLanding/RegionIndicator';
 
+import type { Linode } from '@linode/api-v4/lib/linodes/types';
+
 interface Props {
   disabled?: boolean;
   handlePowerOff: () => void;
   handleSelection: () => void;
-  linodeId: number;
+  linode: Linode;
   selected: boolean;
   showPowerActions: boolean;
 }
@@ -41,28 +36,30 @@ export const SelectLinodeRow = (props: Props) => {
     disabled,
     handlePowerOff,
     handleSelection,
-    linodeId,
+    linode,
     selected,
     showPowerActions,
   } = props;
 
   const theme = useTheme();
 
-  const {
-    data: linode,
-    error: linodeError,
-    isLoading: linodeLoading,
-  } = useLinodeQuery(linodeId);
-
   const { data: linodeType } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
+    linode.type ?? '',
+    Boolean(linode.type)
   );
 
   const { data: linodeImage } = useImageQuery(
-    linode?.image ?? '',
-    Boolean(linode?.image)
+    linode.image ?? '',
+    Boolean(linode.image)
   );
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linode.id,
+  });
+
+  const isDisabled = disabled || isLinodesGrantReadOnly;
 
   // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
@@ -71,52 +68,26 @@ export const SelectLinodeRow = (props: Props) => {
       queryClient.invalidateQueries([
         linodesQueryKey,
         'linode',
-        linodeId,
+        linode.id,
         'configs',
       ]);
     }
-  }, [linode, linodeId, queryClient]);
-
-  if (linodeLoading || !linode) {
-    return (
-      <TableRow>
-        <TableCell colSpan={numCols}>
-          <CircleProgress mini />
-        </TableCell>
-      </TableRow>
-    );
-  }
-
-  if (linodeError) {
-    return (
-      <TableRow data-testid="subnet-linode-row-error">
-        <TableCell colSpan={numCols} style={{ paddingLeft: 10 }}>
-          <Box alignItems="center" display="flex">
-            <ErrorOutline
-              data-qa-error-icon
-              sx={(theme) => ({ color: theme.color.red, marginRight: 1 })}
-            />
-            <Typography>
-              There was an error loading{' '}
-              <Link to={`/linodes/${linodeId}`}>Linode {linodeId}</Link>
-            </Typography>
-          </Box>
-        </TableCell>
-      </TableRow>
-    );
-  }
+  }, [linode, queryClient]);
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status == 'running';
 
   return (
-    <TableRow onClick={handleSelection}>
+    <TableRow
+      disabled={isDisabled}
+      onClick={isDisabled ? undefined : handleSelection}
+    >
       <TableCell
         component="th"
         scope="row"
         sx={{ height: theme.spacing(6), padding: '0 !important', width: '3%' }}
       >
-        <Radio checked={selected} disabled={disabled} />
+        <Radio checked={!isDisabled && selected} disabled={isDisabled} />
       </TableCell>
       <TableCell>{linode.label}</TableCell>
       <TableCell statusCell>
@@ -139,6 +110,7 @@ export const SelectLinodeRow = (props: Props) => {
             <InlineMenuAction
               actionText="Power Off"
               buttonHeight={47}
+              disabled={isDisabled}
               onClick={handlePowerOff}
             />
           )}

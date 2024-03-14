@@ -57,20 +57,15 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = renderWithTheme(
+    const { container } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
-        numberOfPlacementGroupsCreated={9}
         onClose={vi.fn()}
         open={true}
         selectedPlacementGroup={placementGroupFactory.build()}
       />
     );
 
-    expect(
-      getByText(
-        'There was a problem retrieving your placement group. Please try again'
-      )
-    ).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('should render the drawer components', () => {
@@ -132,12 +127,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       })
     );
 
-    const {
-      getByPlaceholderText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
+    const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
           affinity_type: 'anti_affinity',
@@ -149,33 +139,23 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       />
     );
 
-    const linodesSelect = getByPlaceholderText('Select a Linode');
-    const addLinodeButton = getByRole('button', { name: 'Add Linode' });
-    const removableLinodesList = getByTestId('pg-linode-removable-list');
+    const linodesSelect = getByPlaceholderText(
+      'Select Linode or type to search'
+    );
+    const assignLinodeButton = getByRole('button', { name: 'Assign Linode' });
 
     expect(linodesSelect).toBeInTheDocument();
-    expect(addLinodeButton).toHaveAttribute('aria-disabled', 'true');
-    expect(removableLinodesList).toHaveTextContent(
-      'No Linodes have been assigned.'
-    );
+    expect(assignLinodeButton).toHaveAttribute('aria-disabled', 'true');
 
     fireEvent.focus(linodesSelect);
     fireEvent.change(linodesSelect, { target: { value: 'Linode-11' } });
     const optionElement = getByText('Linode-11');
     fireEvent.click(optionElement);
 
-    expect(addLinodeButton).not.toHaveAttribute('aria-disabled', 'true');
+    expect(assignLinodeButton).not.toHaveAttribute('aria-disabled', 'true');
 
-    fireEvent.click(getByRole('button', { name: 'Add Linode' }));
+    fireEvent.click(getByRole('button', { name: 'Assign Linode' }));
 
-    expect(addLinodeButton).toHaveAttribute('aria-disabled', 'true');
-    expect(removableLinodesList).toHaveTextContent('Linode-11');
-
-    const removeButton = getByRole('button', { name: 'remove Linode-11' });
-    fireEvent.click(removeButton);
-
-    expect(removableLinodesList).toHaveTextContent(
-      'No Linodes have been assigned.'
-    );
+    expect(assignLinodeButton).toHaveAttribute('aria-disabled', 'true');
   });
 });

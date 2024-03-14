@@ -78,7 +78,7 @@ describe('ImageAndPassword', () => {
       <ImageAndPassword {...props} />
     );
 
-    await findByText(`You don't have permission to modify this Linode.`, {
+    await findByText(`You don't have permissions to edit this Linode.`, {
       exact: false,
     });
 
@@ -98,7 +98,7 @@ describe('ImageAndPassword', () => {
       <ImageAndPassword {...props} />
     );
 
-    await findByText(`You don't have permission to modify this Linode.`, {
+    await findByText(`You don't have permissions to edit this Linode.`, {
       exact: false,
     });
 

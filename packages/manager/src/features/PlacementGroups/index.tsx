@@ -34,7 +34,7 @@ export const PlacementGroups = () => {
           <Route
             component={PlacementGroupsLanding}
             exact
-            path={`${path}/rename/:id`}
+            path={`${path}/edit/:id`}
           />
           <Route
             component={PlacementGroupsLanding}

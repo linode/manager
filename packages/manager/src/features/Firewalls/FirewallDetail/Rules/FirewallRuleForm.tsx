@@ -293,7 +293,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       {values.addresses === 'ip/netmask' && (
         <StyledMultipleIPInput
           aria-label="IP / Netmask for Firewall rule"
-          inputProps={{ autoFocus: true }}
           ips={ips}
           onBlur={handleIPBlur}
           onChange={handleIPChange}
