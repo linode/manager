@@ -64,17 +64,25 @@ describe('ObjectStorageLanding', () => {
         const upClusters = objectStorageClusterFactory.buildList(1, {
           region: 'ap-south-1',
         });
-        return HttpResponse.json(makeResourcePage([downCluster, ...upClusters]));
+        return HttpResponse.json(
+          makeResourcePage([downCluster, ...upClusters])
+        );
       })
     );
 
     // Mock Buckets
     server.use(
-      http.get('*/object-storage/buckets/cluster-0', () => {
-        return HttpResponse.json([{ reason: 'Cluster offline!' }], {
-          status: 500,
-        });
-      }),
+      http.get(
+        '*/object-storage/buckets/cluster-0',
+        () => {
+          return HttpResponse.json([{ reason: 'Cluster offline!' }], {
+            status: 500,
+          });
+        },
+        {
+          once: true,
+        }
+      ),
       http.get('*/object-storage/buckets/*', () => {
         return HttpResponse.json(
           makeResourcePage(

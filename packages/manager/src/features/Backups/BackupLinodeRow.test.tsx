@@ -78,7 +78,7 @@ describe('BackupLinodeRow', () => {
   it('should render error indicator when price cannot be determined', async () => {
     server.use(
       http.get('*/linode/types/linode-type-test', () => {
-        throw new Error('A hypothetical network error has occurred!');
+        return HttpResponse.error();
       })
     );
 
