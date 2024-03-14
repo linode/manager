@@ -91,7 +91,6 @@ export const PlansPanel = (props: Props) => {
       delete plan.transfer;
       return {
         ...plan,
-        disk: 0,
         price: {
           hourly: 0,
           monthly: 0,
