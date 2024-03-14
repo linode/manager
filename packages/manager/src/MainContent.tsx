@@ -10,6 +10,7 @@ import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
@@ -74,7 +75,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 232,
+      marginLeft: SIDEBAR_WIDTH,
     },
     transition: 'margin-left .1s linear',
   },

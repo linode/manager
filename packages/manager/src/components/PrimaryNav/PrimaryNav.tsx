@@ -362,9 +362,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           return (
             <div key={idx}>
               <Divider
+                spacingTop={
+                  _isManagedAccount ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11
+                }
                 className={classes.divider}
                 spacingBottom={11}
-                spacingTop={idx === 1 ? 0 : 11}
               />
               {filteredLinks.map((thisLink) => {
                 const props = {
