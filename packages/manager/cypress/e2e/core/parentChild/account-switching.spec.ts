@@ -88,16 +88,33 @@ const mockParentUser = accountUserFactory.build({
 });
 
 const mockChildAccount = accountFactory.build({
-  company: 'Child Company',
+  company: 'Partner Company',
+});
+
+// Used for testing flows involving multiple children (e.g. switching child -> child).
+const mockAlternateChildAccount = accountFactory.build({
+  company: 'Other Partner Company',
 });
 
 const mockChildAccountProxyUser = accountUserFactory.build({
-  username: 'Partner User',
+  username: mockParentProfile.username,
+  user_type: 'proxy',
+});
+
+// Used for testing flows involving multiple children (e.g. switching child -> child).
+const mockAlternateChildAccountProxyUser = accountUserFactory.build({
+  username: mockParentProfile.username,
   user_type: 'proxy',
 });
 
 const mockChildAccountProfile = profileFactory.build({
   username: mockChildAccountProxyUser.username,
+  user_type: 'proxy',
+});
+
+// Used for testing flows involving multiple children (e.g. switching child -> child).
+const mockAlternateChildAccountProfile = profileFactory.build({
+  username: mockAlternateChildAccountProxyUser.username,
   user_type: 'proxy',
 });
 
