@@ -273,7 +273,6 @@ const LinodeDetailHeader = () => {
         open={resizeDialogOpen}
       />
       <LinodeRebuildDialog
-        key={matchedLinodeId}
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
         open={rebuildDialogOpen}
