@@ -340,7 +340,7 @@ export interface UserData {
 }
 
 export interface CreateLinodePlacementGroupPayload {
-  id: number | undefined;
+  id: number;
   /**
    * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
    *
