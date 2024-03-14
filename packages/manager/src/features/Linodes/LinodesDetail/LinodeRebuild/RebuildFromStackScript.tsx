@@ -344,9 +344,7 @@ export const RebuildFromStackScript = (props: Props) => {
                     onClick: handleRebuildButtonClick,
                   }}
                   sx={{
-                    '& button': { alignSelf: 'flex-end' },
                     display: 'flex',
-                    flexDirection: 'column-reverse',
                   }}
                 />
               </Grid>
