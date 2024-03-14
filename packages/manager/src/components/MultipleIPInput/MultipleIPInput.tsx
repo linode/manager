@@ -105,7 +105,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     idx: number
   ) => {
-    if (!onBlur) {
+    if (!onBlur || e.target.value === '') {
       return;
     }
 

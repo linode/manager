@@ -29,6 +29,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

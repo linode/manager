@@ -1,9 +1,15 @@
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
+import { Notice } from 'src/components/Notice/Notice';
+import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { useFlags } from 'src/hooks/useFlags';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { EdgePlanTable } from './EdgePlanTable';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -14,6 +20,8 @@ import {
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+
 interface Props {
   className?: string;
   copy?: string;
@@ -56,9 +64,49 @@ export const PlansPanel = (props: Props) => {
     types,
   } = props;
 
-  const theme = useTheme();
+  const flags = useFlags();
+  const location = useLocation();
+  const params = getQueryParamsFromQueryString(location.search);
 
-  const plans = getPlanSelectionsByPlanType(types);
+  const hideEdgeRegions =
+    !flags.gecko ||
+    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+
+  const showEdgePlanTable =
+    !hideEdgeRegions &&
+    getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
+
+  const planTypes = getPlanSelectionsByPlanType(types);
+
+  const getDedicatedEdgePlanType = () => {
+    // 256gb and 512gb plans will not be supported for Edge
+    const plansUpTo128GB = planTypes.dedicated.filter(
+      (planType) =>
+        !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
+          planType.formattedLabel
+        )
+    );
+
+    return plansUpTo128GB.map((plan) => {
+      delete plan.transfer;
+      return {
+        ...plan,
+        disk: 0,
+        price: {
+          hourly: 0,
+          monthly: 0,
+        },
+      };
+    });
+  };
+
+  // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
+  const plans = showEdgePlanTable
+    ? {
+        dedicated: getDedicatedEdgePlanType(),
+      }
+    : planTypes;
+
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
@@ -83,6 +131,12 @@ export const PlansPanel = (props: Props) => {
               planType={plan}
               regionsData={regionsData || []}
             />
+            {showEdgePlanTable && (
+              <Notice
+                text="Edge region pricing is temporarily $0 during the beta period, after which standard pricing will begin."
+                variant="warning"
+              />
+            )}
             <PlanContainer
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
@@ -109,6 +163,22 @@ export const PlansPanel = (props: Props) => {
     currentPlanHeading
   );
 
+  if (showEdgePlanTable) {
+    return (
+      <EdgePlanTable
+        copy={copy}
+        data-qa-select-plan
+        docsLink={docsLink}
+        error={error}
+        header={header || 'Linode Plan'}
+        innerClass={props.tabbedPanelInnerClass}
+        renderTable={tabs[0].render}
+        rootClass={`${className} tabbedPanel`}
+        sx={{ width: '100%' }}
+      />
+    );
+  }
+
   return (
     <TabbedPanel
       copy={copy}
@@ -119,7 +189,7 @@ export const PlansPanel = (props: Props) => {
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
-      sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      sx={{ width: '100%' }}
       tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />

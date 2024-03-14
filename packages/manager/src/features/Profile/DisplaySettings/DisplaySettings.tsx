@@ -13,13 +13,13 @@ import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
+import { sendManageGravatarEvent } from 'src/utilities/analytics';
 
 import { TimezoneForm } from './TimezoneForm';
-import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { sendManageGravatarEvent } from 'src/utilities/analytics';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -69,43 +69,52 @@ export const DisplaySettings = () => {
 
   return (
     <Paper>
-      <Box
-        sx={{
-          gap: 2,
-          marginBottom: theme.spacing(4),
-          marginTop: theme.spacing(),
-        }}
-        display="flex"
-      >
-        <GravatarByEmail email={profile?.email ?? ''} height={88} width={88} />
-        <div>
-          <Typography sx={{ fontSize: '1rem' }} variant="h2">
-            Profile photo
-            <StyledTooltipIcon
-              sxTooltipIcon={{
-                marginLeft: '6px',
-                marginTop: '-2px',
-                padding: 0,
-              }}
-              interactive
-              status="help"
-              text={tooltipIconText}
-            />
-          </Typography>
-          <StyledProfileCopy variant="body1">
-            Create, upload, and manage your globally recognized avatar from a
-            single place with Gravatar.
-          </StyledProfileCopy>
-          <StyledAddImageLink
-            external
-            onClick={() => sendManageGravatarEvent()}
-            to="https://en.gravatar.com/"
+      {!isProxyUser && (
+        <>
+          <Box
+            sx={{
+              gap: 2,
+              marginBottom: theme.spacing(4),
+              marginTop: theme.spacing(),
+            }}
+            display="flex"
           >
-            Manage photo
-          </StyledAddImageLink>
-        </div>
-      </Box>
-      <Divider />
+            <GravatarByEmail
+              email={profile?.email ?? ''}
+              height={88}
+              width={88}
+            />
+            <div>
+              <Typography sx={{ fontSize: '1rem' }} variant="h2">
+                Profile photo
+                <StyledTooltipIcon
+                  sxTooltipIcon={{
+                    marginLeft: '6px',
+                    marginTop: '-2px',
+                    padding: 0,
+                  }}
+                  interactive
+                  status="help"
+                  text={tooltipIconText}
+                />
+              </Typography>
+              <StyledProfileCopy variant="body1">
+                Create, upload, and manage your globally recognized avatar from
+                a single place with Gravatar.
+              </StyledProfileCopy>
+              <StyledAddImageLink
+                external
+                onClick={() => sendManageGravatarEvent()}
+                to="https://en.gravatar.com/"
+              >
+                Manage photo
+              </StyledAddImageLink>
+            </div>
+          </Box>
+          <Divider />
+        </>
+      )}
+
       <SingleTextFieldForm
         tooltipText={
           profile?.restricted

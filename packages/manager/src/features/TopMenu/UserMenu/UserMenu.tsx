@@ -11,6 +11,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarForProxy } from 'src/components/GravatarForProxy';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -25,7 +26,9 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
-import { getStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from 'src/utilities/storage';
+
+import { getCompanyNameOrEmail } from './utils';
 
 interface MenuLink {
   display: string;
@@ -81,14 +84,11 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
-  // If there is no company name to identify an account, fall back on the email.
-  // Covers an edge case in which a restricted parent user without `account_access` cannot access the account company.
-  const companyNameOrEmail =
-    hasParentChildAccountAccess &&
-    profile?.user_type !== 'default' &&
-    account?.company
-      ? account.company
-      : profile?.email;
+  const companyNameOrEmail = getCompanyNameOrEmail({
+    company: account?.company,
+    isParentChildFeatureEnabled: hasParentChildAccountAccess,
+    profile,
+  });
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
@@ -120,7 +120,10 @@ export const UserMenu = React.memo(() => {
 
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
-    if (isProxyUser) {
+    if (isProxyUser && !getStorage('proxy_user')) {
+      // Flag for proxy user to display success toast once.
+      setStorage('proxy_user', 'true');
+
       enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
         variant: 'success',
       });
@@ -211,7 +214,11 @@ export const UserMenu = React.memo(() => {
       >
         <Button
           startIcon={
-            <GravatarByEmail captureAnalytics email={profile?.email ?? ''} />
+            isProxyUser ? (
+              <GravatarForProxy />
+            ) : (
+              <GravatarByEmail captureAnalytics email={profile?.email ?? ''} />
+            )
           }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
@@ -272,7 +279,7 @@ export const UserMenu = React.memo(() => {
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
           {canSwitchBetweenParentOrProxyAccount && (
-            <Typography>You are currently logged in as:</Typography>
+            <Typography>Current account:</Typography>
           )}
           <Typography
             color={(theme) => theme.textColors.headlineStatic}

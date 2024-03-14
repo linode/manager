@@ -242,6 +242,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const virtModeCaptionId = React.useId();
+
   const {
     data: kernels,
     error: kernelsError,
@@ -721,7 +723,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
-                  aria-describedby="virtModeCaption"
+                  aria-describedby={virtModeCaptionId}
                   disabled={isReadOnly}
                   htmlFor="virt_mode"
                 >
@@ -745,7 +747,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     label="Full virtualization"
                     value="fullvirt"
                   />
-                  <FormHelperText id="virtModeCaption">
+                  <FormHelperText id={virtModeCaptionId}>
                     Controls if devices inside your virtual machine are
                     paravirtualized or fully virtualized. Paravirt is what you
                     want, unless you&rsquo;re doing weird things.
