@@ -484,6 +484,7 @@ export const TextField = (props: TextFieldProps) => {
               padding: '6px',
             }}
             classes={{ popper: tooltipClasses }}
+            dataAttrs={dataAttrs}
             interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
             status="help"

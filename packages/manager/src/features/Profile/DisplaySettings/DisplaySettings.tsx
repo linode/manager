@@ -13,12 +13,12 @@ import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 
 import { TimezoneForm } from './TimezoneForm';
-import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -66,6 +66,16 @@ export const DisplaySettings = () => {
     </>
   );
 
+  const tooltipForDisabledUsernameField = profile?.restricted
+    ? 'Restricted users cannot update their username. Please contact an account administrator.'
+    : isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
+  const tooltipForDisabledEmailField = isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
   return (
     <Paper>
       <Box
@@ -102,23 +112,23 @@ export const DisplaySettings = () => {
       </Box>
       <Divider />
       <SingleTextFieldForm
-        tooltipText={
-          profile?.restricted
-            ? 'Restricted users cannot update their username. Please contact an account administrator.'
-            : isProxyUser
-            ? RESTRICTED_FIELD_TOOLTIP
-            : undefined
-        }
+        dataAttrs={{
+          tooltip: tooltipForDisabledUsernameField,
+        }}
         disabled={profile?.restricted || isProxyUser}
         initialValue={profile?.username}
         key={usernameResetToken}
         label="Username"
         submitForm={updateUsername}
         successCallback={requestProfile}
+        tooltipText={tooltipForDisabledUsernameField}
         trimmed
       />
       <Divider spacingTop={24} />
       <SingleTextFieldForm
+        dataAttrs={{
+          tooltip: tooltipForDisabledEmailField,
+        }}
         successCallback={() => {
           // If there's a "user_email_bounce" notification for this user, and
           // the user has just updated their email, re-request notifications to
@@ -136,7 +146,7 @@ export const DisplaySettings = () => {
         key={emailResetToken}
         label="Email"
         submitForm={updateEmail}
-        tooltipText={isProxyUser ? RESTRICTED_FIELD_TOOLTIP : undefined}
+        tooltipText={tooltipForDisabledEmailField}
         trimmed
         type="email"
       />
