@@ -717,11 +717,6 @@ export const handlers = [
       }),
       linodeFactory.build({
         backups: { enabled: false },
-        label: 'bare-metal',
-        type: 'g1-metal-c2',
-      }),
-      linodeFactory.build({
-        backups: { enabled: false },
         label: 'shadow-plan-with-tags',
         tags: ['test1', 'test2', 'test3'],
         type: 'g5-standard-20-s1',
