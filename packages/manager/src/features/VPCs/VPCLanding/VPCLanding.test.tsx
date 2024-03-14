@@ -4,7 +4,7 @@ import * as React from 'react';
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
@@ -20,7 +20,7 @@ describe('VPC Landing Table', () => {
         const vpcsWithSubnet = vpcFactory.buildList(3, {
           subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
         });
-        return HttpResponse.json((makeResourcePage(vpcsWithSubnet)));
+        return HttpResponse.json(makeResourcePage(vpcsWithSubnet));
       })
     );
 
@@ -42,7 +42,7 @@ describe('VPC Landing Table', () => {
   it('should render vpc landing with empty state', async () => {
     server.use(
       http.get('*/vpcs', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

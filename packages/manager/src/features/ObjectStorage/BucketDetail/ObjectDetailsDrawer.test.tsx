@@ -2,7 +2,7 @@ import { act, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
@@ -41,7 +41,7 @@ describe('ObjectDetailsDrawer', () => {
   it('renders formatted size, formatted last modified, truncated URL', async () => {
     server.use(
       http.get('*/profile', () =>
-        HttpResponse.json((profileFactory.build({ timezone: 'utc' })))
+        HttpResponse.json(profileFactory.build({ timezone: 'utc' }))
       )
     );
     const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />);

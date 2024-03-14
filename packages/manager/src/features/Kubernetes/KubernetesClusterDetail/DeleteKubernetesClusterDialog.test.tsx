@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -29,11 +29,9 @@ describe('Kubernetes deletion dialog', () => {
   it('should not be able to submit form before the user fills out confirmation text', async () => {
     server.use(
       http.get(`*/profile/preference`, () => {
-        return res(
-          ctx.json({
-            type_to_confirm: true,
-          })
-        );
+        return HttpResponse.json({
+          type_to_confirm: true,
+        });
       })
     );
 

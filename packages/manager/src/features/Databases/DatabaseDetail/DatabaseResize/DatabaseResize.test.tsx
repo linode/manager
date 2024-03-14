@@ -9,7 +9,7 @@ import { Router } from 'react-router-dom';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
@@ -46,8 +46,8 @@ describe('database resize', () => {
     ];
     server.use(
       http.get('*/databases/types', () => {
-        return res(
-          ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+        return HttpResponse.json(
+          makeResourcePage([...standardTypes, ...dedicatedTypes])
         );
       })
     );
@@ -83,8 +83,8 @@ describe('database resize', () => {
       ];
       server.use(
         http.get('*/databases/types', () => {
-          return res(
-            ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+          return HttpResponse.json(
+            makeResourcePage([...standardTypes, ...dedicatedTypes])
           );
         })
       );

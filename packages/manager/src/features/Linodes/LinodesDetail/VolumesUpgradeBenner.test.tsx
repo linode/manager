@@ -2,7 +2,7 @@ import React from 'react';
 
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumesUpgradeBanner } from './VolumesUpgradeBanner';
@@ -17,10 +17,10 @@ describe('VolumesUpgradeBanner', () => {
 
     server.use(
       http.get('*/linode/instances/:id/volumes', () => {
-        return HttpResponse.json((makeResourcePage([volume])));
+        return HttpResponse.json(makeResourcePage([volume]));
       }),
       http.get('*/account/notifications', () => {
-        return HttpResponse.json((makeResourcePage([notification])));
+        return HttpResponse.json(makeResourcePage([notification]));
       })
     );
 
@@ -49,10 +49,10 @@ describe('VolumesUpgradeBanner', () => {
 
     server.use(
       http.get('*/linode/instances/:id/volumes', () => {
-        return HttpResponse.json((makeResourcePage(volumes)));
+        return HttpResponse.json(makeResourcePage(volumes));
       }),
       http.get('*/account/notifications', () => {
-        return HttpResponse.json((makeResourcePage(notifications)));
+        return HttpResponse.json(makeResourcePage(notifications));
       })
     );
 

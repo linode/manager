@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { imageFactory } from 'src/factories';
 import { linodeFactory } from 'src/factories/linodes';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { SelectLinodeRow } from './SelectLinodeRow';
@@ -23,10 +23,10 @@ describe('SelectLinodeRow', () => {
 
     server.use(
       http.get('*/linode/instances/:linodeId', () => {
-        return HttpResponse.json((linode1));
+        return HttpResponse.json(linode1);
       }),
       http.get('*/images/:imageId', () => {
-        return HttpResponse.json((image1));
+        return HttpResponse.json(image1);
       })
     );
 
@@ -79,10 +79,10 @@ describe('SelectLinodeRow', () => {
     });
     server.use(
       http.get('*/linode/instances/:linodeId', () => {
-        return HttpResponse.json((linode1));
+        return HttpResponse.json(linode1);
       }),
       http.get('*/images/:imageId', () => {
-        return HttpResponse.json((image1));
+        return HttpResponse.json(image1);
       })
     );
 
@@ -123,10 +123,10 @@ describe('SelectLinodeRow', () => {
     });
     server.use(
       http.get('*/linode/instances/:linodeId', () => {
-        return HttpResponse.json((linode1));
+        return HttpResponse.json(linode1);
       }),
       http.get('*/images/:imageId', () => {
-        return HttpResponse.json((image1));
+        return HttpResponse.json(image1);
       })
     );
 

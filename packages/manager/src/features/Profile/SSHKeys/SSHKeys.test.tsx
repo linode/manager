@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { sshKeyFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SSHKeys } from './SSHKeys';
@@ -17,7 +17,7 @@ describe('SSHKeys', () => {
 
     server.use(
       http.get('*/profile/sshkeys', () => {
-        return HttpResponse.json((makeResourcePage(sshKeys)));
+        return HttpResponse.json(makeResourcePage(sshKeys));
       })
     );
 

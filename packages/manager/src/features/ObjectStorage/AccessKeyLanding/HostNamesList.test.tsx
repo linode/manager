@@ -3,7 +3,7 @@ import React from 'react';
 
 import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesList } from './HostNamesList';
@@ -26,7 +26,7 @@ describe('HostNamesList', () => {
           id: 'us-central',
           label: 'Fake Region, NC',
         });
-        return HttpResponse.json((makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
 

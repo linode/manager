@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { imageFactory, linodeTypeFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -194,7 +194,7 @@ describe('AddonsPanel', () => {
   beforeEach(() => {
     server.use(
       http.get('*/images/*', () => {
-        return HttpResponse.json((imageFactory.build()));
+        return HttpResponse.json(imageFactory.build());
       })
     );
   });

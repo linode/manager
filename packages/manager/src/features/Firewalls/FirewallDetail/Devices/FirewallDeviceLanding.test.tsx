@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Router } from 'react-router-dom';
 
 import { firewallDeviceFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -40,7 +40,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
       it('should render the component', () => {
         server.use(
           http.get('*/firewalls/*', () => {
-            return HttpResponse.json((firewallDeviceFactory.buildList(1)));
+            return HttpResponse.json(firewallDeviceFactory.buildList(1));
           })
         );
         const { getByRole, getByTestId } = renderWithTheme(

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Props, TicketList } from './TicketList';
@@ -29,7 +29,7 @@ describe('TicketList', () => {
           status: 'open',
           summary: 'my linode is broken :(',
         });
-        return HttpResponse.json((makeResourcePage(tickets)));
+        return HttpResponse.json(makeResourcePage(tickets));
       })
     );
 
@@ -57,7 +57,7 @@ describe('TicketList', () => {
   it('should render ticket list empty state', async () => {
     server.use(
       http.get('*/support/tickets', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

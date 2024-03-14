@@ -11,13 +11,13 @@ import { accountSettingsFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
 import { profileFactory } from 'src/factories/profile';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  LongviewPlansProps,
   LONGVIEW_FREE_ID,
   LongviewPlans,
+  LongviewPlansProps,
   formatPrice,
 } from './LongviewPlans';
 
@@ -58,7 +58,9 @@ describe('LongviewPlans', () => {
   beforeEach(() => {
     server.use(
       http.get('*/account/settings', () => {
-        return HttpResponse.json((accountSettingsFactory.build({ managed: false })));
+        return HttpResponse.json(
+          accountSettingsFactory.build({ managed: false })
+        );
       })
     );
   });
@@ -109,28 +111,26 @@ describe('LongviewPlans', () => {
     // Build a restricted user's profile so we get a permission error
     server.use(
       http.get('*/profile', () => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              restricted: true,
-            })
-          )
+        return HttpResponse.json(
+          profileFactory.build({
+            restricted: true,
+          })
         );
       })
     );
 
     server.use(
       http.get('*/grants', () => {
-        return res(
-          ctx.status(200),
-          ctx.json(
-            grantsFactory.build({
-              global: {
-                account_access: 'read_only',
-                longview_subscription: false,
-              },
-            })
-          )
+        return HttpResponse.json(
+          grantsFactory.build({
+            global: {
+              account_access: 'read_only',
+              longview_subscription: false,
+            },
+          }),
+          {
+            status: 200,
+          }
         );
       })
     );
@@ -147,7 +147,9 @@ describe('LongviewPlans', () => {
   it('displays a message id the account is managed', async () => {
     server.use(
       http.get('*/account/settings', () => {
-        return HttpResponse.json((accountSettingsFactory.build({ managed: true })));
+        return HttpResponse.json(
+          accountSettingsFactory.build({ managed: true })
+        );
       })
     );
 

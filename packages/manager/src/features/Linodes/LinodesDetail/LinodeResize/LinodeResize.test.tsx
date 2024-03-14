@@ -3,7 +3,7 @@ import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { linodeFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeResize } from './LinodeResize';
@@ -20,7 +20,7 @@ describe('LinodeResize', () => {
   it('to render', async () => {
     server.use(
       http.get('*/linode/instances/:id', () => {
-        return HttpResponse.json((linodeFactory.build({ label: 'test-resize' })));
+        return HttpResponse.json(linodeFactory.build({ label: 'test-resize' }));
       })
     );
     const { findByText } = renderWithTheme(

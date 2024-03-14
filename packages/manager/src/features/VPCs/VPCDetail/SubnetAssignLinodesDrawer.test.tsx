@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
@@ -31,7 +31,7 @@ describe('Subnet Assign Linodes Drawer', () => {
 
   server.use(
     http.get('*/linode/instances', () => {
-      return HttpResponse.json((makeResourcePage([linode])));
+      return HttpResponse.json(makeResourcePage([linode]));
     })
   );
 

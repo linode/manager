@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
 import { profileFactory } from 'src/factories/profile';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -55,8 +55,10 @@ describe('Create API Token Drawer', () => {
 
   it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
     server.use(
-      rest.post('*/profile/tokens', () => {
-        return HttpResponse.json((appTokenFactory.build({ token: 'secret-value' })));
+      http.post('*/profile/tokens', () => {
+        return HttpResponse.json(
+          appTokenFactory.build({ token: 'secret-value' })
+        );
       })
     );
 

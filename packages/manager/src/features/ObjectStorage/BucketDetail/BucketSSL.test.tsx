@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketSSL } from './BucketSSL';
@@ -9,7 +9,7 @@ describe('BucketSSL', () => {
   it('renders inputs for a Certificate and Private Key when no cert is set', async () => {
     server.use(
       http.get('*object-storage/buckets/*/*/ssl', () => {
-        return HttpResponse.json(({ ssl: false }));
+        return HttpResponse.json({ ssl: false });
       })
     );
 
@@ -26,7 +26,7 @@ describe('BucketSSL', () => {
   it('renders a notice and a remove button when certs are already set', async () => {
     server.use(
       http.get('*object-storage/buckets/*/*/ssl', () => {
-        return HttpResponse.json(({ ssl: true }));
+        return HttpResponse.json({ ssl: true });
       })
     );
 

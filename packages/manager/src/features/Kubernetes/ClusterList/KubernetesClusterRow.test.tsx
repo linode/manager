@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { kubernetesClusterFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
@@ -32,7 +32,7 @@ describe('ClusterRow component', () => {
           id: 'us-central',
           label: 'Fake Region, NC',
         });
-        return HttpResponse.json((makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
 

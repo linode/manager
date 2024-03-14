@@ -4,7 +4,7 @@ import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImageAndPassword } from './ImageAndPassword';
@@ -43,7 +43,7 @@ describe('ImageAndPassword', () => {
 
     server.use(
       http.get('*/account/users', () => {
-        return HttpResponse.json((makeResourcePage(users)));
+        return HttpResponse.json(makeResourcePage(users));
       })
     );
 
@@ -61,15 +61,13 @@ describe('ImageAndPassword', () => {
   it('should be disabled for a restricted user with read only access', async () => {
     server.use(
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ restricted: true })));
+        return HttpResponse.json(profileFactory.build({ restricted: true }));
       }),
       http.get('*/profile/grants', () => {
-        return res(
-          ctx.json(
-            grantsFactory.build({
-              linode: [{ id: 0, permissions: 'read_only' }],
-            })
-          )
+        return HttpResponse.json(
+          grantsFactory.build({
+            linode: [{ id: 0, permissions: 'read_only' }],
+          })
         );
       })
     );
@@ -87,10 +85,10 @@ describe('ImageAndPassword', () => {
   it('should be disabled for a restricted user with no access', async () => {
     server.use(
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ restricted: true })));
+        return HttpResponse.json(profileFactory.build({ restricted: true }));
       }),
       http.get('*/profile/grants', () => {
-        return HttpResponse.json((grantsFactory.build({ linode: [] })));
+        return HttpResponse.json(grantsFactory.build({ linode: [] }));
       })
     );
 

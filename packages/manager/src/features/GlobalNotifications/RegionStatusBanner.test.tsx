@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { regionFactory } from 'src/factories/regions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionStatusBanner } from './RegionStatusBanner';
@@ -13,7 +13,7 @@ describe('Region status banner', () => {
     server.use(
       http.get('*/regions', () => {
         const regions = regionFactory.buildList(5);
-        return HttpResponse.json((makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
     const { container } = renderWithTheme(<RegionStatusBanner />);
@@ -28,7 +28,7 @@ describe('Region status banner', () => {
           label: 'Newark, NJ',
           status: 'outage',
         });
-        return HttpResponse.json((makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
     const { queryAllByTestId, queryAllByText } = renderWithTheme(
@@ -46,7 +46,7 @@ describe('Region status banner', () => {
         const regions = regionFactory.buildList(5, {
           status: 'outage',
         });
-        return HttpResponse.json((makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
     const { queryAllByTestId } = renderWithTheme(<RegionStatusBanner />);
@@ -62,7 +62,7 @@ describe('Region status banner', () => {
         const badRegions = regionFactory.buildList(3, { status: 'outage' });
         const goodRegions = regionFactory.buildList(2, { status: 'ok' });
         const regions = [...badRegions, ...goodRegions];
-        return HttpResponse.json((makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
     const { queryAllByTestId } = renderWithTheme(<RegionStatusBanner />);

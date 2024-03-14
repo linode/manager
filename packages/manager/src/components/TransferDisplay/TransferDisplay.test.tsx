@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { accountTransferFactory } from 'src/factories/account';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TransferDisplay } from './TransferDisplay';
@@ -22,7 +22,7 @@ const mockServerQuery = (data: TransferDataOptions) => {
 
   server.use(
     http.get('*/account/transfer', () => {
-      return HttpResponse.json((data));
+      return HttpResponse.json(data);
     })
   );
 };

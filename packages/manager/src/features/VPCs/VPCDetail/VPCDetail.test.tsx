@@ -3,7 +3,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
@@ -17,7 +17,7 @@ describe('VPC Detail Summary section', () => {
     const vpcFactory1 = vpcFactory.build({ id: 100 });
     server.use(
       http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json((vpcFactory1));
+        return HttpResponse.json(vpcFactory1);
       })
     );
 
@@ -51,7 +51,7 @@ describe('VPC Detail Summary section', () => {
     });
     server.use(
       http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json((vpcFactory1));
+        return HttpResponse.json(vpcFactory1);
       })
     );
 
@@ -66,7 +66,7 @@ describe('VPC Detail Summary section', () => {
   it('should hide description if none is provided', async () => {
     server.use(
       http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json((vpcFactory.build()));
+        return HttpResponse.json(vpcFactory.build());
       })
     );
 
@@ -83,7 +83,7 @@ describe('VPC Detail Summary section', () => {
     });
     server.use(
       http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json((vpcFactory1));
+        return HttpResponse.json(vpcFactory1);
       })
     );
 

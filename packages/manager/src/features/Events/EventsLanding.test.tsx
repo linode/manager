@@ -2,7 +2,7 @@ import React from 'react';
 
 import { eventFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EventsLanding } from './EventsLanding';
@@ -10,9 +10,7 @@ import { EventsLanding } from './EventsLanding';
 describe('EventsLanding', () => {
   it('renders an empty state', async () => {
     server.use(
-      http.get('*/events', () =>
-        HttpResponse.json((makeResourcePage([])))
-      )
+      http.get('*/events', () => HttpResponse.json(makeResourcePage([])))
     );
 
     const { findByText } = renderWithTheme(<EventsLanding />);
@@ -21,9 +19,7 @@ describe('EventsLanding', () => {
   });
   it('renders a custom empty state message', async () => {
     server.use(
-      http.get('*/events', () =>
-        HttpResponse.json((makeResourcePage([])))
-      )
+      http.get('*/events', () => HttpResponse.json(makeResourcePage([])))
     );
 
     const emptyMessage = 'No Linode Events :(';
@@ -46,9 +42,7 @@ describe('EventsLanding', () => {
     });
 
     server.use(
-      http.get('*/events', () =>
-        HttpResponse.json((makeResourcePage([event])))
-      )
+      http.get('*/events', () => HttpResponse.json(makeResourcePage([event])))
     );
 
     const { findByText } = renderWithTheme(<EventsLanding />);
@@ -62,8 +56,8 @@ describe('EventsLanding', () => {
 
     server.use(
       http.get('*/events', () =>
-        res(
-          ctx.json(makeResourcePage([event], { page: 1, pages: 1, results: 1 }))
+        HttpResponse.json(
+          makeResourcePage([event], { page: 1, pages: 1, results: 1 })
         )
       )
     );

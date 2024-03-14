@@ -10,7 +10,7 @@ import {
   vpcFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -51,11 +51,11 @@ describe('Linode Entity Detail', () => {
 
     server.use(
       http.get('*/account', () => {
-        return HttpResponse.json((account));
+        return HttpResponse.json(account);
       }),
 
       http.get('*/vpcs', () => {
-        return HttpResponse.json((makeResourcePage([vpc])));
+        return HttpResponse.json(makeResourcePage([vpc]));
       })
     );
 
@@ -92,11 +92,11 @@ describe('Linode Entity Detail', () => {
 
     server.use(
       http.get('*/account', () => {
-        return HttpResponse.json((account));
+        return HttpResponse.json(account);
       }),
 
       http.get('*/vpcs', () => {
-        return HttpResponse.json((makeResourcePage([vpc])));
+        return HttpResponse.json(makeResourcePage([vpc]));
       })
     );
 
@@ -129,7 +129,7 @@ describe('Linode Entity Detail', () => {
 
     server.use(
       http.get('*/vpcs', () => {
-        return HttpResponse.json((makeResourcePage(vpcs)));
+        return HttpResponse.json(makeResourcePage(vpcs));
       })
     );
 

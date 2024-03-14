@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { backupFactory, linodeFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
@@ -10,8 +10,8 @@ describe('RestoreToLinodeDrawer', () => {
   it('renders without crashing', async () => {
     server.use(
       http.get('*/linode/instances/1', () => {
-        return res(
-          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
+        return HttpResponse.json(
+          linodeFactory.build({ backups: { enabled: true }, id: 1 })
         );
       })
     );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -21,7 +21,7 @@ describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
       http.get('*/account/maintenance', () => {
-        return HttpResponse.json(({ managed: false }));
+        return HttpResponse.json({ managed: false });
       })
     );
 
@@ -35,7 +35,7 @@ describe('PrimaryNav', () => {
 
     server.use(
       http.get('*/account/maintenance', () => {
-        return HttpResponse.json(({ managed: true }));
+        return HttpResponse.json({ managed: true });
       })
     );
 
@@ -79,7 +79,7 @@ describe('PrimaryNav', () => {
 
     server.use(
       http.get('*/account', () => {
-        return HttpResponse.json((account));
+        return HttpResponse.json(account);
       })
     );
 
@@ -99,7 +99,7 @@ describe('PrimaryNav', () => {
 
     server.use(
       http.get('*/account', () => {
-        return HttpResponse.json((account));
+        return HttpResponse.json(account);
       })
     );
 
@@ -119,7 +119,7 @@ describe('PrimaryNav', () => {
 
     server.use(
       http.get('*/account', () => {
-        return HttpResponse.json((account));
+        return HttpResponse.json(account);
       })
     );
 

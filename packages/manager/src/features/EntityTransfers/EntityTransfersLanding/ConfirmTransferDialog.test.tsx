@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -27,7 +27,7 @@ describe('Accept Entity Transfer confirmation dialog', () => {
           const transfer = entityTransferFactory.build({
             is_sender: true,
           });
-          return HttpResponse.json((transfer));
+          return HttpResponse.json(transfer);
         })
       );
       renderWithTheme(<ConfirmTransferDialog {...props} />);
@@ -44,7 +44,7 @@ describe('Accept Entity Transfer confirmation dialog', () => {
             } as any, // Domains aren't allowed yet
             is_sender: false,
           });
-          return HttpResponse.json((transfer));
+          return HttpResponse.json(transfer);
         })
       );
       renderWithTheme(<ConfirmTransferDialog {...props} />);
