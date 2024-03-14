@@ -839,7 +839,7 @@ export class LinodeCreate extends React.PureComponent<
     );
 
     const placement_group_payload: CreateLinodePlacementGroupPayload = {
-      id: this.props.placementGroupSelection?.id,
+      id: this.props.placementGroupSelection?.id ?? -1,
     };
 
     // eslint-disable-next-line sonarjs/no-unused-collection
@@ -855,7 +855,8 @@ export class LinodeCreate extends React.PureComponent<
       image: this.props.selectedImageID,
       label: this.props.label,
       placement_group:
-        this.props.flags.placementGroups?.enabled && placement_group_payload.id
+        this.props.flags.placementGroups?.enabled &&
+        placement_group_payload.id !== -1
           ? placement_group_payload
           : undefined,
       private_ip: this.props.privateIPEnabled,
