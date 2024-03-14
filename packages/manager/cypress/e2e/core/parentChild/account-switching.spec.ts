@@ -129,8 +129,20 @@ const childAccountAccessGrantDisabled = grantsFactory.build({
 const mockChildAccountToken = appTokenFactory.build({
   id: randomNumber(),
   created: DateTime.now().toISO(),
-  expiry: DateTime.now().plus({ hours: 1 }).toISO(),
+  expiry: DateTime.now().plus({ minutes: 15 }).toISO(),
   label: `${mockChildAccount.company}_proxy`,
+  scopes: '*',
+  token: randomString(32),
+  website: undefined,
+  thumbnail_url: undefined,
+});
+
+// Used for testing flows involving multiple children (e.g. switching child -> child).
+const mockAlternateChildAccountToken = appTokenFactory.build({
+  id: randomNumber(),
+  created: DateTime.now().toISO(),
+  expiry: DateTime.now().plus({ minutes: 15 }).toISO(),
+  label: `${mockAlternateChildAccount.company}_proxy`,
   scopes: '*',
   token: randomString(32),
   website: undefined,
@@ -162,8 +174,12 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      interceptGetPayments().as('getPayments');
+      interceptGetPaymentMethods().as('getPaymentMethods');
+      interceptGetInvoices().as('getInvoices');
 
       cy.visitWithLogin('/account/billing');
+      cy.wait(['@getPayments', '@getInvoices', '@getPaymentMethods']);
 
       // Confirm that "Switch Account" button is present, then click it.
       ui.button
@@ -313,6 +329,11 @@ describe('Parent/Child account switching', () => {
       mockGetFeatureFlagClientstream();
     });
 
+    /*
+     * - Confirms that a Child account Proxy user can switch back to a Parent account from Billing page.
+     * - Confirms that Parent account information is displayed in user menu button after switch.
+     * - Confirms that Cloud updates local storage auth values upon account switch.
+     */
     it('can switch from Proxy user back to Parent account user from Billing page', () => {
       const mockParentToken = randomString(32);
       const mockParentExpiration = DateTime.now().plus({ minutes: 15 }).toISO();
@@ -331,9 +352,7 @@ describe('Parent/Child account switching', () => {
         localStorageOverrides: {
           proxy_user: true,
           'authentication/parent_token/token': `Bearer ${mockParentToken}`,
-          'authentication/parent_token/expire':
-            //'Thu Mar 19 2024 16:59:36 GMT-0500 (Eastern Standard Time)',
-            mockParentExpiration,
+          'authentication/parent_token/expire': mockParentExpiration,
           'authentication/parent_token/scopes': '*',
         },
       });
@@ -347,7 +366,7 @@ describe('Parent/Child account switching', () => {
         .should('be.enabled')
         .click();
 
-      // Prepare mocks in advance of the account switch. As soon as the child account is clicked,
+      // Prepare mocks in advance of the account switch. As soon as the switch back link is clicked,
       // Cloud will replace its stored token with the token provided by the API and then reload.
       // From that point forward, we will not have a valid test account token stored in local storage,
       // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
@@ -386,7 +405,106 @@ describe('Parent/Child account switching', () => {
         mockParentProfile.username,
         mockParentAccount.company
       );
+
       assertAuthLocalStorage(mockParentToken, mockParentExpiration, '*');
+    });
+  });
+
+  /**
+   * Tests to confirm that Proxy users can switch to other Child accounts as expected.
+   */
+  describe('From Child to Child', () => {
+    /*
+     * - Confirms that a Child account Proxy user can switch to another Child account from Billing page.
+     * - Confirms that alternate Child account information is displayed in user menu button after switch.
+     * - Confirms that Cloud updates local storage auth values upon account switch.
+     */
+    it('can switch to another Child account as a Proxy user', () => {
+      const mockParentToken = randomString(32);
+      const mockParentExpiration = DateTime.now().plus({ minutes: 15 }).toISO();
+
+      mockGetAccount(mockChildAccount);
+      mockGetProfile(mockChildAccountProfile);
+      mockGetChildAccounts([mockAlternateChildAccount]);
+      mockGetUser(mockChildAccountProxyUser);
+      interceptGetPayments().as('getPayments');
+      interceptGetPaymentMethods().as('getPaymentMethods');
+      interceptGetInvoices().as('getInvoices');
+
+      // Visit billing page with `authentication/parent_token/*` local storage
+      // data set to mock values.
+      cy.visitWithLogin('/account/billing', {
+        localStorageOverrides: {
+          proxy_user: true,
+          'authentication/parent_token/token': `Bearer ${mockParentToken}`,
+          'authentication/parent_token/expire': mockParentExpiration,
+          'authentication/parent_token/scopes': '*',
+        },
+      });
+
+      // Wait for page to finish loading before proceeding with account switch.
+      cy.wait(['@getPayments', '@getPaymentMethods', '@getInvoices']);
+
+      ui.button
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // Prepare mocks in advance of the account switch. As soon as the child account is clicked,
+      // Cloud will replace its stored token with the token provided by the API and then reload.
+      // From that point forward, we will not have a valid test account token stored in local storage,
+      // so all non-intercepted API requests will respond with a 401 status code and we will get booted to login.
+      // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
+      // individual requests as needed.
+      mockAllApiRequests();
+      mockGetLinodes([]);
+      mockGetRegions([]);
+      mockGetEvents([]);
+      mockGetNotifications([]);
+      mockGetAccount(mockAlternateChildAccount);
+      mockGetProfile(mockAlternateChildAccountProfile);
+      mockGetUser(mockAlternateChildAccountProxyUser);
+      mockGetPaymentMethods(paymentMethodFactory.buildList(1)).as(
+        'getPaymentMethods'
+      );
+      mockGetInvoices([]).as('getInvoices');
+      mockGetPayments([]).as('getPayments');
+
+      // Set up account switch mock.
+      mockCreateChildAccountToken(
+        mockAlternateChildAccount,
+        mockAlternateChildAccountToken
+      ).as('switchAccount');
+
+      // Click mock company name in "Switch Account" drawer.
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(mockAlternateChildAccount.company)
+            .should('be.visible')
+            .click();
+        });
+
+      // Allow page to load before asserting user menu, ensuring no app crash, etc.
+      cy.wait('@switchAccount');
+      cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
+
+      assertUserMenuButton(
+        mockAlternateChildAccountProfile.username,
+        mockAlternateChildAccount.company
+      );
+
+      assertAuthLocalStorage(
+        mockAlternateChildAccountToken.token!,
+        mockAlternateChildAccountToken.expiry!,
+        mockAlternateChildAccountToken.scopes
+      );
+      // TODO Confirm whether toast is intended here.
+      // ui.toast.assertMessage(
+      //   `Account switched to ${mockAlternateChildAccount.company}.`
+      // );
     });
   });
 
