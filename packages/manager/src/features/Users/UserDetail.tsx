@@ -3,7 +3,7 @@ import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   matchPath,
   useHistory,

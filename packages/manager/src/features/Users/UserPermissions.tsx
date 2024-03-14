@@ -11,10 +11,10 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import { QueryClient } from '@tanstack/react-query';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -33,14 +33,15 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
 import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { grantTypeMap } from 'src/features/Account/constants';
+import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -89,7 +90,7 @@ interface State {
 type CombinedProps = Props &
   WithSnackbarProps &
   WithQueryClientProps &
-  FeatureFlagConsumerProps;
+  WithFeatureFlagProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -300,7 +301,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
-          this.props.queryClient.invalidateQueries('account-users');
+          this.props.queryClient.invalidateQueries(['account', 'users']);
           this.props.enqueueSnackbar('User permissions successfully saved.', {
             variant: 'success',
           });
@@ -435,8 +436,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             sx={{ margin: 0, width: 'auto' }}
           >
             <StyledHeaderGrid>
-              <Typography data-qa-restrict-access={restricted} variant="h2">
-                {isProxyUser ? 'Business Partner' : 'General'} Permissions
+              <Typography
+                sx={{
+                  textTransform: 'capitalize',
+                }}
+                data-qa-restrict-access={restricted}
+                variant="h2"
+              >
+                {isProxyUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledSubHeaderGrid>
@@ -713,6 +720,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               variant: 'success',
             }
           );
+
+          // Refresh the data on /account/users/:currentUser:/grants/ so it is accurate.
+          this.props.queryClient.invalidateQueries([
+            'account',
+            'users',
+            'grants',
+            currentUsername,
+          ]);
         })
         .catch((errResponse) => {
           this.setState({
@@ -815,5 +830,5 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 export default recompose<CombinedProps, Props>(
   withSnackbar,
   withQueryClient,
-  withFlags
+  withFeatureFlags
 )(UserPermissions);

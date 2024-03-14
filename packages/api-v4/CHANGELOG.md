@@ -1,5 +1,20 @@
-## [2024-02-05] - v0.109.0
+## [2024-03-04] - v0.111.0
 
+### Changed:
+
+- Rename `database_scale` type to `database_resize` ([#10193](https://github.com/linode/manager/pull/10193))
+
+### Upcoming Features:
+
+- Accept placement group in Linode create payload ([#10195](https://github.com/linode/manager/pull/10195))
+
+## [2024-02-20] - v0.110.0
+
+### Upcoming Features:
+
+- Update /account and /profile UserType from `null` to `"default"` ([#10176](https://github.com/linode/manager/pull/10176))
+
+## [2024-02-05] - v0.109.0
 
 ### Fixed:
 
@@ -13,7 +28,6 @@
 
 ## [2024-01-22] - v0.108.0
 
-
 ### Added:
 
 - AGLB endpoint health endpoints ([#10008](https://github.com/linode/manager/pull/10008))
@@ -25,17 +39,15 @@
 
 ## [2024-01-08] - v0.107.0
 
-
 ### Added:
 
--  Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
+- Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
 
 ### Tech Stories:
 
 - Add Lint GitHub Action ([#9973](https://github.com/linode/manager/pull/9973))
 
 ## [2023-12-11] - v0.106.0
-
 
 ### Added:
 
@@ -54,7 +66,6 @@
 - Add new endpoints for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
 
 ## [2023-11-13] - v0.105.0
-
 
 ### Upcoming Features:
 

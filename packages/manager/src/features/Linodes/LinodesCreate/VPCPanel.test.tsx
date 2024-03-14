@@ -1,6 +1,5 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { accountFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -9,17 +8,14 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCPanel, VPCPanelProps } from './VPCPanel';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   autoassignIPv4WithinVPC: true,
   from: 'linodeCreate' as VPCPanelProps['from'],
+  handleIPv4RangeChange: vi.fn(),
   handleSelectVPC: vi.fn(),
   handleSubnetChange: vi.fn(),
   handleVPCIPv4Change: vi.fn(),
@@ -47,9 +43,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(wrapper.getByTestId(vpcPanelTestId)).toBeInTheDocument();
@@ -59,7 +53,6 @@ describe('VPCPanel', () => {
   it('should display the VPC Panel if the VPC feature flag is on', async () => {
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -70,7 +63,6 @@ describe('VPCPanel', () => {
   it('should not display the VPC Panel if the user does not have the VPC account capability and the VPC feature flag is off', async () => {
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: false },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -94,7 +86,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -105,7 +96,12 @@ describe('VPCPanel', () => {
   });
 
   it('should have the VPC IPv4 auto-assign checkbox checked by default', async () => {
-    const _props = { ...props, region: 'us-east', selectedVPCId: 5 };
+    const _props = {
+      ...props,
+      region: 'us-east',
+      selectedSubnetId: 2,
+      selectedVPCId: 5,
+    };
 
     server.use(
       rest.get('*/regions', (req, res, ctx) => {
@@ -120,7 +116,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -145,7 +140,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -175,7 +169,6 @@ describe('VPCPanel', () => {
       <VPCPanel {...props} from="linodeConfig" />,
       {
         flags: { vpc: true },
-        queryClient,
       }
     );
 
@@ -200,7 +193,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -222,7 +214,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -234,6 +225,7 @@ describe('VPCPanel', () => {
       ...props,
       autoassignIPv4WithinVPC: false,
       region: 'us-east',
+      selectedSubnetId: 2,
       selectedVPCId: 5,
       vpcIPv4AddressOfLinode: '10.0.4.3',
     };
@@ -251,7 +243,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {
@@ -269,6 +260,7 @@ describe('VPCPanel', () => {
       ...props,
       assignPublicIPv4Address: true,
       region: 'us-east',
+      selectedSubnetId: 2,
       selectedVPCId: 5,
     };
 
@@ -285,7 +277,6 @@ describe('VPCPanel', () => {
 
     const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
       flags: { vpc: true },
-      queryClient,
     });
 
     await waitFor(() => {

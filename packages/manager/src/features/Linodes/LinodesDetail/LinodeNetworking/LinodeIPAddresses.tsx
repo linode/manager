@@ -1,4 +1,4 @@
-import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+import { Interface, LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -10,16 +10,18 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useGrants } from 'src/queries/profile';
-import { getPermissionsForLinode } from 'src/utilities/linodes';
+import { useRegionsQuery } from 'src/queries/regions';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -27,17 +29,17 @@ import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
-import IPTransfer from './IPTransfer';
-import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
+import { IPTransfer } from './IPTransfer';
 import {
   StyledRootGrid,
   StyledTypography,
   StyledWrapperGrid,
 } from './LinodeIPAddresses.styles';
-import { ViewIPDrawer } from './ViewIPDrawer';
-import { ViewRDNSDrawer } from './ViewRDNSDrawer';
-import { ViewRangeDrawer } from './ViewRangeDrawer';
+import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
 import { IPTypes } from './types';
+import { ViewIPDrawer } from './ViewIPDrawer';
+import { ViewRangeDrawer } from './ViewRangeDrawer';
+import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 
 export const ipv4TableID = 'ips';
 
@@ -48,11 +50,24 @@ interface LinodeIPAddressesProps {
 export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { linodeID } = props;
 
-  const { data: grants } = useGrants();
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
+  const { data: linode } = useLinodeQuery(linodeID);
+  const { data: regions } = useRegionsQuery();
 
-  const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
-  const { isVPCOnlyLinode } = useVPCConfigInterface(linodeID);
+  const linodeIsInEdgeRegion = getIsEdgeRegion(
+    regions ?? [],
+    linode?.region ?? ''
+  );
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeID,
+  });
+
+  const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(
+    linodeID
+  );
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -119,7 +134,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   }
 
   const renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(ips);
+    const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -136,12 +151,14 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             <Hidden smDown>
               <Button
                 buttonType="secondary"
+                disabled={isLinodesGrantReadOnly}
                 onClick={() => setIsTransferDialogOpen(true)}
               >
                 IP Transfer
               </Button>
               <Button
                 buttonType="secondary"
+                disabled={isLinodesGrantReadOnly}
                 onClick={() => setIsShareDialogOpen(true)}
                 style={{ marginRight: 16 }}
               >
@@ -149,6 +166,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               </Button>
             </Hidden>
             <AddNewLink
+              disabled={isLinodesGrantReadOnly}
               label="Add an IP Address"
               onClick={() => setIsAddDrawerOpen(true)}
             />
@@ -192,9 +210,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                         isVPCOnlyLinode={
                           isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
                         }
-                        key={ipDisplay.address}
+                        key={`${ipDisplay.address}-${ipDisplay.type}`}
                         linodeId={linodeID}
-                        readOnly={readOnly}
+                        readOnly={isLinodesGrantReadOnly}
                       />
                     ))}
                   </TableBody>
@@ -239,21 +257,22 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
       />
       <AddIPDrawer
         linodeId={linodeID}
+        linodeIsInEdgeRegion={linodeIsInEdgeRegion}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
-        readOnly={readOnly}
+        readOnly={isLinodesGrantReadOnly}
       />
       <IPTransfer
         linodeId={linodeID}
         onClose={() => setIsTransferDialogOpen(false)}
         open={isTransferDialogOpen}
-        readOnly={readOnly}
+        readOnly={isLinodesGrantReadOnly}
       />
       <IPSharing
         linodeId={linodeID}
         onClose={() => setIsShareDialogOpen(false)}
         open={isShareDialogOpen}
-        readOnly={readOnly}
+        readOnly={isLinodesGrantReadOnly}
       />
       {selectedIP && (
         <DeleteIPDialog
@@ -286,9 +305,51 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
+export const vpcConfigInterfaceToDisplayRows = (
+  configInterfaceWithVPC: Interface
+) => {
+  const ipDisplay: IPDisplay[] = [];
+
+  const { ip_ranges, ipv4 } = configInterfaceWithVPC;
+  const emptyProps = {
+    gateway: '',
+    rdns: '',
+    subnetMask: '',
+  };
+
+  if (ipv4?.vpc) {
+    ipDisplay.push({
+      address: ipv4.vpc,
+      type: 'IPv4 – VPC',
+      ...emptyProps,
+    });
+  }
+
+  if (ipv4?.nat_1_1) {
+    ipDisplay.push({
+      address: ipv4.nat_1_1,
+      type: 'VPC IPv4 – NAT',
+      ...emptyProps,
+    });
+  }
+
+  if (ip_ranges) {
+    ip_ranges.forEach((ip_range) => {
+      ipDisplay.push({
+        address: ip_range,
+        type: 'IPv4 – VPC – Range',
+        ...emptyProps,
+      });
+    });
+  }
+
+  return ipDisplay;
+};
+
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse
+  ipResponse?: LinodeIPsResponse,
+  configInterfaceWithVPC?: Interface
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
@@ -309,6 +370,14 @@ export const ipResponseToDisplayRows = (
 
   if (ipv6?.link_local) {
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
+  }
+
+  if (configInterfaceWithVPC) {
+    if (configInterfaceWithVPC.ipv4?.nat_1_1) {
+      // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
+      ipDisplay.shift();
+    }
+    ipDisplay.push(...vpcConfigInterfaceToDisplayRows(configInterfaceWithVPC));
   }
 
   // IPv6 ranges and pools to display in the networking table

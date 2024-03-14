@@ -1,21 +1,27 @@
+import Handyman from '@mui/icons-material/Handyman';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { ApplicationStore } from 'src/store';
 
+import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
 import { MockDataTool } from './MockDataTool';
-import './dev-tools.css';
+import { Preferences } from './Preferences';
+import { isMSWEnabled } from './ServiceWorkerTool';
+import { ThemeSelector } from './ThemeSelector';
 
 function install(store: ApplicationStore) {
   function DevTools() {
     return (
-      <div id="dev-tools">
-        <div>🛠</div>
+      <div className={isMSWEnabled ? 'mswEnabled' : ''} id="dev-tools">
+        <div>
+          <Handyman />
+        </div>
         <Grid className="tools" container spacing={2}>
           <Grid sm={2} xs={4}>
             <FeatureFlagTool />
@@ -28,6 +34,8 @@ function install(store: ApplicationStore) {
           {!isProductionBuild || ENABLE_DEV_TOOLS ? (
             <Grid md={3} sm={5} xs={4}>
               <MockDataTool />
+              <ThemeSelector />
+              <Preferences />
             </Grid>
           ) : null}
         </Grid>
@@ -37,11 +45,11 @@ function install(store: ApplicationStore) {
 
   const devToolsRoot = document.createElement('div');
   document.body.appendChild(devToolsRoot);
-  ReactDOM.render(
+  const root = createRoot(devToolsRoot);
+  root.render(
     <Provider store={store}>
       <DevTools />
-    </Provider>,
-    devToolsRoot
+    </Provider>
   );
 }
 

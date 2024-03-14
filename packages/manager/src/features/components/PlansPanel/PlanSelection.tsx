@@ -25,6 +25,7 @@ import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;
@@ -89,7 +90,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
+  // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
   const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(type, selectedRegionId)
@@ -206,7 +207,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {type.vcpus}
           </TableCell>
           <TableCell center data-qa-storage noWrap>
-            {convertMegabytesTo(type.disk, true)}
+            {type.disk === 0 ? 'N/A' : convertMegabytesTo(type.disk, true)}
           </TableCell>
           {shouldShowTransfer && type.transfer ? (
             <TableCell center data-qa-transfer>

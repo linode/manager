@@ -1,6 +1,5 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { firewallFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -9,18 +8,11 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeFirewalls } from './LinodeFirewalls';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 describe('LinodeFirewalls', () => {
   it('should render', () => {
-    const wrapper = renderWithTheme(<LinodeFirewalls linodeID={1} />, {
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     // Verify table heading is visible
     expect(wrapper.getByTestId('linode-firewalls-table-header')).toBeVisible();
@@ -33,9 +25,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<LinodeFirewalls linodeID={1} />, {
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     await waitFor(() => expect(wrapper.queryByTestId('table-row-empty')));
   });
@@ -47,9 +37,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<LinodeFirewalls linodeID={1} />, {
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     expect(wrapper.queryByTestId('data-qa-linode-firewall-row'));
   });

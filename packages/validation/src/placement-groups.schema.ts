@@ -1,4 +1,4 @@
-import { array, number, object, string } from 'yup';
+import { boolean, object, string } from 'yup';
 
 const labelValidation = string()
   .required('Label is required.')
@@ -9,19 +9,9 @@ export const createPlacementGroupSchema = object({
   label: labelValidation,
   affinity_type: string().required('Affinity type is required.'),
   region: string().required('Region is required.'),
+  is_strict: boolean().required('Is strict is required.'),
 });
 
-export const renamePlacementGroupSchema = object({
+export const updatePlacementGroupSchema = object({
   label: labelValidation,
-});
-
-/**
- * @note While this accepts an array of Linode ids (future proofing), only one Linode id is supported at this time.
- */
-export const assignVMsToPlacementGroupSchema = object({
-  linodeIds: array().of(number().max(1, 'Only one Linode id is supported.')),
-});
-
-export const unassignVMsFromPlacementGroupSchema = object({
-  linodeIds: array().of(number().max(1, 'Only one Linode id is supported.')),
 });

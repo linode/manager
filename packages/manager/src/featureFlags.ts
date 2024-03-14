@@ -37,6 +37,11 @@ interface TaxCollectionBanner {
   regions?: TaxCollectionRegion[];
 }
 
+interface PlacementGroupsFlag {
+  beta: boolean;
+  enabled: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
@@ -44,11 +49,13 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
-  databaseScaleUp: boolean;
+  databaseResize: boolean;
   databases: boolean;
   firewallNodebalancer: boolean;
+  gecko: boolean;
   ipv6Sharing: boolean;
-  linodeCloneUIChanges: boolean;
+  linodeCloneUiChanges: boolean;
+  linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
@@ -56,19 +63,18 @@ export interface Flags {
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   parentChildAccountAccess: boolean;
+  placementGroups: PlacementGroupsFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   recharts: boolean;
   referralBannerText: ReferralBannerText;
-  regionDropdown: boolean;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  vmPlacement: boolean;
   vpc: boolean;
 }
 

@@ -181,10 +181,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         {
           betaChipClassName: 'beta-chip-placement-groups',
           display: 'Placement Groups',
-          hide: !flags.vmPlacement,
+          hide: !flags.placementGroups?.enabled,
           href: '/placement-groups',
           icon: <PlacementGroups />,
-          isBeta: true,
+          isBeta: flags.placementGroups?.beta,
         },
         {
           display: 'Volumes',
@@ -302,7 +302,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowMarketplacePrefetch,
       flags.databaseBeta,
       isACLBEnabled,
-      flags.vmPlacement,
+      flags.placementGroups,
       showVPCs,
     ]
   );

@@ -74,6 +74,12 @@ export const genExpiryTups = (): Expiry[] => {
   ];
 };
 
+export interface ExcludedScope {
+  defaultAccessLevel: number;
+  invalidAccessLevels: number[];
+  name: string;
+}
+
 interface RadioButton extends HTMLInputElement {
   name: string;
 }
@@ -165,7 +171,24 @@ export const CreateAPITokenDrawer = (props: Props) => {
   ): void => {
     const value = +e.currentTarget.value;
     const newScopes = form.values.scopes.map(
-      (scope): Permission => [scope[0], value]
+      (scope): Permission => {
+        // Check the excluded scopes object to see if the current scope will have its own defaults.
+        const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
+          (excludedScope) =>
+            excludedScope.name === scope[0] &&
+            excludedScope.invalidAccessLevels.includes(value)
+        );
+
+        // Set an excluded scope based on its default access level, not the given Select All value.
+        if (indexOfExcludedScope >= 0) {
+          return [
+            scope[0],
+            excludedScopesFromSelectAll[indexOfExcludedScope]
+              .defaultAccessLevel,
+          ];
+        }
+        return [scope[0], value];
+      }
     );
     form.setFieldValue('scopes', newScopes);
   };
@@ -174,8 +197,18 @@ export const CreateAPITokenDrawer = (props: Props) => {
     form.setFieldValue('expiry', e.value);
   };
 
+  // Permission scopes with a different default when Selecting All for the specified access level.
+  const excludedScopesFromSelectAll: ExcludedScope[] = [
+    {
+      defaultAccessLevel: 0,
+      invalidAccessLevels: [1],
+      name: 'vpc',
+    },
+  ];
+
   const indexOfColumnWhereAllAreSelected = allScopesAreTheSame(
-    form.values.scopes
+    form.values.scopes,
+    excludedScopesFromSelectAll
   );
 
   const errorMap = getErrorMap(['label', 'scopes'], error);

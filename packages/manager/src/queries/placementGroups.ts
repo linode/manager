@@ -1,11 +1,11 @@
 import {
-  assignVMsToPlacementGroup,
+  assignLinodesToPlacementGroup,
   createPlacementGroup,
   deletePlacementGroup,
   getPlacementGroup,
   getPlacementGroups,
-  renamePlacementGroup,
-  unassignVMsFromPlacementGroup,
+  unassignLinodesFromPlacementGroup,
+  updatePlacementGroup,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -13,16 +13,18 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
 
 import type {
+  AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
   PlacementGroup,
-  RenamePlacementGroupPayload,
+  UnassignLinodesFromPlacementGroupPayload,
+  UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
 export const queryKey = 'placement-groups';
@@ -74,7 +76,7 @@ export const useCreatePlacementGroup = () => {
         placementGroup
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };
@@ -82,8 +84,8 @@ export const useCreatePlacementGroup = () => {
 export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], RenamePlacementGroupPayload>({
-    mutationFn: (data) => renamePlacementGroup(id, data),
+  return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
+    mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
@@ -106,35 +108,40 @@ export const useDeletePlacementGroup = (id: number) => {
   });
 };
 
-export const useAssignVMsToPlacementGroup = (
-  id: number,
-  linodeIds: [number]
-) => {
+export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>({
-    mutationFn: () => assignVMsToPlacementGroup(id, linodeIds),
+  return useMutation<
+    PlacementGroup,
+    APIError[],
+    AssignLinodesToPlacementGroupPayload
+  >({
+    mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
-        [queryKey, 'placement-group', id],
+        [queryKey, 'placement-group', placementGroupId],
         updatedPlacementGroup
       );
     },
   });
 };
 
-export const useUnassignVMsToPlacementGroup = (
-  id: number,
-  linodeIds: [number]
+export const useUnassignLinodesFromPlacementGroup = (
+  placementGroupId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
-    mutationFn: () => unassignVMsFromPlacementGroup(id, linodeIds),
+  return useMutation<
+    PlacementGroup,
+    APIError[],
+    UnassignLinodesFromPlacementGroupPayload
+  >({
+    mutationFn: (data) =>
+      unassignLinodesFromPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData(
-        [queryKey, 'placement-group', id],
+        [queryKey, 'placement-group', placementGroupId],
         updatedPlacementGroup
       );
     },

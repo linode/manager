@@ -14,6 +14,7 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -22,15 +23,18 @@ import { useVPCsQuery } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 
 export interface VPCPanelProps {
+  additionalIPv4RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   from: 'linodeConfig' | 'linodeCreate';
+  handleIPv4RangeChange: (ranges: ExtendedIP[]) => void;
   handleSelectVPC: (vpcId: number) => void;
   handleSubnetChange: (subnetId: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
@@ -41,6 +45,7 @@ export interface VPCPanelProps {
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
+  vpcIPRangesError?: string;
   vpcIPv4AddressOfLinode: string | undefined;
   vpcIPv4Error?: string;
   vpcIdError?: string;
@@ -50,9 +55,11 @@ const ERROR_GROUP_STRING = 'vpc-errors';
 
 export const VPCPanel = (props: VPCPanelProps) => {
   const {
+    additionalIPv4RangesForVPC,
     assignPublicIPv4Address,
     autoassignIPv4WithinVPC,
     from,
+    handleIPv4RangeChange,
     handleSelectVPC,
     handleSubnetChange,
     handleVPCIPv4Change,
@@ -63,6 +70,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     subnetError,
     toggleAssignPublicIPv4Address,
     toggleAutoassignIPv4WithinVPCEnabled,
+    vpcIPRangesError,
     vpcIPv4AddressOfLinode,
     vpcIPv4Error,
     vpcIdError,
@@ -247,87 +255,105 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 options={subnetDropdownOptions}
                 placeholder="Select Subnet"
               />
-              <Box
-                sx={(theme) => ({
-                  marginLeft: '2px',
-                  paddingTop: theme.spacing(),
-                })}
-                alignItems="center"
-                display="flex"
-                flexDirection="row"
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={autoassignIPv4WithinVPC}
-                      onChange={toggleAutoassignIPv4WithinVPCEnabled}
+              {selectedSubnetId && (
+                <>
+                  <Box
+                    sx={(theme) => ({
+                      marginLeft: '2px',
+                      paddingTop: theme.spacing(),
+                    })}
+                    alignItems="center"
+                    display="flex"
+                    flexDirection="row"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={autoassignIPv4WithinVPC}
+                          onChange={toggleAutoassignIPv4WithinVPCEnabled}
+                        />
+                      }
+                      label={
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          flexDirection="row"
+                        >
+                          <Typography
+                            noWrap={!isSmallBp && from === 'linodeConfig'}
+                          >
+                            Auto-assign a VPC IPv4 address for this Linode in
+                            the VPC
+                          </Typography>
+                          <TooltipIcon
+                            status="help"
+                            text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
+                          />
+                        </Box>
+                      }
+                      data-testid="vpc-ipv4-checkbox"
                     />
-                  }
-                  label={
-                    <Box alignItems="center" display="flex" flexDirection="row">
-                      <Typography
-                        noWrap={!isSmallBp && from === 'linodeConfig'}
-                      >
-                        Auto-assign a VPC IPv4 address for this Linode in the
-                        VPC
-                      </Typography>
-                      <TooltipIcon
-                        status="help"
-                        text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
-                      />
-                    </Box>
-                  }
-                  data-testid="vpc-ipv4-checkbox"
-                />
-              </Box>
-              {!autoassignIPv4WithinVPC && (
-                <TextField
-                  errorGroup={ERROR_GROUP_STRING}
-                  errorText={vpcIPv4Error}
-                  label="VPC IPv4"
-                  onChange={(e) => handleVPCIPv4Change(e.target.value)}
-                  required={!autoassignIPv4WithinVPC}
-                  value={vpcIPv4AddressOfLinode}
-                />
-              )}
-              <Box
-                sx={(theme) => ({
-                  marginLeft: '2px',
-                  marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
-                })}
-                alignItems="center"
-                display="flex"
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={assignPublicIPv4Address}
-                      onChange={toggleAssignPublicIPv4Address}
+                  </Box>
+                  {!autoassignIPv4WithinVPC && (
+                    <TextField
+                      errorGroup={ERROR_GROUP_STRING}
+                      errorText={vpcIPv4Error}
+                      label="VPC IPv4"
+                      onChange={(e) => handleVPCIPv4Change(e.target.value)}
+                      required={!autoassignIPv4WithinVPC}
+                      value={vpcIPv4AddressOfLinode}
                     />
-                  }
-                  label={
-                    <Box alignItems="center" display="flex" flexDirection="row">
-                      <Typography>
-                        Assign a public IPv4 address for this Linode
-                      </Typography>
-                      <TooltipIcon
-                        text={
-                          'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                        }
-                        status="help"
-                      />
-                    </Box>
-                  }
-                />
-              </Box>
-              {assignPublicIPv4Address && publicIPv4Error && (
-                <Typography
-                  sx={(theme) => ({
-                    color: theme.color.red,
-                  })}
-                >
-                  {publicIPv4Error}
-                </Typography>
+                  )}
+                  <Box
+                    sx={(theme) => ({
+                      marginLeft: '2px',
+                      marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
+                    })}
+                    alignItems="center"
+                    display="flex"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={assignPublicIPv4Address}
+                          onChange={toggleAssignPublicIPv4Address}
+                        />
+                      }
+                      label={
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          flexDirection="row"
+                        >
+                          <Typography>
+                            Assign a public IPv4 address for this Linode
+                          </Typography>
+                          <TooltipIcon
+                            text={
+                              'Access the internet through the public IPv4 address using static 1:1 NAT.'
+                            }
+                            status="help"
+                          />
+                        </Box>
+                      }
+                    />
+                  </Box>
+                  {assignPublicIPv4Address && publicIPv4Error && (
+                    <Typography
+                      sx={(theme) => ({
+                        color: theme.color.red,
+                      })}
+                    >
+                      {publicIPv4Error}
+                    </Typography>
+                  )}
+                  <AssignIPRanges
+                    handleIPRangeChange={handleIPv4RangeChange}
+                    includeDescriptionInTooltip={fromLinodeConfig}
+                    ipRanges={additionalIPv4RangesForVPC}
+                    ipRangesError={vpcIPRangesError}
+                  />
+                </>
               )}
             </Stack>
           )}

@@ -9,7 +9,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
@@ -24,7 +24,7 @@ import {
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
 
 /**
- * Gets an infinitly scrollable list of all Events
+ * Gets an infinitely scrollable list of all Events
  *
  * This query is kept up to date by `useEventsPoller`.
  *
@@ -33,7 +33,7 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
  *
  * The magic here is that we're doing cursor based pagination using the event `id`.
  * We are doing this as opposed to page based pagination because we need an accurate way to get
- * the next set of events when the items retrned by the server may have shifted.
+ * the next set of events when the items returned by the server may have shifted.
  */
 export const useEventsInfiniteQuery = (filter?: Filter) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(

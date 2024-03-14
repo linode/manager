@@ -8,24 +8,56 @@ import type {
 } from '@linode/api-v4';
 
 export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
-  affinity_type: Factory.each(() => pickRandom(['affinity', 'anti_affinity'])),
-  capacity: 10,
-  compliant: Factory.each(() => pickRandom([true, false])),
+  affinity_type: 'anti_affinity',
   id: Factory.each((id) => id),
+  is_compliant: Factory.each(() => pickRandom([true, false])),
+  is_strict: true,
   label: Factory.each((id) => `pg-${id}`),
-  linode_ids: Factory.each(() => [
-    pickRandom([1, 2, 3]),
-    pickRandom([4, 5, 6]),
-    pickRandom([7, 8, 9]),
-  ]),
-  region: Factory.each(() =>
-    pickRandom(['us-east', 'us-southeast', 'ca-central'])
-  ),
+  linodes: [
+    {
+      is_compliant: true,
+      linode: 1,
+    },
+    {
+      is_compliant: true,
+      linode: 2,
+    },
+    {
+      is_compliant: true,
+      linode: 3,
+    },
+    {
+      is_compliant: true,
+      linode: 5,
+    },
+    {
+      is_compliant: true,
+      linode: 6,
+    },
+    {
+      is_compliant: true,
+      linode: 7,
+    },
+    {
+      is_compliant: true,
+      linode: 8,
+    },
+    {
+      is_compliant: true,
+      linode: 9,
+    },
+    {
+      is_compliant: false,
+      linode: 43,
+    },
+  ],
+  region: 'us-east',
 });
 
 export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<CreatePlacementGroupPayload>(
   {
     affinity_type: 'anti_affinity',
+    is_strict: true,
     label: Factory.each((id) => `mock-pg-${id}`),
     region: pickRandom(['us-east', 'us-southeast', 'ca-central']),
   }

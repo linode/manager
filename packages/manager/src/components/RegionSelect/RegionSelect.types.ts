@@ -5,6 +5,7 @@ import type {
   Capabilities,
   Country,
   Region,
+  RegionSite,
 } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
@@ -14,6 +15,7 @@ export interface RegionSelectOption {
     region: string;
   };
   label: string;
+  site_type: RegionSite;
   unavailable: boolean;
   value: string;
 }
@@ -35,9 +37,11 @@ export interface RegionSelectProps
   helperText?: string;
   isClearable?: boolean;
   label?: string;
+  regionFilter?: RegionSite;
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
+  showEdgeIconHelperText?: boolean;
   width?: number;
 }
 
@@ -68,6 +72,7 @@ export interface RegionOptionAvailability {
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
+  regionFilter?: RegionSite;
   regions: Region[];
 }
 
@@ -86,3 +91,5 @@ export interface GetSelectedRegionsByIdsArgs {
   regions: Region[];
   selectedRegionIds: string[];
 }
+
+export type SupportedEdgeTypes = 'Distributions' | 'StackScripts';

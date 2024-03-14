@@ -18,8 +18,10 @@ import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
+  additionalIPv4RangesForVPC?: ExtendedIP[];
   errors: VPCInterfaceErrors & OtherInterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
@@ -33,6 +35,7 @@ interface Props {
   slotNumber: number;
 }
 interface VPCInterfaceErrors {
+  ipRangeError?: string;
   labelError?: string;
   publicIPv4Error?: string;
   subnetError?: string;
@@ -63,6 +66,7 @@ type CombinedProps = Props & VPCState;
 
 export const InterfaceSelect = (props: CombinedProps) => {
   const {
+    additionalIPv4RangesForVPC,
     errors,
     fromAddonsPanel,
     handleChange,
@@ -118,6 +122,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
   const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(
     Boolean(nattedIPv4Address)
   );
+  const _additionalIPv4RangesForVPC = additionalIPv4RangesForVPC?.map(
+    (ip_range) => ip_range.address
+  );
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
@@ -142,6 +149,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     // Only clear VPC related fields if VPC selection changes
     if (selectedVPCId !== vpcId) {
       handleChange({
+        ip_ranges: _additionalIPv4RangesForVPC,
         ipam_address: null,
         ipv4: {
           nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
@@ -155,8 +163,22 @@ export const InterfaceSelect = (props: CombinedProps) => {
     }
   };
 
+  const handleIPv4RangeChange = (ipv4Ranges: ExtendedIP[]) => {
+    const changeObj = {
+      ip_ranges: ipv4Ranges.map((ip_range) => ip_range.address),
+      ipam_address: null,
+      label: null,
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
+    };
+
+    handleChange(changeObj);
+  };
+
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipam_address: null,
       ipv4: {
         nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
@@ -170,6 +192,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
 
   const handleVPCIPv4Input = (vpcIPv4Input: string) => {
     const changeObj = {
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipam_address: null,
       label: null,
       purpose,
@@ -204,6 +227,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     }
 
     const changeObj = {
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipam_address: null,
       label: null,
       purpose,
@@ -386,9 +410,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
             }
+            additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
+            handleIPv4RangeChange={handleIPv4RangeChange}
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
@@ -397,6 +423,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
             subnetError={errors.subnetError}
+            vpcIPRangesError={errors.ipRangeError}
             vpcIPv4AddressOfLinode={vpcIPv4}
             vpcIPv4Error={errors.vpcIPv4Error}
             vpcIdError={errors.vpcError}

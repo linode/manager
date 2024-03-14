@@ -9,9 +9,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { useFlags } from 'src/hooks/useFlags';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { Country } from './types';
@@ -28,8 +30,15 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
-  const flags = useFlags();
   const emailRef = React.useRef<HTMLInputElement>();
+  const { data: profile } = useProfile();
+  const isChildUser = profile?.user_type === 'child';
+  const isParentUser = profile?.user_type === 'parent';
+  const isReadOnly =
+    useRestrictedGlobalGrantCheck({
+      globalGrantType: 'account_access',
+      permittedGrantLevel: 'read_write',
+    }) || isChildUser;
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -48,7 +57,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       zip: account?.zip,
     },
     async onSubmit(values) {
-      await mutateAsync(values);
+      const clonedValues = { ...values };
+
+      if (isParentUser) {
+        // This is a disabled field that we want to omit from payload.
+        delete clonedValues.company;
+      }
+
+      await mutateAsync(clonedValues);
 
       // If there's a "billing_email_bounce" notification on the account, and
       // the user has just updated their email, re-request notifications to
@@ -154,6 +170,17 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         data-qa-update-contact
         spacing={0}
       >
+        {isReadOnly && (
+          <Grid xs={12}>
+            <Notice
+              text={getRestrictedResourceText({
+                isChildUser,
+                resourceType: 'Account',
+              })}
+              variant="error"
+            />
+          </Grid>
+        )}
         {generalError && (
           <Grid xs={12}>
             <Notice text={generalError} variant="error" />
@@ -162,6 +189,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-contact-email
+            disabled={isReadOnly}
             errorText={errorMap.email}
             helperTextPosition="top"
             inputRef={emailRef}
@@ -177,6 +205,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid sm={6} xs={12}>
           <TextField
             data-qa-contact-first-name
+            disabled={isReadOnly}
             errorText={errorMap.first_name}
             label="First Name"
             name="first_name"
@@ -187,6 +216,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid sm={6} xs={12}>
           <TextField
             data-qa-contact-last-name
+            disabled={isReadOnly}
             errorText={errorMap.last_name}
             label="Last Name"
             name="last_name"
@@ -197,6 +227,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-company
+            disabled={isReadOnly || isParentUser}
             errorText={errorMap.company}
             label="Company Name"
             name="company"
@@ -207,6 +238,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-contact-address-1
+            disabled={isReadOnly}
             errorText={errorMap.address_1}
             label="Address"
             name="address_1"
@@ -217,6 +249,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-contact-address-2
+            disabled={isReadOnly}
             errorText={errorMap.address_2}
             label="Address 2"
             name="address_2"
@@ -235,21 +268,23 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={countryResults.find(
               ({ value }) => value === formik.values.country
             )}
+            disabled={isReadOnly}
             errorText={errorMap.country}
             isClearable={false}
             label="Country"
             onChange={(item) => formik.setFieldValue('country', item.value)}
             options={countryResults}
             placeholder="Select a Country"
-            required={flags.regionDropdown}
+            required
           />
         </Grid>
         <Grid sm={6} xs={12}>
-          {flags.regionDropdown &&
-          (formik.values.country === 'US' || formik.values.country == 'CA') ? (
+          {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <EnhancedSelect
               placeholder={
-                formik.values.country === 'US' ? 'state' : 'province'
+                formik.values.country === 'US'
+                  ? 'Enter state'
+                  : 'Enter province'
               }
               textFieldProps={{
                 dataAttrs: {
@@ -261,22 +296,24 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
                   ({ value }) => value === formik.values.state
                 ) ?? null
               }
+              disabled={isReadOnly}
               errorText={errorMap.state}
               isClearable={false}
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
               onChange={(item) => formik.setFieldValue('state', item.value)}
               options={filteredRegionResults}
-              required={flags.regionDropdown}
+              required
             />
           ) : (
             <TextField
               data-qa-contact-state-province
+              disabled={isReadOnly}
               errorText={errorMap.state}
               label="State / Province"
               name="state"
               onChange={formik.handleChange}
               placeholder="Enter region"
-              required={flags.regionDropdown}
+              required
               value={formik.values.state}
             />
           )}
@@ -284,6 +321,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid sm={6} xs={12}>
           <TextField
             data-qa-contact-city
+            disabled={isReadOnly}
             errorText={errorMap.city}
             label="City"
             name="city"
@@ -294,6 +332,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid sm={6} xs={12}>
           <TextField
             data-qa-contact-post-code
+            disabled={isReadOnly}
             errorText={errorMap.zip}
             label="Postal Code"
             name="zip"
@@ -304,6 +343,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-contact-phone
+            disabled={isReadOnly}
             errorText={errorMap.phone}
             label="Phone"
             name="phone"
@@ -315,6 +355,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid xs={12}>
           <TextField
             data-qa-contact-tax-id
+            disabled={isReadOnly}
             errorText={errorMap.tax_id}
             label="Tax ID"
             name="tax_id"
@@ -326,6 +367,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'save-contact-info',
+          disabled: isReadOnly,
           label: 'Save Changes',
           loading: isLoading,
           type: 'submit',

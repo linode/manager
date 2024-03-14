@@ -5,7 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';

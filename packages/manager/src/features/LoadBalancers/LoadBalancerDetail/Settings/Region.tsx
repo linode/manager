@@ -8,7 +8,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useLoadBalancerMutation,
   useLoadBalancerQuery,
-} from 'src/queries/aglb/loadbalancers';
+} from 'src/queries/aclb/loadbalancers';
 
 import { LoadBalancerRegions } from '../LoadBalancerRegions';
 

@@ -9,7 +9,8 @@ import { useProfile } from 'src/queries/profile';
 import CloseAccountDialog from './CloseAccountDialog';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PARENT_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from './constants';
 
 const CloseAccountSetting = () => {
@@ -20,12 +21,23 @@ const CloseAccountSetting = () => {
 
   // Disable the Close Account button for users with a Parent/Proxy/Child user type.
   const isCloseAccountDisabled = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type !== null
+    flags.parentChildAccountAccess && profile?.user_type !== 'default'
   );
-  const closeAccountButtonTooltipText =
-    isCloseAccountDisabled && profile?.user_type === 'child'
-      ? CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT
-      : PARENT_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+
+  let closeAccountButtonTooltipText;
+  const userType = profile?.user_type;
+  const caseKey = isCloseAccountDisabled ? userType : 'default';
+
+  switch (caseKey) {
+    case 'child':
+      closeAccountButtonTooltipText = CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+      break;
+    case 'proxy':
+      closeAccountButtonTooltipText = PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+      break;
+    default:
+      closeAccountButtonTooltipText = PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+  }
 
   return (
     <>

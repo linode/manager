@@ -113,6 +113,52 @@ export const CustomHeightAndWidth: Story = {
 /**
  * Example of a RemovableSelectionsList with no data to remove
  */
+export const WithReadableRemoveCTA: Story = {
+  render: () => {
+    const SpecifiedLabelWrapper = () => {
+      const [data, setData] = React.useState(diffLabelListItems);
+
+      const handleRemove = (item: RemovableItem) => {
+        setData([...data].filter((data) => data.id !== item.id));
+      };
+
+      const resetList = () => {
+        setData([...diffLabelListItems]);
+      };
+
+      return (
+        <>
+          <RemovableSelectionsList
+            RemoveButton={() => (
+              <Button
+                sx={(theme) => ({
+                  fontFamily: theme.font.normal,
+                  fontSize: '0.875rem',
+                })}
+                variant="text"
+              >
+                Remove
+              </Button>
+            )}
+            headerText="Linodes to remove"
+            noDataText="No Linodes available"
+            onRemove={handleRemove}
+            selectionData={data}
+          />
+          <Button onClick={resetList} sx={{ marginTop: 2 }}>
+            Reset list
+          </Button>
+        </>
+      );
+    };
+
+    return <SpecifiedLabelWrapper />;
+  },
+};
+
+/**
+ * Example of a RemovableSelectionsList with no data to remove
+ */
 export const NoDataExample: Story = {
   args: {
     headerText: 'Linodes to remove',

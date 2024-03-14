@@ -19,7 +19,14 @@ export const autocomplete = {
  */
 export const autocompletePopper = {
   /**
-   * Finds a autocomplete popper that has the given title.
+   * Finds an open autocomplete popper.
+   */
+  find: () => {
+    return cy.document().its('body').find('[data-qa-autocomplete-popper]');
+  },
+
+  /**
+   * Finds an item within an autocomplete popper that has the given title.
    */
   findByTitle: (
     title: string,
