@@ -44,7 +44,9 @@ export const APITokenMenu = (props: Props) => {
             openEditDrawer(token);
           },
           title: 'Rename',
-          tooltip: 'Only company users can edit API tokens.',
+          tooltip: isProxyUser
+            ? 'Only company users can edit API tokens.'
+            : undefined,
         }
       : null,
     {
