@@ -540,7 +540,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
         .should('be.visible')
         .within(() => {
           cy.findByLabelText('Hostname Match (optional)')
-            .should('have.value', routes[0].rules[0].match_condition.hostname)
+            .should('have.value', routes[0].rules[0].match_condition!.hostname)
             .clear()
             .type('example.com');
 
@@ -558,7 +558,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
           cy.findByLabelText('Match Value')
             .should(
               'have.value',
-              routes[0].rules[0].match_condition.match_value
+              routes[0].rules[0].match_condition!.match_value
             )
             .clear()
             .type('x-header=my-header-value');
@@ -604,7 +604,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
 
       // Verify all rules are shown
       for (const rule of routes[0].rules) {
-        cy.findByText(rule.match_condition.match_value).should('be.visible');
+        cy.findByText(rule.match_condition!.match_value).should('be.visible');
       }
 
       const indexOfRuleToDelete = 1;
@@ -625,7 +625,7 @@ describe('Akamai Cloud Load Balancer routes page', () => {
 
       // Verify the deleted rule no longer shows
       cy.findByText(
-        routes[0].rules[indexOfRuleToDelete].match_condition.match_value
+        routes[0].rules[indexOfRuleToDelete].match_condition!.match_value
       ).should('not.exist');
     });
   });

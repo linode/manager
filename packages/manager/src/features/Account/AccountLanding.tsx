@@ -144,8 +144,7 @@ const AccountLanding = () => {
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
     flags.parentChildAccountAccess &&
-    (isParentUser || isProxyUser) &&
-    !isChildAccountAccessRestricted;
+    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {

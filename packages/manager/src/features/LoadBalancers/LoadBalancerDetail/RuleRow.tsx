@@ -75,9 +75,9 @@ export const RuleRow = (props: RuleRowProps) => {
                 ...sxItemSpacing,
                 width: xsDown ? '45%' : '20%',
               }}
-              aria-label={`Match value: ${rule.match_condition.match_value}`}
+              aria-label={`Match value: ${rule.match_condition?.match_value}`}
             >
-              {rule.match_condition.match_value
+              {rule.match_condition?.match_value
                 ? rule.match_condition.match_value
                 : 'None'}
             </Box>
@@ -85,11 +85,15 @@ export const RuleRow = (props: RuleRowProps) => {
             <Hidden smDown>
               <Box
                 aria-label={`Match Field: ${
-                  matchFieldMap[rule.match_condition.match_field]
+                  rule.match_condition
+                    ? matchFieldMap[rule.match_condition.match_field]
+                    : 'None'
                 }`}
                 sx={{ ...sxItemSpacing, width: '20%' }}
               >
-                {matchFieldMap[rule.match_condition.match_field]}
+                {rule.match_condition
+                  ? matchFieldMap[rule.match_condition.match_field]
+                  : 'None'}
               </Box>
             </Hidden>
             <Hidden smDown>
@@ -105,12 +109,15 @@ export const RuleRow = (props: RuleRowProps) => {
                   <TextTooltip
                     tooltipText={
                       <>
-                        {rule.service_targets.map(({ label }) => (
-                          <div key={label}>{label}</div>
+                        {rule.service_targets.map(({ label, percentage }) => (
+                          <div key={label}>
+                            {label} ({percentage}%)
+                          </div>
                         ))}
                       </>
                     }
                     displayText={String(rule.service_targets.length)}
+                    minWidth={100}
                   />
                 ) : (
                   'None'
@@ -120,8 +127,8 @@ export const RuleRow = (props: RuleRowProps) => {
             <Hidden smDown>
               <Box
                 aria-label={`Session Stickiness: ${
-                  rule.match_condition.session_stickiness_cookie &&
-                  rule.match_condition.session_stickiness_ttl
+                  rule.match_condition?.session_stickiness_cookie ||
+                  rule.match_condition?.session_stickiness_ttl
                     ? 'Yes'
                     : 'No'
                 }`}
@@ -131,8 +138,8 @@ export const RuleRow = (props: RuleRowProps) => {
                   width: '20%',
                 }}
               >
-                {rule.match_condition.session_stickiness_cookie ||
-                rule.match_condition.session_stickiness_ttl
+                {rule.match_condition?.session_stickiness_cookie ||
+                rule.match_condition?.session_stickiness_ttl
                   ? 'Yes'
                   : 'No'}
               </Box>
