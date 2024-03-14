@@ -3,9 +3,9 @@ import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import EnhancedSelect from 'src/components/EnhancedSelect';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -139,8 +139,8 @@ export const AccessSelect = React.memo((props: Props) => {
 
       {errorText ? <Notice text={errorText} variant="error" /> : null}
 
-      <EnhancedSelect
-        onChange={(selected) => {
+      <Autocomplete
+        onChange={(_, selected) => {
           if (selected) {
             setUpdateAccessSuccess(false);
             setUpdateAccessError('');
@@ -151,12 +151,13 @@ export const AccessSelect = React.memo((props: Props) => {
           (thisOption) => thisOption.value === selectedACL ?? 'private'
         )}
         data-testid="acl-select"
+        disableClearable
         disabled={accessLoading}
-        isClearable={false}
-        isLoading={accessLoading}
         label="Access Control List (ACL)"
+        loading={accessLoading}
         options={_options}
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
+        renderTags={() => null}
       />
 
       <div style={{ marginTop: 8, minHeight: 16 }}>
