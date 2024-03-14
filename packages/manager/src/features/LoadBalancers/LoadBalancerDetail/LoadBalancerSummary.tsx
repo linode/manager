@@ -42,7 +42,9 @@ export const LoadBalancerSummary = () => {
     },
     {
       title: 'Regions',
-      value: <LoadBalancerRegionsList regionIds={loadbalancer?.regions ?? []} />,
+      value: (
+        <LoadBalancerRegionsList regionIds={loadbalancer?.regions ?? []} />
+      ),
     },
   ];
 
