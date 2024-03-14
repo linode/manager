@@ -135,7 +135,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
     },
     {
       name: 'child_account',
-      shouldBeIncluded: hasParentChildAccountAccess && isParentUser,
+      shouldBeIncluded: hasParentChildAccountAccess,
     },
   ]);
 
@@ -213,11 +213,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
       defaultAccessLevel: 0,
       invalidAccessLevels: [1],
       name: 'vpc',
-    },
-    {
-      defaultAccessLevel: 0,
-      invalidAccessLevels: [1, 2],
-      name: 'child_account',
     },
   ];
 
