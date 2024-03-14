@@ -48,7 +48,7 @@ export const SelectLinodeTable = ({
               disabled={disabled}
               handlePowerOff={() => handlePowerOff(linode.id)}
               key={linode.id}
-              linodeId={linode.id}
+              linode={linode}
               showPowerActions={showPowerActions}
             />
           ))
