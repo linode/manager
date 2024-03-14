@@ -10,6 +10,7 @@ import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 interface Props {
+  edgeRegionWarning?: string;
   error?: string;
   hasConfirmed: boolean;
   linodeId: number | undefined;
@@ -95,6 +96,7 @@ export const CautionNotice = React.memo((props: Props) => {
           to complete.
         </li>
         {props.metadataWarning ? <li>{props.metadataWarning}</li> : null}
+        {props.edgeRegionWarning ? <li>{props.edgeRegionWarning}</li> : null}
       </ul>
       {props.error && <Notice text={props.error} variant="error" />}
       <Checkbox
