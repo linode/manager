@@ -956,6 +956,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
     mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
     mockGetLinodeTypes(dcPricingMockLinodeTypes);
+    console.log(dcPricingMockLinodeTypes);
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
 
@@ -983,6 +984,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
       .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
       .should('be.visible')
       .within(() => {
+        cy.findByText('Shared CPU')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
         cy.findByText('Linode 0 GB')
           .should('be.visible')
           .closest('tr')
@@ -1209,6 +1214,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
       .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
       .should('be.visible')
       .within(() => {
+        cy.findByText('Shared CPU')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
         cy.findByText('Linode 2 GB')
           .should('be.visible')
           .closest('tr')
