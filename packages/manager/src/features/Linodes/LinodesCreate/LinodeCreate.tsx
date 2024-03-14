@@ -286,7 +286,6 @@ export class LinodeCreate extends React.PureComponent<
       linodesData,
       linodesError,
       linodesLoading,
-      placementGroupSelection,
       regionDisplayInfo,
       regionsData,
       regionsError,
@@ -840,7 +839,7 @@ export class LinodeCreate extends React.PureComponent<
     );
 
     const placement_group_payload: CreateLinodePlacementGroupPayload = {
-      id: this.props.placementGroupSelection?.id ?? -1,
+      id: this.props.placementGroupSelection?.id,
     };
 
     // eslint-disable-next-line sonarjs/no-unused-collection
@@ -855,9 +854,10 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
-      placement_group: this.props.flags.placementGroups?.enabled
-        ? placement_group_payload
-        : undefined,
+      placement_group:
+        this.props.flags.placementGroups?.enabled && placement_group_payload.id
+          ? placement_group_payload
+          : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,
