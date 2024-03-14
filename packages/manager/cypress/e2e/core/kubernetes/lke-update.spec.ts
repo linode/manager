@@ -956,7 +956,6 @@ describe('LKE cluster updates for DC-specific prices', () => {
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
     mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
     mockGetLinodeTypes(dcPricingMockLinodeTypes);
-    console.log(dcPricingMockLinodeTypes);
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
 
