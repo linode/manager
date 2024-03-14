@@ -6,7 +6,7 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
 import { linodeTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { CombinedProps as Props, SearchLanding } from './SearchLanding';
@@ -31,10 +31,10 @@ describe('Component', () => {
   beforeEach(() => {
     server.use(
       http.get('*/domains', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       }),
       http.get('*/linode/types/*', () => {
-        return HttpResponse.json((linodeTypeFactory.build()));
+        return HttpResponse.json(linodeTypeFactory.build());
       })
     );
   });

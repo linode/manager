@@ -7,7 +7,7 @@ import {
   subnetFactory,
 } from 'src/factories/subnets';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
@@ -27,7 +27,7 @@ describe('VPC Subnets table', () => {
     });
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json((makeResourcePage([subnet])));
+        return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
 
@@ -66,7 +66,7 @@ describe('VPC Subnets table', () => {
     const subnet = subnetFactory.build({ linodes: [] });
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json((makeResourcePage([subnet])));
+        return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
 
@@ -87,7 +87,7 @@ describe('VPC Subnets table', () => {
     });
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json((makeResourcePage([subnet])));
+        return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(

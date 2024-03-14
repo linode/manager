@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { accountFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCPanel, VPCPanelProps } from './VPCPanel';
@@ -39,7 +39,7 @@ describe('VPCPanel', () => {
 
     server.use(
       http.get('*/account', () => {
-        return HttpResponse.json((account));
+        return HttpResponse.json(account);
       })
     );
 
@@ -80,7 +80,7 @@ describe('VPCPanel', () => {
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
@@ -110,7 +110,7 @@ describe('VPCPanel', () => {
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
@@ -131,10 +131,10 @@ describe('VPCPanel', () => {
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return HttpResponse.json((makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       }),
       http.get('*/vpcs', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
@@ -158,10 +158,10 @@ describe('VPCPanel', () => {
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return HttpResponse.json((makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       }),
       http.get('*/vpcs', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
@@ -187,7 +187,7 @@ describe('VPCPanel', () => {
           capabilities: [],
           id: 'us-east',
         });
-        return HttpResponse.json((makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       })
     );
 
@@ -208,7 +208,7 @@ describe('VPCPanel', () => {
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return HttpResponse.json((makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       })
     );
 
@@ -237,7 +237,7 @@ describe('VPCPanel', () => {
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
@@ -271,7 +271,7 @@ describe('VPCPanel', () => {
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return HttpResponse.json((makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 

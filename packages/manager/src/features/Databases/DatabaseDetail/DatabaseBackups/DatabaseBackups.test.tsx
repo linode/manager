@@ -6,7 +6,7 @@ import {
   profileFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -19,13 +19,13 @@ describe('Database Backups', () => {
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       http.get('*/profile', () => {
-        return HttpResponse.json((profileFactory.build({ timezone: 'utc' })));
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       }),
       http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json((databaseFactory.build()));
+        return HttpResponse.json(databaseFactory.build());
       }),
       http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json((makeResourcePage(backups)));
+        return HttpResponse.json(makeResourcePage(backups));
       })
     );
 
@@ -44,14 +44,14 @@ describe('Database Backups', () => {
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json((databaseFactory.build()));
+        return HttpResponse.json(databaseFactory.build());
       })
     );
 
     // Mock an empty list of backups
     server.use(
       http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

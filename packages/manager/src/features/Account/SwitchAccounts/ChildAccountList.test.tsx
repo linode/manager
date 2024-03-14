@@ -4,7 +4,7 @@ import * as React from 'react';
 import { accountFactory, profileFactory } from 'src/factories';
 import { ChildAccountList } from 'src/features/Account/SwitchAccounts/ChildAccountList';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
@@ -17,15 +17,11 @@ const props = {
 it('should display a list of child accounts', async () => {
   server.use(
     http.get('*/profile', () => {
-      return HttpResponse.json((profileFactory.build({ user_type: 'parent' })));
+      return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
     }),
     http.get('*/account/child-accounts', () => {
-      return res(
-        ctx.json(
-          makeResourcePage(
-            accountFactory.buildList(5, { company: 'Child Co.' })
-          )
-        )
+      return HttpResponse.json(
+        makeResourcePage(accountFactory.buildList(5, { company: 'Child Co.' }))
       );
     })
   );

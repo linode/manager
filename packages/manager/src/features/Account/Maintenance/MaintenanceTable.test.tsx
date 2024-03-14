@@ -7,7 +7,7 @@ import * as React from 'react';
 
 import { accountMaintenanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import {
@@ -52,7 +52,7 @@ describe('Maintenance Table', () => {
         const accountMaintenance = accountMaintenanceFactory.buildList(1, {
           status: 'pending',
         });
-        return HttpResponse.json((makeResourcePage(accountMaintenance)));
+        return HttpResponse.json(makeResourcePage(accountMaintenance));
       })
     );
     renderWithTheme(<MaintenanceTable type="pending" />);
@@ -80,7 +80,7 @@ describe('Maintenance Table', () => {
   it('should render maintenance table with empty state', async () => {
     server.use(
       http.get('*/account/maintenance', () => {
-        return HttpResponse.json((makeResourcePage([])));
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

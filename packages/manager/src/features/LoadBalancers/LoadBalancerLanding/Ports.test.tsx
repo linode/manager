@@ -2,7 +2,7 @@ import React from 'react';
 
 import { configurationFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Ports } from './Ports';
@@ -18,7 +18,7 @@ describe('Ports', () => {
 
     server.use(
       http.get('*/aclb/1/configurations*', () => {
-        return HttpResponse.json((makeResourcePage(configs)));
+        return HttpResponse.json(makeResourcePage(configs));
       })
     );
 

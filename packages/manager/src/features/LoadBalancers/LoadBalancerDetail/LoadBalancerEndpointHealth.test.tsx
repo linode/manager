@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { loadbalancerEndpointHealthFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
@@ -14,7 +14,7 @@ describe('LoadBalancerEndpointHealth', () => {
           healthy_endpoints: 150,
           total_endpoints: 200,
         });
-        return HttpResponse.json((health));
+        return HttpResponse.json(health);
       })
     );
 

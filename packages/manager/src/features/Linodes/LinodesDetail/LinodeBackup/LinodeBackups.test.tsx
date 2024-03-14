@@ -2,7 +2,7 @@ import { LinodeBackupsResponse } from '@linode/api-v4';
 import * as React from 'react';
 
 import { backupFactory, linodeFactory } from 'src/factories';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeBackups } from './LinodeBackups';
@@ -20,8 +20,8 @@ describe('LinodeBackups', () => {
   it('renders a list of different types of backups if backups are enabled', async () => {
     server.use(
       http.get('*/linode/instances/1', () => {
-        return res(
-          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
+        return HttpResponse.json(
+          linodeFactory.build({ backups: { enabled: true }, id: 1 })
         );
       }),
       http.get('*/linode/instances/1/backups', () => {
@@ -41,7 +41,7 @@ describe('LinodeBackups', () => {
             }),
           },
         };
-        return HttpResponse.json((response));
+        return HttpResponse.json(response);
       })
     );
 
@@ -63,8 +63,8 @@ describe('LinodeBackups', () => {
   it('renders BackupsPlaceholder is backups are not enabled on this linode', async () => {
     server.use(
       http.get('*/linode/instances/1', () => {
-        return res(
-          ctx.json(linodeFactory.build({ backups: { enabled: false }, id: 1 }))
+        return HttpResponse.json(
+          linodeFactory.build({ backups: { enabled: false }, id: 1 })
         );
       })
     );

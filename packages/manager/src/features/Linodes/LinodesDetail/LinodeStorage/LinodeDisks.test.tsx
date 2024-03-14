@@ -3,7 +3,7 @@ import React from 'react';
 import { linodeDiskFactory } from 'src/factories';
 import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse,  server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeDisks } from './LinodeDisks';
@@ -14,10 +14,10 @@ describe('LinodeDisks', () => {
 
     server.use(
       http.get('*/linode/instances/:id', () => {
-        return HttpResponse.json((linodeFactory.build()));
+        return HttpResponse.json(linodeFactory.build());
       }),
       http.get('*/linode/instances/:id/disks', () => {
-        return HttpResponse.json((makeResourcePage(disks)));
+        return HttpResponse.json(makeResourcePage(disks));
       })
     );
 
