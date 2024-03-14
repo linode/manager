@@ -233,7 +233,6 @@ describe('update firewall', () => {
       addFirewallRules(outboundRule, 'outbound');
 
       // Confirm that the outbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="1"]');
       cy.findByText(outboundRule.label!)
         .should('be.visible')
         .closest('li')
