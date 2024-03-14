@@ -16,11 +16,15 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -81,17 +85,42 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
+  const { data: accountSettings } = useAccountSettings();
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+  const { data: regions } = useRegionsQuery();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const regionsSupportObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
   const {
     data: objectStorageClusters,
     isLoading: areClustersLoading,
-  } = useObjectStorageClusters();
+  } = useObjectStorageClusters(!isObjMultiClusterEnabled);
 
+  /*
+   @TODO OBJ Multicluster: @TODO OBJ Multicluster: 'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters);
-  const { data: accountSettings } = useAccountSettings();
+  } = useObjectStorageBuckets({
+    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
+    enabled: true,
+    isObjMultiClusterEnabled,
+    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+  });
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
 

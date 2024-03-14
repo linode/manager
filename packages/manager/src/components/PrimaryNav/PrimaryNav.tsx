@@ -33,6 +33,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useStackScriptsOCA } from 'src/queries/stackscripts';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
@@ -97,6 +98,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { _isManagedAccount, account, accountError } = useAccountManagement();
 
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const { data: regions } = useRegionsQuery();
+
+  const regionsSupportObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
   const {
     data: oneClickApps,
     error: oneClickAppsError,
@@ -107,13 +120,26 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     data: clusters,
     error: clustersError,
     isLoading: clustersLoading,
-  } = useObjectStorageClusters(enableObjectPrefetch);
+  } = useObjectStorageClusters(
+    enableObjectPrefetch && !isObjMultiClusterEnabled
+  );
 
+  /*
+   @TODO OBJ Multicluster: @TODO OBJ Multicluster: 'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
   const {
     data: buckets,
     error: bucketsError,
     isLoading: bucketsLoading,
-  } = useObjectStorageBuckets(clusters, enableObjectPrefetch);
+  } = useObjectStorageBuckets({
+    clusters: isObjMultiClusterEnabled ? undefined : clusters,
+    enabled: enableObjectPrefetch,
+    isObjMultiClusterEnabled,
+    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+  });
 
   const allowObjPrefetch =
     !buckets &&

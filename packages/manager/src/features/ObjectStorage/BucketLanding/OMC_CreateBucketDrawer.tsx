@@ -5,6 +5,8 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -14,10 +16,10 @@ import { useAccountSettings } from 'src/queries/accountSettings';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -36,10 +38,25 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   const { data: regions } = useRegionsQuery();
-  // @TODO OBJ Multicluster - clusters will likely to be replaced with regions and will be taken care in future tickets.
-  const { data: clusters } = useObjectStorageClusters();
-  const { data: buckets } = useObjectStorageBuckets(clusters);
+
+  const regionsSupportObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
+  const { data: buckets } = useObjectStorageBuckets({
+    isObjMultiClusterEnabled,
+    regions: regionsSupportObjectStorage,
+  });
 
   const {
     error,

@@ -21,9 +21,12 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountSettings } from 'src/queries/accountSettings';
-import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
+import { useObjectStorageBuckets } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
@@ -99,6 +102,15 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   const { data: regions } = useRegionsQuery();
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
@@ -111,7 +123,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBucketsFromRegions(regionsSupportObjectStorage);
+  } = useObjectStorageBuckets({
+    isObjMultiClusterEnabled,
+    regions: regionsSupportObjectStorage,
+  });
 
   const { data: accountSettings } = useAccountSettings();
 
