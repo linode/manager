@@ -8,7 +8,7 @@ import {
   VolumeStatus,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-import { http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
@@ -122,11 +122,11 @@ export const makeResourcePage = <T>(
 const statusPage = [
   http.get('*/api/v2/incidents*', () => {
     const response = incidentResponseFactory.build();
-    return new Response(JSON.stringify(response));
+    return HttpResponse.json(response);
   }),
   http.get('*/api/v2/scheduled-maintenances*', () => {
     const response = maintenanceResponseFactory.build();
-    return new Response(JSON.stringify(response));
+    return HttpResponse.json(response);
   }),
 ];
 
@@ -158,15 +158,14 @@ const entityTransfers = [
       transfer4,
       transfer5
     );
-    return new Response(JSON.stringify(makeResourcePage(combinedTransfers)));
+    return HttpResponse.json(makeResourcePage(combinedTransfers));
   }),
   http.get('*/account/entity-transfers/:transferId', () => {
     const transfer = entityTransferFactory.build();
-    return new Response(JSON.stringify(transfer));
+    return HttpResponse.json(transfer);
   }),
-  http.get(
-    '*/account/agreements',
-    () => new Response(JSON.stringify(accountAgreementsFactory.build()))
+  http.get('*/account/agreements', () =>
+    HttpResponse.json(accountAgreementsFactory.build())
   ),
   http.post('*/account/entity-transfers', async ({ request }) => {
     const body = await request.json();
@@ -174,20 +173,20 @@ const entityTransfers = [
     const newTransfer = entityTransferFactory.build({
       entities: payload.entities,
     });
-    return new Response(JSON.stringify(newTransfer));
+    return HttpResponse.json(newTransfer);
   }),
   http.post('*/account/entity-transfers/:transferId/accept', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.delete('*/account/entity-transfers/:transferId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
 ];
 
 const databases = [
   http.get('*/databases/instances', () => {
     const databases = databaseInstanceFactory.buildList(5);
-    return new Response(JSON.stringify(makeResourcePage(databases)));
+    return HttpResponse.json(makeResourcePage(databases));
   }),
 
   http.get('*/databases/types', () => {
@@ -224,7 +223,7 @@ const databases = [
 
     const combinedList = [...engine1, ...engine2, ...engine3];
 
-    return new Response(JSON.stringify(makeResourcePage(combinedList)));
+    return HttpResponse.json(makeResourcePage(combinedList));
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
@@ -244,12 +243,12 @@ const databases = [
       ssl_connection: true,
       storage_engine: params.engine === 'mongodb' ? 'wiredtiger' : undefined,
     });
-    return new Response(JSON.stringify(database));
+    return HttpResponse.json(database);
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/backups', () => {
     const backups = databaseBackupFactory.buildList(7);
-    return new Response(JSON.stringify(makeResourcePage(backups)));
+    return HttpResponse.json(makeResourcePage(backups));
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/credentials', () => {
@@ -286,14 +285,14 @@ const databases = [
   http.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
     () => {
-      return new Response(JSON.stringify({}));
+      return HttpResponse.json({});
     }
   ),
 
   http.post(
     '*/databases/:engine/instances/:databaseId/credentials/reset',
     () => {
-      return new Response(JSON.stringify({}));
+      return HttpResponse.json({});
     }
   ),
 
@@ -310,7 +309,7 @@ const databases = [
   ),
 
   http.delete('*/databases/mysql/instances/:databaseId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
 ];
 
@@ -318,13 +317,13 @@ const aclb = [
   // Configurations
   http.get('*/v4beta/aclb/:id/configurations', () => {
     const configurations = configurationFactory.buildList(3);
-    return new Response(JSON.stringify(makeResourcePage(configurations)));
+    return HttpResponse.json(makeResourcePage(configurations));
   }),
   http.get('*/v4beta/aclb/:id/endpoints-health', ({ params }) => {
     const health = loadbalancerEndpointHealthFactory.build({
       id: Number(params.id),
     });
-    return new Response(JSON.stringify(health));
+    return HttpResponse.json(health);
   }),
   http.get(
     '*/v4beta/aclb/:id/configurations/endpoints-health',
@@ -332,7 +331,7 @@ const aclb = [
       const health = configurationsEndpointHealthFactory.build({
         id: Number(params.id),
       });
-      return new Response(JSON.stringify(health));
+      return HttpResponse.json(health);
     }
   ),
   http.get(
@@ -341,14 +340,14 @@ const aclb = [
       const health = serviceTargetsEndpointHealthFactory.build({
         id: Number(params.id),
       });
-      return new Response(JSON.stringify(health));
+      return HttpResponse.json(health);
     }
   ),
   http.get('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return new Response(JSON.stringify(configurationFactory.build()));
+    return HttpResponse.json(configurationFactory.build());
   }),
   http.post('*/v4beta/aclb/:id/configurations', () => {
-    return new Response(JSON.stringify(configurationFactory.build()));
+    return HttpResponse.json(configurationFactory.build());
   }),
   http.put(
     '*/v4beta/aclb/:id/configurations/:configId',
@@ -362,7 +361,7 @@ const aclb = [
     }
   ),
   http.delete('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   // Load Balancers
   http.get('*/v4beta/aclb', () => {
@@ -381,7 +380,7 @@ const aclb = [
     );
   }),
   http.post('*/v4beta/aclb', () => {
-    return new Response(JSON.stringify(loadbalancerFactory.build()));
+    return HttpResponse.json(loadbalancerFactory.build());
   }),
   http.put('*/v4beta/aclb/:id', async ({ params, request }) => {
     const reqBody = await request.json();
@@ -395,7 +394,7 @@ const aclb = [
     );
   }),
   http.delete('*/v4beta/aclb/:id', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   // Routes
   http.get('*/v4beta/aclb/:id/routes', ({ request }) => {
@@ -412,7 +411,7 @@ const aclb = [
     );
   }),
   http.post('*/v4beta/aclb/:id/routes', () => {
-    return new Response(JSON.stringify(createRouteFactory.buildList(4)));
+    return HttpResponse.json(createRouteFactory.buildList(4));
   }),
   http.put('*/v4beta/aclb/:id/routes/:routeId', async ({ params, request }) => {
     const reqBody = await request.json();
@@ -423,7 +422,7 @@ const aclb = [
     );
   }),
   http.delete('*/v4beta/aclb/:id/routes/:routeId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   // Service Targets
   http.get('*/v4beta/aclb/:id/service-targets', () => {
@@ -432,7 +431,7 @@ const aclb = [
     );
   }),
   http.post('*/v4beta/aclb/:id/service-targets', () => {
-    return new Response(JSON.stringify(createServiceTargetFactory.build()));
+    return HttpResponse.json(createServiceTargetFactory.build());
   }),
   http.put(
     '*/v4beta/aclb/:id/service-targets/:serviceTargetId',
@@ -446,7 +445,7 @@ const aclb = [
     }
   ),
   http.delete('*/v4beta/aclb/:id/service-targets/:serviceTargetId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   // Certificates
   http.get('*/v4beta/aclb/:id/certificates', () => {
@@ -471,7 +470,7 @@ const aclb = [
     }
   ),
   http.post('*/v4beta/aclb/:id/certificates', () => {
-    return new Response(JSON.stringify(certificateFactory.build()));
+    return HttpResponse.json(certificateFactory.build());
   }),
   http.put(
     '*/v4beta/aclb/:id/certificates/:certId',
@@ -485,7 +484,7 @@ const aclb = [
     }
   ),
   http.delete('*/v4beta/aclb/:id/certificates/:certId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
 ];
 
@@ -525,10 +524,10 @@ const vpc = [
     );
   }),
   http.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.delete('*/v4beta/vpcs/:vpcId', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.put('*/v4beta/vpcs/:vpcId', () => {
     return new Response(
@@ -537,17 +536,17 @@ const vpc = [
   }),
   http.get('*/v4beta/vpcs/:vpcID', ({ params }) => {
     const id = Number(params.id);
-    return new Response(JSON.stringify(vpcFactory.build({ id })));
+    return HttpResponse.json(vpcFactory.build({ id }));
   }),
   http.post('*/v4beta/vpcs', async ({ request }) => {
     const body = await request.json();
     const vpc = vpcFactory.build({ ...(body as any) });
-    return new Response(JSON.stringify(vpc));
+    return HttpResponse.json(vpc);
   }),
   http.post('*/v4beta/vpcs/:vpcId/subnets', async ({ request }) => {
     const body = await request.json();
     const subnet = subnetFactory.build({ ...(body as any) });
-    return new Response(JSON.stringify(subnet));
+    return HttpResponse.json(subnet);
   }),
 ];
 
@@ -590,7 +589,7 @@ export const handlers = [
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
       user_type: 'parent',
     });
-    return new Response(JSON.stringify(profile));
+    return HttpResponse.json(profile);
   }),
 
   http.put('*/profile', async ({ request }) => {
@@ -601,36 +600,36 @@ export const handlers = [
     );
   }),
   http.get('*/profile/grants', () => {
-    return new Response(JSON.stringify(grantsFactory.build()));
+    return HttpResponse.json(grantsFactory.build());
   }),
   http.get('*/profile/apps', () => {
     const tokens = appTokenFactory.buildList(5);
-    return new Response(JSON.stringify(makeResourcePage(tokens)));
+    return HttpResponse.json(makeResourcePage(tokens));
   }),
   http.post('*/profile/phone-number', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.post('*/profile/phone-number/verify', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.delete('*/profile/phone-number', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/profile/security-questions', () => {
-    return new Response(JSON.stringify(securityQuestionsFactory.build()));
+    return HttpResponse.json(securityQuestionsFactory.build());
   }),
   http.post<any, SecurityQuestionsPayload>(
     '*/profile/security-questions',
     async ({ request }) => {
       const body = await request.json();
 
-      return new Response(JSON.stringify(body));
+      return HttpResponse.json(body);
     }
   ),
   http.get('*/regions', async () => {
-    return new Response(JSON.stringify(makeResourcePage(regions)));
+    return HttpResponse.json(makeResourcePage(regions));
   }),
   http.get('*/images', async () => {
     const privateImages = imageFactory.buildList(5, {
@@ -674,7 +673,7 @@ export const handlers = [
       ...pendingImages,
       ...creatingImages,
     ];
-    return new Response(JSON.stringify(makeResourcePage(images)));
+    return HttpResponse.json(makeResourcePage(images));
   }),
 
   http.get('*/linode/types', () => {
@@ -697,7 +696,7 @@ export const handlers = [
   ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
     (type) =>
       http.get(`*/linode/types/${type.id}`, () => {
-        return new Response(JSON.stringify(type));
+        return HttpResponse.json(type);
       })
   ),
   http.get('*/linode/instances', async ({ request }) => {
@@ -796,10 +795,10 @@ export const handlers = [
           return (filteredById || filteredByRegion) ?? linodes;
         });
 
-        return new Response(JSON.stringify(makeResourcePage(filteredLinodes)));
+        return HttpResponse.json(makeResourcePage(filteredLinodes));
       }
     }
-    return new Response(JSON.stringify(makeResourcePage(linodes)));
+    return HttpResponse.json(makeResourcePage(linodes));
   }),
 
   http.get('*/linode/instances/:id', async ({ params }) => {
@@ -818,41 +817,41 @@ export const handlers = [
   http.get('*/linode/instances/:id/firewalls', async () => {
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
-    return new Response(JSON.stringify(makeResourcePage(firewalls)));
+    return HttpResponse.json(makeResourcePage(firewalls));
   }),
   http.delete('*/instances/*', async () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/instances/*/configs', async () => {
     const configs = linodeConfigFactory.buildList(3);
-    return new Response(JSON.stringify(makeResourcePage(configs)));
+    return HttpResponse.json(makeResourcePage(configs));
   }),
   http.get('*/instances/*/disks', async () => {
     const disks = linodeDiskFactory.buildList(3);
-    return new Response(JSON.stringify(makeResourcePage(disks)));
+    return HttpResponse.json(makeResourcePage(disks));
   }),
   http.put('*/instances/*/disks/:id', async ({ params }) => {
     const id = Number(params.id);
     const disk = linodeDiskFactory.build({ id });
     // If you want to mock an error
-    // return new Response(JSON.stringify({ errors: [{ field: 'label', reason: 'OMG!' }] }));
-    return new Response(JSON.stringify(disk));
+    // return HttpResponse.json({ errors: [{ field: 'label', reason: 'OMG!' }] }));
+    return HttpResponse.json(disk);
   }),
   http.get('*/instances/*/transfer', async () => {
     const transfer = linodeTransferFactory.build();
-    return new Response(JSON.stringify(transfer));
+    return HttpResponse.json(transfer);
   }),
   http.get('*/instances/*/stats*', async () => {
     const stats = linodeStatsFactory.build();
-    return new Response(JSON.stringify(stats));
+    return HttpResponse.json(stats);
   }),
   http.get('*/instances/*/stats', async () => {
     const stats = linodeStatsFactory.build();
-    return new Response(JSON.stringify(stats));
+    return HttpResponse.json(stats);
   }),
   http.get('*/instances/*/ips', async () => {
     const ips = linodeIPFactory.build();
-    return new Response(JSON.stringify(ips));
+    return HttpResponse.json(ips);
   }),
   http.post('*/linode/instances', async ({ request }) => {
     const body = await request.json();
@@ -863,22 +862,22 @@ export const handlers = [
       region: payload?.region ?? 'us-east',
       type: payload?.type ?? 'g6-standard-1',
     });
-    return new Response(JSON.stringify(linode));
-    // return new Response(JSON.stringify({ errors: [{ reason: 'Invalid label', field: 'data.label' }] }));
+    return HttpResponse.json(linode);
+    // return HttpResponse.json({ errors: [{ reason: 'Invalid label', field: 'data.label' }] }));
   }),
 
   http.get('*/lke/clusters', async () => {
     const clusters = kubernetesAPIResponse.buildList(10);
-    return new Response(JSON.stringify(makeResourcePage(clusters)));
+    return HttpResponse.json(makeResourcePage(clusters));
   }),
   http.get('*/lke/versions', async () => {
     const versions = kubernetesVersionFactory.buildList(1);
-    return new Response(JSON.stringify(makeResourcePage(versions)));
+    return HttpResponse.json(makeResourcePage(versions));
   }),
   http.get('*/lke/clusters/:clusterId', async ({ params }) => {
     const id = Number(params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
-    return new Response(JSON.stringify(cluster));
+    return HttpResponse.json(cluster);
   }),
   http.put('*/lke/clusters/:clusterId', async ({ params }) => {
     const id = Number(params.clusterId);
@@ -887,39 +886,39 @@ export const handlers = [
       id,
       k8s_version,
     });
-    return new Response(JSON.stringify(cluster));
+    return HttpResponse.json(cluster);
   }),
   http.get('*/lke/clusters/:clusterId/pools', async () => {
     const pools = nodePoolFactory.buildList(10);
     nodePoolFactory.resetSequenceNumber();
-    return new Response(JSON.stringify(makeResourcePage(pools)));
+    return HttpResponse.json(makeResourcePage(pools));
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
     const endpoints = kubeEndpointFactory.buildList(2);
-    return new Response(JSON.stringify(makeResourcePage(endpoints)));
+    return HttpResponse.json(makeResourcePage(endpoints));
   }),
   http.get('*/lke/clusters/*/recycle', async () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
-    return new Response(JSON.stringify(makeResourcePage(firewalls)));
+    return HttpResponse.json(makeResourcePage(firewalls));
   }),
   http.get('*/v4beta/networking/firewalls/*/devices', () => {
     const devices = firewallDeviceFactory.buildList(10);
-    return new Response(JSON.stringify(makeResourcePage(devices)));
+    return HttpResponse.json(makeResourcePage(devices));
   }),
   http.get('*/v4beta/networking/firewalls/:firewallId', () => {
     const firewall = firewallFactory.build();
-    return new Response(JSON.stringify(firewall));
+    return HttpResponse.json(firewall);
   }),
   http.put('*/v4beta/networking/firewalls/:firewallId', async ({ request }) => {
     const body = await request.json();
     const firewall = firewallFactory.build({
       status: body?.['status'] ?? 'disabled',
     });
-    return new Response(JSON.stringify(firewall));
+    return HttpResponse.json(firewall);
   }),
   // http.post('*/account/agreements', () => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
@@ -930,23 +929,23 @@ export const handlers = [
     const newFirewall = firewallFactory.build({
       label: payload.label ?? 'mock-firewall',
     });
-    return new Response(JSON.stringify(newFirewall));
+    return HttpResponse.json(newFirewall);
   }),
   http.get('*/v4/nodebalancers', () => {
     const nodeBalancers = nodeBalancerFactory.buildList(1);
-    return new Response(JSON.stringify(makeResourcePage(nodeBalancers)));
+    return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(params.nodeBalancerID),
     });
-    return new Response(JSON.stringify(nodeBalancer));
+    return HttpResponse.json(nodeBalancer);
   }),
   http.get('*/nodebalancers/:nodeBalancerID/configs', ({ params }) => {
     const configs = nodeBalancerConfigFactory.buildList(2, {
       nodebalancer_id: Number(params.nodeBalancerID),
     });
-    return new Response(JSON.stringify(makeResourcePage(configs)));
+    return HttpResponse.json(makeResourcePage(configs));
   }),
   http.get('*/nodebalancers/:nodeBalancerID/configs/:configID/nodes', () => {
     const configs = [
@@ -954,7 +953,7 @@ export const handlers = [
       nodeBalancerConfigNodeFactory.build({ status: 'DOWN' }),
       nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
     ];
-    return new Response(JSON.stringify(makeResourcePage(configs)));
+    return HttpResponse.json(makeResourcePage(configs));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -972,23 +971,23 @@ export const handlers = [
 
   http.put('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*object-storage/buckets/*/*/ssl', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({ ssl: false }));
+    return HttpResponse.json({ ssl: false });
   }),
   http.post('*object-storage/buckets/*/*/ssl', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({ ssl: true }));
+    return HttpResponse.json({ ssl: true });
   }),
   http.delete('*object-storage/buckets/*/*/ssl', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.delete('*object-storage/buckets/*/*', async () => {
     await sleep(2000);
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/object-storage/buckets/*/*/object-list', ({ request }) => {
     const url = new URL(request.url);
@@ -1062,10 +1061,10 @@ export const handlers = [
   }),
   http.get('*/object-storage/buckets', () => {
     const buckets = objectStorageBucketFactory.buildList(10);
-    return new Response(JSON.stringify(makeResourcePage(buckets)));
+    return HttpResponse.json(makeResourcePage(buckets));
   }),
   http.post('*/object-storage/buckets', () => {
-    return new Response(JSON.stringify(objectStorageBucketFactory.build()));
+    return HttpResponse.json(objectStorageBucketFactory.build());
   }),
   http.get('*object-storage/clusters', () => {
     const jakartaCluster = objectStorageClusterFactory.build({
@@ -1186,18 +1185,18 @@ export const handlers = [
     }
   ),
   http.delete('*object-storage/keys/:id', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/domains', () => {
     const domains = domainFactory.buildList(10);
-    return new Response(JSON.stringify(makeResourcePage(domains)));
+    return HttpResponse.json(makeResourcePage(domains));
   }),
   http.post('*/domains/*/records', () => {
     const record = domainRecordFactory.build();
-    return new Response(JSON.stringify(record));
+    return HttpResponse.json(record);
   }),
   http.post('*/volumes/migrate', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/regions/*/migration-queue', () => {
     return new Response(
@@ -1216,15 +1215,15 @@ export const handlers = [
       'resizing',
     ];
     const volumes = statuses.map((status) => volumeFactory.build({ status }));
-    return new Response(JSON.stringify(makeResourcePage(volumes)));
+    return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.post('*/volumes', () => {
     const volume = volumeFactory.build();
-    return new Response(JSON.stringify(volume));
+    return HttpResponse.json(volume);
   }),
   http.get('*/vlans', () => {
     const vlans = VLANFactory.buildList(2);
-    return new Response(JSON.stringify(makeResourcePage(vlans)));
+    return HttpResponse.json(makeResourcePage(vlans));
   }),
   http.get('*/profile/preferences', () => {
     return new Response(
@@ -1234,15 +1233,15 @@ export const handlers = [
     );
   }),
   http.get('*/profile/devices', () => {
-    return new Response(JSON.stringify(makeResourcePage([])));
+    return HttpResponse.json(makeResourcePage([]));
   }),
   http.put('*/profile/preferences', async ({ request }) => {
     const reqBody = await request.json();
     const body = reqBody as any;
-    return new Response(JSON.stringify({ ...body }));
+    return HttpResponse.json({ ...body });
   }),
   http.get('*/kubeconfig', () => {
-    return new Response(JSON.stringify({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
+    return HttpResponse.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' });
   }),
   http.get('*invoices/555/items', () => {
     return new Response(
@@ -1278,7 +1277,7 @@ export const handlers = [
       balance: 50,
       company: 'Mock Company',
     });
-    return new Response(JSON.stringify(account));
+    return HttpResponse.json(account);
   }),
   http.get('*/account/availability', () => {
     const newarkStorage = accountAvailabilityFactory.build({
@@ -1304,7 +1303,7 @@ export const handlers = [
     );
   }),
   http.get('*/account/availability/:regionId', () => {
-    return new Response(JSON.stringify(accountAvailabilityFactory.build()));
+    return HttpResponse.json(accountAvailabilityFactory.build());
   }),
   http.put('*/account', async ({ request }) => {
     const body = await request.json();
@@ -1314,7 +1313,7 @@ export const handlers = [
   }),
   http.get('*/account/transfer', () => {
     const transfer = accountTransferFactory.build();
-    return new Response(JSON.stringify(transfer));
+    return HttpResponse.json(transfer);
   }),
   http.get('*/account/payments', () => {
     const paymentWithLargeId = paymentFactory.build({
@@ -1350,7 +1349,7 @@ export const handlers = [
       id: 1234,
       label: 'LinodeInvoice',
     });
-    return new Response(JSON.stringify(linodeInvoice));
+    return HttpResponse.json(linodeInvoice);
   }),
   http.get('*/account/maintenance', ({ request }) => {
     const url = new URL(request.url);
@@ -1398,7 +1397,7 @@ export const handlers = [
       );
     }
 
-    return new Response(JSON.stringify(makeResourcePage(accountMaintenance)));
+    return HttpResponse.json(makeResourcePage(accountMaintenance));
   }),
 
   http.get('*/account/child-accounts', ({ request }) => {
@@ -1420,7 +1419,7 @@ export const handlers = [
   }),
   http.get('*/account/child-accounts/:euuid', () => {
     const childAccount = accountFactory.buildList(1);
-    return new Response(JSON.stringify(childAccount));
+    return HttpResponse.json(childAccount);
   }),
   http.post('*/account/child-accounts/:euuid/token', () => {
     // Proxy tokens expire in 15 minutes.
@@ -1431,7 +1430,7 @@ export const handlers = [
       expiry: expiry.toISOString(),
       token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
     });
-    return new Response(JSON.stringify(proxyToken));
+    return HttpResponse.json(proxyToken);
   }),
   http.get('*/account/users', ({ request }) => {
     const url = new URL(request.url);
@@ -1502,20 +1501,20 @@ export const handlers = [
     }
 
     // Return default response if 'x-filter' header is not present
-    return new Response(JSON.stringify(makeResourcePage(accountUsers)));
+    return HttpResponse.json(makeResourcePage(accountUsers));
   }),
 
   http.get(`*/account/users/${childAccountUser.username}`, () => {
-    return new Response(JSON.stringify(childAccountUser));
+    return HttpResponse.json(childAccountUser);
   }),
   http.get(`*/account/users/${proxyAccountUser.username}`, () => {
-    return new Response(JSON.stringify(proxyAccountUser));
+    return HttpResponse.json(proxyAccountUser);
   }),
   http.get(`*/account/users/${parentAccountUser.username}`, () => {
-    return new Response(JSON.stringify(parentAccountUser));
+    return HttpResponse.json(parentAccountUser);
   }),
   http.get(`*/account/users/${parentAccountNonAdminUser.username}`, () => {
-    return new Response(JSON.stringify(parentAccountNonAdminUser));
+    return HttpResponse.json(parentAccountNonAdminUser);
   }),
   http.get('*/account/users/:user', () => {
     return new Response(
@@ -1530,7 +1529,7 @@ export const handlers = [
       if (restricted !== undefined) {
         parentAccountNonAdminUser.restricted = restricted;
       }
-      return new Response(JSON.stringify(parentAccountNonAdminUser));
+      return HttpResponse.json(parentAccountNonAdminUser);
     }
   ),
   http.get(`*/account/users/${childAccountUser.username}/grants`, () => {
@@ -1590,7 +1589,7 @@ export const handlers = [
             }
           : undefined,
       });
-      return new Response(JSON.stringify(grantsResponse));
+      return HttpResponse.json(grantsResponse);
     }
   ),
   http.get('*/account/users/:user/grants', () => {
@@ -1726,42 +1725,42 @@ export const handlers = [
   // // HERE
   http.get('*/support/tickets', () => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
-    return new Response(JSON.stringify(makeResourcePage(tickets)));
+    return HttpResponse.json(makeResourcePage(tickets));
   }),
   http.get('*/support/tickets/999', () => {
     const ticket = supportTicketFactory.build({
       closed: new Date().toISOString(),
       id: 999,
     });
-    return new Response(JSON.stringify(ticket));
+    return HttpResponse.json(ticket);
   }),
   http.get('*/support/tickets/:ticketId', ({ params }) => {
     const ticket = supportTicketFactory.build({
       id: Number(params.ticketId),
     });
-    return new Response(JSON.stringify(ticket));
+    return HttpResponse.json(ticket);
   }),
   http.get('*/support/tickets/:ticketId/replies', () => {
     const replies = supportReplyFactory.buildList(15);
-    return new Response(JSON.stringify(makeResourcePage(replies)));
+    return HttpResponse.json(makeResourcePage(replies));
   }),
   http.put('*/longview/plan', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/longview/plan', () => {
     const plan = longviewActivePlanFactory.build();
-    return new Response(JSON.stringify(plan));
+    return HttpResponse.json(plan);
   }),
   http.get('*/longview/subscriptions', () => {
     const subscriptions = longviewSubscriptionFactory.buildList(10);
-    return new Response(JSON.stringify(makeResourcePage(subscriptions)));
+    return HttpResponse.json(makeResourcePage(subscriptions));
   }),
   http.get('*/longview/clients', () => {
     const clients = longviewClientFactory.buildList(10);
-    return new Response(JSON.stringify(makeResourcePage(clients)));
+    return HttpResponse.json(makeResourcePage(clients));
   }),
   http.post('*/backups/enable/*', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/account/settings', () => {
     return new Response(
@@ -1776,15 +1775,15 @@ export const handlers = [
   }),
   http.put('*/account/settings/*', async ({ request }) => {
     const body = await request.json();
-    return new Response(JSON.stringify(body as any));
+    return HttpResponse.json(body as any);
   }),
   http.get('*/tags', () => {
     tagFactory.resetSequenceNumber();
     const tags = tagFactory.buildList(5);
-    return new Response(JSON.stringify(makeResourcePage(tags)));
+    return HttpResponse.json(makeResourcePage(tags));
   }),
   http.get('*gravatar*', () => {
-    return new Response(JSON.stringify({}), { status: 400 });
+    return HttpResponse.json({}, { status: 400 });
   }),
   http.get('*linode.com/blog/feed*', () => {
     return new Response(null, { status: 400 });
@@ -1814,7 +1813,7 @@ export const handlers = [
   http.post('*/managed/services', async ({ request }) => {
     const body = await request.json();
     const monitor = monitorFactory.build(body as any);
-    return new Response(JSON.stringify(monitor));
+    return HttpResponse.json(monitor);
   }),
   http.put('*/managed/services/:id', async ({ params, request }) => {
     const body = await request.json();
@@ -1830,11 +1829,11 @@ export const handlers = [
     );
   }),
   http.delete('*/managed/services/:id', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*managed/stats', () => {
     const stats = managedStatsFactory.build();
-    return new Response(JSON.stringify(stats));
+    return HttpResponse.json(stats);
   }),
   http.get('*managed/issues', () => {
     const openIssue = managedIssueFactory.build({
@@ -1857,7 +1856,7 @@ export const handlers = [
     );
   }),
   http.get('*managed/credentials/sshkey', () => {
-    return new Response(JSON.stringify(managedSSHPubKeyFactory.build()));
+    return HttpResponse.json(managedSSHPubKeyFactory.build());
   }),
   http.get('*managed/credentials', () => {
     return new Response(
@@ -1870,10 +1869,10 @@ export const handlers = [
       ...(body as any),
     });
 
-    return new Response(JSON.stringify(response));
+    return HttpResponse.json(response);
   }),
   http.post('*managed/credentials/:id/revoke', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*managed/contacts', () => {
     return new Response(
@@ -1881,7 +1880,7 @@ export const handlers = [
     );
   }),
   http.delete('*managed/contacts/:id', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.put('*managed/contacts/:id', async ({ params, request }) => {
     const body = await request.json();
@@ -1890,14 +1889,14 @@ export const handlers = [
       id: Number(params.id),
     };
 
-    return new Response(JSON.stringify(payload));
+    return HttpResponse.json(payload);
   }),
   http.post('*managed/contacts', async ({ request }) => {
     const body = await request.json();
     const response = contactFactory.build({
       ...(body as any),
     });
-    return new Response(JSON.stringify(response));
+    return HttpResponse.json(response);
   }),
   http.get('*stackscripts/', () => {
     return new Response(
@@ -2070,7 +2069,7 @@ export const handlers = [
   }),
 
   http.post('*/networking/vlans', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.post('*/networking/ipv6/ranges', async ({ request }) => {
     const body = await request.json();
@@ -2080,10 +2079,10 @@ export const handlers = [
     );
   }),
   http.post('*/networking/ips/assign', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.post('*/account/payments', () => {
-    return new Response(JSON.stringify(creditPaymentResponseFactory.build()));
+    return HttpResponse.json(creditPaymentResponseFactory.build());
   }),
   http.get('*/profile/tokens', () => {
     return new Response(
@@ -2093,7 +2092,7 @@ export const handlers = [
   http.post<any, TokenRequest>('*/profile/tokens', async ({ request }) => {
     const body = await request.json();
     const data = body;
-    return new Response(JSON.stringify(appTokenFactory.build(data)));
+    return HttpResponse.json(appTokenFactory.build(data));
   }),
   http.put<any, Partial<TokenRequest>>(
     '*/profile/tokens/:id',
@@ -2108,7 +2107,7 @@ export const handlers = [
     }
   ),
   http.delete('*/profile/tokens/:id', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/account/betas', () => {
     return new Response(
@@ -2130,10 +2129,10 @@ export const handlers = [
         JSON.stringify(accountBetaFactory.build({ id: params.id as string }))
       );
     }
-    return new Response(JSON.stringify({}), { status: 404 });
+    return HttpResponse.json({}, { status: 404 });
   }),
   http.post('*/account/betas', () => {
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.get('*/betas/:id', ({ params }) => {
     if (params.id !== 'undefined') {
@@ -2141,7 +2140,7 @@ export const handlers = [
         JSON.stringify(betaFactory.build({ id: params.id as string }))
       );
     }
-    return new Response(JSON.stringify({}), { status: 404 });
+    return HttpResponse.json({}, { status: 404 });
   }),
   http.get('*/betas', () => {
     return new Response(
@@ -2195,7 +2194,7 @@ export const handlers = [
   }),
   http.get('*/placement/groups/:placementGroupId', ({ params }) => {
     if (params.placementGroupId === 'undefined') {
-      return new Response(JSON.stringify({ status: 404 }));
+      return HttpResponse.json({}, { status: 404 });
     }
 
     return new Response(
@@ -2222,22 +2221,22 @@ export const handlers = [
       const body = await request.json();
 
       if (params.placementGroupId === '-1') {
-        return new Response(JSON.stringify({ status: 404 }));
+        return HttpResponse.json({}, { status: 404 });
       }
 
       const response = placementGroupFactory.build({
         ...(body as any),
       });
 
-      return new Response(JSON.stringify(response));
+      return HttpResponse.json(response);
     }
   ),
   http.delete('*/placement/groups/:placementGroupId', ({ params }) => {
     if (params.placementGroupId === '-1') {
-      return new Response(JSON.stringify({ status: 404 }));
+      return HttpResponse.json({}, { status: 404 });
     }
 
-    return new Response(JSON.stringify({}));
+    return HttpResponse.json({});
   }),
   http.post(
     '*/placement/groups/:placementGroupId/assign',
@@ -2245,7 +2244,7 @@ export const handlers = [
       const body = await request.json();
 
       if (params.placementGroupId === '-1') {
-        return new Response(JSON.stringify({ status: 404 }));
+        return HttpResponse.json({}, { status: 404 });
       }
 
       const response = placementGroupFactory.build({
@@ -2296,12 +2295,12 @@ export const handlers = [
         ],
       });
 
-      return new Response(JSON.stringify(response));
+      return HttpResponse.json(response);
     }
   ),
   http.post('*/placement/groups/:placementGroupId/unassign', ({ params }) => {
     if (params.placementGroupId === '-1') {
-      return new Response(JSON.stringify({ status: 404 }));
+      return HttpResponse.json({}, { status: 404 });
     }
 
     const response = placementGroupFactory.build({
@@ -2349,7 +2348,7 @@ export const handlers = [
       ],
     });
 
-    return new Response(JSON.stringify(response));
+    return HttpResponse.json(response);
   }),
   ...entityTransfers,
   ...statusPage,
