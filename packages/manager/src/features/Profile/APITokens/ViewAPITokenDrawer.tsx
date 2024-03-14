@@ -79,8 +79,8 @@ export const ViewAPITokenDrawer = (props: Props) => {
   // Filter permissions for all users except parent user accounts.
   const showFilteredPermissions =
     !flags.parentChildAccountAccess ||
-    (flags.parentChildAccountAccess &&
-      (profile?.user_type !== 'parent' || hideChildAccountAccessScope));
+    profile?.user_type !== 'parent' ||
+    hideChildAccountAccessScope;
 
   const filteredPermissions = allPermissions.filter(
     (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
