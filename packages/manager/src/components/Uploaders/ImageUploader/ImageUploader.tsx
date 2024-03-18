@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { flushSync } from 'react-dom';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -234,7 +234,7 @@ export const ImageUploader = React.memo((props: ImageUploaderProps) => {
             redirectToLogin('/images');
           }, 3000);
         } else {
-          queryClient.invalidateQueries(`${queryKey}-list`);
+          queryClient.invalidateQueries([`${queryKey}-list`]);
           history.push('/images');
         }
       };

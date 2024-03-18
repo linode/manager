@@ -8,6 +8,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -18,10 +19,10 @@ import { Typography } from 'src/components/Typography';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { BackupTableRow } from './BackupTableRow';
 import { BackupsPlaceholder } from './BackupsPlaceholder';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
@@ -38,6 +39,7 @@ export const LinodeBackups = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
+  const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
     Boolean(linode?.type)
@@ -62,6 +64,11 @@ export const LinodeBackups = () => {
 
   const [selectedBackup, setSelectedBackup] = React.useState<LinodeBackup>();
 
+  const linodeIsInEdgeRegion = getIsEdgeRegion(
+    regions ?? [],
+    linode?.region ?? ''
+  );
+
   const handleDeploy = (backup: LinodeBackup) => {
     history.push(
       '/linodes/create' +
@@ -74,12 +81,6 @@ export const LinodeBackups = () => {
     setSelectedBackup(backup);
   };
 
-  if (error) {
-    return (
-      <ErrorState errorText="There was an issue retrieving your backups." />
-    );
-  }
-
   const backupsMonthlyPrice:
     | PriceObject['monthly']
     | undefined = getMonthlyBackupsPrice({
@@ -87,18 +88,25 @@ export const LinodeBackups = () => {
     type,
   });
 
-  if (isLoading) {
-    return <CircleProgress />;
-  }
-
   if (!linode?.backups.enabled) {
     return (
       <BackupsPlaceholder
         backupsMonthlyPrice={backupsMonthlyPrice}
         disabled={doesNotHavePermission}
         linodeId={id}
+        linodeIsInEdgeRegion={linodeIsInEdgeRegion}
       />
     );
+  }
+
+  if (error) {
+    return (
+      <ErrorState errorText="There was an issue retrieving your backups." />
+    );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
   }
 
   const hasBackups =
@@ -109,7 +117,6 @@ export const LinodeBackups = () => {
 
   return (
     <Stack spacing={2}>
-      {doesNotHavePermission && <LinodePermissionsError />}
       <Paper style={{ padding: 0 }}>
         <Table aria-label="List of Backups">
           <TableHead>

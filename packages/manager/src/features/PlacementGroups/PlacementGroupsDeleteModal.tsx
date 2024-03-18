@@ -1,4 +1,5 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -29,7 +30,10 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const { onClose, open } = props;
   const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(+id);
+  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
+    +id,
+    Boolean(id)
+  );
   const {
     assignedLinodes,
     isLoading: placementGroupDataLoading,
@@ -50,6 +54,8 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const error = deletePlacementError || unassignLinodeError;
 
   React.useEffect(() => {
@@ -65,10 +71,18 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     };
 
     await unassignLinodes(payload);
+    const toastMessage = `Linode successfully unassigned`;
+    enqueueSnackbar(toastMessage, {
+      variant: 'success',
+    });
   };
 
   const onDelete = async () => {
     await deletePlacementGroup();
+    const toastMessage = `Placement Group successfully deleted.`;
+    enqueueSnackbar(toastMessage, {
+      variant: 'success',
+    });
     onClose();
   };
 
@@ -93,10 +107,8 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           ? [{ reason: 'Placement Group not found.' }]
           : undefined
       }
-      inputProps={{
-        disabled: isDisabled,
-      }}
-      disabled={isDisabled}
+      disableTypeToConfirmInput={isDisabled}
+      disableTypeToConfirmSubmit={isDisabled}
       label="Placement Group"
       loading={placementGroupDataLoading || deletePlacementLoading}
       onClick={onDelete}

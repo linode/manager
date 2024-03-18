@@ -26,6 +26,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
 
 const BucketLanding = React.lazy(() =>
@@ -158,7 +159,11 @@ export const ObjectStorageLanding = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <BucketLanding />
+              {isObjMultiClusterEnabled ? (
+                <OMC_BucketLanding />
+              ) : (
+                <BucketLanding />
+              )}
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
