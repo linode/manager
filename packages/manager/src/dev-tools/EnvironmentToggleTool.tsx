@@ -21,6 +21,7 @@ interface EnvironmentOption {
 //
 // REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
 export const getOptions = (env: Partial<ImportMetaEnv>) => {
+  const newEnv: Record<string, boolean | number | string> = { ...env };
   const envVariables = Object.keys(env);
 
   return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {
@@ -35,14 +36,10 @@ export const getOptions = (env: Partial<ImportMetaEnv>) => {
     return [
       ...acc,
       {
-        // @ts-expect-error our env is strictly typed so idk what to do about this
-        apiRoot: env[`${base}_API_ROOT`] ?? '',
-        // @ts-expect-error our env is strictly typed so idk what to do about this
-        clientID: env[`${base}_CLIENT_ID`] ?? '',
-        // @ts-expect-error our env is strictly typed so idk what to do about this
-        label: env[thisEnvVariable] ?? '',
-        // @ts-expect-error our env is strictly typed so idk what to do about this
-        loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
+        apiRoot: String(newEnv[`${base}_API_ROOT`]) ?? '',
+        clientID: String(newEnv[`${base}_CLIENT_ID`]) ?? '',
+        label: String(newEnv[thisEnvVariable]) ?? '',
+        loginRoot: String(newEnv[`${base}_LOGIN_ROOT`]) ?? '',
       },
     ];
   }, []);
