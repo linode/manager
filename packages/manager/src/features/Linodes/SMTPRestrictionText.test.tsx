@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { accountFactory } from 'src/factories/account';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -45,8 +45,8 @@ describe('SMTPRestrictionText component', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -68,8 +68,8 @@ describe('SMTPRestrictionText component', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -95,8 +95,8 @@ describe('SMTPRestrictionText component', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -113,8 +113,8 @@ describe('SMTPRestrictionText component', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
