@@ -10,7 +10,7 @@ import {
   useLoadBalancerQuery,
 } from 'src/queries/aclb/loadbalancers';
 
-import { LoadBalancerRegions } from '../LoadBalancerRegions';
+import { LoadBalancerRegionsList } from '../LoadBalancerRegions';
 
 interface Props {
   loadbalancerId: number;
@@ -42,7 +42,7 @@ export const Region = ({ loadbalancerId }: Props) => {
             />{' '}
             Load Balancer regions can not be changed during beta.
           </Typography>
-          <LoadBalancerRegions />
+          <LoadBalancerRegionsList regionIds={loadbalancer?.regions ?? []} />
         </Stack>
       </form>
     </Paper>

@@ -8,6 +8,7 @@ import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -25,10 +26,6 @@ export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
 
-interface Props {
-  disabled?: boolean;
-}
-
 interface State {
   backupInfo: Info;
   backupsError?: string;
@@ -36,8 +33,7 @@ interface State {
   selectedLinodeWithBackups?: LinodeWithBackups;
 }
 
-export type CombinedProps = Props &
-  BackupFormStateHandlers &
+export type CombinedProps = BackupFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
@@ -49,9 +45,6 @@ const errorResources = {
   tags: 'Tags for this Linode',
   type: 'A plan selection',
 };
-
-const filterLinodesWithBackups = (linodes: Linode[]) =>
-  linodes.filter((linode) => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -71,12 +64,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   render() {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
-      disabled,
       errors,
       linodesData,
+      regionsData,
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
+      userCannotCreateLinode,
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(errorResources, errors);
@@ -84,6 +78,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const userHasBackups = linodesData.some(
       (thisLinode) => thisLinode.backups.enabled
     );
+
+    const filterLinodesWithBackups = (linodes: Linode[]) =>
+      linodes.filter(
+        (linode) =>
+          linode.backups.enabled && !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
+      );
 
     return (
       <StyledGrid>
@@ -107,7 +107,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                           the same password and SSH Keys (if any) as the original Linode.`,
                 'This Linode will need to be manually booted after it finishes provisioning.',
               ]}
-              disabled={disabled}
+              disabled={userCannotCreateLinode}
               error={hasErrorFor('linode_id')}
               handleSelection={this.handleLinodeSelect}
               linodes={filterLinodesWithBackups(linodesData)}

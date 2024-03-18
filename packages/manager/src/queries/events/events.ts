@@ -9,7 +9,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';

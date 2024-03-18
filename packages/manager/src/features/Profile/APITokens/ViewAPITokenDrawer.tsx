@@ -8,6 +8,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -37,6 +38,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
 
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
   const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
@@ -60,10 +65,22 @@ export const ViewAPITokenDrawer = (props: Props) => {
 
   const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
 
+  /**
+   * A parent user with child_account_access can issue a PAT with child_account scope.
+   * If access is later revoked, we'll still display this scope for existing PATs, but not for new ones.
+   * */
+  const hideChildAccountAccessScope = allPermissions.some(
+    (scope) =>
+      scope[0] === 'child_account' &&
+      scope[1] === 0 &&
+      isChildAccountAccessRestricted
+  );
+
   // Filter permissions for all users except parent user accounts.
   const showFilteredPermissions =
-    (flags.parentChildAccountAccess && profile?.user_type !== 'parent') ||
-    Boolean(!flags.parentChildAccountAccess);
+    !flags.parentChildAccountAccess ||
+    profile?.user_type !== 'parent' ||
+    hideChildAccountAccessScope;
 
   const filteredPermissions = allPermissions.filter(
     (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'

@@ -9,7 +9,7 @@ import { ApiAwarenessModal, ApiAwarenessModalProps } from './ApiAwarenessModal';
 const defaultProps: ApiAwarenessModalProps = {
   isOpen: false,
   onClose: vi.fn(),
-  payLoad: {},
+  payLoad: { region: '', type: '' },
   route: '',
 };
 

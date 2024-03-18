@@ -20,14 +20,25 @@ export const DeleteCertificateDialog = (props: Props) => {
     error,
     isLoading,
     mutateAsync,
+    reset,
   } = useLoadBalancerCertificateDeleteMutation(
     loadbalancerId,
     certificate?.id ?? -1
   );
 
-  const onDelete = async () => {
-    await mutateAsync();
+  const handleClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
     onClose();
+  };
+
+  const onDelete = async () => {
+    try {
+      await mutateAsync();
+      handleClose();
+    } catch (error) {
+      // Swallow error
+    }
   };
 
   return (
@@ -41,12 +52,12 @@ export const DeleteCertificateDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Certificate ${certificate?.label}?`}
     >

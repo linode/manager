@@ -49,6 +49,7 @@ export interface RowProps {
     | 'domain'
     | 'linode'
     | 'nodebalancer'
+    | 'placement_group'
     | 'stackscript'
     | 'subnet'
     | 'volume'

@@ -5,10 +5,10 @@ import {
   getObjectList,
   getObjectURL,
 } from '@linode/api-v4/lib/object-storage';
+import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
@@ -271,7 +271,10 @@ export const BucketDetail = () => {
     const dataCopy = [...copy[copy.length - 1].data];
 
     dataCopy.push(object);
-    copy[copy.length - 1].data = dataCopy;
+    copy[copy.length - 1] = {
+      ...copy[copy.length - 1],
+      data: dataCopy,
+    };
 
     updateStore(copy);
   };

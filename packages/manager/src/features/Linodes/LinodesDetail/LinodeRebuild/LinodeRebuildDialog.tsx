@@ -56,11 +56,10 @@ export const LinodeRebuildDialog = (props: Props) => {
   const [mode, setMode] = React.useState<MODES>('fromImage');
   const [rebuildError, setRebuildError] = React.useState<string>('');
 
-  React.useEffect(() => {
-    if (open) {
-      setRebuildError('');
-    }
-  }, [open]);
+  const onExitDrawer = () => {
+    setRebuildError('');
+    setMode('fromImage');
+  };
 
   const handleRebuildError = (status: string) => {
     setRebuildError(status);
@@ -68,6 +67,7 @@ export const LinodeRebuildDialog = (props: Props) => {
 
   return (
     <Dialog
+      TransitionProps={{ onExited: onExitDrawer }}
       fullHeight
       fullWidth
       maxWidth="md"
@@ -80,8 +80,8 @@ export const LinodeRebuildDialog = (props: Props) => {
         {hostMaintenance && <HostMaintenanceError />}
         {rebuildError && <Notice variant="error">{rebuildError}</Notice>}
         <Typography
-          sx={{ paddingBottom: theme.spacing(2) }}
           data-qa-rebuild-desc
+          sx={{ paddingBottom: theme.spacing(2) }}
         >
           If you can&rsquo;t rescue an existing disk, it&rsquo;s time to rebuild
           your Linode. There are a couple of different ways you can do this:

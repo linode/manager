@@ -12,6 +12,7 @@ import {
 } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { PARENT_USER } from 'src/features/Account/constants';
 
 describe('Account login history', () => {
   /*
@@ -130,7 +131,7 @@ describe('Account login history', () => {
     cy.findByLabelText('Account Logins').should('not.exist');
 
     cy.findByText(
-      "You don't have permissions to edit this Account. Please contact your business partner to request the necessary permissions."
+      `You don't have permissions to edit this Account. Please contact your ${PARENT_USER} to request the necessary permissions.`
     );
   });
 

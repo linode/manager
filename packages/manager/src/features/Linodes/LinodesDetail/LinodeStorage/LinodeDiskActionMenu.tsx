@@ -37,50 +37,40 @@ export const LinodeDiskActionMenu = (props: Props) => {
     readOnly,
   } = props;
 
-  let _tooltip =
-    linodeStatus === 'offline'
-      ? undefined
-      : 'Your Linode must be fully powered down in order to perform this action';
-
-  _tooltip = readOnly
-    ? "You don't have permissions to perform this action"
-    : _tooltip;
-
-  const disabledProps = _tooltip
-    ? {
-        disabled: true,
-        tooltip: _tooltip,
-      }
-    : {};
+  const tooltip =
+    linodeStatus !== 'offline'
+      ? 'Your Linode must be fully powered down in order to perform this action'
+      : undefined;
 
   const actions: Action[] = [
     {
       disabled: readOnly,
       onClick: onRename,
       title: 'Rename',
-      tooltip: readOnly ? _tooltip : '',
     },
     {
+      disabled: linodeStatus !== 'offline' || readOnly,
       onClick: onResize,
       title: 'Resize',
-      ...disabledProps,
+      tooltip,
     },
     {
+      disabled: readOnly,
       onClick: onImagize,
       title: 'Imagize',
-      ...(readOnly ? disabledProps : {}),
     },
     {
+      disabled: readOnly,
       onClick: () => {
         history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
       },
       title: 'Clone',
-      ...(readOnly ? disabledProps : {}),
     },
     {
+      disabled: linodeStatus !== 'offline' || readOnly,
       onClick: onDelete,
       title: 'Delete',
-      ...disabledProps,
+      tooltip,
     },
   ];
 

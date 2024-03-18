@@ -17,8 +17,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
-import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { linodeInTransition } from 'src/features/Linodes/transitions';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -26,11 +27,9 @@ import {
   useLinodeResizeMutation,
 } from 'src/queries/linodes/linodes';
 import { usePreferences } from 'src/queries/preferences';
-import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
-import { getPermissionsForLinode } from 'src/utilities/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
@@ -70,7 +69,6 @@ export const LinodeResize = (props: Props) => {
 
   const { data: types } = useAllTypes(open);
 
-  const { data: grants } = useGrants();
   const { data: preferences } = usePreferences(open);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -91,8 +89,12 @@ export const LinodeResize = (props: Props) => {
 
   const hostMaintenance = linode?.status === 'stopped';
   const isLinodeOffline = linode?.status === 'offline';
-  const unauthorized =
-    getPermissionsForLinode(grants, linodeId || 0) === 'read_only';
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
+  });
 
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {
@@ -157,7 +159,7 @@ export const LinodeResize = (props: Props) => {
     }
   }, [resizeError]);
 
-  const tableDisabled = hostMaintenance || unauthorized;
+  const tableDisabled = hostMaintenance || isLinodesGrantReadOnly;
 
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false &&
@@ -191,7 +193,7 @@ export const LinodeResize = (props: Props) => {
       title={`Resize Linode ${linode?.label}`}
     >
       <form onSubmit={formik.handleSubmit}>
-        {unauthorized && <LinodePermissionsError />}
+        {isLinodesGrantReadOnly && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
         {disksError && (
           <Notice

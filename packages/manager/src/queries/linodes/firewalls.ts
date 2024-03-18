@@ -4,7 +4,7 @@ import {
   ResourcePage,
   getLinodeFirewalls,
 } from '@linode/api-v4';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { queryKey } from './linodes';

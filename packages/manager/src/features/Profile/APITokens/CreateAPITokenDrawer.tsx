@@ -18,6 +18,7 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
@@ -105,11 +106,17 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
 
+  const isParentUser = profile?.user_type === 'parent';
+
   const {
     error,
     isLoading,
     mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
 
   const showVPCs = isFeatureEnabled(
     'VPCs',
@@ -170,7 +177,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
     e: React.SyntheticEvent<RadioButton>
   ): void => {
     const value = +e.currentTarget.value;
-    const newScopes = form.values.scopes.map(
+    const newScopes = (showFilteredPermissions
+      ? filteredPermissions
+      : allPermissions
+    ).map(
       (scope): Permission => {
         // Check the excluded scopes object to see if the current scope will have its own defaults.
         const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
@@ -220,12 +230,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Filter permissions for all users except parent user accounts.
   const allPermissions = form.values.scopes;
 
+  // Filter permissions for all users *except* parent user accounts with access to child accounts enabled.
   const showFilteredPermissions =
-    (flags.parentChildAccountAccess && profile?.user_type !== 'parent') ||
-    Boolean(!flags.parentChildAccountAccess);
+    !flags.parentChildAccountAccess ||
+    (flags.parentChildAccountAccess &&
+      (!isParentUser || isChildAccountAccessRestricted));
 
   const filteredPermissions = allPermissions.filter(
-    (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
+    // @TODO: Parent/Child - Once feature is released and all perms are always returned, use basePermNameMap[scopeTup[0]] !== 'Child Account Access'.
+    (scopeTup) => scopeTup[0] !== 'child_account'
   );
 
   return (

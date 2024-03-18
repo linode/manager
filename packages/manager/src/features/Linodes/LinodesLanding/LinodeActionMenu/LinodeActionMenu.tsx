@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import {
   ActionType,
   getRestrictedResourceText,
@@ -51,6 +52,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     linodeStatus,
     linodeType,
   } = props;
+
   const typesQuery = useSpecificTypes(linodeType?.id ? [linodeType.id] : []);
   const type = typesQuery[0]?.data;
   const extendedType = type ? extendType(type) : undefined;
@@ -78,6 +80,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     sendLinodeActionMenuItemEvent(`${action} Linode`);
     props.onOpenPowerDialog(action);
   };
+
+  const linodeIsInEdgeRegion = getIsEdgeRegion(regions, linodeRegion);
+
+  const edgeRegionTooltipText =
+    'Cloning is currently not supported for Edge instances.';
 
   const actionConfigs: ActionConfig[] = [
     {
@@ -117,7 +124,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: isLinodeReadOnly || hasHostMaintenance,
+      disabled: isLinodeReadOnly || hasHostMaintenance || linodeIsInEdgeRegion,
       isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
@@ -134,7 +141,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Clone',
       tooltipAction: 'clone',
-      tooltipText: maintenanceTooltipText,
+      tooltipText: linodeIsInEdgeRegion
+        ? edgeRegionTooltipText
+        : maintenanceTooltipText,
     },
     {
       condition: !isBareMetalInstance,

@@ -67,6 +67,10 @@ const AccountLanding = () => {
       permittedGrantLevel: 'read_write',
     }) || isChildUser;
 
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   const tabs = [
@@ -139,7 +143,8 @@ const AccountLanding = () => {
 
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
-    flags.parentChildAccountAccess && (isParentUser || isProxyUser);
+    flags.parentChildAccountAccess &&
+    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -170,6 +175,7 @@ const AccountLanding = () => {
           sendSwitchAccountEvent('Account Landing');
           handleAccountSwitch();
         }}
+        data-testid="switch-account-button"
       />
     ) : undefined;
   }

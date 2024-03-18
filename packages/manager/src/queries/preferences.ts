@@ -8,7 +8,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
@@ -17,7 +17,7 @@ import { queryPresets } from './base';
 export const queryKey = 'preferences';
 
 export const usePreferences = (enabled = true) =>
-  useQuery<ManagerPreferences, APIError[]>(queryKey, getUserPreferences, {
+  useQuery<ManagerPreferences, APIError[]>([queryKey], getUserPreferences, {
     ...queryPresets.oneTimeFetch,
     enabled,
   });
@@ -47,7 +47,7 @@ export const updatePreferenceData = (
   queryClient: QueryClient
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
-    queryKey,
+    [queryKey],
     (oldData: ManagerPreferences) => ({
       ...(!replace ? oldData : {}),
       ...newData,

@@ -24,7 +24,11 @@ export const UsersLandingTableHead = ({
   showChildAccountAccessCol,
 }: Props) => {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        whiteSpace: 'nowrap',
+      }}
+    >
       <TableRow>
         <TableSortCell
           active={order.orderBy === 'username'}

@@ -5,7 +5,7 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { PARENT_SESSION_EXPIRED } from 'src/features/Account/constants';
+import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import {
   isParentTokenValid,
   setTokenInLocalStorage,
@@ -13,7 +13,7 @@ import {
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
-import { getStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 
@@ -146,7 +146,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     if (!isParentTokenValid()) {
       const expiredTokenError: APIError = {
         field: 'token',
-        reason: PARENT_SESSION_EXPIRED,
+        reason: PARENT_USER_SESSION_EXPIRED,
       };
 
       setIsParentTokenError([expiredTokenError]);
@@ -155,6 +155,10 @@ export const SwitchAccountDrawer = (props: Props) => {
     }
 
     updateCurrentTokenBasedOnUserType({ userType: 'parent' });
+
+    // Reset flag for proxy user to display success toast once.
+    setStorage('proxy_user', 'false');
+
     handleClose();
     refreshPage();
   }, [handleClose, refreshPage]);

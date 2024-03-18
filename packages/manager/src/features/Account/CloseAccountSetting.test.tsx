@@ -7,7 +7,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import CloseAccountSetting from './CloseAccountSetting';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PARENT_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from './constants';
 
 // Mock the useProfile hook to immediately return the expected data, circumventing the HTTP request and loading state.
@@ -60,9 +61,7 @@ describe('Close Account Settings', () => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(
-      getByText(PARENT_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
-    ).toBeVisible();
+    expect(getByText(PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)).toBeVisible();
     expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
@@ -110,9 +109,7 @@ describe('Close Account Settings', () => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(
-      getByText(PARENT_PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
-    ).toBeVisible();
+    expect(getByText(PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)).toBeVisible();
     expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');

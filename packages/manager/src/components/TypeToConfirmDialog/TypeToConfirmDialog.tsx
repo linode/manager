@@ -32,22 +32,53 @@ interface EntityInfo {
 }
 
 interface TypeToConfirmDialogProps {
+  /**
+   * Chidlren are rendered above the TypeToConfirm input
+   */
   children?: React.ReactNode;
+  /**
+   * Props to be allow disabling the input
+   */
+  disableTypeToConfirmInput?: boolean;
+  /**
+   * Props to be allow disabling the submit button
+   */
+  disableTypeToConfirmSubmit?: boolean;
+  /**
+   * The entity being confirmed
+   */
   entity: EntityInfo;
+  /**
+   * Error to be displayed in the dialog
+   */
   errors?: APIError[] | null | undefined;
+  /*
+   * The label for the dialog
+   */
   label: string;
+  /**
+   * The loading state of dialog
+   */
   loading: boolean;
+  /**
+   * The click handler for the primary button
+   */
   onClick: () => void;
+  /**
+   * The open/closed state of the dialog
+   */
   open: boolean;
 }
 
 type CombinedProps = TypeToConfirmDialogProps &
   ConfirmationDialogProps &
-  Partial<TypeToConfirmProps>;
+  Partial<Omit<TypeToConfirmProps, 'disabled'>>;
 
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
     children,
+    disableTypeToConfirmInput,
+    disableTypeToConfirmSubmit,
     entity,
     errors,
     inputProps,
@@ -64,8 +95,10 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const [confirmText, setConfirmText] = React.useState('');
 
   const { data: preferences } = usePreferences();
-  const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== entity.name;
+  const isPrimaryButtonDisabled =
+    (preferences?.type_to_confirm !== false && confirmText !== entity.name) ||
+    disableTypeToConfirmSubmit;
+  const isTypeToConfirmInputDisabled = disableTypeToConfirmInput;
 
   React.useEffect(() => {
     if (open) {
@@ -82,7 +115,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        disabled,
+        disabled: isPrimaryButtonDisabled,
         label: entity.primaryBtnText,
         loading,
         onClick,
@@ -120,6 +153,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           setConfirmText(input);
         }}
         data-testid={'dialog-confirm-text-input'}
+        disabled={isTypeToConfirmInputDisabled}
         expand
         hideInstructions={entity.subType === 'CloseAccount'}
         inputProps={inputProps}

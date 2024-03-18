@@ -15,6 +15,7 @@ import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
@@ -91,11 +92,17 @@ type CombinedProps = LinodesLandingProps & RouteProps & WithProfileProps;
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
+      grants,
       linodesData,
       linodesInTransition,
       linodesRequestError,
       linodesRequestLoading,
+      profile,
     } = this.props;
+
+    const isLinodesGrantReadOnly =
+      Boolean(profile.data?.restricted) &&
+      !grants.data?.global?.['add_linodes'];
 
     const params = new URLSearchParams(this.props.location.search);
 
@@ -214,9 +221,17 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                         ) : (
                           <div>
                             <LandingHeader
+                              buttonDataAttrs={{
+                                tooltipText: getRestrictedResourceText({
+                                  action: 'create',
+                                  isSingular: false,
+                                  resourceType: 'Linodes',
+                                }),
+                              }}
                               onButtonClick={() =>
                                 this.props.history.push('/linodes/create')
                               }
+                              disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                               entity="Linode"
                               title="Linodes"

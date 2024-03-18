@@ -610,3 +610,12 @@ export const mockGetAccountLogins = (
     paginateResponse(accountLogins)
   );
 };
+
+/**
+ * Intercepts GET request to fetch the account network utilization data.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetNetworkUtilization = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account/transfer'));
+};

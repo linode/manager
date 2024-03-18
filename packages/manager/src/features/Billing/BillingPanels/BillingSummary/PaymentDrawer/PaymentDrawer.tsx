@@ -4,7 +4,7 @@ import { APIWarning } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
@@ -189,7 +189,7 @@ export const PaymentDrawer = (props: Props) => {
           true,
           response.warnings
         );
-        queryClient.invalidateQueries(`${queryKey}-payments`);
+        queryClient.invalidateQueries([`${queryKey}-payments`]);
       })
       .catch((errorResponse) => {
         setSubmitting(false);

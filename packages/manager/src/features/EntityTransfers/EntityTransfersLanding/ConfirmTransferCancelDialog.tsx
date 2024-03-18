@@ -5,7 +5,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -55,7 +55,7 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
         sendEntityTransferCancelEvent();
 
         // Refresh the query for Entity Transfers.
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
 
         onClose();
         setSubmitting(false);

@@ -10,7 +10,7 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -179,7 +179,7 @@ export const PayPalButton = (props: Props) => {
         setProcessing(false);
       });
       if (response) {
-        queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+        queryClient.invalidateQueries([`${accountBillingKey}-payments`]);
 
         setSuccess(
           `Payment for $${response.usd} successfully submitted with PayPal`,

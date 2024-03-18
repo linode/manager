@@ -35,7 +35,7 @@ vi.mock('src/queries/regions', async () => {
 });
 
 const handleDeletePlacementGroupMock = vi.fn();
-const handleRenamePlacementGroupMock = vi.fn();
+const handleEditPlacementGroupMock = vi.fn();
 
 describe('PlacementGroupsLanding', () => {
   it('renders the columns with proper data', () => {
@@ -81,7 +81,7 @@ describe('PlacementGroupsLanding', () => {
             region: 'us-east',
           })}
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}
-          handleRenamePlacementGroup={handleRenamePlacementGroupMock}
+          handleEditPlacementGroup={handleEditPlacementGroupMock}
         />
       )
     );
@@ -94,7 +94,7 @@ describe('PlacementGroupsLanding', () => {
       '1'
     );
     expect(getByText('Newark, NJ')).toBeInTheDocument();
-    expect(getByRole('button', { name: 'Rename' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'Edit' })).toBeInTheDocument();
     expect(getByRole('button', { name: 'Delete' })).toBeInTheDocument();
   });
 });

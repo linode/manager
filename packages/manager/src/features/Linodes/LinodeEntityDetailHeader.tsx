@@ -3,7 +3,7 @@ import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -16,6 +16,7 @@ import { TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 
@@ -81,6 +82,12 @@ export const LinodeEntityDetailHeader = (
     type,
     variant,
   } = props;
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
+  });
 
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
@@ -190,14 +197,14 @@ export const LinodeEntityDetailHeader = (
               handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
             buttonType="secondary"
-            disabled={!(isRunning || isOffline)}
+            disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             {isRunning ? 'Power Off' : 'Power On'}
           </Button>
           <Button
             buttonType="secondary"
-            disabled={isOffline}
+            disabled={isOffline || isLinodesGrantReadOnly}
             onClick={() => handlers.onOpenPowerDialog('Reboot')}
             sx={sxActionItem}
           >
@@ -208,6 +215,7 @@ export const LinodeEntityDetailHeader = (
               handleConsoleButtonClick(linodeId);
             }}
             buttonType="secondary"
+            disabled={isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             Launch LISH Console

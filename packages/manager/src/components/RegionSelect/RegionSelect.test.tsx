@@ -68,7 +68,7 @@ describe('RegionSelect', () => {
   it('should render a Select component with edge region text', () => {
     const newProps = {
       ...props,
-      showGeckoHelperText: true,
+      showEdgeIconHelperText: true,
     };
     const { getByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
     expect(getByTestId('region-select-edge-text')).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('RegionSelect', () => {
   it('should render a Select component with no edge region text', () => {
     const newProps = {
       ...props,
-      showGeckoHelperText: false,
+      showEdgeIconHelperText: false,
     };
     const { queryByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
     expect(queryByTestId('region-select-edge-text')).not.toBeInTheDocument();
