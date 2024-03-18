@@ -69,8 +69,8 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Private: <>This Linode already has a private IP address.</>,
+const tooltipCopy: Record<IPType, string | null> = {
+  v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
 

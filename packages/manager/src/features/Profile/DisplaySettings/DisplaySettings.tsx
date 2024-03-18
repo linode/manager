@@ -66,6 +66,16 @@ export const DisplaySettings = () => {
     </>
   );
 
+  const tooltipForDisabledUsernameField = profile?.restricted
+    ? 'Restricted users cannot update their username. Please contact an account administrator.'
+    : isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
+  const tooltipForDisabledEmailField = isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
   return (
     <Paper>
       {!isProxyUser && (
@@ -111,19 +121,13 @@ export const DisplaySettings = () => {
       )}
 
       <SingleTextFieldForm
-        tooltipText={
-          profile?.restricted
-            ? 'Restricted users cannot update their username. Please contact an account administrator.'
-            : isProxyUser
-            ? RESTRICTED_FIELD_TOOLTIP
-            : undefined
-        }
         disabled={profile?.restricted || isProxyUser}
         initialValue={profile?.username}
         key={usernameResetToken}
         label="Username"
         submitForm={updateUsername}
         successCallback={requestProfile}
+        tooltipText={tooltipForDisabledUsernameField}
         trimmed
       />
       <Divider spacingTop={24} />
@@ -145,7 +149,7 @@ export const DisplaySettings = () => {
         key={emailResetToken}
         label="Email"
         submitForm={updateEmail}
-        tooltipText={isProxyUser ? RESTRICTED_FIELD_TOOLTIP : undefined}
+        tooltipText={tooltipForDisabledEmailField}
         trimmed
         type="email"
       />

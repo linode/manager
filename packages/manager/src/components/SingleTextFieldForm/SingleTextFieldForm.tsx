@@ -93,6 +93,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
+            'data-testid': 'Button',
             disabled: disabled || value === initialValue,
             label: `Update ${label}`,
             loading: submitting,
