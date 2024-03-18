@@ -44,8 +44,8 @@ export const CreateRouteDrawer = (props: Props) => {
         await createRoute(values);
         onClose();
       } catch (errors) {
-        scrollErrorIntoView();
         formik.setErrors(getFormikErrorsFromAPIErrors(errors));
+        scrollErrorIntoView();
       }
     },
   });

@@ -37,7 +37,7 @@ import {
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import { Grants } from '../../../api-v4/lib';
-import { queryKey as accountQueryKey } from './account';
+import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
 import type { RequestOptions } from '@linode/api-v4';
@@ -144,7 +144,7 @@ export const useCreateSSHKeyMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys._def);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries([accountQueryKey, 'users']);
+      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
     },
   });
 };
@@ -156,7 +156,7 @@ export const useUpdateSSHKeyMutation = (id: number) => {
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys._def);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries([accountQueryKey, 'users']);
+      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
     },
   });
 };
@@ -168,7 +168,7 @@ export const useDeleteSSHKeyMutation = (id: number) => {
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys._def);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries([accountQueryKey, 'users']);
+      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
     },
   });
 };
@@ -179,7 +179,7 @@ export const sshKeyEventHandler = (event: EventHandlerData) => {
 
   event.queryClient.invalidateQueries(profileQueries.sshKeys._def);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
-  event.queryClient.invalidateQueries([accountQueryKey, 'users']);
+  event.queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
 };
 
 export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
@@ -205,7 +205,7 @@ export const useDisableTwoFactorMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.profile().queryKey);
       // also invalidate the /account/users data because that endpoint returns 2FA status for each user
-      queryClient.invalidateQueries([accountQueryKey, 'users']);
+      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
     },
   });
 };

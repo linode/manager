@@ -13,7 +13,7 @@ import { PARENT_USER } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
+import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';

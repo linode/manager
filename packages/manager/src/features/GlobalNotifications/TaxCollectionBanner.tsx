@@ -7,7 +7,7 @@ import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleB
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 
 export const TaxCollectionBanner = () => {
   const history = useHistory();

@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Typography } from 'src/components/Typography';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';

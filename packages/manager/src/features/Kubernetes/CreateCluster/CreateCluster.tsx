@@ -27,11 +27,11 @@ import {
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
 import {
   useCreateKubernetesClusterMutation,
   useKubernetesVersionQuery,

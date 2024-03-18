@@ -1,8 +1,8 @@
 import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
@@ -11,7 +11,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { queryKey } from 'src/queries/accountPayment';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -63,7 +63,7 @@ const PaymentInformation = (props: Props) => {
       .then(() => {
         setDeleteLoading(false);
         closeDeleteDialog();
-        queryClient.invalidateQueries([`${queryKey}-all`]);
+        queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
       })
       .catch((e: APIError[]) => {
         setDeleteLoading(false);

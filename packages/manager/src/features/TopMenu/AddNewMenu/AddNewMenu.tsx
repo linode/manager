@@ -27,7 +27,7 @@ import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 

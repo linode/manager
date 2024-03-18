@@ -9,20 +9,20 @@ import {
   OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Tooltip } from 'src/components/Tooltip';
 import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useAccount } from 'src/queries/account';
-import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
-import { useClientToken } from 'src/queries/accountPayment';
+import { useAccount } from 'src/queries/account/account';
+import { useClientToken } from 'src/queries/account/payment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SetSuccess } from './types';
+import { accountQueries } from 'src/queries/account/queries';
 
 const useStyles = makeStyles()(() => ({
   loading: {
@@ -179,7 +179,7 @@ export const PayPalButton = (props: Props) => {
         setProcessing(false);
       });
       if (response) {
-        queryClient.invalidateQueries([`${accountBillingKey}-payments`]);
+        queryClient.invalidateQueries(accountQueries.payments._def);
 
         setSuccess(
           `Payment for $${response.usd} successfully submitted with PayPal`,

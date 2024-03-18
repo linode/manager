@@ -53,7 +53,7 @@ import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { reportAgreementSigningError } from 'src/queries/accountAgreements';
+import { reportAgreementSigningError } from 'src/queries/account/agreements';
 import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';

@@ -23,7 +23,7 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';

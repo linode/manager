@@ -7,7 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,

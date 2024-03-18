@@ -50,10 +50,9 @@ describe('Default Payment Method', () => {
       .should('be.visible')
       .click();
 
-    mockGetPaymentMethods(gpayDefault).as('getPaymentMethods');
     ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
 
-    cy.wait(['@changeDefault', '@getPaymentMethods']);
+    cy.wait(['@changeDefault']);
     cy.get('[data-qa-payment-row=google_pay]').within(() => {
       cy.findByText('DEFAULT').should('be.visible');
     });
@@ -70,11 +69,9 @@ describe('Default Payment Method', () => {
       .should('be.visible')
       .click();
 
-    mockGetPaymentMethods(ccDefault).as('getPaymentMethods');
-
     ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
 
-    cy.wait(['@changeDefault', '@getPaymentMethods']);
+    cy.wait(['@changeDefault']);
     cy.get('[data-qa-payment-row=credit_card]').within(() => {
       cy.findByText('DEFAULT').should('be.visible');
     });
