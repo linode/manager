@@ -21,7 +21,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';

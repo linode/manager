@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
@@ -21,7 +21,11 @@ export interface Props {
 
 export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { data: generalPoolUsage, isError, isLoading } = useAccountTransfer();
+  const {
+    data: generalPoolUsage,
+    isError,
+    isLoading,
+  } = useAccountNetworkTransfer();
   const { data: regions } = useRegionsQuery();
 
   const generalPoolUsagePct = calculatePoolUsagePct(generalPoolUsage);

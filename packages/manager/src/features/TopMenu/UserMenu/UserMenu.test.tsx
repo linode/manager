@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { accountFactory, profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserMenu } from './UserMenu';
@@ -19,19 +19,14 @@ describe('UserMenu', () => {
 
   it("shows a parent user's username and company name in the TopMenu for a parent user", async () => {
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(
-          ctx.json(accountFactory.build({ company: 'Parent Company' }))
+      http.get('*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ company: 'Parent Company' })
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              user_type: 'parent',
-              username: 'parent-user',
-            })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({ user_type: 'parent', username: 'parent-user' })
         );
       })
     );
@@ -46,19 +41,17 @@ describe('UserMenu', () => {
 
   it("shows the parent user's username and child company name in the TopMenu for a proxy user", async () => {
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(
-          ctx.json(accountFactory.build({ company: 'Child Company' }))
+      http.get('*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ company: 'Child Company' })
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              user_type: 'proxy',
-              username: 'parent-user',
-            })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({
+            user_type: 'proxy',
+            username: 'parent-user',
+          })
         );
       })
     );
@@ -73,16 +66,14 @@ describe('UserMenu', () => {
 
   it("shows the child user's username and company name in the TopMenu for a child user", async () => {
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(
-          ctx.json(accountFactory.build({ company: 'Child Company' }))
+      http.get('*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ company: 'Child Company' })
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({ user_type: 'child', username: 'child-user' })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({ user_type: 'child', username: 'child-user' })
         );
       })
     );
@@ -97,17 +88,17 @@ describe('UserMenu', () => {
 
   it("shows the user's username and no company name in the TopMenu for a regular user", async () => {
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(accountFactory.build({ company: 'Test Company' })));
+      http.get('*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ company: 'Test Company' })
+        );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              user_type: 'default',
-              username: 'regular-user',
-            })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({
+            user_type: 'default',
+            username: 'regular-user',
+          })
         );
       })
     );
@@ -123,13 +114,13 @@ describe('UserMenu', () => {
 
   it('shows the parent company name and Switch Account button in the dropdown menu for a parent user', async () => {
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(
-          ctx.json(accountFactory.build({ company: 'Parent Company' }))
+      http.get('*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ company: 'Parent Company' })
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
       })
     );
 
@@ -148,18 +139,14 @@ describe('UserMenu', () => {
 
   it('hides Switch Account button in the dropdown menu for parent accounts lacking child_account_access', async () => {
     server.use(
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: false } })
-          )
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: false } })
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({ restricted: true, user_type: 'parent' })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({ restricted: true, user_type: 'parent' })
         );
       })
     );
@@ -176,13 +163,13 @@ describe('UserMenu', () => {
 
   it('shows the child company name and Switch Account button in the dropdown menu for a proxy user', async () => {
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(
-          ctx.json(accountFactory.build({ company: 'Child Company' }))
+      http.get('*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ company: 'Child Company' })
         );
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ user_type: 'proxy' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'proxy' }));
       })
     );
 
@@ -202,29 +189,25 @@ describe('UserMenu', () => {
   it('shows the parent email for a parent user in the top menu and dropdown menu if their company name is unavailable', async () => {
     // Mock a forbidden request to the /account endpoint, which happens if Billing (Account) Access is None.
     server.use(
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({
-              global: {
-                account_access: null,
-              },
-            })
-          )
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({
+            global: {
+              account_access: null,
+            },
+          })
         );
       }),
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.status(403));
+      http.get('*/account', () => {
+        return HttpResponse.json({}, { status: 403 });
       }),
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              email: 'parent@parent.com',
-              user_type: 'parent',
-              username: 'parent-username',
-            })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({
+            email: 'parent@parent.com',
+            user_type: 'parent',
+            username: 'parent-username',
+          })
         );
       })
     );

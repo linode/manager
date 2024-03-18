@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
-import { queryKey } from 'src/queries/accountNotifications';
+import { useMutateAccountAgreements } from 'src/queries/account/agreements';
+import { accountQueries } from 'src/queries/account/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
@@ -30,7 +30,7 @@ export const ComplianceUpdateModal = () => {
       .then(() => {
         complianceModelContext.close();
         // Re-request notifications so the GDPR notification goes away.
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries(accountQueries.notifications.queryKey);
       })
       .catch((err) => {
         const errorMessage = getErrorStringOrDefault(
