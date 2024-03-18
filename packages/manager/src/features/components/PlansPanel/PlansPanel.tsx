@@ -103,7 +103,6 @@ export const PlansPanel = (props: Props) => {
       delete plan.transfer;
       return {
         ...plan,
-        disk: 0,
         price: {
           hourly: 0,
           monthly: 0,
@@ -169,7 +168,7 @@ export const PlansPanel = (props: Props) => {
             />
             {showEdgePlanTable && (
               <Notice
-                text="Edge region pricing is temporarily $0 during the beta period, after which standard pricing will begin."
+                text="Edge region pricing is temporarily $0 during the beta period, after which billing will begin."
                 variant="warning"
               />
             )}

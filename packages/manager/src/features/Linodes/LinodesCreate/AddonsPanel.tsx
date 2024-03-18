@@ -196,7 +196,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         </Typography>
         {isEdgeRegionSelected && (
           <Notice
-            text="Backups and Private IP are currently not available for Edge regions"
+            text="Backups and Private IP are currently not available for Edge regions."
             variant="warning"
           />
         )}
