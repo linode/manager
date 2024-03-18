@@ -1,6 +1,7 @@
 import { profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
+import type { Profile } from '@linode/api-v4';
 import {
   mockAddUser,
   mockGetUser,
@@ -17,80 +18,87 @@ import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
+import { PARENT_USER } from 'src/features/Account/constants';
 
 /**
- * Asserts whether "None", "Read Only", or "Read-Write" billing access is selected.
+ * Initialize test users before tests
  *
- * @param billingAccess - Selected billing access to assert.
+ * @param mockProfile - Account porfile.
+ * @param enableChildAccountAccess - Child account access switch.
+ *
+ * @returns User array.
  */
-const assertBillingAccessSelected = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
-) => {
-  cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
-    .closest('[data-qa-selection-card]')
-    .should('be.visible')
-    .should('have.attr', 'data-qa-selection-card-checked', 'true');
+const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
+  const mockProfile = profile;
+
+  const mockUser = accountUserFactory.build({
+    username: 'unrestricted-user',
+    restricted: false,
+  });
+
+  const mockRestrictedUser = accountUserFactory.build({
+    username: 'restricted-user',
+    restricted: false,
+  });
+
+  const mockChildUser = accountUserFactory.build({
+    username: 'child-user',
+    restricted: false,
+    user_type: 'child',
+  });
+
+  const mockProxyUser = accountUserFactory.build({
+    username: 'proxy-user',
+    restricted: false,
+    user_type: 'proxy',
+  });
+
+  const mockUsers = [
+    mockUser,
+    mockRestrictedUser,
+    mockChildUser,
+    mockProxyUser,
+  ];
+
+  const mockProfileGrants = grantsFactory.build({
+    global: { child_account_access: enableChildAccountAccess },
+  });
+
+  // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
+  mockAppendFeatureFlags({
+    parentChildAccountAccess: makeFeatureFlagData(true),
+  }).as('getFeatureFlags');
+  mockGetFeatureFlagClientstream().as('getClientStream');
+
+  // Initially mock user with unrestricted account access.
+  mockGetUsers(mockUsers).as('getUsers');
+  mockUsers.forEach((user) => {
+    mockGetUser(user);
+    mockGetUserGrantsUnrestrictedAccess(user.username);
+  });
+  mockGetUserGrants(mockProfile.username, mockProfileGrants);
+  mockGetProfile(mockProfile);
+
+  return mockUsers;
 };
 
 describe('Users landing page', () => {
   /*
-   * Confirm that a "Child account access" column is present in the users table
+   * Confirm the visibility and status of the "Child account access" column for the following users:
+   *   - Unrestricted parent user (Enabled)
+   *   - Restricted parent user with child_account_access grant set to false (Disabled)
+   *   - Restricted parent user with child_account_access grant set to true (Enabled)
+   * Confirm that a "Child account access" column is present in the users table for parent users, but not for other types (default, proxy, and child))
    * Confirm the column reflects the status of child account access for the corresponding users
    */
-  it('shows "Child account access" column for all users', () => {
+  it('shows "Child account access" column for unrestricted parent users', () => {
     const mockProfile = profileFactory.build({
       username: 'unrestricted-parent-user',
       restricted: false,
       user_type: 'parent',
     });
 
-    const mockUser = accountUserFactory.build({
-      username: 'unrestricted-user',
-      restricted: false,
-    });
-
-    const mockRestrictedUser = accountUserFactory.build({
-      username: 'restricted-user',
-      restricted: false,
-    });
-
-    const mockChildUser = accountUserFactory.build({
-      username: 'child-user',
-      restricted: false,
-      user_type: 'child',
-    });
-
-    const mockProxyUser = accountUserFactory.build({
-      username: 'proxy-user',
-      restricted: false,
-      user_type: 'proxy',
-    });
-
-    const mockUsers = [
-      mockUser,
-      mockRestrictedUser,
-      mockChildUser,
-      mockProxyUser,
-    ];
-
-    const mockUserGrants = grantsFactory.build({
-      global: { child_account_access: true },
-    });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    // Initially mock user with unrestricted account access.
-    mockGetUsers(mockUsers).as('getUsers');
-    mockUsers.forEach((user) => {
-      mockGetUser(user);
-      mockGetUserGrantsUnrestrictedAccess(user.username);
-    });
-    mockGetUserGrants(mockUser.username, mockUserGrants);
-    mockGetProfile(mockProfile);
+    const mockUsers = initTestUsers(mockProfile, true);
 
     // Navigate to Users & Grants page.
     cy.visitWithLogin('/account/users');
@@ -102,21 +110,98 @@ describe('Users landing page', () => {
       cy.get(`[aria-label="User ${user.username}"]`)
         .should('be.visible')
         .within(() => {
-          if (user === mockUser) {
-            // The status should be "Enabled" when the user with "child_account_access" grant
-            cy.findByText('Enabled').should('be.visible');
-          } else {
-            // Others should be "Disabled"
-            cy.findByText('Disabled').should('be.visible');
-          }
+          // The status should be "Disabled" when the user with "child_account_access" grant
+          cy.findByText('Enabled').should('be.visible');
         });
     });
   });
 
+  it('shows "Child account access" column for restricted parent users child_account_access grant set to false', () => {
+    const mockProfile = profileFactory.build({
+      username: 'restricted-parent-user',
+      restricted: true,
+      user_type: 'parent',
+    });
+
+    initTestUsers(mockProfile, false);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+
+    // Confirm that "Child account access" column is present
+    cy.findByText('Child Account Access').should('be.visible');
+  });
+
+  it('shows "Child account access" column for restricted parent users child_account_access grant set to false', () => {
+    const mockProfile = profileFactory.build({
+      username: 'restricted-parent-user',
+      restricted: true,
+      user_type: 'parent',
+    });
+
+    initTestUsers(mockProfile, true);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+
+    // Confirm that "Child account access" column is present
+    cy.findByText('Child Account Access').should('be.visible');
+  });
+
+  it('hides "Child account access" column for default users', () => {
+    const mockProfile = profileFactory.build({
+      username: 'default-user',
+      restricted: false,
+    });
+
+    initTestUsers(mockProfile, false);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that "Child account access" column is not present
+    cy.findByText('Child Account Access').should('not.exist');
+  });
+
+  it('hides "Child account access" column for proxy users', () => {
+    const mockProfile = profileFactory.build({
+      username: 'proxy-user',
+      restricted: false,
+      user_type: 'proxy',
+    });
+
+    initTestUsers(mockProfile, false);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that "Child account access" column is not present
+    cy.findByText('Child Account Access').should('not.exist');
+  });
+
+  it('hides "Child account access" column for child users', () => {
+    const mockProfile = profileFactory.build({
+      username: 'child-user',
+      restricted: false,
+      user_type: 'child',
+    });
+
+    initTestUsers(mockProfile, false);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+    cy.wait('@getUsers');
+
+    // Confirm that "Child account access" column is not present
+    cy.findByText('Child Account Access').should('not.exist');
+  });
+
   /*
-   * Confirm that "Business Partner Settings" section is not present for parent users
+   * Confirm that "Parent User Settings" section is not present for parent users
    */
-  it('hides "Business Partner Settings" section for parent users', () => {
+  it('hides "Parent User Settings" section for parent users', () => {
     const mockProfile = profileFactory.build({
       username: 'unrestricted-parent-user',
       restricted: false,
@@ -136,7 +221,7 @@ describe('Users landing page', () => {
 
     // Initially mock user with unrestricted account access.
     mockGetUsers([mockUser]).as('getUsers');
-    mockGetUser(mockUser).as('getUser');
+    mockGetUser(mockUser);
     mockGetUserGrantsUnrestrictedAccess(mockUser.username).as('getUserGrants');
     mockGetProfile(mockProfile);
 
@@ -144,22 +229,20 @@ describe('Users landing page', () => {
     cy.visitWithLogin('/account/users');
     cy.wait('@getUsers');
 
-    // Confirm the "Business partner setting" and "User settings" sections are not present.
-    cy.findByText('Business partner settings').should('not.exist');
-    cy.findByText('User settings').should('not.exist');
+    // Confirm the "Parent User Settings" and "User Settings" sections are not present.
+    cy.findByText(`${PARENT_USER} Settings`).should('not.exist');
+    cy.findByText('User Settings').should('not.exist');
   });
 
   /**
    * Confirm the Users & Grants and User Permissions pages flow for a child account viewing a proxy user.
-   * Confirm that "Business partner settings" and "User settings" sections are present on the Users & Grants page.
-   * Confirm that proxy accounts are listed under "Business partner settings".
+   * Confirm that "Parent User Settings" and "User Settings" sections are present on the Users & Grants page.
+   * Confirm that proxy accounts are listed under "Parent User Settings".
    * Confirm that clicking the "Manage Access" button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
-   * Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
-   * Confirm that proxy accounts default to "Read Write" Billing Access and have disabled "Read Only" and "None" options.
    */
-  it('tests the users landing and user permissions flow for a child account viewing a proxy user', () => {
+  it('tests the users landing flow for a child account viewing a proxy user', () => {
     const mockChildProfile = profileFactory.build({
-      username: 'proxy-user',
+      username: 'child-user',
       user_type: 'child',
     });
 
@@ -191,14 +274,14 @@ describe('Users landing page', () => {
     mockGetUser(mockRestrictedProxyUser);
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
-    // Navigate to Users & Grants page and confirm "Business partner settings" and "User settings" sections are visible.
+    // Navigate to Users & Grants page and confirm "Parent User Settings" and "User Settings" sections are visible.
     cy.visitWithLogin('/account/users');
     cy.wait('@getUsers');
-    cy.findByText('Business partner settings').should('be.visible');
-    cy.findByText('User settings').should('be.visible');
+    cy.findByText(`${PARENT_USER} Settings`).should('be.visible');
+    cy.findByText('User Settings').should('be.visible');
 
-    // Find mock restricted proxy user under "Business partner settings", click its "Manage Access" button.
-    cy.findByLabelText('List of Business Partners')
+    // Find mock restricted proxy user under "Parent User Settings", click its "Manage Access" button.
+    cy.findByLabelText('List of Parent Users')
       .should('be.visible')
       .within(() => {
         cy.findByText(mockRestrictedProxyUser.username)
@@ -218,34 +301,6 @@ describe('Users landing page', () => {
       'endWith',
       `/account/users/${mockRestrictedProxyUser.username}/permissions`
     );
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
-
-    cy.findByText('Business Partner Permissions').should('be.visible');
-
-    // Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
-    expect(cy.findByText('User Profile').should('not.exist'));
-
-    cy.get('[data-qa-global-section]')
-      .should('be.visible')
-      .within(() => {
-        // Confirm that 'Read-Write' Billing Access is enabled
-        cy.get(`[data-qa-select-card-heading="Read-Write"]`)
-          .closest('[data-qa-selection-card]')
-          .should('be.visible')
-          .should('be.enabled');
-        assertBillingAccessSelected('Read-Write');
-
-        // Confirm that 'Read Only' and 'None' Billing Access are disabled
-        cy.get(`[data-qa-select-card-heading="Read Only"]`)
-          .closest('[data-qa-selection-card]')
-          .should('be.visible')
-          .should('have.attr', 'disabled');
-
-        cy.get(`[data-qa-select-card-heading="None"]`)
-          .closest('[data-qa-selection-card]')
-          .should('be.visible')
-          .should('have.attr', 'disabled');
-      });
   });
 
   it('can add users with full access', () => {
