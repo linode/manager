@@ -20,6 +20,7 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
+  { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'linodeCloneUiChanges', label: 'Linode Clone UI Changes' },
   { flag: 'gecko', label: 'Gecko' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
@@ -29,6 +30,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

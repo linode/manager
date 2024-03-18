@@ -8,7 +8,7 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -51,8 +51,8 @@ describe('LinodeConfigDialog', () => {
       const config = configFactory.build();
 
       server.use(
-        rest.get('*/account', (req, res, ctx) => {
-          return res(ctx.json(account));
+        http.get('*/account', () => {
+          return HttpResponse.json(account);
         })
       );
 

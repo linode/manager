@@ -260,7 +260,7 @@ export const InvoiceDetail = () => {
                 reserved. If you no longer need powered-down Linodes, you can{' '}
                 <Link to="https://www.linode.com/docs/products/platform/billing/guides/stop-billing/">
                   {' '}
-                  remove the service{' '}
+                  remove the service
                 </Link>{' '}
                 from your account.
               </Typography>

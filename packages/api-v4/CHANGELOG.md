@@ -1,3 +1,16 @@
+## [2024-03-18] - v0.112.0
+
+
+### Changed:
+
+- Make `match_condition` optional in Rule types to support TCP rules ([#10264](https://github.com/linode/manager/pull/10264))
+- Make `type` and `region` required in `CreateLinodeRequest` ([#10268](https://github.com/linode/manager/pull/10268))
+
+### Upcoming Features:
+
+- Add Placement Groups events types ([#10221](https://github.com/linode/manager/pull/10221))
+- Add temporary deleteBucketWithRegion method for OBJ Multicluster ([#10244](https://github.com/linode/manager/pull/10244))
+
 ## [2024-03-04] - v0.111.0
 
 ### Changed:

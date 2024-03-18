@@ -4,7 +4,7 @@ import {
   endpointHealthFactory,
   serviceTargetsEndpointHealthFactory,
 } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ServiceTargetEndpontHeath } from './ServiceTargetEndpointHealth';
@@ -14,21 +14,18 @@ describe('ServiceTargetEndpontHeath', () => {
     const serviceTargetId = 1;
 
     server.use(
-      rest.get(
-        '*/v4beta/aclb/:id/service-targets/endpoints-health',
-        (req, res, ctx) => {
-          const health = serviceTargetsEndpointHealthFactory.build({
-            service_targets: [
-              endpointHealthFactory.build({
-                healthy_endpoints: 99,
-                id: serviceTargetId,
-                total_endpoints: 100,
-              }),
-            ],
-          });
-          return res(ctx.json(health));
-        }
-      )
+      http.get('*/v4beta/aclb/:id/service-targets/endpoints-health', () => {
+        const health = serviceTargetsEndpointHealthFactory.build({
+          service_targets: [
+            endpointHealthFactory.build({
+              healthy_endpoints: 99,
+              id: serviceTargetId,
+              total_endpoints: 100,
+            }),
+          ],
+        });
+        return HttpResponse.json(health);
+      })
     );
 
     const { findByText } = renderWithTheme(
