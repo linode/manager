@@ -219,7 +219,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {type.vcpus}
           </TableCell>
           <TableCell center data-qa-storage noWrap>
-            {type.disk === 0 ? 'N/A' : convertMegabytesTo(type.disk, true)}
+            {convertMegabytesTo(type.disk, true)}
           </TableCell>
           {shouldShowTransfer && type.transfer ? (
             <TableCell center data-qa-transfer>

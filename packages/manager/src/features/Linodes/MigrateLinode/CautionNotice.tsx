@@ -10,6 +10,7 @@ import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 interface Props {
+  edgeRegionWarning?: string;
   error?: string;
   hasConfirmed: boolean;
   linodeId: number | undefined;
@@ -19,6 +20,15 @@ interface Props {
 }
 
 export const CautionNotice = React.memo((props: Props) => {
+  const {
+    edgeRegionWarning,
+    error,
+    hasConfirmed,
+    linodeId,
+    metadataWarning,
+    migrationTimeInMins,
+    setConfirmed,
+  } = props;
   const theme = useTheme();
 
   // This is not great, but lets us get all of the volumes for a Linode while keeping
@@ -26,12 +36,12 @@ export const CautionNotice = React.memo((props: Props) => {
   // because the event handler automatically updates stored paginated data.
   // We can safely do this because linodes can't have more than 64 volumes.
   const { data: volumesData } = useLinodeVolumesQuery(
-    props.linodeId ?? -1,
+    linodeId ?? -1,
     {
       page_size: API_MAX_PAGE_SIZE,
     },
     {},
-    props.linodeId !== undefined
+    linodeId !== undefined
   );
 
   const amountOfAttachedVolumes = volumesData?.results ?? 0;
@@ -89,20 +99,21 @@ export const CautionNotice = React.memo((props: Props) => {
         <li>
           When this migration begins, we estimate it will take approximately{' '}
           {DateTime.local()
-            .plus({ minutes: props.migrationTimeInMins })
+            .plus({ minutes: migrationTimeInMins })
             .toRelative()
             ?.replace('in', '')}{' '}
           to complete.
         </li>
-        {props.metadataWarning ? <li>{props.metadataWarning}</li> : null}
+        {metadataWarning && <li>{metadataWarning}</li>}
+        {edgeRegionWarning && <li>{edgeRegionWarning}</li>}
       </ul>
-      {props.error && <Notice text={props.error} variant="error" />}
+      {error && <Notice text={error} variant="error" />}
       <Checkbox
         sx={{
           marginLeft: theme.spacing(2),
         }}
-        checked={props.hasConfirmed}
-        onChange={() => props.setConfirmed(!props.hasConfirmed)}
+        checked={hasConfirmed}
+        onChange={() => setConfirmed(!hasConfirmed)}
         text="Accept"
       />
     </StyledRootDiv>
