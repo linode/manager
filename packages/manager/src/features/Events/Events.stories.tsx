@@ -56,7 +56,7 @@ const renderEventMessages = (eventMessageCreators: {
             </TableHead>
             <TableBody>
               {Object.keys(statuses).map((status, key) => {
-                const messageCreator = statuses[status];
+                const messageCreator = statuses[status as Event['status']]!;
 
                 let message = messageCreator(event);
                 message = applyBolding(message);

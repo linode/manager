@@ -113,7 +113,7 @@ export const handleVPCAndSubnetErrors = (
   setFieldError: (field: string, message: string) => void,
   setError?: (message: string) => void
 ) => {
-  const subnetErrors = {};
+  const subnetErrors: any = {};
   const nonSubnetErrors: APIError[] = [];
 
   errors.forEach((error) => {

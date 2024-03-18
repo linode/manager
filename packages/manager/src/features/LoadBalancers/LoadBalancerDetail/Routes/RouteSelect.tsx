@@ -38,6 +38,7 @@ export const RouteSelect = (props: Props) => {
   const filter: Filter = {};
 
   if (inputValue) {
+    // @ts-expect-error Linode filter type broke :(
     filter['label'] = { '+contains': inputValue };
   }
 

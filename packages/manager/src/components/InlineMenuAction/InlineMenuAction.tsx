@@ -8,6 +8,10 @@ import { StyledActionButton } from 'src/components/Button/StyledActionButton';
 interface InlineMenuActionProps {
   /** Required action text */
   actionText: string;
+  /**
+   * optional aria label
+   */
+  ['aria-label']?: string;
   /** Optional height when displayed as a button */
   buttonHeight?: number;
   /** Optional class names */

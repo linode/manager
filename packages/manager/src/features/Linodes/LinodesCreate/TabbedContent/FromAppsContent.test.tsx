@@ -1,5 +1,6 @@
 // import * as React from 'react';
 // import { renderWithTheme } from 'src/utilities/testHelpers';
+import { Image } from '@linode/api-v4';
 import { imageFactory } from 'src/factories/images';
 import { userDefinedFieldFactory } from 'src/factories/stackscripts';
 
@@ -34,10 +35,13 @@ describe('getCompatibleImages', () => {
 
   it('should an array of Images compatible with the StackScript', () => {
     const imagesDataArray = imageFactory.buildList(5);
-    const imagesData = imagesDataArray.reduce((acc, imageData) => {
-      acc[imageData.label] = imageData;
-      return acc;
-    }, {});
+    const imagesData = imagesDataArray.reduce<Record<string, Image>>(
+      (acc, imageData) => {
+        acc[imageData.label] = imageData;
+        return acc;
+      },
+      {}
+    );
     const stackScriptImages = Object.keys(imagesData).slice(0, 2);
     const result = getCompatibleImages(imagesData, stackScriptImages);
     expect(result.length).toBe(2);

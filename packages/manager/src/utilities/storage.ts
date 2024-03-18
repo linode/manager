@@ -2,7 +2,7 @@ import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 
 import { shouldEnableDevTools } from 'src/dev-tools/load';
 
-const localStorageCache = {};
+const localStorageCache: Record<string, any> = {};
 
 export const getStorage = (key: string, fallback?: any) => {
   if (localStorageCache[key]) {

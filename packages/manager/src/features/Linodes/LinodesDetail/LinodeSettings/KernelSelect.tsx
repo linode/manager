@@ -106,10 +106,16 @@ const PRIORITY = {
 };
 
 const sortKernelGroups = (a: GroupType, b: GroupType) => {
-  if (PRIORITY[a.label] > PRIORITY[b.label]) {
+  if (
+    PRIORITY[a.label as keyof typeof PRIORITY] >
+    PRIORITY[b.label as keyof typeof PRIORITY]
+  ) {
     return -1;
   }
-  if (PRIORITY[a.label] < PRIORITY[b.label]) {
+  if (
+    PRIORITY[a.label as keyof typeof PRIORITY] <
+    PRIORITY[b.label as keyof typeof PRIORITY]
+  ) {
     return 1;
   }
   return 0;

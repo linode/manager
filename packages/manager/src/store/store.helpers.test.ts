@@ -1,27 +1,13 @@
 import {
   addMany,
   createDefaultState,
-  getAddRemoved,
   onError,
   onGetAllSuccess,
   onStart,
   removeMany,
-  updateInPlace,
 } from './store.helpers';
 
 describe('store.helpers', () => {
-  describe('getAddRemoved', () => {
-    const existingList = [{ id: '1' }, { id: 2 }, { id: 3 }];
-    const newList = [{ id: 1 }, { id: '3' }, { id: 4 }];
-    const result = getAddRemoved(existingList, newList);
-
-    it('should return a list of new and removed items', () => {
-      const added = [{ id: 4 }];
-      const removed = [{ id: 2 }];
-      expect(result).toEqual([added, removed]);
-    });
-  });
-
   describe('createDefaultState', () => {
     const result = createDefaultState();
     it('should return the unmodified defaultState', () => {
@@ -112,42 +98,6 @@ describe('store.helpers', () => {
 
     it('should set to true', () => {
       expect(result).toHaveProperty('loading', true);
-    });
-  });
-
-  describe('updateInPlace', () => {
-    interface TestEntity {
-      id: number;
-      status: 'active' | 'resizing';
-    }
-
-    const state = createDefaultState({
-      items: ['1', '2', '3'],
-      itemsById: {
-        1: { id: 1, status: 'active' },
-        2: { id: 2, status: 'active' },
-        3: { id: 3, status: 'active' },
-      },
-    });
-
-    const updateFn = (existing: TestEntity) => ({
-      ...existing,
-      status: 'resizing',
-    });
-
-    it('should update the item when it exists in state', () => {
-      const updated = updateInPlace(1, updateFn, state);
-      expect(updated.itemsById[1].status).toBe('resizing');
-    });
-
-    it('should not affect unspecified properties', () => {
-      const updated = updateInPlace(2, updateFn, state);
-      expect(updated.itemsById[2].id).toBe(2);
-    });
-
-    it('should return state as-is if the item with the given ID is not found', () => {
-      const updated = updateInPlace(4, updateFn, state);
-      expect(updated).toEqual(state);
     });
   });
 });

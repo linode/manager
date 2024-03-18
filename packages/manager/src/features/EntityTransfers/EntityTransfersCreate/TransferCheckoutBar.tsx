@@ -29,7 +29,9 @@ export const generatePayload = (
     (acc, entityType) => {
       return {
         ...acc,
-        [entityType]: Object.keys(selectedEntities[entityType]).map(Number),
+        [entityType]: Object.keys(
+          selectedEntities[entityType as keyof typeof selectedEntities]
+        ).map(Number),
       };
     },
     { linodes: [] }

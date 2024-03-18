@@ -70,6 +70,7 @@ export const LoadBalancerServiceTargets = () => {
 
   // If the user types in a search query, filter results by label.
   if (query) {
+    // @ts-expect-error fix linode filter
     filter['label'] = { '+contains': query };
   }
 

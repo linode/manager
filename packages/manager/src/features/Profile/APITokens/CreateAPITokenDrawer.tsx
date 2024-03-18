@@ -327,7 +327,9 @@ export const CreateAPITokenDrawer = (props: Props) => {
           </TableRow>
           {(showFilteredPermissions ? filteredPermissions : allPermissions).map(
             (scopeTup) => {
-              if (!basePermNameMap[scopeTup[0]]) {
+              if (
+                !basePermNameMap[scopeTup[0] as keyof typeof basePermNameMap]
+              ) {
                 return null;
               }
 
@@ -335,11 +337,17 @@ export const CreateAPITokenDrawer = (props: Props) => {
 
               return (
                 <TableRow
-                  data-qa-row={basePermNameMap[scopeTup[0]]}
+                  data-qa-row={
+                    basePermNameMap[scopeTup[0] as keyof typeof basePermNameMap]
+                  }
                   key={scopeTup[0]}
                 >
                   <StyledAccessCell padding="checkbox" parentColumn="Access">
-                    {basePermNameMap[scopeTup[0]]}
+                    {
+                      basePermNameMap[
+                        scopeTup[0] as keyof typeof basePermNameMap
+                      ]
+                    }
                   </StyledAccessCell>
                   <StyledPermissionsCell padding="checkbox" parentColumn="None">
                     <AccessCell

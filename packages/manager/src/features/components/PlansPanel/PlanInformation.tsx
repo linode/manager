@@ -80,7 +80,10 @@ export const PlanInformation = (props: PlanInformationProps) => {
         data-qa-prodedi
         sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
       >
-        {planTabInfoContent[planType]?.typography}
+        {
+          // @ts-expect-error nanode not handeled properly
+          planTabInfoContent[planType]?.typography
+        }
       </Typography>
     </>
   );

@@ -244,7 +244,9 @@ export const CreateFirewallDrawer = React.memo(
 
     const generalError =
       status?.generalError ||
+      // @ts-expect-error formik has bad types
       errors['rules.inbound'] ||
+      // @ts-expect-error formik has bad types
       errors['rules.outbound'] ||
       errors.rules;
 
@@ -314,6 +316,7 @@ export const CreateFirewallDrawer = React.memo(
                 linodes.map((linode) => linode.id)
               );
             }}
+            // @ts-expect-error formik has bad types
             errorText={errors['devices.linodes']}
             helperText={deviceSelectGuidance}
             multiple
@@ -333,6 +336,7 @@ export const CreateFirewallDrawer = React.memo(
                   nodebalancers.map((nodebalancer) => nodebalancer.id)
                 );
               }}
+              // @ts-expect-error formik has bad types
               errorText={errors['devices.nodebalancers']}
               helperText={deviceSelectGuidance}
               multiple

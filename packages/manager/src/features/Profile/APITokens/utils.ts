@@ -94,7 +94,7 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
     const [perm, level] = scopeStr.split(':');
     return {
       ...map,
-      [perm]: levelMap[level],
+      [perm]: levelMap[level as keyof typeof levelMap],
     };
   }, defaultScopeMap(basePerms));
 

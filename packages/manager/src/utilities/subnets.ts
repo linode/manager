@@ -107,7 +107,11 @@ export const calculateAvailableIPv4sRFC1918 = (
   const [, mask] = address.split('/');
 
   // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs
-  return isValidRFC1918IPv4(address) ? SubnetMaskToAvailIPv4s[mask] : undefined;
+  return isValidRFC1918IPv4(address)
+    ? SubnetMaskToAvailIPv4s[
+        Number(mask) as keyof typeof SubnetMaskToAvailIPv4s
+      ]
+    : undefined;
 };
 
 /**

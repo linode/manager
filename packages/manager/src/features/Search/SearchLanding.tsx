@@ -296,7 +296,7 @@ export const SearchLanding = (props: CombinedProps) => {
         <Grid sx={{ padding: 0 }}>
           {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup
-              entity={displayMap[entityType]}
+              entity={displayMap[entityType as keyof typeof displayMap]}
               groupSize={100}
               key={idx}
               results={finalResults[entityType]}

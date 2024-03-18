@@ -986,11 +986,13 @@ export const LinodeConfigDialog = (props: Props) => {
                   thisInterface.ip_ranges ?? []
                 ).map((ip_range, index) => {
                   // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
+                  // @ts-expect-error formik has bad types
                   const errorString: string = formik.errors[
                     `interfaces[${idx}].ip_ranges[${index}]`
                   ]?.includes('is invalid')
                     ? 'Invalid IP range'
-                    : formik.errors[`interfaces[${idx}].ip_ranges[${index}]`];
+                    : // @ts-expect-error formik has bad types
+                      formik.errors[`interfaces[${idx}].ip_ranges[${index}]`];
 
                   return {
                     address: ip_range,
@@ -1009,18 +1011,26 @@ export const LinodeConfigDialog = (props: Props) => {
                     <InterfaceSelect
                       errors={{
                         ipRangeError:
+                          // @ts-expect-error formik has bad types
                           formik.errors[`interfaces[${idx}].ip_ranges`],
                         ipamError:
+                          // @ts-expect-error formik has bad types
                           formik.errors[`interfaces[${idx}].ipam_address`],
+                        // @ts-expect-error formik has bad types
                         labelError: formik.errors[`interfaces[${idx}].label`],
                         primaryError:
+                          // @ts-expect-error formik has bad types
                           formik.errors[`interfaces[${idx}].primary`],
                         publicIPv4Error:
+                          // @ts-expect-error formik has bad types
                           formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
                         subnetError:
+                          // @ts-expect-error formik has bad types
                           formik.errors[`interfaces[${idx}].subnet_id`],
+                        // @ts-expect-error formik has bad types
                         vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
                         vpcIPv4Error:
+                          // @ts-expect-error formik has bad types
                           formik.errors[`interfaces[${idx}].ipv4.vpc`],
                       }}
                       handleChange={(newInterface: Interface) =>

@@ -1,8 +1,8 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { Box } from 'src/components/Box';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -119,14 +119,14 @@ export const ImageSelect = (props: MultiProps | Props) => {
 
 export const getImagesOptions = (images: Image[]) => {
   const groupedImages = groupImages(images);
-  return ['recommended', 'older', 'images', 'deleted'].reduce(
-    (accumulator: GroupType<string>[], category: string) => {
+  return (['recommended', 'older', 'images', 'deleted'] as const).reduce(
+    (accumulator: GroupType<string>[], category) => {
       if (groupedImages[category]) {
         return [
           ...accumulator,
           {
             label: getDisplayNameForGroup(category),
-            options: groupedImages[category].map(({ id, label }: Image) => ({
+            options: groupedImages[category]?.map(({ id, label }: Image) => ({
               label,
               value: id,
             })),

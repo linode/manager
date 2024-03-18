@@ -53,6 +53,7 @@ export const CertificateSelect = (props: Props) => {
   const filter: Filter = props.filter ?? {};
 
   if (inputValue) {
+    // @ts-expect-error idk what happened
     filter['label'] = { '+contains': inputValue };
   }
 

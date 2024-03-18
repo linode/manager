@@ -221,7 +221,7 @@ export const getRealEntityKey = (key: string): SearchField | string => {
     title: LABEL,
   };
 
-  return substitutions[key] || key;
+  return substitutions[key as keyof typeof substitutions] || key;
 };
 
 // Returns true if all values in array are true

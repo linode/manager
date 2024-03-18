@@ -20,7 +20,9 @@ export const Flag = (props: Props) => {
 
   return (
     <StyledFlag
-      className={`fi fi-${COUNTRY_FLAG_OVERRIDES[country] ?? country} fi-xx`}
+      className={`fi fi-${
+        COUNTRY_FLAG_OVERRIDES[country as 'uk'] ?? country
+      } fi-xx`}
     />
   );
 };

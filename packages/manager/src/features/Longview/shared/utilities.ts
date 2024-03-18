@@ -253,9 +253,11 @@ export const sumStatsObject = <T extends {}>(
       if (thisObject && typeof thisObject === 'object') {
         Object.keys(thisObject).forEach((thisKey) => {
           if (thisKey in accum) {
+            // @ts-expect-error this code is crazy 😵‍💫
             accum[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
           } else {
-            accum[thisKey] = thisObject[thisKey];
+            accum[thisKey as keyof typeof accum] =
+              thisObject[thisKey as keyof typeof thisObject];
           }
         });
       }

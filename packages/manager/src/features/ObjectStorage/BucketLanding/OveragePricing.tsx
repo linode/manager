@@ -29,7 +29,9 @@ export const OveragePricing = (props: Props) => {
         <strong>
           $
           {isDcSpecificPricingRegion
-            ? objectStoragePriceIncreaseMap[regionId].storage_overage
+            ? objectStoragePriceIncreaseMap[
+                regionId as keyof typeof objectStoragePriceIncreaseMap
+              ].storage_overage
             : OBJ_STORAGE_PRICE.storage_overage}{' '}
           per GB
         </strong>
@@ -40,7 +42,9 @@ export const OveragePricing = (props: Props) => {
         <strong>
           $
           {isDcSpecificPricingRegion
-            ? objectStoragePriceIncreaseMap[regionId].transfer_overage
+            ? objectStoragePriceIncreaseMap[
+                regionId as keyof typeof objectStoragePriceIncreaseMap
+              ].transfer_overage
             : OBJ_STORAGE_PRICE.transfer_overage}{' '}
           per GB
         </strong>{' '}

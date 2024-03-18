@@ -108,7 +108,7 @@ export const updateDismissedNotifications = (
   notificationsToDismiss: unknown[],
   options: DismissibleNotificationOptions
 ) => {
-  const newNotifications = {};
+  const newNotifications: Record<string, DismissedNotification> = {};
   notificationsToDismiss.forEach((thisNotification) => {
     const hashKey = getHashKey(thisNotification, options.prefix);
     newNotifications[hashKey] = {

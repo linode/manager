@@ -99,6 +99,7 @@ const cloneLandingReducer = (
 
         if (existingFile) {
           Object.keys(action.data).forEach((key) => {
+            // @ts-expect-error this code is crazy!
             existingFile[key] = action.data[key];
           });
 

@@ -31,7 +31,7 @@ export const RouteAccordion = ({ configIndex, route, routeIndex }: Props) => {
         headingProps={{ sx: { width: '100%' } }}
         sx={{ backgroundColor: '#f4f5f6', paddingLeft: 1, paddingRight: 1.4 }}
       >
-        {/* TODO ACLB: Implement RulesTable */}
+        TODO ACLB: Implement RulesTable
       </Accordion>
       <EditRouteDrawer
         configIndex={configIndex}

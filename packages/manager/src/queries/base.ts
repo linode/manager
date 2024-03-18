@@ -56,12 +56,9 @@ export type ItemsByID<T> = Record<string, T>;
  *
  */
 
-export const listToItemsByID = <E extends {}[]>(
-  entityList: E,
-  indexer: string = 'id'
-) => {
-  return entityList.reduce(
-    (map, item) => ({ ...map, [item[indexer]]: item }),
+export const listToItemsByID = <T>(entityList: T[], indexer: string = 'id') => {
+  return entityList.reduce<Record<string, T>>(
+    (map, item) => ({ ...map, [item[indexer as keyof T] as string]: item }),
     {}
   );
 };
@@ -76,7 +73,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
       // Update the query data to include the newly updated Entity.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
-        [variables[indexer]]: updatedEntity,
+        [variables[indexer as keyof V] as string]: updatedEntity,
       }));
     },
   };
@@ -106,7 +103,7 @@ export const creationHandlers = <T, V, E = APIError[]>(
       // Add the new Entity to the existing data.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
-        [updatedEntity[indexer]]: updatedEntity,
+        [updatedEntity[indexer as keyof T] as string]: updatedEntity,
       }));
     },
   };
@@ -122,7 +119,7 @@ export const deletionHandlers = <T, V, E = APIError[]>(
       // Remove the Entity from the existing data.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => {
         const oldDataCopy = { ...oldData };
-        delete oldDataCopy[variables[indexer]];
+        delete oldDataCopy[variables[indexer as keyof V] as string];
         return oldDataCopy;
       });
     },

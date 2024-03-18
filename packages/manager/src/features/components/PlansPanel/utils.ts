@@ -72,8 +72,9 @@ export const getPlanSelectionsByPlanType = <
 
   // filter empty plan group
   return Object.keys(plansByType).reduce((acc, key) => {
-    if (plansByType[key].length > 0) {
-      acc[key] = plansByType[key];
+    if (plansByType[key as keyof typeof plansByType].length > 0) {
+      acc[key as keyof typeof plansByType] =
+        plansByType[key as keyof typeof plansByType];
     }
     return acc;
   }, {} as PlansByType<T>);

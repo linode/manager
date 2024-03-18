@@ -13,6 +13,7 @@ import { Typography } from 'src/components/Typography';
 import {
   addressOptions,
   firewallOptionItemsShort,
+  FirewallPreset,
   portPresets,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
@@ -107,7 +108,13 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         // All predefined FW types use all IPv4 and IPv6.
         setFieldValue('addresses', 'all');
         // Use the port for the selected type.
-        setPresetPorts([PORT_PRESETS[portPresets[selectedType]]]);
+        setPresetPorts([
+          PORT_PRESETS[
+            portPresets[
+              selectedType as FirewallPreset
+            ] as keyof typeof PORT_PRESETS
+          ],
+        ]);
       }
     },
     [

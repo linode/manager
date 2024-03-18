@@ -1,8 +1,9 @@
-import { Stack } from 'src/components/Stack';
+import { Beta } from '@linode/api-v4';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { Stack } from 'src/components/Stack';
 import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { useAccountBetasQuery } from 'src/queries/accountBetas';
 import { useBetasQuery } from 'src/queries/betas';
@@ -24,7 +25,7 @@ const BetasLanding = () => {
   const betas = betasRequest?.data ?? [];
 
   const allBetas = [...accountBetas, ...betas];
-  const allBetasMerged = allBetas.reduce((acc, beta) => {
+  const allBetasMerged = allBetas.reduce<Record<string, Beta>>((acc, beta) => {
     if (acc[beta.id]) {
       acc[beta.id] = Object.assign(beta, acc[beta.id]);
     } else {

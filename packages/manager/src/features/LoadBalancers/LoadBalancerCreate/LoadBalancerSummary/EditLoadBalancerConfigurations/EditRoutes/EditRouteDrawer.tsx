@@ -33,6 +33,7 @@ export const EditRouteDrawer = (props: Props) => {
     <Drawer onClose={handleClose} open={open} title="Edit Route">
       <TextField
         errorText={
+          // @ts-expect-error formik has bad types
           touched.configurations?.[configIndex]?.routes?.[routeIndex]?.label &&
           isErrorPresent
             ? 'Label is required.'

@@ -33,7 +33,6 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"],
 
     /* Completeness */

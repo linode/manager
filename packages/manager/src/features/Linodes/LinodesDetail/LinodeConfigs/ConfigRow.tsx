@@ -40,19 +40,30 @@ export const ConfigRow = React.memo((props: Props) => {
     () =>
       Object.keys(config.devices)
         .map((thisDevice) => {
-          const device = config.devices[thisDevice];
+          const device =
+            config.devices[thisDevice as keyof typeof config.devices];
           let label: null | string = null;
+          // @ts-expect-error this is possible
           if (device?.disk_id) {
             label =
               disks?.find(
                 (thisDisk) =>
-                  thisDisk.id === config.devices[thisDevice]?.disk_id
+                  thisDisk.id ===
+                  // @ts-expect-error bad
+                  config.devices[thisDevice as keyof typeof config.devices]?.disk_id
+
+                // @ts-expect-error this is possible
               )?.label ?? `disk-${device.disk_id}`;
+
+            // @ts-expect-error this is possible
           } else if (device?.volume_id) {
             label =
               volumes?.data.find(
                 (thisVolume) =>
+                  // @ts-expect-error this is possible
                   thisVolume.id === config.devices[thisDevice]?.volume_id
+
+                // @ts-expect-error this is possible
               )?.label ?? `volume-${device.volume_id}`;
           }
 

@@ -1,6 +1,7 @@
 import { PlacementGroup } from '@linode/api-v4';
 import {
   CreateLinodePlacementGroupPayload,
+  CreateLinodeRequest,
   InterfacePayload,
   PriceObject,
   restoreBackup,
@@ -874,7 +875,7 @@ export class LinodeCreate extends React.PureComponent<
     // eslint-disable-next-line sonarjs/no-unused-collection
     const interfaces: InterfacePayload[] = [];
 
-    const payload = {
+    const payload: CreateLinodeRequest = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,

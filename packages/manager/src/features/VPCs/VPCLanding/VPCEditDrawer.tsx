@@ -58,7 +58,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   const handleFieldChange = (field: string, value: string) => {
     form.setFieldValue(field, value);
-    if (form.errors[field]) {
+    if (form.errors[field as keyof typeof form.errors]) {
       form.setFieldError(field, undefined);
     }
   };

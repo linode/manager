@@ -98,23 +98,6 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   };
 };
 
-/**
- * Generates a list of entities added to an existing list, and a list of entities removed from an existing list.
- */
-export const getAddRemoved = <E extends Entity>(
-  existingList: E[] = [],
-  newList: E[] = []
-) => {
-  const existingIds = existingList.map(({ id }) => String(id));
-  const newIds = newList.map(({ id }) => String(id));
-
-  const added = newList.filter(({ id }) => !existingIds.includes(String(id)));
-
-  const removed = existingList.filter(({ id }) => !newIds.includes(String(id)));
-
-  return [added, removed];
-};
-
 export const createRequestThunk = <Req extends any, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>
@@ -135,48 +118,4 @@ export const createRequestThunk = <Req extends any, Res, Err>(
       return Promise.reject(error);
     }
   };
-};
-
-export const updateInPlace = <E extends Entity>(
-  id: number | string,
-  update: (e: E) => E,
-  state: MappedEntityState<E>
-) => {
-  const { itemsById } = state;
-
-  // If this entity cannot be found in state, return the state as-is.
-  if (!itemsById[id]) {
-    return state;
-  }
-
-  // Return the state as-is EXCEPT replacing the original entity with the updated entity.
-  const updated = update(itemsById[id]);
-  return {
-    ...state,
-    itemsById: {
-      ...itemsById,
-      [id]: updated,
-    },
-  };
-};
-
-// Given a nested state and an ID, ensures that MappedEntityState exists at the
-// provided key. If the nested state already exists, return the state untouched.
-// If it doesn't exist, initialize the state with `createDefaultState()`.
-export const ensureInitializedNestedState = (
-  state: Record<number, any>,
-  id: number,
-  override: any = {}
-) => {
-  if (!state[id]) {
-    state[id] = createDefaultState({ ...override, error: {} });
-  }
-  return state;
-};
-
-export const apiResponseToMappedState = <T extends Entity>(data: T[]) => {
-  return data.reduce((acc, thisEntity) => {
-    acc[thisEntity.id] = thisEntity;
-    return acc;
-  }, {});
 };

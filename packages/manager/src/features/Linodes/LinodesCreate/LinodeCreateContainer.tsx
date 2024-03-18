@@ -1005,7 +1005,7 @@ const handleAnalytics = (
 
   if (eventInfo) {
     eventAction = eventInfo.action;
-    const payloadLabel = payload[eventInfo.labelPayloadKey];
+    const payloadLabel = payload[eventInfo.labelPayloadKey as keyof CreateLinodeRequest];
     // Checking if payload label comes back as a number, if so return it as a string, otherwise event won't fire.
     if (isNaN(payloadLabel)) {
       eventLabel = payloadLabel;

@@ -338,6 +338,7 @@ const NodeBalancerCreate = () => {
   const onConfigValueChange = (configId: number, key: string, value: any) => {
     setNodeBalancerFields((prev) => {
       const newConfigs = [...prev.configs];
+      // @ts-expect-error todo
       newConfigs[configId][key] = value;
       return { ...prev, configs: newConfigs };
     });

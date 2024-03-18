@@ -10,25 +10,22 @@ import type {
   RulePayload,
 } from '@linode/api-v4';
 
-type CustomerFacingMatchFieldOption = Exclude<MatchField, 'always_match'>;
-
-export const matchFieldMap: Record<CustomerFacingMatchFieldOption, string> = {
+export const matchFieldMap: Record<MatchField, string> = {
   header: 'HTTP Header',
   method: 'HTTP Method',
   path_prefix: 'Path Prefix',
   path_regex: 'Path Regex',
   query: 'Query String',
+  always_match: '',
 };
 
-export const matchValuePlaceholder: Record<
-  CustomerFacingMatchFieldOption,
-  string
-> = {
+export const matchValuePlaceholder: Record<MatchField, string> = {
   header: 'x-my-header=this',
   method: 'POST',
   path_prefix: '/my-path',
   path_regex: '/path/.*[.](jpg)',
   query: 'my-query-param=this',
+  always_match: '',
 };
 
 export const matchTypeOptions = Object.keys(matchFieldMap).map(

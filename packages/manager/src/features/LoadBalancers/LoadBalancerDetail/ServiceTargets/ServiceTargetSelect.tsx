@@ -56,6 +56,7 @@ export const ServiceTargetSelect = (props: Props) => {
   const filter: Filter = {};
 
   if (inputValue) {
+    // @ts-expect-error idk what happened here
     filter['label'] = { '+contains': inputValue };
   }
 

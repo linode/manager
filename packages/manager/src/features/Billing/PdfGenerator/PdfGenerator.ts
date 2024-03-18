@@ -241,6 +241,7 @@ export const printInvoice = async (
      * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
+    // @ts-expect-error I don't want to break existing functionality
     const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
     const countryTax = hasTax ? taxes?.country_tax : undefined;
     const provincialTax = hasTax

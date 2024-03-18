@@ -1,8 +1,8 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
@@ -105,7 +105,7 @@ const IPSharingPanel = (props: Props) => {
     linodeID: number,
     linodes: Linode[]
   ): Record<number, string> => {
-    const choiceLabels = linodes.reduce((previousValue, currentValue) => {
+    const choiceLabels = linodes.reduce((previousValue: any, currentValue) => {
       // Filter out the current Linode
       if (currentValue.id === linodeID) {
         return previousValue;
@@ -136,7 +136,7 @@ const IPSharingPanel = (props: Props) => {
     return choiceLabels;
   };
 
-  let ipToLinodeID = {};
+  let ipToLinodeID: Record<string, number[]> = {};
 
   const updateIPToLinodeID = (newData: Record<string, number[]>) => {
     ipToLinodeID = { ...ipToLinodeID, ...newData };
@@ -185,9 +185,9 @@ const IPSharingPanel = (props: Props) => {
   };
 
   const onSubmit = () => {
-    const groupedUnsharedRanges = {};
+    const groupedUnsharedRanges: Record<string, string[]> = {};
     const finalIPs: string[] = uniq(
-      ipsToShare.reduce((previousValue, currentValue) => {
+      ipsToShare.reduce((previousValue: any, currentValue) => {
         if (currentValue === undefined || currentValue === null) {
           return previousValue;
         }
@@ -407,7 +407,7 @@ const IPSharingPanel = (props: Props) => {
 const formatAvailableRanges = (
   availableRanges: IPRangeInformation[]
 ): AvailableRangesMap => {
-  return availableRanges.reduce((previousValue, currentValue) => {
+  return availableRanges.reduce((previousValue: any, currentValue) => {
     // use the first entry in linodes as we're only dealing with ranges unassociated with this
     // Linode, so we just use whatever the first Linode is to later get the label for this range
     previousValue[currentValue.linodes[0]] = [

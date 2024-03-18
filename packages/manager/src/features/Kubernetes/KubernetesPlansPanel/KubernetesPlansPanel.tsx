@@ -79,7 +79,7 @@ export const KubernetesPlansPanel = (props: Props) => {
   );
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
+    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan as keyof typeof plans];
     const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
       (plan) => {
         return {
@@ -113,11 +113,13 @@ export const KubernetesPlansPanel = (props: Props) => {
               regionsData={regionsData}
             />
             <KubernetesPlanContainer
+              plans={
+                plans[plan as keyof typeof plans] as TypeWithAvailability[]
+              }
               disabled={disabled || isPlanPanelDisabled(plan)}
               getTypeCount={getTypeCount}
               onAdd={onAdd}
               onSelect={onSelect}
-              plans={plans[plan]}
               selectedId={selectedId}
               selectedRegionId={selectedRegionId}
               updatePlanCount={updatePlanCount}
@@ -125,7 +127,12 @@ export const KubernetesPlansPanel = (props: Props) => {
           </>
         );
       },
-      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
+      title:
+        planTabInfoContent[
+          plan === 'standard'
+            ? 'shared'
+            : (plan as keyof typeof planTabInfoContent)
+        ]?.title,
     };
   });
 

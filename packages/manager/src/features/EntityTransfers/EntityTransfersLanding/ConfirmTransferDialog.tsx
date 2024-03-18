@@ -230,7 +230,7 @@ export const DialogContent = React.memo((props: ContentProps) => {
                     {pluralize(
                       entityName,
                       entityName + 's',
-                      entities[thisEntityType].length
+                      entities[thisEntityType as keyof typeof entities].length
                     )}
                   </strong>
                 </StyledEntityTypography>

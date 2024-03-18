@@ -502,7 +502,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       volume_id: volumes,
     };
 
-    if (!reactQueryEntityDataMap[entityType]) {
+    if (
+      !reactQueryEntityDataMap[
+        entityType as keyof typeof reactQueryEntityDataMap
+      ]
+    ) {
       return [];
     }
 
@@ -517,12 +521,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
 
     return (
-      reactQueryEntityDataMap[entityType]?.map(
-        ({ id, label }: { id: number; label: string }) => ({
-          label,
-          value: id,
-        })
-      ) || []
+      reactQueryEntityDataMap[
+        entityType as keyof Omit<typeof reactQueryEntityDataMap, 'domain_id'>
+      ]?.map(({ id, label }: { id: number; label: string }) => ({
+        label,
+        value: id,
+      })) || []
     );
   };
 

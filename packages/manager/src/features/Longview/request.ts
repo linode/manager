@@ -93,6 +93,7 @@ export const baseRequest = Axios.create({
 export const handleLongviewResponse = (
   response: AxiosResponse<LongviewResponse<any>>
 ) => {
+  // @ts-expect-error type are unknown
   const notifications = response.data[0].NOTIFICATIONS;
   /**
    * A SEVERITY code of 3 indicates
@@ -104,6 +105,7 @@ export const handleLongviewResponse = (
   if (errors.length > 0) {
     return Promise.reject(errors);
   } else {
+    // @ts-expect-error type are unknown
     return Promise.resolve(response.data[0]);
   }
 };

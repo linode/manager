@@ -125,7 +125,7 @@ export class DomainRecordDrawer extends React.Component<
   render() {
     const { submitting } = this.state;
     const { mode, open, records, type } = this.props;
-    const { fields } = this.types[type];
+    const { fields } = this.types[type as keyof typeof this.types];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
 
@@ -267,7 +267,9 @@ export class DomainRecordDrawer extends React.Component<
       return (
         eachOption.value ===
         defaultTo(
+          // @ts-expect-error this code is nuts
           DomainRecordDrawer.defaultFieldsState(this.props)[field],
+          // @ts-expect-error this code is nuts
           this.state.fields[field]
         )
       );
@@ -298,6 +300,7 @@ export class DomainRecordDrawer extends React.Component<
     multiline?: boolean;
   }) => {
     const { domain, type } = this.props;
+    // @ts-expect-error this code is nuts
     const value = this.state.fields[field];
     const hasAliasToResolve =
       value.indexOf('@') >= 0 && shouldResolve(type, field);
@@ -329,6 +332,7 @@ export class DomainRecordDrawer extends React.Component<
         data-qa-target={label}
         label={label}
         type="number"
+        // @ts-expect-error this code is nuts
         value={this.state.fields[field]}
         {...rest}
       />
@@ -445,7 +449,9 @@ export class DomainRecordDrawer extends React.Component<
         this.updateField(field)(e.target.value)
       }
       value={defaultTo(
+        // @ts-expect-error this code is nuts
         DomainRecordDrawer.defaultFieldsState(this.props)[field],
+        // @ts-expect-error this code is nuts
         this.state.fields[field]
       )}
       data-qa-target={label}

@@ -872,12 +872,16 @@ export const handlers = [
     const firewall = firewallFactory.build();
     return res(ctx.json(firewall));
   }),
-  rest.put('*/v4beta/networking/firewalls/:firewallId', (req, res, ctx) => {
-    const firewall = firewallFactory.build({
-      status: req.body?.['status'] ?? 'disabled',
-    });
-    return res(ctx.json(firewall));
-  }),
+  rest.put(
+    '*/v4beta/networking/firewalls/:firewallId',
+    async (req, res, ctx) => {
+      const incomming = await req.json();
+      const firewall = firewallFactory.build({
+        status: incomming['status'] ?? 'disabled',
+      });
+      return res(ctx.json(firewall));
+    }
+  ),
   // rest.post('*/account/agreements', (req, res, ctx) => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
@@ -1306,8 +1310,8 @@ export const handlers = [
 
     if (req.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof typeof a];
+        const statusB = b[headers['+order_by'] as keyof typeof b];
 
         if (statusA < statusB) {
           return -1;
@@ -1406,8 +1410,12 @@ export const handlers = [
       }
 
       filteredAccountUsers.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof typeof a];
+        const statusB = b[headers['+order_by'] as keyof typeof b];
+
+        if (!statusA || !statusB) {
+          return 0;
+        }
 
         if (statusA < statusB) {
           return -1;
@@ -1997,8 +2005,9 @@ export const handlers = [
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.post('*/networking/ipv6/ranges', (req, res, ctx) => {
-    const range = req.body?.['prefix_length'];
+  rest.post('*/networking/ipv6/ranges', async (req, res, ctx) => {
+    const incoming = await req.json();
+    const range = incoming['prefix_length'];
     return res(ctx.json({ range, route_target: '2001:DB8::0000' }));
   }),
   rest.post('*/networking/ips/assign', (req, res, ctx) => {

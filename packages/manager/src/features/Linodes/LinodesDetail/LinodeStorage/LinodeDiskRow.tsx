@@ -63,7 +63,8 @@ export const LinodeDiskRow = React.memo((props: Props) => {
               flexFlow: 'row nowrap',
             }}
           >
-            {diskEventLabelMap[event.action]} ({event.percent_complete}%)
+            {diskEventLabelMap[event.action as keyof typeof diskEventLabelMap]}{' '}
+            ({event.percent_complete}%)
             <BarPercent
               sx={{
                 paddingLeft: theme.spacing(),

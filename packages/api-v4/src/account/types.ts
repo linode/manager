@@ -176,6 +176,7 @@ export type GlobalGrantTypes =
   | 'add_firewalls'
   | 'add_images'
   | 'add_linodes'
+  | 'add_databases'
   | 'add_longview'
   | 'add_nodebalancers'
   | 'add_stackscripts'

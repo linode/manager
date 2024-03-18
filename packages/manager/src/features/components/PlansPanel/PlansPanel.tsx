@@ -129,6 +129,7 @@ export const PlansPanel = (props: Props) => {
   });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
+    // @ts-expect-error nanodes need to be handeled properly
     const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
     const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
       (plan) => {
@@ -193,6 +194,7 @@ export const PlansPanel = (props: Props) => {
           </>
         );
       },
+      // @ts-expect-error nanodes need to be handeled properly
       title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
     };
   });

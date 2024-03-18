@@ -171,7 +171,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
           options: groupedEngines[thisGroup]
             .map((engineObject) => ({
               ...engineObject,
-              flag: engineIcons[engineObject.engine],
+              flag: engineIcons[engineObject.engine as keyof typeof engineIcons],
               label: `${databaseEngineMap[engineObject.engine]} v${
                 engineObject.version
               }`,
@@ -412,10 +412,10 @@ const DatabaseCreate = () => {
     const engineType = values.engine.split('/')[0];
 
     setNodePricing({
-      multi: type.engines[engineType].find(
+      multi: type.engines[engineType as keyof typeof type.engines].find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
       )?.price,
-      single: type.engines[engineType].find(
+      single: type.engines[engineType as keyof typeof type.engines].find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
       )?.price,
     });

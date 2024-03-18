@@ -1,4 +1,4 @@
-import { Config, Disk } from '@linode/api-v4/lib/linodes';
+import { Config, Disk, DiskDevice } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { DateTime } from 'luxon';
@@ -241,8 +241,11 @@ export const getAssociatedDisks = (
 
   // Go through the devices and grab all the disks
   Object.keys(config.devices).forEach((key) => {
-    if (config.devices[key] && config.devices[key].disk_id) {
-      disksOnConfig.push(config.devices[key].disk_id);
+    const device = config.devices[
+      key as keyof typeof config.devices
+    ] as DiskDevice;
+    if (device && device.disk_id) {
+      disksOnConfig.push(device.disk_id);
     }
   });
 

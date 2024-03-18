@@ -59,7 +59,7 @@ export const AddRouteDrawer = (props: Props) => {
     <Drawer onClose={onClose} open={open} title="Add Route">
       <Stack spacing={1}>
         <Typography>{ROUTE_COPY.Protocol.main}</Typography>
-        <Typography>{ROUTE_COPY.Description[routeProtocol]}</Typography>
+        <Typography>{ROUTE_COPY.Description}</Typography>
       </Stack>
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>
         <FormControlLabel

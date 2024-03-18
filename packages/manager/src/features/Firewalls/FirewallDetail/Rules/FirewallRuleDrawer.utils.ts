@@ -281,7 +281,7 @@ export const portStringToItems = (
   const customInput: string[] = [];
 
   ports.forEach((thisPort) => {
-    const preset = PORT_PRESETS[thisPort];
+    const preset = PORT_PRESETS[thisPort as keyof typeof PORT_PRESETS];
     if (preset) {
       items.push(preset);
     } else {

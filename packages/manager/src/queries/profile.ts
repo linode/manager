@@ -131,7 +131,7 @@ export const useSSHKeysQuery = (
   filter?: Filter,
   enabled = true
 ) =>
-  useQuery({
+  useQuery<ResourcePage<SSHKey>, APIError[]>({
     ...profileQueries.sshKeys(params, filter),
     enabled,
     keepPreviousData: true,

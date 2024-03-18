@@ -115,12 +115,9 @@ export class MutateDrawer extends React.Component<Props, State> {
         ) : (
           <ul className="nonMUI-list">
             {Object.keys(extendedUpgradeInfo).map((newSpec) => {
-              const {
-                currentAmount,
-                label,
-                newAmount,
-                unit,
-              } = extendedUpgradeInfo[newSpec];
+              const { currentAmount, label, newAmount } = extendedUpgradeInfo[
+                newSpec as keyof typeof extendedUpgradeInfo
+              ];
 
               if (newAmount === null) {
                 return null;
@@ -128,10 +125,8 @@ export class MutateDrawer extends React.Component<Props, State> {
               return (
                 <ListItem key={label}>
                   <Typography>
-                    {label} goes from {currentAmount} {unit} to{' '}
-                    <strong>
-                      {newAmount} {unit}
-                    </strong>
+                    {label} goes from {currentAmount} to{' '}
+                    <strong>{newAmount}</strong>
                   </Typography>
                 </ListItem>
               );

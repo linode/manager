@@ -35,9 +35,13 @@ export const getOptions = (env: Partial<ImportMetaEnv>) => {
     return [
       ...acc,
       {
+        // @ts-expect-error typechecking is stricter
         apiRoot: env[`${base}_API_ROOT`] ?? '',
+        // @ts-expect-error typechecking is stricter
         clientID: env[`${base}_CLIENT_ID`] ?? '',
+        // @ts-expect-error typechecking is stricter
         label: env[thisEnvVariable] ?? '',
+        // @ts-expect-error typechecking is stricter
         loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
       },
     ];

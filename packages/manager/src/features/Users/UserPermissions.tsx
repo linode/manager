@@ -7,6 +7,7 @@ import {
   getUser,
   updateGrants,
   updateUser,
+  GlobalGrantTypes,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
@@ -148,10 +149,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   entityIsAll = (entity: string, value: GrantLevel): boolean => {
     const { grants } = this.state;
-    if (!(grants && grants[entity])) {
+    if (!(grants && grants[entity as keyof typeof grants])) {
       return false;
     }
-    return grants[entity].reduce((acc: boolean, grant: Grant) => {
+    return grants[entity as GrantType].reduce((acc: boolean, grant: Grant) => {
       return acc && grant.permissions === value;
     }, true);
   };
@@ -475,7 +476,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderGlobalPerm = (perm: string, checked: boolean) => {
-    const permDescriptionMap = {
+    const permDescriptionMap: Record<string, string> = {
       add_databases: 'Can add Databases to this account ($)',
       add_domains: 'Can add Domains using the DNS Manager',
       add_firewalls: 'Can add Firewalls to this account',
@@ -551,7 +552,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                */
               .filter((eachPerm) => eachPerm !== 'cancel_account')
               .map((perm) =>
-                this.renderGlobalPerm(perm, grants.global[perm] as boolean)
+                this.renderGlobalPerm(
+                  perm,
+                  grants.global[perm as GlobalGrantTypes] as boolean
+                )
               )}
         </Grid>
         {this.renderBillingPerm()}
@@ -628,7 +632,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <Tabs>
               <TabList>
                 {this.state.tabs?.map((entity) => (
-                  <Tab key={`${entity}-tab`}>{grantTypeMap[entity]}</Tab>
+                  <Tab key={`${entity}-tab`}>
+                    {grantTypeMap[entity as keyof typeof grantTypeMap]}
+                  </Tab>
                 ))}
               </TabList>
               <TabPanels>
@@ -687,7 +693,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     this.setState({ errors: undefined });
     const { clearNewUser, currentUsername } = this.props;
     const { grants } = this.state;
-    if (!currentUsername || !(grants && grants[type])) {
+    if (!currentUsername || !(grants && grants[type as keyof typeof grants])) {
       return this.setState({
         errors: [
           {
@@ -811,7 +817,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   setGrantTo = (entity: string, idx: number, value: GrantLevel) => () => {
     const { grants } = this.state;
-    if (!(grants && grants[entity])) {
+    if (!(grants && grants[entity as keyof typeof grants])) {
       return;
     }
     this.setState(set(lensPath(['grants', entity, idx, 'permissions']), value));

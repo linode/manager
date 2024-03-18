@@ -30,6 +30,7 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     },
   ],
   global: {
+    add_databases: true,
     account_access: 'read_write',
     add_domains: true,
     add_firewalls: true,

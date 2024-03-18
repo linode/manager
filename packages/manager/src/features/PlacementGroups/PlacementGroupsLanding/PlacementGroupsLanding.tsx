@@ -27,7 +27,7 @@ import { PlacementGroupsEditDrawer } from '../PlacementGroupsEditDrawer';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type { Filter, PlacementGroup } from '@linode/api-v4';
 
 const preferenceKey = 'placement-groups';
 
@@ -43,12 +43,13 @@ export const PlacementGroupsLanding = React.memo(() => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
 
   if (query) {
+    // @ts-expect-error fix linode filter type
     filter['label'] = { '+contains': query };
   }
 

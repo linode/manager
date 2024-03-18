@@ -86,7 +86,11 @@ export const ThirdPartyPayment = (props: Props) => {
       <Box className={classes.paymentTextContainer}>
         {!matchesSmDown ? (
           <Typography className={classes.paymentMethodLabel}>
-            {thirdPartyPaymentMap[paymentMethod.type].label}
+            {
+              thirdPartyPaymentMap[
+                paymentMethod.type as 'paypal' | 'google_pay'
+              ].label
+            }
           </Typography>
         ) : null}
         {renderThirdPartyPaymentBody(paymentMethod)}

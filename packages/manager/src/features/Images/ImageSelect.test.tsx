@@ -62,7 +62,7 @@ describe('ImageSelect', () => {
     });
     it('should properly format GroupType options as RS Item type', () => {
       const category = getImagesOptions([recommendedImage1])[0];
-      const option = category.options[0];
+      const option = category.options?.[0];
       expect(option).toHaveProperty('label', recommendedImage1.label);
       expect(option).toHaveProperty('value', recommendedImage1.id);
     });
