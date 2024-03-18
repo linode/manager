@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Props, TicketList } from './TicketList';
@@ -24,12 +24,12 @@ describe('TicketList', () => {
 
   it('should render ticket table containing tickets', async () => {
     server.use(
-      rest.get('*/support/tickets', (req, res, ctx) => {
+      http.get('*/support/tickets', () => {
         const tickets = supportTicketFactory.buildList(1, {
           status: 'open',
           summary: 'my linode is broken :(',
         });
-        return res(ctx.json(makeResourcePage(tickets)));
+        return HttpResponse.json(makeResourcePage(tickets));
       })
     );
 
@@ -56,8 +56,8 @@ describe('TicketList', () => {
 
   it('should render ticket list empty state', async () => {
     server.use(
-      rest.get('*/support/tickets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/support/tickets', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

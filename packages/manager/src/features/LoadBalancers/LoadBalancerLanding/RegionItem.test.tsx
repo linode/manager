@@ -2,7 +2,7 @@ import React from 'react';
 
 import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionItem } from './RegionItem';
@@ -12,8 +12,8 @@ describe('RegionItem', () => {
     const region = regionFactory.build();
 
     server.use(
-      rest.get('*/v4/regions', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([region])));
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
       })
     );
 

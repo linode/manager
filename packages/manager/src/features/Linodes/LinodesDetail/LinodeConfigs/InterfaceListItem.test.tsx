@@ -6,7 +6,7 @@ import {
   LinodeConfigInterfaceFactoryWithVPC,
   vpcFactory,
 } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -60,8 +60,8 @@ describe('InterfaceListItem', () => {
     });
 
     server.use(
-      rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
-        return res(ctx.json(vpc));
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpc);
       })
     );
 

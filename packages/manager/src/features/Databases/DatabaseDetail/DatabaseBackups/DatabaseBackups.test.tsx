@@ -6,7 +6,7 @@ import {
   profileFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -18,14 +18,14 @@ describe('Database Backups', () => {
 
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       }),
-      rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
-        return res(ctx.json(databaseFactory.build()));
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
       }),
-      rest.get('*/databases/:engine/instances/:id/backups', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(backups)));
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
       })
     );
 
@@ -43,15 +43,15 @@ describe('Database Backups', () => {
   it('should render an empty state if there are no backups', async () => {
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
-      rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
-        return res(ctx.json(databaseFactory.build()));
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
       })
     );
 
     // Mock an empty list of backups
     server.use(
-      rest.get('*/databases/:engine/instances/:id/backups', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

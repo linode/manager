@@ -5,7 +5,7 @@ import * as React from 'react';
 import { profileFactory, sshKeyFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import UserSSHKeyPanel from './UserSSHKeyPanel';
@@ -15,14 +15,14 @@ describe('UserSSHKeyPanel', () => {
     it('should render an empty state', async () => {
       // Mock a lot of API calls to simulate what a restricted user would get
       server.use(
-        rest.get('*/profile', (req, res, ctx) => {
-          return res(ctx.json(profileFactory.build({ restricted: true })));
+        http.get('*/profile', () => {
+          return HttpResponse.json(profileFactory.build({ restricted: true }));
         }),
-        rest.get('*/profile/sshkeys', (req, res, ctx) => {
-          return res(ctx.json(makeResourcePage([])));
+        http.get('*/profile/sshkeys', () => {
+          return HttpResponse.json(makeResourcePage([]));
         }),
-        rest.get('*/account/users', (req, res, ctx) => {
-          return res(ctx.status(401), ctx.json(makeResourcePage([])));
+        http.get('*/account/users', () => {
+          return HttpResponse.json(makeResourcePage([]), { status: 401 });
         })
       );
       const { queryByTestId } = renderWithTheme(
@@ -35,18 +35,18 @@ describe('UserSSHKeyPanel', () => {
     it('should render the restricted users ssh key if they have one', async () => {
       // Mock a lot of API calls to simulate what a restricted user would get
       server.use(
-        rest.get('*/profile', (req, res, ctx) => {
-          return res(ctx.json(profileFactory.build({ restricted: true })));
+        http.get('*/profile', () => {
+          return HttpResponse.json(profileFactory.build({ restricted: true }));
         }),
-        rest.get('*/profile/sshkeys', (req, res, ctx) => {
+        http.get('*/profile/sshkeys', () => {
           const sshKeys = [
             sshKeyFactory.build({ label: 'my-ssh-key' }),
             sshKeyFactory.build({ label: 'my-other-ssh-key' }),
           ];
-          return res(ctx.json(makeResourcePage(sshKeys)));
+          return HttpResponse.json(makeResourcePage(sshKeys));
         }),
-        rest.get('*/account/users', (req, res, ctx) => {
-          return res(ctx.status(401), ctx.json(makeResourcePage([])));
+        http.get('*/account/users', () => {
+          return HttpResponse.json(makeResourcePage([]), { status: 401 });
         })
       );
       const { getByText } = renderWithTheme(
@@ -64,12 +64,12 @@ describe('UserSSHKeyPanel', () => {
   describe('normal user', () => {
     it('should render a row for each user', async () => {
       server.use(
-        rest.get('*/profile', (req, res, ctx) => {
-          return res(ctx.json(profileFactory.build({ restricted: false })));
+        http.get('*/profile', () => {
+          return HttpResponse.json(profileFactory.build({ restricted: false }));
         }),
-        rest.get('*/account/users', (req, res, ctx) => {
+        http.get('*/account/users', () => {
           const users = [accountUserFactory.build({ username: 'test-user' })];
-          return res(ctx.json(makeResourcePage(users)));
+          return HttpResponse.json(makeResourcePage(users));
         })
       );
       const { getByText } = renderWithTheme(
@@ -81,17 +81,17 @@ describe('UserSSHKeyPanel', () => {
     });
     it('should call the update handler when a user is checked', async () => {
       server.use(
-        rest.get('*/profile', (req, res, ctx) => {
-          return res(ctx.json(profileFactory.build({ restricted: false })));
+        http.get('*/profile', () => {
+          return HttpResponse.json(profileFactory.build({ restricted: false }));
         }),
-        rest.get('*/account/users', (req, res, ctx) => {
+        http.get('*/account/users', () => {
           const users = [
             accountUserFactory.build({
               ssh_keys: ['ssh-key'],
               username: 'test-user',
             }),
           ];
-          return res(ctx.json(makeResourcePage(users)));
+          return HttpResponse.json(makeResourcePage(users));
         })
       );
 
