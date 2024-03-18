@@ -4,8 +4,6 @@ import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect
 import { useRegionsQuery } from 'src/queries/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
-import { SelectedRegionsList } from './SelectedRegionsList';
-
 import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface Props {
@@ -35,7 +33,6 @@ export const AccessKeyRegions = (props: Props) => {
       handleSelection={(ids) => {
         onChange(ids);
       }}
-      SelectedRegionsList={SelectedRegionsList}
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
