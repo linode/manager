@@ -1,6 +1,4 @@
-import _ from 'lodash';
 import React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
@@ -11,10 +9,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import {
-  queryKey as accountQueryKey,
-  useChildAccountsInfiniteQuery,
-} from 'src/queries/account';
+import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
@@ -51,7 +46,6 @@ export const ChildAccountList = React.memo(
           }
         : undefined,
     });
-    const queryClient = useQueryClient();
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
     if (isLoading) {
@@ -77,18 +71,11 @@ export const ChildAccountList = React.memo(
             Try again or contact support if the issue persists.
           </Typography>
           <Button
-            onClick={() => {
-              queryClient.invalidateQueries([
-                accountQueryKey,
-                'childAccounts',
-                'infinite',
-              ]);
-              refetchChildAccounts();
-            }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
             buttonType="primary"
+            onClick={() => refetchChildAccounts()}
           >
             Try again
           </Button>

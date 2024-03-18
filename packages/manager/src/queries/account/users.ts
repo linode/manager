@@ -1,14 +1,9 @@
-import {
-  deleteUser,
-  getGrants,
-  getUser,
-  getUsers,
-} from '@linode/api-v4/lib/account';
+import { deleteUser } from '@linode/api-v4/lib/account';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
 
-import { queryKey } from './account';
+import { accountQueries } from './queries';
 
 import type {
   APIError,
@@ -30,29 +25,24 @@ export const useAccountUsers = ({
 }) => {
   const { data: profile } = useProfile();
 
-  return useQuery<ResourcePage<User>, APIError[]>(
-    [queryKey, 'users', 'paginated', params, filters],
-    () => getUsers(params, filters),
-    {
-      enabled: enabled && !profile?.restricted,
-      keepPreviousData: true,
-    }
-  );
+  return useQuery<ResourcePage<User>, APIError[]>({
+    ...accountQueries.users._ctx.paginated(params, filters),
+    enabled: enabled && !profile?.restricted,
+    keepPreviousData: true,
+  });
 };
 
 export const useAccountUser = (username: string) => {
-  return useQuery<User, APIError[]>(
-    [queryKey, 'users', 'user', username],
-    () => getUser(username),
+  return useQuery<User, APIError[]>({
+    ...accountQueries.users._ctx.user(username),
     // Enable the query if the user is not on the blocklist
-    { enabled: !getIsBlocklistedUser(username) }
-  );
+    enabled: !getIsBlocklistedUser(username),
+  });
 };
 
 export const useAccountUserGrants = (username: string) => {
   return useQuery<Grants, APIError[]>(
-    [queryKey, 'users', 'grants', username],
-    () => getGrants(username)
+    accountQueries.users._ctx.user(username)._ctx.grants
   );
 };
 
@@ -60,8 +50,10 @@ export const useAccountUserDeleteMutation = (username: string) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteUser(username), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'users', 'paginated']);
-      queryClient.removeQueries([queryKey, 'users', 'user', username]);
+      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
+      queryClient.removeQueries(
+        accountQueries.users._ctx.user(username).queryKey
+      );
     },
   });
 };
