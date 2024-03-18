@@ -40,6 +40,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
                 ''
               )
             }
+            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
             disableFocusListener={!isDisabledMenuItem}
             disableHoverListener={!isDisabledMenuItem}
             disableTouchListener={!isDisabledMenuItem}
