@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import Axios from 'axios';
-import { UseQueryOptions, useQuery } from 'react-query';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -51,7 +51,7 @@ const maintenanceKey = 'status-page-maintenance';
 
 export const useIncidentQuery = () => {
   return useQuery<IncidentResponse, APIError[]>(
-    incidentKey,
+    [incidentKey],
     getIncidents,
     queryPresets.shortLived
   );
@@ -59,7 +59,7 @@ export const useIncidentQuery = () => {
 
 export const useMaintenanceQuery = (options?: UseQueryOptions<any>) => {
   return useQuery<MaintenanceResponse, APIError[]>(
-    maintenanceKey,
+    [maintenanceKey],
     getAllMaintenance,
     { ...queryPresets.shortLived, ...(options ?? {}) }
   );

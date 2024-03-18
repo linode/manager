@@ -69,20 +69,21 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Private: <>This Linode already has a private IP address.</>,
+const tooltipCopy: Record<IPType, string | null> = {
+  v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
 
 interface Props {
   linodeId: number;
+  linodeIsInEdgeRegion?: boolean;
   onClose: () => void;
   open: boolean;
   readOnly: boolean;
 }
 
 export const AddIPDrawer = (props: Props) => {
-  const { linodeId, onClose, open, readOnly } = props;
+  const { linodeId, linodeIsInEdgeRegion, onClose, open, readOnly } = props;
 
   const {
     error: ipv4Error,
@@ -178,12 +179,20 @@ export const AddIPDrawer = (props: Props) => {
           onChange={handleIPv4Change}
           value={selectedIPv4}
         >
+          {linodeIsInEdgeRegion && (
+            <Notice
+              sx={{ fontSize: 15 }}
+              text="Private IP is currently not available for Edge regions"
+              variant="warning"
+            />
+          )}
           <Typography id="ipv4-select-type">Select type</Typography>
           <Box>
             {ipOptions.map((option, idx) => (
               <FormControlLabel
                 control={<Radio />}
                 data-qa-radio={option.label}
+                disabled={option.value === 'v4Private' && linodeIsInEdgeRegion}
                 key={idx}
                 label={option.label}
                 value={option.value}
@@ -276,7 +285,6 @@ const StyledRadioGroup = styled(RadioGroup, {
   },
   '& p': {
     fontFamily: theme.font.bold,
-    marginTop: theme.spacing(),
   },
   marginBottom: '0 !important',
 }));

@@ -20,6 +20,7 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 describe('Personal access tokens', () => {
   /*
@@ -179,6 +180,8 @@ describe('Personal access tokens', () => {
           .click();
       });
 
+    mockGetPersonalAccessTokens([newToken]).as('getTokens');
+
     ui.drawer
       .findByTitle('Edit Personal Access Token')
       .should('be.visible')
@@ -197,7 +200,8 @@ describe('Personal access tokens', () => {
       });
 
     // Confirm that token has been renamed, initiate revocation.
-    cy.wait('@updateToken');
+    cy.wait(['@updateToken', '@getTokens']);
+
     cy.findByText(newToken.label)
       .should('be.visible')
       .closest('tr')
@@ -265,17 +269,6 @@ describe('Personal access tokens', () => {
       '@getAppTokens',
     ]);
 
-    // Find 'Create a Personal Access Token' button, confirm it is disabled and tooltip displays.
-    ui.button
-      .findByTitle('Create a Personal Access Token')
-      .should('be.visible')
-      .should('be.disabled')
-      .click();
-
-    ui.tooltip
-      .findByText('You can only create tokens for your own company.')
-      .should('be.visible');
-
     // Find token in list, confirm "Rename" is disabled and tooltip displays.
     cy.findByText(proxyToken.label)
       .should('be.visible')
@@ -289,7 +282,7 @@ describe('Personal access tokens', () => {
       });
 
     ui.tooltip
-      .findByText('Only company users can edit API tokens.')
+      .findByText(PROXY_USER_RESTRICTED_TOOLTIP_TEXT)
       .should('be.visible');
 
     // Confirm that token has not been renamed, initiate revocation.
@@ -315,6 +308,17 @@ describe('Personal access tokens', () => {
           .should('be.enabled')
           .click();
       });
+
+    // Find 'Create a Personal Access Token' button, confirm it is disabled and tooltip displays.
+    ui.button
+      .findByTitle('Create a Personal Access Token')
+      .should('be.visible')
+      .should('be.disabled')
+      .click();
+
+    ui.tooltip
+      .findByText(PROXY_USER_RESTRICTED_TOOLTIP_TEXT)
+      .should('be.visible');
 
     // Confirm that token is removed from list after revoking.
     cy.wait(['@revokeToken', '@getTokens']);

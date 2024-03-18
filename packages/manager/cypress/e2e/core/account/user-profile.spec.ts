@@ -9,6 +9,10 @@ import {
 import { randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { mockUpdateProfile } from 'support/intercepts/profile';
+import {
+  PARENT_USER,
+  RESTRICTED_FIELD_TOOLTIP,
+} from 'src/features/Account/constants';
 
 describe('User Profile', () => {
   /*
@@ -223,9 +227,7 @@ describe('User Profile', () => {
             .should('be.visible')
             .trigger('mouseover');
           // Click the button first, then confirm the tooltip is shown.
-          ui.tooltip
-            .findByText('This account type cannot update this field.')
-            .should('be.visible');
+          ui.tooltip.findByText(RESTRICTED_FIELD_TOOLTIP).should('be.visible');
         });
 
       cy.get('[data-qa-textfield-label="Username"]')
@@ -251,9 +253,7 @@ describe('User Profile', () => {
             .should('be.visible')
             .trigger('mouseover');
           // Click the button first, then confirm the tooltip is shown.
-          ui.tooltip
-            .findByText('This account type cannot update this field.')
-            .should('be.visible');
+          ui.tooltip.findByText(RESTRICTED_FIELD_TOOLTIP).should('be.visible');
         });
 
       cy.get('[data-qa-textfield-label="Email"]')
@@ -276,7 +276,7 @@ describe('User Profile', () => {
         .trigger('mouseover');
       // Click the button first, then confirm the tooltip is shown.
       ui.tooltip
-        .findByText('You can\u{2019}t delete a business partner user.')
+        .findByText(`You can\u{2019}t delete a ${PARENT_USER}.`)
         .should('be.visible');
     });
   });

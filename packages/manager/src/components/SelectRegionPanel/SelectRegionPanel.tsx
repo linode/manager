@@ -1,4 +1,4 @@
-import { Capabilities, Region } from '@linode/api-v4/lib/regions';
+import { Capabilities } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -6,10 +6,12 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import {
@@ -31,7 +33,6 @@ interface SelectRegionPanelProps {
   error?: string;
   handleSelection: (id: string) => void;
   helperText?: string;
-  regions: Region[];
   selectedId?: string;
   /**
    * Include a `selectedLinodeTypeId` so we can tell if the region selection will have an affect on price
@@ -46,14 +47,15 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     error,
     handleSelection,
     helperText,
-    regions,
     selectedId,
     selectedLinodeTypeId,
   } = props;
 
+  const flags = useFlags();
   const location = useLocation();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
+  const { data: regions } = useRegionsQuery();
 
   const isCloning = /clone/i.test(params.type);
 
@@ -75,33 +77,34 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  const geckoEnabled = useIsGeckoEnabled(params.type as LinodeCreateType);
+  const hideEdgeRegions =
+    !flags.gecko ||
+    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
-  const showGeckoHelperText = Boolean(
-    geckoEnabled &&
+  const showEdgeIconHelperText = Boolean(
+    !hideEdgeRegions &&
       currentCapability &&
-      regions.find(
+      regions?.find(
         (region) =>
           region.site_type === 'edge' &&
           region.capabilities.includes(currentCapability)
       )
   );
 
-  if (props.regions.length === 0) {
+  if (regions?.length === 0) {
     return null;
   }
 
   return (
     <Paper
-      sx={(theme) => ({
+      sx={{
         '& svg': {
           '& g': {
             // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
             clipPath: 'none !important',
           },
         },
-        marginTop: theme.spacing(3),
-      })}
+      }}
     >
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography data-qa-tp="Region" variant="h2">
@@ -131,12 +134,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         currentCapability={currentCapability}
         disabled={disabled}
         errorText={error}
-        geckoEnabled={geckoEnabled}
         handleSelection={handleSelection}
         helperText={helperText}
-        regions={regions}
+        regionFilter={hideEdgeRegions ? 'core' : undefined}
+        regions={regions ?? []}
         selectedId={selectedId || null}
-        showGeckoHelperText={showGeckoHelperText}
+        showEdgeIconHelperText={showEdgeIconHelperText}
       />
       {showClonePriceWarning && (
         <Notice

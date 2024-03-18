@@ -11,6 +11,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarForProxy } from 'src/components/GravatarForProxy';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -21,10 +22,13 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
-import { getStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from 'src/utilities/storage';
+
+import { getCompanyNameOrEmail } from './utils';
 
 interface MenuLink {
   display: string;
@@ -71,16 +75,21 @@ export const UserMenu = React.memo(() => {
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
   const isParentUser = profile?.user_type === 'parent';
   const isProxyUser = profile?.user_type === 'proxy';
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
   const canSwitchBetweenParentOrProxyAccount =
-    hasParentChildAccountAccess && (isParentUser || isProxyUser);
+    flags.parentChildAccountAccess &&
+    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
-  const companyName =
-    (hasParentChildAccountAccess &&
-      profile?.user_type !== 'default' &&
-      account?.company) ??
-    '';
-  const showCompanyName = hasParentChildAccountAccess && companyName;
+
+  const companyNameOrEmail = getCompanyNameOrEmail({
+    company: account?.company,
+    isParentChildFeatureEnabled: hasParentChildAccountAccess,
+    profile,
+  });
+
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
@@ -111,12 +120,15 @@ export const UserMenu = React.memo(() => {
 
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
-    if (isProxyUser) {
-      enqueueSnackbar(`Account switched to ${companyName}.`, {
+    if (isProxyUser && !getStorage('proxy_user')) {
+      // Flag for proxy user to display success toast once.
+      setStorage('proxy_user', 'true');
+
+      enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
         variant: 'success',
       });
     }
-  }, [isProxyUser, companyName, enqueueSnackbar]);
+  }, [isProxyUser, companyNameOrEmail, enqueueSnackbar]);
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -201,6 +213,13 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
+          startIcon={
+            isProxyUser ? (
+              <GravatarForProxy />
+            ) : (
+              <GravatarByEmail email={profile?.email ?? ''} />
+            )
+          }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',
@@ -212,25 +231,24 @@ export const UserMenu = React.memo(() => {
           disableRipple
           endIcon={getEndIcon()}
           onClick={handleClick}
-          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>
               <Typography
                 sx={{
-                  fontSize: showCompanyName ? '0.775rem' : '0.875rem',
+                  fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
                 }}
               >
                 {userName}
               </Typography>
-              {showCompanyName && (
+              {companyNameOrEmail && (
                 <Typography
                   sx={(theme) => ({
                     fontFamily: theme.font.bold,
                     fontSize: '0.875rem',
                   })}
                 >
-                  {companyName}
+                  {companyNameOrEmail}
                 </Typography>
               )}
             </Stack>
@@ -261,14 +279,16 @@ export const UserMenu = React.memo(() => {
       >
         <Stack data-qa-user-menu minWidth={250} spacing={2}>
           {canSwitchBetweenParentOrProxyAccount && (
-            <Typography>You are currently logged in as:</Typography>
+            <Typography>Current account:</Typography>
           )}
           <Typography
             color={(theme) => theme.textColors.headlineStatic}
             fontSize="1.1rem"
           >
             <strong>
-              {canSwitchBetweenParentOrProxyAccount ? companyName : userName}
+              {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
+                ? companyNameOrEmail
+                : userName}
             </strong>
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (
@@ -278,28 +298,17 @@ export const UserMenu = React.memo(() => {
                 handleAccountSwitch();
               }}
               buttonType="outlined"
+              data-testid="switch-account-button"
             />
           )}
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
-            <Grid container>
-              <Grid
-                container
-                direction="column"
-                rowGap={1}
-                wrap="nowrap"
-                xs={6}
-              >
+            <Grid columnSpacing={2} container rowSpacing={1}>
+              <Grid container direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
-              <Grid
-                container
-                direction="column"
-                rowGap={1}
-                wrap="nowrap"
-                xs={6}
-              >
+              <Grid container direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(4).map(renderLink)}
               </Grid>
             </Grid>
