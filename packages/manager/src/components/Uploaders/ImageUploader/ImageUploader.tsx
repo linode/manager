@@ -114,9 +114,7 @@ export const ImageUploader = React.memo((props: ImageUploaderProps) => {
     // This event listeners prevent the browser from opening files dropped on
     // the screen, which was happening when the dropzone was disabled.
 
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     window.addEventListener('dragover', preventDefault);
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     window.addEventListener('drop', preventDefault);
 
     return () => {

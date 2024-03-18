@@ -26,9 +26,7 @@ interface Props {
 
 type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
-export const SortableTableHead = <T extends unknown>(
-  props: CombinedProps<T>
-) => {
+export const SortableTableHead = <T,>(props: CombinedProps<T>) => {
   const theme = useTheme();
 
   const {

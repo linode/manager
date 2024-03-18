@@ -98,7 +98,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   };
 };
 
-export const createRequestThunk = <Req extends any, Res, Err>(
+export const createRequestThunk = <Req, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>
 ): ThunkActionCreator<Promise<Res>, Req> => {

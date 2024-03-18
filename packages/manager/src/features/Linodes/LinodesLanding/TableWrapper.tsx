@@ -19,7 +19,7 @@ interface Props {
 
 type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & Props;
 
-const TableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
+const TableWrapper = <T,>(props: CombinedProps<T>) => {
   const {
     dataLength,
     handleOrderChange,

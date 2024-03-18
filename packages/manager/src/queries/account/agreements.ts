@@ -38,8 +38,10 @@ export const useMutateAccountAgreements = () => {
           const newAgreements = { ...previousData };
 
           for (const key in variables) {
-            if (variables[key] !== undefined) {
-              newAgreements[key] = variables[key];
+            if (variables[key as keyof Agreements] !== undefined) {
+              newAgreements[key as keyof Agreements] = variables[
+                key as keyof Agreements
+              ]!;
             }
           }
 

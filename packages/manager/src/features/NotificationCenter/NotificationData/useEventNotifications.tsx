@@ -2,8 +2,8 @@ import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { partition } from 'ramda';
 import * as React from 'react';
 
-import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
+import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
@@ -21,9 +21,11 @@ const unwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = (givenEvents?: Event[]) => {
+  const { events: eventsData } = useEventsInfiniteQuery();
   const events = removeBlocklistedEvents(
-    givenEvents ?? useEventsInfiniteQuery().events
+    givenEvents ? givenEvents : eventsData
   );
+
   const notificationContext = React.useContext(_notificationContext);
 
   const _events = events.filter(

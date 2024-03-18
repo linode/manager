@@ -1,4 +1,3 @@
-/* eslint-disable scanjs-rules/call_addEventListener */
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Terminal } from 'xterm';
