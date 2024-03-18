@@ -15,25 +15,15 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import {
   StyledSummaryBox,
   StyledSummaryTextBox,
   StyledSummaryTextTypography,
   StyledTitleTypography,
+  StyledStatusBox,
 } from './DatabaseResizeCurrentConfiguration.style';
 import { Region } from '@linode/api-v4';
 import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  status: {
-    alignItems: 'center',
-    display: 'inline-flex',
-    textTransform: 'capitalize',
-    verticalAlign: 'sub',
-  },
-}));
 
 interface Props {
   database: Database;
@@ -50,7 +40,6 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
   const theme = useTheme();
-  const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r: Region) => r.id === database.region);
@@ -96,9 +85,9 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
         <Box key={'status-version'} paddingRight={6}>
           <StyledSummaryTextBox>
             <span style={{ fontFamily: theme.font.bold }}>Status</span>{' '}
-            <div className={classes.status}>
+            <StyledStatusBox>
               <DatabaseStatusDisplay events={events} database={database} />
-            </div>
+            </StyledStatusBox>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>
             <span style={{ fontFamily: theme.font.bold }}>Version</span>{' '}

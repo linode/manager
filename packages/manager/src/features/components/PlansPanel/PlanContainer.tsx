@@ -40,7 +40,7 @@ export interface Props {
   disabledClasses?: LinodeTypeClass[];
   hideDisabledHelpIcons?: boolean;
   disabledPlanTypes?: PlanSelectionType[];
-  disabledPlanTypesToolTip?: string;
+  disabledPlanTypesToolTipText?: string;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -58,7 +58,7 @@ export const PlanContainer = (props: Props) => {
     disabledClasses,
     hideDisabledHelpIcons,
     disabledPlanTypes,
-    disabledPlanTypesToolTip,
+    disabledPlanTypesToolTipText,
     isCreate,
     linodeID,
     onSelect,
@@ -107,6 +107,7 @@ export const PlanContainer = (props: Props) => {
           disabledClasses={disabledClasses}
           hideDisabledHelpIcons={hideDisabledHelpIcons}
           disabledToolTip={disabledPlanTypesToolTip}
+          disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}
           key={id}

@@ -56,14 +56,19 @@ const getDisabledClass = (
   return disabledClasses.includes(typeClass);
 };
 
-const getToolTip = (
-  sizeTooSmall: boolean,
-  planIsDisabled?: boolean,
-  disabledToolTip?: string
-): string | undefined => {
+const getToolTip = ({
+  sizeTooSmall,
+  planIsDisabled,
+  disabledToolTip,
+}: {
+  sizeTooSmall: boolean;
+  planIsDisabled?: boolean;
+  disabledToolTip?: string;
+}) => {
   if (planIsDisabled) {
     return disabledToolTip;
-  } else if (sizeTooSmall) {
+  }
+  if (sizeTooSmall) {
     return 'This plan is too small for the selected image.';
   }
   return undefined;
@@ -101,7 +106,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
-  const tooltip = getToolTip(planTooSmall, planIsDisabled, disabledToolTip);
+  const tooltip = getToolTip({
+    sizeTooSmall: planTooSmall,
+    planIsDisabled: planIsDisabled,
+    disabledToolTip: disabledToolTip,
+  });
   const isSamePlan = type.heading === currentPlanHeading;
   const isGPU = type.class === 'gpu';
   const isDisabledClass = getDisabledClass(type.class, disabledClasses ?? []);

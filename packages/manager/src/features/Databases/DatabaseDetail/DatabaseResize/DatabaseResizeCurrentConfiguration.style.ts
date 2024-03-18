@@ -46,3 +46,12 @@ export const StyledTitleTypography = styled(Typography, {
 })(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
+
+export const StyledStatusBox = styled(Box, {
+  label: 'StyledStatusBox',
+})(() => ({
+  alignItems: 'center',
+  display: 'inline-flex',
+  textTransform: 'capitalize',
+  verticalAlign: 'sub',
+}));

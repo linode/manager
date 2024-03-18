@@ -1,4 +1,3 @@
-// import { LinodeTypeClass } from '@linode/api-v4';
 import {
   Database,
   DatabaseClusterSizeObject,
@@ -82,7 +81,7 @@ export const DatabaseResize = ({ database }: Props) => {
 
   const resizeDescription = (
     <>
-      <Typography variant="h2">Resizing a Database Cluster</Typography>
+      <Typography variant="h2">Resize a Database Cluster</Typography>
       <Typography sx={{ marginTop: '4px' }}>
         Adapt the cluster to your needs by resizing to a larger plan. Clusters
         cannot be resized to smaller plans.
@@ -228,7 +227,7 @@ export const DatabaseResize = ({ database }: Props) => {
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           disabledPlanTypes={disabledPlans}
-          disabledPlanTypesToolTip="Resizing to smaller plans is not supported."
+          disabledPlanTypesToolTipText="Resizing to smaller plans is not supported."
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}

@@ -26,19 +26,16 @@ interface Props {
 }
 export const DatabaseStatusDisplay = (props: Props) => {
   const { events, database } = props;
-  // recent event
   const recentEvent = events?.find(
     (event: Event) =>
       event.entity?.id === database.id && event.entity?.type === 'database'
   );
 
-  // progress
   let progress: number | undefined;
   if (recentEvent?.action === 'database_resize') {
     progress = recentEvent?.percent_complete ?? 0;
   }
 
-  // status
   let displayedStatus;
   if (
     recentEvent?.status === 'started' ||
