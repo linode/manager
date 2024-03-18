@@ -1,4 +1,3 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -8,8 +7,6 @@ import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { SelectLinodeRow } from './SelectLinodeRow';
-
-const loadingTestId = 'circle-progress';
 
 describe('SelectLinodeRow', () => {
   const handlePowerOff = vi.fn();
@@ -31,27 +28,17 @@ describe('SelectLinodeRow', () => {
       })
     );
 
-    const {
-      findByText,
-      getAllByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
+    const { findByText, getAllByRole, getByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
           handleSelection={handleSelection}
-          linodeId={linode1.id}
+          linode={linode1}
           selected
           showPowerActions
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText(linode1.label);
     getByText('Running');
@@ -87,22 +74,17 @@ describe('SelectLinodeRow', () => {
       })
     );
 
-    const { findByText, getByTestId, getByText, queryByText } = renderWithTheme(
+    const { findByText, getByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
           handleSelection={handleSelection}
-          linodeId={linode1.id}
+          linode={linode1}
           selected
           showPowerActions
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText(linode1.label);
     getByText('Offline');
@@ -131,22 +113,17 @@ describe('SelectLinodeRow', () => {
       })
     );
 
-    const { findByText, getByTestId, getByText, queryByText } = renderWithTheme(
+    const { findByText, getByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
           handleSelection={handleSelection}
-          linodeId={linode1.id}
+          linode={linode1}
           selected
           showPowerActions={false}
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText(linode1.label);
     getByText('Running');
