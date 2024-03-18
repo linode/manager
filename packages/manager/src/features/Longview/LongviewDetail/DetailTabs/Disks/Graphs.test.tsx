@@ -42,7 +42,7 @@ describe('UI', () => {
     expect(queryByTestId('space-graph')).toBeNull();
     expect(queryByTestId('diskio-graph')).toBeInTheDocument();
 
-    expect(getByText(/gather space and inode data/gim));
+    expect(getByText(/gather space and inode data/im));
   });
 
   it('should not render Disk I/O graph for OpenVZ Configs', () => {
@@ -55,7 +55,7 @@ describe('UI', () => {
     expect(queryByTestId('inodes-graph')).toBeInTheDocument();
     expect(queryByTestId('diskio-graph')).toBeNull();
 
-    expect(getByText(/gather Disk I\/O on OpenVZ Linodes/gim));
+    expect(getByText(/gather Disk I\/O on OpenVZ Linodes/im));
   });
 
   it('should render warning text for ChildOf Disks', () => {
@@ -68,7 +68,7 @@ describe('UI', () => {
     expect(queryByTestId('space-graph')).toBeNull();
     expect(queryByTestId('diskio-graph')).toBeNull();
 
-    expect(getByText(/doesn't gather data on this type of device/gim));
+    expect(getByText(/doesn't gather data on this type of device/im));
   });
 
   it('should render warning text for unmounted disks', () => {
@@ -81,6 +81,6 @@ describe('UI', () => {
     expect(queryByTestId('space-graph')).toBeNull();
     expect(queryByTestId('diskio-graph')).toBeInTheDocument();
 
-    expect(getByText(/gather Space and Inode data on unmounted disks/gim));
+    expect(getByText(/gather Space and Inode data on unmounted disks/im));
   });
 });
