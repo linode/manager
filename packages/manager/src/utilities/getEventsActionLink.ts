@@ -106,6 +106,9 @@ export const getLinkForEvent = (action: EventAction, entity: Entity | null) => {
     case 'vpc':
       return `/vpcs/${id}`;
 
+    case 'placement_group':
+      return `/placement-groups/${id}`;
+
     default:
       return;
   }
@@ -139,6 +142,8 @@ export const getLinkTargets = (entity: Entity | null) => {
       return '/longview';
     case 'volume':
       return '/volumes';
+    case 'placement_group':
+      return `/placement-groups/${entity.id}`;
     default:
       return null;
   }

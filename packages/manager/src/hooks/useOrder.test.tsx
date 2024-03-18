@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';

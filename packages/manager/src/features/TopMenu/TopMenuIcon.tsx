@@ -5,7 +5,7 @@ import { Tooltip } from 'src/components/Tooltip';
 
 interface Props {
   children: JSX.Element;
-  title?: string;
+  title: string;
 }
 
 export const StyledTopMenuIconWrapper = styled('div')(({ theme }) => ({

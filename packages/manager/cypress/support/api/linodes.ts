@@ -18,7 +18,7 @@ export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   );
 };
 
-const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
+const defaultLinodeRequestBody = {
   authorized_users: [],
   backups_enabled: false,
   booted: true,

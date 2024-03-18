@@ -254,6 +254,16 @@ export const InvoiceDetail = () => {
                   wrapInParentheses={invoice.total < 0}
                 />
               </Typography>
+              <Typography>
+                This invoice may include Linode Compute Instances that have been
+                powered off as the data is maintained and resources are still
+                reserved. If you no longer need powered-down Linodes, you can{' '}
+                <Link to="https://www.linode.com/docs/products/platform/billing/guides/stop-billing/">
+                  {' '}
+                  remove the service
+                </Link>{' '}
+                from your account.
+              </Typography>
             </Box>
           )}
         </Grid>

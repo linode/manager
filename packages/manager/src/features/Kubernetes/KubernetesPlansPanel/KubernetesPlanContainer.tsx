@@ -9,13 +9,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { getIsPlanSoldOut } from 'src/features/components/PlansPanel/utils';
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
-import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
+
+import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
 
 const tableCells = [
   { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
@@ -32,7 +30,7 @@ export interface KubernetesPlanContainerProps {
   getTypeCount: (planId: string) => number;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  plans: ExtendedType[];
+  plans: TypeWithAvailability[];
   selectedId?: string;
   selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
@@ -51,28 +49,19 @@ export const KubernetesPlanContainer = (
     selectedRegionId,
     updatePlanCount,
   } = props;
-  const flags = useFlags();
 
-  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
-    selectedRegionId || '',
-    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
-  );
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getIsPlanSoldOut({
-        plan,
-        regionAvailabilities,
-        selectedRegionId,
-      });
-
       return (
         <KubernetesPlanSelection
+          isLimitedAvailabilityPlan={
+            disabled ? false : plan.isLimitedAvailabilityPlan
+          } // No need for tooltip due to all plans being unavailable in region
           disabled={disabled}
           getTypeCount={getTypeCount}
           idx={id}
-          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add sold out chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
@@ -89,7 +78,6 @@ export const KubernetesPlanContainer = (
     onAdd,
     onSelect,
     plans,
-    regionAvailabilities,
     selectedId,
     selectedRegionId,
     updatePlanCount,

@@ -7,17 +7,22 @@ import { Currency } from 'src/components/Currency';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
 interface Props {
   backupsMonthlyPrice?: PriceObject['monthly'];
   disabled: boolean;
   linodeId: number;
+  linodeIsInEdgeRegion?: boolean;
 }
 
 export const BackupsPlaceholder = React.memo((props: Props) => {
-  const { backupsMonthlyPrice, disabled, linodeId } = props;
+  const {
+    backupsMonthlyPrice,
+    disabled,
+    linodeId,
+    linodeIsInEdgeRegion,
+  } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -41,15 +46,18 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
 
   return (
     <>
-      {disabled && <LinodePermissionsError />}
       <StyledPlaceholder
         buttonProps={[
           {
             children: 'Enable Backups',
-            disabled,
+            disabled: disabled || linodeIsInEdgeRegion,
             onClick: () => setDialogOpen(true),
+            tooltipText: linodeIsInEdgeRegion
+              ? 'Backups are currently not available for Edge regions.'
+              : undefined,
           },
         ]}
+        data-testid="backups"
         icon={VolumeIcon}
         isEntity
         renderAsSecondary

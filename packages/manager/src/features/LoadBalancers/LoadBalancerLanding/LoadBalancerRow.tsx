@@ -3,14 +3,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 
 import { LoadBalancerEndpointHealth } from '../LoadBalancerDetail/LoadBalancerEndpointHealth';
-import { regions as alphaRegions } from '../LoadBalancerDetail/LoadBalancerRegions';
+import { LoadBalancerRegionsList } from '../LoadBalancerDetail/LoadBalancerRegions';
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { Ports } from './Ports';
 
@@ -24,7 +22,7 @@ interface Props {
 }
 
 export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
-  const { hostname, id, label } = loadBalancer;
+  const { hostname, id, label, regions } = loadBalancer;
 
   return (
     <TableRow
@@ -51,17 +49,12 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
       </Hidden>
       <Hidden mdDown>
         <TableCell>
-          <Stack py={1} spacing={0.5}>
-            {alphaRegions.map(({ id, label }) => (
-              <Typography key={id}>
-                {label} ({id})
-              </Typography>
-            ))}
-          </Stack>
-          {/* Uncomment the code below to show the regions returned by the API */}
-          {/* {regions.map((region) => (
-            <RegionsCell key={region} region={region} />
-          ))} */}
+          <LoadBalancerRegionsList
+            hideFlags
+            py={1}
+            regionIds={regions}
+            spacing={0.5}
+          />
         </TableCell>
       </Hidden>
       <TableCell actionCell>

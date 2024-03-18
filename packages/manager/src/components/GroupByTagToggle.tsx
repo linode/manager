@@ -13,9 +13,11 @@ interface GroupByTagToggleProps {
 export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
   const { isGroupedByTag, isLargeAccount, toggleGroupByTag } = props;
 
+  const groupByDescriptionId = React.useId();
+
   return (
     <>
-      <div className="visually-hidden" id="groupByDescription">
+      <div className="visually-hidden" id={groupByDescriptionId}>
         {isGroupedByTag
           ? 'group by tag is currently enabled'
           : 'group by tag is currently disabled'}
@@ -25,7 +27,7 @@ export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
         title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
       >
         <StyledToggleButton
-          aria-describedby={'groupByDescription'}
+          aria-describedby={groupByDescriptionId}
           aria-label={`Toggle group by tag`}
           disableRipple
           // See https://github.com/linode/manager/pull/6653 for more details

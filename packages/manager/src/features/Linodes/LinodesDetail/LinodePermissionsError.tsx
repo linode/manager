@@ -1,10 +1,13 @@
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 export const LinodePermissionsError = () => (
   <Notice
-    text="You don't have permission to modify this Linode. Please contact an account administrator for details."
+    text={getRestrictedResourceText({
+      resourceType: 'Linodes',
+    })}
     variant="error"
   />
 );

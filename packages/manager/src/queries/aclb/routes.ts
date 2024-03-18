@@ -10,7 +10,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';

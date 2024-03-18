@@ -350,8 +350,8 @@ export interface CreateLinodePlacementGroupPayload {
 }
 
 export interface CreateLinodeRequest {
-  type?: string;
-  region?: string;
+  type: string;
+  region: string;
   stackscript_id?: number;
   backup_id?: number;
   swap_size?: number;

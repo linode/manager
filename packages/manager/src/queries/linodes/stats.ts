@@ -7,7 +7,7 @@ import {
   getLinodeTransferByDate,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { parseAPIDate } from 'src/utilities/date';
 

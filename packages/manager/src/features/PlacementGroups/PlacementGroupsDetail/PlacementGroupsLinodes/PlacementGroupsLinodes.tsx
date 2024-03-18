@@ -12,12 +12,12 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
-import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
-import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
 } from '../../constants';
+import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
+import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Linode, PlacementGroup } from '@linode/api-v4';
@@ -102,12 +102,11 @@ export const PlacementGroupsLinodes = (props: Props) => {
         <Grid>
           <Button
             buttonType="primary"
-            data-testid="add-linode-to-placement-group-button"
             disabled={hasReachedCapacity}
             onClick={handleOpenAssignLinodesDrawer}
             tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
           >
-            Add Linode to Placement Group
+            Assign Linode to Placement Group
           </Button>
         </Grid>
       </Grid>

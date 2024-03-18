@@ -504,7 +504,6 @@ const NodeBalancerCreate = () => {
         disabled={isRestricted}
         error={hasErrorFor('region')}
         handleSelection={regionChange}
-        regions={regions ?? []}
         selectedId={nodeBalancerFields.region}
       />
       {flags.firewallNodebalancer && (

@@ -2,7 +2,7 @@ import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Grid from '@mui/material/Unstable_Grid2';
 import { curry } from 'ramda';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from 'react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -70,7 +70,7 @@ export const EntityTransfersCreate = () => {
         const entityCount = countByEntity(transfer.entities);
         sendEntityTransferCreateEvent(entityCount);
 
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         push({ pathname: '/account/service-transfers', state: { transfer } });
       },
     }).catch((_) => null);

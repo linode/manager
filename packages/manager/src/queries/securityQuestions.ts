@@ -5,7 +5,7 @@ import {
   updateSecurityQuestions,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { queryPresets } from './base';
 
@@ -17,7 +17,7 @@ export const useSecurityQuestions = ({
   enabled?: boolean;
 } = {}) => {
   return useQuery<SecurityQuestionsData, APIError[]>(
-    queryKey,
+    [queryKey],
     getSecurityQuestions,
     {
       ...queryPresets.oneTimeFetch,
@@ -39,7 +39,7 @@ export const useMutateSecurityQuestions = () => {
     {
       onSuccess: (response) => {
         queryClient.setQueryData<SecurityQuestionsData | undefined>(
-          queryKey,
+          [queryKey],
           (oldData) => {
             if (oldData === undefined) {
               return undefined;

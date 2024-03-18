@@ -53,11 +53,7 @@ import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import {
-  accountAgreementsQueryKey,
-  reportAgreementSigningError,
-} from 'src/queries/accountAgreements';
-import { simpleMutationHandlers } from 'src/queries/base';
+import { reportAgreementSigningError } from 'src/queries/accountAgreements';
 import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
@@ -67,11 +63,11 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -79,8 +75,8 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 
-import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
+import LinodeCreate from './LinodeCreate';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 
 import type {
@@ -877,20 +873,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          this.props.queryClient.executeMutation<
-            {},
-            APIError[],
-            Partial<Agreements>
-          >({
-            mutationFn: signAgreement,
-            mutationKey: accountAgreementsQueryKey,
-            onError: reportAgreementSigningError,
-            variables: { eu_model: true, privacy_policy: true },
-            ...simpleMutationHandlers(
-              accountAgreementsQueryKey,
-              this.props.queryClient
-            ),
-          });
+          const agreeData = { eu_model: true, privacy_policy: true };
+          signAgreement(agreeData)
+            .then(() => {
+              this.props.queryClient.setQueryData<Agreements>(
+                ['account', 'agreements'],
+                (prev) => ({
+                  ...(prev ?? {}),
+                  ...agreeData,
+                })
+              );
+            })
+            .catch(reportAgreementSigningError);
         }
 
         /** Analytics creation event */

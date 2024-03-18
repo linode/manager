@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 interface Props {
   isProxyUser: boolean;
@@ -44,7 +45,7 @@ export const APITokenMenu = (props: Props) => {
             openEditDrawer(token);
           },
           title: 'Rename',
-          tooltip: 'Only company users can edit API tokens.',
+          tooltip: isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined,
         }
       : null,
     {

@@ -2,8 +2,8 @@ import { Token } from '@linode/api-v4/lib/profile';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -17,6 +17,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { Typography } from 'src/components/Typography';
+import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
@@ -205,16 +206,16 @@ export const APITokenTable = (props: Props) => {
         </Grid>
         <StyledAddNewWrapper>
           {type === 'Personal Access Token' && (
-            <AddNewLink
-              disabledReason={
-                isProxyUser
-                  ? 'You can only create tokens for your own company.'
-                  : undefined
+            <Button
+              tooltipText={
+                isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
               }
+              buttonType="primary"
               disabled={isProxyUser}
-              label="Create a Personal Access Token"
               onClick={() => setIsCreateOpen(true)}
-            />
+            >
+              Create a Personal Access Token
+            </Button>
           )}
         </StyledAddNewWrapper>
       </StyledRootContainer>

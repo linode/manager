@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -242,6 +242,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const virtModeCaptionId = React.useId();
+
   const {
     data: kernels,
     error: kernelsError,
@@ -391,7 +393,7 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries(vlansQueryKey);
+        queryClient.invalidateQueries([vlansQueryKey]);
       }
 
       // Ensure VPC query data is up-to-date
@@ -400,7 +402,7 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vpc'
         )
       ) {
-        queryClient.invalidateQueries(vpcQueryKey);
+        queryClient.invalidateQueries([vpcQueryKey]);
       }
 
       enqueueSnackbar(
@@ -451,7 +453,7 @@ export const LinodeConfigDialog = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       // Ensure VLANs are fresh.
-      queryClient.invalidateQueries(vlansQueryKey);
+      queryClient.invalidateQueries([vlansQueryKey]);
 
       /**
        * If config is defined, we're editing. Set the state
@@ -721,7 +723,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
-                  aria-describedby="virtModeCaption"
+                  aria-describedby={virtModeCaptionId}
                   disabled={isReadOnly}
                   htmlFor="virt_mode"
                 >
@@ -745,7 +747,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     label="Full virtualization"
                     value="fullvirt"
                   />
-                  <FormHelperText id="virtModeCaption">
+                  <FormHelperText id={virtModeCaptionId}>
                     Controls if devices inside your virtual machine are
                     paravirtualized or fully virtualized. Paravirt is what you
                     want, unless you&rsquo;re doing weird things.

@@ -14,7 +14,11 @@ interface Props {
 
 export const UsersLandingProxyTableHead = ({ order }: Props) => {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        whiteSpace: 'nowrap',
+      }}
+    >
       <TableRow>
         <TableSortCell
           active={order.orderBy === 'username'}

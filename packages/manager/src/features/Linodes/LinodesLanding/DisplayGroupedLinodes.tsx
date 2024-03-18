@@ -71,6 +71,9 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
     ...rest
   } = props;
 
+  const displayViewDescriptionId = React.useId();
+  const groupByDescriptionId = React.useId();
+
   const dataLength = data.length;
 
   const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
@@ -96,12 +99,12 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
       <>
         <Grid className={'px0'} xs={12}>
           <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
-            <div className="visually-hidden" id="displayViewDescription">
+            <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
             </div>
             <Tooltip placement="top" title="List view">
               <StyledToggleButton
-                aria-describedby={'displayViewDescription'}
+                aria-describedby={displayViewDescriptionId}
                 aria-label="Toggle display"
                 disableRipple
                 isActive={linodesAreGrouped}
@@ -112,14 +115,14 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
               </StyledToggleButton>
             </Tooltip>
 
-            <div className="visually-hidden" id="groupByDescription">
+            <div className="visually-hidden" id={groupByDescriptionId}>
               {linodesAreGrouped
                 ? 'group by tag is currently enabled'
                 : 'group by tag is currently disabled'}
             </div>
             <Tooltip placement="top-end" title="Ungroup by tag">
               <StyledToggleButton
-                aria-describedby={'groupByDescription'}
+                aria-describedby={groupByDescriptionId}
                 aria-label={`Toggle group by tag`}
                 disableRipple
                 isActive={linodesAreGrouped}

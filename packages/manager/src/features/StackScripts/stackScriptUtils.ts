@@ -106,8 +106,6 @@ export const baseApps = {
   '1008125': 'Easypanel',
   '1017300': 'Kali Linux',
   '1037036': 'Budibase',
-  '1226544': 'HashiCorp Nomad Cluster',
-  '1226545': 'HashiCorp Nomad Clients Cluster',
   '1037037': 'HashiCorp Nomad',
   '1037038': 'HashiCorp Vault',
   '1051714': 'Microweber',
@@ -125,15 +123,19 @@ export const baseApps = {
   '1160820': 'Appwrite',
   '1177225': 'Seatable',
   '1177605': 'Illa Builder',
+  '1226544': 'HashiCorp Nomad Cluster',
+  '1226545': 'HashiCorp Nomad Clients Cluster',
   '1243759': 'MainConcept FFmpeg Plugins Demo',
   '1243760': 'MainConcept Live Encoder Demo',
   '1243762': 'MainConcept P2 AVC ULTRA Transcoder Demo',
   '1243763': 'MainConcept XAVC Transcoder Demo',
   '1243764': 'MainConcept XDCAM Transcoder Demo',
   '1243780': 'SimpleX Chat',
-  // uncomment after 2/20/24 release
-  // '1308539': 'NATS Single Node',
-  // '1298017': 'JupyterLab',
+  '1298017': 'JupyterLab',
+  '1308539': 'NATS Single Node',
+  // uncomment after 3/18/24 release
+  // '1329430': 'Passbolt',
+  // '1329462': 'LinuxGSM',
 };
 
 const oneClickFilter = [

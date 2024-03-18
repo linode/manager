@@ -699,6 +699,29 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   payment_submitted: {
     notification: (e) => `A payment was successfully submitted.`,
   },
+  // This event action denotes when a Placement Group has been selected during the Linode Create flow.
+  placement_group_assign: {
+    notification: (e) => `Placement Group successfully assigned.`,
+  },
+  // This event action denotes an existing Linode instance has been assigned to an existing Placement Group.
+  placement_group_assigned: {
+    notification: (e) =>
+      `Linode ${e.secondary_entity?.label} has been assigned to Placement Group ${e.entity?.label}.`,
+  },
+  placement_group_created: {
+    notification: (e) =>
+      `Placement Group ${e.entity?.label} has been successfully created.`,
+  },
+  placement_group_deleted: {
+    notification: (e) => `Placement Group ${e.entity?.label} has been deleted.`,
+  },
+  placement_group_unassigned: {
+    notification: (e) =>
+      `Linode ${e.secondary_entity?.label} has been unassigned from Placement Group ${e.entity?.label}.`,
+  },
+  placement_group_updated: {
+    notification: (e) => `Placement Group ${e.entity?.label} has been updated.`,
+  },
   profile_update: {
     notification: (e) => `Your profile has been updated.`,
   },

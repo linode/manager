@@ -13,6 +13,7 @@ import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { AddTag } from './AddTag';
 
 interface TagCellProps {
+  disabled?: boolean;
   listAllTags: (tags: string[]) => void;
   sx?: SxProps;
   tags: string[];
@@ -35,7 +36,7 @@ const checkOverflow = (el: any) => {
 };
 
 const TagCell = (props: TagCellProps) => {
-  const { sx, tags, updateTags } = props;
+  const { disabled, sx, tags, updateTags } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -90,6 +91,7 @@ const TagCell = (props: TagCellProps) => {
             {tags.map((thisTag) => (
               <StyledTag
                 colorVariant="lightBlue"
+                disabled={disabled}
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
                 loading={loading}
@@ -110,6 +112,7 @@ const TagCell = (props: TagCellProps) => {
           ) : null}
           <StyledTagButton
             buttonType="outlined"
+            disabled={disabled}
             endIcon={<StyledPlusIcon />}
             onClick={() => setAddingTag(true)}
             title="Add a tag"
