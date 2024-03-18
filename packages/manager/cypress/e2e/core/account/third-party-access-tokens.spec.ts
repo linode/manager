@@ -71,7 +71,9 @@ describe('Third party access tokens', () => {
             .closest('tr')
             .within(() => {
               cy.findByLabelText(
-                `This token has ${access[key]} access for ${key.toLowerCase()}`
+                `This token has ${
+                  access[key as keyof typeof access]
+                } access for ${key.toLowerCase()}`
               ).should('be.visible');
             });
         });
