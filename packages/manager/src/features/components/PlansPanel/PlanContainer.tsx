@@ -14,7 +14,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
 
-import type { TypeWithAvailability } from './types';
+import type { PlanSelectionType, TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
@@ -90,13 +90,8 @@ export const PlanContainer = (props: Props) => {
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
       const planIsDisabled =
-        disabledPlanTypes?.find((element) => element === plan) !== undefined;
-      const isPlanSoldOut = getIsPlanSoldOut({
-        plan,
-        regionAvailabilities,
-        selectedRegionId,
-      });
-
+        disabledPlanTypes?.find((element) => element.id === plan.id) !==
+        undefined;
       return (
         <PlanSelection
           isLimitedAvailabilityPlan={
@@ -106,7 +101,6 @@ export const PlanContainer = (props: Props) => {
           disabled={disabled || planIsDisabled}
           disabledClasses={disabledClasses}
           hideDisabledHelpIcons={hideDisabledHelpIcons}
-          disabledToolTip={disabledPlanTypesToolTip}
           disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}

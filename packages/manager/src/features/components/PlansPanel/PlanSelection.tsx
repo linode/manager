@@ -140,11 +140,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   const rowAriaDisabled =
-    isSamePlan ||
-    planTooSmall ||
-    isPlanSoldOut ||
-    isDisabledClass ||
-    planIsDisabled;
+    isSamePlan || planTooSmall || isDisabledClass || planIsDisabled;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -158,10 +154,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               ? onSelect(type.id)
               : undefined
           }
-          aria-disabled={isSamePlan || planTooSmall || isDisabled || disabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
-          disabled={isSamePlan || planTooSmall || isDisabled || disabled}
           key={type.id}
         >
           <StyledRadioCell>
