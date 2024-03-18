@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { typeFactory } from 'src/factories/types';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
@@ -64,8 +64,8 @@ describe('ConfigureForm component with price comparison', () => {
 
   beforeEach(() => {
     server.use(
-      rest.get('*/linode/types/g6-standard-1', (req, res, ctx) => {
-        return res(ctx.json(mockLinodeType));
+      http.get('*/linode/types/g6-standard-1', () => {
+        return HttpResponse.json(mockLinodeType);
       })
     );
   });
