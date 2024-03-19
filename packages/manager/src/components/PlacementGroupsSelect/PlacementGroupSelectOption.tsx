@@ -49,8 +49,8 @@ export const PlacementGroupSelectOption = ({
         }
         componentsProps={{
           root: {
-            'data-qa-option': value,
-            'data-testid': value,
+            'data-qa-option': value.label,
+            'data-testid': `pg-option-${value.id}`,
           } as ListItemComponentsPropsOverrides,
         }}
         onClick={(e) =>
@@ -60,17 +60,15 @@ export const PlacementGroupSelectOption = ({
             ? props.onClick(e)
             : null
         }
-        aria-disabled={undefined}
+        aria-disabled={disabled}
       >
-        <>
-          <Box alignItems="center" display="flex" flexGrow={1}>
-            {label}
-            {disabled && (
-              <Box sx={visuallyHidden}>{PLACEMENT_GROUP_HAS_NO_CAPACITY}</Box>
-            )}
-          </Box>
-          {selected && <SelectedIcon visible={selected} />}
-        </>
+        <Box alignItems="center" display="flex" flexGrow={1}>
+          {label}
+          {disabled && (
+            <Box sx={visuallyHidden}>{PLACEMENT_GROUP_HAS_NO_CAPACITY}</Box>
+          )}
+        </Box>
+        {selected && <SelectedIcon visible={selected} />}
       </StyledListItem>
     </Tooltip>
   );
