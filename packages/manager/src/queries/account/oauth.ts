@@ -6,7 +6,6 @@ import {
   Params,
   createOAuthClient,
   deleteOAuthClient,
-  getOAuthClients,
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
@@ -14,29 +13,25 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-import { queryKey as accountQueryKey } from './account';
-
-const queryKey = [accountQueryKey, 'oauth'];
+import { accountQueries } from './queries';
 
 export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
-  useQuery(
-    [...queryKey, 'paginated', params, filter],
-    () => getOAuthClients(params, filter),
-    {
-      keepPreviousData: true,
-    }
-  );
+  useQuery({
+    ...accountQueries.oauthClients(params, filter),
+    keepPreviousData: true,
+  });
 
 export const useResetOAuthClientMutation = (id: string) =>
-  useMutation<OAuthClient & { secret: string }, APIError[]>(() =>
-    resetOAuthClientSecret(id)
-  );
+  useMutation<OAuthClient & { secret: string }, APIError[]>({
+    mutationFn: () => resetOAuthClientSecret(id),
+  });
 
 export const useDeleteOAuthClientMutation = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteOAuthClient(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteOAuthClient(id),
     onSuccess() {
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries(accountQueries.oauthClients._def);
     },
   });
 };
@@ -47,27 +42,26 @@ export const useCreateOAuthClientMutation = () => {
     OAuthClient & { secret: string },
     APIError[],
     OAuthClientRequest
-  >(createOAuthClient, {
+  >({
+    mutationFn: createOAuthClient,
     onSuccess() {
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries(accountQueries.oauthClients._def);
     },
   });
 };
 
 export const useUpdateOAuthClientMutation = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation<OAuthClient, APIError[], Partial<OAuthClientRequest>>(
-    (data) => updateOAuthClient(id, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(queryKey);
-      },
-    }
-  );
+  return useMutation<OAuthClient, APIError[], Partial<OAuthClientRequest>>({
+    mutationFn: (data) => updateOAuthClient(id, data),
+    onSuccess() {
+      queryClient.invalidateQueries(accountQueries.oauthClients._def);
+    },
+  });
 };
 
 export const oauthClientsEventHandler = ({ queryClient }: EventHandlerData) => {
   // We may over-fetch because on `onSuccess` also invalidates, but this will be
   // good for UX because Cloud will always be up to date
-  queryClient.invalidateQueries(queryKey);
+  queryClient.invalidateQueries(accountQueries.oauthClients._def);
 };

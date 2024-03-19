@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
+import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 export const LinodesLandingCSVDownload = () => {

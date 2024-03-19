@@ -9,7 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { useUpdateOAuthClientMutation } from 'src/queries/accountOAuth';
+import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {

@@ -14,7 +14,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useVlansQuery } from 'src/queries/vlans';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
