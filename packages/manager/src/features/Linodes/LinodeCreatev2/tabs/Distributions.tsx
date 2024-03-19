@@ -17,7 +17,7 @@ export const Distributions = () => {
       <Typography variant="h2">Choose a Distribution</Typography>
       <ImageSelectv2
         errorText={fieldState.error?.message}
-        onChange={(_, image) => field.onChange(image?.id)}
+        onChange={(_, image) => field.onChange(image?.id ?? null)}
         value={field.value}
         variant="public"
       />
