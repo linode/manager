@@ -41,7 +41,7 @@ interface FooterProps {
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
 }
 
 export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {

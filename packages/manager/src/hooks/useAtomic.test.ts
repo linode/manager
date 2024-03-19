@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAtomic } from './useAtomic';
 
 describe('useAtomic', () => {
-  it('batches updates', async () => {
+  it('atomically updates', async () => {
     const { result } = renderHook(() => {
       const [tags, setTags] = useState<string[]>([]);
       const updateTags = (tags: string[]) =>
@@ -56,6 +56,34 @@ describe('useAtomic', () => {
 
     await waitFor(() => {
       expect(result.current).toEqual(['tag2']);
+    });
+  });
+
+  it('batches updates when debounce is specified', async () => {
+    const calls: string[][] = [];
+    const callFn = (items: string[]) =>
+      new Promise<void>((resolve) => {
+        calls.push(items);
+        resolve();
+      });
+
+    renderHook(() => {
+      const callFnAtomic = useAtomic([], callFn, 100);
+      useEffect(() => {
+        setTimeout(() => {
+          callFnAtomic((items) => [...items, 'item1']);
+        }, 0);
+        setTimeout(() => {
+          callFnAtomic((items) => [...items, 'item2']);
+        }, 50);
+        setTimeout(() => {
+          callFnAtomic((items) => [...items, 'item3']);
+        }, 200);
+      }, []);
+    });
+
+    await waitFor(() => {
+      expect(calls).toEqual([['item1', 'item2'], ['item3']]);
     });
   });
 });

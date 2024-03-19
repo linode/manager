@@ -41,11 +41,6 @@ import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
-interface TagDrawerProps {
-  open: boolean;
-  tags: string[];
-}
-
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
@@ -97,10 +92,7 @@ const LinodeDetailHeader = () => {
   );
   const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
-  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
-    open: false,
-    tags: [],
-  });
+  const [tagDrawerOpen, setTagDrawerOpen] = React.useState<boolean>(false);
 
   const history = useHistory();
 
@@ -127,20 +119,15 @@ const LinodeDetailHeader = () => {
   };
 
   const closeTagDrawer = () => {
-    setTagDrawer((tagDrawer) => ({ ...tagDrawer, open: false }));
+    setTagDrawerOpen(false);
   };
 
-  const openTagDrawer = (tags: string[]) => {
-    setTagDrawer({
-      open: true,
-      tags,
-    });
+  const openTagDrawer = () => {
+    setTagDrawerOpen(true);
   };
 
   const updateTags = (tags: string[]) => {
-    return updateLinode({ tags }).then((_) => {
-      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
-    });
+    return updateLinode({ tags });
   };
 
   const {
@@ -295,8 +282,8 @@ const LinodeDetailHeader = () => {
       <TagDrawer
         entityLabel={linode.label}
         onClose={closeTagDrawer}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
+        open={tagDrawerOpen}
+        tags={linode.tags}
         updateTags={updateTags}
       />
       <EnableBackupsDialog

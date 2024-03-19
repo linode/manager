@@ -15,7 +15,7 @@ import { AddTag } from './AddTag';
 
 interface TagCellProps {
   disabled?: boolean;
-  listAllTags?: (tags: string[]) => void;
+  listAllTags?: () => void;
   sx?: SxProps;
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
@@ -40,9 +40,16 @@ export const TagCell = (props: TagCellProps) => {
   const { disabled, listAllTags, sx, tags } = props;
 
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
+  const [addingTags, setAddingTags] = React.useState(() => new Set<string>());
   const [deletingTags, setDeletingTags] = React.useState(
     () => new Set<string>()
   );
+
+  const displayTags = React.useMemo(
+    () => Array.from(new Set([...tags, ...Array.from(addingTags)])).sort(),
+    [addingTags, tags]
+  );
+
   const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
 
   const windowDimensions = useWindowDimensions();
@@ -50,21 +57,35 @@ export const TagCell = (props: TagCellProps) => {
   const [hasOverflow, setHasOverflow] = React.useState(false);
   React.useLayoutEffect(() => {
     setHasOverflow(!!elRef && checkOverflow(elRef));
-  }, [windowDimensions, tags, elRef]);
+  }, [windowDimensions, displayTags, elRef]);
 
-  const updateTagsAtomic = useAtomic(tags, props.updateTags);
+  const updateTagsAtomic = useAtomic(tags, props.updateTags, 1000);
 
-  const handleAddTag = (tag: string) =>
-    updateTagsAtomic((tags) => [...tags, tag]);
+  const handleAddTag = (tag: string) => {
+    setAddingTags((prev) => new Set(prev.add(tag)));
+    return updateTagsAtomic((tags) => [...tags, tag]).finally(() => {
+      addingTags.delete(tag);
+    });
+  };
 
   const handleDeleteTag = (tagToDelete: string) => {
     setDeletingTags((prev) => new Set(prev.add(tagToDelete)));
     updateTagsAtomic((tags) =>
       tags.filter((tag) => tag != tagToDelete)
     ).finally(() => {
-      setDeletingTags((prev) => (prev.delete(tagToDelete), new Set(prev)));
+      deletingTags.delete(tagToDelete);
     });
   };
+
+  React.useEffect(() => {
+    const tagSet = new Set(tags);
+    setDeletingTags(
+      (prev) => new Set(Array.from(prev).filter((tag) => tagSet.has(tag)))
+    );
+    setAddingTags(
+      (prev) => new Set(Array.from(prev).filter((tag) => !tagSet.has(tag)))
+    );
+  }, [tags]);
 
   const panelView = listAllTags == undefined;
 
@@ -98,7 +119,7 @@ export const TagCell = (props: TagCellProps) => {
           {addingTag && (
             <AddTag
               addTag={handleAddTag}
-              existingTags={tags}
+              existingTags={displayTags}
               onClose={() => setAddingTag(false)}
             />
           )}
@@ -117,13 +138,13 @@ export const TagCell = (props: TagCellProps) => {
             ref={setElRef}
             wrap={listAllTags == undefined}
           >
-            {tags.map((thisTag) => (
+            {displayTags.map((thisTag) => (
               <StyledTag
                 colorVariant="lightBlue"
                 disabled={disabled}
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
-                loading={deletingTags.has(thisTag)}
+                loading={deletingTags.has(thisTag) || addingTags.has(thisTag)}
                 onDelete={disabled ? undefined : () => handleDeleteTag(thisTag)}
               />
             ))}
@@ -132,8 +153,8 @@ export const TagCell = (props: TagCellProps) => {
             <StyledIconButton
               aria-label="Display all tags"
               disableRipple
-              onClick={() => listAllTags(tags)}
-              onKeyPress={() => listAllTags(tags)}
+              onClick={() => listAllTags()}
+              onKeyPress={() => listAllTags()}
               size="large"
             >
               <MoreHoriz />

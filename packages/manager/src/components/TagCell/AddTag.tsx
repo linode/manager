@@ -16,7 +16,6 @@ export const AddTag = (props: AddTagProps) => {
   const { addTag, existingTags, onClose } = props;
 
   const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = React.useState(false);
   const { data: profile } = useProfile();
   const {
     data: accountTags,
@@ -43,28 +42,23 @@ export const AddTag = (props: AddTagProps) => {
   ];
 
   const handleAddTag = (newTag: string) => {
-    setIsLoading(true);
-    addTag(newTag)
-      .then(() => {
-        if (accountTags) {
-          updateTagsSuggestionsData(
-            [...accountTags, { label: newTag }],
-            queryClient
-          );
-        }
-        if (onClose) {
-          onClose();
-        }
-      })
-      .finally(() => setIsLoading(false));
+    if (onClose) {
+      onClose();
+    }
+    addTag(newTag).then(() => {
+      if (accountTags) {
+        updateTagsSuggestionsData(
+          [...accountTags, { label: newTag }],
+          queryClient
+        );
+      }
+    });
   };
-
-  const loading = accountTagsLoading || isLoading;
 
   return (
     <Autocomplete
       onBlur={() => {
-        if (!isLoading && onClose) {
+        if (onClose) {
           onClose();
         }
       }}
@@ -77,10 +71,9 @@ export const AddTag = (props: AddTagProps) => {
         <li {...props}>{option.displayLabel ?? option.label}</li>
       )}
       disableClearable
-      disabled={isLoading}
       forcePopupIcon
       label={'Create or Select a Tag'}
-      loading={loading}
+      loading={accountTagsLoading}
       noOptionsText={<i>{`"${inputValue}" already added`}</i>} // Will display create option unless that tag is already added
       onInputChange={(_, value) => setInputValue(value)}
       openOnFocus
