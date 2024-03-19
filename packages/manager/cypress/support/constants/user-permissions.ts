@@ -10,6 +10,7 @@ export const userPermissionsGrants: Grants = grantsFactory.build({
     account_access: null,
     cancel_account: false,
     child_account_access: false,
+    add_databases: false,
     add_domains: false,
     add_firewalls: false,
     add_images: false,
