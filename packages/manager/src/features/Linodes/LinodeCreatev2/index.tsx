@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Stack } from 'src/components/Stack';
 import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 
+import { Details } from './Details';
 import { Error } from './Error';
 import { Plan } from './Plan';
 import { Region } from './Region';
@@ -20,6 +21,7 @@ export const LinodeCreatev2 = () => {
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
   const onSubmit: SubmitHandler<CreateLinodeRequest> = async (data) => {
+    alert(JSON.stringify(data, null, 2));
     try {
       const linode = await createLinode(data);
 
@@ -44,6 +46,7 @@ export const LinodeCreatev2 = () => {
           <Error />
           <Region />
           <Plan />
+          <Details />
           <Summary />
         </Stack>
       </form>
