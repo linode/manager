@@ -208,7 +208,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !showVPCs,
           href: '/vpcs',
           icon: <VPC />,
-          isBeta: flags.vpc, // @TODO VPC: after VPC enters GA, remove this property entirely
         },
         {
           display: 'Firewalls',
