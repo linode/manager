@@ -1,9 +1,8 @@
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
@@ -17,6 +16,9 @@ import {
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 
+import { PG_SELECT_TOOLTIP_COPY } from './constants';
+import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';
+
 import type { PlacementGroup } from '@linode/api-v4';
 import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 
@@ -26,11 +28,6 @@ interface Props {
     'handlePlacementGroupChange' | 'selectedRegionId'
   >;
 }
-
-const PG_SELECT_TOOLTIP_COPY = `
-Add your virtual machine (VM) to a group to best meet your needs.
-You may want to group VMs closer together to help improve performance, or further apart to enable high-availability configurations.
-Learn more.`;
 
 export const PlacementGroupsDetailPanel = ({
   placementGroupsSelectProps,
@@ -55,8 +52,7 @@ export const PlacementGroupsDetailPanel = ({
     selectedRegion?.capabilities.includes('Placement Group')
   );
 
-  const handlePlacementGroupChange =
-    placementGroupsSelectProps.handlePlacementGroupChange;
+  const { handlePlacementGroupChange } = placementGroupsSelectProps;
 
   const onPlacementGroupSelectChange = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
@@ -109,14 +105,17 @@ export const PlacementGroupsDetailPanel = ({
             The selected region does not currently have Placement Group
             capabilities. Only these{' '}
             <TextTooltip
+              sxTypography={{
+                fontFamily: theme.font.bold,
+              }}
               tooltipText={
-                <StyledFormattedRegionList>
+                <StyledDetailPanelFormattedRegionList>
                   {allRegionsWithPlacementGroupCapability?.map((region) => (
                     <ListItem key={region.id}>
                       {region.label} ({region.id})
                     </ListItem>
                   ))}
-                </StyledFormattedRegionList>
+                </StyledDetailPanelFormattedRegionList>
               }
               displayText="regions"
               minWidth={225}
@@ -174,12 +173,3 @@ export const PlacementGroupsDetailPanel = ({
     </>
   );
 };
-
-export const StyledFormattedRegionList = styled(List, {
-  label: 'StyledFormattedRegionList',
-})(({ theme }) => ({
-  '& li': {
-    padding: `4px 0`,
-  },
-  padding: `${theme.spacing(0.5)} ${theme.spacing()}`,
-}));
