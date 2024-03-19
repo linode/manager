@@ -9,40 +9,29 @@ import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/Plac
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
-import {
-  hasPlacementGroupReachedCapacity,
-  hasRegionReachedPlacementGroupCapacity,
-} from 'src/features/PlacementGroups/utils';
+import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions';
 
-import { PG_SELECT_TOOLTIP_COPY } from './constants';
+import { PLACEMENT_GROUP_SELECT_TOOLTIP_COPY } from './constants';
 import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';
 
 import type { PlacementGroup } from '@linode/api-v4';
-import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 
 interface Props {
-  placementGroupsSelectProps: Pick<
-    PlacementGroupsSelectProps,
-    'handlePlacementGroupChange' | 'selectedRegionId'
-  >;
+  handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  selectedRegionId?: string;
 }
 
-export const PlacementGroupsDetailPanel = ({
-  placementGroupsSelectProps,
-}: Props) => {
+export const PlacementGroupsDetailPanel = (props: Props) => {
   const theme = useTheme();
-  const { selectedRegionId } = placementGroupsSelectProps;
+  const { handlePlacementGroupChange, selectedRegionId } = props;
   const { data: allPlacementGroups } = useUnpaginatedPlacementGroupsQuery();
   const { data: regions } = useRegionsQuery();
   const [
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
-  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
-    PlacementGroup | undefined
-  >();
 
   const selectedRegion = regions?.find(
     (thisRegion) => thisRegion.id === selectedRegionId
@@ -52,15 +41,8 @@ export const PlacementGroupsDetailPanel = ({
     selectedRegion?.capabilities.includes('Placement Group')
   );
 
-  const { handlePlacementGroupChange } = placementGroupsSelectProps;
-
-  const onPlacementGroupSelectChange = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-    handlePlacementGroupChange(placementGroup);
-  };
-
   const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
-    onPlacementGroupSelectChange(placementGroup);
+    handlePlacementGroupChange(placementGroup);
   };
 
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
@@ -68,13 +50,6 @@ export const PlacementGroupsDetailPanel = ({
   );
   const isPlacementGroupSelectDisabled =
     !selectedRegionId || !hasRegionPlacementGroupCapability;
-
-  const errorText = hasPlacementGroupReachedCapacity({
-    placementGroup: selectedPlacementGroup,
-    region: selectedRegion,
-  })
-    ? "This Placement Group doesn't have any capacity"
-    : undefined;
 
   const placementGroupSelectLabel = selectedRegion
     ? `Placement Groups in ${selectedRegion.label} (${selectedRegion.id})`
@@ -124,45 +99,42 @@ export const PlacementGroupsDetailPanel = ({
           </Typography>
         </Notice>
       )}
-      {placementGroupsSelectProps && (
-        <Box>
-          <PlacementGroupsSelect
-            {...placementGroupsSelectProps}
-            handlePlacementGroupChange={(placementGroup) => {
-              onPlacementGroupSelectChange(placementGroup);
-            }}
-            sx={{
-              mb: 1,
-              width: '100%',
-            }}
-            disabled={isPlacementGroupSelectDisabled}
-            errorText={errorText}
-            key={selectedRegion?.id}
-            label={placementGroupSelectLabel}
-            noOptionsMessage="There are no Placement Groups in this region"
-            textFieldProps={{ tooltipText: PG_SELECT_TOOLTIP_COPY }}
-          />
-          {selectedRegion && hasRegionPlacementGroupCapability && (
-            <Button
-              disabled={hasRegionReachedPlacementGroupCapacity({
-                allPlacementGroups,
-                region: selectedRegion,
-              })}
-              sx={(theme) => ({
-                fontFamily: theme.font.normal,
-                fontSize: '0.875rem',
-                mt: -0.75,
-                p: 0,
-              })}
-              onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
-              tooltipText="This region has reached its Placement Group capacity."
-              variant="text"
-            >
-              Create Placement Group
-            </Button>
-          )}
-        </Box>
-      )}
+      <Box>
+        <PlacementGroupsSelect
+          handlePlacementGroupChange={(placementGroup) => {
+            handlePlacementGroupChange(placementGroup);
+          }}
+          sx={{
+            mb: 1,
+            width: '100%',
+          }}
+          disabled={isPlacementGroupSelectDisabled}
+          key={selectedRegion?.id}
+          label={placementGroupSelectLabel}
+          noOptionsMessage="There are no Placement Groups in this region"
+          selectedRegion={selectedRegion}
+          textFieldProps={{ tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY }}
+        />
+        {selectedRegion && hasRegionPlacementGroupCapability && (
+          <Button
+            disabled={hasRegionReachedPlacementGroupCapacity({
+              allPlacementGroups,
+              region: selectedRegion,
+            })}
+            sx={(theme) => ({
+              fontFamily: theme.font.normal,
+              fontSize: '0.875rem',
+              mt: -0.75,
+              p: 0,
+            })}
+            onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
+            tooltipText="This region has reached its Placement Group capacity."
+            variant="text"
+          >
+            Create Placement Group
+          </Button>
+        )}
+      </Box>
       <PlacementGroupsCreateDrawer
         allPlacementGroups={allPlacementGroups || []}
         onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}

@@ -648,10 +648,6 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
-            placementGroupsSelectProps={{
-              handlePlacementGroupChange,
-              selectedRegionId: selectedRegionID,
-            }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
@@ -659,6 +655,8 @@ export class LinodeCreate extends React.PureComponent<
             }
             data-qa-details-panel
             error={hasErrorFor.placement_group}
+            handlePlacementGroupChange={handlePlacementGroupChange}
+            selectedRegionId={selectedRegionID}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
