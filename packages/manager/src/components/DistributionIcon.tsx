@@ -1,18 +1,16 @@
 import 'font-logos/assets/font-logos.css';
 import React from 'react';
 
+import { Box } from './Box';
+
+import type { BoxProps } from './Box';
 import type { Image } from '@linode/api-v4';
 
-interface Props {
+interface Props extends BoxProps {
   /**
    * The Linux distribution name
    */
   distribution: Image['vendor'];
-  /**
-   * An optional size for the icon
-   * @default '1.8em'
-   */
-  size?: React.CSSProperties['fontSize'];
 }
 
 /**
@@ -21,19 +19,13 @@ interface Props {
  * Uses https://github.com/Lukas-W/font-logos
  */
 export const DistributionIcon = (props: Props) => {
-  const { distribution, size } = props;
+  const { distribution, ...rest } = props;
 
   const className = distribution
     ? `fl-${distroIcons[distribution] ?? 'tux'}`
     : `fl-tux`;
 
-  return (
-    <i
-      className={className}
-      data-testid="distro-icon"
-      style={{ fontSize: size ?? '1.8em' }}
-    />
-  );
+  return <Box className={className} data-testid="distro-icon" {...rest} />;
 };
 
 /**

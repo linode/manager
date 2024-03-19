@@ -23,7 +23,11 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
   return (
     <li {...listItemProps} style={{ maxHeight: 35 }}>
       <Stack alignItems="center" direction="row" flexGrow={1} gap={2}>
-        <DistributionIcon distribution={image.vendor} />
+        <DistributionIcon
+          distribution={image.vendor}
+          fontSize="1.8em"
+          lineHeight="1.8em"
+        />
         <Typography color="inherit">{image.label}</Typography>
         <Stack flexGrow={1} />
         {flags.metadata && image.capabilities.includes('cloud-init') && (

@@ -26,18 +26,4 @@ describe('DistributionIcon', () => {
 
     expect(getByTestId('distro-icon')).toHaveClass('fl-tux');
   });
-  it('defaults to 1.8em', () => {
-    const { getByTestId } = renderWithTheme(
-      <DistributionIcon distribution="Alpine" />
-    );
-
-    expect(getByTestId('distro-icon')).toHaveStyle({ fontSize: '1.8em' });
-  });
-  it('allows size to be overwritten', () => {
-    const { getByTestId } = renderWithTheme(
-      <DistributionIcon distribution="Alpine" size="14px" />
-    );
-
-    expect(getByTestId('distro-icon')).toHaveStyle({ fontSize: '14px' });
-  });
 });
