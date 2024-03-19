@@ -19,7 +19,7 @@ import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCe
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';

@@ -1,8 +1,8 @@
 import { addPromotion } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -10,7 +10,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { queryKey } from 'src/queries/account';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles()(() => ({
@@ -51,7 +51,7 @@ const PromoDialog = (props: Props) => {
         enqueueSnackbar('Successfully applied promo to your account.', {
           variant: 'success',
         });
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries(accountQueries.account.queryKey);
         onClose();
       })
       .catch((error: APIError[]) => {

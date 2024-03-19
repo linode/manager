@@ -2,6 +2,8 @@
 
 [TanStack Query](https://tanstack.com/query/latest) (formerly React Query) is Cloud Manager's primary tool for fetching and caching API data. For a quick introduction, read our [Fetching Data](../development-guide/05-fetching-data.md#react-query) development guide. 
 
+You can find all of Cloud Manager's queries and mutations in `packages/manager/src/queries`.
+
 ## Query Keys
 
 React Query's cache is a simple key-value store. Query Keys are serializable strings that uniquely identify a query's data in the cache. You can read more about the concept [here](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys) in the TanStack Query docs.
@@ -12,6 +14,12 @@ Because of Cloud Manager's complexity, we use [`@lukemorales/query-key-factory`]
 
 #### Simple Query
 
+> [!note]
+> Queries that have no parameters _must_ specify `null` for the query key. 
+> Using `null` tells the query key factory to not append any params to the query key.
+> (See the profile example below)
+
+
 ```ts
 import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "@linode/api-v4";
@@ -20,7 +28,7 @@ import type { APIError, Profile } from "@linode/api-v4";
 const profileQueries = createQueryKeys('profile', {
   profile: {
     queryFn: getProfile,
-    queryKey: null,
+    queryKey: null, // queryKey will be ["profile", "profile"]
   },
 });
 
@@ -41,7 +49,7 @@ import type { APIError, Linode } from "@linode/api-v4";
 const linodeQueries = createQueryKeys('linodes', {
   linode: (id: number) => ({
     queryFn: () => getLinode(id),
-    queryKey: [id],
+    queryKey: [id], // queryKey will be ["linodes", "linode", id]
   }),
 });
 
@@ -49,13 +57,22 @@ export const useLinodeQuery = (id: number) =>
   useQuery<Linode, APIError[]>(linodeQueries.linode(1));
 ```
 
+### Additional Reading on Query Keys
+
+- https://tkdodo.eu/blog/effective-react-query-keys#effective-react-query-keys
+- https://tanstack.com/query/latest/docs/framework/react/guides/query-keys
+
 ## Maintaining the Cache
 
-> A significant challenge of React Query is keeping the client state in sync with the server. 
+A significant challenge of React Query is keeping the client state in sync with the server. 
 
 The two easiest ways of updating the cache using React Query are
 - Using `invalidateQueries` to mark data as stale (which will trigger a refetch the next time the query is mounted) 
 - Using `setQueryData` to manually update the cache
+
+> [!note]
+> Place `invalidateQueries` and `setQueryData` calls in the `onSuccess` of `useMutation` hooks
+> whenever possible.
 
 ### `invalidateQueries`
 
@@ -85,11 +102,11 @@ import type { APIError, Linode, ResourcePage } from "@linode/api-v4";
 const linodeQueries = createQueryKeys('linodes', {
   linode: (id: number) => ({
     queryFn: () => getLinode(id),
-    queryKey: [id],
+    queryKey: [id], // queryKey will be ["linodes", "linode", id]
   }),
-  linodes: (params: Params = {}, filter: Filter = {}) => ({
+  paginated: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getLinodes(params, filter),
-    queryKey: [params, filter],
+    queryKey: [params, filter], // queryKey will be ["linodes", "paginated", params, filter]
   }),
 });
 
@@ -102,7 +119,7 @@ export const useLinodeUpdateMutation = (id: number) => {
     mutationFn: (data) => updateLinode(id, data),
     onSuccess(linode) {
       // Invalidate all paginated pages in the cache.
-      queryClient.invalidateQueries(linodeQueries.linodes._def);
+      queryClient.invalidateQueries(linodeQueries.paginated._def);
       // Because we have the updated Linode, we can manually set the cache for the `useLinode` query.
       queryClient.setQueryData(linodeQueries.linode(id).queryKey, linode);
     },
@@ -114,8 +131,10 @@ export const useDeleteLinodeMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteLinode(id),
     onSuccess() {
+      // Invalidate all paginated pages in the cache.
+      queryClient.invalidateQueries(linodeQueries.paginated._def);
+      // Remove the deleted linode from the cache
       queryClient.removeQueries(linodeQueries.linode(id).queryKey);
-      queryClient.invalidateQueries(linodeQueries.linodes._def);
     },
   });
 };
@@ -126,10 +145,24 @@ export const useCreateLinodeMutation = () => {
     mutationFn: createLinode,
     onSuccess(linode) {
       // Invalidate all paginated pages in the cache. We don't know what page the new Linode will be on.
-      queryClient.invalidateQueries(linodeQueries.linodes._def);
+      queryClient.invalidateQueries(linodeQueries.paginated._def);
       // Because we have the new Linode, we can manually set the cache for the `useLinode` query.
       queryClient.setQueryData(linodeQueries.linode(id).queryKey, linode);
     },
   });
 }
 ```
+
+## Frequently Asked Questions
+
+### Are we storing dupdate data in the cache? Why?
+
+Yes, there is potential for the same data to exist many times in the cache.
+
+For example, we have a query `useVolumesQuery` with the query key `["volumes", "paginated", { page: 1 }]` that contains the first 100 volumes on your account.
+One of those same volumes could also be stored in the cache by using `useVolumeQuery` with query key `["linodes", "linode", 5]`.
+This creates a senerio where the same volume is cached by React Query under multiple query keys.
+
+This is a legitimate disadvantage of React Query's caching strategy. **We must be aware of this when we perform cache updates (using invalidations or manually updating the cache) so that the entity is update everywhere in the cache.**
+
+Some data fetching tools like Apollo Client are able to intelligently detect duplicate entities and merge them. React Query does not do this. See [this tweet](https://twitter.com/tannerlinsley/status/1557395389531074560) from the creator of React Query.

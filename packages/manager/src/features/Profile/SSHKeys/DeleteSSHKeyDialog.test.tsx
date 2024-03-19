@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DeleteSSHKeyDialog from './DeleteSSHKeyDialog';
@@ -34,8 +34,8 @@ describe('DeleteSSHKeyDialog', () => {
 
   it('should submit and call onClose', async () => {
     server.use(
-      rest.delete('*/profile/sshkeys/0', (req, res, ctx) => {
-        return res(ctx.json({}));
+      http.delete('*/profile/sshkeys/0', () => {
+        return HttpResponse.json({});
       })
     );
 

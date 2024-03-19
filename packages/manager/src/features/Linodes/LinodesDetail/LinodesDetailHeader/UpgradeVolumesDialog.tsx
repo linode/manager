@@ -8,7 +8,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

@@ -1,15 +1,11 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-
 import { imageFactory } from 'src/factories';
 import { linodeFactory } from 'src/factories/linodes';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { SelectLinodeRow } from './SelectLinodeRow';
-
-const loadingTestId = 'circle-progress';
 
 describe('SelectLinodeRow', () => {
   const handlePowerOff = vi.fn();
@@ -23,35 +19,25 @@ describe('SelectLinodeRow', () => {
     });
 
     server.use(
-      rest.get('*/linode/instances/:linodeId', (req, res, ctx) => {
-        return res(ctx.json(linode1));
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(linode1);
       }),
-      rest.get('*/images/:imageId', (req, res, ctx) => {
-        return res(ctx.json(image1));
+      http.get('*/images/:imageId', () => {
+        return HttpResponse.json(image1);
       })
     );
 
-    const {
-      findByText,
-      getAllByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
+    const { findByText, getAllByRole, getByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
           handleSelection={handleSelection}
-          linodeId={linode1.id}
+          linode={linode1}
           selected
           showPowerActions
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText(linode1.label);
     getByText('Running');
@@ -79,30 +65,25 @@ describe('SelectLinodeRow', () => {
       label: 'Debian 10',
     });
     server.use(
-      rest.get('*/linode/instances/:linodeId', (req, res, ctx) => {
-        return res(ctx.json(linode1));
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(linode1);
       }),
-      rest.get('*/images/:imageId', (req, res, ctx) => {
-        return res(ctx.json(image1));
+      http.get('*/images/:imageId', () => {
+        return HttpResponse.json(image1);
       })
     );
 
-    const { findByText, getByTestId, getByText, queryByText } = renderWithTheme(
+    const { findByText, getByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
           handleSelection={handleSelection}
-          linodeId={linode1.id}
+          linode={linode1}
           selected
           showPowerActions
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText(linode1.label);
     getByText('Offline');
@@ -123,30 +104,25 @@ describe('SelectLinodeRow', () => {
       label: 'Debian 10',
     });
     server.use(
-      rest.get('*/linode/instances/:linodeId', (req, res, ctx) => {
-        return res(ctx.json(linode1));
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(linode1);
       }),
-      rest.get('*/images/:imageId', (req, res, ctx) => {
-        return res(ctx.json(image1));
+      http.get('*/images/:imageId', () => {
+        return HttpResponse.json(image1);
       })
     );
 
-    const { findByText, getByTestId, getByText, queryByText } = renderWithTheme(
+    const { findByText, getByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <SelectLinodeRow
           handlePowerOff={handlePowerOff}
           handleSelection={handleSelection}
-          linodeId={linode1.id}
+          linode={linode1}
           selected
           showPowerActions={false}
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText(linode1.label);
     getByText('Running');

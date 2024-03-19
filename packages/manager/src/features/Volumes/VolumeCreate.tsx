@@ -24,7 +24,7 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';

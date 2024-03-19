@@ -5,7 +5,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 const VPCCreate = React.lazy(() => import('./VPCCreate/VPCCreate'));

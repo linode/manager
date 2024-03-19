@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { imageFactory, linodeTypeFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -193,8 +193,8 @@ const attachVLANTestId = 'attach-vlan';
 describe('AddonsPanel', () => {
   beforeEach(() => {
     server.use(
-      rest.get('*/images/*', (req, res, ctx) => {
-        return res(ctx.json(imageFactory.build()));
+      http.get('*/images/*', () => {
+        return HttpResponse.json(imageFactory.build());
       })
     );
   });

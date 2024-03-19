@@ -3,7 +3,7 @@ import React from 'react';
 
 import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesList } from './HostNamesList';
@@ -21,12 +21,12 @@ const mockObjectStorageKey = {
 describe('HostNamesList', () => {
   it('renders without crashing', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const regions = regionFactory.buildList(1, {
           id: 'us-central',
           label: 'Fake Region, NC',
         });
-        return res(ctx.json(makeResourcePage(regions)));
+        return HttpResponse.json(makeResourcePage(regions));
       })
     );
 
