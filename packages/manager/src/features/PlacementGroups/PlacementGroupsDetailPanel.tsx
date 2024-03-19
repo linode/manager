@@ -111,7 +111,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           disabled={isPlacementGroupSelectDisabled}
           key={selectedRegion?.id}
           label={placementGroupSelectLabel}
-          noOptionsMessage="There are no Placement Groups in this region"
+          noOptionsMessage="There are no Placement Groups in this region."
           selectedRegion={selectedRegion}
           textFieldProps={{ tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY }}
         />
