@@ -140,12 +140,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const { isACLBEnabled } = useIsACLBEnabled();
 
   const prefetchObjectStorage = () => {
@@ -205,7 +199,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           display: 'VPC',
-          hide: !showVPCs,
           href: '/vpcs',
           icon: <VPC />,
         },
@@ -301,7 +294,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.databaseBeta,
       isACLBEnabled,
       flags.placementGroups,
-      showVPCs,
     ]
   );
 
