@@ -23,7 +23,7 @@ export const useLinodeCreateQueryParams = () => {
 
   const updateParams = (params: Partial<LinodeCreateQueryParams>) => {
     const newParams = new URLSearchParams({ ...rawParams, ...params });
-    history.replace({ search: newParams.toString() });
+    history.push({ search: newParams.toString() });
   };
 
   const params = {
