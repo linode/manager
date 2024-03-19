@@ -3,14 +3,16 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
 import { profileFactory } from 'src/factories/profile';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 
-// Mock the useProfile hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useProfile and useGrants hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
+  useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
@@ -19,6 +21,14 @@ vi.mock('src/queries/profile', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
+  };
+});
+
+vi.mock('src/queries/grants', async () => {
+  const actual = await vi.importActual<any>('src/queries/grants');
+  return {
+    ...actual,
+    useGrants: queryMocks.useGrants,
   };
 });
 
@@ -55,8 +65,10 @@ describe('Create API Token Drawer', () => {
 
   it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
     server.use(
-      rest.post('*/profile/tokens', (req, res, ctx) => {
-        return res(ctx.json(appTokenFactory.build({ token: 'secret-value' })));
+      http.post('*/profile/tokens', () => {
+        return HttpResponse.json(
+          appTokenFactory.build({ token: 'secret-value' })
+        );
       })
     );
 
@@ -97,6 +109,24 @@ describe('Create API Token Drawer', () => {
     });
     const childScope = getByText('Child Account Access');
     expect(childScope).toBeInTheDocument();
+  });
+
+  it('Should not the Child Account Access scope for a restricted parent user account without the child_account_access grant', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
+    });
+    queryMocks.useProfile.mockReturnValue({
+      data: grantsFactory.build({ global: { child_account_access: false } }),
+    });
+
+    const { queryByText } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
+    const childScope = queryByText('Child Account Access');
+    expect(childScope).not.toBeInTheDocument();
   });
 
   it('Should not show the Child Account Access scope for a non-parent user account with the parent/child feature flag on', () => {
