@@ -60,12 +60,14 @@ export const PlacementGroupSelectOption = ({
             ? props.onClick(e)
             : null
         }
-        aria-disabled={disabled}
+        aria-disabled={undefined}
       >
         <Box alignItems="center" display="flex" flexGrow={1}>
           {label}
           {disabled && (
-            <Box sx={visuallyHidden}>{PLACEMENT_GROUP_HAS_NO_CAPACITY}</Box>
+            <Box
+              sx={visuallyHidden}
+            >{`Option disabled: ${PLACEMENT_GROUP_HAS_NO_CAPACITY}`}</Box>
           )}
         </Box>
         {selected && <SelectedIcon visible={selected} />}
