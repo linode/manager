@@ -28,28 +28,24 @@ export const PlacementGroupSelectOption = ({
   selected,
   value,
 }: PlacementGroupSelectOptionProps) => {
-  const isDisabledMenuItem = disabled;
-
   return (
     <Tooltip
       PopperProps={{
         sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
       }}
-      disableFocusListener={!isDisabledMenuItem}
-      disableHoverListener={!isDisabledMenuItem}
-      disableTouchListener={!isDisabledMenuItem}
+      disableFocusListener={!disabled}
+      disableHoverListener={!disabled}
+      disableTouchListener={!disabled}
       enterDelay={200}
       enterNextDelay={200}
       enterTouchDelay={200}
       key={value.id}
-      title={isDisabledMenuItem ? PLACEMENT_GROUP_HAS_NO_CAPACITY : ''}
+      title={disabled ? PLACEMENT_GROUP_HAS_NO_CAPACITY : ''}
     >
       <StyledListItem
         {...props}
         className={
-          isDisabledMenuItem
-            ? `${props.className} Mui-disabled`
-            : props.className
+          disabled ? `${props.className} Mui-disabled` : props.className
         }
         componentsProps={{
           root: {
@@ -58,7 +54,7 @@ export const PlacementGroupSelectOption = ({
           } as ListItemComponentsPropsOverrides,
         }}
         onClick={(e) =>
-          isDisabledMenuItem
+          disabled
             ? e.preventDefault()
             : props.onClick
             ? props.onClick(e)
@@ -69,7 +65,7 @@ export const PlacementGroupSelectOption = ({
         <>
           <Box alignItems="center" display="flex" flexGrow={1}>
             {label}
-            {isDisabledMenuItem && (
+            {disabled && (
               <Box sx={visuallyHidden}>{PLACEMENT_GROUP_HAS_NO_CAPACITY}</Box>
             )}
           </Box>
