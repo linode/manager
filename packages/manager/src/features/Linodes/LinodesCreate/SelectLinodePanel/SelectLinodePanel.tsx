@@ -198,7 +198,6 @@ export const SelectLinodePanel = (props: Props) => {
           action={'Power Off'}
           isOpen={!!powerOffLinode}
           linodeId={powerOffLinode.linodeId}
-          manuallyUpdateConfigs={true}
           onClose={() => setPowerOffLinode(false)}
         />
       )}
