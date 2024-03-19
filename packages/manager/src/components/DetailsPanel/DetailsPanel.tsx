@@ -9,23 +9,22 @@ import { Typography } from 'src/components/Typography';
 import { PlacementGroupsDetailPanel } from 'src/features/PlacementGroups/PlacementGroupsDetailPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
+import type { PlacementGroup } from '@linode/api-v4';
 
 interface DetailsPanelProps {
   error?: string;
+  handlePlacementGroupChange: (selected: PlacementGroup) => void;
   labelFieldProps?: TextFieldProps;
-  placementGroupsSelectProps: Pick<
-    PlacementGroupsSelectProps,
-    'handlePlacementGroupChange' | 'selectedRegionId'
-  >;
+  selectedRegionId?: string;
   tagsInputProps?: TagsInputProps;
 }
 
 export const DetailsPanel = (props: DetailsPanelProps) => {
   const {
     error,
+    handlePlacementGroupChange,
     labelFieldProps,
-    placementGroupsSelectProps,
+    selectedRegionId,
     tagsInputProps,
   } = props;
   const theme = useTheme();
@@ -64,9 +63,8 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
 
       {showPlacementGroups && (
         <PlacementGroupsDetailPanel
-          placementGroupsSelectProps={{
-            ...placementGroupsSelectProps,
-          }}
+          handlePlacementGroupChange={handlePlacementGroupChange}
+          selectedRegionId={selectedRegionId}
         />
       )}
     </Paper>

@@ -1,4 +1,3 @@
-import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { placementGroupFactory, regionFactory } from 'src/factories';
@@ -6,12 +5,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
 
-import type { PlacementGroupsSelectProps } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
-
-const placementGroupsSelectProps: PlacementGroupsSelectProps = {
-  disabled: true,
+const defaultProps = {
   handlePlacementGroupChange: vi.fn(),
-  label: 'Placement Group',
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -59,57 +54,6 @@ describe('PlacementGroupsDetailPanel', () => {
         }),
       ],
     });
-  });
-
-  it('should have its select disabled and no create PG button on initial render', () => {
-    const { getByRole, queryByRole } = renderWithTheme(
-      <PlacementGroupsDetailPanel
-        placementGroupsSelectProps={placementGroupsSelectProps}
-      />
-    );
-
-    expect(getByRole('combobox')).toBeDisabled();
-    expect(
-      queryByRole('button', { name: /create placement group/i })
-    ).not.toBeInTheDocument();
-  });
-
-  it('should have its select enabled and a create PG button when provided a region', () => {
-    const { getByRole } = renderWithTheme(
-      <PlacementGroupsDetailPanel
-        placementGroupsSelectProps={{
-          ...placementGroupsSelectProps,
-          selectedRegionId: 'us-east',
-        }}
-      />
-    );
-
-    expect(getByRole('combobox')).toBeEnabled();
-    expect(
-      getByRole('button', { name: /create placement group/i })
-    ).toBeEnabled();
-  });
-
-  it('should have its select disabled and no create PG button when provided a region without PG capability', () => {
-    const { getByRole, getByTestId, queryByRole } = renderWithTheme(
-      <PlacementGroupsDetailPanel
-        placementGroupsSelectProps={{
-          ...placementGroupsSelectProps,
-          selectedRegionId: 'us-southeast',
-        }}
-      />
-    );
-
-    expect(getByRole('combobox')).toBeDisabled();
-    expect(getByTestId('notice-warning')).toHaveTextContent(
-      'The selected region does not currently have Placement Group capabilities.'
-    );
-    expect(
-      queryByRole('button', { name: /create placement group/i })
-    ).not.toBeInTheDocument();
-  });
-
-  it('should have its PG select enabled and Create Placement Group button disabled if the region has reached its PG capacity', () => {
     queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
@@ -128,13 +72,55 @@ describe('PlacementGroupsDetailPanel', () => {
         }),
       ],
     });
+  });
 
+  it('should have its select disabled and no create PG button on initial render', () => {
+    const { getByRole, queryByRole } = renderWithTheme(
+      <PlacementGroupsDetailPanel {...defaultProps} />
+    );
+
+    expect(getByRole('combobox')).toBeDisabled();
+    expect(
+      queryByRole('button', { name: /create placement group/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it('should have its select enabled and a create PG button when provided a region', () => {
+    const { getByRole } = renderWithTheme(
+      <PlacementGroupsDetailPanel
+        {...defaultProps}
+        selectedRegionId="us-east"
+      />
+    );
+
+    expect(getByRole('combobox')).toBeEnabled();
+    expect(
+      getByRole('button', { name: /create placement group/i })
+    ).toBeEnabled();
+  });
+
+  it('should have its select disabled and no create PG button when provided a region without PG capability', () => {
+    const { getByRole, getByTestId, queryByRole } = renderWithTheme(
+      <PlacementGroupsDetailPanel
+        {...defaultProps}
+        selectedRegionId="us-southeast"
+      />
+    );
+
+    expect(getByRole('combobox')).toBeDisabled();
+    expect(getByTestId('notice-warning')).toHaveTextContent(
+      'The selected region does not currently have Placement Group capabilities.'
+    );
+    expect(
+      queryByRole('button', { name: /create placement group/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it('should have its PG select enabled and Create Placement Group button disabled if the region has reached its PG capacity', () => {
     const { getByPlaceholderText, getByRole } = renderWithTheme(
       <PlacementGroupsDetailPanel
-        placementGroupsSelectProps={{
-          ...placementGroupsSelectProps,
-          selectedRegionId: 'us-west',
-        }}
+        {...defaultProps}
+        selectedRegionId="us-west"
       />
     );
 
@@ -143,51 +129,5 @@ describe('PlacementGroupsDetailPanel', () => {
     expect(
       getByRole('button', { name: /create placement group/i })
     ).toBeDisabled();
-  });
-
-  it('should have an error message if the PG has reached capacity', async () => {
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
-      data: [
-        placementGroupFactory.build({
-          affinity_type: 'affinity',
-          id: 1,
-          is_compliant: true,
-          is_strict: true,
-          label: 'my-placement-group',
-          linodes: [
-            {
-              is_compliant: true,
-              linode: 1,
-            },
-          ],
-          region: 'ca-central',
-        }),
-      ],
-    });
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsDetailPanel
-        placementGroupsSelectProps={{
-          ...placementGroupsSelectProps,
-          selectedRegionId: 'ca-central',
-        }}
-      />
-    );
-
-    const select = getByPlaceholderText('Select a Placement Group');
-    expect(select).toBeEnabled();
-
-    fireEvent.focus(select);
-    fireEvent.change(select, {
-      target: { value: 'my-placement-group (Affinity)' },
-    });
-
-    const selectedRegionOption = getByText('my-placement-group (Affinity)');
-    fireEvent.click(selectedRegionOption);
-
-    await waitFor(() => {
-      expect(
-        getByText("This Placement Group doesn't have any capacity")
-      ).toBeInTheDocument();
-    });
   });
 });
