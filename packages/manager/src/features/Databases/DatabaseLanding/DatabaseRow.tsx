@@ -12,7 +12,7 @@ import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';

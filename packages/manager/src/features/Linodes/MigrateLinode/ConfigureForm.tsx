@@ -8,7 +8,7 @@ import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';

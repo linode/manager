@@ -8,7 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 

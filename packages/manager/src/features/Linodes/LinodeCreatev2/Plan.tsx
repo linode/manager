@@ -4,7 +4,7 @@ import { useController, useFormContext } from 'react-hook-form';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import { extendType } from 'src/utilities/extendType';

@@ -11,7 +11,7 @@ import {
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
+import { useRegionsAvailabilityQuery } from 'src/queries/regions/regions';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';

@@ -6,7 +6,7 @@ import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/
 import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
+import { useRegionsAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
