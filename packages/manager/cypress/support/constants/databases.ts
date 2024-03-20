@@ -49,8 +49,41 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
+    id: 'g6-dedicated-2',
+  }),
+  databaseTypeFactory.build({
+    class: 'dedicated',
+    id: 'g6-dedicated-4',
+  }),
+  databaseTypeFactory.build({
+    class: 'dedicated',
+    id: 'g6-dedicated-6',
+  }),
+  databaseTypeFactory.build({
+    class: 'dedicated',
+    id: 'g6-dedicated-8',
+  }),
+  databaseTypeFactory.build({
+    class: 'dedicated',
     id: 'g6-dedicated-16',
   }),
+  databaseTypeFactory.build({
+    class: 'standard',
+    id: 'g6-standard-4',
+  }),
+  databaseTypeFactory.build({
+    class: 'standard',
+    id: 'g6-standard-8',
+  }),
+  databaseTypeFactory.build({
+    class: 'standard',
+    id: 'g6-standard-16',
+  }),
+  databaseTypeFactory.build({
+    class: 'standard',
+    id: 'g6-standard-32',
+  }),
+  
 ];
 
 // Array of database cluster configurations for which to test creation.
@@ -69,7 +102,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     dbType: 'mysql',
     engine: 'MySQL',
     label: randomLabel(),
-    linodeType: 'g6-dedicated-16',
+    linodeType: 'g6-dedicated-2',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
   },
@@ -93,3 +126,25 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     version: '13',
   },
 ];
+
+export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
+  {
+    clusterSize: 3,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-standard-16',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '8',
+  },
+  {
+    clusterSize: 3,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-dedicated-8',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '5',
+  },
+];
+
