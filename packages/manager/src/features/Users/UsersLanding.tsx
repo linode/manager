@@ -49,7 +49,7 @@ export const UsersLanding = () => {
     ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers({
+  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -162,7 +162,7 @@ export const UsersLanding = () => {
         <TableBody>
           <UsersLandingTableBody
             error={error}
-            isLoading={isLoading}
+            isLoading={isInitialLoading}
             numCols={numCols}
             onDelete={handleDelete}
             users={users?.data}
