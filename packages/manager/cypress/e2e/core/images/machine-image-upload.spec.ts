@@ -10,7 +10,6 @@ import {
   mockDeleteImage,
   mockGetAllImages,
   mockGetCustomImages,
-  mockGetImage,
   mockUpdateImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
@@ -250,7 +249,9 @@ describe('machine image', () => {
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      mockGetAllImages([imageFactory.build({ label, id: imageId, status: 'available'})]).as('getImages');
+      mockGetAllImages([
+        imageFactory.build({ label, id: imageId, status: 'available' }),
+      ]).as('getImages');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);
       cy.wait('@getImages');
