@@ -112,7 +112,7 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: 'anti_affinity',
+      affinity_type: 'anti_affinity:local',
       is_strict: true,
       label: '',
       region: selectedRegionId ?? '',

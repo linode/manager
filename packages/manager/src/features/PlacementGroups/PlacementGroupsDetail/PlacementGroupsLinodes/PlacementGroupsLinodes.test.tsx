@@ -19,10 +19,10 @@ describe('PlacementGroupsLinodes', () => {
 
   it('features the linodes table, a filter field, a create button and a docs link', () => {
     const placementGroup = placementGroupFactory.build({
-      linodes: [
+      members: [
         {
           is_compliant: true,
-          linode: 1,
+          linode_id: 1,
         },
       ],
     });

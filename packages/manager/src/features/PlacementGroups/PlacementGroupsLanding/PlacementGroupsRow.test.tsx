@@ -69,13 +69,13 @@ describe('PlacementGroupsLanding', () => {
       wrapWithTableBody(
         <PlacementGroupsRow
           placementGroup={placementGroupFactory.build({
-            affinity_type: 'anti_affinity',
+            affinity_type: 'anti_affinity:local',
             is_compliant: false,
             label: 'group 1',
-            linodes: [
+            members: [
               {
                 is_compliant: true,
-                linode: 1,
+                linode_id: 1,
               },
             ],
             region: 'us-east',
