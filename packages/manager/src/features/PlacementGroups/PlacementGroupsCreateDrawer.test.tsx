@@ -115,12 +115,12 @@ describe('PlacementGroupsCreateDrawer', () => {
         {...commonProps}
         allPlacementGroups={[
           {
-            affinity_type: 'affinity',
+            affinity_type: 'affinity:local',
             id: 1,
             is_compliant: true,
             is_strict: true,
             label: 'my-placement-group',
-            linodes: [],
+            members: [],
             region: 'us-west',
           },
         ]}
