@@ -192,7 +192,7 @@ export const PlacementGroupsCreateDrawer = (
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onClose,
+              onClick: handleDrawerClose,
             }}
             sx={{ pt: 4 }}
           />
