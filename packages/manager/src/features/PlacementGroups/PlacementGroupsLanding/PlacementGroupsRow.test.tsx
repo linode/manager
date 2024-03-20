@@ -25,8 +25,8 @@ vi.mock('src/queries/linodes/linodes', async () => {
   };
 });
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
 
   return {
     ...actual,

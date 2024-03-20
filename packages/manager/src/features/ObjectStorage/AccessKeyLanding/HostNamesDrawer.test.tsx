@@ -22,7 +22,7 @@ const mockS3Regions = [
   },
 ];
 
-vi.mock('src/queries/regions', () => ({
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: vi.fn(() => ({
     data: [
       ...regionFactory.buildList(1, { id: 'region1', label: 'Newark, NJ' }),
