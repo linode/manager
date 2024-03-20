@@ -53,7 +53,7 @@ describe('View API Token Drawer', () => {
     });
 
     const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true, vpc: true },
+      flags: { parentChildAccountAccess: true },
     });
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -71,7 +71,7 @@ describe('View API Token Drawer', () => {
 
     const { getByTestId } = renderWithTheme(
       <ViewAPITokenDrawer {...props} token={limitedToken} />,
-      { flags: { parentChildAccountAccess: true, vpc: true } }
+      { flags: { parentChildAccountAccess: true } }
     );
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -92,7 +92,7 @@ describe('View API Token Drawer', () => {
         {...props}
         token={appTokenFactory.build({ scopes: 'account:read_write' })}
       />,
-      { flags: { parentChildAccountAccess: true, vpc: true } }
+      { flags: { parentChildAccountAccess: true } }
     );
     for (const permissionName of basePerms) {
       // We only expect account to have read/write for this test
@@ -118,7 +118,7 @@ describe('View API Token Drawer', () => {
             'databases:read_only domains:read_write child_account:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
         })}
       />,
-      { flags: { parentChildAccountAccess: true, vpc: true } }
+      { flags: { parentChildAccountAccess: true } }
     );
 
     const expectedScopeLevels = {
@@ -147,23 +147,6 @@ describe('View API Token Drawer', () => {
         `This token has ${expectedScopeLevel} access for ${permissionName}`
       );
     }
-  });
-
-  it('Should show the VPC scope with the VPC feature flag on', () => {
-    const { getByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { vpc: true },
-    });
-    const vpcScope = getByText('VPCs');
-    expect(vpcScope).toBeInTheDocument();
-  });
-
-  it('Should not show the VPC scope with the VPC feature flag off', () => {
-    const { queryByText } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { vpc: false },
-    });
-
-    const vpcScope = queryByText('VPCs');
-    expect(vpcScope).not.toBeInTheDocument();
   });
 
   describe('Parent/Child: User Roles', () => {
