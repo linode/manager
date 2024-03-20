@@ -2064,46 +2064,46 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage([
         placementGroupFactory.build({
-          affinity_type: 'anti_affinity',
+          affinity_type: 'anti_affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
-          linodes: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
+          members: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
             is_compliant: true,
-            linode,
+            linode_id: linode,
           })),
           region: 'us-east',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 2,
           is_compliant: true,
           is_strict: true,
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 9,
+              linode_id: 9,
             },
             {
               is_compliant: true,
-              linode: 10,
+              linode_id: 10,
             },
             {
               is_compliant: true,
-              linode: 11,
+              linode_id: 11,
             },
           ],
           region: 'us-west',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           is_strict: true,
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 12,
+              linode_id: 12,
             },
           ],
           region: 'ca-central',
