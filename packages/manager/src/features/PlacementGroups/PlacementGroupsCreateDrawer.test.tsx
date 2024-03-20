@@ -100,7 +100,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         is_strict: true,
         label: 'my-label',
         region: 'us-east',
