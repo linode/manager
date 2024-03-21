@@ -65,13 +65,16 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     });
   };
 
+  if (!placementGroups) {
+    return null;
+  }
+
   const formatLabel = (placementGroup: PlacementGroup) =>
     `${placementGroup.label} (${AFFINITY_TYPES[placementGroup.affinity_type]})`;
 
-  const placementGroupsOptions: PlacementGroup[] =
-    placementGroups?.filter(
-      (placementGroup) => placementGroup.region === selectedRegion?.id
-    ) ?? [];
+  const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
+    (placementGroup) => placementGroup.region === selectedRegion?.id
+  );
 
   return (
     <Autocomplete
