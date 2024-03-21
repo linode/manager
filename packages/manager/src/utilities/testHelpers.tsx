@@ -175,10 +175,12 @@ const FormContextWrapper = <T extends FieldValues>(
 
 export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
   ui: React.ReactElement,
-  useFormOptions?: UseFormProps<T>
+  useFormOptions?: UseFormProps<T>,
+  options?: Options
 ) =>
   renderWithTheme(
-    <FormContextWrapper {...useFormOptions}>{ui}</FormContextWrapper>
+    <FormContextWrapper {...useFormOptions}>{ui}</FormContextWrapper>,
+    options
   );
 
 type Query = (f: MatcherFunction) => HTMLElement;

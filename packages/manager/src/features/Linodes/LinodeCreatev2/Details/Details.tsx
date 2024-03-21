@@ -6,9 +6,15 @@ import { Paper } from 'src/components/Paper';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
+
+import { PlacementGroupPanel } from './PlacementGroupPanel';
 
 export const Details = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
+  const flags = useFlags();
+
+  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
 
   return (
     <Paper>
@@ -38,6 +44,7 @@ export const Details = () => {
         control={control}
         name="tags"
       />
+      {showPlacementGroups && <PlacementGroupPanel />}
     </Paper>
   );
 };
