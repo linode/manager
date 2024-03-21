@@ -15,6 +15,7 @@ const props: PlacementGroupsSelectProps = {
   id: '',
   label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
+  selectedPlacementGroup: null,
   selectedRegion: regionFactory.build({ id: 'us-southeast' }),
 };
 

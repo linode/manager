@@ -71,8 +71,9 @@ export const useCreatePlacementGroup = () => {
     mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.setQueryData(
-        [queryKey, 'placement-groups', placementGroup.id],
+        [queryKey, 'placement-group', placementGroup.id],
         placementGroup
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -88,6 +89,7 @@ export const useMutatePlacementGroup = (id: number) => {
     mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.setQueryData(
         [queryKey, 'placement-group', id],
         placementGroup
@@ -103,6 +105,7 @@ export const useDeletePlacementGroup = (id: number) => {
     mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.removeQueries([queryKey, 'placement-group', id]);
     },
   });
