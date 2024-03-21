@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MatcherFunction, render } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import { Formik, FormikConfig, FormikValues } from 'formik';
@@ -5,7 +6,12 @@ import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  FieldValues,
+  FormProvider,
+  UseFormProps,
+  useForm,
+} from 'react-hook-form';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
@@ -13,8 +19,8 @@ import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { FlagSet } from 'src/featureFlags';
+import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
 import {
@@ -158,6 +164,22 @@ export const renderWithThemeAndFormik = <T extends FormikValues>(
   ui: React.ReactElement,
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
+
+const FormContextWrapper = <T extends FieldValues>(
+  props: UseFormProps<T> & { children: React.ReactNode }
+) => {
+  const formMethods = useForm<T>(props);
+
+  return <FormProvider {...formMethods}>{props.children}</FormProvider>;
+};
+
+export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
+  ui: React.ReactElement,
+  useFormOptions?: UseFormProps<T>
+) =>
+  renderWithTheme(
+    <FormContextWrapper {...useFormOptions}>{ui}</FormContextWrapper>
+  );
 
 type Query = (f: MatcherFunction) => HTMLElement;
 

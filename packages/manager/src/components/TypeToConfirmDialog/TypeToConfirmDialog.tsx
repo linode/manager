@@ -13,7 +13,12 @@ import {
 import { usePreferences } from 'src/queries/preferences';
 
 interface EntityInfo {
-  action?: 'cancellation' | 'deletion' | 'detachment' | 'restoration';
+  action?:
+    | 'cancellation'
+    | 'deletion'
+    | 'detachment'
+    | 'restoration'
+    | 'resizing';
   name?: string | undefined;
   primaryBtnText: string;
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';

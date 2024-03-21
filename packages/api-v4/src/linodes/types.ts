@@ -355,7 +355,7 @@ export interface CreateLinodeRequest {
   stackscript_id?: number;
   backup_id?: number;
   swap_size?: number;
-  image?: string;
+  image?: string | null;
   root_pass?: string;
   authorized_keys?: string[];
   backups_enabled?: boolean;
