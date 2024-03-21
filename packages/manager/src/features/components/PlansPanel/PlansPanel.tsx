@@ -47,6 +47,8 @@ interface Props {
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTipText?: string;
 }
 
 export const PlansPanel = (props: Props) => {
@@ -66,6 +68,8 @@ export const PlansPanel = (props: Props) => {
     selectedRegionID,
     showTransfer,
     types,
+    disabledPlanTypes,
+    disabledPlanTypesToolTipText,
   } = props;
 
   const flags = useFlags();
@@ -188,6 +192,8 @@ export const PlansPanel = (props: Props) => {
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
+              disabledPlanTypes={disabledPlanTypes}
+              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
             />
           </>
         );

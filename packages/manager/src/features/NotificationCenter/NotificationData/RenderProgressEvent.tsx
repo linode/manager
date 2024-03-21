@@ -59,7 +59,10 @@ export const RenderProgressEvent = (props: Props) => {
     <>
       <RenderEventStyledBox data-test-id={event.action} display="flex">
         <RenderEventGravatar username={event.username} />
-        <Box data-test-id={event.action} sx={{ marginTop: '-2px' }}>
+        <Box
+          data-test-id={event.action}
+          sx={{ marginTop: '-2px', width: '100%' }}
+        >
           {eventMessage}
           <BarPercent
             className={classes.bar}
