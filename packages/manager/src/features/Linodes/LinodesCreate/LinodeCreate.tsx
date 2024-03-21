@@ -49,7 +49,6 @@ import {
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -117,6 +116,7 @@ export interface LinodeCreateProps {
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
+  handlePlacementGroupChange: (placementGroup: PlacementGroup) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -147,7 +147,6 @@ export interface LinodeCreateProps {
   updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
-  updatePlacementGroupSelection: (placementGroup: PlacementGroup) => void;
   updateTags: (tags: Tag[]) => void;
   updateUserData: (userData: string) => void;
   userData: string | undefined;
@@ -277,6 +276,7 @@ export class LinodeCreate extends React.PureComponent<
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
       imagesData,
@@ -286,7 +286,6 @@ export class LinodeCreate extends React.PureComponent<
       linodesData,
       linodesError,
       linodesLoading,
-      placementGroupSelection,
       regionDisplayInfo,
       regionsData,
       regionsError,
@@ -302,7 +301,6 @@ export class LinodeCreate extends React.PureComponent<
       typesError,
       typesLoading,
       updateLabel,
-      updatePlacementGroupSelection,
       updateTags,
       updateUserData,
       userCannotCreateLinode,
@@ -326,34 +324,12 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
-    {
-      /* TODO VM_Placement: Refactor this into a util method */
-    }
-    const regionLabel = regionsData?.find((r) => r.id === selectedRegionID)
-      ?.label;
-    let placementGroupsLabel;
-    if (selectedRegionID && regionLabel) {
-      placementGroupsLabel = `Placement Groups in ${regionLabel} (${selectedRegionID})`;
-    } else {
-      placementGroupsLabel = 'Placement Group';
-    }
-
     const tagsInputProps = {
       disabled: userCannotCreateLinode,
       onChange: updateTags,
       tagError: hasErrorFor.tags,
       value: tags || [],
     };
-
-    let errorText;
-    if (
-      hasPlacementGroupReachedCapacity({
-        placementGroup: placementGroupSelection!,
-        region: regionsData.find((r) => r.id === selectedRegionID)!,
-      })
-    ) {
-      errorText = `This Placement Group doesn't have any capacity`;
-    }
 
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
@@ -672,14 +648,6 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
-            placementGroupsSelectProps={{
-              disabled: !selectedRegionID,
-              errorText,
-              handlePlacementGroupSelection: updatePlacementGroupSelection,
-              label: placementGroupsLabel,
-              noOptionsMessage: 'There are no Placement Groups in this region',
-              selectedRegionId: selectedRegionID,
-            }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
@@ -687,7 +655,8 @@ export class LinodeCreate extends React.PureComponent<
             }
             data-qa-details-panel
             error={hasErrorFor.placement_group}
-            regions={regionsData!}
+            handlePlacementGroupChange={handlePlacementGroupChange}
+            selectedRegionId={selectedRegionID}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
@@ -883,9 +852,11 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
-      placement_group: this.props.flags.placementGroups?.enabled
-        ? placement_group_payload
-        : undefined,
+      placement_group:
+        this.props.flags.placementGroups?.enabled &&
+        placement_group_payload.id !== -1
+          ? placement_group_payload
+          : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,

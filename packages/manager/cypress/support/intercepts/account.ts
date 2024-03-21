@@ -364,6 +364,15 @@ export const mockUpdateUsername = (
 };
 
 /**
+ * Intercepts GET request to retrieve account payment methods.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetPaymentMethods = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account/payment-methods*'));
+};
+
+/**
  * Intercepts GET request to retrieve account payment methods and mocks response.
  *
  * @param paymentMethods - Array of payment methods with which to respond.
@@ -413,6 +422,15 @@ export const mockGetInvoice = (invoice: Invoice): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to fetch account invoices.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetInvoices = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account/invoices*'));
+};
+
+/**
  * Intercepts GET request to fetch account invoices and mocks response.
  *
  * @param invoices - Invoice data with which to mock response.
@@ -446,6 +464,15 @@ export const mockGetInvoiceItems = (
     apiMatcher(`account/invoices/${invoice.id}/items*`),
     paginateResponse(items)
   );
+};
+
+/**
+ * Intercepts GET request to fetch account payments.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetPayments = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account/payments*'));
 };
 
 /**
