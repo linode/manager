@@ -1,5 +1,4 @@
 import {
-  CreatePlacementGroupPayload,
   NotificationType,
   ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
@@ -26,7 +25,6 @@ import {
   configurationFactory,
   configurationsEndpointHealthFactory,
   contactFactory,
-  createPlacementGroupPayloadFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -2064,7 +2062,53 @@ export const handlers = [
   // Placement Groups
   http.get('*/placement/groups', () => {
     return HttpResponse.json(
-      makeResourcePage(placementGroupFactory.buildList(3))
+      makeResourcePage([
+        placementGroupFactory.build({
+          affinity_type: 'anti_affinity:local',
+          id: 1,
+          is_compliant: true,
+          is_strict: true,
+          members: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
+            is_compliant: true,
+            linode_id: linode,
+          })),
+          region: 'us-east',
+        }),
+        placementGroupFactory.build({
+          affinity_type: 'affinity:local',
+          id: 2,
+          is_compliant: true,
+          is_strict: true,
+          members: [
+            {
+              is_compliant: true,
+              linode_id: 9,
+            },
+            {
+              is_compliant: true,
+              linode_id: 10,
+            },
+            {
+              is_compliant: true,
+              linode_id: 11,
+            },
+          ],
+          region: 'us-west',
+        }),
+        placementGroupFactory.build({
+          affinity_type: 'affinity:local',
+          id: 3,
+          is_compliant: true,
+          is_strict: true,
+          members: [
+            {
+              is_compliant: true,
+              linode_id: 12,
+            },
+          ],
+          region: 'ca-central',
+        }),
+      ])
     );
   }),
   http.get('*/placement/groups/:placementGroupId', ({ params }) => {
@@ -2078,14 +2122,15 @@ export const handlers = [
       })
     );
   }),
-  http.post<any, CreatePlacementGroupPayload>(
-    '*/placement/groups',
-    async ({ request }) => {
-      const body = await request.json();
+  http.post('*/placement/groups', async ({ request }) => {
+    const reqBody = await request.json();
+    const body = reqBody as any;
+    const response = placementGroupFactory.build({
+      ...body,
+    });
 
-      return HttpResponse.json(createPlacementGroupPayloadFactory.build(body));
-    }
-  ),
+    return HttpResponse.json(response);
+  }),
   http.put(
     '*/placement/groups/:placementGroupId',
     async ({ params, request }) => {
@@ -2119,49 +2164,49 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: Number(params.placementGroupId) ?? -1,
         label: 'pg-1',
-        linodes: [
+        members: [
           {
             is_compliant: true,
-            linode: 1,
+            linode_id: 1,
           },
           {
             is_compliant: true,
-            linode: 2,
+            linode_id: 2,
           },
           {
             is_compliant: true,
-            linode: 3,
+            linode_id: 3,
           },
           {
             is_compliant: true,
-            linode: 4,
+            linode_id: 4,
           },
           {
             is_compliant: true,
-            linode: 5,
+            linode_id: 5,
           },
           {
             is_compliant: true,
-            linode: 6,
+            linode_id: 6,
           },
           {
             is_compliant: true,
-            linode: 7,
+            linode_id: 7,
           },
           {
             is_compliant: true,
-            linode: 8,
+            linode_id: 8,
           },
           {
             is_compliant: false,
-            linode: 43,
+            linode_id: 43,
           },
           {
             is_compliant: true,
-            linode: (body as any).linodes[0],
+            linode_id: (body as any).linodes[0],
           },
         ],
       });
@@ -2175,46 +2220,46 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      affinity_type: 'anti_affinity',
+      affinity_type: 'anti_affinity:local',
       id: Number(params.placementGroupId) ?? -1,
       label: 'pg-1',
-      linodes: [
+      members: [
         {
           is_compliant: true,
-          linode: 1,
+          linode_id: 1,
         },
 
         {
           is_compliant: true,
-          linode: 2,
+          linode_id: 2,
         },
         {
           is_compliant: true,
-          linode: 3,
+          linode_id: 3,
         },
         {
           is_compliant: true,
-          linode: 4,
+          linode_id: 4,
         },
         {
           is_compliant: true,
-          linode: 5,
+          linode_id: 5,
         },
         {
           is_compliant: true,
-          linode: 6,
+          linode_id: 6,
         },
         {
           is_compliant: true,
-          linode: 7,
+          linode_id: 7,
         },
         {
           is_compliant: true,
-          linode: 8,
+          linode_id: 8,
         },
         {
           is_compliant: false,
-          linode: 43,
+          linode_id: 43,
         },
       ],
     });

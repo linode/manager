@@ -11,7 +11,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
   getDerivedVolumeStatusFromStatusAndEvent,
