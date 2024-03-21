@@ -46,7 +46,7 @@ describe('PlacementGroupsLanding', () => {
   it('renders breadcrumbs, docs link and tabs', () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_compliant: true,
         label: 'My first PG',

@@ -23,6 +23,7 @@ export interface PlacementGroupsSelectProps {
   loading?: boolean;
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
+  selectedPlacementGroup: PlacementGroup | null;
   selectedRegion?: Region;
   sx?: SxProps;
   textFieldProps?: Partial<TextFieldProps>;
@@ -40,6 +41,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     loading,
     noOptionsMessage,
     onBlur,
+    selectedPlacementGroup,
     selectedRegion,
     sx,
     ...textFieldProps
@@ -76,6 +78,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     (placementGroup) => placementGroup.region === selectedRegion?.id
   );
 
+  const selection =
+    placementGroupsOptions.find(
+      (placementGroup) => placementGroup.id === selectedPlacementGroup?.id
+    ) ?? null;
+
   return (
     <Autocomplete
       noOptionsText={
@@ -110,6 +117,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
       sx={sx}
+      value={selection}
       {...textFieldProps}
     />
   );

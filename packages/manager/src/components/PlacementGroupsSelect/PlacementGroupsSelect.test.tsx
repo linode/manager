@@ -15,6 +15,7 @@ const props: PlacementGroupsSelectProps = {
   id: '',
   label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
+  selectedPlacementGroup: null,
   selectedRegion: regionFactory.build({ id: 'us-southeast' }),
 };
 
@@ -36,15 +37,15 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 1,
+              linode_id: 1,
             },
           ],
           region: 'us-west',
@@ -69,15 +70,15 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 1,
+              linode_id: 1,
             },
           ],
           region: 'ca-central',

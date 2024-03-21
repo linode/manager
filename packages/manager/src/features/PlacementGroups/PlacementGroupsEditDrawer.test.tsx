@@ -49,7 +49,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     });
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         label: 'PG-to-edit',
         region: 'us-east',
