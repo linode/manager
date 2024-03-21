@@ -6,7 +6,9 @@ import { Images } from './Images';
 
 describe('Images', () => {
   it('renders a header', () => {
-    const { getByText } = renderWithThemeAndHookFormContext(<Images />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <Images />,
+    });
 
     const header = getByText('Choose an Image');
 
@@ -18,7 +20,9 @@ describe('Images', () => {
     const {
       getByLabelText,
       getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext(<Images />);
+    } = renderWithThemeAndHookFormContext({
+      component: <Images />,
+    });
 
     expect(getByLabelText('Images')).toBeVisible();
     expect(getByPlaceholderText('Choose an image')).toBeVisible();

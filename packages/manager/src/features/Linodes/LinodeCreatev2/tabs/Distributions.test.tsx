@@ -6,7 +6,9 @@ import { Distributions } from './Distributions';
 
 describe('Distributions', () => {
   it('renders a header', () => {
-    const { getByText } = renderWithThemeAndHookFormContext(<Distributions />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <Distributions />,
+    });
 
     const header = getByText('Choose a Distribution');
 
@@ -18,7 +20,9 @@ describe('Distributions', () => {
     const {
       getByLabelText,
       getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext(<Distributions />);
+    } = renderWithThemeAndHookFormContext({
+      component: <Distributions />,
+    });
 
     expect(getByLabelText('Images')).toBeVisible();
     expect(getByPlaceholderText('Choose an image')).toBeVisible();
