@@ -272,6 +272,12 @@ export const lightTheme: ThemeOptions = {
           },
           top: 'unset',
         },
+        groupLabel: {
+          fontFamily: latoWeb.bold,
+          fontSize: '1rem',
+          lineHeight: 'unset',
+          padding: '8px',
+        },
         hasPopupIcon: {
           '&.MuiAutocomplete-root': {
             '& .MuiAutocomplete-inputRoot': {
