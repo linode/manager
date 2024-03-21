@@ -32,6 +32,10 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
+  const [
+    selectedPlacementGroup,
+    setSelectedPlacementGroup,
+  ] = React.useState<PlacementGroup | null>(null);
 
   const selectedRegion = regions?.find(
     (thisRegion) => thisRegion.id === selectedRegionId
@@ -41,8 +45,13 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     selectedRegion?.capabilities.includes('Placement Group')
   );
 
-  const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
+  const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     handlePlacementGroupChange(placementGroup);
+  };
+
+  const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
+    handlePlacementGroupSelection(placementGroup);
   };
 
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
@@ -102,16 +111,16 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       <Box>
         <PlacementGroupsSelect
           handlePlacementGroupChange={(placementGroup) => {
-            handlePlacementGroupChange(placementGroup);
+            handlePlacementGroupSelection(placementGroup);
           }}
           sx={{
             mb: 1,
             width: '100%',
           }}
           disabled={isPlacementGroupSelectDisabled}
-          key={selectedRegion?.id}
           label={placementGroupSelectLabel}
           noOptionsMessage="There are no Placement Groups in this region."
+          selectedPlacementGroup={selectedPlacementGroup}
           selectedRegion={selectedRegion}
           textFieldProps={{ tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY }}
         />
