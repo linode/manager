@@ -45,7 +45,7 @@ export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
     enabled,
   });
 
-export const useRegionsAvailabilityQuery = (
+export const useRegionAvailabilityQuery = (
   regionId: string,
   enabled: boolean = true
 ) => {
