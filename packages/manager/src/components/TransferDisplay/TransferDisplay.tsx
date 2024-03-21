@@ -4,7 +4,7 @@ import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
 import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
 import { StyledTransferDisplayContainer } from './TransferDisplay.styles';

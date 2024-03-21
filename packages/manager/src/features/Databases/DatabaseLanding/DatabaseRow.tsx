@@ -1,3 +1,4 @@
+import { Event } from '@linode/api-v4';
 import {
   Database,
   DatabaseInstance,
@@ -5,15 +6,16 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { Event } from '@linode/api-v4';
+
 import { DatabaseStatusDisplay } from '../DatabaseDetail/DatabaseStatusDisplay';
 
 export const databaseEngineMap: Record<Engine, string> = {

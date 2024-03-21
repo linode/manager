@@ -11,7 +11,7 @@ import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { PLACEMENT_GROUP_SELECT_TOOLTIP_COPY } from './constants';
 import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';

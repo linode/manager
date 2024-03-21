@@ -11,6 +11,7 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { regionQueries } from '../regions/regions';
 import { accountQueries } from './queries';
 
 export const useAccountBetasQuery = (params?: Params, filter?: Filter) =>
@@ -27,9 +28,9 @@ export const useCreateAccountBetaMutation = () => {
       // Refetch the paginated list of account betas. If we just enrolled in a beta,
       // it will show up in account betas.
       queryClient.invalidateQueries(accountQueries.betas._ctx.paginated._def);
-      // Refetch regions because enrolling in betas can enable new regions
+      // Refetch all regions data because enrolling in betas can enable new regions
       // or region capabilities.
-      queryClient.invalidateQueries(['regions']);
+      queryClient.invalidateQueries(regionQueries._def);
     },
   });
 };

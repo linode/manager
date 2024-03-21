@@ -40,7 +40,7 @@ import {
   useAllAccountPayments,
 } from 'src/queries/account/billing';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';

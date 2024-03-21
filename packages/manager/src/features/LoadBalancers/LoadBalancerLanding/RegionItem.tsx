@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Flag } from 'src/components/Flag';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { Country } from '@linode/api-v4';
 
