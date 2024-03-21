@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4';
 import {
   Database,
   DatabaseInstance,
@@ -5,25 +6,26 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useRegionsQuery } from 'src/queries/regions';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+
 import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
+import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 import {
+  StyledStatusBox,
   StyledSummaryBox,
   StyledSummaryTextBox,
   StyledSummaryTextTypography,
   StyledTitleTypography,
-  StyledStatusBox,
 } from './DatabaseResizeCurrentConfiguration.style';
-import { Region } from '@linode/api-v4';
-import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 
 interface Props {
   database: Database;
@@ -86,7 +88,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
           <StyledSummaryTextBox>
             <span style={{ fontFamily: theme.font.bold }}>Status</span>{' '}
             <StyledStatusBox>
-              <DatabaseStatusDisplay events={events} database={database} />
+              <DatabaseStatusDisplay database={database} events={events} />
             </StyledStatusBox>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>

@@ -3,7 +3,7 @@ import {
   hasPlacementGroupReachedCapacity,
 } from 'src/features/PlacementGroups/utils';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { APIError, Linode, PlacementGroup, Region } from '@linode/api-v4';
 
