@@ -82,46 +82,46 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
       placementGroupFactory.build({
-        linodes: [
+        members: [
           {
             is_compliant: true,
-            linode: 1,
+            linode_id: 1,
           },
           {
             is_compliant: true,
-            linode: 2,
+            linode_id: 2,
           },
           {
             is_compliant: true,
-            linode: 3,
+            linode_id: 3,
           },
           {
             is_compliant: true,
-            linode: 5,
+            linode_id: 5,
           },
           {
             is_compliant: true,
-            linode: 6,
+            linode_id: 6,
           },
           {
             is_compliant: true,
-            linode: 7,
+            linode_id: 7,
           },
           {
             is_compliant: true,
-            linode: 8,
+            linode_id: 8,
           },
           {
             is_compliant: true,
-            linode: 9,
+            linode_id: 9,
           },
           {
             is_compliant: true,
-            linode: 43,
+            linode_id: 43,
           },
           {
             is_compliant: true,
-            linode: 11,
+            linode_id: 11,
           },
         ],
       })
@@ -130,7 +130,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity',
+          affinity_type: 'anti_affinity:local',
           label: 'PG-1',
           region: 'us-east',
         })}

@@ -2064,46 +2064,46 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage([
         placementGroupFactory.build({
-          affinity_type: 'anti_affinity',
+          affinity_type: 'anti_affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
-          linodes: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
+          members: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
             is_compliant: true,
-            linode,
+            linode_id: linode,
           })),
           region: 'us-east',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 2,
           is_compliant: true,
           is_strict: true,
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 9,
+              linode_id: 9,
             },
             {
               is_compliant: true,
-              linode: 10,
+              linode_id: 10,
             },
             {
               is_compliant: true,
-              linode: 11,
+              linode_id: 11,
             },
           ],
           region: 'us-west',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           is_strict: true,
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 12,
+              linode_id: 12,
             },
           ],
           region: 'ca-central',
@@ -2164,49 +2164,49 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: Number(params.placementGroupId) ?? -1,
         label: 'pg-1',
-        linodes: [
+        members: [
           {
             is_compliant: true,
-            linode: 1,
+            linode_id: 1,
           },
           {
             is_compliant: true,
-            linode: 2,
+            linode_id: 2,
           },
           {
             is_compliant: true,
-            linode: 3,
+            linode_id: 3,
           },
           {
             is_compliant: true,
-            linode: 4,
+            linode_id: 4,
           },
           {
             is_compliant: true,
-            linode: 5,
+            linode_id: 5,
           },
           {
             is_compliant: true,
-            linode: 6,
+            linode_id: 6,
           },
           {
             is_compliant: true,
-            linode: 7,
+            linode_id: 7,
           },
           {
             is_compliant: true,
-            linode: 8,
+            linode_id: 8,
           },
           {
             is_compliant: false,
-            linode: 43,
+            linode_id: 43,
           },
           {
             is_compliant: true,
-            linode: (body as any).linodes[0],
+            linode_id: (body as any).linodes[0],
           },
         ],
       });
@@ -2220,46 +2220,46 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      affinity_type: 'anti_affinity',
+      affinity_type: 'anti_affinity:local',
       id: Number(params.placementGroupId) ?? -1,
       label: 'pg-1',
-      linodes: [
+      members: [
         {
           is_compliant: true,
-          linode: 1,
+          linode_id: 1,
         },
 
         {
           is_compliant: true,
-          linode: 2,
+          linode_id: 2,
         },
         {
           is_compliant: true,
-          linode: 3,
+          linode_id: 3,
         },
         {
           is_compliant: true,
-          linode: 4,
+          linode_id: 4,
         },
         {
           is_compliant: true,
-          linode: 5,
+          linode_id: 5,
         },
         {
           is_compliant: true,
-          linode: 6,
+          linode_id: 6,
         },
         {
           is_compliant: true,
-          linode: 7,
+          linode_id: 7,
         },
         {
           is_compliant: true,
-          linode: 8,
+          linode_id: 8,
         },
         {
           is_compliant: false,
-          linode: 43,
+          linode_id: 43,
         },
       ],
     });
