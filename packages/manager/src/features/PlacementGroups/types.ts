@@ -7,7 +7,7 @@ export type PlacementGroupsDrawerPropsBase = {
 
 export type PlacementGroupsCreateDrawerProps = PlacementGroupsDrawerPropsBase & {
   allPlacementGroups: PlacementGroup[];
-  disabledCreateButton: boolean;
+  disabledPlacementGroupCreateButton: boolean;
   onPlacementGroupCreate?: (placementGroup: PlacementGroup) => void;
   selectedRegionId?: string;
 };

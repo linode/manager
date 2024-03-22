@@ -112,7 +112,7 @@ export const PlacementGroupsDetail = () => {
           },
           pathname: `/placement-groups/${label}`,
         }}
-        disableEditButton={isLinodeReadOnly}
+        disabledBreadcrumbEditButton={isLinodeReadOnly}
         docsLabel="Docs"
         docsLink="TODO VM_Placement: add doc link"
         title="Placement Group Detail"
@@ -123,7 +123,6 @@ export const PlacementGroupsDetail = () => {
             action: 'edit',
             resourceType: 'Placement Groups',
           })}
-          important
           spacingTop={16}
           variant="warning"
         />

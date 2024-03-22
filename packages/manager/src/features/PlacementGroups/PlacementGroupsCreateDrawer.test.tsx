@@ -7,7 +7,7 @@ import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
 const commonProps = {
   allPlacementGroups: [],
-  disabledCreateButton: false,
+  disabledPlacementGroupCreateButton: false,
   onClose: vi.fn(),
   open: true,
 };

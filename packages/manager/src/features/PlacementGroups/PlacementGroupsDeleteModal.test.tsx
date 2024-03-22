@@ -102,7 +102,9 @@ describe('PlacementGroupsDeleteModal', () => {
 
     let renderResult: RenderResult;
     await act(async () => {
-      renderResult = renderWithTheme(<PlacementGroupsDeleteModal {...props} />);
+      renderResult = renderWithTheme(
+        <PlacementGroupsDeleteModal disableUnassignButton={false} {...props} />
+      );
     });
 
     const { getByRole, getByTestId, getByText } = renderResult!;
@@ -138,7 +140,9 @@ describe('PlacementGroupsDeleteModal', () => {
 
     let renderResult: RenderResult;
     await act(async () => {
-      renderResult = renderWithTheme(<PlacementGroupsDeleteModal {...props} />);
+      renderResult = renderWithTheme(
+        <PlacementGroupsDeleteModal disableUnassignButton={false} {...props} />
+      );
     });
 
     const { getByRole, getByTestId, getByText } = renderResult!;

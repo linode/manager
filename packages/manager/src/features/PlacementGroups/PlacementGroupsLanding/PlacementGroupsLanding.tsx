@@ -16,6 +16,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TextField } from 'src/components/TextField';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -100,7 +101,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         />
         <PlacementGroupsCreateDrawer
           allPlacementGroups={placementGroups.data}
-          disabledCreateButton={isLinodeReadOnly}
+          disabledPlacementGroupCreateButton={isLinodeReadOnly}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
         />
@@ -122,6 +123,13 @@ export const PlacementGroupsLanding = React.memo(() => {
   return (
     <>
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Placement Groups',
+          }),
+        }}
         breadcrumbProps={{ pathname: '/placement-groups' }}
         disabledCreateButton={isLinodeReadOnly}
         docsLink={'TODO VM_Placement: add doc link'}
@@ -203,7 +211,7 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsCreateDrawer
         allPlacementGroups={placementGroups?.data ?? []}
-        disabledCreateButton={isLinodeReadOnly}
+        disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
       />
@@ -213,6 +221,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         open={isPlacementGroupEditDrawerOpen}
       />
       <PlacementGroupsDeleteModal
+        disableUnassignButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupDeleteModalOpen}
       />

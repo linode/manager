@@ -18,8 +18,8 @@ export interface LandingHeaderProps {
   breadcrumbProps?: BreadcrumbProps;
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
+  disabledBreadcrumbEditButton?: boolean;
   disabledCreateButton?: boolean;
-  disableEditButton?: boolean;
   docsLabel?: string;
   docsLink?: string;
   entity?: string;
@@ -44,8 +44,8 @@ export const LandingHeader = ({
   breadcrumbProps,
   buttonDataAttrs,
   createButtonText,
+  disabledBreadcrumbEditButton,
   disabledCreateButton,
-  disableEditButton,
   docsLabel,
   docsLink,
   entity,
@@ -91,7 +91,7 @@ export const LandingHeader = ({
           removeCrumbX={removeCrumbX}
           {...breadcrumbDataAttrs}
           {...breadcrumbProps}
-          disableEditButton={disableEditButton}
+          disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         />
       </Grid>
       {!shouldHideDocsAndCreateButtons && (

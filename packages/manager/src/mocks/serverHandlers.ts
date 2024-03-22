@@ -557,7 +557,7 @@ export const handlers = [
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
       user_type: 'parent',
       // PLACEMENT GROUPS TESTING - Permissions and Grants:
-      // Uncommnet the two lines below: This is important! The grants endpoint is only called for restricted users.
+      // Uncomment the two lines below: This is important! The grants endpoint is only called for restricted users.
       // restricted: true,
       // user_type: 'default',
     });

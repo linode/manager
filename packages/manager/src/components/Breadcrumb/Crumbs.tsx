@@ -20,7 +20,7 @@ export interface CrumbOverridesProps {
 
 interface Props {
   crumbOverrides?: CrumbOverridesProps[];
-  disableEditButton?: boolean;
+  disabledBreadcrumbEditButton?: boolean;
   firstAndLastOnly?: boolean;
   labelOptions?: LabelProps;
   labelTitle?: string;
@@ -31,7 +31,7 @@ interface Props {
 export const Crumbs = React.memo((props: Props) => {
   const {
     crumbOverrides,
-    disableEditButton,
+    disabledBreadcrumbEditButton,
     firstAndLastOnly,
     labelOptions,
     labelTitle,
@@ -94,7 +94,7 @@ export const Crumbs = React.memo((props: Props) => {
       {/* the final crumb has the possibility of being a link, editable text or just static text */}
       <FinalCrumb
         crumb={labelTitle || lastCrumb}
-        disableEditButton={disableEditButton}
+        disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         labelOptions={labelOptions}
         onEditHandlers={onEditHandlers}
       />
