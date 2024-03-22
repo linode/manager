@@ -16,8 +16,8 @@ type Props = RouteComponentProps<{}>;
 export const CloudViewTabs = React.memo((props: Props) => {
   const tabs = [
     {
-      routeName: `${props.match.url}/overview`,
-      title: 'Overview',
+      routeName: `${props.match.url}/home`,
+      title: 'Home',
     },
     {
       routeName: `${props.match.url}/namespaces`,

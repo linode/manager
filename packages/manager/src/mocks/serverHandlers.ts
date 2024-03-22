@@ -553,6 +553,59 @@ const cloudView = [
     //   })
     // );
   }),
+  rest.get('*/cloudview/services', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(
+      ctx.json({
+        service_types: [
+          {
+            available_metrics: [
+              {
+                data_type: 'test',
+                description: 'test',
+                dimensions: [
+                  {
+                    data_type: 'test',
+                    description: 'test',
+                    key: 'test',
+                    label: 'test',
+                    values: ['test'],
+                  },
+                ],
+                label: 'test',
+                metric_label: 'test',
+                metric_type: 'test',
+              },
+            ],
+            price: '10usd',
+            service_type: 'ACLB',
+          },
+          {
+            available_metrics: [
+              {
+                data_type: 'test',
+                description: 'test',
+                dimensions: [
+                  {
+                    data_type: 'test',
+                    description: 'test',
+                    key: 'test',
+                    label: 'test',
+                    values: ['test'],
+                  },
+                ],
+                label: 'test',
+                metric_label: 'test',
+                metric_type: 'test',
+              },
+            ],
+            price: '10usd',
+            service_type: 'linodes',
+          },
+        ],
+      })
+    );
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });

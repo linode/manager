@@ -5,11 +5,14 @@ import { Divider } from 'src/components/Divider';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { GlobalFilters } from './GlobalFilters';
+
 export const Overview = React.memo(() => {
   return (
     <Paper>
       <LandingHeader breadcrumbProps={{ pathname: '/Metrics Visualization' }} />
       <Divider orientation="horizontal"></Divider>
+      <GlobalFilters></GlobalFilters>
       <Placeholder
         subtitle="No visualizations are available at this moment.
         Apply filters to view charts"

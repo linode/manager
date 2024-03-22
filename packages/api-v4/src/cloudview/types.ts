@@ -23,3 +23,24 @@ export interface CreateNameSpacePayload {
   region: string | null;
   type: string | null;
 }
+
+export interface ServiceTypes {
+  service_types: {
+    service_type: string;
+    price: string;
+    available_metrics: {
+      label: string;
+      description: string;
+      metric_label: string;
+      metric_type: string;
+      data_type: string;
+      dimensions: {
+        label: string;
+        key: string;
+        values: string[];
+        data_type: string;
+        description: string;
+      }[];
+    }[];
+  }[];
+}
