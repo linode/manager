@@ -34,7 +34,9 @@ import {
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
 
-type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
+interface Props extends LinodeWithMaintenance {
+  handlers: LinodeHandlers;
+}
 
 export const LinodeRow = (props: Props) => {
   const {

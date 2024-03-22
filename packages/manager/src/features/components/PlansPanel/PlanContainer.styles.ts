@@ -4,9 +4,9 @@ import { Table } from 'src/components/Table';
 import { TableCell, TableCellProps } from 'src/components/TableCell';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-type StyledTableCellPropsProps = TableCellProps & {
+interface StyledTableCellPropsProps extends TableCellProps {
   isPlanCell?: boolean;
-};
+}
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',

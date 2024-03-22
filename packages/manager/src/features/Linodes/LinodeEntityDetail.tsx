@@ -35,9 +35,9 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 export const LinodeEntityDetail = (props: Props) => {
   const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;

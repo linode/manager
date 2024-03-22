@@ -82,9 +82,9 @@ export const StyledEditingContainer = styled(Box, {
   position: 'relative',
 }));
 
-type ExpandedTextField = TextFieldProps & {
+interface ExpandedTextField extends TextFieldProps {
   typeVariant: EditableTextVariant;
-};
+}
 
 export const StyledTextField = styled(TextField, {
   label: 'EditableInput__StyledTextField',

@@ -1,6 +1,6 @@
 import { deleteLinodeConfigInterface } from '@linode/api-v4';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey } from 'src/queries/linodes/linodes';
@@ -11,10 +11,10 @@ import type {
   DeleteLinodeConfigInterfacePayload,
 } from '@linode/api-v4';
 
-type IdsForUnassignLinode = DeleteLinodeConfigInterfacePayload & {
+interface IdsForUnassignLinode extends DeleteLinodeConfigInterfacePayload {
   subnetId: number;
   vpcId: number;
-};
+}
 
 type InvalidateSubnetLinodeConfigQueryIds = Omit<
   IdsForUnassignLinode,

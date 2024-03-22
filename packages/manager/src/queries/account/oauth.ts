@@ -21,8 +21,12 @@ export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
     keepPreviousData: true,
   });
 
+interface OAuthClientWithSecret extends OAuthClient {
+  secret: string;
+}
+
 export const useResetOAuthClientMutation = (id: string) =>
-  useMutation<OAuthClient & { secret: string }, APIError[]>({
+  useMutation<OAuthClientWithSecret, APIError[]>({
     mutationFn: () => resetOAuthClientSecret(id),
   });
 
@@ -36,13 +40,13 @@ export const useDeleteOAuthClientMutation = (id: string) => {
   });
 };
 
+interface OAuthClientWithSecret extends OAuthClient {
+  secret: string;
+}
+
 export const useCreateOAuthClientMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    OAuthClient & { secret: string },
-    APIError[],
-    OAuthClientRequest
-  >({
+  return useMutation<OAuthClientWithSecret, APIError[], OAuthClientRequest>({
     mutationFn: createOAuthClient,
     onSuccess() {
       queryClient.invalidateQueries(accountQueries.oauthClients._def);

@@ -125,6 +125,10 @@ interface State {
   panelNodeMessages: string[];
 }
 
+interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
+  nodes: NodeBalancerConfigNode[];
+}
+
 type CombinedProps = Props & RouteProps & PreloadedProps & WithQueryClientProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
@@ -627,12 +631,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     panelMessages: string[],
     configErrors: any[],
     configSubmitting: any[]
-  ) => (
-    config: NodeBalancerConfig & {
-      nodes: NodeBalancerConfigNode[];
-    },
-    idx: number
-  ) => {
+  ) => (config: NodeBalancerConfigWithNodes, idx: number) => {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;

@@ -12,10 +12,14 @@ export interface PlanSelectionType extends BaseType {
   transfer?: ExtendedType['transfer'];
 }
 
+interface ExtendedTypeWithAvailability extends ExtendedType {
+  isLimitedAvailabilityPlan: boolean;
+}
+
+interface PlanSelectionTypeWithAvailability extends PlanSelectionType {
+  isLimitedAvailabilityPlan: boolean;
+}
+
 export type TypeWithAvailability =
-  | (ExtendedType & {
-      isLimitedAvailabilityPlan: boolean;
-    })
-  | (PlanSelectionType & {
-      isLimitedAvailabilityPlan: boolean;
-    });
+  | ExtendedTypeWithAvailability
+  | PlanSelectionTypeWithAvailability;
