@@ -58,7 +58,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
   const {
     data: userTags,
     error: userTagsError,
-    isLoading: userTagsLoading,
+    isFetching: userTagsLoading,
   } = useTagSuggestions(!profile?.restricted);
 
   const tagsToSuggest = React.useMemo<Item[] | undefined>(
