@@ -173,13 +173,22 @@ const FormContextWrapper = <T extends FieldValues>(
   return <FormProvider {...formMethods}>{props.children}</FormProvider>;
 };
 
+interface RenderWithThemeAndHookFormOptions<T extends FieldValues> {
+  component: React.ReactElement;
+  options?: Options;
+  useFormOptions?: UseFormProps<T>;
+}
+
 export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
-  ui: React.ReactElement,
-  useFormOptions?: UseFormProps<T>
-) =>
-  renderWithTheme(
-    <FormContextWrapper {...useFormOptions}>{ui}</FormContextWrapper>
+  options: RenderWithThemeAndHookFormOptions<T>
+) => {
+  return renderWithTheme(
+    <FormContextWrapper {...options.useFormOptions}>
+      {options.component}
+    </FormContextWrapper>,
+    options.options
   );
+};
 
 type Query = (f: MatcherFunction) => HTMLElement;
 
