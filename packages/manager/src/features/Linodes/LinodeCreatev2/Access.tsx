@@ -2,9 +2,9 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { Paper } from 'src/components/Paper';
+import { Skeleton } from 'src/components/Skeleton';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -22,7 +22,9 @@ export const Access = () => {
 
   return (
     <Paper>
-      <React.Suspense fallback={<CircleProgress />}>
+      <React.Suspense
+        fallback={<Skeleton sx={{ height: '89px', maxWidth: '416px' }} />}
+      >
         <Controller
           render={({ field, fieldState }) => (
             <PasswordInput
