@@ -5,16 +5,17 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
-import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Notice } from 'src/components/Notice/Notice';
+import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
 import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+
 interface Props {
   objectStorageKey?: ObjectStorageKey | null;
   onClose: () => void;
@@ -59,6 +60,11 @@ export const SecretTokenDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
+      sx={() => ({
+        '.MuiPaper-root': {
+          overflow: 'hidden',
+        },
+      })}
       actions={actions}
       disableEscapeKeyDown
       fullWidth
@@ -106,31 +112,9 @@ export const SecretTokenDialog = (props: Props) => {
       {isObjMultiClusterEnabled &&
         objectStorageKey &&
         objectStorageKey?.regions?.length > 0 && (
-          <Box
-            sx={(theme) => ({
-              '.copyIcon': {
-                marginRight: 0,
-                paddingRight: 0,
-              },
-              backgroundColor: theme.bg.main,
-              border: `1px solid ${theme.color.grey3}`,
-              borderColor: theme.name === 'light' ? '#ccc' : '#222',
-              padding: theme.spacing(1),
-            })}
-          >
-            {objectStorageKey?.regions.map((region, index) => (
-              <CopyableTextField
-                value={`${regionsLookup?.[region.id]?.label}: ${
-                  region.s3_endpoint
-                }`}
-                hideLabel
-                key={index}
-                label="Create a Filesystem"
-                sx={{ border: 'none', maxWidth: '100%' }}
-              />
-            ))}
-          </Box>
+          <HostNamesList objectStorageKey={objectStorageKey} />
         )}
+
       {objectStorageKey ? (
         <>
           <Box marginBottom="16px">

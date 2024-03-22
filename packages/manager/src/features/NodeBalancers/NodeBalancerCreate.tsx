@@ -37,10 +37,10 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
 import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -504,7 +504,6 @@ const NodeBalancerCreate = () => {
         disabled={isRestricted}
         error={hasErrorFor('region')}
         handleSelection={regionChange}
-        regions={regions ?? []}
         selectedId={nodeBalancerFields.region}
       />
       {flags.firewallNodebalancer && (

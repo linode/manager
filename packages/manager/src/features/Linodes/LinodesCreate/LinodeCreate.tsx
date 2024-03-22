@@ -25,6 +25,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { Stack } from 'src/components/Stack';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -48,7 +49,6 @@ import {
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -116,6 +116,7 @@ export interface LinodeCreateProps {
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
+  handlePlacementGroupChange: (placementGroup: PlacementGroup) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -146,7 +147,6 @@ export interface LinodeCreateProps {
   updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
-  updatePlacementGroupSelection: (placementGroup: PlacementGroup) => void;
   updateTags: (tags: Tag[]) => void;
   updateUserData: (userData: string) => void;
   userData: string | undefined;
@@ -276,6 +276,7 @@ export class LinodeCreate extends React.PureComponent<
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
       imagesData,
@@ -285,7 +286,6 @@ export class LinodeCreate extends React.PureComponent<
       linodesData,
       linodesError,
       linodesLoading,
-      placementGroupSelection,
       regionDisplayInfo,
       regionsData,
       regionsError,
@@ -301,7 +301,6 @@ export class LinodeCreate extends React.PureComponent<
       typesError,
       typesLoading,
       updateLabel,
-      updatePlacementGroupSelection,
       updateTags,
       updateUserData,
       userCannotCreateLinode,
@@ -325,34 +324,12 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
-    {
-      /* TODO VM_Placement: Refactor this into a util method */
-    }
-    const regionLabel = regionsData?.find((r) => r.id === selectedRegionID)
-      ?.label;
-    let placementGroupsLabel;
-    if (selectedRegionID && regionLabel) {
-      placementGroupsLabel = `Placement Groups in ${regionLabel} (${selectedRegionID})`;
-    } else {
-      placementGroupsLabel = 'Placement Group';
-    }
-
     const tagsInputProps = {
       disabled: userCannotCreateLinode,
       onChange: updateTags,
       tagError: hasErrorFor.tags,
       value: tags || [],
     };
-
-    let errorText;
-    if (
-      hasPlacementGroupReachedCapacity({
-        placementGroup: placementGroupSelection!,
-        region: regionsData.find((r) => r.id === selectedRegionID)!,
-      })
-    ) {
-      errorText = `This Placement Group doesn't have any capacity`;
-    }
 
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
@@ -369,6 +346,11 @@ export class LinodeCreate extends React.PureComponent<
         title: regionDisplayInfo.title,
       });
     }
+
+    const linodeIsInEdgeRegion = getIsEdgeRegion(
+      regionsData,
+      selectedRegionID ?? ''
+    );
 
     if (typeDisplayInfo) {
       const typeDisplayInfoCopy = cloneDeep(typeDisplayInfo);
@@ -392,7 +374,17 @@ export class LinodeCreate extends React.PureComponent<
         )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
-      displaySections.push(typeDisplayInfoCopy);
+      // @TODO Gecko: Remove $0 hardcoding once plan data is returned from API
+      if (linodeIsInEdgeRegion) {
+        displaySections.push({
+          ...typeDisplayInfoCopy,
+          details: '$0/month',
+          hourly: 0,
+          monthly: 0,
+        });
+      } else {
+        displaySections.push(typeDisplayInfoCopy);
+      }
     }
 
     const type = typesData.find(
@@ -406,7 +398,12 @@ export class LinodeCreate extends React.PureComponent<
       type,
     });
 
-    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+    if (
+      hasBackups &&
+      typeDisplayInfo &&
+      backupsMonthlyPrice &&
+      !linodeIsInEdgeRegion
+    ) {
       displaySections.push(
         renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
@@ -421,6 +418,12 @@ export class LinodeCreate extends React.PureComponent<
     if (this.props.privateIPEnabled) {
       displaySections.push({
         title: 'Private IP',
+      });
+    }
+
+    if (this.props.placementGroupSelection) {
+      displaySections.push({
+        title: 'Assigned to Placement Group',
       });
     }
 
@@ -491,157 +494,158 @@ export class LinodeCreate extends React.PureComponent<
               variant="error"
             />
           )}
-          <Tabs
-            defaultIndex={selectedTab}
-            index={selectedTab}
-            onChange={this.handleTabChange}
-          >
-            <TabLinkList tabs={this.tabs} />
-            <TabPanels>
-              <SafeTabPanel index={0}>
-                <FromImageContent
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  error={hasErrorFor.image}
-                  imagePanelTitle="Choose a Distribution"
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  variant="public"
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={1}>
-                <FromAppsContent
-                  setNumberOfNodesForAppCluster={
-                    this.setNumberOfNodesForAppCluster
-                  }
-                  // error={hasErrorFor.image}
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  errors={errors}
-                  flags={flags}
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={2}>
-                <Tabs defaultIndex={stackScriptSelectedTab}>
-                  <StyledPaper>
-                    <Typography variant="h2">Create From:</Typography>
-                    <TabLinkList tabs={this.stackScriptTabs} />
-                    <StyledTabPanel>
-                      <SafeTabPanel index={0}>
-                        <FromStackScriptContent
-                          accountBackupsEnabled={accountBackupsEnabled}
-                          category="account"
-                          errors={errors}
-                          header={'Select a StackScript'}
-                          imagesData={imagesData!}
-                          regionsData={regionsData!}
-                          request={getMineAndAccountStackScripts}
-                          typesData={typesData!}
-                          userCannotCreateLinode={userCannotCreateLinode}
-                          {...rest}
-                        />
-                      </SafeTabPanel>
-                      <SafeTabPanel index={1}>
-                        <FromStackScriptContent
-                          accountBackupsEnabled={accountBackupsEnabled}
-                          category="community"
-                          errors={errors}
-                          header={'Select a StackScript'}
-                          imagesData={imagesData!}
-                          regionsData={regionsData!}
-                          request={getCommunityStackscripts}
-                          typesData={typesData!}
-                          userCannotCreateLinode={userCannotCreateLinode}
-                          {...rest}
-                        />
-                      </SafeTabPanel>
-                    </StyledTabPanel>
-                  </StyledPaper>
-                </Tabs>
-              </SafeTabPanel>
-              <SafeTabPanel index={3}>
-                <FromImageContent
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  imagePanelTitle="Choose an Image"
-                  imagesData={imagesData}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  variant={'private'}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={4}>
-                <FromBackupsContent
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  errors={errors}
-                  imagesData={imagesData!}
-                  linodesData={linodesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...restoreBackup}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={5}>
-                <FromLinodeContent
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  errors={errors}
-                  imagesData={imagesData!}
-                  linodesData={linodesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...rest}
-                />
-              </SafeTabPanel>
-            </TabPanels>
-          </Tabs>
+          <Stack gap={3}>
+            <Tabs
+              defaultIndex={selectedTab}
+              index={selectedTab}
+              onChange={this.handleTabChange}
+            >
+              <TabLinkList tabs={this.tabs} />
+              <TabPanels>
+                <SafeTabPanel index={0}>
+                  <FromImageContent
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    error={hasErrorFor.image}
+                    imagePanelTitle="Choose a Distribution"
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    variant="public"
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={1}>
+                  <FromAppsContent
+                    setNumberOfNodesForAppCluster={
+                      this.setNumberOfNodesForAppCluster
+                    }
+                    // error={hasErrorFor.image}
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    errors={errors}
+                    flags={flags}
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={2}>
+                  <Tabs defaultIndex={stackScriptSelectedTab}>
+                    <StyledPaper>
+                      <Typography variant="h2">Create From:</Typography>
+                      <TabLinkList tabs={this.stackScriptTabs} />
+                      <StyledTabPanel>
+                        <SafeTabPanel index={0}>
+                          <FromStackScriptContent
+                            accountBackupsEnabled={accountBackupsEnabled}
+                            category="account"
+                            errors={errors}
+                            header={'Select a StackScript'}
+                            imagesData={imagesData!}
+                            regionsData={regionsData!}
+                            request={getMineAndAccountStackScripts}
+                            typesData={typesData!}
+                            userCannotCreateLinode={userCannotCreateLinode}
+                            {...rest}
+                          />
+                        </SafeTabPanel>
+                        <SafeTabPanel index={1}>
+                          <FromStackScriptContent
+                            accountBackupsEnabled={accountBackupsEnabled}
+                            category="community"
+                            errors={errors}
+                            header={'Select a StackScript'}
+                            imagesData={imagesData!}
+                            regionsData={regionsData!}
+                            request={getCommunityStackscripts}
+                            typesData={typesData!}
+                            userCannotCreateLinode={userCannotCreateLinode}
+                            {...rest}
+                          />
+                        </SafeTabPanel>
+                      </StyledTabPanel>
+                    </StyledPaper>
+                  </Tabs>
+                </SafeTabPanel>
+                <SafeTabPanel index={3}>
+                  <FromImageContent
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    imagePanelTitle="Choose an Image"
+                    imagesData={imagesData}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    variant={'private'}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={4}>
+                  <FromBackupsContent
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    errors={errors}
+                    imagesData={imagesData!}
+                    linodesData={linodesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    {...restoreBackup}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={5}>
+                  <FromLinodeContent
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    errors={errors}
+                    imagesData={imagesData!}
+                    linodesData={linodesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+              </TabPanels>
+            </Tabs>
 
-          {this.props.createType !== 'fromBackup' && (
-            <SelectRegionPanel
-              currentCapability="Linodes"
-              data-qa-select-region-panel
-              disabled={userCannotCreateLinode}
-              error={hasErrorFor.region}
-              handleSelection={this.props.updateRegionID}
-              helperText={this.props.regionHelperText}
-              regions={regionsData!}
-              selectedId={this.props.selectedRegionID}
-              selectedLinodeTypeId={this.props.selectedTypeID}
-            />
-          )}
-          <PlansPanel
-            docsLink={
-              <DocsLink
-                onClick={() => {
-                  sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
-                }}
-                href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
-                label="Choosing a Plan"
+            {this.props.createType !== 'fromBackup' && (
+              <SelectRegionPanel
+                currentCapability="Linodes"
+                data-qa-select-region-panel
+                disabled={userCannotCreateLinode}
+                error={hasErrorFor.region}
+                handleSelection={this.props.updateRegionID}
+                helperText={this.props.regionHelperText}
+                selectedId={this.props.selectedRegionID}
+                selectedLinodeTypeId={this.props.selectedTypeID}
               />
-            }
-            data-qa-select-plan
-            disabled={userCannotCreateLinode}
-            disabledClasses={this.props.disabledClasses}
-            error={hasErrorFor.type}
-            isCreate
-            key={this.state.planKey}
-            linodeID={this.props.selectedLinodeID}
-            onSelect={this.props.updateTypeID}
-            regionsData={regionsData!}
-            selectedId={this.props.selectedTypeID}
-            selectedRegionID={selectedRegionID}
-            showTransfer
-            types={this.filterTypes()}
-          />
+            )}
+            <PlansPanel
+              docsLink={
+                <DocsLink
+                  onClick={() => {
+                    sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
+                  }}
+                  href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
+                  label="Choosing a Plan"
+                />
+              }
+              data-qa-select-plan
+              disabled={userCannotCreateLinode}
+              disabledClasses={this.props.disabledClasses}
+              error={hasErrorFor.type}
+              isCreate
+              key={this.state.planKey}
+              linodeID={this.props.selectedLinodeID}
+              onSelect={this.props.updateTypeID}
+              regionsData={regionsData!}
+              selectedId={this.props.selectedTypeID}
+              selectedRegionID={selectedRegionID}
+              showTransfer
+              types={this.filterTypes()}
+            />
+          </Stack>
           <DetailsPanel
             labelFieldProps={{
               disabled: userCannotCreateLinode,
@@ -650,14 +654,6 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
-            placementGroupsSelectProps={{
-              disabled: !selectedRegionID,
-              errorText,
-              handlePlacementGroupSelection: updatePlacementGroupSelection,
-              label: placementGroupsLabel,
-              noOptionsMessage: 'There are no Placement Groups in this region',
-              selectedRegionId: selectedRegionID,
-            }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
@@ -665,7 +661,8 @@ export class LinodeCreate extends React.PureComponent<
             }
             data-qa-details-panel
             error={hasErrorFor.placement_group}
-            regions={regionsData!}
+            handlePlacementGroupChange={handlePlacementGroupChange}
+            selectedRegionId={selectedRegionID}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
@@ -861,11 +858,13 @@ export class LinodeCreate extends React.PureComponent<
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
-      placement_group: this.props.flags.placementGroups?.enabled
-        ? placement_group_payload
-        : undefined,
+      placement_group:
+        this.props.flags.placementGroups?.enabled &&
+        placement_group_payload.id !== -1
+          ? placement_group_payload
+          : undefined,
       private_ip: this.props.privateIPEnabled,
-      region: this.props.selectedRegionID,
+      region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,
       stackscript_data: this.props.selectedUDFs,
 
@@ -874,7 +873,7 @@ export class LinodeCreate extends React.PureComponent<
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
-      type: this.props.selectedTypeID,
+      type: this.props.selectedTypeID ?? '',
     };
 
     if (
@@ -965,7 +964,7 @@ export class LinodeCreate extends React.PureComponent<
       image: this.props.selectedImageID,
       label: this.props.label,
       private_ip: this.props.privateIPEnabled,
-      region: this.props.selectedRegionID,
+      region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,
       stackscript_data: this.props.selectedUDFs,
       // StackScripts
@@ -974,7 +973,7 @@ export class LinodeCreate extends React.PureComponent<
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
-      type: this.props.selectedTypeID,
+      type: this.props.selectedTypeID ?? '',
     };
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     this.props.checkValidation(payload);

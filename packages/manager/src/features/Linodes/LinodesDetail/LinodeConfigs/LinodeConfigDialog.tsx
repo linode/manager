@@ -47,7 +47,7 @@ import {
   useAllLinodeKernelsQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { vpcQueryKey } from 'src/queries/vpcs';
@@ -241,6 +241,8 @@ export const LinodeConfigDialog = (props: Props) => {
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const virtModeCaptionId = React.useId();
 
   const {
     data: kernels,
@@ -721,7 +723,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
-                  aria-describedby="virtModeCaption"
+                  aria-describedby={virtModeCaptionId}
                   disabled={isReadOnly}
                   htmlFor="virt_mode"
                 >
@@ -745,7 +747,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     label="Full virtualization"
                     value="fullvirt"
                   />
-                  <FormHelperText id="virtModeCaption">
+                  <FormHelperText id={virtModeCaptionId}>
                     Controls if devices inside your virtual machine are
                     paravirtualized or fully virtualized. Paravirt is what you
                     want, unless you&rsquo;re doing weird things.

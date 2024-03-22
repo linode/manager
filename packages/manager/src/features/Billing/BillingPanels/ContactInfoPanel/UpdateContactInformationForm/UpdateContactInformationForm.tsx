@@ -11,8 +11,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount, useMutateAccount } from 'src/queries/account';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useAccount, useMutateAccount } from 'src/queries/account/account';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -57,7 +57,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       zip: account?.zip,
     },
     async onSubmit(values) {
-      await mutateAsync(values);
+      const clonedValues = { ...values };
+
+      if (isParentUser) {
+        // This is a disabled field that we want to omit from payload.
+        delete clonedValues.company;
+      }
+
+      await mutateAsync(clonedValues);
 
       // If there's a "billing_email_bounce" notification on the account, and
       // the user has just updated their email, re-request notifications to

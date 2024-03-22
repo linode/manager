@@ -31,8 +31,8 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
   return {
     ...actual,
     useRegionsQuery: queryMocks.useRegionsQuery,
@@ -87,13 +87,13 @@ describe('PlacementGroupsDeleteModal', () => {
   it('should render the right form elements', async () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         label: 'PG-to-delete',
-        linodes: [
+        members: [
           {
             is_compliant: true,
-            linode: 1,
+            linode_id: 1,
           },
         ],
         region: 'us-east',
@@ -131,10 +131,10 @@ describe('PlacementGroupsDeleteModal', () => {
   it("should be enabled when there's no assigned linodes", async () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         label: 'PG-to-delete',
-        linodes: [],
+        members: [],
       }),
     });
 

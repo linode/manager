@@ -35,7 +35,8 @@ export type DatabaseStatus =
   | 'resuming'
   | 'restoring'
   | 'failed'
-  | 'degraded';
+  | 'degraded'
+  | 'resizing';
 
 export type DatabaseBackupType = 'snapshot' | 'auto';
 

@@ -9,16 +9,16 @@ import {
   OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { useClientToken } from 'src/queries/accountPayment';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
+import { useClientToken } from 'src/queries/account/payment';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles()(() => ({
@@ -115,7 +115,7 @@ export const PayPalChip = (props: Props) => {
       type: 'payment_method_nonce',
     })
       .then(() => {
-        queryClient.invalidateQueries([`${accountPaymentKey}-all`]);
+        queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
 
         onClose();
 

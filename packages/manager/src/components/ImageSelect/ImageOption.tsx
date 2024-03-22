@@ -1,8 +1,8 @@
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { Item } from 'src/components/EnhancedSelect';

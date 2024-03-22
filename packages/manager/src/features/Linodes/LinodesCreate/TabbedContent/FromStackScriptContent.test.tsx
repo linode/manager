@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { stackScriptFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -31,8 +31,8 @@ describe('FromStackScriptContent', () => {
     const stackscripts = stackScriptFactory.buildList(3);
 
     server.use(
-      rest.get('*/v4/linode/stackscripts', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(stackscripts)));
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage(stackscripts));
       })
     );
 

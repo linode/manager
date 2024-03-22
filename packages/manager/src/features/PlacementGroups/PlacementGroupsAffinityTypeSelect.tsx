@@ -21,13 +21,13 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
   return (
     <Autocomplete
       defaultValue={affinityTypeOptions.find(
-        (option) => option.value === 'anti_affinity'
+        (option) => option.value === 'anti_affinity:local'
       )}
       onChange={(_, value) => {
         setFieldValue('affinity_type', value?.value ?? '');
       }}
       renderOption={(props, option) => {
-        const isDisabledMenuItem = option.value === 'affinity';
+        const isDisabledMenuItem = option.value === 'affinity:local';
 
         return (
           <Tooltip
@@ -41,6 +41,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
                 ''
               )
             }
+            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
             disableFocusListener={!isDisabledMenuItem}
             disableHoverListener={!isDisabledMenuItem}
             disableTouchListener={!isDisabledMenuItem}

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
@@ -16,11 +16,11 @@ const loadingTestId = 'circle-progress';
 describe('VPC Landing Table', () => {
   it('should render vpc landing table with items', async () => {
     server.use(
-      rest.get('*/vpcs', (req, res, ctx) => {
+      http.get('*/vpcs', () => {
         const vpcsWithSubnet = vpcFactory.buildList(3, {
           subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
         });
-        return res(ctx.json(makeResourcePage(vpcsWithSubnet)));
+        return HttpResponse.json(makeResourcePage(vpcsWithSubnet));
       })
     );
 
@@ -41,8 +41,8 @@ describe('VPC Landing Table', () => {
 
   it('should render vpc landing with empty state', async () => {
     server.use(
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/vpcs', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

@@ -12,7 +12,7 @@ import {
 } from 'src/features/Account/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import {
   sendLinodeActionEvent,

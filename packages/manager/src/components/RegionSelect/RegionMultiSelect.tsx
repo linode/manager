@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { StyledListItem } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
@@ -38,7 +38,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated();
+  } = useAllAccountAvailabilitiesQuery();
 
   const [selectedRegions, setSelectedRegions] = useState<RegionSelectOption[]>(
     getSelectedRegionsByIds({
