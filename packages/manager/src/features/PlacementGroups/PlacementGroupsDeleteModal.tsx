@@ -23,12 +23,13 @@ import type {
 } from '@linode/api-v4';
 
 interface Props {
+  disableUnassignButton: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
-  const { onClose, open } = props;
+  const { disableUnassignButton, onClose, open } = props;
   const { id } = useParams<{ id: string }>();
   const { data: selectedPlacementGroup } = usePlacementGroupQuery(
     +id,
@@ -156,6 +157,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
               fontFamily: theme.font.normal,
               fontSize: '0.875rem',
             })}
+            disabled={disableUnassignButton}
             loading={unassignLinodeLoading}
             variant="text"
           >

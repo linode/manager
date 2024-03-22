@@ -80,6 +80,7 @@ describe('PlacementGroupsLanding', () => {
             ],
             region: 'us-east',
           })}
+          disabled
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}
           handleEditPlacementGroup={handleEditPlacementGroupMock}
         />

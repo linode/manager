@@ -16,8 +16,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TextField } from 'src/components/TextField';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -62,6 +64,10 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
+  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
+
   const handleCreatePlacementGroup = () => {
     history.replace('/placement-groups/create');
   };
@@ -90,10 +96,12 @@ export const PlacementGroupsLanding = React.memo(() => {
     return (
       <>
         <PlacementGroupsLandingEmptyState
+          disabledCreateButton={isLinodeReadOnly}
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
           allPlacementGroups={placementGroups.data}
+          disabledPlacementGroupCreateButton={isLinodeReadOnly}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
         />
@@ -115,7 +123,15 @@ export const PlacementGroupsLanding = React.memo(() => {
   return (
     <>
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Placement Groups',
+          }),
+        }}
         breadcrumbProps={{ pathname: '/placement-groups' }}
+        disabledCreateButton={isLinodeReadOnly}
         docsLink={'TODO VM_Placement: add doc link'}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
@@ -178,6 +194,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               handleEditPlacementGroup={() =>
                 handleEditPlacementGroup(placementGroup)
               }
+              disabled={isLinodeReadOnly}
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
             />
@@ -194,14 +211,17 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsCreateDrawer
         allPlacementGroups={placementGroups?.data ?? []}
+        disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}
       />
       <PlacementGroupsEditDrawer
+        disableEditButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupEditDrawerOpen}
       />
       <PlacementGroupsDeleteModal
+        disableUnassignButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupDeleteModalOpen}
       />

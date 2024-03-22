@@ -7,11 +7,13 @@ export type PlacementGroupsDrawerPropsBase = {
 
 export type PlacementGroupsCreateDrawerProps = PlacementGroupsDrawerPropsBase & {
   allPlacementGroups: PlacementGroup[];
+  disabledPlacementGroupCreateButton: boolean;
   onPlacementGroupCreate?: (placementGroup: PlacementGroup) => void;
   selectedRegionId?: string;
 };
 
 export type PlacementGroupsEditDrawerProps = PlacementGroupsDrawerPropsBase & {
+  disableEditButton: boolean;
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
 };
 

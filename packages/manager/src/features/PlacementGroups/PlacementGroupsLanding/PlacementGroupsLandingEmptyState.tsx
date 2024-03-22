@@ -11,17 +11,20 @@ import {
 } from './PlacementGroupsLandingEmptyStateData';
 
 interface Props {
+  disabledCreateButton: boolean;
   openCreatePlacementGroupDrawer: () => void;
 }
 
-export const PlacementGroupsLandingEmptyState = (props: Props) => {
-  const { openCreatePlacementGroupDrawer } = props;
-
+export const PlacementGroupsLandingEmptyState = ({
+  disabledCreateButton,
+  openCreatePlacementGroupDrawer,
+}: Props) => {
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Placement Groups',
+          disabled: disabledCreateButton,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
