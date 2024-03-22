@@ -14,8 +14,8 @@ const queryMocks = vi.hoisted(() => ({
   useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
   return {
     ...actual,
     useRegionsQuery: queryMocks.useRegionsQuery,
@@ -57,15 +57,15 @@ describe('PlacementGroupsDetailPanel', () => {
     queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 1,
+              linode_id: 1,
             },
           ],
           region: 'us-west',

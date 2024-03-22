@@ -421,6 +421,12 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
+    if (this.props.placementGroupSelection) {
+      displaySections.push({
+        title: 'Assigned to Placement Group',
+      });
+    }
+
     if (
       this.props.selectedVPCId !== undefined &&
       this.props.selectedVPCId !== -1

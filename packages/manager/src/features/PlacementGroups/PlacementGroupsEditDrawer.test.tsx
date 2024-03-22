@@ -24,8 +24,8 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
   return {
     ...actual,
     useRegionsQuery: queryMocks.useRegionsQuery,
@@ -49,7 +49,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     });
     queryMocks.usePlacementGroupQuery.mockReturnValue({
       data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         label: 'PG-to-edit',
         region: 'us-east',

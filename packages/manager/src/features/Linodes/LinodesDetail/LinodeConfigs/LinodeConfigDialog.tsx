@@ -47,7 +47,7 @@ import {
   useAllLinodeKernelsQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { vpcQueryKey } from 'src/queries/vpcs';

@@ -26,7 +26,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
