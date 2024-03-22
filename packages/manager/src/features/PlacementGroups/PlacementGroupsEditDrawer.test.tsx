@@ -58,6 +58,7 @@ describe('PlacementGroupsCreateDrawer', () => {
 
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
+        disableEditButton={false}
         onClose={vi.fn()}
         onPlacementGroupEdit={vi.fn()}
         open={true}

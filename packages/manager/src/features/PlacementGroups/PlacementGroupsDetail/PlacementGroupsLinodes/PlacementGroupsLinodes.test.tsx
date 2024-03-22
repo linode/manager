@@ -9,7 +9,10 @@ import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
 describe('PlacementGroupsLinodes', () => {
   it('renders an error state if placement groups are undefined', () => {
     const { getByText } = renderWithTheme(
-      <PlacementGroupsLinodes placementGroup={undefined} />
+      <PlacementGroupsLinodes
+        isLinodeReadOnly={false}
+        placementGroup={undefined}
+      />
     );
 
     expect(
@@ -28,7 +31,10 @@ describe('PlacementGroupsLinodes', () => {
     });
 
     const { getByPlaceholderText, getByRole } = renderWithTheme(
-      <PlacementGroupsLinodes placementGroup={placementGroup} />
+      <PlacementGroupsLinodes
+        isLinodeReadOnly={false}
+        placementGroup={placementGroup}
+      />
     );
 
     expect(getByPlaceholderText('Search Linodes')).toBeInTheDocument();

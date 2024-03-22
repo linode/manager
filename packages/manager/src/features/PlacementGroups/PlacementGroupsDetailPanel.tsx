@@ -10,6 +10,7 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -44,6 +45,10 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
   const hasRegionPlacementGroupCapability = Boolean(
     selectedRegion?.capabilities.includes('Placement Group')
   );
+
+  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
     setSelectedPlacementGroup(placementGroup);
@@ -146,6 +151,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       </Box>
       <PlacementGroupsCreateDrawer
         allPlacementGroups={allPlacementGroups || []}
+        disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
         onPlacementGroupCreate={handlePlacementGroupCreated}
         open={isCreatePlacementGroupDrawerOpen}
