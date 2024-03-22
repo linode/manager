@@ -1,22 +1,10 @@
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useVPCsQuery } from 'src/queries/vpcs';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import type { Interface } from '@linode/api-v4/lib/linodes/types';
 
 export const useVPCConfigInterface = (linodeId: number) => {
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  const { data: vpcData } = useVPCsQuery({}, {}, showVPCs);
+  const { data: vpcData } = useVPCsQuery({}, {});
   const vpcsList = vpcData?.data ?? [];
 
   const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
@@ -56,7 +44,6 @@ export const useVPCConfigInterface = (linodeId: number) => {
     configInterfaceWithVPC,
     configs,
     isVPCOnlyLinode,
-    showVPCs,
     vpcLinodeIsAssignedTo,
   };
 };

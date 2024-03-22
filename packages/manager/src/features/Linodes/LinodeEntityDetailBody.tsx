@@ -41,7 +41,6 @@ export type Props = LinodeEntityDetailProps & {
 
 export interface BodyProps {
   configInterfaceWithVPC?: Interface;
-  displayVPCSection: boolean;
   gbRAM: number;
   gbStorage: number;
   ipv4: Linode['ipv4'];
@@ -59,7 +58,6 @@ export interface BodyProps {
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     configInterfaceWithVPC,
-    displayVPCSection,
     gbRAM,
     gbStorage,
     ipv4,
@@ -166,7 +164,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       </StyledBodyGrid>
-      {displayVPCSection && vpcLinodeIsAssignedTo && (
+      {vpcLinodeIsAssignedTo && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,

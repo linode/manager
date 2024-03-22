@@ -50,26 +50,6 @@ describe('VPCPanel', () => {
     });
   });
 
-  it('should display the VPC Panel if the VPC feature flag is on', async () => {
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-    });
-
-    await waitFor(() => {
-      expect(wrapper.getByTestId(vpcPanelTestId)).toBeInTheDocument();
-    });
-  });
-
-  it('should not display the VPC Panel if the user does not have the VPC account capability and the VPC feature flag is off', async () => {
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: false },
-    });
-
-    await waitFor(() => {
-      expect(wrapper.queryByTestId(vpcPanelTestId)).not.toBeInTheDocument();
-    });
-  });
-
   it('should display the Subnet & other subsequent fields if a VPC has been selected and the selected region supports VPCs', async () => {
     const _props = { ...props, region: 'us-east', selectedVPCId: 5 };
 
@@ -84,9 +64,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       expect(
@@ -114,9 +92,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       // the "Auto-assign a VPC IPv4 address for this Linode in the VPC" checkbox is the first one (0 index)
@@ -138,9 +114,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(
@@ -166,10 +140,7 @@ describe('VPCPanel', () => {
     );
 
     const wrapper = renderWithTheme(
-      <VPCPanel {...props} from="linodeConfig" />,
-      {
-        flags: { vpc: true },
-      }
+      <VPCPanel {...props} from="linodeConfig" />
     );
 
     await waitFor(() => {
@@ -191,9 +162,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(
@@ -212,9 +181,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(wrapper.queryByText('Create VPC')).toBeInTheDocument();
@@ -241,9 +208,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       expect(
@@ -275,9 +240,7 @@ describe('VPCPanel', () => {
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       expect(
