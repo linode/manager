@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface DNSResolversProps {
   region: string;

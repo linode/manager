@@ -6,7 +6,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
 import {
@@ -51,7 +51,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated();
+  } = useAllAccountAvailabilitiesQuery();
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({

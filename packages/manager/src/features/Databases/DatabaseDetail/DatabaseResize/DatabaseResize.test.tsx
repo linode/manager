@@ -9,7 +9,7 @@ import { Router } from 'react-router-dom';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
@@ -45,9 +45,9 @@ describe('database resize', () => {
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),
     ];
     server.use(
-      rest.get('*/databases/types', (req, res, ctx) => {
-        return res(
-          ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+      http.get('*/databases/types', () => {
+        return HttpResponse.json(
+          makeResourcePage([...standardTypes, ...dedicatedTypes])
         );
       })
     );
@@ -82,9 +82,9 @@ describe('database resize', () => {
         ...databaseTypeFactory.buildList(7, { class: 'standard' }),
       ];
       server.use(
-        rest.get('*/databases/types', (req, res, ctx) => {
-          return res(
-            ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+        http.get('*/databases/types', () => {
+          return HttpResponse.json(
+            makeResourcePage([...standardTypes, ...dedicatedTypes])
           );
         })
       );
@@ -118,7 +118,7 @@ describe('database resize', () => {
         'false'
       );
       fireEvent.click(resizeButton);
-      getByText(`Resize ${database.label}?`);
+      getByText(`Resize Database Cluster ${database.label}?`);
     });
   });
 });

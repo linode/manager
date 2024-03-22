@@ -224,12 +224,6 @@ export const MainContent = () => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const { isACLBEnabled } = useIsACLBEnabled();
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
@@ -383,7 +377,7 @@ export const MainContent = () => {
                           {flags.selfServeBetas && (
                             <Route component={BetaRoutes} path="/betas" />
                           )}
-                          {showVPCs && <Route component={VPC} path="/vpcs" />}
+                          <Route component={VPC} path="/vpcs" />
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />

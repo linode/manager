@@ -13,7 +13,7 @@ import { PARENT_USER } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
+import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
@@ -23,6 +23,7 @@ import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const UsersLanding = () => {
   const theme = useTheme();
@@ -49,7 +50,8 @@ export const UsersLanding = () => {
     ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers({
+  // Since this query is disabled for restricted users, use isInitialLoading.
+  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -59,18 +61,25 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
+  // Since this query is disabled for restricted users, use isInitialLoading.
   const {
     data: proxyUser,
     error: proxyUserError,
-    isLoading: isLoadingProxyUser,
+    isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
     enabled:
       flags.parentChildAccountAccess && showProxyUserTable && !isRestrictedUser,
     filters: { user_type: 'proxy' },
   });
 
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
   const showChildAccountAccessCol = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type === 'parent'
+    flags.parentChildAccountAccess &&
+      profile?.user_type === 'parent' &&
+      !isChildAccountAccessRestricted
   );
 
   // Parent/Child accounts include additional "child account access" column.
@@ -162,7 +171,7 @@ export const UsersLanding = () => {
         <TableBody>
           <UsersLandingTableBody
             error={error}
-            isLoading={isLoading}
+            isLoading={isInitialLoading}
             numCols={numCols}
             onDelete={handleDelete}
             users={users?.data}
