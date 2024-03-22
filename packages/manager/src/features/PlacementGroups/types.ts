@@ -19,7 +19,8 @@ export interface PlacementGroupsEditDrawerProps {
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];
-}
+  selectedPlacementGroup: PlacementGroup | undefined;
+};
 
 export interface PlacementGroupsAssignLinodesDrawerProps {
   onClose: PlacementGroupsDrawerPropsBase['onClose'];

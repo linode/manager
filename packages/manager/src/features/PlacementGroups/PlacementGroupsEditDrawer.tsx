@@ -3,7 +3,6 @@ import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Divider } from 'src/components/Divider';
@@ -14,7 +13,6 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
-import { usePlacementGroupQuery } from 'src/queries/placementGroups';
 import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -28,12 +26,13 @@ import type { FormikHelpers } from 'formik';
 export const PlacementGroupsEditDrawer = (
   props: PlacementGroupsEditDrawerProps
 ) => {
-  const { disableEditButton, onClose, onPlacementGroupEdit, open } = props;
-  const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
-    +id,
-    Boolean(id)
-  );
+  const {
+    disableEditButton,
+    onClose,
+    onPlacementGroupEdit,
+    open,
+    selectedPlacementGroup,
+  } = props;
   const { region } = usePlacementGroupData({
     placementGroup: selectedPlacementGroup,
   });
