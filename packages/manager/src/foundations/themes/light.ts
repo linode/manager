@@ -306,6 +306,7 @@ export const lightTheme: ThemeOptions = {
         },
         noOptions: {
           border: `1px solid ${primaryColors.main}`,
+          borderTop: 0,
         },
         option: {
           '&.Mui-focused, :hover': {

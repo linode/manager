@@ -365,6 +365,7 @@ export const darkTheme: ThemeOptions = {
             color: primaryColors.main,
           },
           '&.Mui-disabled': {
+            backgroundColor: '#444444',
             borderColor: '#606469',
             color: '#ccc !important',
             opacity: 0.5,
