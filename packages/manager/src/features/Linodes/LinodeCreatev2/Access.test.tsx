@@ -11,17 +11,14 @@ import { Access } from './Access';
 
 describe('Access', () => {
   it('should render a root password input', async () => {
-    const {
-      findByLabelText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext({
+    const { findByLabelText } = renderWithThemeAndHookFormContext({
       component: <Access />,
     });
 
     const rootPasswordInput = await findByLabelText('Root Password');
 
     expect(rootPasswordInput).toBeVisible();
-    expect(getByPlaceholderText('Enter a password.')).toBeVisible();
+    expect(rootPasswordInput).toBeEnabled();
   });
 
   it('should render a SSH Keys heading', async () => {
@@ -98,6 +95,8 @@ describe('Access', () => {
       expect(await findByText(sshKey.label, { exact: false })).toBeVisible();
     }
 
-    expect(getByRole('checkbox')).toBeDisabled();
+    await waitFor(() => {
+      expect(getByRole('checkbox')).toBeDisabled();
+    });
   });
 });
