@@ -2,13 +2,15 @@ import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { Distributions } from './Distributions';
+import { Images } from './Images';
 
-describe('Distributions', () => {
+describe('Images', () => {
   it('renders a header', () => {
-    const { getByText } = renderWithThemeAndHookFormContext(<Distributions />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <Images />,
+    });
 
-    const header = getByText('Choose a Distribution');
+    const header = getByText('Choose an Image');
 
     expect(header).toBeVisible();
     expect(header.tagName).toBe('H2');
@@ -18,7 +20,9 @@ describe('Distributions', () => {
     const {
       getByLabelText,
       getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext(<Distributions />);
+    } = renderWithThemeAndHookFormContext({
+      component: <Images />,
+    });
 
     expect(getByLabelText('Images')).toBeVisible();
     expect(getByPlaceholderText('Choose an image')).toBeVisible();

@@ -11,12 +11,13 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 
+import { Details } from './Details/Details';
 import { Error } from './Error';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
-import { Distributions } from './tabs/Distributions';
-import { Images } from './tabs/Images';
+import { Distributions } from './Tabs/Distributions';
+import { Images } from './Tabs/Images';
 import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -29,6 +30,7 @@ export const LinodeCreatev2 = () => {
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
   const onSubmit: SubmitHandler<CreateLinodeRequest> = async (data) => {
+    alert(JSON.stringify(data, null, 2));
     try {
       const linode = await createLinode(data);
 
@@ -85,6 +87,7 @@ export const LinodeCreatev2 = () => {
           </Tabs>
           <Region />
           <Plan />
+          <Details />
           <Summary />
         </Stack>
       </form>
