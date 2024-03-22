@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
+import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';

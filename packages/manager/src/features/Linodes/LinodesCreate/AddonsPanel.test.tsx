@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { imageFactory, linodeTypeFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -63,7 +63,7 @@ const props: AddonsPanelProps = {
       ipv6: '2600:3c00::f03c:93ff:fe85:576d/128',
       label: 'test_instance',
       placement_group: {
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_strict: true,
         label: 'test',
@@ -108,7 +108,7 @@ const props: AddonsPanelProps = {
       ipv6: '2600:3c04::f03c:93ff:fe75:0612/128',
       label: 'debian-ca-central',
       placement_group: {
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_strict: true,
         label: 'test',
@@ -152,7 +152,7 @@ const props: AddonsPanelProps = {
       ipv6: '2600:3c01::f03c:93ff:fe75:e4f9/128',
       label: 'almalinux-us-west',
       placement_group: {
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_strict: true,
         label: 'test',
@@ -193,8 +193,8 @@ const attachVLANTestId = 'attach-vlan';
 describe('AddonsPanel', () => {
   beforeEach(() => {
     server.use(
-      rest.get('*/images/*', (req, res, ctx) => {
-        return res(ctx.json(imageFactory.build()));
+      http.get('*/images/*', () => {
+        return HttpResponse.json(imageFactory.build());
       })
     );
   });

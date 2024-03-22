@@ -13,7 +13,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -112,7 +112,7 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: 'anti_affinity',
+      affinity_type: 'anti_affinity:local',
       is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
@@ -192,7 +192,7 @@ export const PlacementGroupsCreateDrawer = (
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onClose,
+              onClick: handleDrawerClose,
             }}
             sx={{ pt: 4 }}
           />
