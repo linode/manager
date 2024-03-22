@@ -26,9 +26,10 @@ export type PlacementGroupPayload = Pick<
   'id' | 'label' | 'affinity_type' | 'is_strict'
 >;
 
-export type CreatePlacementGroupPayload = Omit<PlacementGroupPayload, 'id'> & {
+export interface CreatePlacementGroupPayload
+  extends Omit<PlacementGroupPayload, 'id'> {
   region: Region['id'];
-};
+}
 
 export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 
