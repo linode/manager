@@ -18,11 +18,17 @@ interface PageViewEvent {
   url: string;
 }
 
+interface CustomData {
+  isLinodePoweredOff?: boolean;
+  value?: number;
+}
+
 interface AnalyticsEvent {
   action: string;
   category: string;
+  data?: CustomData | string;
   label?: string;
-  value?: number;
+  value?: string | number;
 }
 
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
@@ -36,8 +42,9 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
     window._satellite.track('custom event', {
       action: eventPayload.action.replace(/\|/g, ''),
       category: eventPayload.category.replace(/\|/g, ''),
+      value: JSON.stringify(eventPayload.data),
       label: eventPayload.label?.replace(/\|/g, ''),
-      value: eventPayload.value,
+      // value: eventPayload.value,
     });
   }
 };
@@ -484,5 +491,17 @@ export const sendUpdateLinodeLabelEvent = (
     action: 'Click:button',
     category: 'Linode Label',
     label: `Update linode label from ${label}`,
+  });
+};
+
+export const sendTestLinodeCloneEvent = () => {
+  sendEvent({
+    action: 'Test Linode Create',
+    category: 'test',
+    data: {
+      isLinodePoweredOff: true,
+      value: 0,
+    },
+    label: `test-linode-type`,
   });
 };

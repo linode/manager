@@ -60,6 +60,7 @@ import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
+  sendTestLinodeCloneEvent,
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
@@ -1019,4 +1020,5 @@ const handleAnalytics = (
   }
 
   sendCreateLinodeEvent(eventAction, eventLabel);
+  sendTestLinodeCloneEvent();
 };
