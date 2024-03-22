@@ -23,6 +23,7 @@ import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const UsersLanding = () => {
   const theme = useTheme();
@@ -71,8 +72,14 @@ export const UsersLanding = () => {
     filters: { user_type: 'proxy' },
   });
 
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
   const showChildAccountAccessCol = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type === 'parent'
+    flags.parentChildAccountAccess &&
+      profile?.user_type === 'parent' &&
+      !isChildAccountAccessRestricted
   );
 
   // Parent/Child accounts include additional "child account access" column.
