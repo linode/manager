@@ -49,7 +49,8 @@ export const UsersLanding = () => {
     ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers({
+  // Since this query is disabled for restricted users, use isInitialLoading.
+  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -59,10 +60,11 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
+  // Since this query is disabled for restricted users, use isInitialLoading.
   const {
     data: proxyUser,
     error: proxyUserError,
-    isLoading: isLoadingProxyUser,
+    isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
     enabled:
       flags.parentChildAccountAccess && showProxyUserTable && !isRestrictedUser,
@@ -162,7 +164,7 @@ export const UsersLanding = () => {
         <TableBody>
           <UsersLandingTableBody
             error={error}
-            isLoading={isLoading}
+            isLoading={isInitialLoading}
             numCols={numCols}
             onDelete={handleDelete}
             users={users?.data}
