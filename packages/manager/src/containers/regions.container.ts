@@ -10,6 +10,10 @@ export interface RegionsProps {
   regionsLoading: boolean;
 }
 
+interface ComponentProps<P> extends RegionsProps {
+  componentProps: P;
+}
+
 /**
  * Simple wrapper around our Regions query. Originally this was a Redux connect
  * function; it is being retained in this way because there are still a few places
@@ -22,14 +26,14 @@ export interface RegionsProps {
  * component is needed, best practice is to include an FC container above it (the routing level often works well)
  * and pass regions through there.
  */
-export const withRegions = <Props>(
-  Component: React.ComponentType<Props & RegionsProps>
-) => (props: Props) => {
+export const withRegions = <P>(
+  Component: React.ComponentType<ComponentProps<P>>
+) => (props: P) => {
   const { data, error, isLoading } = useRegionsQuery();
   return React.createElement(Component, {
+    componentProps: props,
     regionsData: data ?? [],
     regionsError: error ?? undefined,
     regionsLoading: isLoading,
-    ...props,
   });
 };

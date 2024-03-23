@@ -1,12 +1,12 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
-import type { CreateLinodeRequest } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { SimpleBackoffMethod } from 'support/util/backoff';
-import { pollLinodeStatus, pollLinodeDiskStatuses } from 'support/util/polling';
+import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import type { Config, Linode, LinodeConfigCreationData } from '@linode/api-v4';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 /**
  * Creates a Linode and waits for it to be in "running" state.
@@ -37,6 +37,10 @@ export const createAndBootLinode = async (
   return linode;
 };
 
+interface LinodeConfigRequestOverride
+  extends Omit<CreateLinodeRequest, 'label'>,
+    LinodeConfigCreationData {}
+
 /**
  * Creates a Linode and returns the first config for that Linode.
  */
@@ -44,9 +48,7 @@ export const createLinodeAndGetConfig = async ({
   linodeConfigRequestOverride = {},
   waitForLinodeToBeRunning = false,
 }: {
-  linodeConfigRequestOverride?: Partial<
-    CreateLinodeRequest & LinodeConfigCreationData
-  >;
+  linodeConfigRequestOverride?: Partial<LinodeConfigRequestOverride>;
   waitForLinodeToBeRunning?: boolean;
 }): Promise<[Linode, Config]> => {
   const createPayload = createLinodeRequestFactory.build({

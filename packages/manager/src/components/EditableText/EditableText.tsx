@@ -131,7 +131,7 @@ interface Props {
   textSuffix?: string;
 }
 
-type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
+interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
 
 export const EditableText = (props: PassThroughProps) => {
   const { classes } = useStyles();

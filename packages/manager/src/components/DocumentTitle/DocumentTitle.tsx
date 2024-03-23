@@ -1,7 +1,7 @@
-/* 
+/*
 
 This component allows for dynamism in what is displayed as the tab/window title depending
-on where the user is in the application. Example: "Linodes | Akamai Cloud Manager" when on 
+on where the user is in the application. Example: "Linodes | Akamai Cloud Manager" when on
 the Linodes landing page. More context: https://github.com/linode/manager/pull/9406
 
 */
@@ -27,13 +27,14 @@ const DocumentTitleSegmentsProvider = documentTitleSegments.Provider;
 
 const DocumentTitleSegmentsConsumer = documentTitleSegments.Consumer;
 
-interface Props {
+interface DocumentTitleSegmentProps {
   segment: string;
 }
+interface InnerDocumentTitleSegmentProps
+  extends DocumentTitleSegmentsContext,
+    DocumentTitleSegmentProps {}
 
-const InnerDocumentTitleSegment = (
-  props: Props & DocumentTitleSegmentsContext
-) => {
+const InnerDocumentTitleSegment = (props: InnerDocumentTitleSegmentProps) => {
   const { appendSegment, removeSegment, segment } = props;
 
   const prevSegment = usePrevious(segment) ?? '';
@@ -52,7 +53,7 @@ const InnerDocumentTitleSegment = (
   return null;
 };
 
-export const DocumentTitleSegment = (props: Props) => {
+export const DocumentTitleSegment = (props: DocumentTitleSegmentProps) => {
   const { segment } = props;
 
   return (
