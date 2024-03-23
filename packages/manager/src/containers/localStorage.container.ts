@@ -2,14 +2,16 @@ import { StateHandlerMap, StateUpdaters, withStateHandlers } from 'recompose';
 
 import { Storage, storage } from 'src/utilities/storage';
 
+type Handlers<TState, TUpdaters> = StateHandlerMap<TState> & TUpdaters;
+
 const localStorageContainer = <TState, TUpdaters, TOuter>(
   mapState: (s: Storage) => TState,
   mapHandlers: (
     s: Storage
-  ) => StateUpdaters<TOuter, TState, StateHandlerMap<TState> & TUpdaters>
+  ) => StateUpdaters<TOuter, TState, Handlers<TState, TUpdaters>>
 ) => {
   const handlers = mapHandlers(storage);
-  return withStateHandlers<TState, StateHandlerMap<TState> & TUpdaters, TOuter>(
+  return withStateHandlers<TState, Handlers<TState, TUpdaters>, TOuter>(
     () => mapState(storage),
     handlers
   );

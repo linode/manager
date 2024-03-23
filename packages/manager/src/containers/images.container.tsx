@@ -12,6 +12,10 @@ export interface WithImagesProps {
   imagesLoading: boolean;
 }
 
+interface ComponentProps<P> extends WithImagesProps {
+  componentProps: P;
+}
+
 /**
  * This is modeled after regions.container.tsx.
 
@@ -26,19 +30,19 @@ export interface WithImagesProps {
  * best practice is to include an FC container above it (the routing level often works well)
  * and pass the data through there.
  */
-export const withImages = <Props,>(
-  Component: React.ComponentType<Props & WithImagesProps>
-) => (props: Props) => {
+export const withImages = <P extends {}>(
+  Component: React.ComponentType<ComponentProps<P>>
+) => (props: P) => {
   const { data, dataUpdatedAt, error, isLoading } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);
   return (
     <Component
+      componentProps={props}
       imagesData={_imagesData}
       imagesError={error ?? undefined}
       imagesLastUpdated={dataUpdatedAt}
       imagesLoading={isLoading}
-      {...props}
     />
   );
 };

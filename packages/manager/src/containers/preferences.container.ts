@@ -13,7 +13,7 @@ export interface PreferencesActionsProps {
   ) => Promise<ManagerPreferences>;
 }
 
-export type Props = PreferencesActionsProps & PreferencesStateProps;
+export interface Props extends PreferencesActionsProps, PreferencesStateProps {}
 
 const withPreferences = <Props>(
   Component: React.ComponentType<

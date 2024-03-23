@@ -6,14 +6,18 @@ export type WithEventsPollingActionProps = ReturnType<
   typeof useEventsPollingActions
 >;
 
-export const withEventsPollingActions = <Props>(
-  Component: React.ComponentType<Props & WithEventsPollingActionProps>
+interface ComponentProps<P> extends WithEventsPollingActionProps {
+  componentProps: P;
+}
+
+export const withEventsPollingActions = <P extends {}>(
+  Component: React.ComponentType<ComponentProps<P>>
 ) => {
-  return (props: Props) => {
+  return (props: P) => {
     const polling = useEventsPollingActions();
 
     return React.createElement(Component, {
-      ...props,
+      componentProps: props,
       ...polling,
     });
   };
