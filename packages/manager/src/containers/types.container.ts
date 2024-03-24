@@ -16,16 +16,8 @@ export interface WithSpecificTypesProps {
   setRequestedTypes: (types: string[]) => void;
 }
 
-interface WithTypesComponentProps<P> extends WithTypesProps {
-  componentProps: P;
-}
-
-interface WithSpecificTypesComponentProps<P> extends WithSpecificTypesProps {
-  componentProps: P;
-}
-
 export const withTypes = <P>(
-  Component: React.ComponentType<WithTypesComponentProps<P>>,
+  Component: React.ComponentType<WithTypesProps>,
   enabled = true
 ) => (props: P) => {
   const {
@@ -35,7 +27,7 @@ export const withTypes = <P>(
   } = useAllTypes(enabled);
 
   return React.createElement(Component, {
-    componentProps: props,
+    ...props,
     typesData,
     typesError: typesError ?? undefined,
     typesLoading,
@@ -43,7 +35,7 @@ export const withTypes = <P>(
 };
 
 export const withSpecificTypes = <P>(
-  Component: React.ComponentType<WithSpecificTypesComponentProps<P>>,
+  Component: React.ComponentType<WithSpecificTypesProps>,
   enabled = true
 ) => (props: P) => {
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
@@ -53,7 +45,7 @@ export const withSpecificTypes = <P>(
     .filter(isNotNullOrUndefined);
 
   return React.createElement(Component, {
-    componentProps: props,
+    ...props,
     requestedTypesData,
     setRequestedTypes,
   });

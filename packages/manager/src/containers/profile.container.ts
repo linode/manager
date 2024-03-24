@@ -10,19 +10,15 @@ export interface WithProfileProps {
   profile: UseQueryResult<Profile, APIError[]>;
 }
 
-interface ComponentProps<P> extends WithProfileProps {
-  componentProps: P;
-}
-
 export const withProfile = <P extends {}>(
-  Component: React.ComponentType<ComponentProps<P>>
+  Component: React.ComponentType<WithProfileProps>
 ) => {
   return (props: P) => {
     const profile = useProfile();
     const grants = useGrants();
 
     return React.createElement(Component, {
-      componentProps: props,
+      ...props,
       grants,
       profile,
     });

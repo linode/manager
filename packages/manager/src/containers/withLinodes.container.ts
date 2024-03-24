@@ -30,12 +30,8 @@ export interface WithLinodesProps {
   linodesLoading: boolean;
 }
 
-interface ComponentProps<P> extends WithLinodesProps {
-  componentProps: P;
-}
-
 export const withLinodes = <P>(
-  Component: React.ComponentType<ComponentProps<P>>,
+  Component: React.ComponentType<WithLinodesProps>,
   enabled = true
 ) => (props: P) => {
   const {
@@ -48,7 +44,7 @@ export const withLinodes = <P>(
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
 
   return React.createElement(Component, {
-    componentProps: props,
+    ...props,
     linodeActions: {
       cloneLinode,
       createLinode,
