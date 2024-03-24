@@ -1,10 +1,16 @@
-import React from 'react';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 
 export interface WithQueryClientProps {
   queryClient: QueryClient;
 }
 
-export const withQueryClient = <Props extends {}>(
-  Component: React.ComponentType<Props & WithQueryClientProps>
-) => (props: Props) => <Component {...props} queryClient={useQueryClient()} />;
+interface ComponentProps<P> extends WithQueryClientProps {
+  componentProps: P;
+}
+
+export const withQueryClient = <P extends {}>(
+  Component: React.ComponentType<ComponentProps<P>>
+) => (props: P) => (
+  <Component componentProps={props} queryClient={useQueryClient()} />
+);

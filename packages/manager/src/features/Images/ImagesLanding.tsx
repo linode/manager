@@ -35,7 +35,12 @@ import {
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import {
+<<<<<<< HEAD
   imageQueries,
+=======
+  queryKey,
+  removeImageFromCache,
+>>>>>>> 8c5d435f08 (Moaar instances)
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
@@ -79,7 +84,7 @@ interface ImageDialogState {
   submitting: boolean;
 }
 
-type CombinedProps = ImageDrawerState & ImageDialogState;
+interface ImagesLandingProps extends ImageDrawerState, ImageDialogState {}
 
 const defaultDrawerState = {
   description: '',
@@ -97,7 +102,7 @@ const defaultDialogState = {
   submitting: false,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = () => {
+export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();

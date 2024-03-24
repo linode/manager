@@ -129,7 +129,11 @@ interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
   nodes: NodeBalancerConfigNode[];
 }
 
-type CombinedProps = Props & RouteProps & PreloadedProps & WithQueryClientProps;
+interface NodeBalancerConfigurationsProps
+  extends Props,
+    RouteProps,
+    PreloadedProps,
+    WithQueryClientProps {}
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -163,7 +167,10 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
     statuses.unknown ? `, ${statuses.unknown} unknown` : ''
   }`;
 };
-class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
+class NodeBalancerConfigurations extends React.Component<
+  NodeBalancerConfigurationsProps,
+  State
+> {
   render() {
     const { nodeBalancerLabel } = this.props;
     const {
@@ -1165,7 +1172,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 }
 
-const preloaded = PromiseLoader<CombinedProps>({
+const preloaded = PromiseLoader<NodeBalancerConfigurationsProps>({
   configs: (props) => {
     const {
       match: {
@@ -1176,7 +1183,7 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-const enhanced = composeC<CombinedProps, Props>(
+const enhanced = composeC<NodeBalancerConfigurationsProps, Props>(
   withRouter,
   preloaded,
   withQueryClient

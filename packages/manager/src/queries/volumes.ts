@@ -79,22 +79,25 @@ export const useLinodeVolumesQuery = (
     { enabled, keepPreviousData: true }
   );
 
+interface ResizeVolumePayloadWithId extends ResizeVolumePayload {
+  volumeId: number;
+}
+
 export const useResizeVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & ResizeVolumePayload
-  >(({ volumeId, ...data }) => resizeVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-    },
-  });
+  return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>(
+    ({ volumeId, ...data }) => resizeVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+      },
+    }
+  );
 };
 
 export const useCloneVolumeMutation = () => {
