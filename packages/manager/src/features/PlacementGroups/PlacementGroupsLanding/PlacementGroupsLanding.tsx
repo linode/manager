@@ -81,6 +81,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/delete/${placementGroup.id}`);
   };
 
@@ -230,6 +231,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         disableUnassignButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupDeleteModalOpen}
+        selectedPlacementGroup={selectedPlacementGroup}
       />
     </>
   );

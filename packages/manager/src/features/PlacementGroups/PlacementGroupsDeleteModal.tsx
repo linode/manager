@@ -1,7 +1,6 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { List } from 'src/components/List';
@@ -13,12 +12,12 @@ import { Typography } from 'src/components/Typography';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import {
   useDeletePlacementGroup,
-  usePlacementGroupQuery,
   useUnassignLinodesFromPlacementGroup,
 } from 'src/queries/placementGroups';
 
 import type {
   Linode,
+  PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
 
@@ -26,15 +25,16 @@ interface Props {
   disableUnassignButton: boolean;
   onClose: () => void;
   open: boolean;
+  selectedPlacementGroup: PlacementGroup | undefined;
 }
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
-  const { disableUnassignButton, onClose, open } = props;
-  const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
-    +id,
-    Boolean(id)
-  );
+  const {
+    disableUnassignButton,
+    onClose,
+    open,
+    selectedPlacementGroup,
+  } = props;
   const {
     assignedLinodes,
     isLoading: placementGroupDataLoading,

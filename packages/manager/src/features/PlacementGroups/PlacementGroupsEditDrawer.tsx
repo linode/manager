@@ -101,15 +101,15 @@ export const PlacementGroupsEditDrawer = (
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
-  if (!selectedPlacementGroup) {
-    return null;
-  }
-
   return (
     <Drawer
-      title={`Edit Placement Group ${selectedPlacementGroup.label} (${
-        AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
-      })`}
+      title={
+        selectedPlacementGroup
+          ? `Edit Placement Group ${selectedPlacementGroup.label} (${
+              AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
+            })`
+          : 'Edit Placement Group'
+      }
       onClose={handleDrawerClose}
       open={open}
     >
@@ -118,10 +118,12 @@ export const PlacementGroupsEditDrawer = (
         <strong>Region: </strong>
         {region ? `${region.label} (${region.id})` : 'Unknown'}
       </Typography>
-      <Typography mb={4}>
-        <strong>Affinity Enforcement: </strong>
-        {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
-      </Typography>
+      {selectedPlacementGroup && (
+        <Typography mb={4}>
+          <strong>Affinity Enforcement: </strong>
+          {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
+        </Typography>
+      )}
       <Divider />
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
