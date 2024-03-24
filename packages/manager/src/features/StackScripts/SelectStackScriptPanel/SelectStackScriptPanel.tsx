@@ -64,7 +64,7 @@ interface Props extends RenderGuardProps {
   selectedUsername?: string;
 }
 
-type CombinedProps = Props & RenderGuardProps & WithProfileProps;
+interface SelectStackScriptPanelProps extends Props, WithProfileProps {}
 
 interface State {
   stackScript?: StackScript;
@@ -72,7 +72,10 @@ interface State {
   stackScriptLoading: boolean;
 }
 
-class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
+class SelectStackScriptPanel extends React.Component<
+  SelectStackScriptPanelProps,
+  State
+> {
   componentDidMount() {
     const selected = +getQueryParamFromQueryString(
       location.search,
@@ -197,7 +200,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 }
 
-export default compose<CombinedProps, Props>(
+export default compose<SelectStackScriptPanelProps, Props>(
   RenderGuard,
   withProfile
 )(SelectStackScriptPanel);

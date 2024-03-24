@@ -14,7 +14,9 @@ import { compose } from 'recompose';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-type CombinedProps = DispatchProps & RouteComponentProps;
+interface LoginAsCustomerCallbackProps
+  extends DispatchProps,
+    RouteComponentProps {}
 
 interface QueryParams {
   access_token: string;
@@ -23,7 +25,7 @@ interface QueryParams {
   token_type: string;
 }
 
-export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
+export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallbackProps> {
   componentDidMount() {
     /**
      * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
@@ -115,7 +117,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
+export default compose<LoginAsCustomerCallbackProps, {}>(
   connected,
   withRouter
 )(LoginAsCustomerCallback);

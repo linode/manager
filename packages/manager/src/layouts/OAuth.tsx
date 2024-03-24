@@ -7,7 +7,7 @@ import { handleStartSession } from 'src/store/authentication/authentication.acti
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { authentication } from 'src/utilities/storage';
 
-type CombinedProps = DispatchProps & RouteComponentProps;
+interface OAuthCallbackPageProps extends DispatchProps, RouteComponentProps {}
 
 interface OAuthQueryParams {
   access_token: string; // token for auth
@@ -18,7 +18,7 @@ interface OAuthQueryParams {
   token_type: string; // token prefix AKA "Bearer"
 }
 
-export class OAuthCallbackPage extends Component<CombinedProps> {
+export class OAuthCallbackPage extends Component<OAuthCallbackPageProps> {
   checkNonce(nonce: string) {
     const { history } = this.props;
     // nonce should be set and equal to ours otherwise retry auth
@@ -143,7 +143,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
+export default compose<OAuthCallbackPageProps, {}>(
   connected,
   withRouter
 )(OAuthCallbackPage);

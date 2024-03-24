@@ -19,7 +19,7 @@ import type {
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-interface Props {
+interface InterfaceSelectProps extends VPCState {
   additionalIPv4RangesForVPC?: ExtendedIP[];
   errors: VPCInterfaceErrors & OtherInterfaceErrors;
   fromAddonsPanel?: boolean;
@@ -61,9 +61,7 @@ export interface ExtendedInterface
   purpose: ExtendedPurpose;
 }
 
-type CombinedProps = Props & VPCState;
-
-export const InterfaceSelect = (props: CombinedProps) => {
+export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const {
     additionalIPv4RangesForVPC,
     errors,

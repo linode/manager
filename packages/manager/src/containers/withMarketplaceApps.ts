@@ -20,9 +20,13 @@ export interface WithMarketplaceAppsProps {
   appInstancesLoading: boolean;
 }
 
-export const withMarketplaceApps = <Props>(
-  Component: React.ComponentType<Props & WithMarketplaceAppsProps>
-) => (props: Props) => {
+interface ComponentProps<P> extends WithMarketplaceAppsProps {
+  componentProps: P;
+}
+
+export const withMarketplaceApps = <P>(
+  Component: React.ComponentType<ComponentProps<P>>
+) => (props: P) => {
   const location = useLocation();
   const flags = useFlags();
 
@@ -46,9 +50,9 @@ export const withMarketplaceApps = <Props>(
   );
 
   return React.createElement(Component, {
-    ...props,
     appInstances: trimmedApps,
     appInstancesError: error?.[0]?.reason,
     appInstancesLoading: isLoading,
+    componentProps: props,
   });
 };

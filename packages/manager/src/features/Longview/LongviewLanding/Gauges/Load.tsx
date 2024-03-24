@@ -10,10 +10,10 @@ import withClientData, {
 
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+interface LoadGaugeProps extends Props, LVDataProps {}
 
 export const LoadGauge = withClientData<Props>((ownProps) => ownProps.clientID)(
-  (props: CombinedProps) => {
+  (props: LoadGaugeProps) => {
     const {
       lastUpdatedError,
       longviewClientData,

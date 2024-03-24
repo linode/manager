@@ -22,9 +22,9 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { profileQueries } from './profile';
 
 export const queryKey = 'domains';
@@ -98,9 +98,13 @@ export const useDeleteDomainMutation = (id: number) => {
   });
 };
 
+interface UpdateDomainPayloadWithId extends UpdateDomainPayload {
+  id: number;
+}
+
 export const useUpdateDomainMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], { id: number } & UpdateDomainPayload>(
+  return useMutation<Domain, APIError[], UpdateDomainPayloadWithId>(
     (data) => {
       const { id, ...rest } = data;
       return updateDomain(id, rest);

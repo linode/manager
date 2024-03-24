@@ -25,11 +25,14 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & DispatchProps & LVClientData;
+interface LongviewPackageDrawerProps
+  extends Props,
+    DispatchProps,
+    LVClientData {}
 
 export const LongviewPackageDrawer = withLongviewStats<Props>(
   (own) => own.clientID
-)((props: CombinedProps) => {
+)((props: LongviewPackageDrawerProps) => {
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
   const theme = useTheme();
 
@@ -51,7 +54,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
             <TableCell style={{ width: '40%' }}>Package</TableCell>
             <TableCell>
               Installed Version{` `}/{` `}
-              <Box component="span" color={theme.color.green}>
+              <Box color={theme.color.green} component="span">
                 Latest Version
               </Box>
             </TableCell>
