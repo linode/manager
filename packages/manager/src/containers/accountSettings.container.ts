@@ -9,19 +9,15 @@ export interface WithAccountSettingsProps {
   accountSettings: UseQueryResult<AccountSettings, APIError[]>;
 }
 
-interface ComponentProps<P> extends WithAccountSettingsProps {
-  componentProps: P;
-}
-
 export const withAccountSettings = <P extends {}>(
-  Component: React.ComponentType<ComponentProps<P>>
+  Component: React.ComponentType<WithAccountSettingsProps>
 ) => {
   return (props: P) => {
     const accountSettings = useAccountSettings();
 
     return React.createElement(Component, {
+      ...props,
       accountSettings,
-      componentProps: props,
     });
   };
 };
