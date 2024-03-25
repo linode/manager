@@ -29,6 +29,7 @@ export const PlacementGroupsEditDrawer = (
   const {
     disableEditButton,
     onClose,
+    onExited,
     onPlacementGroupEdit,
     open,
     selectedPlacementGroup,
@@ -111,6 +112,7 @@ export const PlacementGroupsEditDrawer = (
           : 'Edit Placement Group'
       }
       onClose={handleDrawerClose}
+      onExited={onExited}
       open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}

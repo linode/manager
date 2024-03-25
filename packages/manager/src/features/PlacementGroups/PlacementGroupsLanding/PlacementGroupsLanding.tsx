@@ -87,6 +87,9 @@ export const PlacementGroupsLanding = React.memo(() => {
 
   const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
+  };
+
+  const onExited = () => {
     setSelectedPlacementGroup(undefined);
   };
 
@@ -224,12 +227,14 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
+        onExited={onExited}
         open={isPlacementGroupEditDrawerOpen}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
+        onExited={onExited}
         open={isPlacementGroupDeleteModalOpen}
         selectedPlacementGroup={selectedPlacementGroup}
       />

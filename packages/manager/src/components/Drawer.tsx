@@ -11,6 +11,10 @@ import { convertForAria } from 'src/utilities/stringUtils';
 
 interface Props extends DrawerProps {
   /**
+   * Callback fired when the drawer closing animation has completed.
+   */
+  onExited?: () => void;
+  /**
    * Title that appears at the top of the drawer
    */
   title: string;
@@ -85,7 +89,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export const Drawer = (props: Props) => {
   const { classes, cx } = useStyles();
 
-  const { children, onClose, title, wide, ...rest } = props;
+  const { children, onClose, onExited, title, wide, ...rest } = props;
 
   const titleID = convertForAria(title);
 
@@ -107,6 +111,8 @@ export const Drawer = (props: Props) => {
       aria-labelledby={titleID}
       data-qa-drawer
       data-testid="drawer"
+      // onTransitionEnd={onExited}
+      onTransitionExited={onExited}
       role="dialog"
     >
       <Grid

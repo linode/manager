@@ -24,6 +24,7 @@ import type {
 interface Props {
   disableUnassignButton: boolean;
   onClose: () => void;
+  onExited?: () => void;
   open: boolean;
   selectedPlacementGroup: PlacementGroup | undefined;
 }
@@ -32,6 +33,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
     onClose,
+    onExited,
     open,
     selectedPlacementGroup,
   } = props;
@@ -114,6 +116,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       loading={placementGroupDataLoading || deletePlacementLoading}
       onClick={onDelete}
       onClose={onClose}
+      onExited={onExited}
       open={open}
       title={`Delete ${placementGroupLabel}`}
     >
