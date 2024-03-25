@@ -15,10 +15,13 @@ export interface PreferencesActionsProps {
 
 export interface Props extends PreferencesActionsProps, PreferencesStateProps {}
 
+export interface ComponentProps
+  extends Props,
+    PreferencesStateProps,
+    PreferencesActionsProps {}
+
 const withPreferences = <Props>(
-  Component: React.ComponentType<
-    Props & PreferencesStateProps & PreferencesActionsProps
-  >
+  Component: React.ComponentType<ComponentProps>
 ) => (props: Props) => {
   const { data: preferences, refetch } = usePreferences();
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
