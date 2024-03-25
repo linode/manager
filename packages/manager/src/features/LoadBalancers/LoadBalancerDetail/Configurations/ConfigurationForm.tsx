@@ -157,22 +157,28 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
 
   const handleProtocolChange = (protocol: Protocol) => {
     let certificates = [...formik.values.certificates];
+    let port = formik.values.port;
 
     if (protocol !== 'https') {
+      // Clear the certificates array if the selected protocol is not HTTPS.
+      // The API will error if you try to pass certificates for HTTP or TCP.
       certificates = [];
     }
 
-    let port = formik.values.port;
+    if (!hasChangedPort) {
+      // If the user has not manually changed the port, and they select HTTP,
+      // set the port to 80 for them.
+      if (protocol === 'http') {
+        port = 80;
+      }
 
-    if (!hasChangedPort && protocol === 'http') {
-      port = 80;
+      // If the user has not manually changed the port, and they select HTTPS,
+      // set the port to 443 for them.
+      if (protocol === 'https') {
+        port = 443;
+      }
     }
 
-    if (!hasChangedPort && protocol === 'https') {
-      port = 443;
-    }
-
-    // Update the protocol and port at the same time if the port is unchanged.
     formik.setFormikState((prev) => ({
       ...prev,
       values: {
