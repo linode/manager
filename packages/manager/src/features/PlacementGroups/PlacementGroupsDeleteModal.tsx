@@ -115,7 +115,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           '& .MuiDialog-paper': {
             '& > .MuiDialogContent-root > div': {
               maxHeight: 300,
-              padding: 0,
+              padding: 4,
             },
             maxHeight: 500,
             width: 500,
