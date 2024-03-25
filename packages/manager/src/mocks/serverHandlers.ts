@@ -1627,9 +1627,12 @@ export const handlers = [
       once: true,
     }
   ),
-  // // HERE
+
   http.get('*/support/tickets', () => {
-    const tickets = supportTicketFactory.buildList(15, { status: 'open' });
+    const tickets = supportTicketFactory.buildList(15, {
+      severity: 1,
+      status: 'open',
+    });
     return HttpResponse.json(makeResourcePage(tickets));
   }),
   http.get('*/support/tickets/999', () => {
@@ -1642,6 +1645,7 @@ export const handlers = [
   http.get('*/support/tickets/:ticketId', ({ params }) => {
     const ticket = supportTicketFactory.build({
       id: Number(params.ticketId),
+      severity: 1,
     });
     return HttpResponse.json(ticket);
   }),
