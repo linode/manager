@@ -123,7 +123,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         }}
         onClose={onClose}
         open={open}
-        title="Placement Group Not Found"
+        title="Delete Placement Group"
       >
         {isFetching ? <CircleProgress /> : <NotFound />}
       </ConfirmationDialog>

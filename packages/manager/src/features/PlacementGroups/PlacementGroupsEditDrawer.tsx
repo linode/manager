@@ -121,7 +121,7 @@ export const PlacementGroupsEditDrawer = (
           ? `Edit Placement Group ${placementGroup.label} (${
               AFFINITY_TYPES[placementGroup.affinity_type]
             })`
-          : 'Placement Group Not Found'
+          : 'Edit Placement Group'
       }
       onClose={handleDrawerClose}
       onExited={onExited}
