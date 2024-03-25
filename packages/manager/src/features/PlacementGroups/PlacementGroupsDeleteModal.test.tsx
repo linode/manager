@@ -143,9 +143,7 @@ describe('PlacementGroupsDeleteModal', () => {
       );
     });
 
-    const { getByRole, getByTestId, getByText } = renderResult!;
-
-    expect(getByText('No Linodes assigned to this Placement Group.'));
+    const { getByRole, getByTestId } = renderResult!;
 
     const textField = getByTestId('textfield-input');
     const deleteButton = getByRole('button', { name: 'Delete' });

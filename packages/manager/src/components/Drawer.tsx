@@ -111,7 +111,6 @@ export const Drawer = (props: Props) => {
       aria-labelledby={titleID}
       data-qa-drawer
       data-testid="drawer"
-      // onTransitionEnd={onExited}
       onTransitionExited={onExited}
       role="dialog"
     >

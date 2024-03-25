@@ -72,7 +72,7 @@ interface TypeToConfirmDialogProps {
   /**
    * Optional callback to be executed when the closing animation has completed
    */
-  onExited?: (() => void) & (() => void);
+  onExited?: () => void;
   /**
    * The open/closed state of the dialog
    */
