@@ -1,8 +1,10 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
@@ -14,6 +16,7 @@ import { Typography } from 'src/components/Typography';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import {
   useDeletePlacementGroup,
+  usePlacementGroupQuery,
   useUnassignLinodesFromPlacementGroup,
 } from 'src/queries/placementGroups';
 
@@ -39,25 +42,31 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     open,
     selectedPlacementGroup,
   } = props;
+  const { id } = useParams<{ id: string }>();
+  const { data: placementGroupFromParam, isFetching } = usePlacementGroupQuery(
+    Number(id),
+    Boolean(!selectedPlacementGroup)
+  );
+  const placementGroup = selectedPlacementGroup ?? placementGroupFromParam;
   const {
     assignedLinodes,
     isLoading: placementGroupDataLoading,
     linodesCount: assignedLinodesCount,
   } = usePlacementGroupData({
-    placementGroup: selectedPlacementGroup,
+    placementGroup,
   });
   const {
     error: deletePlacementError,
     isLoading: deletePlacementLoading,
     mutateAsync: deletePlacementGroup,
     reset: resetDeletePlacementGroup,
-  } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
+  } = useDeletePlacementGroup(placementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
     isLoading: unassignLinodeLoading,
     mutateAsync: unassignLinodes,
     reset: resetUnassignLinodes,
-  } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
+  } = useUnassignLinodesFromPlacementGroup(placementGroup?.id ?? -1);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -91,22 +100,22 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     onClose();
   };
 
-  const placementGroupLabel = selectedPlacementGroup
-    ? `Placement Group ${selectedPlacementGroup?.label} (${
-        AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
+  const placementGroupLabel = placementGroup
+    ? `Placement Group ${placementGroup?.label} (${
+        AFFINITY_TYPES[placementGroup.affinity_type]
       })`
     : 'Placement Group';
 
-  const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
+  const isDisabled = !placementGroup || assignedLinodesCount > 0;
 
-  if (!selectedPlacementGroup) {
+  if (!placementGroup) {
     return (
       <ConfirmationDialog
         sx={{
           '& .MuiDialog-paper': {
             '& > .MuiDialogContent-root > div': {
-              padding: 0,
               maxHeight: 300,
+              padding: 0,
             },
             maxHeight: 500,
             width: 500,
@@ -116,7 +125,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         open={open}
         title="Placement Group Not Found"
       >
-        <NotFound />
+        {isFetching ? <CircleProgress /> : <NotFound />}
       </ConfirmationDialog>
     );
   }
@@ -125,7 +134,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: selectedPlacementGroup?.label,
+        name: placementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
       }}
@@ -141,7 +150,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     >
       {error && (
         <Notice
-          key={selectedPlacementGroup?.id}
+          key={placementGroup?.id}
           text={error?.[0]?.reason}
           variant="error"
         />
