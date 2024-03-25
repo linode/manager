@@ -17,7 +17,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useSupportTicketsQuery } from 'src/queries/support';
 
 import { TicketRow } from './TicketRow';
-import { getStatusFilter } from './ticketUtils';
+import { getStatusFilter, useTicketSeverityCapability } from './ticketUtils';
 
 export interface Props {
   filterStatus: 'closed' | 'open';
@@ -28,6 +28,8 @@ const preferenceKey = 'support-tickets';
 
 export const TicketList = (props: Props) => {
   const { filterStatus, newTicket } = props;
+
+  const hasSeverityCapability = useTicketSeverityCapability();
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -118,6 +120,18 @@ export const TicketList = (props: Props) => {
               </TableSortCell>
             </Hidden>
             <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            {hasSeverityCapability && (
+              <TableSortCell
+                active={isActive('severity')}
+                data-qa-support-severity-header
+                direction={order}
+                handleClick={handleOrderChange}
+                label="severity"
+                noWrap
+              >
+                Severity
+              </TableSortCell>
+            )}
             <Hidden smDown>
               <TableSortCell
                 active={isActive('opened')}

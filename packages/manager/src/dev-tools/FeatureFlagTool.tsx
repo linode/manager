@@ -30,6 +30,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
 ];
 

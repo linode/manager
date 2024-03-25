@@ -1,5 +1,9 @@
 import { Filter, Params } from '@linode/api-v4';
-import { getTickets } from '@linode/api-v4/lib/support';
+import { TicketSeverity, getTickets } from '@linode/api-v4/lib/support';
+
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 /**
  * getStatusFilter
@@ -43,4 +47,21 @@ export const getTicketsPage = (
   const ordering = { '+order': 'desc', '+order_by': 'opened' } as const;
   const filter = { ...status, ...ordering, ...filters };
   return getTickets(params, filter);
+};
+
+export const useTicketSeverityCapability = () => {
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  return isFeatureEnabled(
+    'Support Ticket Severity',
+    Boolean(flags.supportTicketSeverity),
+    account?.capabilities ?? []
+  );
+};
+
+export const severityLabelMap: Record<TicketSeverity, string> = {
+  1: '1-Major Impact',
+  2: '2-Moderate Impact',
+  3: '3-Low Impact',
 };
