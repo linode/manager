@@ -23,7 +23,7 @@ import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';

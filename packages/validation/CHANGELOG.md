@@ -1,3 +1,11 @@
+## [2024-03-18] - v0.42.0
+
+
+### Changed:
+
+- Update TCP rules to not include a `match_condition` ([#10264](https://github.com/linode/manager/pull/10264))
+
+
 ## [2024-03-04] - v0.41.0
 
 ### Upcoming Features:

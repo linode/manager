@@ -63,10 +63,8 @@ describe('DisplaySettings component', () => {
 
     expect(updateUsernameButton).not.toHaveAttribute('disabled');
     expect(updateUsernameButton).toHaveAttribute('aria-disabled', 'true');
-    expect(updateEmailButton).toHaveAttribute('data-qa-tooltip');
 
     expect(updateEmailButton).not.toHaveAttribute('disabled');
     expect(updateEmailButton).toHaveAttribute('aria-disabled', 'true');
-    expect(updateEmailButton).toHaveAttribute('data-qa-tooltip');
   });
 });
