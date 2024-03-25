@@ -11,6 +11,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 
+import { Access } from './Access';
 import { Details } from './Details/Details';
 import { Error } from './Error';
 import { Plan } from './Plan';
@@ -58,8 +59,8 @@ export const LinodeCreatev2 = () => {
         title="Create"
       />
       <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <Error />
         <Stack gap={3}>
-          <Error />
           <Tabs
             index={currentTabIndex}
             onChange={(index) => updateParams({ type: tabs[index] })}
@@ -88,6 +89,7 @@ export const LinodeCreatev2 = () => {
           <Region />
           <Plan />
           <Details />
+          <Access />
           <Summary />
         </Stack>
       </form>
