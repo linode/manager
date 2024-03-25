@@ -156,19 +156,20 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
   };
 
   const handleProtocolChange = (protocol: Protocol) => {
-    // If the user has changed the port manually, just update the protocol and NOT the port.
-    if (hasChangedPort) {
-      return formik.setFieldValue('protocol', protocol);
+    let certificates = [...formik.values.certificates];
+
+    if (protocol !== 'https') {
+      certificates = [];
     }
 
-    let newPort = formik.values.port;
+    let port = formik.values.port;
 
-    if (protocol === 'http') {
-      newPort = 80;
+    if (!hasChangedPort && protocol === 'http') {
+      port = 80;
     }
 
-    if (protocol === 'https') {
-      newPort = 443;
+    if (!hasChangedPort && protocol === 'https') {
+      port = 443;
     }
 
     // Update the protocol and port at the same time if the port is unchanged.
@@ -176,7 +177,8 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
       ...prev,
       values: {
         ...prev.values,
-        port: newPort,
+        certificates,
+        port,
         protocol,
       },
     }));
