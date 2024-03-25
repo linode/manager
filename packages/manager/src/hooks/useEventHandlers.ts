@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { oauthClientsEventHandler } from 'src/queries/accountOAuth';
+import { oauthClientsEventHandler } from 'src/queries/account/oauth';
 import { databaseEventsHandler } from 'src/queries/databases';
 import { domainEventsHandler } from 'src/queries/domains';
 import { firewallEventsHandler } from 'src/queries/firewalls';

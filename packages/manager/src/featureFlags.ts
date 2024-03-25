@@ -51,6 +51,7 @@ export interface Flags {
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
   gecko: boolean;
   ipv6Sharing: boolean;
@@ -75,7 +76,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  vpc: boolean;
 }
 
 type PromotionalOfferFeature =

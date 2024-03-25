@@ -18,10 +18,9 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -103,7 +102,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
   };
 
   const { data: profile } = useProfile();
-  const { data: account } = useAccount();
+
+  const isParentUser = profile?.user_type === 'parent';
 
   const {
     error,
@@ -111,21 +111,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
     mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
 
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
 
-  // @TODO: VPC & Parent/Child - once these are in GA, remove _basePermNameMap logic and references.
+  // @TODO: Parent/Child - once in GA, remove _basePermNameMap logic and references.
   // Just use the basePermNameMap import directly w/o any manipulation.
   const basePermNameMap = filterPermsNameMap(_basePermNameMap, [
-    {
-      name: 'vpc',
-      shouldBeIncluded: showVPCs,
-    },
     {
       name: 'child_account',
       shouldBeIncluded: hasParentChildAccountAccess,
@@ -170,7 +164,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
     e: React.SyntheticEvent<RadioButton>
   ): void => {
     const value = +e.currentTarget.value;
-    const newScopes = form.values.scopes.map(
+    const newScopes = (showFilteredPermissions
+      ? filteredPermissions
+      : allPermissions
+    ).map(
       (scope): Permission => {
         // Check the excluded scopes object to see if the current scope will have its own defaults.
         const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
@@ -220,12 +217,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Filter permissions for all users except parent user accounts.
   const allPermissions = form.values.scopes;
 
+  // Filter permissions for all users *except* parent user accounts with access to child accounts enabled.
   const showFilteredPermissions =
-    (flags.parentChildAccountAccess && profile?.user_type !== 'parent') ||
-    Boolean(!flags.parentChildAccountAccess);
+    !flags.parentChildAccountAccess ||
+    (flags.parentChildAccountAccess &&
+      (!isParentUser || isChildAccountAccessRestricted));
 
   const filteredPermissions = allPermissions.filter(
-    (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
+    // @TODO: Parent/Child - Once feature is released and all perms are always returned, use basePermNameMap[scopeTup[0]] !== 'Child Account Access'.
+    (scopeTup) => scopeTup[0] !== 'child_account'
   );
 
   return (

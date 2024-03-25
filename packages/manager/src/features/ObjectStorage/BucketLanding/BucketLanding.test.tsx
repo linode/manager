@@ -6,17 +6,21 @@ import {
   objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
 
 describe('ObjectStorageLanding', () => {
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   it('renders a loading state', () => {
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/object-storage/buckets', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
@@ -28,16 +32,16 @@ describe('ObjectStorageLanding', () => {
   it('renders an empty state', async () => {
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(4);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
@@ -56,28 +60,33 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const upClusters = objectStorageClusterFactory.buildList(1, {
           region: 'ap-south-1',
         });
-        return res(ctx.json(makeResourcePage([downCluster, ...upClusters])));
+        return HttpResponse.json(
+          makeResourcePage([downCluster, ...upClusters])
+        );
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/cluster-0', (req, res, ctx) => {
-        return res.once(
-          ctx.status(500),
-          ctx.json([{ reason: 'Cluster offline!' }])
-        );
-      }),
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              objectStorageBucketFactory.buildList(2, { cluster: 'ap-south-1' })
-            )
+      http.get(
+        '*/object-storage/buckets/cluster-0',
+        () => {
+          return HttpResponse.json([{ reason: 'Cluster offline!' }], {
+            status: 500,
+          });
+        },
+        {
+          once: true,
+        }
+      ),
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            objectStorageBucketFactory.buildList(2, { cluster: 'ap-south-1' })
           )
         );
       })
@@ -93,16 +102,18 @@ describe('ObjectStorageLanding', () => {
   it('renders general error state', async () => {
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(1);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json([{ reason: 'Cluster offline!' }]));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json([{ reason: 'Cluster offline!' }], {
+          status: 500,
+        });
       })
     );
     renderWithTheme(<BucketLanding />);
@@ -115,16 +126,16 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(1);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(buckets)));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(makeResourcePage(buckets));
       })
     );
 
@@ -141,16 +152,16 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(1);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(buckets)));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(makeResourcePage(buckets));
       })
     );
 

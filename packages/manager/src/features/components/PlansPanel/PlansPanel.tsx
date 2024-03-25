@@ -6,6 +6,7 @@ import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/
 import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -14,11 +15,14 @@ import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
+  getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
+  isMajorityLimitedAvailabilityPlans,
   planTabInfoContent,
+  replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
 
-import type { PlanSelectionType } from './types';
+import type { PlanSelectionType, TypeWithAvailability } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
@@ -43,6 +47,8 @@ interface Props {
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTipText?: string;
 }
 
 export const PlansPanel = (props: Props) => {
@@ -62,11 +68,23 @@ export const PlansPanel = (props: Props) => {
     selectedRegionID,
     showTransfer,
     types,
+    disabledPlanTypes,
+    disabledPlanTypesToolTipText,
   } = props;
 
   const flags = useFlags();
   const location = useLocation();
   const params = getQueryParamsFromQueryString(location.search);
+
+  const { data: regionAvailabilities } = useRegionAvailabilityQuery(
+    selectedRegionID || '',
+    Boolean(flags.soldOutChips) && selectedRegionID !== undefined
+  );
+
+  const _types = replaceOrAppendPlaceholder512GbPlans(types);
+  const _plans = getPlanSelectionsByPlanType(
+    flags.disableLargestGbPlans ? _types : types
+  );
 
   const hideEdgeRegions =
     !flags.gecko ||
@@ -76,11 +94,9 @@ export const PlansPanel = (props: Props) => {
     !hideEdgeRegions &&
     getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
 
-  const planTypes = getPlanSelectionsByPlanType(types);
-
   const getDedicatedEdgePlanType = () => {
-    // 256gb and 512gb plans will not be supported for Edge
-    const plansUpTo128GB = planTypes.dedicated.filter(
+    // 256GB and 512GB plans will not be supported for Edge
+    const plansUpTo128GB = _plans.dedicated.filter(
       (planType) =>
         !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
           planType.formattedLabel
@@ -91,7 +107,6 @@ export const PlansPanel = (props: Props) => {
       delete plan.transfer;
       return {
         ...plan,
-        disk: 0,
         price: {
           hourly: 0,
           monthly: 0,
@@ -105,7 +120,7 @@ export const PlansPanel = (props: Props) => {
     ? {
         dedicated: getDedicatedEdgePlanType(),
       }
-    : planTypes;
+    : _plans;
 
   const {
     hasSelectedRegion,
@@ -117,15 +132,39 @@ export const PlansPanel = (props: Props) => {
   });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
+    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
+    const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
+      (plan) => {
+        return {
+          ...plan,
+          isLimitedAvailabilityPlan: getIsLimitedAvailability({
+            plan,
+            regionAvailabilities,
+            selectedRegionId: selectedRegionID,
+          }),
+        };
+      }
+    );
+
+    const mostClassPlansAreLimitedAvailability = isMajorityLimitedAvailabilityPlans(
+      plansForThisLinodeTypeClass
+    );
+
     return {
       disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
       render: () => {
         return (
           <>
             <PlanInformation
+              hideLimitedAvailabilityBanner={
+                showEdgePlanTable || !flags.disableLargestGbPlans
+              }
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
+              mostClassPlansAreLimitedAvailability={
+                mostClassPlansAreLimitedAvailability
+              }
               disabledClasses={props.disabledClasses}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
@@ -133,22 +172,28 @@ export const PlansPanel = (props: Props) => {
             />
             {showEdgePlanTable && (
               <Notice
-                text="Edge region pricing is temporarily $0 during the beta period, after which standard pricing will begin."
+                text="Edge region pricing is temporarily $0 during the beta period, after which billing will begin."
                 variant="warning"
               />
             )}
             <PlanContainer
+              hideDisabledHelpIcons={
+                mostClassPlansAreLimitedAvailability &&
+                flags.disableLargestGbPlans
+              } // Making it conditional on the flag avoids scenario w/ flag off where all plans on a tab could be disabled with no explanation
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
-              plans={plans[plan]}
+              plans={plansForThisLinodeTypeClass}
               selectedDiskSize={props.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
+              disabledPlanTypes={disabledPlanTypes}
+              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
             />
           </>
         );

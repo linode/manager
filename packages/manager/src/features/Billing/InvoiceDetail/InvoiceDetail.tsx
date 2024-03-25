@@ -23,8 +23,8 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useAccount } from 'src/queries/account/account';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
@@ -260,7 +260,7 @@ export const InvoiceDetail = () => {
                 reserved. If you no longer need powered-down Linodes, you can{' '}
                 <Link to="https://www.linode.com/docs/products/platform/billing/guides/stop-billing/">
                   {' '}
-                  remove the service{' '}
+                  remove the service
                 </Link>{' '}
                 from your account.
               </Typography>

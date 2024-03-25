@@ -11,6 +11,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarForProxy } from 'src/components/GravatarForProxy';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -22,10 +23,12 @@ import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
+
+import { getCompanyNameOrEmail } from './utils';
 
 interface MenuLink {
   display: string;
@@ -81,14 +84,11 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
-  // If there is no company name to identify an account, fall back on the email.
-  // Covers an edge case in which a restricted parent user without `account_access` cannot access the account company.
-  const companyNameOrEmail =
-    hasParentChildAccountAccess &&
-    profile?.user_type !== 'default' &&
-    account?.company
-      ? account.company
-      : profile?.email;
+  const companyNameOrEmail = getCompanyNameOrEmail({
+    company: account?.company,
+    isParentChildFeatureEnabled: hasParentChildAccountAccess,
+    profile,
+  });
 
   const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
@@ -213,6 +213,13 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
+          startIcon={
+            isProxyUser ? (
+              <GravatarForProxy />
+            ) : (
+              <GravatarByEmail email={profile?.email ?? ''} />
+            )
+          }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',
@@ -224,7 +231,6 @@ export const UserMenu = React.memo(() => {
           disableRipple
           endIcon={getEndIcon()}
           onClick={handleClick}
-          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>

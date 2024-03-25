@@ -36,6 +36,7 @@ import {
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getAll } from 'src/utilities/getAll';
 
+import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
 export interface BucketError {
@@ -143,7 +144,7 @@ export const useCreateBucketMutation = () => {
   >(createBucket, {
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
-      queryClient.invalidateQueries(['account', 'settings']);
+      queryClient.invalidateQueries(accountQueries.settings.queryKey);
       queryClient.setQueryData<BucketsResponce>(
         [`${queryKey}-buckets`],
         (oldData) => ({
