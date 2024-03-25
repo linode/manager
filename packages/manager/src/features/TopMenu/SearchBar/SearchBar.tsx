@@ -110,7 +110,7 @@ const SearchBar = (props: SearchProps) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -124,7 +124,9 @@ const SearchBar = (props: SearchProps) => {
     clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
     enabled: shouldMakeRequests,
     isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
   });
 
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);

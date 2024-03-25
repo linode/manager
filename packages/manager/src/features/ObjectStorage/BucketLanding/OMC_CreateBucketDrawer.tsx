@@ -49,13 +49,13 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
   const { data: buckets } = useObjectStorageBuckets({
     isObjMultiClusterEnabled,
-    regions: regionsSupportObjectStorage,
+    regions: regionsSupportingObjectStorage,
   });
 
   const {

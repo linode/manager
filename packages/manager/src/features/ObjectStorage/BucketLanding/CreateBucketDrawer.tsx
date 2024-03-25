@@ -56,7 +56,7 @@ export const CreateBucketDrawer = (props: Props) => {
     !isObjMultiClusterEnabled
   );
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -69,7 +69,9 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: buckets } = useObjectStorageBuckets({
     clusters: isObjMultiClusterEnabled ? undefined : clusters,
     isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
   });
 
   const {

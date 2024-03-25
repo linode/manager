@@ -115,7 +115,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -125,7 +125,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets({
     isObjMultiClusterEnabled,
-    regions: regionsSupportObjectStorage,
+    regions: regionsSupportingObjectStorage,
   });
 
   const { data: accountSettings } = useAccountSettings();

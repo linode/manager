@@ -66,7 +66,7 @@ export const OMC_BucketLanding = () => {
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -76,7 +76,7 @@ export const OMC_BucketLanding = () => {
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets({
     isObjMultiClusterEnabled,
-    regions: regionsSupportObjectStorage,
+    regions: regionsSupportingObjectStorage,
   });
 
   const { mutateAsync: deleteBucket } = useDeleteBucketWithRegionMutation();

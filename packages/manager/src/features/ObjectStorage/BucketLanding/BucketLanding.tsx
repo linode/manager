@@ -62,7 +62,7 @@ export const BucketLanding = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -85,7 +85,9 @@ export const BucketLanding = () => {
   } = useObjectStorageBuckets({
     clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
     isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
   });
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();

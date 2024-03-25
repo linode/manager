@@ -106,7 +106,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -138,7 +138,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     clusters: isObjMultiClusterEnabled ? undefined : clusters,
     enabled: enableObjectPrefetch,
     isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
   });
 
   const allowObjPrefetch =

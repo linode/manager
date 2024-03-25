@@ -69,7 +69,7 @@ export const ObjectStorageLanding = () => {
 
   const { data: regionsData } = useRegionsQuery();
 
-  const regionsSupportObjectStorage = regionsData?.filter((region) =>
+  const regionsSupportingObjectStorage = regionsData?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -86,7 +86,9 @@ export const ObjectStorageLanding = () => {
   } = useObjectStorageBuckets({
     clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
     isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
   });
 
   const userHasNoBucketCreated =

@@ -96,7 +96,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     account?.capabilities ?? []
   );
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -119,7 +119,9 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
     enabled: true,
     isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled ? regionsSupportObjectStorage : undefined,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
   });
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
