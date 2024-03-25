@@ -19,9 +19,11 @@ import type {
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
+interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
+
 interface InterfaceSelectProps extends VPCState {
   additionalIPv4RangesForVPC?: ExtendedIP[];
-  errors: VPCInterfaceErrors & OtherInterfaceErrors;
+  errors: InterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;

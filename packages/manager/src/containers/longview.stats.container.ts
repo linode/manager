@@ -23,7 +23,7 @@ export interface DispatchProps {
   ) => Promise<LongviewResponse['DATA']>;
 }
 
-export type Props = DispatchProps & LVClientData;
+export interface Props extends DispatchProps, LVClientData {}
 
 /**
  *

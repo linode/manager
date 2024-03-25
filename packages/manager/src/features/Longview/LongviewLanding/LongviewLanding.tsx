@@ -184,6 +184,6 @@ const StyledTabs = styled(Tabs, {
   marginTop: 0,
 }));
 
-export default compose<LongviewLandingProps, {} & RouteComponentProps>(
+export default compose<LongviewLandingProps, RouteComponentProps>(
   withLongviewClients()
 )(LongviewLanding);
