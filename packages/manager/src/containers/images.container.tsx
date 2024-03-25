@@ -12,10 +12,6 @@ export interface WithImagesProps {
   imagesLoading: boolean;
 }
 
-interface ComponentProps<P> extends WithImagesProps {
-  componentProps: P;
-}
-
 /**
  * This is modeled after regions.container.tsx.
 
@@ -31,14 +27,13 @@ interface ComponentProps<P> extends WithImagesProps {
  * and pass the data through there.
  */
 export const withImages = <P extends {}>(
-  Component: React.ComponentType<ComponentProps<P>>
+  Component: React.ComponentType<WithImagesProps>
 ) => (props: P) => {
   const { data, dataUpdatedAt, error, isLoading } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);
   return (
     <Component
-      componentProps={props}
       imagesData={_imagesData}
       imagesError={error ?? undefined}
       imagesLastUpdated={dataUpdatedAt}
