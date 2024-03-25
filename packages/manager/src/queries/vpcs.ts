@@ -24,10 +24,28 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { getAll } from 'src/utilities/getAll';
+
 export const vpcQueryKey = 'vpcs';
 export const subnetQueryKey = 'subnets';
 
 // VPC queries
+export const getAllVPCs = () =>
+  getAll<VPC>((params) => getVPCs(params))().then((data) => data.data);
+
+export const useAllVPCsQuery = (
+  params: Params = {},
+  filters: Filter = {},
+  enabled = true
+) =>
+  useQuery<VPC[], APIError[]>(
+    [`${vpcQueryKey}-all`, params, filters],
+    getAllVPCs,
+    {
+      enabled,
+    }
+  );
+
 export const useVPCsQuery = (params: Params, filter: Filter) => {
   return useQuery<ResourcePage<VPC>, APIError[]>(
     [vpcQueryKey, 'paginated', params, filter],

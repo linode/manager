@@ -1,11 +1,11 @@
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useVPCsQuery } from 'src/queries/vpcs';
+import { useAllVPCsQuery } from 'src/queries/vpcs';
 
 import type { Interface } from '@linode/api-v4/lib/linodes/types';
 
 export const useVPCConfigInterface = (linodeId: number) => {
-  const { data: vpcData } = useVPCsQuery({}, {});
-  const vpcsList = vpcData?.data ?? [];
+  const { data: vpcData } = useAllVPCsQuery();
+  const vpcsList = vpcData ?? [];
 
   const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
     const subnets = vpc.subnets;
