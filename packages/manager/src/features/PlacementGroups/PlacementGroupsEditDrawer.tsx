@@ -7,6 +7,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
@@ -109,57 +110,62 @@ export const PlacementGroupsEditDrawer = (
           ? `Edit Placement Group ${selectedPlacementGroup.label} (${
               AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
             })`
-          : 'Edit Placement Group'
+          : 'Placement Group Not Found'
       }
       onClose={handleDrawerClose}
       onExited={onExited}
       open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}
-      <Typography mb={1} mt={4}>
-        <strong>Region: </strong>
-        {region ? `${region.label} (${region.id})` : 'Unknown'}
-      </Typography>
-      {selectedPlacementGroup && (
-        <Typography mb={4}>
-          <strong>Affinity Enforcement: </strong>
-          {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
-        </Typography>
-      )}
-      <Divider />
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={1}>
-          <TextField
-            inputProps={{
-              autoFocus: true,
-            }}
-            aria-label="Label for the Placement Group"
-            disabled={disableEditButton || false}
-            errorText={errors.label}
-            label="Label"
-            name="label"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.label}
-          />
+      {selectedPlacementGroup ? (
+        <>
+          <Typography mb={1} mt={4}>
+            <strong>Region: </strong>
+            {region ? `${region.label} (${region.id})` : 'Unknown'}
+          </Typography>
 
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              disabled: disableEditButton,
-              label: 'Edit',
-              loading: isSubmitting,
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: onClose,
-            }}
-            sx={{ pt: 4 }}
-          />
-        </Stack>
-      </form>
+          <Typography mb={4}>
+            <strong>Affinity Enforcement: </strong>
+            {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
+          </Typography>
+          <Divider />
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={1}>
+              <TextField
+                inputProps={{
+                  autoFocus: true,
+                }}
+                aria-label="Label for the Placement Group"
+                disabled={!selectedPlacementGroup || disableEditButton || false}
+                errorText={errors.label}
+                label="Label"
+                name="label"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.label}
+              />
+
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  disabled: !selectedPlacementGroup || disableEditButton,
+                  label: 'Edit',
+                  loading: isSubmitting,
+                  type: 'submit',
+                }}
+                secondaryButtonProps={{
+                  'data-testid': 'cancel',
+                  label: 'Cancel',
+                  onClick: onClose,
+                }}
+                sx={{ pt: 4 }}
+              />
+            </Stack>
+          </form>
+        </>
+      ) : (
+        <NotFound />
+      )}
     </Drawer>
   );
 };
