@@ -34,7 +34,7 @@ describe('AccessSelect', () => {
     });
   });
 
-  it.skip('updates the access and submits the appropriate value', async () => {
+  it('updates the access and submits the appropriate value', async () => {
     renderWithTheme(<AccessSelect {...props} />);
 
     await waitFor(() => {
