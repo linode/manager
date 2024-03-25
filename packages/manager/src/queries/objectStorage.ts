@@ -39,6 +39,8 @@ import { getAll } from 'src/utilities/getAll';
 import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
+import type { AtLeastOne } from 'src/utilities/types/typesHelpers';
+
 export interface BucketError {
   /*
    @TODO OBJ Multicluster:'region' will become required, and the
@@ -66,10 +68,6 @@ interface UseObjectStorageBucketsBaseOptions {
   enabled?: boolean;
   isObjMultiClusterEnabled?: boolean;
 }
-
-// Utility type to enforce at least one of `clusters` or `regions` to be provided.
-type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
-  U[keyof U];
 
 // Use the utility type with your options
 type UseObjectStorageBucketsOptions = AtLeastOne<{
