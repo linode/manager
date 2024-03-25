@@ -1,4 +1,3 @@
-import { CreateLinodeRequest } from '@linode/api-v4';
 import React, { useState } from 'react';
 import { useController } from 'react-hook-form';
 
@@ -11,7 +10,10 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Firewall = () => {
   const { field, fieldState } = useController<
@@ -19,9 +21,13 @@ export const Firewall = () => {
     'firewall_id'
   >({ name: 'firewall_id' });
 
-  const { data: firewalls } = useAllFirewallsQuery();
+  const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   const selectedFirewall =
     firewalls?.find((firewall) => firewall.id === field.value) ?? null;
@@ -37,15 +43,21 @@ export const Firewall = () => {
         </Typography>
         <Stack spacing={1.5}>
           <Autocomplete
-            errorText={fieldState.error?.message}
+            disabled={isLinodeCreateRestricted}
+            errorText={fieldState.error?.message ?? error?.[0].reason}
             label="Assign Firewall"
+            loading={isLoading}
             noMarginTop
             onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
             options={firewalls ?? []}
+            placeholder="None"
             value={selectedFirewall}
           />
           <Box>
-            <LinkButton onClick={() => setIsDrawerOpen(true)}>
+            <LinkButton
+              isDisabled={isLinodeCreateRestricted}
+              onClick={() => setIsDrawerOpen(true)}
+            >
               Create Firewall
             </LinkButton>
           </Box>

@@ -14,6 +14,7 @@ import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 import { Access } from './Access';
 import { Details } from './Details/Details';
 import { Error } from './Error';
+import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
@@ -23,7 +24,6 @@ import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
-import { Firewall } from './Firewall';
 
 export const LinodeCreatev2 = () => {
   const methods = useForm<CreateLinodeRequest>();
