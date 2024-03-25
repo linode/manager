@@ -43,6 +43,7 @@ export const withImages = <P extends {}>(
       imagesError={error ?? undefined}
       imagesLastUpdated={dataUpdatedAt}
       imagesLoading={isLoading}
+      {...props}
     />
   );
 };
