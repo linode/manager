@@ -13,6 +13,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
@@ -27,13 +28,25 @@ import type {
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
-export const queryKey = 'placement-groups';
+export const placementGroupQueries = createQueryKeys('placement-groups', {
+  all: (params: Params = {}, filters: Filter = {}) => ({
+    queryFn: () => getAllPlacementGroupsRequest(),
+    queryKey: [params, filters],
+  }),
+  paginated: (params: Params, filters: Filter) => ({
+    queryFn: () => getPlacementGroups(params, filters),
+    queryKey: [params, filters],
+  }),
+  placementGroup: (placementGroupId: number) => ({
+    queryFn: () => getPlacementGroup(placementGroupId),
+    queryKey: [placementGroupId],
+  }),
+});
 
-export const useUnpaginatedPlacementGroupsQuery = (enabled = true) =>
+export const useAllPlacementGroupsQuery = (enabled = true) =>
   useQuery<PlacementGroup[], APIError[]>({
     enabled,
-    queryFn: () => getAllPlacementGroupsRequest(),
-    queryKey: [queryKey, 'all'],
+    ...placementGroupQueries.all(),
   });
 
 const getAllPlacementGroupsRequest = () =>
@@ -49,8 +62,7 @@ export const usePlacementGroupsQuery = (
   useQuery<ResourcePage<PlacementGroup>, APIError[]>({
     enabled,
     keepPreviousData: true,
-    queryFn: () => getPlacementGroups(params, filter),
-    queryKey: [queryKey, 'paginated', params, filter],
+    ...placementGroupQueries.paginated(params, filter),
   });
 
 export const usePlacementGroupQuery = (
@@ -59,8 +71,7 @@ export const usePlacementGroupQuery = (
 ) => {
   return useQuery<PlacementGroup, APIError[]>({
     enabled,
-    queryFn: () => getPlacementGroup(placementGroupId),
-    queryKey: [queryKey, 'placement-group', placementGroupId],
+    ...placementGroupQueries.placementGroup(placementGroupId),
   });
 };
 
@@ -70,10 +81,10 @@ export const useCreatePlacementGroup = () => {
   return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>({
     mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.setQueryData(
-        [queryKey, 'placement-group', placementGroup.id],
+      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.setQueryData<PlacementGroup>(
+        placementGroupQueries.placementGroup(placementGroup.id).queryKey,
         placementGroup
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -88,10 +99,10 @@ export const useMutatePlacementGroup = (id: number) => {
   return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
     mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.setQueryData(
-        [queryKey, 'placement-group', id],
+        placementGroupQueries.placementGroup(id).queryKey,
         placementGroup
       );
     },
@@ -104,9 +115,11 @@ export const useDeletePlacementGroup = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.removeQueries([queryKey, 'placement-group', id]);
+      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.removeQueries(
+        placementGroupQueries.placementGroup(id).queryKey
+      );
     },
   });
 };
@@ -121,9 +134,10 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   >({
     mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.setQueryData(
-        [queryKey, 'placement-group', placementGroupId],
+        placementGroupQueries.placementGroup(placementGroupId).queryKey,
         updatedPlacementGroup
       );
     },
@@ -142,9 +156,10 @@ export const useUnassignLinodesFromPlacementGroup = (
     mutationFn: (data) =>
       unassignLinodesFromPlacementGroup(placementGroupId, data),
     onSuccess: (updatedPlacementGroup) => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.setQueryData(
-        [queryKey, 'placement-group', placementGroupId],
+        placementGroupQueries.placementGroup(placementGroupId).queryKey,
         updatedPlacementGroup
       );
     },
