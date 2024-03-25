@@ -5,12 +5,6 @@ export interface WithQueryClientProps {
   queryClient: QueryClient;
 }
 
-interface ComponentProps<P> extends WithQueryClientProps {
-  componentProps: P;
-}
-
 export const withQueryClient = <P extends {}>(
-  Component: React.ComponentType<ComponentProps<P>>
-) => (props: P) => (
-  <Component componentProps={props} queryClient={useQueryClient()} />
-);
+  Component: React.ComponentType<WithQueryClientProps>
+) => (props: P) => <Component {...props} queryClient={useQueryClient()} />;
