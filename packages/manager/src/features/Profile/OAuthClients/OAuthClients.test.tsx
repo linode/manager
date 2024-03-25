@@ -3,7 +3,7 @@ import React from 'react';
 
 import { oauthClientFactory } from 'src/factories/accountOAuth';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import OAuthClients from './OAuthClients';
@@ -13,8 +13,8 @@ describe('Maintenance Table Row', () => {
 
   it('should render oauth clients that come from the API', async () => {
     server.use(
-      rest.get('*/account/oauth-clients', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(clients)));
+      http.get('*/account/oauth-clients', () => {
+        return HttpResponse.json(makeResourcePage(clients));
       })
     );
 

@@ -345,8 +345,16 @@ describe('APIToken utils', () => {
         ['vpc', 0],
       ];
       const excludedScopeNames: ExcludedScope[] = [
-        { defaultAccessLevel: 0, invalidAccessLevels: [1], name: 'vpc' },
-        { defaultAccessLevel: 2, invalidAccessLevels: [1], name: 'longview' },
+        {
+          defaultAccessLevel: 0,
+          invalidAccessLevels: [1],
+          name: 'vpc',
+        },
+        {
+          defaultAccessLevel: 2,
+          invalidAccessLevels: [1],
+          name: 'longview',
+        },
       ];
       expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
     });

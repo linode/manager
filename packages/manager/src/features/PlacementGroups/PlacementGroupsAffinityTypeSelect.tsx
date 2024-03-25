@@ -11,22 +11,23 @@ import { affinityTypeOptions } from './utils';
 import type { FormikHelpers } from 'formik';
 
 interface Props {
+  disabledPlacementGroupCreateButton: boolean;
   error: string | undefined;
   setFieldValue: FormikHelpers<any>['setFieldValue'];
 }
 
 export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
-  const { error, setFieldValue } = props;
+  const { disabledPlacementGroupCreateButton, error, setFieldValue } = props;
   return (
     <Autocomplete
       defaultValue={affinityTypeOptions.find(
-        (option) => option.value === 'anti_affinity'
+        (option) => option.value === 'anti_affinity:local'
       )}
       onChange={(_, value) => {
         setFieldValue('affinity_type', value?.value ?? '');
       }}
       renderOption={(props, option) => {
-        const isDisabledMenuItem = option.value === 'affinity';
+        const isDisabledMenuItem = option.value === 'affinity:local';
 
         return (
           <Tooltip
@@ -40,6 +41,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
                 ''
               )
             }
+            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
             disableFocusListener={!isDisabledMenuItem}
             disableHoverListener={!isDisabledMenuItem}
             disableTouchListener={!isDisabledMenuItem}
@@ -82,6 +84,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
         ),
       }}
       disableClearable={true}
+      disabled={disabledPlacementGroupCreateButton}
       errorText={error}
       label="Affinity Type"
       options={affinityTypeOptions}

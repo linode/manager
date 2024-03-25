@@ -69,8 +69,8 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Private: <>This Linode already has a private IP address.</>,
+const tooltipCopy: Record<IPType, string | null> = {
+  v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
 
@@ -182,7 +182,7 @@ export const AddIPDrawer = (props: Props) => {
           {linodeIsInEdgeRegion && (
             <Notice
               sx={{ fontSize: 15 }}
-              text="Private IP is currently not available for Edge regions"
+              text="Private IP is currently not available for Edge regions."
               variant="warning"
             />
           )}

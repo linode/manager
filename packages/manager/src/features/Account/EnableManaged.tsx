@@ -11,7 +11,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
-import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 

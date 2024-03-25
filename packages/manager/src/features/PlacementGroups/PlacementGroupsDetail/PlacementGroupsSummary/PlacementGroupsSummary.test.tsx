@@ -10,30 +10,30 @@ describe('PlacementGroups Summary', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           label: 'pg-3',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 2,
+              linode_id: 2,
             },
             {
               is_compliant: true,
-              linode: 4,
+              linode_id: 4,
             },
             {
               is_compliant: true,
-              linode: 6,
+              linode_id: 6,
             },
             {
               is_compliant: true,
-              linode: 8,
+              linode_id: 8,
             },
             {
               is_compliant: true,
-              linode: 10,
+              linode_id: 10,
             },
           ],
 

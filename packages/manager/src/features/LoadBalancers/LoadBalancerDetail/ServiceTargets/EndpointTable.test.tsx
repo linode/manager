@@ -3,7 +3,7 @@ import React from 'react';
 
 import { endpointFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EndpointTable } from './EndpointTable';
@@ -96,8 +96,8 @@ describe('EndpointTable', () => {
     ];
 
     server.use(
-      rest.get('*/linode/instances', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(linodes)));
+      http.get('*/linode/instances', () => {
+        return HttpResponse.json(makeResourcePage(linodes));
       })
     );
 

@@ -18,6 +18,7 @@ import type { PlacementGroup } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface PlacementGroupsRowProps {
+  disabled: boolean;
   handleDeletePlacementGroup: () => void;
   handleEditPlacementGroup: () => void;
   placementGroup: PlacementGroup;
@@ -25,6 +26,7 @@ interface PlacementGroupsRowProps {
 
 export const PlacementGroupsRow = React.memo(
   ({
+    disabled,
     handleDeletePlacementGroup,
     handleEditPlacementGroup,
     placementGroup,
@@ -85,6 +87,7 @@ export const PlacementGroupsRow = React.memo(
           {actions.map((action) => (
             <InlineMenuAction
               actionText={action.title}
+              disabled={disabled}
               key={action.title}
               onClick={action.onClick}
             />

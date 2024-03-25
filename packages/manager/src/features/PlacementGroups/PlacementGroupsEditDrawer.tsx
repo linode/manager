@@ -28,7 +28,7 @@ import type { FormikHelpers } from 'formik';
 export const PlacementGroupsEditDrawer = (
   props: PlacementGroupsEditDrawerProps
 ) => {
-  const { onClose, onPlacementGroupEdit, open } = props;
+  const { disableEditButton, onClose, onPlacementGroupEdit, open } = props;
   const { id } = useParams<{ id: string }>();
   const { data: selectedPlacementGroup } = usePlacementGroupQuery(
     +id,
@@ -131,7 +131,7 @@ export const PlacementGroupsEditDrawer = (
               autoFocus: true,
             }}
             aria-label="Label for the Placement Group"
-            disabled={false}
+            disabled={disableEditButton || false}
             errorText={errors.label}
             label="Label"
             name="label"
@@ -143,6 +143,7 @@ export const PlacementGroupsEditDrawer = (
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
+              disabled: disableEditButton,
               label: 'Edit',
               loading: isSubmitting,
               type: 'submit',
