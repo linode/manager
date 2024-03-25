@@ -12,6 +12,7 @@ import {
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+import db1network from 'src/features/Longview/LongviewDetail/db1network.json';
 
 export const NetworkGraph = React.memo((props: GraphProps) => {
   const {
@@ -33,10 +34,7 @@ export const NetworkGraph = React.memo((props: GraphProps) => {
     end
   );
 
-  const networkData = React.useMemo(
-    () => sumNetwork(pathOr({}, ['Interface'], data.Network)),
-    [data.Network]
-  );
+  const networkData = db1network[0].DATA.Network.Interface.eth0;
 
   React.useEffect(() => {
     request();

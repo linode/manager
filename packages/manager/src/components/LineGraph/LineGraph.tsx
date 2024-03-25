@@ -116,6 +116,12 @@ const lineOptions: ChartDataSets = {
 };
 
 const humanizeLargeData = (value: number) => {
+  if (value >= 1000000000000) {
+    return value / 1000000000000 + 'T';
+  }
+  if (value >= 1000000000) {
+    return value / 1000000000 + 'B';
+  }
   if (value >= 1000000) {
     return value / 1000000 + 'M';
   }
@@ -186,6 +192,11 @@ export const LineGraph = (props: LineGraphProps) => {
   ) => {
     const finalChartOptions: ChartOptions = {
       animation: { duration: 0 },
+      layout: {
+        padding: {
+          left: 8,
+        },
+      },
       legend: {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined,

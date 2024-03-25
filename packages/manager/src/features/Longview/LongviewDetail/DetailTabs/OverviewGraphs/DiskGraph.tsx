@@ -9,6 +9,7 @@ import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+import db1disk from 'src/features/Longview/LongviewDetail/db1disk.json';
 
 export const DiskGraph = (props: GraphProps) => {
   const {
@@ -39,10 +40,10 @@ export const DiskGraph = (props: GraphProps) => {
   const { error, read, swap, write } = React.useMemo(
     () =>
       processDiskData(
-        pathOr({}, ['Disk'], data),
-        pathOr('kvm', ['SysInfo', 'type'], data)
+        db1disk[0].DATA.Disk,
+        db1disk[0].DATA.SysInfo.type
       ),
-    [data.Disk, data.SysInfo]
+    [db1disk]
   );
 
   return (

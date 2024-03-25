@@ -13,6 +13,7 @@ import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+import db1memory from 'src/features/Longview/LongviewDetail/db1memory.json';
 
 export const MemoryGraph = (props: GraphProps) => {
   const {
@@ -40,10 +41,10 @@ export const MemoryGraph = (props: GraphProps) => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const buffers = pathOr<Stat[]>([], ['Memory', 'real', 'buffers'], data);
-  const cache = pathOr<Stat[]>([], ['Memory', 'real', 'cache'], data);
+  const buffers = db1memory[0].DATA.Memory.real.buffers;
+  const cache = db1memory[0].DATA.Memory.real.cache;
   const used = getUsedMemory(
-    pathOr([], ['Memory', 'real', 'used'], data),
+    db1memory[0].DATA.Memory.real.used,
     cache,
     buffers
   );
