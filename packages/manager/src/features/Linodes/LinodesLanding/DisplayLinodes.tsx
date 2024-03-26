@@ -26,13 +26,13 @@ import type { Config } from '@linode/api-v4/lib/linodes';
 
 export interface RenderLinodesProps
   extends PaginationProps<LinodeWithMaintenance> {
-  data: Props['data'];
-  openDialog: Props['openDialog'];
-  openPowerActionDialog: Props['openPowerActionDialog'];
+  data: DisplayLinodesProps['data'];
+  openDialog: DisplayLinodesProps['openDialog'];
+  openPowerActionDialog: DisplayLinodesProps['openPowerActionDialog'];
   showHead?: boolean;
 }
 
-interface Props {
+interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
@@ -51,9 +51,7 @@ interface Props {
   updatePageUrl: (page: number) => void;
 }
 
-type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
-
-export const DisplayLinodes = React.memo((props: CombinedProps) => {
+export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const {
     component: Component,
     data,

@@ -48,10 +48,14 @@ import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
 
+interface UpdateDomainDataProps extends UpdateDomainPayload {
+  id: number;
+}
+
 interface Props {
   domain: Domain;
   domainRecords: DomainRecord[];
-  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
+  updateDomain: (data: UpdateDomainDataProps) => Promise<Domain>;
   updateRecords: () => void;
 }
 

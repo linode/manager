@@ -131,12 +131,17 @@ export const useNodebalancerConfigCreateMutation = (id: number) => {
   );
 };
 
+interface CreateNodeBalancerConfigWithConfig
+  extends Partial<CreateNodeBalancerConfig> {
+  configId: number;
+}
+
 export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     NodeBalancerConfig,
     APIError[],
-    Partial<CreateNodeBalancerConfig> & { configId: number }
+    CreateNodeBalancerConfigWithConfig
   >(
     ({ configId, ...data }) =>
       updateNodeBalancerConfig(nodebalancerId, configId, data),

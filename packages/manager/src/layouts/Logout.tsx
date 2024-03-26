@@ -10,7 +10,9 @@ import { clearUserInput } from 'src/store/authentication/authentication.helpers'
 import { handleLogout } from 'src/store/authentication/authentication.requests';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 
-export class Logout extends Component<DispatchProps & StateProps> {
+interface LogoutProps extends DispatchProps, StateProps {}
+
+export class Logout extends Component<LogoutProps> {
   componentDidMount() {
     // Clear any user input (in the Support Drawer) since the user is manually logging out.
     clearUserInput();

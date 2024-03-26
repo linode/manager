@@ -26,15 +26,13 @@ export interface IPAddressRowHandlers {
   openRemoveIPRangeDialog: (range: IPRange) => void;
 }
 
-interface Props {
+interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
   isVPCOnlyLinode: boolean;
   linodeId: number;
   readOnly: boolean;
 }
 
-type CombinedProps = IPDisplay & IPAddressRowHandlers & Props;
-
-export const LinodeIPAddressRow = (props: CombinedProps) => {
+export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   const {
     _ip,
     _range,

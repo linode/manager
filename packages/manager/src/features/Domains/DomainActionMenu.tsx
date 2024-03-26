@@ -22,7 +22,7 @@ export interface Handlers {
   onRemove: (domain: Domain) => void;
 }
 
-interface DomainActionMenuProps extends Handlers {
+interface Props extends Handlers {
   domain: Domain;
 }
 
@@ -30,9 +30,9 @@ interface ExtendedAction extends Action {
   className?: string;
 }
 
-type CombinedProps = DomainActionMenuProps & Handlers;
+interface DomainActionMenuProps extends Props, Handlers {}
 
-export const DomainActionMenu = React.memo((props: CombinedProps) => {
+export const DomainActionMenu = React.memo((props: DomainActionMenuProps) => {
   const { classes } = useStyles();
 
   const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;

@@ -51,11 +51,12 @@ export const initGooglePaymentInstance = async (
   return { error: false };
 };
 
-const tokenizePaymentDataRequest = async (
-  transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
-    totalPrice?: string;
-  }
-) => {
+interface TransactionInfo
+  extends Omit<google.payments.api.TransactionInfo, 'totalPrice'> {
+  totalPrice?: string;
+}
+
+const tokenizePaymentDataRequest = async (transactionInfo: TransactionInfo) => {
   if (!googlePaymentInstance) {
     return Promise.reject(unableToOpenGPayError);
   }
@@ -103,9 +104,7 @@ const tokenizePaymentDataRequest = async (
 
 export const gPay = async (
   action: 'add-recurring-payment' | 'one-time-payment',
-  transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
-    totalPrice?: string;
-  },
+  transactionInfo: TransactionInfo,
   setMessage: (message: PaymentMessage, warnings?: APIWarning[]) => void,
   setProcessing: (processing: boolean) => void,
   queryClient: QueryClient

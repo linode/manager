@@ -13,9 +13,9 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
 
-export type Props = Firewall & ActionHandlers;
+export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
-export const FirewallRow = React.memo((props: Props) => {
+export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const flags = useFlags();
   const { id, label, rules, status, ...actionHandlers } = props;
 

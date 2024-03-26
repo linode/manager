@@ -87,9 +87,12 @@ export interface LinodesLandingProps {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-type CombinedProps = LinodesLandingProps & RouteProps & WithProfileProps;
+interface ListLinodesProps
+  extends LinodesLandingProps,
+    RouteProps,
+    WithProfileProps {}
 
-class ListLinodes extends React.Component<CombinedProps, State> {
+class ListLinodes extends React.Component<ListLinodesProps, State> {
   render() {
     const {
       grants,
@@ -444,7 +447,7 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-export const enhanced = compose<CombinedProps, LinodesLandingProps>(
+export const enhanced = compose<ListLinodesProps, LinodesLandingProps>(
   withRouter,
   withProfile
 );

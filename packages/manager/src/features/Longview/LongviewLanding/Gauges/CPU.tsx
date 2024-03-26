@@ -12,7 +12,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { CPU } from '../../request.types';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+interface getFinalUsedCPUProps extends Props, LVDataProps {}
 
 export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
   const numberOfCores = pathOr(0, ['SysInfo', 'cpu', 'cores'], data);
@@ -21,7 +21,7 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
 };
 
 export const CPUGauge = withClientStats<Props>((ownProps) => ownProps.clientID)(
-  (props: CombinedProps) => {
+  (props: getFinalUsedCPUProps) => {
     const {
       lastUpdatedError,
       longviewClientData,

@@ -44,6 +44,10 @@ import {
   isValidDomainRecord,
 } from './domainUtils';
 
+interface UpdateDomainDataProps extends UpdateDomainPayload {
+  id: number;
+}
+
 interface DomainRecordDrawerProps
   extends Partial<Omit<DomainRecord, 'type'>>,
     Partial<Omit<Domain, 'type'>> {
@@ -59,7 +63,7 @@ interface DomainRecordDrawerProps
   records: DomainRecord[];
   type: DomainType | RecordType;
 
-  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
+  updateDomain: (data: UpdateDomainDataProps) => Promise<Domain>;
   updateRecords: () => void;
 }
 
