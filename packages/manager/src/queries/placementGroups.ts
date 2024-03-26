@@ -83,7 +83,7 @@ export const useCreatePlacementGroup = () => {
     mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all);
+      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
         placementGroup
@@ -102,7 +102,7 @@ export const useMutatePlacementGroup = (id: number) => {
     mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all);
+      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.setQueryData(
         placementGroupQueries.placementGroup(id).queryKey,
         placementGroup
@@ -118,7 +118,7 @@ export const useDeletePlacementGroup = (id: number) => {
     mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all);
+      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.removeQueries(
         placementGroupQueries.placementGroup(id).queryKey
       );
@@ -137,7 +137,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
     mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all);
+      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
@@ -161,7 +161,7 @@ export const useUnassignLinodesFromPlacementGroup = (
       unassignLinodesFromPlacementGroup(placementGroupId, data),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all);
+      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
