@@ -26,9 +26,9 @@ export interface WithImagesProps {
  * best practice is to include an FC container above it (the routing level often works well)
  * and pass the data through there.
  */
-export const withImages = <P extends {}>(
-  Component: React.ComponentType<WithImagesProps>
-) => (props: P) => {
+export const withImages = <Props,>(
+  Component: React.ComponentType<Props & WithImagesProps>
+) => (props: Props) => {
   const { data, dataUpdatedAt, error, isLoading } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);

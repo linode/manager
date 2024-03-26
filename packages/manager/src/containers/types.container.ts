@@ -16,10 +16,10 @@ export interface WithSpecificTypesProps {
   setRequestedTypes: (types: string[]) => void;
 }
 
-export const withTypes = <P>(
-  Component: React.ComponentType<WithTypesProps>,
+export const withTypes = <Props>(
+  Component: React.ComponentType<Props & WithTypesProps>,
   enabled = true
-) => (props: P) => {
+) => (props: Props) => {
   const {
     data: typesData,
     error: typesError,
@@ -34,10 +34,10 @@ export const withTypes = <P>(
   });
 };
 
-export const withSpecificTypes = <P>(
-  Component: React.ComponentType<WithSpecificTypesProps>,
+export const withSpecificTypes = <Props>(
+  Component: React.ComponentType<Props & WithSpecificTypesProps>,
   enabled = true
-) => (props: P) => {
+) => (props: Props) => {
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes, enabled);
   const requestedTypesData = typesQuery

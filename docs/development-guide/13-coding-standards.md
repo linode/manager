@@ -157,6 +157,8 @@ For this reason, extending types with interfaces/extends is suggested over creat
 + }
 ```
 
+Source: [TypeScript Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections)
+
 ## Adobe Analytics
 
 ### Writing a Custom Event

@@ -12,13 +12,9 @@ import {
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
 
-interface LinodeCloneDataWithID extends LinodeCloneData {
-  id: number;
-}
-
 interface Actions {
   cloneLinode: (data: {
-    sourceLinodeId: LinodeCloneDataWithID['id'];
+    sourceLinodeId: number & LinodeCloneData;
   }) => Promise<Linode>;
   createLinode: (data: CreateLinodeRequest) => Promise<Linode>;
 }
@@ -30,10 +26,10 @@ export interface WithLinodesProps {
   linodesLoading: boolean;
 }
 
-export const withLinodes = <P>(
-  Component: React.ComponentType<WithLinodesProps>,
+export const withLinodes = <Props>(
+  Component: React.ComponentType<Props & WithLinodesProps>,
   enabled = true
-) => (props: P) => {
+) => (props: Props) => {
   const {
     data: linodesData,
     error: linodesError,
