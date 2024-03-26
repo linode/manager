@@ -9,9 +9,7 @@ interface InnerProps {
   errors: APIError[];
 }
 
-interface CombinedProps extends Props {
-  errors: APIError[];
-}
+interface CombinedProps extends Props, InnerProps {}
 
 const AccountActivationError = (props: CombinedProps) => {
   React.useEffect(() => {
