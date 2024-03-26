@@ -79,7 +79,7 @@ interface ImageDialogState {
   submitting: boolean;
 }
 
-type CombinedProps = ImageDrawerState & ImageDialogState;
+interface ImagesLandingProps extends ImageDrawerState, ImageDialogState {}
 
 const defaultDrawerState = {
   description: '',
@@ -97,7 +97,7 @@ const defaultDialogState = {
   submitting: false,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = () => {
+export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();

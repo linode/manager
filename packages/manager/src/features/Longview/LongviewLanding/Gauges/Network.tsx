@@ -15,9 +15,9 @@ import {
 } from '../../shared/utilities';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+interface NetworkProps extends Props, LVDataProps {}
 
-const Network = (props: CombinedProps) => {
+const Network = (props: NetworkProps) => {
   const {
     lastUpdatedError,
     longviewClientData,
@@ -101,7 +101,7 @@ const Network = (props: CombinedProps) => {
   );
 };
 
-export const NetworkGauge = compose<CombinedProps, Props>(
+export const NetworkGauge = compose<NetworkProps, Props>(
   React.memo,
   withClientStats<Props>((ownProps) => ownProps.clientID)
 )(Network);

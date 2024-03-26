@@ -471,14 +471,14 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   );
 });
 
-interface PrefetchPrimaryLinkProps {
+interface PrefetchPrimaryLinkProps extends PrimaryLinkProps {
   prefetchRequestCondition: boolean;
   prefetchRequestFn: () => void;
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
 export const PrefetchPrimaryLink = React.memo(
-  (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
+  (props: PrefetchPrimaryLinkProps) => {
     const { cancelRequest, makeRequest } = usePrefetch(
       props.prefetchRequestFn,
       props.prefetchRequestCondition
