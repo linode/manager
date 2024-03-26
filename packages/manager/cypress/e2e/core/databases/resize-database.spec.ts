@@ -12,7 +12,6 @@ import {
   mockGetDatabaseTypes,
   mockResize,
   mockResizeProvisioningDatabase,
-  mockGetDatabasePrices,
 } from 'support/intercepts/databases';
 import {
   databaseClusterConfiguration,
@@ -38,10 +37,10 @@ const resizeDatabase = (initialLabel: string) => {
     .should('be.enabled')
     .click();
   ui.dialog
-    .findByTitle(`Resize ${initialLabel}?`)
+    .findByTitle(`Resize Database Cluster ${initialLabel}?`)
     .should('be.visible')
     .within(() => {
-      ui.buttonGroup.findButtonByTitle('Resize').should('be.visible').click();
+      ui.buttonGroup.findButtonByTitle('Resize Cluster').should('be.visible').click();
     });
 };
 
@@ -169,11 +168,10 @@ describe('Resizing existing clusters', () => {
                   // Find the plan name using `nodeType` and check if it's enabled/disabled,
                   // similar to before.
                 });
-              cy.get('[data-testid="summary"]').should(
-                'contain',
-                nodeType.label
-              );
+                cy.get('[data-testid="summary"]').should('contain',nodeType.label)
             });
+
+          
 
           mockResize(database.id, database.engine, {
             ...database,
