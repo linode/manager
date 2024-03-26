@@ -29,11 +29,16 @@ import type {
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
+const getAllPlacementGroupsRequest = () =>
+  getAll<PlacementGroup>((params, filters) =>
+    getPlacementGroups(params, filters)
+  )().then((data) => data.data);
+
 export const placementGroupQueries = createQueryKeys('placement-groups', {
-  all: (params: Params = {}, filters: Filter = {}) => ({
-    queryFn: () => getAllPlacementGroupsRequest(),
-    queryKey: [params, filters],
-  }),
+  all: {
+    queryFn: getAllPlacementGroupsRequest,
+    queryKey: null,
+  },
   paginated: (params: Params, filters: Filter) => ({
     queryFn: () => getPlacementGroups(params, filters),
     queryKey: [params, filters],
@@ -47,13 +52,8 @@ export const placementGroupQueries = createQueryKeys('placement-groups', {
 export const useAllPlacementGroupsQuery = (enabled = true) =>
   useQuery<PlacementGroup[], APIError[]>({
     enabled,
-    ...placementGroupQueries.all(),
+    ...placementGroupQueries.all,
   });
-
-const getAllPlacementGroupsRequest = () =>
-  getAll<PlacementGroup>((params, filters) =>
-    getPlacementGroups(params, filters)
-  )().then((data) => data.data);
 
 export const usePlacementGroupsQuery = (
   params: Params,
@@ -83,7 +83,7 @@ export const useCreatePlacementGroup = () => {
     mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.invalidateQueries(placementGroupQueries.all);
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
         placementGroup
@@ -102,7 +102,7 @@ export const useMutatePlacementGroup = (id: number) => {
     mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.invalidateQueries(placementGroupQueries.all);
       queryClient.setQueryData(
         placementGroupQueries.placementGroup(id).queryKey,
         placementGroup
@@ -118,7 +118,7 @@ export const useDeletePlacementGroup = (id: number) => {
     mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.invalidateQueries(placementGroupQueries.all);
       queryClient.removeQueries(
         placementGroupQueries.placementGroup(id).queryKey
       );
@@ -137,7 +137,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
     mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.invalidateQueries(placementGroupQueries.all);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
@@ -161,7 +161,7 @@ export const useUnassignLinodesFromPlacementGroup = (
       unassignLinodesFromPlacementGroup(placementGroupId, data),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
+      queryClient.invalidateQueries(placementGroupQueries.all);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
