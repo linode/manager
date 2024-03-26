@@ -297,7 +297,7 @@ export const CreateLinodeSchema = object({
   }),
   interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
-  firewall_id: number().notRequired(),
+  firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
 });
 
