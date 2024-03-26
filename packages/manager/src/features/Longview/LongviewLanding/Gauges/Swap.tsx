@@ -11,10 +11,10 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+interface SwapGaugeProps extends Props, LVDataProps {}
 
 export const SwapGauge = withClientData<Props>((ownProps) => ownProps.clientID)(
-  (props: CombinedProps) => {
+  (props: SwapGaugeProps) => {
     const {
       lastUpdatedError,
       longviewClientData,

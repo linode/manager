@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import {
   StyledPlusIcon,
@@ -9,7 +9,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Tag } from 'src/components/Tag/Tag';
 import { Typography } from 'src/components/Typography';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -35,10 +34,6 @@ export interface TagsPanelProps {
    */
   disabled?: boolean;
   /**
-   * The ID of the entity to which the tags belong.
-   */
-  entityId: number;
-  /**
    * The tags to display.
    */
   tags: string[];
@@ -50,7 +45,7 @@ export interface TagsPanelProps {
 
 export const TagsPanel = (props: TagsPanelProps) => {
   const { classes, cx } = useStyles();
-  const { disabled, entityId, tags, updateTags } = props;
+  const { disabled, tags, updateTags } = props;
 
   const queryClient = useQueryClient();
 
@@ -63,14 +58,8 @@ export const TagsPanel = (props: TagsPanelProps) => {
   const {
     data: userTags,
     error: userTagsError,
-    isLoading: userTagsLoading,
+    isFetching: userTagsLoading,
   } = useTagSuggestions(!profile?.restricted);
-
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: entityId,
-  });
 
   const tagsToSuggest = React.useMemo<Item[] | undefined>(
     () =>
@@ -176,7 +165,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
           className={classes.selectTag}
           creatable
           createOptionPosition="first"
-          disabled={disabled || isLinodesGrantReadOnly}
+          disabled={disabled}
           escapeClearsValue
           hideLabel
           isLoading={userTagsLoading}
@@ -195,7 +184,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
         >
           <StyledTagButton
             buttonType="outlined"
-            disabled={disabled || isLinodesGrantReadOnly}
+            disabled={disabled}
             endIcon={<StyledPlusIcon disabled={disabled} />}
             onClick={toggleTagInput}
           >
@@ -217,7 +206,7 @@ export const TagsPanel = (props: TagsPanelProps) => {
                 [classes.tag]: true,
               })}
               colorVariant="lightBlue"
-              disabled={disabled || isLinodesGrantReadOnly}
+              disabled={disabled}
               key={`tag-item-${thisTag}`}
               label={thisTag}
               maxLength={30}

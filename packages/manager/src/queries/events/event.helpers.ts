@@ -1,17 +1,11 @@
 import { Event, EventAction, Filter } from '@linode/api-v4';
 
-export const isLongPendingEvent = (event: Event): boolean => {
-  const { action, status } = event;
-  return status === 'scheduled' && action === 'image_upload';
-};
-
 export const isInProgressEvent = (event: Event) => {
-  const { percent_complete } = event;
-  if (percent_complete === null || isLongPendingEvent(event)) {
+  if (event.percent_complete === null) {
     return false;
-  } else {
-    return percent_complete !== null && percent_complete < 100;
   }
+
+  return event.percent_complete < 100;
 };
 
 export const isEventInProgressDiskImagize = (event: Event): boolean => {

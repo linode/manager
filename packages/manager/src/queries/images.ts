@@ -16,92 +16,14 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 import { profileQueries } from './profile';
 
-export const queryKey = 'images';
-
-export const useImagesQuery = (params: Params, filters: Filter) =>
-  useQuery<ResourcePage<Image>, APIError[]>(
-    [`${queryKey}-list`, params, filters],
-    () => getImages(params, filters),
-    { keepPreviousData: true }
-  );
-
-// Get specific Image
-export const useImageQuery = (imageID: string, enabled = true) =>
-  useQuery<Image, APIError[]>([queryKey, imageID], () => getImage(imageID), {
-    enabled,
-  });
-
-// Create Image
-export const useCreateImageMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<Image, APIError[], CreateImagePayload>(
-    ({ cloud_init, description, diskID, label }) => {
-      return createImage(diskID, label, description, cloud_init);
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([`${queryKey}-list`]);
-        // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries(profileQueries.grants.queryKey);
-      },
-    }
-  );
-};
-
-// Update Image
-export const useUpdateImageMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<
-    Image,
-    APIError[],
-    { description?: string; imageId: string; label?: string }
-  >(
-    ({ description, imageId, label }) =>
-      updateImage(imageId, label, description),
-    {
-      onSuccess(image) {
-        updateInPaginatedStore<Image>(
-          [`${queryKey}-list`],
-          image.id,
-          image,
-          queryClient
-        );
-      },
-    }
-  );
-};
-
-// Delete Image
-export const useDeleteImageMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { imageId: string }>(
-    ({ imageId }) => deleteImage(imageId),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([`${queryKey}-list`]);
-      },
-    }
-  );
-};
-
-// Remove Image from cache
-export const removeImageFromCache = (queryClient: QueryClient) =>
-  queryClient.invalidateQueries([`${queryKey}-list`]);
-
-// Get all Images
 export const getAllImages = (
   passedParams: Params = {},
   passedFilter: Filter = {}
@@ -110,91 +32,121 @@ export const getAllImages = (
     getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
 
+export const imageQueries = createQueryKeys('images', {
+  all: (params: Params = {}, filters: Filter = {}) => ({
+    queryFn: () => getAllImages(params, filters),
+    queryKey: [params, filters],
+  }),
+  image: (imageId: string) => ({
+    queryFn: () => getImage(imageId),
+    queryKey: [imageId],
+  }),
+  paginated: (params: Params, filters: Filter) => ({
+    queryFn: () => getImages(params, filters),
+    queryKey: [params, filters],
+  }),
+});
+
+export const useImagesQuery = (params: Params, filters: Filter) =>
+  useQuery<ResourcePage<Image>, APIError[]>({
+    ...imageQueries.paginated(params, filters),
+    keepPreviousData: true,
+  });
+
+export const useImageQuery = (imageId: string, enabled = true) =>
+  useQuery<Image, APIError[]>({
+    ...imageQueries.image(imageId),
+    enabled,
+  });
+
+export const useCreateImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Image, APIError[], CreateImagePayload>({
+    mutationFn: ({ cloud_init, description, diskID, label }) => {
+      return createImage(diskID, label, description, cloud_init);
+    },
+    onSuccess(image) {
+      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.setQueryData<Image>(
+        imageQueries.image(image.id).queryKey,
+        image
+      );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+    },
+  });
+};
+
+export const useUpdateImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Image,
+    APIError[],
+    { description?: string; imageId: string; label?: string }
+  >({
+    mutationFn: ({ description, imageId, label }) =>
+      updateImage(imageId, label, description),
+    onSuccess(image) {
+      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.setQueryData<Image>(
+        imageQueries.image(image.id).queryKey,
+        image
+      );
+    },
+  });
+};
+
+export const useDeleteImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { imageId: string }>(
+    ({ imageId }) => deleteImage(imageId),
+    {
+      onSuccess(_, variables) {
+        queryClient.invalidateQueries(imageQueries.paginated._def);
+        queryClient.removeQueries(
+          imageQueries.image(variables.imageId).queryKey
+        );
+      },
+    }
+  );
+};
+
 export const useAllImagesQuery = (
   params: Params = {},
   filters: Filter = {},
   enabled = true
 ) =>
-  useQuery<Image[], APIError[]>(
-    [`${queryKey}-all`, params, filters],
-    () => getAllImages(params, filters),
-    {
-      enabled,
-    }
-  );
+  useQuery<Image[], APIError[]>({
+    ...imageQueries.all(params, filters),
+    enabled,
+  });
 
-export const useUploadImageQuery = (payload: ImageUploadPayload) =>
-  useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
+export const useUploadImageMutation = (payload: ImageUploadPayload) =>
+  useMutation<UploadImageResponse, APIError[]>({
+    mutationFn: () => uploadImage(payload),
+  });
 
 export const imageEventsHandler = ({
   event,
   queryClient,
 }: EventHandlerData) => {
-  const { action, entity, status } = event;
+  if (['failed', 'finished', 'notification'].includes(event.status)) {
+    queryClient.invalidateQueries(imageQueries.all._def);
+    queryClient.invalidateQueries(imageQueries.paginated._def);
 
-  // Keep the getAll query up to date so that when we have to use it, it contains accurate data
-  queryClient.invalidateQueries([`${queryKey}-all`]);
+    if (event.entity) {
+      /*
+       * Image event entities look like this:
+       * "entity": {
+       *   "label": "test-1",
+       *   "id": 23802090,
+       *   "type": "image",
+       *   "url": "/v4/images/private/23802090"
+       * },
+       */
 
-  switch (action) {
-    case 'image_delete':
-      if (
-        doesItemExistInPaginatedStore(
-          [`${queryKey}-list`],
-          entity!.id,
-          queryClient
-        )
-      ) {
-        queryClient.invalidateQueries([`${queryKey}-list`]);
-      }
-      return;
-
-    /**
-     * Not ideal, but we don't have a choice: disk_imagize entity is the Linode
-     * where the disk resides, not the image (as one would expect).
-     */
-    case 'disk_imagize':
-      if (status === 'failed' && event.secondary_entity) {
-        updateInPaginatedStore<Image>(
-          [`${queryKey}-list`],
-          event.secondary_entity.id,
-          {},
-          queryClient
-        );
-        return;
-      }
-
-      if (
-        ['finished', 'notification'].includes(status) &&
-        event.secondary_entity
-      ) {
-        updateInPaginatedStore<Image>(
-          [`${queryKey}-list`],
-          `private/${event.secondary_entity.id}`,
-          {
-            status: 'available',
-          },
-          queryClient
-        );
-        return;
-      }
-
-    case 'image_upload':
-      if (event.status === 'finished') {
-        // eslint-disable-next-line no-unused-expressions
-        (async () =>
-          await getImage(`private/${event.entity?.id}`).then(() => {
-            updateInPaginatedStore<Image>(
-              [`${queryKey}-list`],
-              `private/${event.entity?.id}`,
-              {
-                status: 'available',
-              },
-              queryClient
-            );
-          }))();
-      }
-
-    default:
-      return;
+      const imageId = `private/${event.entity.id}`;
+      queryClient.invalidateQueries(imageQueries.image(imageId).queryKey);
+    }
   }
 };

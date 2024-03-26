@@ -61,12 +61,6 @@ export const AddNewMenu = () => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const { isACLBEnabled } = useIsACLBEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -107,7 +101,6 @@ export const AddNewMenu = () => {
     {
       description: 'Create a private and isolated network',
       entity: 'VPC',
-      hide: !showVPCs,
       icon: VPCIcon,
       link: '/vpcs/create',
     },

@@ -140,12 +140,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const { isACLBEnabled } = useIsACLBEnabled();
 
   const prefetchObjectStorage = () => {
@@ -205,10 +199,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           display: 'VPC',
-          hide: !showVPCs,
           href: '/vpcs',
           icon: <VPC />,
-          isBeta: flags.vpc, // @TODO VPC: after VPC enters GA, remove this property entirely
         },
         {
           display: 'Firewalls',
@@ -302,7 +294,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.databaseBeta,
       isACLBEnabled,
       flags.placementGroups,
-      showVPCs,
     ]
   );
 
@@ -480,14 +471,14 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   );
 });
 
-interface PrefetchPrimaryLinkProps {
+interface PrefetchPrimaryLinkProps extends PrimaryLinkProps {
   prefetchRequestCondition: boolean;
   prefetchRequestFn: () => void;
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
 export const PrefetchPrimaryLink = React.memo(
-  (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
+  (props: PrefetchPrimaryLinkProps) => {
     const { cancelRequest, makeRequest } = usePrefetch(
       props.prefetchRequestFn,
       props.prefetchRequestCondition

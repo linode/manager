@@ -22,7 +22,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -276,7 +276,11 @@ export const RebuildFromImage = (props: Props) => {
                   />
                 </>
               ) : null}
-              <Grid sx={{ marginTop: '16px' }}>
+              <Grid
+                sx={(theme) => ({
+                  marginTop: theme.spacing(2),
+                })}
+              >
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -295,14 +299,16 @@ export const RebuildFromImage = (props: Props) => {
                   value={confirmationText}
                   visible={preferences?.type_to_confirm}
                 />
+
                 <StyledActionsPanel
                   primaryButtonProps={{
-                    'data-testid': 'rebuild-button',
                     'data-qa-form-data-loading': isLoading,
+                    'data-testid': 'rebuild-button',
                     disabled: submitButtonDisabled || disabled,
                     label: 'Rebuild Linode',
                     onClick: handleRebuildButtonClick,
                   }}
+                  sx={{ display: 'flex', flexDirection: 'column-reverse' }}
                 />
               </Grid>
             </form>
