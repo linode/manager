@@ -17,9 +17,11 @@ export interface PlacementGroupsCreateDrawerProps {
 export interface PlacementGroupsEditDrawerProps {
   disableEditButton: boolean;
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
+  onExited?: () => void;
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];
-}
+  selectedPlacementGroup: PlacementGroup | undefined;
+};
 
 export interface PlacementGroupsAssignLinodesDrawerProps {
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
