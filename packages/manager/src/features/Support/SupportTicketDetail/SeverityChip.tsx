@@ -15,7 +15,7 @@ const severityColorMap: Record<TicketSeverity, ChipProps['color']> = {
 export const SeverityChip = ({ severity }: { severity: TicketSeverity }) => (
   <StyledChip
     color={severityColorMap[severity]}
-    label={severityLabelMap[severity]}
+    label={severityLabelMap.get(severity)}
   />
 );
 

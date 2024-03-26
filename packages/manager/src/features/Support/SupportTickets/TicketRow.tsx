@@ -66,7 +66,7 @@ export const TicketRow = ({ ticket }: Props) => {
       </TableCell>
       {hasSeverityCapability && (
         <TableCell data-qa-support-severity>
-          {ticket.severity ? severityLabelMap[ticket.severity] : ''}
+          {ticket.severity ? severityLabelMap.get(ticket.severity) : ''}
         </TableCell>
       )}
       <Hidden smDown>
