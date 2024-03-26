@@ -11,6 +11,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { Namespaces } from './Namespaces/Namespaces';
 import { Overview } from './Overview/Overview';
+import { DashBoardLanding } from './Dashboard/DashboardLanding';
 type Props = RouteComponentProps<{}>;
 
 export const CloudViewTabs = React.memo((props: Props) => {
@@ -18,6 +19,10 @@ export const CloudViewTabs = React.memo((props: Props) => {
     {
       routeName: `${props.match.url}/home`,
       title: 'Home',
+    },
+    {
+      routeName: `${props.match.url}/feature/dashboards`,
+      title: 'Dashboards & Widgets',
     },
     {
       routeName: `${props.match.url}/namespaces`,
@@ -52,9 +57,12 @@ export const CloudViewTabs = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <Overview />
+              <Overview/>
             </SafeTabPanel>
             <SafeTabPanel index={1}>
+              <DashBoardLanding  />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
               <Namespaces />
             </SafeTabPanel>
           </TabPanels>

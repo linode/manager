@@ -23,6 +23,7 @@ import {
   appTokenFactory,
   betaFactory,
   certificateFactory,
+  cloudViewWidgetFactory,
   configurationFactory,
   configurationsEndpointHealthFactory,
   contactFactory,
@@ -31,6 +32,7 @@ import {
   createServiceTargetFactory,
   credentialFactory,
   creditPaymentResponseFactory,
+  dashboardFactory,
   databaseBackupFactory,
   databaseEngineFactory,
   databaseFactory,
@@ -241,8 +243,8 @@ const databases = [
         req.params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : req.params.engine === 'postgresql'
-          ? pickRandom(possiblePostgresReplicationTypes)
-          : (undefined as any),
+            ? pickRandom(possiblePostgresReplicationTypes)
+            : (undefined as any),
       ssl_connection: true,
       storage_engine:
         req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
@@ -553,6 +555,138 @@ const cloudView = [
     //   })
     // );
   }),
+
+  //dashboards
+  rest.get('*/cloudview/dashboards',
+    async (req, res, ctx) => {
+      await sleep(100); // this is to test out loading feature
+      //TODO, decide how to work on widgets and filters (for now keeping static ones)
+      // return res(ctx.json(makeResourcePage(dashboardFactory.buildList(10))))
+      return res(ctx.json(makeResourcePage([{
+        id: 1,
+        label: "Akamai Global Dashboard",
+        service_type: "ACLB",
+        instance_id: 2,
+        namespace_id: 2,
+        created: "2023-07-12T16:08:53",
+        updated: "2023-07-12T16:08:53",
+        widgets: [{
+          label: "HTTP_200",
+          metric: "200",
+          aggregate_function: "sum",
+          group_by: "",
+          y_label: "count",
+          filters: []
+        }, {
+          label: "HTTP_400",
+          metric: "400",
+          aggregate_function: "sum",
+          group_by: "",
+          y_label: "count",
+          filters: []
+        }, {
+          label: "HTTP_500",
+          metric: "500",
+          aggregate_function: "sum",
+          group_by: "",
+          y_label: "count",
+          filters: []
+        }, {
+          label: "HTTP_401",
+          metric: "401",
+          aggregate_function: "sum",
+          group_by: "",
+          y_label: "count",
+          filters: []
+        }], 
+        filters:[ {
+          key:"service_type",
+          operator:"eq",
+          value:"ACLB"
+          },
+          {
+            key:"region",
+            operator:"eq",
+            value:"us-east"
+          },
+          {
+            key:"interval",
+            operator:"eq",
+            value:"1m"
+          }
+        ]
+      }])))
+    }),
+
+  rest.get('*/cloudview/dashboards/:id',
+    async (req, res, ctx) => {
+
+      await sleep(100) // this is to test out loading feature
+      if (req.params.id) {
+
+        return res(ctx.json({
+          id: req.params.id,
+          label: "Akamai Global Dashboard",
+          service_type: "ACLB",
+          instance_id: 2,
+          namespace_id: 2,
+          created: "2023-07-12T16:08:53",
+          updated: "2023-07-12T16:08:53",
+          widgets: [{
+            label: "HTTP_200",
+            metric: "200",
+            aggregate_function: "sum",
+            group_by: "",
+            y_label: "count",
+            filters: []
+          }, {
+            label: "HTTP_400",
+            metric: "400",
+            aggregate_function: "sum",
+            group_by: "",
+            y_label: "count",
+            filters: []
+          }, {
+            label: "HTTP_500",
+            metric: "500",
+            aggregate_function: "sum",
+            group_by: "",
+            y_label: "count",
+            filters: []
+          }, {
+            label: "HTTP_401",
+            metric: "401",
+            aggregate_function: "sum",
+            group_by: "",
+            y_label: "count",
+            filters: []
+          }],
+          filters:[ {
+            key:"service_type",
+            operator:"eq",
+            value:"ACLB"
+            },
+            {
+              key:"region",
+              operator:"eq",
+              value:"us-east"
+            },
+            {
+              key:"interval",
+              operator:"eq",
+              value:"1m"
+            }
+          ]
+        }, 
+        ))
+        
+      } else {
+        //TODO, decide how to work on widgets and filters (for now keeping static ones)
+        return res(ctx.json(dashboardFactory.build({ id: 0 })))
+      }
+    }),
+
+
   rest.get('*/cloudview/services', async (req, res, ctx) => {
     await sleep(2000);
     return res(
@@ -1367,9 +1501,9 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-          ];
+          ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
+          ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
+        ];
 
     if (req.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
@@ -1596,9 +1730,9 @@ export const handlers = [
       const grantsResponse = grantsFactory.build({
         global: parentAccountNonAdminUser.restricted
           ? {
-              cancel_account: false,
-              child_account_access: true,
-            }
+            cancel_account: false,
+            child_account_access: true,
+          }
           : undefined,
       });
       return res(ctx.json(grantsResponse));

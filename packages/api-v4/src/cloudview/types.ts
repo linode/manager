@@ -12,6 +12,35 @@ export interface Namespace {
   updated: string;
 }
 
+export interface Dashboard {
+
+  id: number;
+  label:string;
+  service_type:string;
+  instance_id:number;
+  namespace_id:number;
+  widgets:Widgets[];
+  created:string;
+  updated:string;
+  filters:Filters[];
+
+}
+
+export interface Widgets {
+  label:string;
+  metric:string;
+  aggregate_function:string;
+  group_by:string;
+  y_label:string;
+  filters:Filters[];
+}
+
+export interface Filters {
+  key:string;
+  operator:string;
+  value:string;
+}
+
 export interface NamespaceApiKey {
   active_keys: {
     api_key: string;

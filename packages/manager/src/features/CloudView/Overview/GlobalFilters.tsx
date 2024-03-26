@@ -13,8 +13,9 @@ import {
 } from '../shared/ResourceSelect';
 import { CloudViewServiceSelect } from '../shared/ServicetypeSelect';
 import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
+import { GlobalFilterProperties, GlobalFiltersObject } from '../Models/GlobalFilterProperties';
 
-export const GlobalFilters = React.memo(() => {
+export const GlobalFilters = React.memo((props:GlobalFilterProperties) => {
   const theme = useTheme();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -36,72 +37,90 @@ export const GlobalFilters = React.memo(() => {
   const handleTimeRangeChange = (start: number, end: number) => {
     console.log('TimeRange: ', start, end);
     setTimeBox({ end, start });
+    emitGlobalFilterChange();
   };
 
   const handleIntervalChange = (interval: string | undefined) => {
     console.log('Interval: ', interval);
     setInterval(interval);
+    emitGlobalFilterChange();
   };
 
   const handleRegionChange = (region: string | undefined) => {
     console.log('Region: ', region);
     setRegion(region);
+    emitGlobalFilterChange();
   };
 
   const handleResourceChange = (resourceId: any) => {
     console.log('Resource ID: ', resourceId);
     setResourceId(resourceId);
+    emitGlobalFilterChange();
   };
 
   const handleServiceChange = (service: CloudViewResourceTypes) => {
     console.log('Service Type: ', service);
     setService(service);
+    emitGlobalFilterChange();
   };
 
+  const emitGlobalFilterChange = () => {
+
+    let globalFilters = {} as GlobalFiltersObject;
+    globalFilters.region = selectedRegion!;
+    globalFilters.interval = selectedInterval!
+    globalFilters.resource = selectedResourceId
+    globalFilters.serviceType = selectedService!
+    globalFilters.timeRange = time;
+
+    props.handleAnyFilterChange(globalFilters);
+  }
+
+
   return (
-    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
-      <StyledGrid xs={12}>
-        <Grid sx={{ fontSize: 'medium' }}>
-          <div>Region</div>
-        </Grid>
-        <Grid sx={{ marginLeft: 2, width: 250 }}>
-          <StyledCloudViewRegionSelect
-            handleRegionChange={handleRegionChange}
-          />
-        </Grid>
-        <Grid sx={{ marginLeft: 4, fontSize: 'medium' }}>
-          <div>Service Type</div>
-        </Grid>
-        <Grid sx={{ marginLeft: 0.2, width: 100 }}>
-          <CloudViewServiceSelect handleServiceChange={handleServiceChange} />
-        </Grid>
-        <Grid sx={{ fontSize: 'medium', marginLeft: 6 }}>
-          <div>Resource</div>
-        </Grid>
-        <Grid sx={{ marginLeft: 2, width: 200 }}>
-          <StyledCloudViewResourceSelect
-            handleResourceChange={handleResourceChange}
-            region={selectedRegion}
-            resourceType={selectedService}
-            disabled={!selectedService}
-          />
-        </Grid>
-        <Grid sx={{ marginLeft: 8 }}>
-          <StyledCloudViewIntervalSelect
-            handleIntervalChange={handleIntervalChange}
-          />
-        </Grid>
-        <Grid sx={{ marginLeft: 3 }}>
-          <StyledCloudViewTimeRangeSelect
-            defaultValue={'Past 30 Minutes'}
-            handleStatsChange={handleTimeRangeChange}
-            hideLabel
-            label="Select Time Range"
-          />
-        </Grid>
-      </StyledGrid>
-    </Grid>
-  );
+      <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
+        <StyledGrid xs={12}>
+          <Grid sx={{ fontSize: 'medium' }}>
+            <div>Region</div>
+          </Grid>
+          <Grid sx={{ marginLeft: 2, width: 250 }}>
+            <StyledCloudViewRegionSelect
+              handleRegionChange={handleRegionChange}
+            />
+          </Grid>
+          <Grid sx={{ marginLeft: 4, fontSize: 'medium' }}>
+            <div>Service Type</div>
+          </Grid>
+          <Grid sx={{ marginLeft: 0.2, width: 100 }}>
+            <CloudViewServiceSelect handleServiceChange={handleServiceChange} />
+          </Grid>
+          <Grid sx={{ fontSize: 'medium', marginLeft: 6 }}>
+            <div>Resource</div>
+          </Grid>
+          <Grid sx={{ marginLeft: 2, width: 200 }}>
+            <StyledCloudViewResourceSelect
+              handleResourceChange={handleResourceChange}
+              region={selectedRegion}
+              resourceType={selectedService}
+              disabled={!selectedService}
+            />
+          </Grid>
+          <Grid sx={{ marginLeft: 8 }}>
+            <StyledCloudViewIntervalSelect
+              handleIntervalChange={handleIntervalChange}
+            />
+          </Grid>
+          <Grid sx={{ marginLeft: 3 }}>
+            <StyledCloudViewTimeRangeSelect
+              defaultValue={'Past 30 Minutes'}
+              handleStatsChange={handleTimeRangeChange}
+              hideLabel
+              label="Select Time Range"
+            />
+          </Grid>
+        </StyledGrid>
+      </Grid>
+    ); 
 });
 
 const StyledCloudViewRegionSelect = styled(CloudViewRegionSelect, {

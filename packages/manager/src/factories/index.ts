@@ -46,6 +46,9 @@ export * from './volume';
 export * from './vlans';
 export * from './vpcs';
 export * from './cloudViewNamespaces';
+export * from './cloudViewDashboards';
+export * from './cloudViewFilters';
+export * from './cloudViewWidgets';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {
