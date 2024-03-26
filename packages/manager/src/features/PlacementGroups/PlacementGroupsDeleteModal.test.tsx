@@ -19,7 +19,6 @@ const queryMocks = vi.hoisted(() => ({
     reset: vi.fn(),
   }),
   useParams: vi.fn().mockReturnValue({}),
-  usePlacementGroupQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
@@ -44,7 +43,6 @@ vi.mock('src/queries/placementGroups', async () => {
   return {
     ...actual,
     useDeletePlacementGroup: queryMocks.useDeletePlacementGroup,
-    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
   };
 });
 
@@ -85,25 +83,25 @@ describe('PlacementGroupsDeleteModal', () => {
   });
 
   it('should render the right form elements', async () => {
-    queryMocks.usePlacementGroupQuery.mockReturnValue({
-      data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity:local',
-        id: 1,
-        label: 'PG-to-delete',
-        members: [
-          {
-            is_compliant: true,
-            linode_id: 1,
-          },
-        ],
-        region: 'us-east',
-      }),
-    });
-
     let renderResult: RenderResult;
     await act(async () => {
       renderResult = renderWithTheme(
-        <PlacementGroupsDeleteModal disableUnassignButton={false} {...props} />
+        <PlacementGroupsDeleteModal
+          {...props}
+          selectedPlacementGroup={placementGroupFactory.build({
+            affinity_type: 'anti_affinity:local',
+            id: 1,
+            label: 'PG-to-delete',
+            members: [
+              {
+                is_compliant: true,
+                linode_id: 1,
+              },
+            ],
+            region: 'us-east',
+          })}
+          disableUnassignButton={false}
+        />
       );
     });
 
@@ -129,25 +127,23 @@ describe('PlacementGroupsDeleteModal', () => {
   });
 
   it("should be enabled when there's no assigned linodes", async () => {
-    queryMocks.usePlacementGroupQuery.mockReturnValue({
-      data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity:local',
-        id: 1,
-        label: 'PG-to-delete',
-        members: [],
-      }),
-    });
-
     let renderResult: RenderResult;
     await act(async () => {
       renderResult = renderWithTheme(
-        <PlacementGroupsDeleteModal disableUnassignButton={false} {...props} />
+        <PlacementGroupsDeleteModal
+          {...props}
+          selectedPlacementGroup={placementGroupFactory.build({
+            affinity_type: 'anti_affinity:local',
+            id: 1,
+            label: 'PG-to-delete',
+            members: [],
+          })}
+          disableUnassignButton={false}
+        />
       );
     });
 
-    const { getByRole, getByTestId, getByText } = renderResult!;
-
-    expect(getByText('No Linodes assigned to this Placement Group.'));
+    const { getByRole, getByTestId } = renderResult!;
 
     const textField = getByTestId('textfield-input');
     const deleteButton = getByRole('button', { name: 'Delete' });

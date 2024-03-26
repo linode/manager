@@ -37,6 +37,9 @@ export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
   const [query, setQuery] = React.useState<string>('');
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+    PlacementGroup | undefined
+  >(undefined);
   const { handleOrderChange, order, orderBy } = useOrder(
     {
       order: 'asc',
@@ -73,15 +76,21 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/edit/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/delete/${placementGroup.id}`);
   };
 
   const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
+  };
+
+  const onExited = () => {
+    setSelectedPlacementGroup(undefined);
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
@@ -218,12 +227,16 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
+        onExited={onExited}
         open={isPlacementGroupEditDrawerOpen}
+        selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
+        onExited={onExited}
         open={isPlacementGroupDeleteModalOpen}
+        selectedPlacementGroup={selectedPlacementGroup}
       />
     </>
   );

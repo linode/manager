@@ -12,7 +12,6 @@ const queryMocks = vi.hoisted(() => ({
     reset: vi.fn(),
   }),
   useParams: vi.fn().mockReturnValue({}),
-  usePlacementGroupQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
@@ -37,7 +36,6 @@ vi.mock('src/queries/placementGroups', async () => {
   return {
     ...actual,
     useMutatePlacementGroup: queryMocks.useMutatePlacementGroup,
-    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
   };
 });
 
@@ -47,17 +45,15 @@ describe('PlacementGroupsCreateDrawer', () => {
     queryMocks.useRegionsQuery.mockReturnValue({
       data: regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' }),
     });
-    queryMocks.usePlacementGroupQuery.mockReturnValue({
-      data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity:local',
-        id: 1,
-        label: 'PG-to-edit',
-        region: 'us-east',
-      }),
-    });
 
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
+        selectedPlacementGroup={placementGroupFactory.build({
+          affinity_type: 'anti_affinity:local',
+          id: 1,
+          label: 'PG-to-edit',
+          region: 'us-east',
+        })}
         disableEditButton={false}
         onClose={vi.fn()}
         onPlacementGroupEdit={vi.fn()}
