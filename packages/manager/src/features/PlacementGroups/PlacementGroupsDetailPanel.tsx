@@ -11,7 +11,7 @@ import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { PLACEMENT_GROUP_SELECT_TOOLTIP_COPY } from './constants';
@@ -27,7 +27,7 @@ interface Props {
 export const PlacementGroupsDetailPanel = (props: Props) => {
   const theme = useTheme();
   const { handlePlacementGroupChange, selectedRegionId } = props;
-  const { data: allPlacementGroups } = useUnpaginatedPlacementGroupsQuery();
+  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { data: regions } = useRegionsQuery();
   const [
     isCreatePlacementGroupDrawerOpen,

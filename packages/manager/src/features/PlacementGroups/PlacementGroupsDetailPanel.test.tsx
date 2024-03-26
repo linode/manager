@@ -11,7 +11,7 @@ const defaultProps = {
 
 const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/regions/regions', async () => {
@@ -26,8 +26,7 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
@@ -54,7 +53,7 @@ describe('PlacementGroupsDetailPanel', () => {
         }),
       ],
     });
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
           affinity_type: 'affinity:local',

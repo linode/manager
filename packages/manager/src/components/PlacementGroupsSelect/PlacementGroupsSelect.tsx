@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
@@ -51,7 +51,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     data: placementGroups,
     error,
     isLoading,
-  } = useUnpaginatedPlacementGroupsQuery(Boolean(selectedRegion?.id));
+  } = useAllPlacementGroupsQuery(Boolean(selectedRegion?.id));
 
   const isDisabledPlacementGroup = (
     selectedPlacementGroup: PlacementGroup,
