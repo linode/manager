@@ -67,7 +67,7 @@ export const TicketList = (props: Props) => {
             3: { xsDown: true },
             5: { smDown: true },
           }}
-          columns={6}
+          columns={hasSeverityCapability ? 7 : 6}
         />
       );
     }

@@ -60,8 +60,8 @@ export const useTicketSeverityCapability = () => {
   );
 };
 
-export const severityLabelMap: Record<TicketSeverity, string> = {
-  1: '1-Major Impact',
-  2: '2-Moderate Impact',
-  3: '3-Low Impact',
-};
+export const severityLabelMap: Map<TicketSeverity, string> = new Map([
+  [1, '1-Major Impact'],
+  [2, '2-Moderate Impact'],
+  [3, '3-Low Impact'],
+]);
