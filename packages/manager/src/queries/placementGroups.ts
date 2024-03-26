@@ -16,6 +16,7 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { queryKey as linodeQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile';
@@ -87,6 +88,7 @@ export const useCreatePlacementGroup = () => {
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
         placementGroup
       );
+
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
@@ -133,13 +135,15 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
     AssignLinodesToPlacementGroupPayload
   >({
     mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
-    onSuccess: (updatedPlacementGroup) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       queryClient.invalidateQueries(placementGroupQueries.all._def);
-      queryClient.setQueryData(
-        placementGroupQueries.placementGroup(placementGroupId).queryKey,
-        updatedPlacementGroup
+      queryClient.invalidateQueries(
+        placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
+
+      // Invalidate all linodes query since we use the list to populate the select in the assign drawer
+      queryClient.invalidateQueries([linodeQueryKey, 'all']);
     },
   });
 };
@@ -155,13 +159,15 @@ export const useUnassignLinodesFromPlacementGroup = (
   >({
     mutationFn: (data) =>
       unassignLinodesFromPlacementGroup(placementGroupId, data),
-    onSuccess: (updatedPlacementGroup) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       queryClient.invalidateQueries(placementGroupQueries.all._def);
-      queryClient.setQueryData(
-        placementGroupQueries.placementGroup(placementGroupId).queryKey,
-        updatedPlacementGroup
+      queryClient.invalidateQueries(
+        placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
+
+      // Invalidate all linodes query since we use the list to populate the select in the assign drawer
+      queryClient.invalidateQueries([linodeQueryKey, 'all']);
     },
   });
 };
