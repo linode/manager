@@ -8,7 +8,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Addons } from './Addons';
 
 describe('Linode Create v2 Addons', () => {
-  it('should render a root password input', () => {
+  it('should render an "Add-ons" heading', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Addons />,
     });
