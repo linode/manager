@@ -142,7 +142,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      // Invalidate all linodes query since we use the list to populate the select in the assign drawer
+      // Invalidate all linodes query since we use the list to populate the PG linode select
       queryClient.invalidateQueries([linodeQueryKey, 'all']);
     },
   });
@@ -166,7 +166,7 @@ export const useUnassignLinodesFromPlacementGroup = (
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      // Invalidate all linodes query since we use the list to populate the select in the assign drawer
+      // Invalidate all linodes query since we use the list to populate the PG linode select
       queryClient.invalidateQueries([linodeQueryKey, 'all']);
     },
   });
