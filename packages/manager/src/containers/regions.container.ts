@@ -22,9 +22,9 @@ export interface RegionsProps {
  * component is needed, best practice is to include an FC container above it (the routing level often works well)
  * and pass regions through there.
  */
-export const withRegions = <P>(
-  Component: React.ComponentType<RegionsProps>
-) => (props: P) => {
+export const withRegions = <Props>(
+  Component: React.ComponentType<Props & RegionsProps>
+) => (props: Props) => {
   const { data, error, isLoading } = useRegionsQuery();
   return React.createElement(Component, {
     regionsData: data ?? [],

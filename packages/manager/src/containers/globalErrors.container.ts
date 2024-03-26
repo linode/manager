@@ -20,7 +20,7 @@ export interface StateProps {
 /* tslint:disable-next-line */
 export type ReduxState = State;
 
-export interface Props extends DispatchProps, StateProps {}
+export type Props = DispatchProps & StateProps;
 
 export default <TInner extends {}, TOuter extends {}>(
   mapAccountToProps?: (ownProps: TOuter, errors: State) => TInner

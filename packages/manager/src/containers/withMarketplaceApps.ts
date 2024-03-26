@@ -20,9 +20,9 @@ export interface WithMarketplaceAppsProps {
   appInstancesLoading: boolean;
 }
 
-export const withMarketplaceApps = <P>(
-  Component: React.ComponentType<WithMarketplaceAppsProps>
-) => (props: P) => {
+export const withMarketplaceApps = <Props>(
+  Component: React.ComponentType<Props & WithMarketplaceAppsProps>
+) => (props: Props) => {
   const location = useLocation();
   const flags = useFlags();
 

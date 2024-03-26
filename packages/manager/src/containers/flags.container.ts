@@ -8,10 +8,10 @@ export interface WithFeatureFlagProps {
   flags: FlagSet;
 }
 
-export const withFeatureFlags = <P extends {}>(
-  Component: React.ComponentType<WithFeatureFlagProps>
+export const withFeatureFlags = <Props>(
+  Component: React.ComponentType<Props & WithFeatureFlagProps>
 ) => {
-  return (props: P) => {
+  return (props: Props) => {
     const flags = useFlags();
 
     return React.createElement(Component, {
