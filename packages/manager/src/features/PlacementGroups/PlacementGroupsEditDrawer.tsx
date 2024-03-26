@@ -23,7 +23,7 @@ import {
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { getAffinityEnforcement } from './utils';
+import { getAffinityTypeEnforcement } from './utils';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
@@ -137,7 +137,7 @@ export const PlacementGroupsEditDrawer = (
 
           <Typography mb={4}>
             <strong>Affinity Enforcement: </strong>
-            {getAffinityEnforcement(placementGroup.is_strict)}
+            {getAffinityTypeEnforcement(placementGroup.is_strict)}
           </Typography>
           <Divider />
           <form onSubmit={handleSubmit}>
