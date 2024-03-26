@@ -14,6 +14,7 @@ import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 import { Access } from './Access';
 import { Details } from './Details/Details';
 import { Error } from './Error';
+import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
@@ -90,6 +91,7 @@ export const LinodeCreatev2 = () => {
           <Plan />
           <Details />
           <Access />
+          <Firewall />
           <Summary />
         </Stack>
       </form>
