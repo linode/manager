@@ -52,9 +52,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   ) => {
     const currentFlag = flags[flag];
     const updatedValue =
-      typeof currentFlag === 'boolean'
-        ? e.target.checked
-        : { ...currentFlag, enabled: e.target.checked }; // If current flag is an object, update 'enabled' key
+      typeof currentFlag == 'object' && 'enabled' in currentFlag
+        ? { ...currentFlag, enabled: e.target.checked } // If current flag is an object, update 'enabled' key
+        : e.target.checked;
     const updatedFlags = {
       ...getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY),
       [flag]: updatedValue,
