@@ -2,10 +2,11 @@
  * @file Cypress intercepts and mocks for Cloud Manager DBaaS operations.
  */
 
- import type {
+import type {
   Database,
   DatabaseCredentials,
   DatabaseEngine,
+  DatabasePriceObject,
   DatabaseType,
 } from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
@@ -185,7 +186,6 @@ export const mockUpdateProvisioningDatabase = (
     error
   );
 };
- 
 
 /**
  * Intercepts POST request to reset an active database's password and mocks response.
@@ -205,8 +205,6 @@ export const mockResetPassword = (
     {}
   );
 };
-
-
 
 /**
  * Intercepts POST request to reset a provisioning database's password and mocks response.

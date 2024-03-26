@@ -12,6 +12,7 @@ import {
   mockGetDatabaseTypes,
   mockResize,
   mockResizeProvisioningDatabase,
+  mockGetDatabasePrices,
 } from 'support/intercepts/databases';
 import {
   databaseClusterConfiguration,
@@ -19,6 +20,7 @@ import {
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 import { accountFactory } from '@src/factories';
+import { contains } from 'ramda';
 
 /**
  * Resizes a current database cluster to a larger plan size.
@@ -52,7 +54,7 @@ describe('Resizing existing clusters', () => {
          * - Confirms that users can resize an existing database.
          * - Confirms that users can not downsize and smaller plans are disabled.
          */
-        it('Can update active database clusters', () => {
+        it('Can resize active database clusters', () => {
           const initialLabel = configuration.label;
           const allowedIp = randomIp();
           const initialPassword = randomString(16);
@@ -167,6 +169,10 @@ describe('Resizing existing clusters', () => {
                   // Find the plan name using `nodeType` and check if it's enabled/disabled,
                   // similar to before.
                 });
+              cy.get('[data-testid="summary"]').should(
+                'contain',
+                nodeType.label
+              );
             });
 
           mockResize(database.id, database.engine, {
@@ -196,6 +202,7 @@ describe('Resizing existing clusters', () => {
                 label: initialLabel,
                 region: configuration.region.id,
                 engine: configuration.dbType,
+                //engine: 'mysql',
                 status: dbstatus,
                 allow_list: [allowedIp],
                 hosts: {
@@ -213,6 +220,9 @@ describe('Resizing existing clusters', () => {
                 'getDatabaseTypes'
               );
 
+              cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
+              cy.wait(['@getAccount', '@getDatabaseTypes', '@getDatabase']);
+
               mockResize(database.id, database.engine, {
                 ...database,
                 type: 'g6-standard-32',
@@ -223,9 +233,6 @@ describe('Resizing existing clusters', () => {
                 database.engine,
                 errorMessage
               ).as('resizeDatabase');
-
-              cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-              cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
               // Cannot update database label.
               // updateDatabaseLabel(initialLabel, updateAttemptLabel);

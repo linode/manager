@@ -19,6 +19,8 @@ export const possibleStatuses: DatabaseStatus[] = [
   'active',
   'failed',
   'degraded',
+  'restoring',
+  'resizing',
 ];
 
 export const possibleMySQLReplicationTypes: MySQLReplicationType[] = [
@@ -135,8 +137,8 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   disk: Factory.each((i) => i * 20480),
   label: Factory.each((i) => `Linode ${i} GB`),
   memory: Factory.each((i) => i * 2048),
-  vcpus: Factory.each((i) => i * 2)
-}); 
+  vcpus: Factory.each((i) => i * 2),
+});
 
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
   {

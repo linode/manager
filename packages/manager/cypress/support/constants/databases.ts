@@ -46,44 +46,163 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
   databaseTypeFactory.build({
     class: 'nanode',
     id: 'g6-nanode-1',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.0225,
+            monthly: 15,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
     id: 'g6-dedicated-2',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.0975,
+            monthly: 65,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
     id: 'g6-dedicated-4',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.195,
+            monthly: 130,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
     id: 'g6-dedicated-6',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.39,
+            monthly: 260,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
     id: 'g6-dedicated-8',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.78,
+            monthly: 520,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
     id: 'g6-dedicated-16',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 1.56,
+            monthly: 1040,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'standard',
     id: 'g6-standard-4',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.09,
+            monthly: 60,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'standard',
     id: 'g6-standard-8',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.18,
+            monthly: 120,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'standard',
     id: 'g6-standard-16',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.36,
+            monthly: 240,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
   databaseTypeFactory.build({
     class: 'standard',
     id: 'g6-standard-32',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 0.72,
+            monthly: 480,
+          },
+          quantity: 3,
+        },
+      ],
+    },
   }),
-  
 ];
 
 // Array of database cluster configurations for which to test creation.
@@ -147,4 +266,3 @@ export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
     version: '5',
   },
 ];
-
