@@ -19,7 +19,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
@@ -31,6 +31,7 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { getImageLabelForLinode } from '../Images/utils';
 import { ResultGroup } from './ResultGroup';
+import './searchLanding.css';
 import {
   StyledError,
   StyledGrid,
@@ -38,7 +39,6 @@ import {
   StyledRootGrid,
   StyledStack,
 } from './SearchLanding.styles';
-import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 
@@ -52,7 +52,9 @@ const displayMap = {
   volumes: 'Volumes',
 };
 
-export type CombinedProps = SearchProps & RouteComponentProps<{}>;
+export interface SearchLandingProps
+  extends SearchProps,
+    RouteComponentProps<{}> {}
 
 const splitWord = (word: any) => {
   word = word.split('');
@@ -62,7 +64,7 @@ const splitWord = (word: any) => {
   return word;
 };
 
-export const SearchLanding = (props: CombinedProps) => {
+export const SearchLanding = (props: SearchLandingProps) => {
   const { entities, search, searchResultsByEntity } = props;
 
   const isLargeAccount = useIsLargeAccount();
@@ -308,6 +310,8 @@ export const SearchLanding = (props: CombinedProps) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withStoreSearch())(SearchLanding);
+const enhanced = compose<SearchLandingProps, {}>(withStoreSearch())(
+  SearchLanding
+);
 
 export default enhanced;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
 import { SelectedRegionsList } from './SelectedRegionsList';

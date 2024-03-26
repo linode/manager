@@ -20,7 +20,9 @@ type TooltipIconStatus =
   | 'success'
   | 'warning';
 
-type EnhancedTooltipProps = TooltipProps & { width?: number };
+interface EnhancedTooltipProps extends TooltipProps {
+  width?: number;
+}
 
 export interface TooltipIconProps
   extends Omit<TooltipProps, 'children' | 'leaveDelay' | 'title'> {

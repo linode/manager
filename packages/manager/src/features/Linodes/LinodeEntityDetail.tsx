@@ -9,7 +9,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -35,9 +35,9 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 export const LinodeEntityDetail = (props: Props) => {
   const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;
@@ -64,7 +64,6 @@ export const LinodeEntityDetail = (props: Props) => {
     configInterfaceWithVPC,
     configs,
     isVPCOnlyLinode,
-    showVPCs,
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
@@ -109,7 +108,6 @@ export const LinodeEntityDetail = (props: Props) => {
         body={
           <LinodeEntityDetailBody
             configInterfaceWithVPC={configInterfaceWithVPC}
-            displayVPCSection={showVPCs}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
             ipv4={linode.ipv4}
@@ -140,7 +138,6 @@ export const LinodeEntityDetail = (props: Props) => {
           <LinodeEntityDetailHeader
             backups={linode.backups}
             configs={configs}
-            enableVPCLogic={showVPCs}
             handlers={handlers}
             image={linode.image ?? 'Unknown Image'}
             imageVendor={imageVendor}

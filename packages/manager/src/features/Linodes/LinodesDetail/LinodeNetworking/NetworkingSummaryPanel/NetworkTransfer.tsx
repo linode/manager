@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Typography } from 'src/components/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
   getDynamicDCNetworkTransferData,

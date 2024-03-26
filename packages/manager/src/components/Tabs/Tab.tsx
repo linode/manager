@@ -38,11 +38,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Tab = ({
-  children,
-  className,
-  ...rest
-}: TabProps & { className?: string }) => {
+interface TabPropsWithClassName extends TabProps {
+  className?: string;
+}
+
+const Tab = ({ children, className, ...rest }: TabPropsWithClassName) => {
   const { classes, cx } = useStyles();
 
   return (
