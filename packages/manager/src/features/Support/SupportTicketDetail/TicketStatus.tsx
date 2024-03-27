@@ -61,7 +61,7 @@ export const TicketStatus = (props: Props) => {
       {severity && (
         <Grid alignItems="center" container direction="row" spacing={1}>
           <Grid>
-            <Typography>Severity</Typography>
+            <Typography>Severity:</Typography>
           </Grid>
           <Grid>
             <SeverityChip severity={severity} />
