@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey } from 'src/queries/linodes/linodes';
-import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
+import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs/vpcs';
 
 import type {
   APIError,

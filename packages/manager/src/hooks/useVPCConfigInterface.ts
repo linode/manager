@@ -1,5 +1,5 @@
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllVPCsQuery } from 'src/queries/vpcs';
+import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
 import type { Interface } from '@linode/api-v4/lib/linodes/types';
 

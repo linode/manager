@@ -16,86 +16,117 @@ import {
   modifySubnet,
   updateVPC,
 } from '@linode/api-v4';
-import {
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { getAllVPCsRequest } from './requests';
+
+import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { getAll } from 'src/utilities/getAll';
 
 export const vpcQueryKey = 'vpcs';
 export const subnetQueryKey = 'subnets';
 
 // VPC queries
-export const getAllVPCs = () =>
-  getAll<VPC>((params) => getVPCs(params))().then((data) => data.data);
+export const vpcQueries = createQueryKeys('vpcs', {
+  vpc: (id: number) => ({
+    queryFn: () => getVPC(id),
+    queryKey: [id],
+  }),
+  vpcs: {
+    contextQueries: {
+      all: {
+        queryFn: getAllVPCsRequest,
+        queryKey: null,
+      },
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getVPCs(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+});
 
-export const useAllVPCsQuery = (
-  params: Params = {},
-  filters: Filter = {},
-  enabled = true
-) =>
-  useQuery<VPC[], APIError[]>(
-    [`${vpcQueryKey}-all`, params, filters],
-    getAllVPCs,
-    {
-      enabled,
-    }
-  );
+export const useAllVPCsQuery = (enabled = true) =>
+  useQuery<VPC[], APIError[]>({
+    ...vpcQueries.vpcs._ctx.all,
+    enabled,
+  });
 
 export const useVPCsQuery = (params: Params, filter: Filter) => {
-  return useQuery<ResourcePage<VPC>, APIError[]>(
-    [vpcQueryKey, 'paginated', params, filter],
-    () => getVPCs(params, filter),
-    {
-      keepPreviousData: true,
-    }
-  );
-};
-
-export const useVPCQuery = (id: number, enabled: boolean = true) => {
-  return useQuery<VPC, APIError[]>([vpcQueryKey, 'vpc', id], () => getVPC(id), {
-    enabled,
+  return useQuery<ResourcePage<VPC>, APIError[]>({
+    ...vpcQueries.vpcs._ctx.paginated(params, filter),
+    keepPreviousData: true,
   });
 };
 
+export const useVPCQuery = (id: number, enabled: boolean = true) =>
+  useQuery<VPC, APIError[]>({
+    ...vpcQueries.vpc(id),
+    enabled,
+  });
+
 export const useCreateVPCMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<VPC, APIError[], CreateVPCPayload>(createVPC, {
+  return useMutation<VPC, APIError[], CreateVPCPayload>({
+    mutationFn: createVPC,
     onSuccess: (VPC) => {
-      queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
-      queryClient.setQueryData([vpcQueryKey, 'vpc', VPC.id], VPC);
+      queryClient.invalidateQueries(vpcQueries.vpcs._ctx.all);
+      queryClient.invalidateQueries(vpcQueries.vpcs._ctx.paginated._def);
+      queryClient.setQueryData(vpcQueries.vpc(VPC.id).queryKey, VPC);
     },
   });
 };
 
 export const useUpdateVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<VPC, APIError[], UpdateVPCPayload>(
-    (data) => updateVPC(id, data),
-    {
-      onSuccess: (VPC) => {
-        queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
-        queryClient.setQueryData<VPC>([vpcQueryKey, 'vpc', VPC.id], VPC);
-      },
-    }
-  );
+  return useMutation<VPC, APIError[], UpdateVPCPayload>({
+    mutationFn: (data) => updateVPC(id, data), // (data) => updateVPC(id, data),
+    onSuccess: (VPC) => {
+      queryClient.invalidateQueries(vpcQueries.vpcs._ctx.paginated._def);
+      queryClient.setQueryData<VPC>(vpcQueries.vpc(VPC.id).queryKey, VPC);
+    },
+  });
 };
 
 export const useDeleteVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteVPC(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteVPC(id),
     onSuccess: () => {
-      queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
-      queryClient.removeQueries([vpcQueryKey, 'vpc', id]);
+      queryClient.invalidateQueries(vpcQueries.vpcs._ctx.all);
+      queryClient.invalidateQueries(vpcQueries.vpcs._ctx.paginated._def);
+      queryClient.removeQueries(vpcQueries.vpc(id).queryKey);
     },
   });
 };
 
 // Subnet queries
+// export const subnetQueries = createQueryKeys('subnets', {
+//   subnet: (vpcId: number, subnetId: number) => ({
+//     queryFn: () => getSubnet(vpcId, subnetId),
+//     queryKey: [vpcQueries.vpc(vpcId).queryKey],
+//   }),
+//   subnets: {
+//     contextQueries: {
+//       all: {
+//         queryFn: getAllVPCsRequest,
+//         queryKey: null,
+//       },
+//       paginated: (params: Params = {}, filter: Filter = {}) => ({
+//         queryFn: () => getVPCs(params, filter),
+//         queryKey: [params, filter],
+//       }),
+//     },
+//     queryKey: null,
+//   },
+// });
+
 export const useSubnetsQuery = (
   vpcID: number,
   params: Params,
