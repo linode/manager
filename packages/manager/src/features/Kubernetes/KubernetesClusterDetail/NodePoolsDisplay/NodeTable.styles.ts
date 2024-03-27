@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Table } from 'src/components/Table';
 import { TableRow } from 'src/components/TableRow';
 
 export const StyledTableRow = styled(TableRow, {
@@ -14,11 +15,18 @@ export const StyledTableRow = styled(TableRow, {
   '&:hover': {
     backgroundColor: theme.bg.lightBlue1,
   },
-  [`&:hover > svg, & :focus > svg`]: {
+  [`&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg`]: {
     opacity: 1,
   },
   marginLeft: 4,
   top: 1,
+}));
+
+export const StyledTable = styled(Table, {
+  label: 'Table',
+})(({ theme }) => ({
+  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+  borderRight: `1px solid ${theme.borderColors.borderTable}`,
 }));
 
 export const StyledCopyTooltip = styled(CopyTooltip, {

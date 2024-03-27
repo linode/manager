@@ -1,12 +1,9 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
@@ -19,53 +16,10 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { NodeRow as _NodeRow } from './NodeRow';
+import { StyledTable } from './NodeTable.styles';
 
 import type { NodeRow } from './NodeRow';
 
-const useStyles = makeStyles<void, 'copy'>()(
-  (theme: Theme, _params, classes) => ({
-    copy: {
-      '& svg': {
-        height: `12px`,
-        opacity: 0,
-        width: `12px`,
-      },
-      marginLeft: 4,
-      top: 1,
-    },
-    error: {
-      color: theme.color.red,
-    },
-    ipCell: {
-      ...theme.applyTableHeaderStyles,
-      width: '35%',
-    },
-    labelCell: {
-      ...theme.applyTableHeaderStyles,
-      width: '35%',
-    },
-    row: {
-      '&:hover': {
-        backgroundColor: theme.bg.lightBlue1,
-      },
-      [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
-        opacity: 1,
-      },
-    },
-    statusCell: {
-      ...theme.applyTableHeaderStyles,
-      width: '15%',
-    },
-    table: {
-      borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-      borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    },
-  })
-);
-
-// =============================================================================
-// NodeTable
-// =============================================================================
 export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
@@ -73,10 +27,8 @@ export interface Props {
   typeLabel: string;
 }
 
-export const NodeTable = (props: Props) => {
+export const NodeTable = React.memo((props: Props) => {
   const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
-
-  const { classes } = useStyles();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
@@ -95,15 +47,15 @@ export const NodeTable = (props: Props) => {
             pageSize,
           }) => (
             <>
-              <Table
-                aria-label="List of Your Cluster Nodes"
-                className={classes.table}
-              >
+              <StyledTable aria-label="List of Your Cluster Nodes">
                 <TableHead>
                   <TableRow>
                     <TableSortCell
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                       active={orderBy === 'label'}
-                      className={classes.labelCell}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'label'}
@@ -111,8 +63,11 @@ export const NodeTable = (props: Props) => {
                       Linode
                     </TableSortCell>
                     <TableSortCell
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                       active={orderBy === 'instanceStatus'}
-                      className={classes.statusCell}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'instanceStatus'}
@@ -120,8 +75,11 @@ export const NodeTable = (props: Props) => {
                       Status
                     </TableSortCell>
                     <TableSortCell
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '15%',
+                      })}
                       active={orderBy === 'ip'}
-                      className={classes.ipCell}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'ip'}
@@ -162,7 +120,7 @@ export const NodeTable = (props: Props) => {
                     </TableCell>
                   </TableRow>
                 </TableFooter>
-              </Table>
+              </StyledTable>
               <PaginationFooter
                 count={count}
                 eventCategory="Node Table"
@@ -177,13 +135,7 @@ export const NodeTable = (props: Props) => {
       )}
     </OrderBy>
   );
-};
-
-export default React.memo(NodeTable);
-
-// =============================================================================
-// Utilities
-// =============================================================================
+});
 
 /**
  * Transforms an LKE Pool Node to a NodeRow.
