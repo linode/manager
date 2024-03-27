@@ -1,5 +1,9 @@
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { profileFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Details } from './Details';
@@ -57,5 +61,30 @@ describe('Linode Create Details', () => {
     expect(
       queryByText('Select a region above to see available Placement Groups.')
     ).toBeNull();
+  });
+
+  it('should disable the label and tag TextFields if the user does not have permission to create a linode', async () => {
+    server.use(
+      http.get('*/v4/profile', () => {
+        return HttpResponse.json(profileFactory.build({ restricted: true }));
+      }),
+      http.get('*/v4/profile/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { add_linodes: false } })
+        );
+      })
+    );
+
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: <Details />,
+    });
+
+    const labelInput = getByLabelText('Linode Label');
+    const tagsInput = getByLabelText('Add Tags');
+
+    await waitFor(() => {
+      expect(labelInput).toBeDisabled();
+      expect(tagsInput).toBeDisabled();
+    });
   });
 });
