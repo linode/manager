@@ -24,26 +24,6 @@ export interface ProxyTokenCreationParams {
   userType: Omit<UserType, 'child' | 'default'>;
 }
 
-/**
- * Headers are required for proxy users when obtaining a proxy token.
- * For 'proxy' userType, use the stored parent token in the request.
- */
-export const getProxyToken = async ({
-  euuid,
-  token,
-  userType,
-}: ProxyTokenCreationParams) => {
-  return await createChildAccountPersonalAccessToken({
-    euuid,
-    headers:
-      userType === 'proxy'
-        ? {
-            Authorization: token,
-          }
-        : undefined,
-  });
-};
-
 export const updateParentTokenInLocalStorage = ({
   currentTokenWithBearer,
 }: {
@@ -64,15 +44,23 @@ export const updateParentTokenInLocalStorage = ({
   });
 };
 
+/**
+ * Headers are required for proxy users when obtaining a proxy token.
+ * For 'proxy' userType, use the stored parent token in the request.
+ */
 export const updateProxyTokenInLocalStorage = async ({
   euuid,
   token,
   userType,
 }: ProxyTokenCreationParams) => {
-  const proxyToken = await getProxyToken({
+  const proxyToken = await createChildAccountPersonalAccessToken({
     euuid,
-    token,
-    userType,
+    headers:
+      userType === 'proxy'
+        ? {
+            Authorization: token,
+          }
+        : undefined,
   });
 
   setTokenInLocalStorage({
