@@ -12,6 +12,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 
 import { Access } from './Access';
+import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { Error } from './Error';
 import { Firewall } from './Firewall';
@@ -92,6 +93,7 @@ export const LinodeCreatev2 = () => {
           <Details />
           <Access />
           <Firewall />
+          <Addons />
           <Summary />
         </Stack>
       </form>
