@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useDeleteVPCMutation } from 'src/queries/vpcs';
+import { useDeleteVPCMutation } from 'src/queries/vpcs/vpcs';
 
 interface Props {
   id?: number;

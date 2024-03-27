@@ -10,7 +10,7 @@ import {
   useDeleteLinodeMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
+import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs/vpcs';
 
 import { getVPCsFromLinodeConfigs } from './utils';
 

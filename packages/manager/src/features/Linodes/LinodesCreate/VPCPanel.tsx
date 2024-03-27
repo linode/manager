@@ -17,7 +17,7 @@ import { Typography } from 'src/components/Typography';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCsQuery } from 'src/queries/vpcs';
+import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -91,7 +91,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     false
   );
 
-  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {});
+  const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
@@ -99,7 +99,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     }
   }, [subnetError, vpcIPv4Error]);
 
-  const vpcs = vpcData?.data ?? [];
+  const vpcs = vpcsData ?? [];
 
   const vpcDropdownOptions: Item[] = vpcs.reduce((accumulator, vpc) => {
     return vpc.region === region
