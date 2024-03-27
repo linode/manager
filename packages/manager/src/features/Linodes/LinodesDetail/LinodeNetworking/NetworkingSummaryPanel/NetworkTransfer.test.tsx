@@ -28,7 +28,7 @@ vi.mock('src/queries/account/transfer', () => ({
   }),
 }));
 
-vi.mock('src/queries/regions', () => {
+vi.mock('src/queries/regions/regions', () => {
   const mockRegions = [
     ...regionFactory.buildList(5),
     regionWithDynamicPricingFactory.build(),

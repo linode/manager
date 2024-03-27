@@ -42,7 +42,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     size,
   } = props;
 
-  const { data: clusters } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
 
   const flags = useFlags();
@@ -52,6 +51,10 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
+  );
+
+  const { data: clusters } = useObjectStorageClusters(
+    !isObjMultiClusterEnabled
   );
 
   const actualCluster = clusters?.find((c) => c.id === cluster);
