@@ -221,10 +221,10 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
-        isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
         proxyToken={pendingRevocationToken}
+        userType={profile?.user_type}
       />
     </React.Fragment>
   );

@@ -9,9 +9,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
   currentTokenWithBearer: 'Bearer 123',
-  isProxyUser: false,
   onClose: vi.fn(),
   onSwitchAccount: vi.fn(),
+  userType: undefined,
 };
 
 it('should display a list of child accounts', async () => {

@@ -2,16 +2,15 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories/profile';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const props = {
-  isProxyUser: false,
   onClose: vi.fn(),
   open: true,
-  username: 'mock-user',
+  userType: undefined,
 };
 
 describe('SwitchAccountDrawer', () => {
@@ -38,7 +37,7 @@ describe('SwitchAccountDrawer', () => {
     );
 
     const { findByLabelText, getByText } = renderWithTheme(
-      <SwitchAccountDrawer {...props} isProxyUser />
+      <SwitchAccountDrawer {...props} userType="proxy" />
     );
 
     expect(

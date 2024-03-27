@@ -345,10 +345,10 @@ export const UserMenu = React.memo(() => {
         </Stack>
       </Popover>
       <SwitchAccountDrawer
-        isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
         proxyToken={pendingRevocationToken}
+        userType={profile?.user_type}
       />
     </>
   );
