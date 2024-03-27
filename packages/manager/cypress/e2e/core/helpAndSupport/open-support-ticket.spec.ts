@@ -67,7 +67,8 @@ describe('help & support', () => {
       cy.get('input[placeholder="Enter a title for your ticket."]')
         .click({ scrollBehavior: false })
         .type(ticketLabel);
-      getVisible('[data-qa-enhanced-select="General/Account/Billing"]');
+      getClick('[data-qa-ticket-entity-type]');
+      containsVisible('General/Account/Billing');
       getClick('[data-qa-ticket-description="true"]').type(ticketDescription);
       cy.get('[id="attach-file"]').attachFile(image);
       getVisible('[value="test_screenshot.png"]');
