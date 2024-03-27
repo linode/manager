@@ -12,10 +12,12 @@ import {
 import {
   cancellationDataLossWarning,
   cancellationPaymentErrorMessage,
-  contactParentUserTooltipsMessage,
-  contactCustomerSupportTooltipsMessage,
-  removeChildAccountTooltipsMessage,
 } from 'support/constants/account';
+import {
+  CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+} from 'src/features/Account/constants';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import {
@@ -230,7 +232,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(contactParentUserTooltipsMessage)
+          .findByText(CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });
@@ -264,7 +266,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(contactCustomerSupportTooltipsMessage)
+          .findByText(PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });
@@ -298,7 +300,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(removeChildAccountTooltipsMessage)
+          .findByText(PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });
