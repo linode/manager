@@ -119,7 +119,9 @@ export const TicketList = (props: Props) => {
                 Ticket ID
               </TableSortCell>
             </Hidden>
-            <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            <Hidden mdDown>
+              <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            </Hidden>
             {hasSeverityCapability && (
               <TableSortCell
                 active={isActive('severity')}

@@ -56,14 +56,16 @@ export const TicketRow = ({ ticket }: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
-      <TableCell
-        sx={{
-          lineHeight: 1.1,
-        }}
-        data-qa-support-entity
-      >
-        {renderEntityLink(ticket)}
-      </TableCell>
+      <Hidden mdDown>
+        <TableCell
+          sx={{
+            lineHeight: 1.1,
+          }}
+          data-qa-support-entity
+        >
+          {renderEntityLink(ticket)}
+        </TableCell>
+      </Hidden>
       {hasSeverityCapability && (
         <TableCell data-qa-support-severity>
           {ticket.severity ? severityLabelMap.get(ticket.severity) : ''}
