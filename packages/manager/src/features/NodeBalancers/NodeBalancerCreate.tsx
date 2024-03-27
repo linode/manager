@@ -62,6 +62,7 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -645,15 +646,18 @@ const NodeBalancerCreate = () => {
         justifyContent={'flex-end'}
       >
         <Button
+          disabled={
+            (showGDPRCheckbox && !hasSignedAgreement) || isRestricted || !price
+          }
           sx={{
             flexShrink: 0,
             mx: matchesSmDown ? theme.spacing(1) : null,
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          disabled={(showGDPRCheckbox && !hasSignedAgreement) || isRestricted}
           loading={isLoading}
           onClick={onCreate}
+          tooltipText={!price ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >
           Create NodeBalancer
         </Button>
