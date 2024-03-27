@@ -135,3 +135,19 @@ export const updateCurrentTokenBasedOnUserType = ({
     setStorage('authentication/expire', userExpiry);
   }
 };
+
+/**
+ * Finds a personal access token stored locally for revocation,
+ * typically used when switching between accounts. Searching local storage
+ * for the token is necessary because the token is not persisted in state.
+ */
+export async function getPersonalAccessTokenForRevocation(
+  tokens: Token[],
+  currentTokenWithBearer: string
+): Promise<Token | undefined> {
+  return tokens.find(
+    (token) =>
+      token.token &&
+      currentTokenWithBearer.replace('Bearer ', '').startsWith(token.token)
+  );
+}
