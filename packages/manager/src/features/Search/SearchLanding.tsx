@@ -265,8 +265,8 @@ export const SearchLanding = (props: CombinedProps) => {
 
   const loading =
     areLinodesLoading ||
-    areBucketsLoading ||
-    areClustersLoading ||
+    (areBucketsLoading && !isObjMultiClusterEnabled) ||
+    (areClustersLoading && !isObjMultiClusterEnabled) ||
     areDomainsLoading ||
     areVolumesLoading ||
     areKubernetesClustersLoading ||
