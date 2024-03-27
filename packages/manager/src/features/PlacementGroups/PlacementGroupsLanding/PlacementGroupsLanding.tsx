@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
@@ -14,8 +15,8 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { TextField } from 'src/components/TextField';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -57,13 +58,16 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter['label'] = { '+contains': query };
   }
 
-  const params = {
-    page: pagination.page,
-    page_size: pagination.pageSize,
-  };
-
-  const { data: placementGroups, error, isLoading } = usePlacementGroupsQuery(
-    params,
+  const {
+    data: placementGroups,
+    error,
+    isFetching,
+    isLoading,
+  } = usePlacementGroupsQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
     filter
   );
 
@@ -101,7 +105,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     return <CircleProgress />;
   }
 
-  if (placementGroups?.results === 0) {
+  if (placementGroups?.results === 0 && query === '') {
     return (
       <>
         <PlacementGroupsLandingEmptyState
@@ -146,21 +150,26 @@ export const PlacementGroupsLanding = React.memo(() => {
         onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
       />
-      <TextField
+      <DebouncedSearchTextField
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              <IconButton
-                aria-label="Clear"
-                onClick={() => setQuery('')}
-                size="small"
-                sx={{ padding: 'unset' }}
-              >
-                <CloseIcon sx={{ color: '#aaa !important' }} />
-              </IconButton>
+              {isFetching ? (
+                <CircleProgress mini />
+              ) : (
+                <IconButton
+                  aria-label="Clear"
+                  onClick={() => setQuery('')}
+                  size="small"
+                  sx={{ padding: 'unset' }}
+                >
+                  <CloseIcon sx={{ color: '#aaa !important' }} />
+                </IconButton>
+              )}
             </InputAdornment>
           ),
         }}
+        debounceTime={250}
         hideLabel
         label="Filter"
         onChange={(e) => setQuery(e.target.value)}
@@ -176,10 +185,29 @@ export const PlacementGroupsLanding = React.memo(() => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
-              sx={{ width: '40%' }}
+              sx={{ width: '20%' }}
             >
               Label
             </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'affinity_type'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="affinity_type"
+            >
+              Affinity Type
+            </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'is_strict'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="is_strict"
+                sx={{ width: '20%' }}
+              >
+                Affinity Type Enforcement
+              </TableSortCell>
+            </Hidden>
             <TableCell>Linodes</TableCell>
             <Hidden smDown>
               <TableSortCell
@@ -195,6 +223,7 @@ export const PlacementGroupsLanding = React.memo(() => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {placementGroups?.data.length === 0 && <TableRowEmpty colSpan={4} />}
           {placementGroups?.data.map((placementGroup) => (
             <PlacementGroupsRow
               handleDeletePlacementGroup={() =>
