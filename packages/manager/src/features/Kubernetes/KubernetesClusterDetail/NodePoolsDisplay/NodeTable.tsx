@@ -1,10 +1,10 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import OrderBy from 'src/components/OrderBy';
@@ -230,9 +230,16 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
 
   const nodeReadyAndInstanceRunning =
     nodeStatus === 'ready' && instanceStatus === 'running';
-  const iconStatus = nodeReadyAndInstanceRunning ? 'active' : 'inactive';
+
+  const iconStatus =
+    nodeStatus === 'not_ready'
+      ? 'other'
+      : nodeReadyAndInstanceRunning
+      ? 'active'
+      : 'inactive';
 
   const displayLabel = label ?? typeLabel;
+
   const displayStatus =
     nodeStatus === 'not_ready'
       ? 'Provisioning'
