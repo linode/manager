@@ -85,16 +85,12 @@ export const SwitchAccountDrawer = (props: Props) => {
     }) => {
       const isProxyUser = userType === 'proxy';
 
-      // Only if we're a proxy user do we need to revoke the proxy token.
       if (isProxyUser) {
+        // Revoke proxy token before switching accounts.
         await handleProxyTokenRevocation();
-      }
-
-      // Before switching to a child account, update the parent token in local storage.
-      if (!isProxyUser) {
-        updateParentTokenInLocalStorage({
-          currentTokenWithBearer,
-        });
+      } else {
+        // Before switching to a child account, update the parent token in local storage.
+        updateParentTokenInLocalStorage({ currentTokenWithBearer });
       }
 
       try {
