@@ -1,16 +1,11 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -20,12 +15,12 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { transitionText } from 'src/features/Linodes/transitions';
-import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
-import NodeActionMenu from './NodeActionMenu';
+import { NodeRow as _NodeRow } from './NodeRow';
+
+import type { NodeRow } from './NodeRow';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({
@@ -78,7 +73,7 @@ export interface Props {
   typeLabel: string;
 }
 
-export const NodeTable: React.FC<Props> = (props) => {
+export const NodeTable = (props: Props) => {
   const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
 
   const { classes } = useStyles();
@@ -144,7 +139,7 @@ export const NodeTable: React.FC<Props> = (props) => {
                   >
                     {paginatedAndOrderedData.map((eachRow) => {
                       return (
-                        <NodeRow
+                        <_NodeRow
                           instanceId={eachRow.instanceId}
                           instanceStatus={eachRow.instanceStatus}
                           ip={eachRow.ip}
@@ -185,119 +180,6 @@ export const NodeTable: React.FC<Props> = (props) => {
 };
 
 export default React.memo(NodeTable);
-
-// =============================================================================
-// NodeRow
-// =============================================================================
-interface NodeRow {
-  instanceId?: number;
-  instanceStatus?: string;
-  ip?: string;
-  label?: string;
-  nodeId: string;
-  nodeStatus: string;
-}
-
-interface NodeRowProps extends NodeRow {
-  linodeError?: APIError[];
-  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  typeLabel: string;
-}
-
-export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
-  const {
-    instanceId,
-    instanceStatus,
-    ip,
-    label,
-    linodeError,
-    nodeId,
-    nodeStatus,
-    openRecycleNodeDialog,
-    typeLabel,
-  } = props;
-
-  const { classes } = useStyles();
-
-  const { data: events } = useInProgressEvents();
-
-  const recentEvent = events?.find(
-    (event) =>
-      event.entity?.id === instanceId && event.entity?.type === 'linode'
-  );
-
-  const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
-
-  const nodeReadyAndInstanceRunning =
-    nodeStatus === 'ready' && instanceStatus === 'running';
-
-  const iconStatus =
-    nodeStatus === 'not_ready'
-      ? 'other'
-      : nodeReadyAndInstanceRunning
-      ? 'active'
-      : 'inactive';
-
-  const displayLabel = label ?? typeLabel;
-
-  const displayStatus =
-    nodeStatus === 'not_ready'
-      ? 'Provisioning'
-      : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
-
-  const displayIP = ip ?? '';
-
-  return (
-    <TableRow
-      ariaLabel={label}
-      className={classes.row}
-      data-qa-node-row={nodeId}
-    >
-      <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
-          <Grid>
-            <Typography>
-              {linodeLink ? (
-                <Link to={linodeLink}>{displayLabel}</Link>
-              ) : (
-                displayLabel
-              )}
-            </Typography>
-          </Grid>
-        </Grid>
-      </TableCell>
-      <TableCell statusCell={!linodeError}>
-        {linodeError ? (
-          <Typography className={classes.error}>
-            Error retrieving status
-          </Typography>
-        ) : (
-          <>
-            <StatusIcon status={iconStatus} />
-            {displayStatus}
-          </>
-        )}
-      </TableCell>
-      <TableCell>
-        {linodeError ? (
-          <Typography className={classes.error}>Error retrieving IP</Typography>
-        ) : displayIP.length > 0 ? (
-          <>
-            <CopyTooltip copyableText text={displayIP} />
-            <CopyTooltip className={classes.copy} text={displayIP} />
-          </>
-        ) : null}
-      </TableCell>
-      <TableCell>
-        <NodeActionMenu
-          instanceLabel={label}
-          nodeId={nodeId}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-        />
-      </TableCell>
-    </TableRow>
-  );
-});
 
 // =============================================================================
 // Utilities
