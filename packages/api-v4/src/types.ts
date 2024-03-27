@@ -118,7 +118,6 @@ export interface RequestHeaders {
   'Content-Type'?: RequestContentType;
 }
 
-// TODO: find best place to put this
 export interface PriceType {
   id: string;
   label: string;
