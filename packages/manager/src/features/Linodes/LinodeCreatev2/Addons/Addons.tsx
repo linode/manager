@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { Divider } from 'src/components/Divider';
@@ -18,7 +18,10 @@ export const Addons = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const selectedRegion = regions?.find((r) => r.id === regionId);
+  const selectedRegion = useMemo(
+    () => regions?.find((r) => r.id === regionId),
+    [regions, regionId]
+  );
 
   const isEdgeRegionSelected = selectedRegion?.site_type === 'edge';
 

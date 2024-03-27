@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { Checkbox } from 'src/components/Checkbox';
@@ -38,7 +38,10 @@ export const Backups = () => {
     type,
   });
 
-  const selectedRegion = regions?.find((r) => r.id === regionId);
+  const selectedRegion = useMemo(
+    () => regions?.find((r) => r.id === regionId),
+    [regions, regionId]
+  );
 
   const isAccountBackupsEnabled = accountSettings?.backups_enabled ?? false;
 

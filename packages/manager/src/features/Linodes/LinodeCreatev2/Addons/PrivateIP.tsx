@@ -1,5 +1,4 @@
-import type { CreateLinodeRequest } from '@linode/api-v4';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { Checkbox } from 'src/components/Checkbox';
@@ -8,6 +7,8 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const PrivateIP = () => {
   const { field } = useController<CreateLinodeRequest, 'private_ip'>({
@@ -22,7 +23,10 @@ export const PrivateIP = () => {
 
   const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
 
-  const selectedRegion = regions?.find((r) => r.id === regionId);
+  const selectedRegion = useMemo(
+    () => regions?.find((r) => r.id === regionId),
+    [regions, regionId]
+  );
 
   const isEdgeRegionSelected = selectedRegion?.site_type === 'edge';
 
