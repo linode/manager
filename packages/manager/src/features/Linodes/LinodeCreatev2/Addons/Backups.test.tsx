@@ -27,7 +27,7 @@ describe('Linode Create V2 Backups Addon', () => {
     expect(checkbox).not.toBeChecked();
   });
 
-  it('should get its value from the from context', () => {
+  it('should get its value from the form context', () => {
     const {
       getByRole,
     } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({

@@ -1,4 +1,4 @@
-import { CreateLinodeRequest } from '@linode/api-v4';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
