@@ -1,9 +1,9 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4';
 import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import UserIcon from 'src/assets/icons/account.svg';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -26,7 +26,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.color.white,
     border: `1px solid ${theme.color.grey2}`,
     borderRadius: theme.shape.borderRadius,
-    marginRight: theme.spacing(2),
     marginTop: theme.spacing(1),
     width: '100%',
   },
@@ -66,9 +65,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
     marginTop: theme.spacing(0.5),
     position: 'relative',
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
     [theme.breakpoints.up('sm')]: {
       height: 40,
       marginRight: theme.spacing(1),

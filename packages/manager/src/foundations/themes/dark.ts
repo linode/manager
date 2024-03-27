@@ -269,6 +269,9 @@ export const darkTheme: ThemeOptions = {
         colorInfo: {
           color: primaryColors.dark,
         },
+        colorWarning: {
+          color: primaryColors.dark,
+        },
         outlined: {
           backgroundColor: 'transparent',
           borderRadius: 1,
