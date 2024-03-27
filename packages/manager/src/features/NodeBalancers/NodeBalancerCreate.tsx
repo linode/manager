@@ -46,6 +46,7 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
@@ -62,7 +63,6 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -424,6 +424,7 @@ const NodeBalancerCreate = () => {
     regionId: nodeBalancerFields.region,
     type: types?.[0],
   });
+  const isInvalidPrice = Boolean(nodeBalancerFields.region && !price);
 
   const summaryItems = [];
 
@@ -647,7 +648,9 @@ const NodeBalancerCreate = () => {
       >
         <Button
           disabled={
-            (showGDPRCheckbox && !hasSignedAgreement) || isRestricted || !price
+            (showGDPRCheckbox && !hasSignedAgreement) ||
+            isRestricted ||
+            isInvalidPrice
           }
           sx={{
             flexShrink: 0,
@@ -657,7 +660,7 @@ const NodeBalancerCreate = () => {
           data-qa-deploy-nodebalancer
           loading={isLoading}
           onClick={onCreate}
-          tooltipText={!price ? PRICE_ERROR_TOOLTIP_TEXT : ''}
+          tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >
           Create NodeBalancer
         </Button>
