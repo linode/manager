@@ -1,3 +1,4 @@
+import { Token } from '@linode/api-v4';
 import React from 'react';
 
 import { getPersonalAccessTokenForRevocation } from 'src/features/Account/utils';
@@ -18,10 +19,9 @@ import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
  * - `pendingRevocationTokenId`: The ID of the token currently marked for pending revocation, or `undefined` if none.
  */
 export const usePendingRevocationToken = () => {
-  const [
-    pendingRevocationTokenId,
-    setPendingRevocationTokenId,
-  ] = React.useState<number | undefined>(undefined);
+  const [pendingRevocationToken, setPendingRevocationToken] = React.useState<
+    Token | undefined
+  >(undefined);
   const currentTokenWithBearer = useCurrentToken() ?? '';
   const { data: personalAccessTokens } = usePersonalAccessTokensQuery();
 
@@ -35,11 +35,11 @@ export const usePendingRevocationToken = () => {
       currentTokenWithBearer
     );
 
-    setPendingRevocationTokenId(token?.id);
+    setPendingRevocationToken(token);
   };
 
   return {
     getPendingRevocationToken,
-    pendingRevocationTokenId,
+    pendingRevocationToken,
   };
 };

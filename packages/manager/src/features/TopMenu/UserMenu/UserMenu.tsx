@@ -61,7 +61,7 @@ export const UserMenu = React.memo(() => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const {
     getPendingRevocationToken,
-    pendingRevocationTokenId,
+    pendingRevocationToken,
   } = usePendingRevocationToken();
 
   const { data: account } = useAccount();
@@ -348,7 +348,7 @@ export const UserMenu = React.memo(() => {
         isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        proxyTokenId={pendingRevocationTokenId}
+        proxyToken={pendingRevocationToken}
       />
     </>
   );

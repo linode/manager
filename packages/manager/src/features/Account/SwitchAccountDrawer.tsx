@@ -27,11 +27,12 @@ interface Props {
   isProxyUser: boolean;
   onClose: () => void;
   open: boolean;
-  proxyTokenId?: number;
+  proxyToken?: Token;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
-  const { isProxyUser, onClose, open, proxyTokenId } = props;
+  const { isProxyUser, onClose, open, proxyToken } = props;
+  const proxyTokenLabel = proxyToken?.label;
 
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
@@ -41,7 +42,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const { mutateAsync: revokeToken } = useRevokePersonalAccessTokenMutation(
-    proxyTokenId ?? -1
+    proxyToken?.id ?? -1
   );
   const { enqueueSnackbar } = useSnackbar();
   const currentTokenWithBearer = useCurrentToken() ?? '';
@@ -56,15 +57,15 @@ export const SwitchAccountDrawer = (props: Props) => {
   const handleProxyTokenRevocation = React.useCallback(async () => {
     try {
       await revokeToken();
-      enqueueSnackbar(`Successfully revoked ${proxyTokenId}.`, {
+      enqueueSnackbar(`Successfully revoked ${proxyTokenLabel}.`, {
         variant: 'success',
       });
     } catch (error) {
-      enqueueSnackbar('Failed to revoke token.', {
+      enqueueSnackbar(`Failed to revoke ${proxyTokenLabel}.`, {
         variant: 'error',
       });
     }
-  }, [enqueueSnackbar, proxyTokenId, revokeToken]);
+  }, [enqueueSnackbar, proxyTokenLabel, revokeToken]);
 
   const handleSwitchAccount = async ({
     currentTokenWithBearer,

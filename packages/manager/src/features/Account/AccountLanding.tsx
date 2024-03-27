@@ -58,7 +58,7 @@ const AccountLanding = () => {
   const sessionContext = React.useContext(switchAccountSessionContext);
   const {
     getPendingRevocationToken,
-    pendingRevocationTokenId,
+    pendingRevocationToken,
   } = usePendingRevocationToken();
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
@@ -224,7 +224,7 @@ const AccountLanding = () => {
         isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        proxyTokenId={pendingRevocationTokenId}
+        proxyToken={pendingRevocationToken}
       />
     </React.Fragment>
   );

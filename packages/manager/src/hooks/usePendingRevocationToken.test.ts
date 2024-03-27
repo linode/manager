@@ -52,13 +52,13 @@ vi.mock('src/hooks/useAuthentication', async () => {
 });
 
 describe('usePendingRevocationToken', () => {
-  it('should set pendingRevocationTokenId when personal access tokens are available', async () => {
+  it('should set pendingRevocationToken id when personal access tokens are available', async () => {
     const { result } = renderHook(() => usePendingRevocationToken(), {
       wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
     });
 
     await waitFor(() => {
-      expect(result.current.pendingRevocationTokenId).toBeUndefined();
+      expect(result.current.pendingRevocationToken?.id).toBeUndefined();
     });
 
     await act(async () => {
@@ -66,11 +66,11 @@ describe('usePendingRevocationToken', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.pendingRevocationTokenId).toEqual(123);
+      expect(result.current.pendingRevocationToken?.id).toEqual(123);
     });
   });
 
-  it('should not set pendingRevocationTokenId when no matching tokens are available', async () => {
+  it('should not set pendingRevocationToken?.id when no matching tokens are available', async () => {
     // Adjust the mock to return a token that doesn't match
     queryMocks.useCurrentToken.mockReturnValue('Bearer nonMatchingToken');
 
@@ -84,7 +84,7 @@ describe('usePendingRevocationToken', () => {
 
     // Now expecting undefined because there should be no match
     await waitFor(() => {
-      expect(result.current.pendingRevocationTokenId).toBeUndefined();
+      expect(result.current.pendingRevocationToken?.id).toBeUndefined();
     });
   });
 });
