@@ -10,7 +10,7 @@ import type {
 /**
  * Helper to get the affinity enforcement readable string.
  */
-export const getAffinityEnforcement = (
+export const getAffinityTypeEnforcement = (
   is_strict: boolean
 ): AffinityEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
