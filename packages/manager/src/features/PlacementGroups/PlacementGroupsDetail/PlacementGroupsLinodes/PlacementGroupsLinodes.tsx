@@ -44,6 +44,9 @@ export const PlacementGroupsLinodes = ({
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [searchText, setSearchText] = React.useState('');
+  const [selectedLinode, setSelectedLinode] = React.useState<
+    Linode | undefined
+  >();
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
@@ -63,8 +66,17 @@ export const PlacementGroupsLinodes = ({
     return assignedLinodes;
   };
 
-  const handleOpenAssignLinodesDrawer = () => {
+  const handleAssignLinodesDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
+  };
+  const handleUnassignLinodeModal = (linode: Linode) => {
+    setSelectedLinode(linode);
+    history.replace(
+      `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
+    );
+  };
+  const handleExitedUnassignModal = () => {
+    setSelectedLinode(undefined);
   };
   const handleCloseDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes`);
@@ -112,7 +124,7 @@ export const PlacementGroupsLinodes = ({
             buttonType="primary"
             data-testid="add-linode-to-placement-group-button"
             disabled={hasReachedCapacity || isLinodeReadOnly}
-            onClick={handleOpenAssignLinodesDrawer}
+            onClick={handleAssignLinodesDrawer}
           >
             Assign Linode to Placement Group
           </Button>
@@ -120,6 +132,7 @@ export const PlacementGroupsLinodes = ({
       </Grid>
       <PlacementGroupsLinodesTable
         error={linodesError ?? []}
+        handleUnassignLinodeModal={handleUnassignLinodeModal}
         linodes={getLinodesList() ?? []}
         loading={isLoading}
       />
@@ -130,7 +143,9 @@ export const PlacementGroupsLinodes = ({
       />
       <PlacementGroupsUnassignModal
         onClose={handleCloseDrawer}
+        onExited={handleExitedUnassignModal}
         open={isUnassignLinodesDrawerOpen}
+        selectedLinode={selectedLinode}
       />
     </Stack>
   );

@@ -45,7 +45,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const { id } = useParams<{ id: string }>();
   const { data: placementGroupFromParam, isFetching } = usePlacementGroupQuery(
     Number(id),
-    Boolean(!selectedPlacementGroup)
+    open && selectedPlacementGroup === undefined
   );
   const placementGroup = selectedPlacementGroup ?? placementGroupFromParam;
   const {

@@ -7,6 +7,7 @@ import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 const defaultProps = {
   error: [],
+  handleUnassignLinodeModal: vi.fn(),
   linodes: linodeFactory.buildList(5),
   loading: false,
 };
