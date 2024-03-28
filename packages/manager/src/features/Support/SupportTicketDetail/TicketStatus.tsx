@@ -44,7 +44,7 @@ export const TicketStatus = (props: Props) => {
   };
 
   return (
-    <StyledStatusBar container>
+    <StyledStatusBar container data-qa-ticket-status>
       <Grid alignItems="center" container direction="row" xs>
         <StyledStatusIcon
           ariaLabel={`Ticket status is ${status}`}
