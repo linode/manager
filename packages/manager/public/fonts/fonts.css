@@ -27,7 +27,7 @@
 /* Webfont: UbuntuMono */
 @font-face {
   font-family: 'UbuntuMono';
-  src: 
+  src:
     /* IE6-IE8 */ url('fonts/UbuntuMono-Regular.woff2') format('woff2'),
     /* Modern Browsers */ url('fonts/UbuntuMono-Regular.woff') format('woff'),
     /* Modern Browsers */ url('fonts/UbuntuMono-Regular.ttf') format('truetype');
