@@ -88,7 +88,7 @@ describe('PlacementGroupsLanding', () => {
     );
 
     expect(getByTestId('link-to-placement-group-1')).toHaveTextContent(
-      'group 1 (Anti-affinity)'
+      'group 1'
     );
     expect(getByText('Non-compliant')).toBeInTheDocument();
     expect(getByTestId('placement-group-1-assigned-linodes')).toHaveTextContent(
