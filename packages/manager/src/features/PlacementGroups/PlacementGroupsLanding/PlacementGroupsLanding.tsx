@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -37,10 +38,12 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const theme = useTheme();
   const [query, setQuery] = React.useState<string>('');
   const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
     PlacementGroup | undefined
   >(undefined);
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { handleOrderChange, order, orderBy } = useOrder(
     {
       order: 'asc',
@@ -154,18 +157,16 @@ export const PlacementGroupsLanding = React.memo(() => {
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              {isFetching ? (
-                <CircleProgress mini />
-              ) : (
-                <IconButton
-                  aria-label="Clear"
-                  onClick={() => setQuery('')}
-                  size="small"
-                  sx={{ padding: 'unset' }}
-                >
-                  <CloseIcon sx={{ color: '#aaa !important' }} />
-                </IconButton>
-              )}
+              {isFetching && <CircleProgress mini />}
+
+              <IconButton
+                aria-label="Clear"
+                onClick={() => setQuery('')}
+                size="small"
+                sx={{ padding: 'unset' }}
+              >
+                <CloseIcon sx={{ color: '#aaa !important' }} />
+              </IconButton>
             </InputAdornment>
           ),
         }}
@@ -185,18 +186,20 @@ export const PlacementGroupsLanding = React.memo(() => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
-              sx={{ width: '20%' }}
+              sx={{ width: matchesSmDown ? '40%' : '20%' }}
             >
               Label
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'affinity_type'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="affinity_type"
-            >
-              Affinity Type
-            </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'affinity_type'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="affinity_type"
+              >
+                Affinity Type
+              </TableSortCell>
+            </Hidden>
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'is_strict'}
@@ -223,7 +226,7 @@ export const PlacementGroupsLanding = React.memo(() => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {placementGroups?.data.length === 0 && <TableRowEmpty colSpan={4} />}
+          {placementGroups?.data.length === 0 && <TableRowEmpty colSpan={6} />}
           {placementGroups?.data.map((placementGroup) => (
             <PlacementGroupsRow
               handleDeletePlacementGroup={() =>

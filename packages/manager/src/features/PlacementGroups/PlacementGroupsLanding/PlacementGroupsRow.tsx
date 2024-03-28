@@ -73,7 +73,9 @@ export const PlacementGroupsRow = React.memo(
             </Typography>
           )}
         </TableCell>
-        <TableCell>{AFFINITY_TYPES[affinity_type]}</TableCell>
+        <Hidden smDown>
+          <TableCell>{AFFINITY_TYPES[affinity_type]}</TableCell>
+        </Hidden>
         <Hidden smDown>
           <TableCell>{getAffinityTypeEnforcement(is_strict)}</TableCell>
         </Hidden>
