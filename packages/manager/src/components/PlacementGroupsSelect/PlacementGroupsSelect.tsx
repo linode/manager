@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
@@ -23,6 +23,7 @@ export interface PlacementGroupsSelectProps {
   loading?: boolean;
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
+  selectedPlacementGroup: PlacementGroup | null;
   selectedRegion?: Region;
   sx?: SxProps;
   textFieldProps?: Partial<TextFieldProps>;
@@ -40,6 +41,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     loading,
     noOptionsMessage,
     onBlur,
+    selectedPlacementGroup,
     selectedRegion,
     sx,
     ...textFieldProps
@@ -49,7 +51,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     data: placementGroups,
     error,
     isLoading,
-  } = useUnpaginatedPlacementGroupsQuery(Boolean(selectedRegion?.id));
+  } = useAllPlacementGroupsQuery(Boolean(selectedRegion?.id));
 
   const isDisabledPlacementGroup = (
     selectedPlacementGroup: PlacementGroup,
@@ -75,6 +77,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
     (placementGroup) => placementGroup.region === selectedRegion?.id
   );
+
+  const selection =
+    placementGroupsOptions.find(
+      (placementGroup) => placementGroup.id === selectedPlacementGroup?.id
+    ) ?? null;
 
   return (
     <Autocomplete
@@ -110,6 +117,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       options={placementGroupsOptions ?? []}
       placeholder="Select a Placement Group"
       sx={sx}
+      value={selection}
       {...textFieldProps}
     />
   );

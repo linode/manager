@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4';
 import {
   Database,
   DatabaseInstance,
@@ -6,17 +7,18 @@ import {
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
 import { Box } from 'src/components/Box';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useRegionsQuery } from 'src/queries/regions';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
+
 import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
-import { Region } from '@linode/api-v4';
+import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   configs: {
@@ -86,7 +88,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
         <Box display="flex">
           <Typography className={classes.label}>Status</Typography>
           <div className={classes.status}>
-            <DatabaseStatusDisplay events={events} database={database} />
+            <DatabaseStatusDisplay database={database} events={events} />
           </div>
         </Box>
         <Box display="flex">

@@ -165,21 +165,35 @@ export const renderWithThemeAndFormik = <T extends FormikValues>(
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
+interface UseFormPropsWithChildren<T extends FieldValues>
+  extends UseFormProps<T> {
+  children: React.ReactNode;
+}
+
 const FormContextWrapper = <T extends FieldValues>(
-  props: UseFormProps<T> & { children: React.ReactNode }
+  props: UseFormPropsWithChildren<T>
 ) => {
   const formMethods = useForm<T>(props);
 
   return <FormProvider {...formMethods}>{props.children}</FormProvider>;
 };
 
+interface RenderWithThemeAndHookFormOptions<T extends FieldValues> {
+  component: React.ReactElement;
+  options?: Options;
+  useFormOptions?: UseFormProps<T>;
+}
+
 export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
-  ui: React.ReactElement,
-  useFormOptions?: UseFormProps<T>
-) =>
-  renderWithTheme(
-    <FormContextWrapper {...useFormOptions}>{ui}</FormContextWrapper>
+  options: RenderWithThemeAndHookFormOptions<T>
+) => {
+  return renderWithTheme(
+    <FormContextWrapper {...options.useFormOptions}>
+      {options.component}
+    </FormContextWrapper>,
+    options.options
   );
+};
 
 type Query = (f: MatcherFunction) => HTMLElement;
 

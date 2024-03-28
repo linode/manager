@@ -456,6 +456,7 @@ describe('Akamai Cloud Load Balancer configurations page', () => {
       const routes = routeFactory.buildList(3);
       const configuration = configurationFactory.build({
         protocol: 'http',
+        certificates: [],
         routes: routes.map((route) => ({ id: route.id, label: route.label })),
       });
       const loadbalancer = loadbalancerFactory.build({

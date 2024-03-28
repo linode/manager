@@ -11,11 +11,11 @@ const defaultProps = {
 
 const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
   return {
     ...actual,
     useRegionsQuery: queryMocks.useRegionsQuery,
@@ -26,8 +26,7 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
@@ -54,18 +53,18 @@ describe('PlacementGroupsDetailPanel', () => {
         }),
       ],
     });
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 1,
+              linode_id: 1,
             },
           ],
           region: 'us-west',

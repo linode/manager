@@ -199,11 +199,13 @@ interface CreateTab extends Tab {
   type: CreateTypes;
 }
 
+interface LinodeCreateComponentProps extends CombinedProps, DispatchProps {}
+
 export class LinodeCreate extends React.PureComponent<
-  CombinedProps & DispatchProps,
+  LinodeCreateComponentProps,
   State
 > {
-  constructor(props: CombinedProps & DispatchProps) {
+  constructor(props: LinodeCreateComponentProps) {
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
@@ -418,6 +420,12 @@ export class LinodeCreate extends React.PureComponent<
     if (this.props.privateIPEnabled) {
       displaySections.push({
         title: 'Private IP',
+      });
+    }
+
+    if (this.props.placementGroupSelection) {
+      displaySections.push({
+        title: 'Assigned to Placement Group',
       });
     }
 

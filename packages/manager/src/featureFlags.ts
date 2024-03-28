@@ -77,7 +77,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  vpc: boolean;
 }
 
 type PromotionalOfferFeature =

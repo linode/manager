@@ -25,7 +25,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'gecko', label: 'Gecko' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'vpc', label: 'VPC' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },

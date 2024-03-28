@@ -288,10 +288,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<
-  LongviewClientsCombinedProps,
-  Props & RouteComponentProps
->(
+interface ComposeProps extends Props, RouteComponentProps {}
+
+export default compose<LongviewClientsCombinedProps, ComposeProps>(
   React.memo,
   connected,
   withLongviewClients()

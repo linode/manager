@@ -15,36 +15,36 @@ const props: PlacementGroupsSelectProps = {
   id: '',
   label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
+  selectedPlacementGroup: null,
   selectedRegion: regionFactory.build({ id: 'us-southeast' }),
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
 describe('PlacementGroupSelect', () => {
   beforeEach(() => {
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 1,
+              linode_id: 1,
             },
           ],
           region: 'us-west',
@@ -66,18 +66,18 @@ describe('PlacementGroupSelect', () => {
   });
 
   it('should have a disabled option if the region has reached its placement group capacity', async () => {
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity',
+          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
           is_strict: true,
           label: 'my-placement-group',
-          linodes: [
+          members: [
             {
               is_compliant: true,
-              linode: 1,
+              linode_id: 1,
             },
           ],
           region: 'ca-central',

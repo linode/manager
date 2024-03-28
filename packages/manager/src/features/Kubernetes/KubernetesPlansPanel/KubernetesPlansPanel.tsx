@@ -11,7 +11,7 @@ import {
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
+import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
@@ -68,7 +68,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const flags = useFlags();
 
-  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
+  const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionId || '',
     Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );

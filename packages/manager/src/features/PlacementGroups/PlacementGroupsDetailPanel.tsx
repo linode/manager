@@ -10,8 +10,9 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
-import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { PLACEMENT_GROUP_SELECT_TOOLTIP_COPY } from './constants';
 import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';
@@ -26,12 +27,16 @@ interface Props {
 export const PlacementGroupsDetailPanel = (props: Props) => {
   const theme = useTheme();
   const { handlePlacementGroupChange, selectedRegionId } = props;
-  const { data: allPlacementGroups } = useUnpaginatedPlacementGroupsQuery();
+  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { data: regions } = useRegionsQuery();
   const [
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
+  const [
+    selectedPlacementGroup,
+    setSelectedPlacementGroup,
+  ] = React.useState<PlacementGroup | null>(null);
 
   const selectedRegion = regions?.find(
     (thisRegion) => thisRegion.id === selectedRegionId
@@ -41,8 +46,17 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     selectedRegion?.capabilities.includes('Placement Group')
   );
 
-  const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
+  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
+
+  const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     handlePlacementGroupChange(placementGroup);
+  };
+
+  const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
+    handlePlacementGroupSelection(placementGroup);
   };
 
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
@@ -102,16 +116,16 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       <Box>
         <PlacementGroupsSelect
           handlePlacementGroupChange={(placementGroup) => {
-            handlePlacementGroupChange(placementGroup);
+            handlePlacementGroupSelection(placementGroup);
           }}
           sx={{
             mb: 1,
             width: '100%',
           }}
           disabled={isPlacementGroupSelectDisabled}
-          key={selectedRegion?.id}
           label={placementGroupSelectLabel}
           noOptionsMessage="There are no Placement Groups in this region."
+          selectedPlacementGroup={selectedPlacementGroup}
           selectedRegion={selectedRegion}
           textFieldProps={{ tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY }}
         />
@@ -137,6 +151,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       </Box>
       <PlacementGroupsCreateDrawer
         allPlacementGroups={allPlacementGroups || []}
+        disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
         onPlacementGroupCreate={handlePlacementGroupCreated}
         open={isCreatePlacementGroupDrawerOpen}
