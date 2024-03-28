@@ -1,4 +1,4 @@
-import { PriceObject, RegionPriceObject } from './linodes/types';
+import type { PriceObject, RegionPriceObject } from './linodes/types';
 
 export interface APIError {
   field?: string;

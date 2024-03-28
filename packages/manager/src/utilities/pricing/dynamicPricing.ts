@@ -90,7 +90,7 @@ export const getDCSpecificPrice = ({
 export const getDCSpecificPriceByType = ({
   regionId,
   type,
-}: DataCenterPricingByTypeOptions) => {
+}: DataCenterPricingByTypeOptions): string | undefined => {
   if (!regionId || !type) {
     return undefined;
   }

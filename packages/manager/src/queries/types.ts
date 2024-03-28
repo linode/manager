@@ -1,11 +1,5 @@
-import {
-  LinodeType,
-  getLinodeTypes,
-  getNodeBalancerTypes,
-  getType,
-} from '@linode/api-v4';
-import { APIError, PriceType } from '@linode/api-v4/lib/types';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { LinodeType, getLinodeTypes, getType } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   UseQueryOptions,
@@ -23,11 +17,6 @@ const queryKey = 'types';
 const getAllTypes = () =>
   getAll(getLinodeTypes)().then((results) => results.data);
 
-const getAllNodeBalancerTypes = () =>
-  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
-    (results) => results.data
-  );
-
 const getSingleType = async (type: string, queryClient: QueryClient) => {
   const allTypesCache = queryClient.getQueryData<LinodeType[]>(
     allTypesQueryKey
@@ -36,13 +25,6 @@ const getSingleType = async (type: string, queryClient: QueryClient) => {
     allTypesCache?.find((cachedType) => cachedType.id === type) ?? getType(type)
   );
 };
-
-export const typesQueries = createQueryKeys('types', {
-  nodebalancers: {
-    queryFn: getAllNodeBalancerTypes,
-    queryKey: null,
-  },
-});
 
 const allTypesQueryKey = [queryKey, 'all'];
 export const useAllTypes = (enabled = true) => {
@@ -74,9 +56,3 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
 export const useTypeQuery = (type: string, enabled = true) => {
   return useSpecificTypes([type], enabled)[0];
 };
-
-export const useNodeBalancerTypesQuery = () =>
-  useQuery<PriceType[], APIError[]>({
-    ...queryPresets.oneTimeFetch,
-    ...typesQueries.nodebalancers,
-  });

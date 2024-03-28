@@ -38,10 +38,12 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
+import {
+  useNodeBalancerTypesQuery,
+  useNodebalancerCreateMutation,
+} from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useNodeBalancerTypesQuery } from 'src/queries/types';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
