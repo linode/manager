@@ -34,34 +34,35 @@ export const GlobalFilters = React.memo((props:GlobalFilterProperties) => {
     setService,
   ] = React.useState<CloudViewResourceTypes>();
 
+  React.useEffect(() => {
+
+    emitGlobalFilterChange();
+    
+  }, [time, selectedInterval, selectedRegion, selectedResourceId, selectedService])
+
   const handleTimeRangeChange = (start: number, end: number) => {
     console.log('TimeRange: ', start, end);
-    setTimeBox({ end, start });
-    emitGlobalFilterChange();
+    setTimeBox({ end, start });    
   };
 
   const handleIntervalChange = (interval: string | undefined) => {
     console.log('Interval: ', interval);
-    setInterval(interval);
-    emitGlobalFilterChange();
+    setInterval(interval);    
   };
 
   const handleRegionChange = (region: string | undefined) => {
     console.log('Region: ', region);
-    setRegion(region);
-    emitGlobalFilterChange();
+    setRegion(region);    
   };
 
   const handleResourceChange = (resourceId: any) => {
     console.log('Resource ID: ', resourceId);
-    setResourceId(resourceId);
-    emitGlobalFilterChange();
+    setResourceId(resourceId);    
   };
 
   const handleServiceChange = (service: CloudViewResourceTypes) => {
     console.log('Service Type: ', service);
-    setService(service);
-    emitGlobalFilterChange();
+    setService(service);    
   };
 
   const emitGlobalFilterChange = () => {
@@ -72,7 +73,6 @@ export const GlobalFilters = React.memo((props:GlobalFilterProperties) => {
     globalFilters.resource = selectedResourceId
     globalFilters.serviceType = selectedService!
     globalFilters.timeRange = time;
-
     props.handleAnyFilterChange(globalFilters);
   }
 

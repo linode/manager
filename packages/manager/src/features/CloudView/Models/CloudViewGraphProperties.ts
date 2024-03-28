@@ -10,7 +10,5 @@ export interface CloudViewGraphProperties {
     title:string;
     subtitle:string;
     unit:string;
-    dashboardFilters:GlobalFiltersObject;
-    counter:number; //testing
-
+    dashboardFilters:GlobalFiltersObject;    
 }

@@ -3,7 +3,7 @@ import { LongviewLineGraph } from "src/components/LongviewLineGraph/LongviewLine
 import { useProfile } from 'src/queries/profile';
 import { seriesDataFormatter } from "./Formatters/CloudViewFormatter";
 import { CloudViewGraphProperties } from "../Models/CloudViewGraphProperties";
-import { Placeholder } from "src/components/Placeholder/Placeholder";
+import { CircleProgress } from "src/components/CircleProgress";
 
 
 
@@ -11,93 +11,81 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
     const { data: profile } = useProfile();
 
-    const timezone = profile?.timezone || 'US/Eastern';
+    const timezone = profile?.timezone || 'US/Eastern';    
 
-    const [cuber, setCuber] = React.useState<number>(0);
+    const [data, setData] = React.useState<Array<number[]>>([]);
 
-    const [staticData, setStaticData] = React.useState<Array<number[]>>([]);
+    const[loading, setLoading] = React.useState<boolean>(false);
 
-
-    const setDataFunc = async () => {
-        await(sleep(2000));
-
-        let arrayData:Array<number[]> = [...staticData];
-            
-            if(cuber % 2 == 0) {
-                arrayData.forEach(element => {
-                    element[1] = element[1]*2;
-                })
-            } else {
-                arrayData.forEach(element => {
-                    element[1] = element[1]+2;
-                })
-            }
-            
-
-            setStaticData(arrayData);
-        
-    }
-
-    function sleep(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+    const getShowToday = () => {        
+        return (props.end - props.start)/3600 <= 24;
     }
 
 
     React.useEffect(() => {
 
-        console.log("changed inside cloud view")
-        setCuber((cuber) => cuber+1);          
+        let start = 0;
+        let end = 0;
 
-        if(props.dashboardFilters.timeRange) {
-            console.log(props.dashboardFilters.timeRange.start)
-        }        
-
-
-        //Instead of setting data statically, we can get and set from API call
-        if(staticData.length == 0) {
-            let arrayData:Array<number[]> = [];
-            for(let i=0; i<5; i++) {
-                for(let j=i+1; j<=i*5; j++) {
-
-                    let element:number[] = [];
-                    element[0] = i;
-                    element[1] = j*5;
-                    arrayData.push(element);
-                }
+        setLoading(true);
+        if (props.dashboardFilters) {
+            
+            if (props.dashboardFilters.timeRange && props.dashboardFilters.timeRange.start) {
+                console.log(props.dashboardFilters.timeRange.start)
+                start = props.dashboardFilters.timeRange.start;
             }
 
-            setStaticData(arrayData);
-        } else {
-            setDataFunc();
+            if (props.dashboardFilters.timeRange && props.dashboardFilters.timeRange.end) {
+                console.log(props.dashboardFilters.timeRange.end)
+                end = props.dashboardFilters.timeRange.end;
+            }
+
+            //Instead of setting data statically, we can get and set from API call
+            let arrayData: Array<number[]> = [];
+            let j = 1;
+            for (let i = start;
+                i < end; i = i + 1000) {
+                let element: number[] = [];
+                element[0] = i;
+                element[1] = j + 5;
+                j = j + 5;
+                arrayData.push(element);
+            }            
+            setData(arrayData)            
         }
+
+        setLoading(false);
 
         //tood, call metric collection API
 
-    }, [props])
+    }, [props.dashboardFilters]) //in case of changes in dashboardFilters, please update this
 
-    return (
-        <LongviewLineGraph
-            data={[
-                {
-                    backgroundColor: 'lightgreen',
-                    borderColor: 'skyblue',
-                    data: seriesDataFormatter(staticData, props.dashboardFilters.timeRange?props.dashboardFilters.timeRange.start/1000:0, 
-                        props.dashboardFilters.timeRange?props.dashboardFilters.timeRange.end/1000:0),
-                    label: props.title
-                }
-            ]}
-            ariaLabel={props.ariaLabel}
-            error={false ? props.errorLabel : undefined}
-            loading={staticData.length==0}
-            nativeLegend
-            showToday={props.isToday}
-            subtitle={props.subtitle}
-            timezone={timezone}
-            title={props.title}
-            unit={props.unit} />
-        // <Placeholder title="Widgets Fetched successfully, need to render ">
-        //     {cuber}
+    if(data.length>0) {
+        return (
 
-        // </Placeholder>
-    )
+        
+            <LongviewLineGraph
+                data={[
+                    {
+                        backgroundColor: 'lightgreen',
+                        borderColor: 'skyblue',
+                        data: seriesDataFormatter(data, props.dashboardFilters && props.dashboardFilters.timeRange ? props.dashboardFilters.timeRange.start : 0,
+                            props.dashboardFilters && props.dashboardFilters.timeRange ? props.dashboardFilters.timeRange.end : 0),
+                        label: props.title
+                    }
+                ]}
+                ariaLabel={props.ariaLabel}
+                error={false ? props.errorLabel : undefined}
+                loading={loading}
+                nativeLegend
+                showToday={getShowToday()}
+                subtitle={props.subtitle}
+                timezone={timezone}
+                title={props.title}
+                unit={props.unit}
+                suggestedMax={10} />            
+        )
+    } else {
+        return (<CircleProgress/>);
+    }
 }

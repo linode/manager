@@ -17,7 +17,6 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
 
     const [cloudViewGraphProperties , setCloudViewGraphProperties] = React.useState<CloudViewGraphProperties>({} as CloudViewGraphProperties);
 
-    const [dashboardFilters, setDashboardFilters] = React.useState<GlobalFiltersObject>({} as GlobalFiltersObject);    
 
 
     if (props.needDefault && props.dashboardId) {
@@ -39,16 +38,15 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
     }
 
 
-    const handleGlobalFilterChange = (globalFilter:GlobalFiltersObject) => {
-        setDashboardFilters({...globalFilter});         
-        setCloudViewGraphProperties({...cloudViewGraphProperties, counter:2})
+    const handleGlobalFilterChange = (globalFilter:GlobalFiltersObject) => {        
+        setCloudViewGraphProperties({...cloudViewGraphProperties, dashboardFilters:globalFilter})
     }
 
     const renderWidgets = () => {
 
         if(dashboard!=undefined) {            
             return dashboard.widgets.map((element, index) => {                
-                return <Grid xs={6}><CloudViewGraph key={index} {...cloudViewGraphProperties} title={element.label} dashboardFilters={{...dashboardFilters}}
+                return <Grid xs={6} key={index}><CloudViewGraph key={index} {...cloudViewGraphProperties} title={element.label}
                 /></Grid>
             });             
 
