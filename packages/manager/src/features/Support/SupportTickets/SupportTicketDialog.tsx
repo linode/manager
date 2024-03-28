@@ -624,6 +624,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 tooltipPosition: 'right',
                 tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
               }}
+              autoHighlight
+              clearOnBlur
               data-qa-ticket-severity
               label="Severity"
               options={severityOptions}
