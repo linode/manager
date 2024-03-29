@@ -25,6 +25,7 @@ import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
+import { VLAN } from './VLAN';
 
 export const LinodeCreatev2 = () => {
   const methods = useForm<CreateLinodeRequest>();
@@ -93,6 +94,7 @@ export const LinodeCreatev2 = () => {
           <Details />
           <Access />
           <Firewall />
+          <VLAN />
           <Addons />
           <Summary />
         </Stack>
