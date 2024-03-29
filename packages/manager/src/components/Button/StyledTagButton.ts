@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 import Plus from 'src/assets/icons/plusSign.svg';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import { Button } from './Button';
 
@@ -12,6 +13,7 @@ import { Button } from './Button';
  */
 export const StyledTagButton = styled(Button, {
   label: 'StyledTagButton',
+  shouldForwardProp: omittedProps(['panel']),
 })<{ panel?: boolean }>(({ theme, ...props }) => ({
   border: 'none',
   fontSize: '0.875rem',
