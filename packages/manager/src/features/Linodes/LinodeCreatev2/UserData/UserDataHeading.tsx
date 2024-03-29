@@ -36,8 +36,9 @@ export const UserDataHeading = () => {
               User data allows you to provide additional custom data to
               cloud-init to further configure your system.{' '}
               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
-                Learn more.
+                Learn more
               </Link>
+              .
             </>
           }
           interactive

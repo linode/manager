@@ -71,8 +71,9 @@ export const UserData = () => {
         user data should be added at this step and cannot be modified after the
         the Linode has been created.{' '}
         <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
-          Learn more.
+          Learn more
         </Link>
+        .
       </Typography>
       {formatWarning && (
         <Notice spacingBottom={16} spacingTop={16} variant="warning">
