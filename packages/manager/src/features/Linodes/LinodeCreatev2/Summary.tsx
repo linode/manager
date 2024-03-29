@@ -1,3 +1,5 @@
+import { useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -8,15 +10,37 @@ import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Summary = () => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
   const { control } = useFormContext<CreateLinodeRequest>();
 
-  const [label, regionId, imageId, firewallId, typeId] = useWatch({
+  const [
+    label,
+    regionId,
+    imageId,
+    firewallId,
+    typeId,
+    backupsEnabled,
+    privateIPEnabled,
+  ] = useWatch({
     control,
-    name: ['label', 'region', 'image', 'firewall_id', 'type'],
+    name: [
+      'label',
+      'region',
+      'image',
+      'firewall_id',
+      'type',
+      'backups_enabled',
+      'private_ip',
+    ],
   });
 
   const { data: regions } = useRegionsQuery();
@@ -24,6 +48,13 @@ export const Summary = () => {
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
   const region = regions?.find((r) => r.id === regionId);
+
+  // @todo handle marketplace cluster pricing (support many nodes by looking at UDF data)
+  const price = getLinodeRegionPrice(type, regionId);
+
+  const backupsPrice = renderMonthlyPriceToCorrectDecimalPlace(
+    getMonthlyBackupsPrice({ region: regionId, type })
+  );
 
   const summaryItems = [
     {
@@ -40,10 +71,23 @@ export const Summary = () => {
     },
     {
       item: {
-        details: `$${type?.price.monthly}/month`,
+        details: `$${price?.monthly}/month`,
         title: type?.label,
       },
-      show: Boolean(region),
+      show: Boolean(type),
+    },
+    {
+      item: {
+        details: `$${backupsPrice}/month`,
+        title: 'Backups',
+      },
+      show: backupsEnabled,
+    },
+    {
+      item: {
+        title: 'Private IP',
+      },
+      show: privateIPEnabled,
     },
     {
       item: {
@@ -64,16 +108,18 @@ export const Summary = () => {
         ) : (
           <Stack
             divider={
-              <Divider
-                flexItem
-                orientation="vertical"
-                sx={{ borderWidth: 1, margin: 0 }}
-              />
+              isSmallScreen ? undefined : (
+                <Divider
+                  flexItem
+                  orientation="vertical"
+                  sx={{ borderWidth: 1, margin: 0 }}
+                />
+              )
             }
-            direction={{ sm: 'row', xs: 'column' }}
+            direction={isSmallScreen ? 'column' : 'row'}
             gap={1.5}
           >
-            {summaryItems.map(({ item }) => (
+            {summaryItemsToShow.map(({ item }) => (
               <Stack
                 alignItems="center"
                 direction="row"
