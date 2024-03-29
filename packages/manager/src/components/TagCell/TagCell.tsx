@@ -6,11 +6,11 @@ import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
-import { useAtomic } from 'src/hooks/useAtomic';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
+import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 
 interface TagCellProps {
@@ -39,16 +39,8 @@ const checkOverflow = (el: HTMLElement) => {
 export const TagCell = (props: TagCellProps) => {
   const { disabled, listAllTags, sx, tags } = props;
 
-  const [addingTag, setAddingTag] = React.useState<boolean>(false);
-  const [addingTags, setAddingTags] = React.useState(() => new Set<string>());
-  const [deletingTags, setDeletingTags] = React.useState(
-    () => new Set<string>()
-  );
-
-  const displayTags = React.useMemo(
-    () => Array.from(new Set([...tags, ...Array.from(addingTags)])).sort(),
-    [addingTags, tags]
-  );
+  const [addingTag, setAddingTag] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
 
@@ -57,35 +49,14 @@ export const TagCell = (props: TagCellProps) => {
   const [hasOverflow, setHasOverflow] = React.useState(false);
   React.useLayoutEffect(() => {
     setHasOverflow(!!elRef && checkOverflow(elRef));
-  }, [windowDimensions, displayTags, elRef]);
+  }, [windowDimensions, tags, elRef]);
 
-  const updateTagsAtomic = useAtomic(tags, props.updateTags, 1000);
-
-  const handleAddTag = (tag: string) => {
-    setAddingTags((prev) => new Set(prev.add(tag)));
-    return updateTagsAtomic((tags) => [...tags, tag]).finally(() => {
-      addingTags.delete(tag);
+  const handleUpdateTag = (updatedTags: string[]) => {
+    setLoading(true);
+    return props.updateTags(updatedTags).finally(() => {
+      setLoading(false);
     });
   };
-
-  const handleDeleteTag = (tagToDelete: string) => {
-    setDeletingTags((prev) => new Set(prev.add(tagToDelete)));
-    updateTagsAtomic((tags) =>
-      tags.filter((tag) => tag != tagToDelete)
-    ).finally(() => {
-      deletingTags.delete(tagToDelete);
-    });
-  };
-
-  React.useEffect(() => {
-    const tagSet = new Set(tags);
-    setDeletingTags(
-      (prev) => new Set(Array.from(prev).filter((tag) => tagSet.has(tag)))
-    );
-    setAddingTags(
-      (prev) => new Set(Array.from(prev).filter((tag) => !tagSet.has(tag)))
-    );
-  }, [tags]);
 
   const panelView = listAllTags == undefined;
 
@@ -118,8 +89,8 @@ export const TagCell = (props: TagCellProps) => {
           {panelView && !addingTag && <AddButton panel />}
           {addingTag && (
             <AddTag
-              addTag={handleAddTag}
-              existingTags={displayTags}
+              addTag={(tag) => handleUpdateTag([...tags, tag])}
+              existingTags={tags}
               onClose={() => setAddingTag(false)}
             />
           )}
@@ -138,14 +109,24 @@ export const TagCell = (props: TagCellProps) => {
             ref={setElRef}
             wrap={listAllTags == undefined}
           >
-            {displayTags.map((thisTag) => (
+            {loading ? (
+              <StyledCircleDiv>
+                <CircleProgress mini />
+              </StyledCircleDiv>
+            ) : null}
+            {tags.map((thisTag) => (
               <StyledTag
+                onDelete={
+                  disabled
+                    ? undefined
+                    : () =>
+                        handleUpdateTag(tags.filter((tag) => tag !== thisTag))
+                }
                 colorVariant="lightBlue"
                 disabled={disabled}
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
-                loading={deletingTags.has(thisTag) || addingTags.has(thisTag)}
-                onDelete={disabled ? undefined : () => handleDeleteTag(thisTag)}
+                loading={loading}
               />
             ))}
           </StyledTagListDiv>
@@ -172,6 +153,16 @@ const StyledGrid = styled(Grid)((props) => ({
   minHeight: 40,
   position: 'relative',
 }));
+
+const StyledCircleDiv = styled('div')({
+  alignItems: 'center',
+  display: 'flex',
+  height: '100%',
+  justifyContent: 'center',
+  position: 'absolute',
+  width: '100%',
+  zIndex: 2,
+});
 
 const StyledTagListDiv = styled('div', {
   shouldForwardProp: omittedProps(['hasOverflow', 'wrap']),

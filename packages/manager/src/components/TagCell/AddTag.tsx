@@ -42,17 +42,20 @@ export const AddTag = (props: AddTagProps) => {
   ];
 
   const handleAddTag = (newTag: string) => {
-    if (onClose) {
-      onClose();
-    }
-    addTag(newTag).then(() => {
-      if (accountTags) {
-        updateTagsSuggestionsData(
-          [...accountTags, { label: newTag }],
-          queryClient
-        );
-      }
-    });
+    addTag(newTag)
+      .then(() => {
+        if (accountTags) {
+          updateTagsSuggestionsData(
+            [...accountTags, { label: newTag }],
+            queryClient
+          );
+        }
+      })
+      .finally(() => {
+        if (onClose) {
+          onClose();
+        }
+      });
   };
 
   return (
