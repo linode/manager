@@ -45,7 +45,9 @@ export const PlacementGroupsEditDrawer = (
     Number(id),
     open && selectedPlacementGroup === undefined
   );
-  const placementGroup = selectedPlacementGroup ?? placementGroupFromParam;
+  const [placementGroup, setPlacementGroup] = React.useState(
+    selectedPlacementGroup
+  );
   const { region } = usePlacementGroupData({
     placementGroup,
   });
@@ -67,6 +69,12 @@ export const PlacementGroupsEditDrawer = (
     onClose();
     handleResetForm();
   };
+
+  React.useEffect(() => {
+    if (open) {
+      setPlacementGroup(selectedPlacementGroup ?? placementGroupFromParam);
+    }
+  }, [open, selectedPlacementGroup, placementGroupFromParam]);
 
   const handleFormSubmit = async (
     values: UpdatePlacementGroupPayload,

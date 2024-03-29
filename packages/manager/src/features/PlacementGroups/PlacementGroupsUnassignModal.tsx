@@ -26,25 +26,29 @@ interface Props {
 
 export const PlacementGroupsUnassignModal = (props: Props) => {
   const { onClose, onExited, open, selectedLinode } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const { id: placementGroupId, linodeId } = useParams<{
     id: string;
     linodeId: string;
   }>();
-
+  const [linode, setLinode] = React.useState<Linode | undefined>(
+    selectedLinode
+  );
   const {
     error,
     isLoading,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
-
-  const { enqueueSnackbar } = useSnackbar();
-
   const { data: linodeFromQuery, isFetching } = useLinodeQuery(
     +linodeId ?? -1,
     open && selectedLinode === undefined
   );
 
-  const linode = selectedLinode ?? linodeFromQuery;
+  React.useEffect(() => {
+    if (open) {
+      setLinode(selectedLinode ?? linodeFromQuery);
+    }
+  }, [selectedLinode, linodeFromQuery, open]);
 
   const payload: UnassignLinodesFromPlacementGroupPayload = {
     linodes: [linode?.id ?? -1],
@@ -95,6 +99,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
           },
         }}
         onClose={onClose}
+        onExited={onExited}
         open={open}
         title="Delete Placement Group"
       >

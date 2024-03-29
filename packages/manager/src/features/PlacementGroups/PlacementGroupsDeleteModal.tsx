@@ -42,12 +42,15 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     open,
     selectedPlacementGroup,
   } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams<{ id: string }>();
+  const [placementGroup, setPlacementGroup] = React.useState<
+    PlacementGroup | undefined
+  >(selectedPlacementGroup);
   const { data: placementGroupFromParam, isFetching } = usePlacementGroupQuery(
     Number(id),
     open && selectedPlacementGroup === undefined
   );
-  const placementGroup = selectedPlacementGroup ?? placementGroupFromParam;
   const {
     assignedLinodes,
     isLoading: placementGroupDataLoading,
@@ -59,25 +62,20 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     error: deletePlacementError,
     isLoading: deletePlacementLoading,
     mutateAsync: deletePlacementGroup,
-    reset: resetDeletePlacementGroup,
   } = useDeletePlacementGroup(placementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
     isLoading: unassignLinodeLoading,
     mutateAsync: unassignLinodes,
-    reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(placementGroup?.id ?? -1);
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const error = deletePlacementError || unassignLinodeError;
 
   React.useEffect(() => {
     if (open) {
-      resetDeletePlacementGroup();
-      resetUnassignLinodes();
+      setPlacementGroup(selectedPlacementGroup ?? placementGroupFromParam);
     }
-  }, [open, resetUnassignLinodes, resetDeletePlacementGroup]);
+  }, [selectedPlacementGroup, placementGroupFromParam, open]);
+
+  const error = deletePlacementError || unassignLinodeError;
 
   const handleUnassignLinode = async (linode: Linode) => {
     const payload: UnassignLinodesFromPlacementGroupPayload = {
@@ -122,6 +120,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           },
         }}
         onClose={onClose}
+        onExited={onExited}
         open={open}
         title="Delete Placement Group"
       >
