@@ -23,11 +23,13 @@ import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 import type { Linode, PlacementGroup } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   isLinodeReadOnly: boolean;
   placementGroup: PlacementGroup | undefined;
 }
 
 export const PlacementGroupsLinodes = ({
+  isFetching,
   isLinodeReadOnly,
   placementGroup,
 }: Props) => {
@@ -35,7 +37,6 @@ export const PlacementGroupsLinodes = ({
   const {
     assignedLinodes,
     hasReachedCapacity,
-    isLoading,
     linodesError,
     region,
   } = usePlacementGroupData({
@@ -134,7 +135,7 @@ export const PlacementGroupsLinodes = ({
         error={linodesError ?? []}
         handleUnassignLinodeModal={handleUnassignLinodeModal}
         linodes={getLinodesList() ?? []}
-        loading={isLoading}
+        loading={isFetching}
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}

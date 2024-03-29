@@ -134,16 +134,15 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
     APIError[],
     AssignLinodesToPlacementGroupPayload
   >({
-    mutationFn: (data) => assignLinodesToPlacementGroup(placementGroupId, data),
-    onSuccess: () => {
+    mutationFn: (req) => assignLinodesToPlacementGroup(placementGroupId, req),
+    onSuccess: (_, ctx) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      // Invalidate all linodes query since we use the list to populate the PG linode select
-      queryClient.invalidateQueries([linodeQueryKey, 'all']);
+      queryClient.invalidateQueries([linodeQueryKey, 'linode', ctx.linodes[0]]);
     },
   });
 };
@@ -157,17 +156,16 @@ export const useUnassignLinodesFromPlacementGroup = (
     APIError[],
     UnassignLinodesFromPlacementGroupPayload
   >({
-    mutationFn: (data) =>
-      unassignLinodesFromPlacementGroup(placementGroupId, data),
-    onSuccess: () => {
+    mutationFn: (req) =>
+      unassignLinodesFromPlacementGroup(placementGroupId, req),
+    onSuccess: (_, ctx) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      // Invalidate all linodes query since we use the list to populate the PG linode select
-      queryClient.invalidateQueries([linodeQueryKey, 'all']);
+      queryClient.invalidateQueries([linodeQueryKey, 'linode', ctx.linodes[0]]);
     },
   });
 };
