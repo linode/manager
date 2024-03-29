@@ -60,7 +60,9 @@ export const BucketDetailsDrawer = React.memo(
     );
 
     // @TODO OBJ Multicluster: Once the feature is rolled out to production, we can clean this up by removing the useObjectStorageClusters and useRegionsQuery, which will not be required at that time.
-    const { data: clusters } = useObjectStorageClusters();
+    const { data: clusters } = useObjectStorageClusters(
+      !isObjMultiClusterEnabled
+    );
     const { data: regions } = useRegionsQuery();
     const { data: profile } = useProfile();
     const actualCluster = clusters?.find((c) => c.id === cluster);
