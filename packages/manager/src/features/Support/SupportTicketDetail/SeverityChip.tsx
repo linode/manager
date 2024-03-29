@@ -1,5 +1,4 @@
 import { TicketSeverity } from '@linode/api-v4';
-import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Chip, ChipProps } from 'src/components/Chip';
@@ -13,13 +12,9 @@ const severityColorMap: Record<TicketSeverity, ChipProps['color']> = {
 };
 
 export const SeverityChip = ({ severity }: { severity: TicketSeverity }) => (
-  <StyledChip
+  <Chip
     color={severityColorMap[severity]}
     label={severityLabelMap.get(severity)}
+    sx={(theme) => ({ padding: theme.spacing() })}
   />
 );
-
-const StyledChip = styled(Chip, { label: 'StyledChip' })(({ theme }) => ({
-  paddingLeft: theme.spacing(),
-  paddingRight: theme.spacing(),
-}));

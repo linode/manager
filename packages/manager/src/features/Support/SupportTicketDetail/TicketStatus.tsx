@@ -3,7 +3,10 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
+import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
@@ -44,41 +47,38 @@ export const TicketStatus = (props: Props) => {
   };
 
   return (
-    <StyledStatusBar container data-qa-ticket-status>
-      <Grid alignItems="center" container direction="row" xs>
-        <StyledStatusIcon
-          ariaLabel={`Ticket status is ${status}`}
-          status={status === 'closed' ? 'inactive' : 'active'}
-        />
-        {capitalize(status)}
-        &nbsp;
-        <Typography>
-          | {statusUpdateText} by {updated_by} at {formattedDate}
-        </Typography>
-        &nbsp;
-        {renderEntityLabel()}
-      </Grid>
-      {severity && (
-        <Grid alignItems="center" container direction="row" spacing={1}>
-          <Grid>
-            <Typography>Severity:</Typography>
-          </Grid>
-          <Grid>
-            <SeverityChip severity={severity} />
-          </Grid>
+    <Paper
+      data-qa-ticket-status
+      sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
+    >
+      <Stack direction="row">
+        <Grid alignItems="center" container direction="row" xs>
+          <StyledStatusIcon
+            ariaLabel={`Ticket status is ${status}`}
+            status={status === 'closed' ? 'inactive' : 'active'}
+          />
+          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+            {capitalize(status)}
+          </Typography>
+          <Hidden smDown>
+            &nbsp;
+            <Typography>
+              | {statusUpdateText} by {updated_by} at {formattedDate}
+            </Typography>
+            &nbsp;
+            {renderEntityLabel()}
+          </Hidden>
         </Grid>
-      )}
-    </StyledStatusBar>
+        {severity && (
+          <Stack alignItems="center" direction="row" spacing={1}>
+            <Typography>Severity:</Typography>
+            <SeverityChip severity={severity} />
+          </Stack>
+        )}
+      </Stack>
+    </Paper>
   );
 };
-
-const StyledStatusBar = styled(Grid, { label: 'StyledStatusBar' })(
-  ({ theme }) => ({
-    backgroundColor: theme.color.white,
-    fontFamily: theme.font.bold,
-    padding: `${theme.spacing()} ${theme.spacing(2)}`,
-  })
-);
 
 const StyledStatusIcon = styled(StatusIcon, {
   label: 'StyledStatusIcon',
