@@ -1,7 +1,7 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
-import { PriceType } from '@linode/api-v4/src/types';
 import * as Factory from 'factory.ts';
 
+import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type { PriceType } from '@linode/api-v4/src/types';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
