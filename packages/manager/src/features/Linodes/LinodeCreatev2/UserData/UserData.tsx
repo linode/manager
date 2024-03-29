@@ -38,11 +38,7 @@ export const UserData = () => {
     const isUserDataValid = validPrefixes.some((prefix) =>
       userDataLower.startsWith(prefix)
     );
-    if (userData.length > 0 && !isUserDataValid && !hasInputValueChanged) {
-      setFormatWarning(true);
-    } else {
-      setFormatWarning(false);
-    }
+    setFormatWarning(userData.length > 0 && !isUserDataValid && !hasInputValueChanged);
   };
 
   const region = useMemo(() => regions?.find((r) => r.id === regionId), [
