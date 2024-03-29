@@ -14,7 +14,7 @@ const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
   useAssignLinodesToPlacementGroup: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/linodes/linodes', async () => {
@@ -29,13 +29,12 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
   return {
     ...actual,
     useRegionsQuery: queryMocks.useRegionsQuery,
@@ -77,51 +76,51 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       ],
     });
     queryMocks.useRegionsQuery.mockReturnValue(regionFactory.buildList(5));
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: placementGroupFactory.build(),
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
       placementGroupFactory.build({
-        linodes: [
+        members: [
           {
             is_compliant: true,
-            linode: 1,
+            linode_id: 1,
           },
           {
             is_compliant: true,
-            linode: 2,
+            linode_id: 2,
           },
           {
             is_compliant: true,
-            linode: 3,
+            linode_id: 3,
           },
           {
             is_compliant: true,
-            linode: 5,
+            linode_id: 5,
           },
           {
             is_compliant: true,
-            linode: 6,
+            linode_id: 6,
           },
           {
             is_compliant: true,
-            linode: 7,
+            linode_id: 7,
           },
           {
             is_compliant: true,
-            linode: 8,
+            linode_id: 8,
           },
           {
             is_compliant: true,
-            linode: 9,
+            linode_id: 9,
           },
           {
             is_compliant: true,
-            linode: 43,
+            linode_id: 43,
           },
           {
             is_compliant: true,
-            linode: 11,
+            linode_id: 11,
           },
         ],
       })
@@ -130,7 +129,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity',
+          affinity_type: 'anti_affinity:local',
           label: 'PG-1',
           region: 'us-east',
         })}

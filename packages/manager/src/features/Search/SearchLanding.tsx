@@ -9,6 +9,8 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -19,10 +21,11 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
@@ -31,6 +34,7 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { getImageLabelForLinode } from '../Images/utils';
 import { ResultGroup } from './ResultGroup';
+import './searchLanding.css';
 import {
   StyledError,
   StyledGrid,
@@ -38,7 +42,6 @@ import {
   StyledRootGrid,
   StyledStack,
 } from './SearchLanding.styles';
-import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 
@@ -52,7 +55,9 @@ const displayMap = {
   volumes: 'Volumes',
 };
 
-export type CombinedProps = SearchProps & RouteComponentProps<{}>;
+export interface SearchLandingProps
+  extends SearchProps,
+    RouteComponentProps<{}> {}
 
 const splitWord = (word: any) => {
   word = word.split('');
@@ -62,22 +67,49 @@ const splitWord = (word: any) => {
   return word;
 };
 
-export const SearchLanding = (props: CombinedProps) => {
+export const SearchLanding = (props: SearchLandingProps) => {
   const { entities, search, searchResultsByEntity } = props;
+  const { data: regions } = useRegionsQuery();
+
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
 
   const isLargeAccount = useIsLargeAccount();
+
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   const {
     data: objectStorageClusters,
     error: objectStorageClustersError,
     isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!isLargeAccount);
+  } = useObjectStorageClusters(!isLargeAccount && !isObjMultiClusterEnabled);
 
+  /*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
   const {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters, !isLargeAccount);
+  } = useObjectStorageBuckets({
+    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
+    enabled: !isLargeAccount,
+    isObjMultiClusterEnabled,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
+  });
 
   const {
     data: domains,
@@ -120,8 +152,6 @@ export const SearchLanding = (props: CombinedProps) => {
     error: linodesError,
     isLoading: areLinodesLoading,
   } = useAllLinodesQuery({}, {}, !isLargeAccount);
-
-  const { data: regions } = useRegionsQuery();
 
   const typesQuery = useSpecificTypes(
     (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined)
@@ -237,8 +267,8 @@ export const SearchLanding = (props: CombinedProps) => {
 
   const loading =
     areLinodesLoading ||
-    areBucketsLoading ||
-    areClustersLoading ||
+    (areBucketsLoading && !isObjMultiClusterEnabled) ||
+    (areClustersLoading && !isObjMultiClusterEnabled) ||
     areDomainsLoading ||
     areVolumesLoading ||
     areKubernetesClustersLoading ||
@@ -308,6 +338,8 @@ export const SearchLanding = (props: CombinedProps) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withStoreSearch())(SearchLanding);
+const enhanced = compose<SearchLandingProps, {}>(withStoreSearch())(
+  SearchLanding
+);
 
 export default enhanced;

@@ -7,6 +7,7 @@ import { TagCell } from './TagCell';
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
 
 export interface TagDrawerProps {
+  disabled?: boolean;
   entityLabel: string;
   onClose: () => void;
   open: boolean;
@@ -15,11 +16,11 @@ export interface TagDrawerProps {
 }
 
 export const TagDrawer = (props: TagDrawerProps) => {
-  const { entityLabel, onClose, open, tags, updateTags } = props;
+  const { disabled, entityLabel, onClose, open, tags, updateTags } = props;
 
   return (
     <Drawer onClose={onClose} open={open} title={`Tags (${entityLabel})`}>
-      <TagCell tags={tags} updateTags={updateTags} />
+      <TagCell disabled={disabled} tags={tags} updateTags={updateTags} />
     </Drawer>
   );
 };

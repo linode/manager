@@ -10,6 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
@@ -35,6 +36,12 @@ export const DomainDetail = () => {
     isLoading: isRecordsLoading,
     refetch: refetchRecords,
   } = useDomainRecordsQuery(domainId);
+
+  const isDomainReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'domain',
+    id: domainId,
+  });
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
 
@@ -123,7 +130,11 @@ export const DomainDetail = () => {
             <StyledTypography data-qa-title variant="h3">
               Tags
             </StyledTypography>
-            <TagCell tags={domain.tags} updateTags={handleUpdateTags} />
+            <TagCell
+              disabled={isDomainReadOnly}
+              tags={domain.tags}
+              updateTags={handleUpdateTags}
+            />
           </StyledPaper>
           <StyledDiv>
             <DeleteDomain

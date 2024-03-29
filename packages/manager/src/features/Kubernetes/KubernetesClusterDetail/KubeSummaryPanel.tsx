@@ -13,6 +13,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Paper } from 'src/components/Paper';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
@@ -121,6 +122,12 @@ export const KubeSummaryPanel = (props: Props) => {
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: cluster.id,
+  });
+
   const [
     resetKubeConfigDialogOpen,
     setResetKubeConfigDialogOpen,
@@ -197,7 +204,11 @@ export const KubeSummaryPanel = (props: Props) => {
               </Button>
             </Grid>
             <Grid className={classes.tags}>
-              <TagCell tags={cluster.tags} updateTags={handleUpdateTags} />
+              <TagCell
+                disabled={isClusterReadOnly}
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Grid>
           </Grid>
         </Grid>

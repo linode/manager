@@ -20,9 +20,9 @@ interface Props {
   stackScriptId?: number;
 }
 
-type CombinedProps = DispatchProps & Props;
+interface StackScriptDialogProps extends DispatchProps, Props {}
 
-export const StackScriptDialog = (props: CombinedProps) => {
+export const StackScriptDialog = (props: StackScriptDialogProps) => {
   const { closeDrawer, open, stackScriptId } = props;
 
   const [stackScript, setStackScript] = React.useState<StackScript | undefined>(

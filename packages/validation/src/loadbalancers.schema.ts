@@ -180,7 +180,7 @@ export const UpdateConfigurationSchema = object({
         .of(CertificateEntrySchema)
         .min(1, 'Certificates must not be empty for HTTPS configurations.')
         .required(),
-    otherwise: (o) => o.notRequired(),
+    otherwise: (o) => o.max(0).notRequired(),
   }),
   route_ids: array().of(number()),
 });
@@ -202,7 +202,7 @@ export const CreateConfigurationSchema = object({
         .of(CertificateEntrySchema)
         .min(1, 'Certificates must not be empty for HTTPS configurations.')
         .required(),
-    otherwise: (o) => o.notRequired(),
+    otherwise: (o) => o.max(0).notRequired(),
   }),
   route_ids: array().of(number()),
 });

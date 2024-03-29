@@ -1,8 +1,8 @@
 import { Region } from '@linode/api-v4';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -15,14 +15,17 @@ import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   BucketError,
   useDeleteBucketWithRegionMutation,
-  useObjectStorageBucketsFromRegions,
+  useObjectStorageBuckets,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -46,6 +49,15 @@ export const OMC_BucketLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   const {
     data: regions,
     error: regionErrors,
@@ -54,7 +66,7 @@ export const OMC_BucketLanding = () => {
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -62,7 +74,10 @@ export const OMC_BucketLanding = () => {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBucketsFromRegions(regionsSupportObjectStorage);
+  } = useObjectStorageBuckets({
+    isObjMultiClusterEnabled,
+    regions: regionsSupportingObjectStorage,
+  });
 
   const { mutateAsync: deleteBucket } = useDeleteBucketWithRegionMutation();
 

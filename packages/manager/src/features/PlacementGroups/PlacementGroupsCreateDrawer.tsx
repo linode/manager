@@ -11,9 +11,10 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -30,6 +31,7 @@ export const PlacementGroupsCreateDrawer = (
 ) => {
   const {
     allPlacementGroups,
+    disabledPlacementGroupCreateButton,
     onClose,
     onPlacementGroupCreate,
     open,
@@ -112,7 +114,7 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: 'anti_affinity',
+      affinity_type: 'anti_affinity:local',
       is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
@@ -131,6 +133,16 @@ export const PlacementGroupsCreateDrawer = (
       open={open}
       title="Create Placement Group"
     >
+      {disabledPlacementGroupCreateButton && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'edit',
+            resourceType: 'Placement Groups',
+          })}
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
@@ -146,7 +158,7 @@ export const PlacementGroupsCreateDrawer = (
               autoFocus: true,
             }}
             aria-label="Label for the Placement Group"
-            disabled={false}
+            disabled={disabledPlacementGroupCreateButton || false}
             errorText={errors.label}
             label="Label"
             name="label"
@@ -156,6 +168,9 @@ export const PlacementGroupsCreateDrawer = (
           />
           {!selectedRegionId && (
             <RegionSelect
+              disabled={
+                Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
+              }
               errorText={
                 hasRegionReachedPGCapacity
                   ? 'This region has reached capacity'
@@ -165,17 +180,22 @@ export const PlacementGroupsCreateDrawer = (
                 handleRegionSelect(selection);
               }}
               currentCapability="Placement Group"
-              disabled={Boolean(selectedRegionId)}
               helperText="Only regions supporting Placement Groups are listed."
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
             />
           )}
           <PlacementGroupsAffinityTypeSelect
+            disabledPlacementGroupCreateButton={
+              disabledPlacementGroupCreateButton
+            }
             error={errors.affinity_type}
             setFieldValue={setFieldValue}
           />
           <PlacementGroupsAffinityEnforcementRadioGroup
+            disabledPlacementGroupCreateButton={
+              disabledPlacementGroupCreateButton
+            }
             handleChange={handleChange}
             setFieldValue={setFieldValue}
             value={values.is_strict}
@@ -183,7 +203,10 @@ export const PlacementGroupsCreateDrawer = (
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: isSubmitting || hasRegionReachedPGCapacity,
+              disabled:
+                isSubmitting ||
+                hasRegionReachedPGCapacity ||
+                disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,
               onClick: () => setHasFormBeenSubmitted(true),
@@ -192,7 +215,7 @@ export const PlacementGroupsCreateDrawer = (
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onClose,
+              onClick: handleDrawerClose,
             }}
             sx={{ pt: 4 }}
           />

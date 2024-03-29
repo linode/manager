@@ -5,6 +5,7 @@ import * as React from 'react';
 import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import { Typography } from 'src/components/Typography';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 
@@ -25,6 +26,12 @@ export const CardView = (props: RenderLinodesProps) => {
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     tagDrawerLinodeId ?? -1
   );
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: tagDrawerLinodeId,
+  });
 
   const closeTagDrawer = () => {
     setTagDrawerLinodeId(undefined);
@@ -78,6 +85,7 @@ export const CardView = (props: RenderLinodesProps) => {
       </Grid>
       {tagDrawerLinode && (
         <TagDrawer
+          disabled={isLinodesGrantReadOnly}
           entityLabel={tagDrawerLinode.label}
           onClose={closeTagDrawer}
           open

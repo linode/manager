@@ -12,6 +12,8 @@ import { useAPISearch } from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -22,10 +24,11 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
@@ -87,6 +90,13 @@ const SearchBar = (props: SearchProps) => {
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
 
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
@@ -95,12 +105,30 @@ const SearchBar = (props: SearchProps) => {
 
   // Data fetching
   const { data: objectStorageClusters } = useObjectStorageClusters(
-    shouldMakeRequests
+    shouldMakeRequests && !isObjMultiClusterEnabled
   );
-  const { data: objectStorageBuckets } = useObjectStorageBuckets(
-    objectStorageClusters,
-    shouldMakeRequests
+
+  const { data: regions } = useRegionsQuery();
+
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
   );
+
+  /*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
+  const { data: objectStorageBuckets } = useObjectStorageBuckets({
+    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
+    enabled: shouldMakeRequests,
+    isObjMultiClusterEnabled,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
+  });
+
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
@@ -120,7 +148,6 @@ const SearchBar = (props: SearchProps) => {
     {},
     shouldMakeRequests
   );
-  const { data: regions } = useRegionsQuery();
 
   const typesQuery = useSpecificTypes(
     (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),

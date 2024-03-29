@@ -13,14 +13,12 @@ import {
   Action,
   PowerActionsDialog,
 } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
@@ -62,13 +60,11 @@ const LinodeDetailHeader = () => {
     matchedLinodeId
   );
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: matchedLinodeId,
+  });
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -245,7 +241,6 @@ const LinodeDetailHeader = () => {
         action={powerAction}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
-        manuallyUpdateConfigs={showVPCs}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
@@ -280,6 +275,7 @@ const LinodeDetailHeader = () => {
         open={isUpgradeVolumesDialogOpen}
       />
       <TagDrawer
+        disabled={isLinodesGrantReadOnly}
         entityLabel={linode.label}
         onClose={closeTagDrawer}
         open={tagDrawerOpen}

@@ -145,26 +145,6 @@ describe('Create API Token Drawer', () => {
     expect(childScope).not.toBeInTheDocument();
   });
 
-  it('Should show the VPC scope with the VPC feature flag on', () => {
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { vpc: true },
-    });
-    const vpcScope = getByText('VPCs');
-    expect(vpcScope).toBeInTheDocument();
-  });
-
-  it('Should not show the VPC scope with the VPC feature flag off', () => {
-    const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { vpc: false },
-      }
-    );
-
-    const vpcScope = queryByText('VPCs');
-    expect(vpcScope).not.toBeInTheDocument();
-  });
-
   it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
@@ -174,10 +154,7 @@ describe('Create API Token Drawer', () => {
 
   it('Should not select Read Only for VPC scope when Select All > Read Only is clicked', async () => {
     const { getAllByTestId, getByLabelText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { vpc: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
     const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
     const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;

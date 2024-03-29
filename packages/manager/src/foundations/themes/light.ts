@@ -3,7 +3,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
-const inputMaxWidth = 416;
+export const inputMaxWidth = 416;
 
 export const bg = {
   app: '#f4f5f6',
@@ -271,6 +271,12 @@ export const lightTheme: ThemeOptions = {
             color: '#aaa',
           },
           top: 'unset',
+        },
+        groupLabel: {
+          fontFamily: latoWeb.bold,
+          fontSize: '1rem',
+          lineHeight: 'unset',
+          padding: '8px',
         },
         hasPopupIcon: {
           '&.MuiAutocomplete-root': {
