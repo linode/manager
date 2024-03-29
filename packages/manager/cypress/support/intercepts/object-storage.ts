@@ -453,19 +453,11 @@ export const mockGetClusters = (
  */
 export const interceptGetBucketAccess = (
   label: string,
-  cluster: string,
-  data: any,
-  statusCode: number = 200
+  cluster: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`),
-    {
-      body: {
-        data,
-      },
-      statusCode,
-    }
+    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`)
   );
 };
 
@@ -483,7 +475,6 @@ export const interceptUpdateBucketAccess = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`),
-    {}
+    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`)
   );
 };

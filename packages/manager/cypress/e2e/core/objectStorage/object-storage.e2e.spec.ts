@@ -403,12 +403,9 @@ describe('object storage end-to-end tests', () => {
       setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
-      interceptGetBucketAccess(bucketLabel, bucketCluster, {
-        acl: 'private',
-        acl_xml: '',
-        cors_enabled: true,
-        cors_xml: '',
-      }).as('getBucketAccess');
+      interceptGetBucketAccess(bucketLabel, bucketCluster).as(
+        'getBucketAccess'
+      );
       interceptUpdateBucketAccess(bucketLabel, bucketCluster).as(
         'updateBucketAccess'
       );
