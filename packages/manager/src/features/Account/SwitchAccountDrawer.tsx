@@ -103,6 +103,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         });
       } catch (error) {
         setIsProxyTokenError(error);
+        throw error;
       }
 
       onClose(event);
