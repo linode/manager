@@ -21,6 +21,7 @@ import { Region } from './Region';
 import { Summary } from './Summary';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
+import { UserData } from './UserData/UserData';
 import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -93,6 +94,7 @@ export const LinodeCreatev2 = () => {
           <Details />
           <Access />
           <Firewall />
+          <UserData />
           <Addons />
           <Summary />
         </Stack>

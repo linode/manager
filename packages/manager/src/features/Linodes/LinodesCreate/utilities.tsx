@@ -27,6 +27,13 @@ export const utoa = (data: string) => {
   }
 };
 
+/**
+ * ASCII to Unicode (decode Base64 to original data)
+ */
+export function atou(b64: string) {
+  return decodeURIComponent(escape(atob(b64)));
+}
+
 export const regionSupportsMetadata = (
   regionsData: Region[],
   region: string

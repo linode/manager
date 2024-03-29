@@ -7,7 +7,7 @@ import type { LinodeCreateType } from '../LinodesCreate/types';
 /**
  * This interface is used to type the query params on the Linode Create flow.
  */
-interface LinodeCreateQueryParams {
+export interface LinodeCreateQueryParams {
   type: LinodeCreateType | undefined;
 }
 
