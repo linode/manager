@@ -293,7 +293,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             error={
               !createMode && formik.errors.regions ? (
                 <span>
-                  Select at least one region. To delete all keys,{' '}
+                  Select at least one region. To remove all regions,{' '}
                   <LinkButton
                     onClick={() => {
                       onClose();
@@ -301,7 +301,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   >
                     revoke
                   </LinkButton>{' '}
-                  an access key individually.
+                  the access key.
                 </span>
               ) : (
                 (formik.errors.regions as string)
