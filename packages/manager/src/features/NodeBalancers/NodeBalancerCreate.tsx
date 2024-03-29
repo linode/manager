@@ -63,8 +63,13 @@ import {
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
 
+interface NodeBalancerConfigFieldsWithStatusAndErrors
+  extends NodeBalancerConfigFieldsWithStatus {
+  errors?: APIError[];
+}
+
 interface NodeBalancerFieldsState {
-  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
+  configs: NodeBalancerConfigFieldsWithStatusAndErrors[];
   firewall_id?: number;
   label?: string;
   region?: string;

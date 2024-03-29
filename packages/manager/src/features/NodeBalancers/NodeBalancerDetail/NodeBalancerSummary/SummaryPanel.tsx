@@ -135,7 +135,6 @@ export const SummaryPanel = () => {
         </StyledTitle>
         <TagsPanel
           disabled={isNodeBalancerReadOnly}
-          entityId={nodebalancer.id}
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
         />

@@ -3,7 +3,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
-const inputMaxWidth = 416;
+export const inputMaxWidth = 416;
 
 export const bg = {
   app: '#f4f5f6',

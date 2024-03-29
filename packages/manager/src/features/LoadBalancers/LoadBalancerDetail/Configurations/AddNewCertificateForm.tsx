@@ -23,17 +23,19 @@ import type {
   CreateCertificatePayload,
 } from '@linode/api-v4';
 
+interface AddNewCertificateFormUseFormikProps
+  extends CreateCertificatePayload,
+    Omit<CertificateConfig, 'id'> {}
+
 export const AddNewCertificateForm = (props: AddCertificateDrawerProps) => {
   const { loadbalancerId, onAdd, onClose, open } = props;
 
   const {
-    mutateAsync: createCertificate,
     error,
+    mutateAsync: createCertificate,
   } = useLoadBalancerCertificateCreateMutation(loadbalancerId);
 
-  const formik = useFormik<
-    CreateCertificatePayload & Omit<CertificateConfig, 'id'>
-  >({
+  const formik = useFormik<AddNewCertificateFormUseFormikProps>({
     initialValues: {
       certificate: '',
       hostname: '',

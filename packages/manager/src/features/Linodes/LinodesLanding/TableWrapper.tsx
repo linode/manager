@@ -17,9 +17,9 @@ interface Props {
   toggleLinodeView: () => 'grid' | 'list';
 }
 
-type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & Props;
+interface TableWrapperProps<T> extends Omit<OrderByProps<T>, 'data'>, Props {}
 
-const TableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
+const TableWrapper = <T extends unknown>(props: TableWrapperProps<T>) => {
   const {
     dataLength,
     handleOrderChange,

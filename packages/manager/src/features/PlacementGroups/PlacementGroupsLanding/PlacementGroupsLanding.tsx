@@ -1,8 +1,10 @@
 import CloseIcon from '@mui/icons-material/Close';
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
@@ -14,8 +16,8 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { TextField } from 'src/components/TextField';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -36,7 +38,12 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const theme = useTheme();
   const [query, setQuery] = React.useState<string>('');
+  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
+    PlacementGroup | undefined
+  >(undefined);
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { handleOrderChange, order, orderBy } = useOrder(
     {
       order: 'asc',
@@ -54,13 +61,16 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter['label'] = { '+contains': query };
   }
 
-  const params = {
-    page: pagination.page,
-    page_size: pagination.pageSize,
-  };
-
-  const { data: placementGroups, error, isLoading } = usePlacementGroupsQuery(
-    params,
+  const {
+    data: placementGroups,
+    error,
+    isFetching,
+    isLoading,
+  } = usePlacementGroupsQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
     filter
   );
 
@@ -73,15 +83,21 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/edit/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
     history.replace(`/placement-groups/delete/${placementGroup.id}`);
   };
 
   const onClosePlacementGroupDrawer = () => {
     history.replace('/placement-groups');
+  };
+
+  const onExited = () => {
+    setSelectedPlacementGroup(undefined);
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
@@ -92,7 +108,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     return <CircleProgress />;
   }
 
-  if (placementGroups?.results === 0) {
+  if (placementGroups?.results === 0 && query === '') {
     return (
       <>
         <PlacementGroupsLandingEmptyState
@@ -137,10 +153,12 @@ export const PlacementGroupsLanding = React.memo(() => {
         onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
       />
-      <TextField
+      <DebouncedSearchTextField
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
+              {isFetching && <CircleProgress mini />}
+
               <IconButton
                 aria-label="Clear"
                 onClick={() => setQuery('')}
@@ -152,6 +170,7 @@ export const PlacementGroupsLanding = React.memo(() => {
             </InputAdornment>
           ),
         }}
+        debounceTime={250}
         hideLabel
         label="Filter"
         onChange={(e) => setQuery(e.target.value)}
@@ -167,10 +186,31 @@ export const PlacementGroupsLanding = React.memo(() => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
-              sx={{ width: '40%' }}
+              sx={{ width: matchesSmDown ? '40%' : '20%' }}
             >
               Label
             </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'affinity_type'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="affinity_type"
+              >
+                Affinity Type
+              </TableSortCell>
+            </Hidden>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'is_strict'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="is_strict"
+                sx={{ width: '20%' }}
+              >
+                Affinity Type Enforcement
+              </TableSortCell>
+            </Hidden>
             <TableCell>Linodes</TableCell>
             <Hidden smDown>
               <TableSortCell
@@ -186,6 +226,7 @@ export const PlacementGroupsLanding = React.memo(() => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {placementGroups?.data.length === 0 && <TableRowEmpty colSpan={6} />}
           {placementGroups?.data.map((placementGroup) => (
             <PlacementGroupsRow
               handleDeletePlacementGroup={() =>
@@ -218,12 +259,16 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
+        onExited={onExited}
         open={isPlacementGroupEditDrawerOpen}
+        selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
+        onExited={onExited}
         open={isPlacementGroupDeleteModalOpen}
+        selectedPlacementGroup={selectedPlacementGroup}
       />
     </>
   );

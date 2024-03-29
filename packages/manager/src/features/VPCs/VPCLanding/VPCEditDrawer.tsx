@@ -42,7 +42,11 @@ export const VPCEditDrawer = (props: Props) => {
     reset,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
 
-  const form = useFormik<UpdateVPCPayload & { none?: string }>({
+  interface UpdateVPCPayloadWithNone extends UpdateVPCPayload {
+    none?: string;
+  }
+
+  const form = useFormik<UpdateVPCPayloadWithNone>({
     enableReinitialize: true,
     initialValues: {
       description: vpc?.description,

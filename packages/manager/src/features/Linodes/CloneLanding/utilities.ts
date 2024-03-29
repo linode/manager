@@ -41,7 +41,9 @@ export type CloneLandingAction =
   | { type: 'clearAll' }
   | { type: 'setSubmitting'; value: boolean };
 
-export type ExtendedConfig = Config & { associatedDisks: Disk[] };
+export interface ExtendedConfig extends Config {
+  associatedDisks: Disk[];
+}
 /**
  * REDUCER
  *
