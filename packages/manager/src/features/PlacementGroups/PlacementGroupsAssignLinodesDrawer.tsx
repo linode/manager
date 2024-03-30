@@ -14,8 +14,8 @@ import { Typography } from 'src/components/Typography';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
-  useAssignLinodesToPlacementGroup,
   useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
 } from 'src/queries/placementGroups';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
@@ -164,6 +164,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
+              checkIsOptionEqualToValue
               disabled={hasReachedCapacity}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}

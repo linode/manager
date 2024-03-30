@@ -34,7 +34,6 @@ export const PlacementGroupsDetail = () => {
   const {
     data: placementGroup,
     error: placementGroupError,
-    isFetching,
     isLoading,
   } = usePlacementGroupQuery(
     placementGroupId,
@@ -139,8 +138,8 @@ export const PlacementGroupsDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <PlacementGroupsLinodes
-              isFetching={isFetching}
               isLinodeReadOnly={isLinodeReadOnly}
+              isLoading={isLoading}
               placementGroup={placementGroup}
             />
           </SafeTabPanel>

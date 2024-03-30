@@ -25,6 +25,7 @@ import type {
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
+import type { ButtonProps } from 'src/components/Button/Button';
 
 interface Props {
   disableUnassignButton: boolean;
@@ -82,16 +83,17 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       linodes: [linode.id],
     };
 
-    await unassignLinodes(payload);
-    const toastMessage = `Linode successfully unassigned`;
-    enqueueSnackbar(toastMessage, {
+    const response = await unassignLinodes(payload);
+    setPlacementGroup(response);
+
+    enqueueSnackbar('Linode successfully unassigned', {
       variant: 'success',
     });
   };
 
   const onDelete = async () => {
     await deletePlacementGroup();
-    const toastMessage = `Placement Group successfully deleted.`;
+    const toastMessage = 'Placement Group successfully deleted.';
     enqueueSnackbar(toastMessage, {
       variant: 'success',
     });
@@ -184,8 +186,9 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             </List>
           </Notice>
           <RemovableSelectionsList
-            RemoveButton={() => (
+            RemoveButton={(props: ButtonProps) => (
               <Button
+                {...props}
                 sx={(theme) => ({
                   fontFamily: theme.font.normal,
                   fontSize: '0.875rem',
