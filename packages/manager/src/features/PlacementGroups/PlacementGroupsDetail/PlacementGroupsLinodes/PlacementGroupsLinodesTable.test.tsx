@@ -8,8 +8,8 @@ import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 const defaultProps = {
   error: [],
   handleUnassignLinodeModal: vi.fn(),
+  isFetchingLinodes: false,
   linodes: linodeFactory.buildList(5),
-  loading: false,
 };
 
 describe('PlacementGroupsLinodesTable', () => {
@@ -26,7 +26,7 @@ describe('PlacementGroupsLinodesTable', () => {
 
   it('renders a loading skeleton based on the loading prop', () => {
     const { getByTestId } = renderWithTheme(
-      <PlacementGroupsLinodesTable {...defaultProps} loading />
+      <PlacementGroupsLinodesTable {...defaultProps} isFetchingLinodes />
     );
 
     expect(getByTestId('table-row-loading')).toBeInTheDocument();

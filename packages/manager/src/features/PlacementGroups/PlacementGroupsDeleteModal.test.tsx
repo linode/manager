@@ -101,6 +101,8 @@ describe('PlacementGroupsDeleteModal', () => {
             region: 'us-east',
           })}
           disableUnassignButton={false}
+          isFetching={false}
+          linodes={[linodeFactory.build()]}
         />
       );
     });
@@ -139,6 +141,8 @@ describe('PlacementGroupsDeleteModal', () => {
             members: [],
           })}
           disableUnassignButton={false}
+          isFetching={false}
+          linodes={[linodeFactory.build()]}
         />
       );
     });

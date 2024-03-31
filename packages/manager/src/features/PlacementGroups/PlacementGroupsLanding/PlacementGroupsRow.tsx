@@ -10,28 +10,32 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
 import { getAffinityTypeEnforcement } from '../utils';
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface PlacementGroupsRowProps {
+  assignedLinodes: Linode[] | undefined;
   disabled: boolean;
   handleDeletePlacementGroup: () => void;
   handleEditPlacementGroup: () => void;
   placementGroup: PlacementGroup;
+  region: Region | undefined;
 }
 
 export const PlacementGroupsRow = React.memo(
-  ({
-    disabled,
-    handleDeletePlacementGroup,
-    handleEditPlacementGroup,
-    placementGroup,
-  }: PlacementGroupsRowProps) => {
+  (props: PlacementGroupsRowProps) => {
+    const {
+      assignedLinodes,
+      disabled,
+      handleDeletePlacementGroup,
+      handleEditPlacementGroup,
+      placementGroup,
+      region,
+    } = props;
     const {
       affinity_type,
       id,
@@ -39,9 +43,6 @@ export const PlacementGroupsRow = React.memo(
       is_strict,
       label,
     } = placementGroup;
-    const { assignedLinodes, linodesCount, region } = usePlacementGroupData({
-      placementGroup,
-    });
     const actions: Action[] = [
       {
         onClick: handleEditPlacementGroup,
@@ -91,7 +92,7 @@ export const PlacementGroupsRow = React.memo(
                   ))}
                 </List>
               }
-              displayText={`${linodesCount}`}
+              displayText={`${assignedLinodes?.length ?? 0}`}
               minWidth={200}
             />
           )}

@@ -15,10 +15,12 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
 } from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getPlacementGroupLinodeCount } from '../utils';
@@ -38,6 +40,19 @@ export const PlacementGroupsDetail = () => {
   } = usePlacementGroupQuery(
     placementGroupId,
     Boolean(flags.placementGroups?.enabled)
+  );
+  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
+    {},
+    {
+      '+or': placementGroup?.members.map((member) => ({
+        id: member.linode_id,
+      })),
+    }
+  );
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find(
+    (region) => region.id === placementGroup?.region
   );
 
   const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
@@ -65,6 +80,10 @@ export const PlacementGroupsDetail = () => {
       <ErrorState errorText="There was a problem retrieving your Placement Group. Please try again." />
     );
   }
+
+  const assignedLinodes = linodes?.filter((linode) =>
+    placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
+  );
 
   const linodeCount = getPlacementGroupLinodeCount(placementGroup);
   const tabs = [
@@ -138,9 +157,11 @@ export const PlacementGroupsDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <PlacementGroupsLinodes
+              assignedLinodes={assignedLinodes}
+              isFetchingLinodes={isFetchingLinodes}
               isLinodeReadOnly={isLinodeReadOnly}
-              isLoading={isLoading}
               placementGroup={placementGroup}
+              region={region}
             />
           </SafeTabPanel>
         </TabPanels>

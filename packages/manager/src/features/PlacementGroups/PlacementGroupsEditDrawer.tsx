@@ -15,7 +15,6 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
@@ -38,6 +37,7 @@ export const PlacementGroupsEditDrawer = (
     onExited,
     onPlacementGroupEdit,
     open,
+    region,
     selectedPlacementGroup,
   } = props;
   const { id } = useParams<{ id: string }>();
@@ -48,9 +48,6 @@ export const PlacementGroupsEditDrawer = (
   const [placementGroup, setPlacementGroup] = React.useState(
     selectedPlacementGroup
   );
-  const { region } = usePlacementGroupData({
-    placementGroup,
-  });
   const { error, mutateAsync } = useMutatePlacementGroup(
     placementGroup?.id ?? -1
   );

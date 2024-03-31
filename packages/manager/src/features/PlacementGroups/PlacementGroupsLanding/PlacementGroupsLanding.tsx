@@ -1,6 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -22,12 +23,15 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
 import { PlacementGroupsDeleteModal } from '../PlacementGroupsDeleteModal';
 import { PlacementGroupsEditDrawer } from '../PlacementGroupsEditDrawer';
+import { getPlacementGroupLinodes } from '../utils';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
@@ -38,6 +42,7 @@ const preferenceKey = 'placement-groups';
 export const PlacementGroupsLanding = React.memo(() => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const { id } = useParams<{ id: string }>();
   const theme = useTheme();
   const [query, setQuery] = React.useState<string>('');
   const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
@@ -73,6 +78,43 @@ export const PlacementGroupsLanding = React.memo(() => {
     },
     filter
   );
+
+  const allLinodeIDsAssigned = placementGroups?.data.reduce(
+    (acc, placementGroup) => {
+      return acc.concat(
+        placementGroup.members.map((member) => member.linode_id)
+      );
+    },
+    [] as number[]
+  );
+
+  const {
+    data: linodes,
+    // isLoading
+  } = useAllLinodesQuery(
+    {},
+    {
+      '+or': allLinodeIDsAssigned?.map((linodeId) => ({ id: linodeId })),
+    }
+  );
+
+  const { data: regions } = useRegionsQuery();
+  const getPlacementGroupRegion = (
+    placementGroup: PlacementGroup | undefined
+  ) => {
+    return regions?.find((region) => region.id === placementGroup?.region);
+  };
+
+  React.useEffect(() => {
+    if (id) {
+      const placementGroup = placementGroups?.data.find(
+        (pg) => pg.id === Number(id)
+      );
+      if (placementGroup) {
+        setSelectedPlacementGroup(placementGroup);
+      }
+    }
+  }, [id, placementGroups]);
 
   const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -229,6 +271,10 @@ export const PlacementGroupsLanding = React.memo(() => {
           {placementGroups?.data.length === 0 && <TableRowEmpty colSpan={6} />}
           {placementGroups?.data.map((placementGroup) => (
             <PlacementGroupsRow
+              assignedLinodes={getPlacementGroupLinodes(
+                placementGroup,
+                linodes
+              )}
               handleDeletePlacementGroup={() =>
                 handleDeletePlacementGroup(placementGroup)
               }
@@ -238,6 +284,7 @@ export const PlacementGroupsLanding = React.memo(() => {
               disabled={isLinodeReadOnly}
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
+              region={getPlacementGroupRegion(placementGroup)}
             />
           ))}
         </TableBody>
@@ -261,10 +308,13 @@ export const PlacementGroupsLanding = React.memo(() => {
         onClose={onClosePlacementGroupDrawer}
         onExited={onExited}
         open={isPlacementGroupEditDrawerOpen}
+        region={getPlacementGroupRegion(selectedPlacementGroup)}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
+        isFetching={isFetching}
+        linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
         onExited={onExited}
         open={isPlacementGroupDeleteModalOpen}

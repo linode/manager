@@ -10,7 +10,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
@@ -20,28 +20,25 @@ import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignL
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
-import type { Linode, PlacementGroup } from '@linode/api-v4';
+import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
 
 interface Props {
+  assignedLinodes: Linode[] | undefined;
+  isFetchingLinodes: boolean;
   isLinodeReadOnly: boolean;
-  isLoading: boolean;
   placementGroup: PlacementGroup | undefined;
+  region: Region | undefined;
 }
 
-export const PlacementGroupsLinodes = ({
-  isLinodeReadOnly,
-  isLoading,
-  placementGroup,
-}: Props) => {
-  const history = useHistory();
+export const PlacementGroupsLinodes = (props: Props) => {
   const {
     assignedLinodes,
-    hasReachedCapacity,
-    linodesError,
-    region,
-  } = usePlacementGroupData({
+    isFetchingLinodes,
+    isLinodeReadOnly,
     placementGroup,
-  });
+    region,
+  } = props;
+  const history = useHistory();
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [searchText, setSearchText] = React.useState('');
@@ -66,6 +63,11 @@ export const PlacementGroupsLinodes = ({
 
     return assignedLinodes;
   };
+
+  const hasReachedCapacity = hasPlacementGroupReachedCapacity({
+    placementGroup,
+    region,
+  });
 
   const handleAssignLinodesDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
@@ -132,10 +134,9 @@ export const PlacementGroupsLinodes = ({
         </Grid>
       </Grid>
       <PlacementGroupsLinodesTable
-        error={linodesError ?? []}
         handleUnassignLinodeModal={handleUnassignLinodeModal}
+        isFetchingLinodes={isFetchingLinodes}
         linodes={getLinodesList() ?? []}
-        loading={isLoading}
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}

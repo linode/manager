@@ -80,9 +80,11 @@ describe('PlacementGroupsLanding', () => {
             ],
             region: 'us-east',
           })}
+          assignedLinodes={[]}
           disabled
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}
           handleEditPlacementGroup={handleEditPlacementGroupMock}
+          region={undefined}
         />
       )
     );

@@ -51,9 +51,10 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const { hasReachedCapacity, region } = usePlacementGroupData({
     placementGroup: selectedPlacementGroup,
   });
-  const { mutateAsync: assignLinodes } = useAssignLinodesToPlacementGroup(
-    selectedPlacementGroup?.id ?? -1
-  );
+  const {
+    isLoading,
+    mutateAsync: assignLinodes,
+  } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
@@ -165,7 +166,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
                 setSelectedLinode(value);
               }}
               checkIsOptionEqualToValue
-              disabled={hasReachedCapacity}
+              disabled={hasReachedCapacity || isLoading}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"

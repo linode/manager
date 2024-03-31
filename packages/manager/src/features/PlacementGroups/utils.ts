@@ -3,6 +3,7 @@ import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 import type {
   AffinityEnforcement,
   CreatePlacementGroupPayload,
+  Linode,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
@@ -14,6 +15,22 @@ export const getAffinityTypeEnforcement = (
   is_strict: boolean
 ): AffinityEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
+};
+
+/**
+ * Helper to get the full linodes objects assigned to a Placement Group.
+ */
+export const getPlacementGroupLinodes = (
+  placementGroup: PlacementGroup | undefined,
+  linodes: Linode[] | undefined
+) => {
+  if (!placementGroup || !linodes) {
+    return;
+  }
+
+  return linodes.filter((linode) =>
+    placementGroup.members.some((pgLinode) => pgLinode.linode_id === linode.id)
+  );
 };
 
 /**
