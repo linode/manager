@@ -133,7 +133,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       onClose={onClose}
       onExited={onExited}
       open={open}
-      title={`Delete ${selectedPlacementGroup.label}`}
+      title={`Delete Placement Group ${selectedPlacementGroup.label}`}
     >
       {error && (
         <Notice
@@ -187,7 +187,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             )}
             disableItemsOnRemove
             hasEncounteredError={Boolean(unassignLinodeError)}
-            headerText={`Linodes assigned to ${selectedPlacementGroup.label}`}
+            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup.label}`}
             id="assigned-linodes"
             maxWidth={540}
             noDataText="No Linodes assigned to this Placement Group."

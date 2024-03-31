@@ -1,11 +1,7 @@
 import { act, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import {
-  linodeFactory,
-  placementGroupFactory,
-  regionFactory,
-} from 'src/factories';
+import { linodeFactory, placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
@@ -13,30 +9,11 @@ import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
 import type { RenderResult } from '@testing-library/react';
 
 const queryMocks = vi.hoisted(() => ({
-  useAllLinodesQuery: vi.fn().mockReturnValue({}),
   useDeletePlacementGroup: vi.fn().mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
   }),
-  useParams: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
-
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
-  };
-});
-
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
 
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
@@ -46,48 +23,25 @@ vi.mock('src/queries/placementGroups', async () => {
   };
 });
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
-  return {
-    ...actual,
-    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
-  };
-});
-
 const props = {
   onClose: vi.fn(),
   open: true,
 };
 
 describe('PlacementGroupsDeleteModal', () => {
-  beforeAll(() => {
-    queryMocks.useParams.mockReturnValue({
-      id: '1',
-    });
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: [
-        regionFactory.build({
-          id: 'us-east',
-        }),
-      ],
-    });
-    queryMocks.useAllLinodesQuery.mockReturnValue({
-      data: [
-        linodeFactory.build({
-          id: 1,
-          label: 'test-linode',
-          region: 'us-east',
-        }),
-      ],
-    });
-  });
-
   it('should render the right form elements', async () => {
     let renderResult: RenderResult;
     await act(async () => {
       renderResult = renderWithTheme(
         <PlacementGroupsDeleteModal
           {...props}
+          linodes={[
+            linodeFactory.build({
+              id: 1,
+              label: 'test-linode',
+              region: 'us-east',
+            }),
+          ]}
           selectedPlacementGroup={placementGroupFactory.build({
             affinity_type: 'anti_affinity:local',
             id: 1,
@@ -102,7 +56,6 @@ describe('PlacementGroupsDeleteModal', () => {
           })}
           disableUnassignButton={false}
           isFetching={false}
-          linodes={[linodeFactory.build()]}
         />
       );
     });
@@ -111,13 +64,11 @@ describe('PlacementGroupsDeleteModal', () => {
 
     expect(
       getByRole('heading', {
-        name: 'Delete Placement Group PG-to-delete (Anti-affinity)',
+        name: 'Delete Placement Group PG-to-delete',
       })
     ).toBeInTheDocument();
     expect(
-      getByText(
-        'Linodes assigned to Placement Group PG-to-delete (Anti-affinity)'
-      )
+      getByText('Linodes assigned to Placement Group PG-to-delete')
     ).toBeInTheDocument();
     expect(getByTestId('assigned-linodes')).toContainElement(
       getByText('test-linode')
@@ -134,6 +85,13 @@ describe('PlacementGroupsDeleteModal', () => {
       renderResult = renderWithTheme(
         <PlacementGroupsDeleteModal
           {...props}
+          linodes={[
+            linodeFactory.build({
+              id: 1,
+              label: 'test-linode',
+              region: 'us-east',
+            }),
+          ]}
           selectedPlacementGroup={placementGroupFactory.build({
             affinity_type: 'anti_affinity:local',
             id: 1,
@@ -142,7 +100,6 @@ describe('PlacementGroupsDeleteModal', () => {
           })}
           disableUnassignButton={false}
           isFetching={false}
-          linodes={[linodeFactory.build()]}
         />
       );
     });
