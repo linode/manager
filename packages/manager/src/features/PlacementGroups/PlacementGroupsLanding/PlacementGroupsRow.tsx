@@ -88,12 +88,17 @@ export const PlacementGroupsRow = React.memo(
               tooltipText={
                 <List>
                   {assignedLinodes?.map((linode, idx) => (
-                    <ListItem key={`pg-linode-${idx}`}>{linode.label}</ListItem>
+                    <ListItem
+                      key={`pg-linode-${idx}`}
+                      sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
+                    >
+                      {linode.label}
+                    </ListItem>
                   ))}
                 </List>
               }
               displayText={`${assignedLinodes?.length ?? 0}`}
-              minWidth={200}
+              minWidth={250}
             />
           )}
           &nbsp; of {region?.maximum_vms_per_pg ?? 'unknown'}
