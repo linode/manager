@@ -153,12 +153,12 @@ export const AccessSelect = React.memo((props: Props) => {
         }}
         data-testid="acl-select"
         disableClearable
-        disabled={accessLoading}
+        disabled={Boolean(accessError)}
         label="Access Control List (ACL)"
         loading={accessLoading}
-        options={_options}
+        options={!accessLoading ? _options : []}
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
-        value={selectedOption}
+        value={!accessLoading ? selectedOption : undefined}
       />
 
       <div style={{ marginTop: 8, minHeight: 16 }}>
