@@ -188,6 +188,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
               label: 'Assign Linode',
               type: 'submit',
             }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: handleDrawerClose,
+            }}
             sx={{ pt: 2 }}
           />
         </Stack>
