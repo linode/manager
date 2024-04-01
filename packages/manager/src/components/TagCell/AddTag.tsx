@@ -26,6 +26,7 @@ export const AddTag = (props: AddTagProps) => {
   // should still work.
 
   const [inputValue, setInputValue] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const createTag =
     !!accountTags &&
@@ -42,6 +43,7 @@ export const AddTag = (props: AddTagProps) => {
   ];
 
   const handleAddTag = (newTag: string) => {
+    setLoading(true);
     addTag(newTag)
       .then(() => {
         if (accountTags) {
@@ -52,6 +54,7 @@ export const AddTag = (props: AddTagProps) => {
         }
       })
       .finally(() => {
+        setLoading(false);
         if (onClose) {
           onClose();
         }
@@ -76,7 +79,7 @@ export const AddTag = (props: AddTagProps) => {
       disableClearable
       forcePopupIcon
       label={'Create or Select a Tag'}
-      loading={accountTagsLoading}
+      loading={accountTagsLoading || loading}
       noOptionsText={<i>{`"${inputValue}" already added`}</i>} // Will display create option unless that tag is already added
       onInputChange={(_, value) => setInputValue(value)}
       openOnFocus
