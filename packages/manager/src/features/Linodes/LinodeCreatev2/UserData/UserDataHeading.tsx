@@ -27,7 +27,7 @@ export const UserDataHeading = () => {
   const warningMessage = params.type ? warningMessageMap[params.type] : null;
 
   return (
-    <Stack>
+    <Stack spacing={1}>
       <Stack direction="row" spacing={1}>
         <Typography variant="h2">Add User Data</Typography>
         <TooltipIcon
@@ -47,7 +47,7 @@ export const UserDataHeading = () => {
         />
       </Stack>
       {warningMessage && (
-        <Notice spacingBottom={0} spacingTop={16} variant="warning">
+        <Notice spacingBottom={0} spacingTop={0} variant="warning">
           {warningMessage}
         </Notice>
       )}
