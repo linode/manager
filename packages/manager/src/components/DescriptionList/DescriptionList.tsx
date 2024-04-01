@@ -6,7 +6,7 @@ import { Typography } from 'src/components/Typography';
 import type { SxProps } from '@mui/material/styles';
 import type { TypographyProps } from 'src/components/Typography';
 
-export interface SummaryItemsProps {
+export interface DescriptionListProps {
   items: {
     description: string;
     title: string;
@@ -15,7 +15,7 @@ export interface SummaryItemsProps {
   sx?: SxProps;
 }
 
-export const DescriptionList = (props: SummaryItemsProps) => {
+export const DescriptionList = (props: DescriptionListProps) => {
   const { items, layout = 'stacked', sx } = props;
 
   return (
@@ -37,7 +37,7 @@ export const DescriptionList = (props: SummaryItemsProps) => {
 };
 
 interface StyledDLProps extends TypographyProps {
-  layout?: SummaryItemsProps['layout'];
+  layout?: DescriptionListProps['layout'];
 }
 
 const StyledDL = styled(Typography, {
