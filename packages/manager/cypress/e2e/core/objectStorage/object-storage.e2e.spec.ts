@@ -394,7 +394,7 @@ describe('object storage end-to-end tests', () => {
   /*
    * - Confirms that user can update Bucket access.
    */
-  it('can update, bucket access', () => {
+  it('can update bucket access', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
